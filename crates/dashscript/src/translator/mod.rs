@@ -269,6 +269,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_c_style_for_loop() {
+        let src = "function f(): void { let total = 0; for (let i = 0; i < 5; i++) { total += i; } console.log(total); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("while i < 5.0"), "got:\n{rust}");
+        assert!(rust.contains("i += 1.0"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_arrow_function_expression_body() {
         let src = "function f(): void { const double = (x: number) => x * 2; console.log(double(5)); }";
         let rust = Translator::new().translate(src).expect("should translate");

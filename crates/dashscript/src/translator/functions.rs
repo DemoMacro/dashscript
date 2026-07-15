@@ -3,9 +3,9 @@
 use std::collections::HashMap;
 
 use oxc_ast::ast::{
-    Expression, FormalParameters, ForOfStatement, ForStatementLeft, Function, FunctionBody,
-    IfStatement, Statement, SwitchCase, SwitchStatement, TSType, VariableDeclaration,
-    VariableDeclarationKind, WhileStatement,
+    Expression, FormalParameters, ForOfStatement, ForStatement, ForStatementInit,
+    ForStatementLeft, Function, FunctionBody, IfStatement, Statement, SwitchCase, SwitchStatement,
+    TSType, VariableDeclaration, VariableDeclarationKind, WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
@@ -119,6 +119,7 @@ fn translate_stmt(stmt: &Statement, locals: &mut Locals) -> Vec<Stmt> {
         Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt, locals)],
         Statement::WhileStatement(while_stmt) => vec![translate_while(while_stmt, locals)],
         Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals),
+        Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals),
         Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals)],
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
         Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
@@ -203,6 +204,39 @@ fn translate_for_of(stmt: &ForOfStatement, locals: &mut Locals) -> Vec<Stmt> {
     let iter = expressions::translate_expr(&stmt.right);
     let body = statement_block(&stmt.body, locals);
     vec![parse_quote!(for &#pat in &#iter #body)]
+}
+
+/// `for (init; test; update) body` → `{ init; while test { body; update; } }`.
+///
+/// `.ds` `number` is `f64`, and `Range<f64>` isn't iterable in Rust, so a
+/// C-style loop decomposes into a `while` (not `for i in 0..n`). It is wrapped
+/// in a block so the loop's own bindings (e.g. `i`) don't collide across loops.
+/// A `continue` inside the body skips the `update` step — a known limitation;
+/// use a `while` if the update must run every iteration.
+fn translate_for(stmt: &ForStatement, locals: &mut Locals) -> Vec<Stmt> {
+    let init: Vec<Stmt> = match &stmt.init {
+        Some(ForStatementInit::VariableDeclaration(decl)) => {
+            translate_variable_declaration(decl, locals)
+        }
+        _ => Vec::new(),
+    };
+    let test = stmt
+        .test
+        .as_ref()
+        .map(|t| condition_expr(t, locals))
+        .unwrap_or_else(|| parse_quote!(true));
+    let body = translate_stmt(&stmt.body, locals);
+    let update: Option<Stmt> = stmt.update.as_ref().map(|u| {
+        let e = expressions::translate_expr(u);
+        parse_quote!(#e;)
+    });
+    vec![parse_quote!({
+        #(#init)*
+        while #test {
+            #(#body)*
+            #update
+        }
+    })]
 }
 
 /// Binding name from `for (const v of …)`; other left forms are unmapped.
