@@ -1,11 +1,12 @@
 //! `Expression` → `syn::Expr`.
 
 use oxc_ast::ast::{
-    Argument, ArrayExpression, ArrayExpressionElement, AssignmentExpression, AssignmentTarget,
-    BinaryExpression, CallExpression, ComputedMemberExpression, ConditionalExpression, Expression,
-    IdentifierReference, LogicalExpression,
-    ObjectExpression, ObjectPropertyKind, SimpleAssignmentTarget, StaticMemberExpression,
-    StringLiteral, TemplateLiteral, TSNonNullExpression, UnaryExpression, UpdateExpression,
+    Argument, ArrayExpression, ArrayExpressionElement, ArrowFunctionExpression,
+    AssignmentExpression, AssignmentTarget, BinaryExpression, CallExpression,
+    ComputedMemberExpression, ConditionalExpression, Expression, FunctionBody,
+    IdentifierReference, LogicalExpression, ObjectExpression, ObjectPropertyKind,
+    SimpleAssignmentTarget, StaticMemberExpression, Statement, StringLiteral, TemplateLiteral,
+    TSNonNullExpression, UnaryExpression, UpdateExpression,
 };
 use oxc_syntax::operator::{
     AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator, UpdateOperator,
@@ -39,6 +40,7 @@ pub fn translate_expr(expr: &Expression) -> Expr {
         Expression::AssignmentExpression(a) => assignment_expr(a),
         Expression::UpdateExpression(u) => update_expr(u),
         Expression::TSNonNullExpression(nn) => nonnull_expr(nn),
+        Expression::ArrowFunctionExpression(arrow) => arrow_expr(arrow),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -61,6 +63,7 @@ pub fn translate_argument(arg: &Argument) -> Expr {
         Argument::ConditionalExpression(c) => conditional_expr(c),
         Argument::UnaryExpression(un) => unary_expr(un),
         Argument::TSNonNullExpression(nn) => nonnull_expr(nn),
+        Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -243,6 +246,34 @@ fn ident_or_undefined(id: &IdentifierReference) -> Expr {
 fn nonnull_expr(nn: &TSNonNullExpression) -> Expr {
     let inner = translate_expr(&nn.expression);
     parse_quote!(#inner.unwrap())
+}
+
+/// `(x) => expr` → `|x| expr` (expression body only; a block body is unmapped).
+/// Parameter type annotations are dropped — Rust infers them at the call site.
+fn arrow_expr(arrow: &ArrowFunctionExpression) -> Expr {
+    let params: Vec<Ident> = arrow
+        .params
+        .items
+        .iter()
+        .map(|fp| bindings::binding_name(&fp.pattern))
+        .collect();
+    let body = if arrow.expression {
+        single_expression_body(&arrow.body)
+            .map(translate_expr)
+            .unwrap_or_else(|| parse_quote!(::core::todo!()))
+    } else {
+        parse_quote!(::core::todo!())
+    };
+    parse_quote!(|#(#params),*| #body)
+}
+
+/// The single expression of an expression-body arrow (`() => expr`), when the
+/// body is exactly one expression statement.
+fn single_expression_body<'a, 'b>(body: &'b FunctionBody<'a>) -> Option<&'b Expression<'a>> {
+    let [Statement::ExpressionStatement(es)] = body.statements.as_slice() else {
+        return None;
+    };
+    Some(&es.expression)
 }
 
 /// `` `Hello, ${name}!` `` → `format!("Hello, {}!", name)`.

@@ -269,6 +269,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_arrow_function_expression_body() {
+        let src = "function f(): void { const double = (x: number) => x * 2; console.log(double(5)); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("|x| x * 2.0"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_break_and_continue() {
         let src = "function f(): void { let i = 0; while (i < 10) { i++; if (i == 5) { continue; } if (i == 8) { break; } } }";
         let rust = Translator::new().translate(src).expect("should translate");
