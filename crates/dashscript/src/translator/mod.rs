@@ -449,4 +449,16 @@ mod tests {
             "got:\n{rust}"
         );
     }
+
+    #[test]
+    fn translates_array_filter_to_iter_copied_filter_collect() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const ys = xs.filter(n => n > 1); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `.filter`'s closure receives &Item after `.copied()`, so the param is
+        // destructured (`|&n|`) and the body reads the owned value.
+        assert!(
+            rust.contains("xs.iter().copied().filter(|&n| n > 1.0).collect::<Vec<_>>()"),
+            "got:\n{rust}"
+        );
+    }
 }

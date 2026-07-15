@@ -13,7 +13,7 @@ use oxc_syntax::operator::{
 };
 use proc_macro2::Span;
 use quote::{format_ident, quote};
-use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Type, UnOp};
+use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Pat, Type, UnOp};
 
 use super::context::Ctx;
 use super::{bindings, types};
@@ -41,7 +41,7 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         Expression::AssignmentExpression(a) => assignment_expr(a, ctx),
         Expression::UpdateExpression(u) => update_expr(u),
         Expression::TSNonNullExpression(nn) => nonnull_expr(nn, ctx),
-        Expression::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx),
+        Expression::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
         // User-written parens are unwrapped; `prettyplease` re-adds any needed
         // for precedence (e.g. `(a + b) * c` round-trips correctly).
         Expression::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
@@ -67,7 +67,7 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::ConditionalExpression(c) => conditional_expr(c, ctx),
         Argument::UnaryExpression(un) => unary_expr(un, ctx),
         Argument::TSNonNullExpression(nn) => nonnull_expr(nn, ctx),
-        Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx),
+        Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         _ => parse_quote!(::core::todo!()),
     }
@@ -333,12 +333,22 @@ fn nonnull_expr(nn: &TSNonNullExpression, ctx: &Ctx<'_>) -> Expr {
 
 /// `(x) => expr` → `|x| expr` (expression body only; a block body is unmapped).
 /// Parameter type annotations are dropped — Rust infers them at the call site.
-fn arrow_expr(arrow: &ArrowFunctionExpression, ctx: &Ctx<'_>) -> Expr {
-    let params: Vec<Ident> = arrow
+/// Translate an arrow to a Rust closure. `borrow_params` wraps each parameter
+/// in a `&` pattern (`|&n|`) so the closure body reads owned values — used for
+/// `.filter` callbacks, whose closure receives `&Item` even after `.copied()`.
+fn arrow_expr(arrow: &ArrowFunctionExpression, ctx: &Ctx<'_>, borrow_params: bool) -> Expr {
+    let params: Vec<Pat> = arrow
         .params
         .items
         .iter()
-        .map(|fp| bindings::binding_name(&fp.pattern))
+        .map(|fp| {
+            let name = bindings::binding_name(&fp.pattern);
+            if borrow_params {
+                parse_quote!(&#name)
+            } else {
+                parse_quote!(#name)
+            }
+        })
         .collect();
     let body = if arrow.expression {
         single_expression_body(&arrow.body)
@@ -663,15 +673,17 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     parse_quote!(#callee(#(#args),*))
 }
 
-/// `xs.map(f)` on a `Vec` of Copy elements →
-/// `xs.iter().copied().map(f).collect::<Vec<_>>()`. `.copied()` gives the
-/// callback owned values (`.ds` `number`/`boolean` are Copy), matching the TS
-/// callback signature; `collect::<Vec<_>>()` materializes the lazily-mapped
-/// iterator. Returns `None` for other methods or non-`Vec` receivers.
+/// `xs.map(f)` / `xs.filter(f)` on a `Vec` of Copy elements →
+/// `xs.iter().copied().<method>(f).collect::<Vec<_>>()`. `.copied()` gives
+/// `.map` owned values (`.ds` `number`/`boolean` are Copy), matching the TS
+/// callback signature; `.filter`'s closure still receives `&Item`, so its
+/// param is destructured (`|&n|`). Returns `None` otherwise.
 fn array_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    if sm.property.name.as_str() != "map" {
-        return None;
-    }
+    let borrow = match sm.property.name.as_str() {
+        "map" => false,
+        "filter" => true,
+        _ => return None,
+    };
     let Expression::Identifier(id) = &sm.object else {
         return None;
     };
@@ -681,8 +693,16 @@ fn array_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -
     if !is_vec {
         return None;
     }
-    let callback = translate_argument(args.first()?, ctx);
-    Some(parse_quote!(#recv.iter().copied().map(#callback).collect::<Vec<_>>()))
+    let method = format_ident!("{}", sm.property.name.as_str());
+    let callback = if borrow {
+        let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+            return None;
+        };
+        arrow_expr(arrow, ctx, true)
+    } else {
+        translate_argument(args.first()?, ctx)
+    };
+    Some(parse_quote!(#recv.iter().copied().#method(#callback).collect::<Vec<_>>()))
 }
 
 /// A handful of TS method names map to a different Rust method name; the

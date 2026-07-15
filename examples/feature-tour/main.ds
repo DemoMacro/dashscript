@@ -60,10 +60,13 @@ function main(): void {
   const square = (n: number) => n * n;
   console.log("square:", square(9));
 
-  // array callback: `xs.map(f)` maps a Vec of Copy numbers via `.copied()`.
+  // array callbacks: `.map` (callback owns via .copied) and `.filter`
+  // (callback borrows, so its param destructures as `|&n|`).
   const xs: number[] = [1, 2, 3];
   const doubled = xs.map((n) => n * 2);
   console.log("doubled:", doubled[0], doubled[1], doubled[2]);
+  const evens = xs.filter((n) => n > 1);
+  console.log("evens:", evens.length);
 
   // loops: a C-style for, a for-of, break and continue
   let sum = 0;

@@ -27,6 +27,7 @@ true
 ababab
 square: 81
 doubled: 2 4 6
+evens: 2
 sum 1..5: 15
 counted: 8
 empty
@@ -37,25 +38,26 @@ set: 42
 
 ## What it demonstrates
 
-| `.ds`                                  | Rust                                        |
-| -------------------------------------- | ------------------------------------------- |
-| `interface Vector { … }`               | `struct Vector { … }`                       |
-| `type Kind = "a" \| "b"`               | `enum Kind { A, B }`                        |
-| `switch (kind) { case … }`             | `match kind { Kind::A => … }`               |
-| `{ kind: "c"; r } \| { kind: "s"; s }` | `enum Shape { Circle { r }, Square { s } }` |
-| `switch (s.kind) { case …: s.r }`      | `match s { Shape::Circle { r } => r }`      |
-| `Math.sqrt(…)`, `x ** 2`               | `….sqrt()`, `x.powf(2.0)`                   |
-| `a + b + " => " + …`                   | `format!("{}{}{}{}", …)` (string concat)    |
-| `cond ? "a" : "b"`                     | `if cond { … } else { … }`                  |
-| `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`           |
-| `"ab".repeat(3)`                       | `….repeat(3.0 as usize)`                    |
-| `(n) => n * n`                         | `\|n\| n * n`                               |
-| `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()` |
-| `for (let i = …; …; i++)`              | `{ let mut i …; while … { …; i += 1.0; } }` |
-| `for (const n of xs)`                  | `for &n in &xs`                             |
-| `continue` / `break`                   | `continue` / `break`                        |
-| `number \| null`, `…!`                 | `Option<f64>`, `….unwrap()`                 |
-| `if (items)` / `if (maybe)`            | `!items.is_empty()` / `maybe.is_some()`     |
+| `.ds`                                  | Rust                                            |
+| -------------------------------------- | ----------------------------------------------- |
+| `interface Vector { … }`               | `struct Vector { … }`                           |
+| `type Kind = "a" \| "b"`               | `enum Kind { A, B }`                            |
+| `switch (kind) { case … }`             | `match kind { Kind::A => … }`                   |
+| `{ kind: "c"; r } \| { kind: "s"; s }` | `enum Shape { Circle { r }, Square { s } }`     |
+| `switch (s.kind) { case …: s.r }`      | `match s { Shape::Circle { r } => r }`          |
+| `Math.sqrt(…)`, `x ** 2`               | `….sqrt()`, `x.powf(2.0)`                       |
+| `a + b + " => " + …`                   | `format!("{}{}{}{}", …)` (string concat)        |
+| `cond ? "a" : "b"`                     | `if cond { … } else { … }`                      |
+| `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`               |
+| `"ab".repeat(3)`                       | `….repeat(3.0 as usize)`                        |
+| `(n) => n * n`                         | `\|n\| n * n`                                   |
+| `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()`     |
+| `xs.filter((n) => n > 1)`              | `xs.iter().copied().filter(\|&n\| …).collect()` |
+| `for (let i = …; …; i++)`              | `{ let mut i …; while … { …; i += 1.0; } }`     |
+| `for (const n of xs)`                  | `for &n in &xs`                                 |
+| `continue` / `break`                   | `continue` / `break`                            |
+| `number \| null`, `…!`                 | `Option<f64>`, `….unwrap()`                     |
+| `if (items)` / `if (maybe)`            | `!items.is_empty()` / `maybe.is_some()`         |
 
 ## License
 
