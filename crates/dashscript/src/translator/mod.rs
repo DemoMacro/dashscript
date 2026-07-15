@@ -269,6 +269,23 @@ mod tests {
     }
 
     #[test]
+    fn translates_math_methods() {
+        let src =
+            "function f(x: number): number { return Math.floor(x) + Math.max(x, 0) + Math.pow(x, 2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("x.floor()"), "got:\n{rust}");
+        assert!(rust.contains("x.max(0.0)"), "got:\n{rust}");
+        assert!(rust.contains("x.powf(2.0)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_math_constants() {
+        let src = "function f(): number { return Math.PI; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("f64::consts::PI"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_multi_arg_console_log() {
         let src = "function f(): void { console.log(\"x\", 1, true); }";
         let rust = Translator::new().translate(src).expect("should translate");

@@ -145,14 +145,66 @@ fn array_element(elem: &ArrayExpressionElement) -> Option<Expr> {
 
 /// `p.x` → field access. (A `console.log` callee is intercepted earlier.)
 fn member_expr(sm: &StaticMemberExpression) -> Expr {
-    let obj = translate_expr(&sm.object);
     let field_name: &str = &sm.property.name;
+    // `Math.PI` / `Math.E` → the corresponding Rust constant.
+    if is_ident(&sm.object, "Math") {
+        if let Some(p) = math_constant(field_name) {
+            return p;
+        }
+    }
+    let obj = translate_expr(&sm.object);
     // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a field).
     if field_name == "length" {
         return parse_quote!(#obj.len());
     }
     let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)
+}
+
+/// `Math.<m>(args)` → the idiomatic Rust float operation. Single-arg methods
+/// (`floor`, `ceil`, `abs`, …) become a method on the argument; `max`/`min`
+/// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
+fn math_method(name: &str, args: &[Argument]) -> Option<Expr> {
+    match name {
+        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp" | "ln" => {
+            let recv = math_receiver(args.first()?);
+            let m = format_ident!("{}", name);
+            Some(parse_quote!(#recv.#m()))
+        }
+        "max" | "min" => {
+            let a = math_receiver(args.first()?);
+            let b = translate_argument(args.get(1)?);
+            let m = format_ident!("{}", name);
+            Some(parse_quote!(#a.#m(#b)))
+        }
+        "pow" => {
+            let a = math_receiver(args.first()?);
+            let b = translate_argument(args.get(1)?);
+            Some(parse_quote!(#a.powf(#b)))
+        }
+        _ => None,
+    }
+}
+
+/// A `Math.` receiver: a numeric literal gets an `_f64` suffix so a bare
+/// literal like `3` isn't an ambiguous `{float}` (`3.0.max(7.0)` won't infer);
+/// any other receiver translates normally (its context already pins `f64`).
+fn math_receiver(arg: &Argument) -> Expr {
+    if let Argument::NumericLiteral(n) = arg {
+        let s = format!("{}_f64", n.value);
+        return parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN));
+    }
+    translate_argument(arg)
+}
+
+/// `Math.PI` → `std::f64::consts::PI`, `Math.E` → `…::E`.
+fn math_constant(name: &str) -> Option<Expr> {
+    let path = match name {
+        "PI" => quote!(::std::f64::consts::PI),
+        "E" => quote!(::std::f64::consts::E),
+        _ => return None,
+    };
+    syn::parse2(path).ok()
 }
 
 /// `arr[i]` → `arr[i as usize]`. A `.ds` index is `f64`; Rust indexes by
@@ -397,6 +449,14 @@ fn translate_call(call: &CallExpression) -> Expr {
         let placeholders: String = vals.iter().map(|_| "{}").collect::<Vec<_>>().join(" ");
         let fmt = syn::LitStr::new(&placeholders, Span::call_site());
         return parse_quote!(::std::println!(#fmt, #(#vals),*));
+    }
+    // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
+    if let Expression::StaticMemberExpression(sm) = &call.callee {
+        if is_ident(&sm.object, "Math") {
+            if let Some(expr) = math_method(&sm.property.name, call.arguments.as_slice()) {
+                return expr;
+            }
+        }
     }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
