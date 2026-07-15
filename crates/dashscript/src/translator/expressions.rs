@@ -82,6 +82,18 @@ pub fn translate_init(expr: &Expression, ty_hint: Option<&Type>) -> Expr {
         let value = translate_expr(expr);
         return parse_quote!(Some(#value));
     }
+    // A string literal into a named (non-`String`) type is an enum variant:
+    // `let s: Status = "done"` → `Status::Done`.
+    if let Expression::StringLiteral(s) = expr {
+        if let Some(path) = ty_hint.and_then(types::type_path) {
+            if path.is_ident("String") {
+                return string_expr(s);
+            }
+            let value: &str = &s.value;
+            let variant = bindings::pascal(value);
+            return parse_quote!(#path::#variant);
+        }
+    }
     translate_expr(expr)
 }
 

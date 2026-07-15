@@ -39,6 +39,26 @@ pub fn type_ident(name: &str) -> Ident {
     format_ident!("{}", name)
 }
 
+/// Convert a string-literal union member (`"in_progress"`) to an `enum` variant
+/// in Rust `UpperCamelCase` (`InProgress`). Non-alphanumeric chars split words.
+pub fn pascal(name: &str) -> Ident {
+    let mut out = String::with_capacity(name.len());
+    let mut capitalize_next = true;
+    for c in name.chars() {
+        if c.is_alphanumeric() {
+            if capitalize_next {
+                out.extend(c.to_uppercase());
+                capitalize_next = false;
+            } else {
+                out.push(c);
+            }
+        } else {
+            capitalize_next = true;
+        }
+    }
+    format_ident!("{}", out)
+}
+
 /// Identifier name from a `BindingPattern` (parameter / variable binding).
 ///
 /// Destructuring patterns (`ObjectPattern` / `ArrayPattern`) are unsupported

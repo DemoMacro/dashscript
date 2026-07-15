@@ -201,4 +201,21 @@ mod tests {
         assert!(rust.contains("-> Option<f64>"), "got:\n{rust}");
         assert!(rust.contains("return None"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_string_union_to_enum() {
+        let src = "type Status = \"pending\" | \"active\" | \"done\";";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("enum Status"), "got:\n{rust}");
+        assert!(rust.contains("Pending"), "got:\n{rust}");
+        assert!(rust.contains("Active"), "got:\n{rust}");
+        assert!(rust.contains("Done"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_enum_variant_construction() {
+        let src = "type Status = \"pending\" | \"done\"; function f(): void { let s: Status = \"done\"; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("Status::Done"), "got:\n{rust}");
+    }
 }
