@@ -439,4 +439,14 @@ mod tests {
         // narrowing: each `s.radius` reads as the destructured `radius` binding.
         assert!(rust.contains("radius * radius"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_array_map_to_iter_copied_map_collect() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const ys = xs.map(n => n * 2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(
+            rust.contains("xs.iter().copied().map(|n| n * 2.0).collect::<Vec<_>>()"),
+            "got:\n{rust}"
+        );
+    }
 }

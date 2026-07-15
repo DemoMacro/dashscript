@@ -26,6 +26,7 @@ hello, world
 true
 ababab
 square: 81
+doubled: 2 4 6
 sum 1..5: 15
 counted: 8
 empty
@@ -49,6 +50,7 @@ set: 42
 | `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`           |
 | `"ab".repeat(3)`                       | `….repeat(3.0 as usize)`                    |
 | `(n) => n * n`                         | `\|n\| n * n`                               |
+| `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()` |
 | `for (let i = …; …; i++)`              | `{ let mut i …; while … { …; i += 1.0; } }` |
 | `for (const n of xs)`                  | `for &n in &xs`                             |
 | `continue` / `break`                   | `continue` / `break`                        |

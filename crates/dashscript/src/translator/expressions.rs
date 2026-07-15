@@ -649,6 +649,9 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = string_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        if let Some(expr) = array_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(method) = map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object, ctx);
             let args: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
@@ -658,6 +661,28 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     let callee = translate_expr(&call.callee, ctx);
     let args: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
     parse_quote!(#callee(#(#args),*))
+}
+
+/// `xs.map(f)` on a `Vec` of Copy elements →
+/// `xs.iter().copied().map(f).collect::<Vec<_>>()`. `.copied()` gives the
+/// callback owned values (`.ds` `number`/`boolean` are Copy), matching the TS
+/// callback signature; `collect::<Vec<_>>()` materializes the lazily-mapped
+/// iterator. Returns `None` for other methods or non-`Vec` receivers.
+fn array_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    if sm.property.name.as_str() != "map" {
+        return None;
+    }
+    let Expression::Identifier(id) = &sm.object else {
+        return None;
+    };
+    let recv = bindings::snake(&id.name);
+    let path = ctx.local_type(&recv.to_string())?;
+    let is_vec = path.segments.last().is_some_and(|s| s.ident == "Vec");
+    if !is_vec {
+        return None;
+    }
+    let callback = translate_argument(args.first()?, ctx);
+    Some(parse_quote!(#recv.iter().copied().map(#callback).collect::<Vec<_>>()))
 }
 
 /// A handful of TS method names map to a different Rust method name; the

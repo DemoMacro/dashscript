@@ -60,6 +60,11 @@ function main(): void {
   const square = (n: number) => n * n;
   console.log("square:", square(9));
 
+  // array callback: `xs.map(f)` maps a Vec of Copy numbers via `.copied()`.
+  const xs: number[] = [1, 2, 3];
+  const doubled = xs.map((n) => n * 2);
+  console.log("doubled:", doubled[0], doubled[1], doubled[2]);
+
   // loops: a C-style for, a for-of, break and continue
   let sum = 0;
   for (let i = 1; i <= 5; i++) {
