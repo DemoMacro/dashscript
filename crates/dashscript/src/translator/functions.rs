@@ -8,7 +8,7 @@ use oxc_ast::ast::{
 use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
-use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, Pat, ReturnType, Stmt, Type};
+use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, Pat, Path, ReturnType, Stmt, Type};
 
 use super::context::{Ctx, Locals, Narrow};
 use super::registry::TypeRegistry;
@@ -45,13 +45,31 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
             ty => Some(ReturnType::Type(Default::default(), Box::new(types::translate_type(ty)))),
         })
         .unwrap_or(ReturnType::Default);
+    // The return-type path threads down to `return {…}` so the object literal
+    // can borrow its struct name.
+    let return_path = func.return_type.as_deref().and_then(return_path_of);
     let mut locals = Locals::new();
     for fp in &func.params.items {
         register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
     }
-    let block = translate_body(func.body.as_deref(), &mut locals, registry, &Narrow::default());
+    let block = translate_body(
+        func.body.as_deref(),
+        &mut locals,
+        registry,
+        &Narrow::default(),
+        return_path.as_ref(),
+    );
     parse_quote! {
         fn #name(#(#inputs),*) #output #block
+    }
+}
+
+/// The `syn::Path` of a function's return type — used to translate `return {…}`
+/// object literals. `void`/`undefined` yield no path.
+fn return_path_of(ta: &oxc_ast::ast::TSTypeAnnotation) -> Option<Path> {
+    match &ta.type_annotation {
+        TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
+        ty => path_of(&types::translate_type(ty)),
     }
 }
 
@@ -89,12 +107,13 @@ fn translate_body(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Block {
     let stmts: Vec<Stmt> = body
         .map(|b| {
             b.statements
                 .iter()
-                .flat_map(|s| translate_stmt(s, locals, registry, narrow))
+                .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
                 .collect()
         })
         .unwrap_or_default();
@@ -107,17 +126,22 @@ fn translate_stmt(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Vec<Stmt> {
     match stmt {
         Statement::BlockStatement(block) => block
             .body
             .iter()
-            .flat_map(|s| translate_stmt(s, locals, registry, narrow))
+            .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
             .collect(),
         Statement::ReturnStatement(ret) => {
             let s: Stmt = match &ret.argument {
                 Some(arg) => {
-                    let expr = expressions::translate_expr(arg, &Ctx::new(&*locals, registry, narrow));
+                    // An object literal borrows the struct name from the return
+                    // type; everything else translates as a plain expression.
+                    let ret_ty = return_path.map(|p| -> Type { parse_quote!(#p) });
+                    let expr =
+                        expressions::translate_init(arg, ret_ty.as_ref(), &Ctx::new(&*locals, registry, narrow));
                     parse_quote!(return #expr;)
                 }
                 None => parse_quote!(return;),
@@ -131,24 +155,32 @@ fn translate_stmt(
         Statement::VariableDeclaration(decl) => {
             translate_variable_declaration(decl, locals, registry, narrow)
         }
-        Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt, locals, registry, narrow)],
-        Statement::WhileStatement(while_stmt) => vec![translate_while(while_stmt, locals, registry, narrow)],
-        Statement::DoWhileStatement(dws) => vec![translate_do_while(dws, locals, registry, narrow)],
-        Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals, registry, narrow),
-        Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals, registry, narrow),
-        Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals, registry, narrow)],
+        Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt, locals, registry, narrow, return_path)],
+        Statement::WhileStatement(while_stmt) => {
+            vec![translate_while(while_stmt, locals, registry, narrow, return_path)]
+        }
+        Statement::DoWhileStatement(dws) => vec![translate_do_while(dws, locals, registry, narrow, return_path)],
+        Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals, registry, narrow, return_path),
+        Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals, registry, narrow, return_path),
+        Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals, registry, narrow, return_path)],
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
         Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
         _ => vec![],
     }
 }
 
-fn translate_if(stmt: &IfStatement, locals: &mut Locals, registry: &TypeRegistry, narrow: &Narrow) -> Stmt {
+fn translate_if(
+    stmt: &IfStatement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+    return_path: Option<&Path>,
+) -> Stmt {
     let cond = condition_expr(&stmt.test, locals, registry, narrow);
-    let then_block = statement_block(&stmt.consequent, locals, registry, narrow);
+    let then_block = statement_block(&stmt.consequent, locals, registry, narrow, return_path);
     match &stmt.alternate {
         Some(alt) => {
-            let else_block = statement_block(alt, locals, registry, narrow);
+            let else_block = statement_block(alt, locals, registry, narrow, return_path);
             parse_quote!(if #cond #then_block else #else_block)
         }
         None => parse_quote!(if #cond #then_block),
@@ -160,9 +192,10 @@ fn translate_while(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Stmt {
     let cond = condition_expr(&stmt.test, locals, registry, narrow);
-    let body = statement_block(&stmt.body, locals, registry, narrow);
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
     parse_quote!(while #cond #body)
 }
 
@@ -173,8 +206,9 @@ fn translate_do_while(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Stmt {
-    let body = statement_block(&stmt.body, locals, registry, narrow);
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
     let test = condition_expr(&stmt.test, locals, registry, narrow);
     parse_quote!(loop {
         #body
@@ -241,12 +275,13 @@ fn translate_for_of(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Vec<Stmt> {
     let Some(pat) = for_of_binding(&stmt.left) else {
         return vec![];
     };
     let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
-    let body = statement_block(&stmt.body, locals, registry, narrow);
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
     vec![parse_quote!(for &#pat in &#iter #body)]
 }
 
@@ -262,6 +297,7 @@ fn translate_for(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Vec<Stmt> {
     let init: Vec<Stmt> = match &stmt.init {
         Some(ForStatementInit::VariableDeclaration(decl)) => {
@@ -274,7 +310,7 @@ fn translate_for(
         .as_ref()
         .map(|t| condition_expr(t, locals, registry, narrow))
         .unwrap_or_else(|| parse_quote!(true));
-    let body = translate_stmt(&stmt.body, locals, registry, narrow);
+    let body = translate_stmt(&stmt.body, locals, registry, narrow, return_path);
     let update: Option<Stmt> = stmt.update.as_ref().map(|u| {
         let e = expressions::translate_expr(u, &Ctx::new(&*locals, registry, narrow));
         parse_quote!(#e;)
@@ -298,8 +334,14 @@ fn for_of_binding(left: &ForStatementLeft) -> Option<Ident> {
 }
 
 /// Turn any statement into a `{ … }` block (used by if/while/for bodies).
-fn statement_block(stmt: &Statement, locals: &mut Locals, registry: &TypeRegistry, narrow: &Narrow) -> Block {
-    let stmts: Vec<Stmt> = translate_stmt(stmt, locals, registry, narrow);
+fn statement_block(
+    stmt: &Statement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+    return_path: Option<&Path>,
+) -> Block {
+    let stmts: Vec<Stmt> = translate_stmt(stmt, locals, registry, narrow, return_path);
     parse_quote!({ #(#stmts)* })
 }
 
@@ -314,16 +356,17 @@ fn translate_switch(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Stmt {
     if let Some((scrut, type_name)) = discriminant_member(&sw.discriminant, locals, registry) {
-        return discriminated_match(sw, &scrut, &type_name, locals, registry);
+        return discriminated_match(sw, &scrut, &type_name, locals, registry, return_path);
     }
     let disc = expressions::translate_expr(&sw.discriminant, &Ctx::new(&*locals, registry, narrow));
     let enum_path = discriminant_path(&sw.discriminant, locals);
     let arms: Vec<Arm> = sw
         .cases
         .iter()
-        .filter_map(|c| switch_arm(c, enum_path.as_ref(), locals, registry, narrow))
+        .filter_map(|c| switch_arm(c, enum_path.as_ref(), locals, registry, narrow, return_path))
         .collect();
     parse_quote!(match #disc { #(#arms)* })
 }
@@ -358,12 +401,13 @@ fn discriminated_match(
     type_name: &str,
     locals: &mut Locals,
     registry: &TypeRegistry,
+    return_path: Option<&Path>,
 ) -> Stmt {
     let scrut_ident = format_ident!("{}", scrut);
     let arms: Vec<Arm> = sw
         .cases
         .iter()
-        .filter_map(|c| discriminated_arm(c, scrut, type_name, locals, registry))
+        .filter_map(|c| discriminated_arm(c, scrut, type_name, locals, registry, return_path))
         .collect();
     parse_quote!(match #scrut_ident { #(#arms)* })
 }
@@ -377,6 +421,7 @@ fn discriminated_arm(
     type_name: &str,
     locals: &mut Locals,
     registry: &TypeRegistry,
+    return_path: Option<&Path>,
 ) -> Option<Arm> {
     let (pat, narrow) = match &c.test {
         Some(Expression::StringLiteral(s)) => {
@@ -394,7 +439,7 @@ fn discriminated_arm(
         }
         _ => (parse_quote!(_), Narrow::default()),
     };
-    let body = case_body(&c.consequent, locals, registry, &narrow);
+    let body = case_body(&c.consequent, locals, registry, &narrow, return_path);
     Some(parse_quote!(#pat => #body,))
 }
 
@@ -410,12 +455,13 @@ fn switch_arm(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    return_path: Option<&Path>,
 ) -> Option<Arm> {
     let pat = match &c.test {
         Some(test) => switch_pattern(test, enum_path),
         None => parse_quote!(_),
     };
-    let body = case_body(&c.consequent, locals, registry, narrow);
+    let body = case_body(&c.consequent, locals, registry, narrow, return_path);
     Some(parse_quote!(#pat => #body,))
 }
 
@@ -434,11 +480,17 @@ fn switch_pattern(test: &Expression, enum_path: Option<&syn::Path>) -> Pat {
     parse_quote!(#path::#variant)
 }
 
-fn case_body(stmts: &[Statement], locals: &mut Locals, registry: &TypeRegistry, narrow: &Narrow) -> Block {
+fn case_body(
+    stmts: &[Statement],
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+    return_path: Option<&Path>,
+) -> Block {
     let rust: Vec<Stmt> = stmts
         .iter()
         .filter(|s| !matches!(s, Statement::BreakStatement(_)))
-        .flat_map(|s| translate_stmt(s, locals, registry, narrow))
+        .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
         .collect();
     parse_quote!({ #(#rust)* })
 }

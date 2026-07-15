@@ -469,4 +469,12 @@ mod tests {
         assert!(rust.contains("xs[1.0 as usize..3.0 as usize].to_vec()"), "got:\n{rust}");
         assert!(rust.contains("xs[2.0 as usize..].to_vec()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_return_object_literal_to_struct_init() {
+        let src = "interface V { x: number; y: number; } function f(): V { return { x: 1, y: 2 }; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `return { … }` borrows the struct name from the return-type annotation.
+        assert!(rust.contains("V { x: 1.0, y: 2.0 }"), "got:\n{rust}");
+    }
 }

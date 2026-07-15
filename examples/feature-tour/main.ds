@@ -11,6 +11,10 @@ function magnitude(v: Vector): number {
   return Math.sqrt(v.x ** 2 + v.y ** 2);
 }
 
+function makeVector(x: number, y: number): Vector {
+  return { x: x, y: y };
+}
+
 function label(kind: Kind): string {
   switch (kind) {
     case "linear": return "linear";
@@ -35,6 +39,9 @@ function area(s: Shape): number {
 function main(): void {
   const v: Vector = { x: 3, y: 4 };
   console.log("magnitude:", magnitude(v));
+
+  const mv = makeVector(5, 6);
+  console.log("makeVector:", mv.x, mv.y);
   console.log("2^10:", 2 ** 10);
 
   const lin: Kind = "linear";
