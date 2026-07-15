@@ -251,4 +251,11 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".len()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_array_index() {
+        let src = "function f(): void { const xs: number[] = [1, 2]; console.log(xs[0]); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("xs[0.0 as usize]"), "got:\n{rust}");
+    }
 }

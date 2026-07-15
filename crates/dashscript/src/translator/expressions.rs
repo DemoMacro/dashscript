@@ -2,7 +2,8 @@
 
 use oxc_ast::ast::{
     Argument, ArrayExpression, ArrayExpressionElement, AssignmentExpression, AssignmentTarget,
-    BinaryExpression, CallExpression, ConditionalExpression, Expression, IdentifierReference, LogicalExpression,
+    BinaryExpression, CallExpression, ComputedMemberExpression, ConditionalExpression, Expression,
+    IdentifierReference, LogicalExpression,
     ObjectExpression, ObjectPropertyKind, SimpleAssignmentTarget, StaticMemberExpression,
     StringLiteral, TemplateLiteral, TSNonNullExpression, UnaryExpression, UpdateExpression,
 };
@@ -29,6 +30,7 @@ pub fn translate_expr(expr: &Expression) -> Expr {
         Expression::CallExpression(call) => translate_call(call),
         Expression::ArrayExpression(arr) => array_expr(arr),
         Expression::StaticMemberExpression(sm) => member_expr(sm),
+        Expression::ComputedMemberExpression(cm) => computed_member(cm),
         Expression::TemplateLiteral(t) => template_expr(t),
         Expression::BinaryExpression(bin) => binary_expr(bin),
         Expression::LogicalExpression(log) => logical_expr(log),
@@ -52,6 +54,7 @@ pub fn translate_argument(arg: &Argument) -> Expr {
         Argument::CallExpression(call) => translate_call(call),
         Argument::ArrayExpression(arr) => array_expr(arr),
         Argument::StaticMemberExpression(sm) => member_expr(sm),
+        Argument::ComputedMemberExpression(cm) => computed_member(cm),
         Argument::TemplateLiteral(t) => template_expr(t),
         Argument::BinaryExpression(bin) => binary_expr(bin),
         Argument::LogicalExpression(log) => logical_expr(log),
@@ -150,6 +153,21 @@ fn member_expr(sm: &StaticMemberExpression) -> Expr {
     }
     let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)
+}
+
+/// `arr[i]` → `arr[i as usize]`. A `.ds` index is `f64`; Rust indexes by
+/// `usize`, so the index is cast. Bounds are unchecked (panics out of range) —
+/// a safe `.get`-based mapping can come later.
+fn computed_member(cm: &ComputedMemberExpression) -> Expr {
+    let obj = translate_expr(&cm.object);
+    let idx = translate_expr(&cm.expression);
+    let idx = Expr::Cast(syn::ExprCast {
+        attrs: Vec::new(),
+        expr: Box::new(idx),
+        as_token: syn::Token![as](Span::call_site()),
+        ty: Box::new(parse_quote!(usize)),
+    });
+    parse_quote!(#obj[#idx])
 }
 
 fn ident_expr(id: &IdentifierReference) -> Expr {
