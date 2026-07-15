@@ -75,6 +75,10 @@ impl Manifest {
             out.push_str(&deps.join("\n"));
             out.push('\n');
         }
+        // An empty `[workspace]` table makes the emitted project its own
+        // workspace root, so it is never absorbed by a parent workspace (e.g.
+        // DashScript's own repo when `ds build` emits under `dist/`).
+        out.push_str("\n[workspace]\n");
         out
     }
 }

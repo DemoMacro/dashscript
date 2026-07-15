@@ -1,12 +1,12 @@
 //! `ds` — the DashScript toolchain entry point.
 //!
-//! Currently wired: `run`. Planned: `build`, `check`, `fmt`, `add`, `test`.
+//! Wired: `run`, `build`. Planned: `check`, `fmt`, `add`, `test`.
 
 use std::{
     error::Error,
     fs,
-    path::Path,
-    process::{Command, ExitCode},
+    path::{Path, PathBuf},
+    process::{Command, ExitCode, ExitStatus},
 };
 
 use dashscript::{Manifest, Translator};
@@ -15,83 +15,125 @@ fn main() -> ExitCode {
     let mut args = std::env::args().skip(1);
     match args.next().as_deref() {
         Some("run") => match args.next() {
-            Some(file) => match run(&file) {
-                Ok(code) => code,
-                Err(err) => {
-                    eprintln!("ds: {err}");
-                    ExitCode::FAILURE
-                }
-            },
-            None => {
-                eprintln!("usage: ds run <file.ds>");
-                ExitCode::FAILURE
-            }
+            Some(file) => run_cmd(&file, CommandKind::Run),
+            None => usage_exit("usage: ds run <file.ds>"),
+        },
+        Some("build") => match args.next() {
+            Some(file) => run_cmd(&file, CommandKind::Build),
+            None => usage_exit("usage: ds build <file.ds>"),
         },
         Some(other) => {
             eprintln!("ds: unknown subcommand '{other}'");
-            eprintln!("available: run <file.ds>");
+            eprintln!("available: run <file.ds>, build <file.ds>");
             ExitCode::FAILURE
         }
         None => {
             eprintln!("ds: DashScript toolchain");
             eprintln!("usage: ds <command> [args]");
-            eprintln!("commands: run <file.ds>");
+            eprintln!("commands: run <file.ds>, build <file.ds>");
             ExitCode::FAILURE
         }
     }
 }
 
-/// Build a `.ds` file into a Cargo project in a temp dir and `cargo run` it.
-///
-/// Translation emits `src/main.rs`; the sibling `manifest.json` (if present)
-/// is turned into `Cargo.toml`. Execution is delegated to the system `cargo`
-/// for now — a DashScript-managed Rust toolchain (downloaded on demand, no
-/// `rustup`) will replace this later.
-fn run(file: &str) -> Result<ExitCode, Box<dyn Error>> {
-    let path = Path::new(file);
-    let src = fs::read_to_string(path)
-        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+enum CommandKind {
+    Run,
+    Build,
+}
 
+fn run_cmd(file: &str, kind: CommandKind) -> ExitCode {
+    let result = match kind {
+        CommandKind::Run => run(file),
+        CommandKind::Build => build(file),
+    };
+    match result {
+        Ok(code) => code,
+        Err(err) => {
+            eprintln!("ds: {err}");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+fn usage_exit(msg: &str) -> ExitCode {
+    eprintln!("{msg}");
+    ExitCode::FAILURE
+}
+
+/// Translate a `.ds` file into a buildable Cargo project at `project_dir`.
+fn emit_cargo_project(src_path: &Path, project_dir: &Path) -> Result<(), Box<dyn Error>> {
+    let src = fs::read_to_string(src_path)
+        .map_err(|e| format!("cannot read {}: {e}", src_path.display()))?;
     let rust = Translator::new()
         .translate(&src)
-        .map_err(|e| format!("translate {}: {e}", path.display()))?;
+        .map_err(|e| format!("translate {}: {e}", src_path.display()))?;
+    let cargo_toml = resolve_manifest(src_path);
+    fs::create_dir_all(project_dir.join("src"))?;
+    fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
+    fs::write(project_dir.join("src").join("main.rs"), rust)?;
+    Ok(())
+}
 
-    // Resolve the manifest beside the source; fall back to the file's stem.
-    let dir = path.parent().unwrap_or_else(|| Path::new(""));
-    let cargo_toml = match fs::read_to_string(dir.join("manifest.json"))
+/// Resolve the Cargo manifest for `src_path`: the sibling `manifest.json` if
+/// present, otherwise a minimal manifest named after the file's stem.
+fn resolve_manifest(src_path: &Path) -> String {
+    let dir = src_path.parent().unwrap_or_else(|| Path::new(""));
+    if let Some(manifest) = fs::read_to_string(dir.join("manifest.json"))
         .ok()
         .and_then(|json| Manifest::from_json(&json).ok())
     {
-        Some(manifest) => manifest.to_cargo_toml(),
-        None => {
-            let manifest = Manifest {
-                name: path
-                    .file_stem()
-                    .and_then(|s| s.to_str())
-                    .unwrap_or("dashscript")
-                    .to_string(),
-                ..Manifest::default()
-            };
-            manifest.to_cargo_toml()
-        }
-    };
+        return manifest.to_cargo_toml();
+    }
+    let name = src_path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("dashscript");
+    Manifest {
+        name: name.to_string(),
+        ..Manifest::default()
+    }
+    .to_cargo_toml()
+}
 
-    // Emit a buildable Cargo project in the system temp dir.
+/// Build a `.ds` file into a Cargo project in a temp dir and `cargo run` it.
+///
+/// Execution is delegated to the system `cargo` for now — a DashScript-managed
+/// Rust toolchain (downloaded on demand, no `rustup`) will replace this later.
+fn run(file: &str) -> Result<ExitCode, Box<dyn Error>> {
+    let path = Path::new(file);
     let project = std::env::temp_dir().join(format!("dashscript-{}", std::process::id()));
-    let src_dir = project.join("src");
-    fs::create_dir_all(&src_dir)?;
-    fs::write(project.join("Cargo.toml"), cargo_toml)?;
-    fs::write(src_dir.join("main.rs"), rust)?;
+    emit_cargo_project(path, &project)?;
+    let status = invoke_cargo(&project, ["run", "--quiet"])?;
+    Ok(status_to_code(status))
+}
 
-    let status = Command::new("cargo")
-        .args(["run", "--quiet"])
-        .current_dir(&project)
+/// Emit a `.ds` file's Cargo project under `dist/<stem>/` and verify it with
+/// `cargo check` — the generated source is inspectable there.
+fn build(file: &str) -> Result<ExitCode, Box<dyn Error>> {
+    let path = Path::new(file);
+    let stem = path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .ok_or("invalid file path")?;
+    let project = PathBuf::from("dist").join(stem);
+    emit_cargo_project(path, &project)?;
+    println!("ds: emitted {}", project.display());
+    let status = invoke_cargo(&project, ["check", "--quiet"])?;
+    Ok(status_to_code(status))
+}
+
+fn invoke_cargo<const N: usize>(project: &Path, args: [&str; N]) -> Result<ExitStatus, Box<dyn Error>> {
+    Command::new("cargo")
+        .args(args)
+        .current_dir(project)
         .status()
-        .map_err(|e| format!("failed to invoke cargo (is it on PATH?): {e}"))?;
+        .map_err(|e| format!("failed to invoke cargo (is it on PATH?): {e}").into())
+}
 
-    Ok(if status.success() {
+fn status_to_code(status: ExitStatus) -> ExitCode {
+    if status.success() {
         ExitCode::SUCCESS
     } else {
         ExitCode::FAILURE
-    })
+    }
 }
