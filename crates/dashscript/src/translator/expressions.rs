@@ -2,7 +2,7 @@
 
 use oxc_ast::ast::{
     Argument, ArrayExpression, ArrayExpressionElement, AssignmentExpression, AssignmentTarget,
-    BinaryExpression, CallExpression, Expression, IdentifierReference, LogicalExpression,
+    BinaryExpression, CallExpression, ConditionalExpression, Expression, IdentifierReference, LogicalExpression,
     ObjectExpression, ObjectPropertyKind, SimpleAssignmentTarget, StaticMemberExpression,
     StringLiteral, TemplateLiteral, TSNonNullExpression, UnaryExpression, UpdateExpression,
 };
@@ -32,6 +32,7 @@ pub fn translate_expr(expr: &Expression) -> Expr {
         Expression::TemplateLiteral(t) => template_expr(t),
         Expression::BinaryExpression(bin) => binary_expr(bin),
         Expression::LogicalExpression(log) => logical_expr(log),
+        Expression::ConditionalExpression(c) => conditional_expr(c),
         Expression::UnaryExpression(un) => unary_expr(un),
         Expression::AssignmentExpression(a) => assignment_expr(a),
         Expression::UpdateExpression(u) => update_expr(u),
@@ -54,6 +55,7 @@ pub fn translate_argument(arg: &Argument) -> Expr {
         Argument::TemplateLiteral(t) => template_expr(t),
         Argument::BinaryExpression(bin) => binary_expr(bin),
         Argument::LogicalExpression(log) => logical_expr(log),
+        Argument::ConditionalExpression(c) => conditional_expr(c),
         Argument::UnaryExpression(un) => unary_expr(un),
         Argument::TSNonNullExpression(nn) => nonnull_expr(nn),
         _ => parse_quote!(::core::todo!()),
@@ -254,6 +256,14 @@ fn unary_expr(un: &UnaryExpression) -> Expr {
         }),
         _ => parse_quote!(::core::todo!()),
     }
+}
+
+/// `cond ? a : b` → `if cond { a } else { b }` — Rust's `if` is an expression.
+fn conditional_expr(c: &ConditionalExpression) -> Expr {
+    let test = translate_expr(&c.test);
+    let then = translate_expr(&c.consequent);
+    let els = translate_expr(&c.alternate);
+    parse_quote!(if #test { #then } else { #els })
 }
 
 /// `x = …`, `x += …`, … — only simple identifier targets (no `obj.x = …`).

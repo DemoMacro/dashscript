@@ -218,4 +218,23 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("Status::Done"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_ternary_to_if_expression() {
+        let src = "function f(x: number): string { return x > 0 ? \"pos\" : \"neg\"; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("if x > 0.0 {"), "got:\n{rust}");
+        assert!(rust.contains("\"pos\".to_string()"), "got:\n{rust}");
+        assert!(rust.contains("} else {"), "got:\n{rust}");
+        assert!(rust.contains("\"neg\".to_string()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_switch_to_match() {
+        let src = "type Status = \"pending\" | \"done\"; function f(s: Status): void { switch (s) { case \"pending\": console.log(\"p\"); break; default: console.log(\"?\"); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("match s"), "got:\n{rust}");
+        assert!(rust.contains("Status::Pending"), "got:\n{rust}");
+        assert!(rust.contains("_ =>"), "got:\n{rust}");
+    }
 }

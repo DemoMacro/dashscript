@@ -25,7 +25,12 @@ oxc_syntax = "0.140"
 
 # Rust source emission (translator) — pulled in when codegen lands.
 prettyplease = "0.2"
-syn = { version = "2", default-features = false, features = ["parsing", "printing", "full"] }
+syn = { version = "2", default-features = false, features = [
+  "parsing",
+  "printing",
+  "full",
+  "clone-impls",
+] }
 quote = "1"
 proc-macro2 = "1"
 
