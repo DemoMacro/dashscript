@@ -237,4 +237,18 @@ mod tests {
         assert!(rust.contains("Status::Pending"), "got:\n{rust}");
         assert!(rust.contains("_ =>"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_string_method_call() {
+        let src = "function f(): void { let s = \"hello\".toUpperCase(); console.log(s); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".to_string().to_uppercase()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_length_to_len() {
+        let src = "function f(): void { let n = \"hi\".length; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".len()"), "got:\n{rust}");
+    }
 }

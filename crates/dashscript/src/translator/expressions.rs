@@ -10,8 +10,8 @@ use oxc_syntax::operator::{
     AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator, UpdateOperator,
 };
 use proc_macro2::Span;
-use quote::quote;
-use syn::{parse_quote, parse_str, BinOp, Expr, Type, UnOp};
+use quote::{format_ident, quote};
+use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Type, UnOp};
 
 use super::{bindings, types};
 
@@ -144,6 +144,10 @@ fn array_element(elem: &ArrayExpressionElement) -> Option<Expr> {
 fn member_expr(sm: &StaticMemberExpression) -> Expr {
     let obj = translate_expr(&sm.object);
     let field_name: &str = &sm.property.name;
+    // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a field).
+    if field_name == "length" {
+        return parse_quote!(#obj.len());
+    }
     let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)
 }
@@ -326,9 +330,32 @@ fn translate_call(call: &CallExpression) -> Expr {
             _ => parse_quote!(::core::todo!()),
         };
     }
+    // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
+    if let Expression::StaticMemberExpression(sm) = &call.callee {
+        if let Some(method) = map_method(&sm.property.name) {
+            let obj = translate_expr(&sm.object);
+            let args: Vec<Expr> = call.arguments.iter().map(translate_argument).collect();
+            return parse_quote!(#obj.#method(#(#args),*));
+        }
+    }
     let callee = translate_expr(&call.callee);
     let args: Vec<Expr> = call.arguments.iter().map(translate_argument).collect();
     parse_quote!(#callee(#(#args),*))
+}
+
+/// A handful of TS method names map to a different Rust method name; the
+/// receiver and arguments are passed through unchanged. Unmapped methods fall
+/// through to a plain call on the receiver expression.
+fn map_method(name: &str) -> Option<Ident> {
+    let mapped = match name {
+        "toUpperCase" => "to_uppercase",
+        "toLowerCase" => "to_lowercase",
+        "trim" => "trim",
+        "push" => "push",
+        "pop" => "pop",
+        _ => return None,
+    };
+    Some(format_ident!("{}", mapped))
 }
 
 /// True when `callee` is `console.log` (a static member access).
