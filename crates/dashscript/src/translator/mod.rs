@@ -461,4 +461,12 @@ mod tests {
             "got:\n{rust}"
         );
     }
+
+    #[test]
+    fn translates_array_slice_to_index_range_to_vec() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3, 4]; const ys = xs.slice(1, 3); const zs = xs.slice(2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("xs[1.0 as usize..3.0 as usize].to_vec()"), "got:\n{rust}");
+        assert!(rust.contains("xs[2.0 as usize..].to_vec()"), "got:\n{rust}");
+    }
 }

@@ -673,17 +673,12 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     parse_quote!(#callee(#(#args),*))
 }
 
-/// `xs.map(f)` / `xs.filter(f)` on a `Vec` of Copy elements →
-/// `xs.iter().copied().<method>(f).collect::<Vec<_>>()`. `.copied()` gives
-/// `.map` owned values (`.ds` `number`/`boolean` are Copy), matching the TS
-/// callback signature; `.filter`'s closure still receives `&Item`, so its
-/// param is destructured (`|&n|`). Returns `None` otherwise.
+/// Array methods on a `Vec` of Copy elements: `.map`/`.filter` take a callback
+/// (`xs.iter().copied().<m>(f).collect::<Vec<_>>()`, with `.filter`'s param
+/// destructured since its closure receives `&Item`); `.slice(a, b)` →
+/// `xs[a as usize..b as usize].to_vec()` (`.slice(a)` / `.slice()` clamp the
+/// range / clone). Returns `None` otherwise.
 fn array_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    let borrow = match sm.property.name.as_str() {
-        "map" => false,
-        "filter" => true,
-        _ => return None,
-    };
     let Expression::Identifier(id) = &sm.object else {
         return None;
     };
@@ -693,16 +688,30 @@ fn array_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -
     if !is_vec {
         return None;
     }
-    let method = format_ident!("{}", sm.property.name.as_str());
-    let callback = if borrow {
-        let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-            return None;
-        };
-        arrow_expr(arrow, ctx, true)
-    } else {
-        translate_argument(args.first()?, ctx)
-    };
-    Some(parse_quote!(#recv.iter().copied().#method(#callback).collect::<Vec<_>>()))
+    Some(match sm.property.name.as_str() {
+        "map" => {
+            let cb = translate_argument(args.first()?, ctx);
+            parse_quote!(#recv.iter().copied().map(#cb).collect::<Vec<_>>())
+        }
+        "filter" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, true);
+            parse_quote!(#recv.iter().copied().filter(#cb).collect::<Vec<_>>())
+        }
+        // `.ds` indices are `f64`; cast each bound to `usize`.
+        "slice" => {
+            let start = args.first().map(|a| usize_arg(a, ctx));
+            let end = args.get(1).map(|a| usize_arg(a, ctx));
+            match (start, end) {
+                (Some(s), Some(e)) => parse_quote!(#recv[#s..#e].to_vec()),
+                (Some(s), None) => parse_quote!(#recv[#s..].to_vec()),
+                (None, _) => parse_quote!(#recv.clone()),
+            }
+        }
+        _ => return None,
+    })
 }
 
 /// A handful of TS method names map to a different Rust method name; the
