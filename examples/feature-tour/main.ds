@@ -28,8 +28,9 @@ function main(): void {
   console.log("magnitude:", magnitude(v));
   console.log("2^10:", 2 ** 10);
 
-  const k: Kind = "rotational";
-  console.log("kind:", label(k));
+  const lin: Kind = "linear";
+  const rot: Kind = "rotational";
+  console.log("kinds:", label(lin), label(rot));
 
   const u: Vector = { x: 1, y: 2 };
   console.log(describe(u));
@@ -70,7 +71,7 @@ function main(): void {
   } else {
     console.log("empty");
   }
-  let maybe: number | null = 42;
+  const maybe: number | null = 42;
   if (maybe) {
     console.log("set:", maybe!);
   }
