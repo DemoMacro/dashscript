@@ -4,9 +4,10 @@ use std::collections::HashMap;
 
 use oxc_ast::ast::{
     Expression, FormalParameters, ForOfStatement, ForStatementLeft, Function, FunctionBody,
-    IfStatement, Statement, SwitchCase, SwitchStatement, TSType, VariableDeclaration,
-    VariableDeclarationKind, WhileStatement,
+    IfStatement, Statement, SwitchCase, SwitchStatement, TSType, UnaryExpression,
+    VariableDeclaration, VariableDeclarationKind, WhileStatement,
 };
+use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, Pat, ReturnType, Stmt, Type};
@@ -124,7 +125,7 @@ fn translate_stmt(stmt: &Statement, locals: &mut Locals) -> Vec<Stmt> {
 }
 
 fn translate_if(stmt: &IfStatement, locals: &mut Locals) -> Stmt {
-    let cond = expressions::translate_expr(&stmt.test);
+    let cond = condition_expr(&stmt.test, locals);
     let then_block = statement_block(&stmt.consequent, locals);
     match &stmt.alternate {
         Some(alt) => {
@@ -136,9 +137,55 @@ fn translate_if(stmt: &IfStatement, locals: &mut Locals) -> Stmt {
 }
 
 fn translate_while(stmt: &WhileStatement, locals: &mut Locals) -> Stmt {
-    let cond = expressions::translate_expr(&stmt.test);
+    let cond = condition_expr(&stmt.test, locals);
     let body = statement_block(&stmt.body, locals);
     parse_quote!(while #cond #body)
+}
+
+/// Translate an `if`/`while` test. A bare identifier of a `Vec`/`String` type
+/// maps to an emptiness check, and an `Option` maps to `is_some`; negation flips
+/// to `is_empty`/`is_none`. Anything else translates as a plain boolean expr.
+fn condition_expr(test: &Expression, locals: &Locals) -> Expr {
+    if let Some(expr) = truthiness(test, false, locals) {
+        return expr;
+    }
+    if let Expression::UnaryExpression(un) = test {
+        if matches!(un.operator, UnaryOperator::LogicalNot) {
+            if let Some(expr) = truthiness(&un.argument, true, locals) {
+                return expr;
+            }
+        }
+    }
+    expressions::translate_expr(test)
+}
+
+/// If `expr` is a bare identifier of a collection (`Vec`/`String`) or `Option`
+/// type, return its Rust boolean form. `negated` selects the falsy side
+/// (`is_empty`/`is_none`) vs the truthy side (`!is_empty`/`is_some`).
+fn truthiness(expr: &Expression, negated: bool, locals: &Locals) -> Option<Expr> {
+    let Expression::Identifier(id) = expr else {
+        return None;
+    };
+    let ident = bindings::snake(&id.name);
+    let last = locals
+        .get(&ident.to_string())?
+        .segments
+        .last()?
+        .ident
+        .to_string();
+    match last.as_str() {
+        "Vec" | "String" => Some(if negated {
+            parse_quote!(#ident.is_empty())
+        } else {
+            parse_quote!(!#ident.is_empty())
+        }),
+        "Option" => Some(if negated {
+            parse_quote!(#ident.is_none())
+        } else {
+            parse_quote!(#ident.is_some())
+        }),
+        _ => None,
+    }
 }
 
 /// `for (const v of xs)` → `for &v in &xs { … }`.

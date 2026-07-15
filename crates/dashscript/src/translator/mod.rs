@@ -269,6 +269,20 @@ mod tests {
     }
 
     #[test]
+    fn translates_if_collection_truthiness() {
+        let src = "function f(): void { const xs: number[] = [1]; if (xs) { console.log(1); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("xs.is_empty()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_if_option_truthiness() {
+        let src = "function f(): void { let m: number | null = 1; if (m) { console.log(1); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("m.is_some()"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_compound_append() {
         let src = "function f(): void { let s = \"a\"; s += \"bc\"; console.log(s); }";
         let rust = Translator::new().translate(src).expect("should translate");
