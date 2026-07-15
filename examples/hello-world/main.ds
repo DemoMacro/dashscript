@@ -1,7 +1,12 @@
-// hello-world — a minimal DashScript program.
+// hello-world — data modeling in DashScript.
 //
-// `function main` is the entry point; `console.log` prints to stdout.
+// `interface Point` becomes a Rust `struct Point`; the object literal becomes
+// a struct literal; `p.x` / `p.y` map one-to-one to Rust field access.
+
+interface Point { x: number; y: number }
 
 function main(): void {
-  console.log("Hello, world!");
+  const p: Point = { x: 3, y: 4 };
+  console.log(p.x);
+  console.log(p.y);
 }

@@ -1,13 +1,14 @@
 //! oxc AST → idiomatic Rust source, emitted through `syn` + `prettyplease`.
 //!
-//! Translation is one file per AST category — `functions`, `types`,
-//! `expressions`, `bindings` — so each oxc node maps to a `syn` node
+//! Translation is one file per AST category — `declarations`, `functions`,
+//! `types`, `expressions`, `bindings` — so each oxc node maps to a `syn` node
 //! one-to-one. The `syn` tree is the project's hub: the translator builds it
 //! (oxc → syn), `prettyplease` prints it, and the future `bindgen` parses
 //! Rust crates into the same `syn` tree (syn → .ds) — one AST, two
 //! directions. Parsing reuses `oxc_parser`; DashScript never parses itself.
 
 pub mod bindings;
+pub mod declarations;
 pub mod expressions;
 pub mod functions;
 pub mod types;
@@ -68,5 +69,45 @@ mod tests {
     #[test]
     fn reports_parse_diagnostics() {
         assert!(Translator::new().translate("function (").is_err());
+    }
+
+    #[test]
+    fn translates_interface_to_struct() {
+        let src = "interface Point { x: number; y: number; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("struct Point"), "got:\n{rust}");
+        assert!(rust.contains("pub x: f64"), "got:\n{rust}");
+        assert!(rust.contains("pub y: f64"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_type_to_vec() {
+        let src = "interface Box { items: number[]; ids: Array<string>; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("Vec<f64>"), "got:\n{rust}");
+        assert!(rust.contains("Vec<String>"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_locals_object_literal_and_field_access() {
+        let src =
+            "interface Point { x: number } function main(): void { const p: Point = { x: 1 }; console.log(p.x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("Point { x: 1.0 }"), "got:\n{rust}");
+        assert!(rust.contains("p.x"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_mutable_let_as_let_mut() {
+        let src = "function main(): void { let n: number = 0; console.log(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let mut n"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_literal_to_vec_macro() {
+        let src = "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("vec![1.0, 2.0, 3.0]"), "got:\n{rust}");
     }
 }

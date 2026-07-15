@@ -1,7 +1,8 @@
 # hello-world
 
 A minimal [DashScript](https://github.com/DemoMacro/dashscript) project —
-the smallest program that exercises the translator today.
+data modeling end to end: an `interface` becomes a Rust `struct`, an object
+literal becomes a struct literal, and field access maps one-to-one.
 
 ## Files
 
@@ -21,7 +22,8 @@ ds run main.ds       # parse → translate → emit a Cargo project → cargo ru
 Output:
 
 ```
-Hello, world!
+3
+4
 ```
 
 `ds run` delegates execution to `cargo`, so a Rust toolchain must be on
@@ -32,8 +34,15 @@ Hello, world!
 `main.ds` maps to roughly:
 
 ```rust
+struct Point {
+    pub x: f64,
+    pub y: f64,
+}
+
 fn main() {
-    println!("{}", "Hello, world!".to_string());
+    let p = Point { x: 3.0, y: 4.0 };
+    println!("{}", p.x);
+    println!("{}", p.y);
 }
 ```
 
