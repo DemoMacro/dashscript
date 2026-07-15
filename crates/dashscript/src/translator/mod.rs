@@ -486,4 +486,11 @@ mod tests {
         assert!(rust.contains(".split(\",\")"), "got:\n{rust}");
         assert!(rust.contains(".collect::<Vec<String>>()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_object_destructuring_to_struct_pattern() {
+        let src = "interface V { x: number; y: number; } function f(v: V): number { const { x, y } = v; return x + y; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let V { x, y } = v;"), "got:\n{rust}");
+    }
 }

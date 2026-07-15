@@ -1,9 +1,10 @@
 //! Function & variable declarations, and statement translation → `syn`.
 
 use oxc_ast::ast::{
-    DoWhileStatement, Expression, FormalParameters, ForOfStatement, ForStatement,
-    ForStatementInit, ForStatementLeft, Function, FunctionBody, IfStatement, Statement, SwitchCase,
-    SwitchStatement, TSType, VariableDeclaration, VariableDeclarationKind, WhileStatement,
+    BindingPattern, DoWhileStatement, Expression, FormalParameters, ForOfStatement, ForStatement,
+    ForStatementInit, ForStatementLeft, Function, FunctionBody, IfStatement, ObjectPattern,
+    Statement, SwitchCase, SwitchStatement, TSType, VariableDeclaration, VariableDeclarationKind,
+    WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
@@ -496,6 +497,7 @@ fn case_body(
 }
 
 /// `let x` → `let mut x` (TS `let` is mutable); `const`/`var` → `let`.
+/// An object pattern (`const { x, y } = v`) destructures the struct.
 fn translate_variable_declaration(
     decl: &VariableDeclaration,
     locals: &mut Locals,
@@ -505,23 +507,72 @@ fn translate_variable_declaration(
     let mutable = matches!(decl.kind, VariableDeclarationKind::Let);
     decl.declarations
         .iter()
-        .map(|d| {
-            let name = bindings::binding_name(&d.id);
-            let ty = d
-                .type_annotation
-                .as_ref()
-                .map(|ta| types::translate_type(&ta.type_annotation));
-            if let Some(ty) = &ty {
-                if let Some(path) = path_of(ty) {
-                    locals.insert(name.to_string(), path);
-                }
+        .map(|d| match &d.id {
+            BindingPattern::ObjectPattern(obj) => {
+                destructure_object(obj, d.init.as_ref(), locals, mutable, registry, narrow)
             }
-            let init = d.init.as_ref().map(|e| {
-                expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry, narrow))
-            });
-            build_local(&name, mutable, ty.as_ref(), init.as_ref())
+            _ => {
+                let name = bindings::binding_name(&d.id);
+                let ty = d
+                    .type_annotation
+                    .as_ref()
+                    .map(|ta| types::translate_type(&ta.type_annotation));
+                if let Some(ty) = &ty {
+                    if let Some(path) = path_of(ty) {
+                        locals.insert(name.to_string(), path);
+                    }
+                }
+                let init = d.init.as_ref().map(|e| {
+                    expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry, narrow))
+                });
+                build_local(&name, mutable, ty.as_ref(), init.as_ref())
+            }
         })
         .collect()
+}
+
+/// `const { x, y } = v` → `let Vector { x, y } = v;` (or `mut x, mut y` for
+/// `let`). The struct name comes from `v`'s type in the locals table, so only a
+/// plain-identifier source is supported. Fields keep their names (snake-case);
+/// their types aren't registered yet — the source struct must hold scalars.
+fn destructure_object(
+    obj: &ObjectPattern,
+    init: Option<&Expression>,
+    locals: &mut Locals,
+    mutable: bool,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Stmt {
+    let Some(init_expr) = init else {
+        return parse_quote!(let _ = ::core::todo!(););
+    };
+    let value = expressions::translate_expr(init_expr, &Ctx::new(&*locals, registry, narrow));
+    let Some(path) = expr_type_path(init_expr, locals) else {
+        return parse_quote!(let _ = #value;);
+    };
+    let fields: Vec<TokenStream> = obj
+        .properties
+        .iter()
+        .filter_map(|p| {
+            let name = bindings::property_key_name(&p.key)?;
+            if mutable {
+                Some(quote!(mut #name))
+            } else {
+                Some(quote!(#name))
+            }
+        })
+        .collect();
+    parse_quote!(let #path { #(#fields),* } = #value;)
+}
+
+/// The `syn::Path` of an expression's type, when the expression is a plain
+/// identifier local whose type is known — used to name the struct in a
+/// destructure.
+fn expr_type_path(expr: &Expression, locals: &Locals) -> Option<syn::Path> {
+    let Expression::Identifier(id) = expr else {
+        return None;
+    };
+    locals.get(&bindings::snake(&id.name).to_string()).cloned()
 }
 
 /// Extract the path of a `Type::Path`, if any.
