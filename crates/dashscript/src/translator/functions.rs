@@ -4,8 +4,8 @@ use std::collections::HashMap;
 
 use oxc_ast::ast::{
     Expression, FormalParameters, ForOfStatement, ForStatementLeft, Function, FunctionBody,
-    IfStatement, Statement, SwitchCase, SwitchStatement, TSType, UnaryExpression,
-    VariableDeclaration, VariableDeclarationKind, WhileStatement,
+    IfStatement, Statement, SwitchCase, SwitchStatement, TSType, VariableDeclaration,
+    VariableDeclarationKind, WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
