@@ -393,14 +393,10 @@ fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
 /// its arguments to a plain Rust call expression.
 fn translate_call(call: &CallExpression) -> Expr {
     if is_console_log(&call.callee) {
-        return match call.arguments.as_slice() {
-            [arg] => {
-                let value = translate_argument(arg);
-                parse_quote!(::std::println!("{}", #value))
-            }
-            // multi-arg `console.*` is not mapped yet
-            _ => parse_quote!(::core::todo!()),
-        };
+        let vals: Vec<Expr> = call.arguments.iter().map(translate_argument).collect();
+        let placeholders: String = vals.iter().map(|_| "{}").collect::<Vec<_>>().join(" ");
+        let fmt = syn::LitStr::new(&placeholders, Span::call_site());
+        return parse_quote!(::std::println!(#fmt, #(#vals),*));
     }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {

@@ -269,6 +269,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_multi_arg_console_log() {
+        let src = "function f(): void { console.log(\"x\", 1, true); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("\"{} {} {}\""), "got:\n{rust}");
+        assert!(!rust.contains("todo!"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_if_collection_truthiness() {
         let src = "function f(): void { const xs: number[] = [1]; if (xs) { console.log(1); } }";
         let rust = Translator::new().translate(src).expect("should translate");
