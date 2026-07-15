@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = ["crates/*", "apps/*"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2021"
+authors = ["Demo Macro <abc@imst.xyz>"]
+license = "MIT"
+repository = "https://github.com/DemoMacro/dashscript"
+homepage = "https://github.com/DemoMacro/dashscript"
+description = "A TypeScript-frontend language that transpiles to idiomatic Rust"
+keywords = ["typescript", "rust", "transpiler", "compiler"]
+categories = ["compilers", "development-tools"]
+
+[workspace.dependencies]
+dashscript = { path = "crates/dashscript" }
+
+# oxc — reused for parsing / lint / format. DashScript never reimplements these.
+oxc_allocator = "0.140"
+oxc_parser = "0.140"
+oxc_ast = "0.140"
+oxc_span = "0.140"
+
+# Rust source emission (translator) — pulled in when codegen lands.
+prettyplease = "0.2"
+syn = { version = "2", default-features = false, features = ["parsing", "printing", "full"] }
+quote = "1"
+proc-macro2 = "1"
+
+# manifest.json → Cargo.toml
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+
+[profile.release]
+# A transpiler CLI: optimize the generated-binary experience.
+opt-level = 3
+lto = "thin"
+codegen-units = 1

@@ -1,0 +1,38 @@
+{
+  "name": "@dashscript/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/DemoMacro/dashscript#readme",
+  "bugs": {
+    "url": "https://github.com/DemoMacro/dashscript/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Demo Macro",
+    "email": "abc@imst.xyz",
+    "url": "https://www.demomacro.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoMacro/dashscript.git"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter \"./packages/**\" -r dev",
+    "demo": "pnpm --filter @dashscript/editor demo",
+    "build": "pnpm --filter \"./packages/**\" -r build",
+    "check": "vp check --fix",
+    "test": "vp test run",
+    "bench": "vp test bench",
+    "version": "pnpm --filter \"./packages/**\" -r exec basis version",
+    "publish": "pnpm --filter \"./packages/**\" -r exec basis publish",
+    "postinstall": "pnpm build && vp config && basis git setup"
+  },
+  "devDependencies": {
+    "@funish/basis": "0.3.0",
+    "@types/node": "26.1.1",
+    "vite-plus": "0.2.4"
+  }
+}

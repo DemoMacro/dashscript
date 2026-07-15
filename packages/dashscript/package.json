@@ -1,0 +1,47 @@
+{
+  "name": "dashscript",
+  "version": "0.0.0",
+  "description": "A TypeScript-frontend language that transpiles to idiomatic Rust.",
+  "keywords": [
+    "compiler",
+    "oxc",
+    "rust",
+    "transpiler",
+    "typescript"
+  ],
+  "homepage": "https://github.com/DemoMacro/dashscript#readme",
+  "bugs": {
+    "url": "https://github.com/DemoMacro/dashscript/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Demo Macro",
+    "email": "abc@imst.xyz",
+    "url": "https://www.demomacro.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoMacro/dashscript.git"
+  },
+  "bin": {
+    "ds": "dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "vp pack -w",
+    "build": "vp pack",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {}
+}

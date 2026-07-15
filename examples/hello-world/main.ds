@@ -1,0 +1,7 @@
+// hello-world — a minimal DashScript program.
+//
+// `function main` is the entry point; `console.log` prints to stdout.
+
+function main(): void {
+  console.log("Hello, world!");
+}
