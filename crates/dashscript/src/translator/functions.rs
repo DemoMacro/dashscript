@@ -3,9 +3,9 @@
 use std::collections::HashMap;
 
 use oxc_ast::ast::{
-    Expression, FormalParameters, ForOfStatement, ForStatement, ForStatementInit,
-    ForStatementLeft, Function, FunctionBody, IfStatement, Statement, SwitchCase, SwitchStatement,
-    TSType, VariableDeclaration, VariableDeclarationKind, WhileStatement,
+    DoWhileStatement, Expression, FormalParameters, ForOfStatement, ForStatement,
+    ForStatementInit, ForStatementLeft, Function, FunctionBody, IfStatement, Statement, SwitchCase,
+    SwitchStatement, TSType, VariableDeclaration, VariableDeclarationKind, WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
@@ -118,6 +118,7 @@ fn translate_stmt(stmt: &Statement, locals: &mut Locals) -> Vec<Stmt> {
         Statement::VariableDeclaration(decl) => translate_variable_declaration(decl, locals),
         Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt, locals)],
         Statement::WhileStatement(while_stmt) => vec![translate_while(while_stmt, locals)],
+        Statement::DoWhileStatement(dws) => vec![translate_do_while(dws, locals)],
         Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals),
         Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals),
         Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals)],
@@ -143,6 +144,19 @@ fn translate_while(stmt: &WhileStatement, locals: &mut Locals) -> Stmt {
     let cond = condition_expr(&stmt.test, locals);
     let body = statement_block(&stmt.body, locals);
     parse_quote!(while #cond #body)
+}
+
+/// `do { body } while (test)` → `loop { body; if !(test) { break; } }` — Rust
+/// has no do-while, so the body runs once then the test gates each repeat.
+fn translate_do_while(stmt: &DoWhileStatement, locals: &mut Locals) -> Stmt {
+    let body = statement_block(&stmt.body, locals);
+    let test = condition_expr(&stmt.test, locals);
+    parse_quote!(loop {
+        #body
+        if !(#test) {
+            break;
+        }
+    })
 }
 
 /// Translate an `if`/`while` test. A bare identifier of a `Vec`/`String` type

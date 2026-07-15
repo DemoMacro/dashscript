@@ -210,6 +210,16 @@ fn math_constant(name: &str) -> Option<Expr> {
     syn::parse2(path).ok()
 }
 
+/// Base of `**`: a numeric literal gets an `_f64` suffix so `2 ** 3` isn't an
+/// ambiguous `{float}` receiver; any other operand translates normally.
+fn pow_receiver(expr: &Expression) -> Expr {
+    if let Expression::NumericLiteral(n) = expr {
+        let s = format!("{}_f64", n.value);
+        return parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN));
+    }
+    translate_expr(expr)
+}
+
 /// `arr[i]` → `arr[i as usize]`. A `.ds` index is `f64`; Rust indexes by
 /// `usize`, so the index is cast. Bounds are unchecked (panics out of range) —
 /// a safe `.get`-based mapping can come later.
@@ -305,6 +315,13 @@ fn template_expr(t: &TemplateLiteral) -> Expr {
 fn binary_expr(bin: &BinaryExpression) -> Expr {
     if matches!(bin.operator, BinaryOperator::Addition) && concat_is_string(bin) {
         return string_concat(bin);
+    }
+    // `a ** b` → `a.powf(b)`; a numeric-literal base gets an `_f64` suffix so
+    // `2 ** 3` isn't an ambiguous `{float}` receiver.
+    if matches!(bin.operator, BinaryOperator::Exponential) {
+        let base = pow_receiver(&bin.left);
+        let exp = translate_expr(&bin.right);
+        return parse_quote!(#base.powf(#exp));
     }
     let left = translate_expr(&bin.left);
     let right = translate_expr(&bin.right);

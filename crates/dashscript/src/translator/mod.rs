@@ -269,6 +269,21 @@ mod tests {
     }
 
     #[test]
+    fn translates_exponent_operator() {
+        let src = "function f(x: number): number { return x ** 2; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".powf(2.0)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_do_while() {
+        let src = "function f(): void { let i = 0; do { i++; } while (i < 3); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("loop {"), "got:\n{rust}");
+        assert!(rust.contains("break"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_predicate_methods() {
         let src = "function f(s: string): boolean { return s.includes(\"x\") && s.startsWith(\"a\"); }";
         let rust = Translator::new().translate(src).expect("should translate");
