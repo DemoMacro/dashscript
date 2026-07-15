@@ -171,22 +171,35 @@ fn math_method(name: &str, args: &[Argument]) -> Option<Expr> {
     match name {
         "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp" | "ln" => {
             let recv = math_receiver(args.first()?);
-            let m = format_ident!("{}", name);
-            Some(parse_quote!(#recv.#m()))
+            Some(method_call(recv, name, Vec::new()))
         }
         "max" | "min" => {
             let a = math_receiver(args.first()?);
             let b = translate_argument(args.get(1)?);
-            let m = format_ident!("{}", name);
-            Some(parse_quote!(#a.#m(#b)))
+            Some(method_call(a, name, vec![b]))
         }
         "pow" => {
             let a = math_receiver(args.first()?);
             let b = translate_argument(args.get(1)?);
-            Some(parse_quote!(#a.powf(#b)))
+            Some(method_call(a, "powf", vec![b]))
         }
         _ => None,
     }
+}
+
+/// Build `recv.method(args)` as an `ExprMethodCall` so `prettyplease`
+/// parenthesizes the receiver by precedence — `(a + b).sqrt()`, not
+/// `a + b.sqrt()` (which would bind `.sqrt()` to `b` only).
+fn method_call(recv: Expr, method: &str, args: Vec<Expr>) -> Expr {
+    Expr::MethodCall(syn::ExprMethodCall {
+        attrs: Vec::new(),
+        receiver: Box::new(recv),
+        dot_token: Default::default(),
+        method: format_ident!("{}", method),
+        turbofish: None,
+        args: args.into_iter().collect(),
+        paren_token: Default::default(),
+    })
 }
 
 /// A `Math.` receiver: a numeric literal gets an `_f64` suffix so a bare
