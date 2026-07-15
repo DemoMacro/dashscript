@@ -269,6 +269,24 @@ mod tests {
     }
 
     #[test]
+    fn translates_string_predicate_methods() {
+        let src = "function f(s: string): boolean { return s.includes(\"x\") && s.startsWith(\"a\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".contains(\"x\")"), "got:\n{rust}");
+        assert!(rust.contains(".starts_with(\"a\")"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_string_repeat_and_replace() {
+        let repeat = "function f(s: string): string { return s.repeat(3); }";
+        let rust = Translator::new().translate(repeat).expect("should translate");
+        assert!(rust.contains(".repeat(3.0 as usize)"), "got:\n{rust}");
+        let replace = "function g(s: string): string { return s.replace(\"a\", \"b\"); }";
+        let rust = Translator::new().translate(replace).expect("should translate");
+        assert!(rust.contains(".replacen(\"a\", \"b\", 1)"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_c_style_for_loop() {
         let src = "function f(): void { let total = 0; for (let i = 0; i < 5; i++) { total += i; } console.log(total); }";
         let rust = Translator::new().translate(src).expect("should translate");

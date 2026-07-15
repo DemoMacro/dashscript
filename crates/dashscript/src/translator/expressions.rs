@@ -491,6 +491,9 @@ fn translate_call(call: &CallExpression) -> Expr {
     }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
+        if let Some(expr) = string_method(sm, call.arguments.as_slice()) {
+            return expr;
+        }
         if let Some(method) = map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object);
             let args: Vec<Expr> = call.arguments.iter().map(translate_argument).collect();
@@ -515,6 +518,57 @@ fn map_method(name: &str) -> Option<Ident> {
         _ => return None,
     };
     Some(format_ident!("{}", mapped))
+}
+
+/// String methods whose arguments need adapting to Rust's `&str`-oriented API:
+/// `includes`/`startsWith`/`endsWith` → `contains`/`starts_with`/`ends_with`;
+/// `replace` → `replacen(.., 1)` (TS replaces the first match only); `repeat`
+/// → `repeat(n as usize)`. Returns `None` for unmapped names.
+fn string_method(sm: &StaticMemberExpression, args: &[Argument]) -> Option<Expr> {
+    let obj = translate_expr(&sm.object);
+    let name: &str = &sm.property.name;
+    Some(match name {
+        "includes" => {
+            let a = str_method_arg(args.first()?);
+            parse_quote!(#obj.contains(#a))
+        }
+        "startsWith" => {
+            let a = str_method_arg(args.first()?);
+            parse_quote!(#obj.starts_with(#a))
+        }
+        "endsWith" => {
+            let a = str_method_arg(args.first()?);
+            parse_quote!(#obj.ends_with(#a))
+        }
+        "replace" => {
+            let a = str_method_arg(args.first()?);
+            let b = str_method_arg(args.get(1)?);
+            parse_quote!(#obj.replacen(#a, #b, 1))
+        }
+        "repeat" => {
+            let n = usize_arg(args.first()?);
+            parse_quote!(#obj.repeat(#n))
+        }
+        _ => return None,
+    })
+}
+
+/// A string-method argument as a `&str`: a string literal stays a bare literal
+/// (a perfect `Pattern`); any other expression (a `String` var or call) gets
+/// `.as_str()` so it satisfies Rust's `&str`-typed string APIs.
+fn str_method_arg(arg: &Argument) -> Expr {
+    if let Argument::StringLiteral(s) = arg {
+        let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+        return parse_quote!(#lit);
+    }
+    let e = translate_argument(arg);
+    parse_quote!(#e.as_str())
+}
+
+/// A `.ds` `number` argument cast to `usize` (e.g. for `repeat`).
+fn usize_arg(arg: &Argument) -> Expr {
+    let e = translate_argument(arg);
+    parse_quote!(#e as usize)
 }
 
 /// True when `callee` is `console.log` (a static member access).
