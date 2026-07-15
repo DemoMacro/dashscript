@@ -758,6 +758,11 @@ fn string_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) 
             let n = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.repeat(#n))
         }
+        "split" => {
+            // `split` yields `&str`; map to owned so the result is `Vec<String>`.
+            let delim = str_method_arg(args.first()?, ctx);
+            parse_quote!(#obj.split(#delim).map(|part| part.to_string()).collect::<Vec<String>>())
+        }
         _ => return None,
     })
 }

@@ -63,6 +63,10 @@ function main(): void {
   console.log(greeting.includes("World"));
   console.log("ab".repeat(3));
 
+  // string → string[]: split maps to split().map(to_string).collect()
+  const parts = "a,b,c".split(",");
+  console.log("split:", parts.length);
+
   // arrow function as a value
   const square = (n: number) => n * n;
   console.log("square:", square(9));

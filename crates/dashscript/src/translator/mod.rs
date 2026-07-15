@@ -477,4 +477,13 @@ mod tests {
         // `return { … }` borrows the struct name from the return-type annotation.
         assert!(rust.contains("V { x: 1.0, y: 2.0 }"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_string_split_to_vec_string() {
+        let src = "function f(): void { const parts = \"a,b,c\".split(\",\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `split` yields &str; mapped to owned so the result is Vec<String>.
+        assert!(rust.contains(".split(\",\")"), "got:\n{rust}");
+        assert!(rust.contains(".collect::<Vec<String>>()"), "got:\n{rust}");
+    }
 }
