@@ -41,6 +41,9 @@ pub fn translate_expr(expr: &Expression) -> Expr {
         Expression::UpdateExpression(u) => update_expr(u),
         Expression::TSNonNullExpression(nn) => nonnull_expr(nn),
         Expression::ArrowFunctionExpression(arrow) => arrow_expr(arrow),
+        // User-written parens are unwrapped; `prettyplease` re-adds any needed
+        // for precedence (e.g. `(a + b) * c` round-trips correctly).
+        Expression::ParenthesizedExpression(p) => translate_expr(&p.expression),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -64,6 +67,7 @@ pub fn translate_argument(arg: &Argument) -> Expr {
         Argument::UnaryExpression(un) => unary_expr(un),
         Argument::TSNonNullExpression(nn) => nonnull_expr(nn),
         Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow),
+        Argument::ParenthesizedExpression(p) => translate_expr(&p.expression),
         _ => parse_quote!(::core::todo!()),
     }
 }

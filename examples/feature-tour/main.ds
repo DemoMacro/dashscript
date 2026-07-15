@@ -1,0 +1,77 @@
+// feature-tour — a tour of the DashScript subset that transpiles to idiomatic Rust.
+
+interface Vector {
+  x: number;
+  y: number;
+}
+
+type Kind = "linear" | "rotational";
+
+function magnitude(v: Vector): number {
+  return Math.sqrt(v.x ** 2 + v.y ** 2);
+}
+
+function label(kind: Kind): string {
+  switch (kind) {
+    case "linear": return "linear";
+    case "rotational": return "rotational";
+  }
+}
+
+function describe(v: Vector): string {
+  const mag = magnitude(v);
+  return "magnitude " + mag + " => " + (mag > 5 ? "large" : "small");
+}
+
+function main(): void {
+  const v: Vector = { x: 3, y: 4 };
+  console.log("magnitude:", magnitude(v));
+  console.log("2^10:", 2 ** 10);
+
+  const k: Kind = "rotational";
+  console.log("kind:", label(k));
+
+  const u: Vector = { x: 1, y: 2 };
+  console.log(describe(u));
+
+  // string methods + concatenation
+  const greeting = "Hello, World";
+  console.log(greeting.toLowerCase());
+  console.log(greeting.includes("World"));
+  console.log("ab".repeat(3));
+
+  // arrow function as a value
+  const square = (n: number) => n * n;
+  console.log("square:", square(9));
+
+  // loops: a C-style for, a for-of, break and continue
+  let sum = 0;
+  for (let i = 1; i <= 5; i++) {
+    sum += i;
+  }
+  console.log("sum 1..5:", sum);
+
+  let counted = 0;
+  for (const n of [2, 4, 6, 8]) {
+    if (n == 4) {
+      continue;
+    }
+    if (n == 8) {
+      break;
+    }
+    counted += n;
+  }
+  console.log("counted:", counted);
+
+  // truthiness on a Vec and on an Option
+  const items: number[] = [];
+  if (items) {
+    console.log("nonempty");
+  } else {
+    console.log("empty");
+  }
+  let maybe: number | null = 42;
+  if (maybe) {
+    console.log("set:", maybe!);
+  }
+}

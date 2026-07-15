@@ -269,6 +269,14 @@ mod tests {
     }
 
     #[test]
+    fn unwraps_parenthesized_expression() {
+        let src = "function f(a: number, b: number, c: number): number { return (a + b) * c; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // parens are unwrapped, then prettyplease re-adds them for precedence
+        assert!(rust.contains("(a + b) * c"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_exponent_operator() {
         let src = "function f(x: number): number { return x ** 2; }";
         let rust = Translator::new().translate(src).expect("should translate");

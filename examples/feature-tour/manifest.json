@@ -1,0 +1,5 @@
+{
+  "name": "feature-tour",
+  "target": "rust",
+  "dependencies": {}
+}
