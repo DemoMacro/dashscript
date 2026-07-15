@@ -4,7 +4,7 @@ use oxc_ast::ast::{
     Argument, ArrayExpression, ArrayExpressionElement, AssignmentExpression, AssignmentTarget,
     BinaryExpression, CallExpression, Expression, IdentifierReference, LogicalExpression,
     ObjectExpression, ObjectPropertyKind, SimpleAssignmentTarget, StaticMemberExpression,
-    StringLiteral, TemplateLiteral, UnaryExpression, UpdateExpression,
+    StringLiteral, TemplateLiteral, TSNonNullExpression, UnaryExpression, UpdateExpression,
 };
 use oxc_syntax::operator::{
     AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator, UpdateOperator,
@@ -24,7 +24,8 @@ pub fn translate_expr(expr: &Expression) -> Expr {
         Expression::StringLiteral(s) => string_expr(s),
         Expression::NumericLiteral(n) => numeric_expr(n.value),
         Expression::BooleanLiteral(b) => bool_expr(b.value),
-        Expression::Identifier(id) => ident_expr(id),
+        Expression::NullLiteral(_) => parse_quote!(None),
+        Expression::Identifier(id) => ident_or_undefined(id),
         Expression::CallExpression(call) => translate_call(call),
         Expression::ArrayExpression(arr) => array_expr(arr),
         Expression::StaticMemberExpression(sm) => member_expr(sm),
@@ -34,6 +35,7 @@ pub fn translate_expr(expr: &Expression) -> Expr {
         Expression::UnaryExpression(un) => unary_expr(un),
         Expression::AssignmentExpression(a) => assignment_expr(a),
         Expression::UpdateExpression(u) => update_expr(u),
+        Expression::TSNonNullExpression(nn) => nonnull_expr(nn),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -44,7 +46,8 @@ pub fn translate_argument(arg: &Argument) -> Expr {
         Argument::StringLiteral(s) => string_expr(s),
         Argument::NumericLiteral(n) => numeric_expr(n.value),
         Argument::BooleanLiteral(b) => bool_expr(b.value),
-        Argument::Identifier(id) => ident_expr(id),
+        Argument::NullLiteral(_) => parse_quote!(None),
+        Argument::Identifier(id) => ident_or_undefined(id),
         Argument::CallExpression(call) => translate_call(call),
         Argument::ArrayExpression(arr) => array_expr(arr),
         Argument::StaticMemberExpression(sm) => member_expr(sm),
@@ -52,6 +55,7 @@ pub fn translate_argument(arg: &Argument) -> Expr {
         Argument::BinaryExpression(bin) => binary_expr(bin),
         Argument::LogicalExpression(log) => logical_expr(log),
         Argument::UnaryExpression(un) => unary_expr(un),
+        Argument::TSNonNullExpression(nn) => nonnull_expr(nn),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -62,7 +66,31 @@ pub fn translate_init(expr: &Expression, ty_hint: Option<&Type>) -> Expr {
     if let Expression::ObjectExpression(obj) = expr {
         return object_expr(obj, ty_hint);
     }
+    // null / undefined map to `None` directly — never wrapped in `Some`.
+    let nullish = matches!(expr, Expression::NullLiteral(_))
+        || matches!(expr, Expression::Identifier(id) if id.name.as_str() == "undefined");
+    if nullish {
+        return parse_quote!(None);
+    }
+    // A non-null *value literal* into an `Option<T>` binding wraps in `Some`.
+    // Identifiers/calls may already yield an `Option`, so only literals wrap.
+    let is_value_literal = matches!(
+        expr,
+        Expression::NumericLiteral(_) | Expression::StringLiteral(_) | Expression::BooleanLiteral(_)
+    );
+    if is_value_literal && ty_hint.is_some_and(is_option) {
+        let value = translate_expr(expr);
+        return parse_quote!(Some(#value));
+    }
     translate_expr(expr)
+}
+
+/// True when `ty` is `Option<…>` — decides whether to wrap an initializer.
+fn is_option(ty: &Type) -> bool {
+    matches!(
+        ty,
+        Type::Path(tp) if tp.path.segments.last().is_some_and(|s| s.ident == "Option")
+    )
 }
 
 /// `Point { x: 1 }` — needs the target type's name from the binding annotation.
@@ -110,6 +138,23 @@ fn ident_expr(id: &IdentifierReference) -> Expr {
     let name: &str = &id.name;
     let ident = bindings::snake(name);
     parse_quote!(#ident)
+}
+
+/// `undefined` (a global identifier in TS) maps to `None`; any other
+/// identifier is a plain reference.
+fn ident_or_undefined(id: &IdentifierReference) -> Expr {
+    let name: &str = &id.name;
+    if name == "undefined" {
+        return parse_quote!(None);
+    }
+    ident_expr(id)
+}
+
+/// `x!` (TS non-null assertion) → `x.unwrap()`. The author asserts non-null, so
+/// a panic on `None` is their explicit choice, not an implicit assumption.
+fn nonnull_expr(nn: &TSNonNullExpression) -> Expr {
+    let inner = translate_expr(&nn.expression);
+    parse_quote!(#inner.unwrap())
 }
 
 /// `` `Hello, ${name}!` `` → `format!("Hello, {}!", name)`.

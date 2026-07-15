@@ -1,4 +1,4 @@
-// hello-world — DashScript data modeling + control flow, transpiled to Rust.
+// hello-world — DashScript data modeling, control flow, and Option → Rust.
 
 interface Point {
   x: number;
@@ -13,7 +13,6 @@ function magnitudeSquared(p: Point): number {
 function main(): void {
   const p: Point = { x: 3, y: 4 };
 
-  // if / else with a comparison
   if (p.x >= p.y) {
     console.log("x is bigger");
   } else {
@@ -23,6 +22,11 @@ function main(): void {
   // DashScript exposes Rust ownership: `magnitudeSquared(p)` moves `p`, so it
   // must be the last use of `p`. (Template literal → format!; call → call.)
   console.log(`magnitude squared: ${magnitudeSquared(p)}`);
+
+  // Nullable types map to Option<T>: a literal initializer wraps in Some(...),
+  // and the `!` non-null assertion maps to unwrap().
+  const explicit: number | null = 36;
+  console.log(explicit!);
 
   // while loop with update (i++ → i += 1.0)
   let i = 0;

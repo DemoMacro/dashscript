@@ -1,11 +1,11 @@
 # hello-world
 
 A minimal [DashScript](https://github.com/DemoMacro/dashscript) project —
-data modeling and control flow end to end: an `interface` becomes a Rust
-`struct`, object literals become struct literals, and `if` / `while` /
-`for…of`, arithmetic and comparison operators, and template literals each map
-to their idiomatic Rust counterpart. Function names convert from TypeScript
-`camelCase` to Rust `snake_case`; type names keep their `PascalCase`.
+data modeling, control flow, and nullable types end to end: an `interface`
+becomes a Rust `struct`, object literals become struct literals, `if` / `while`
+/ `for…of`, operators, and template literals map to their idiomatic Rust
+counterpart, and `T | null` becomes `Option<T>`. Function names convert from
+TypeScript `camelCase` to Rust `snake_case`; type names keep their `PascalCase`.
 
 ## Files
 
@@ -27,6 +27,7 @@ Output:
 ```
 y is bigger
 magnitude squared: 25
+36
 0
 1
 2
@@ -59,6 +60,8 @@ fn main() {
         println!("{}", "y is bigger".to_string());
     }
     println!("{}", format!("magnitude squared: {}", magnitude_squared(p)));
+    let explicit: Option<f64> = Some(36.0);
+    println!("{}", explicit.unwrap());
     let mut i = 0.0;
     while i < 3.0 {
         println!("{}", i);
@@ -74,7 +77,8 @@ fn main() {
 ```
 
 DashScript exposes Rust ownership: `magnitude_squared(p)` moves `p`, so the
-call is placed where `p` is last used.
+call is placed where `p` is last used. Nullable types map to `Option<T>`; the
+`!` non-null assertion maps to `unwrap()`.
 
 ## License
 

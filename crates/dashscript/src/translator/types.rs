@@ -1,6 +1,6 @@
 //! `TSType` → `syn::Type` — the one-to-one mapping table.
 
-use oxc_ast::ast::{TSArrayType, TSType, TSTypeName, TSTypeReference};
+use oxc_ast::ast::{TSArrayType, TSType, TSTypeName, TSTypeReference, TSUnionType};
 use quote::format_ident;
 use syn::{parse_quote, Type};
 
@@ -15,6 +15,7 @@ pub fn translate_type(ty: &TSType) -> Type {
         TSType::TSBooleanKeyword(_) => parse_quote!(bool),
         TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => parse_quote!(()),
         TSType::TSArrayType(arr) => array_type(arr),
+        TSType::TSUnionType(u) => union_type(u),
         TSType::TSTypeReference(r) => reference_type(r),
         _ => parse_quote!(_),
     }
@@ -39,6 +40,25 @@ fn reference_type(r: &TSTypeReference) -> Type {
     }
     let ident = format_ident!("{}", name);
     parse_quote!(#ident)
+}
+
+/// `T | null` / `T | undefined` → `Option<T>` (one non-null member); a real
+/// multi-member union (`A | B`) maps to an `enum` later, so it falls back to
+/// `_` here and surfaces as a `cargo check` error until then.
+fn union_type(u: &TSUnionType) -> Type {
+    let mut non_null: Vec<&TSType> = Vec::new();
+    let mut nullable = false;
+    for t in &u.types {
+        match t {
+            TSType::TSNullKeyword(_) | TSType::TSUndefinedKeyword(_) => nullable = true,
+            other => non_null.push(other),
+        }
+    }
+    if nullable && non_null.len() == 1 {
+        let inner = translate_type(non_null[0]);
+        return parse_quote!(Option<#inner>);
+    }
+    parse_quote!(_)
 }
 
 /// The path of a `Type::Path`, if any — used to name an object literal's struct.

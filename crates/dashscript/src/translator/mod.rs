@@ -169,4 +169,36 @@ mod tests {
         assert!(rust.contains("\"Hello, {}!\""), "got:\n{rust}");
         assert!(rust.contains("name)"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_nullable_to_option() {
+        let src = "function main(): void { let x: number | null = null; console.log(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("Option<f64>"), "got:\n{rust}");
+        assert!(rust.contains("= None"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_some_wrapping() {
+        let src = "function main(): void { let x: number | null = 5; console.log(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("Option<f64>"), "got:\n{rust}");
+        assert!(rust.contains("Some(5.0)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_non_null_assertion() {
+        let src = "function f(x: number | null): void { console.log(x!); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("x: Option<f64>"), "got:\n{rust}");
+        assert!(rust.contains("x.unwrap()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_nullable_return_type() {
+        let src = "function f(): number | null { return null; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("-> Option<f64>"), "got:\n{rust}");
+        assert!(rust.contains("return None"), "got:\n{rust}");
+    }
 }
