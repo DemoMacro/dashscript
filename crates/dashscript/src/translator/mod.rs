@@ -258,4 +258,13 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("xs[0.0 as usize]"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_type_union_to_tagged_enum() {
+        let src = "interface Circle { radius: number } interface Square { side: number } type Shape = Circle | Square;";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("enum Shape"), "got:\n{rust}");
+        assert!(rust.contains("Circle(Circle)"), "got:\n{rust}");
+        assert!(rust.contains("Square(Square)"), "got:\n{rust}");
+    }
 }

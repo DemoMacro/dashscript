@@ -1,7 +1,8 @@
 //! Type declarations (`interface` / `type`) → `syn` items.
 
 use oxc_ast::ast::{
-    TSLiteral, TSInterfaceDeclaration, TSSignature, TSType, TSTypeAliasDeclaration, TSUnionType,
+    TSLiteral, TSInterfaceDeclaration, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeName,
+    TSUnionType,
 };
 use proc_macro2::TokenStream;
 use quote::quote;
@@ -30,9 +31,9 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Option<Item> {
             Some(Item::Struct(parse_quote! { struct #name { #(#fields)* } }))
         }
         TSType::TSUnionType(u) => {
-            // A union of string literals becomes an `enum`; anything else falls
-            // back to a type alias (real data-carrying unions come later).
-            if let Some(item) = string_union_to_enum(&name, u) {
+            // A union of string literals or named types becomes an `enum`;
+            // anything else falls back to a type alias.
+            if let Some(item) = union_to_enum(&name, u) {
                 return Some(Item::Enum(item));
             }
             let ty = types::translate_type(&alias.type_annotation);
@@ -45,16 +46,23 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Option<Item> {
     }
 }
 
-/// `"red" | "green"` → `enum T { Red, Green }`. Returns `None` unless every
-/// member is a string literal, so mixed/data unions fall back to a type alias.
-fn string_union_to_enum(name: &Ident, u: &TSUnionType) -> Option<ItemEnum> {
-    let variants: Vec<Ident> = u.types.iter().filter_map(string_literal_variant).collect();
-    if variants.len() != u.types.len() {
-        return None;
+/// A union becomes an `enum`: string literals yield unit variants
+/// (`"red" | "green"` → `Red, Green`), type references yield tuple variants
+/// (`Circle | Square` → `Circle(Circle), Square(Square)`). Mixed unions or
+/// those with other members fall back to a type alias.
+fn union_to_enum(name: &Ident, u: &TSUnionType) -> Option<ItemEnum> {
+    let str_variants: Vec<Ident> = u.types.iter().filter_map(string_literal_variant).collect();
+    if str_variants.len() == u.types.len() {
+        return Some(parse_quote! { enum #name { #(#str_variants),* } });
     }
-    Some(parse_quote! { enum #name { #(#variants),* } })
+    let ref_variants: Vec<syn::Variant> = u.types.iter().filter_map(type_ref_variant).collect();
+    if ref_variants.len() == u.types.len() {
+        return Some(parse_quote! { enum #name { #(#ref_variants),* } });
+    }
+    None
 }
 
+/// `"red"` → `Red` (a unit variant).
 fn string_literal_variant(ty: &TSType) -> Option<Ident> {
     let TSType::TSLiteralType(lit) = ty else {
         return None;
@@ -64,6 +72,19 @@ fn string_literal_variant(ty: &TSType) -> Option<Ident> {
     };
     let value: &str = &s.value;
     Some(bindings::pascal(value))
+}
+
+/// `Circle` → `Circle(Circle)` — a tuple variant wrapping the named type.
+fn type_ref_variant(ty: &TSType) -> Option<syn::Variant> {
+    let TSType::TSTypeReference(r) = ty else {
+        return None;
+    };
+    let TSTypeName::IdentifierReference(id) = &r.type_name else {
+        return None;
+    };
+    let name: &str = &id.name;
+    let variant = bindings::type_ident(name);
+    Some(parse_quote!(#variant(#variant)))
 }
 
 /// One struct field from a property signature: `pub name: Type,`.
