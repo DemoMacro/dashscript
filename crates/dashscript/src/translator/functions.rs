@@ -1,7 +1,5 @@
 //! Function & variable declarations, and statement translation → `syn`.
 
-use std::collections::HashMap;
-
 use oxc_ast::ast::{
     DoWhileStatement, Expression, FormalParameters, ForOfStatement, ForStatement,
     ForStatementInit, ForStatementLeft, Function, FunctionBody, IfStatement, Statement, SwitchCase,
@@ -12,11 +10,8 @@ use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, Pat, ReturnType, Stmt, Type};
 
+use super::context::{Ctx, Locals};
 use super::{bindings, declarations, expressions, types};
-
-/// Variable name → its type's path, tracked so `switch` can turn a string-literal
-/// case into an enum variant pattern. Only path-typed locals are recorded.
-type Locals = HashMap<String, syn::Path>;
 
 /// Translate a top-level statement into a `syn::Item`, if mapped.
 ///
@@ -104,7 +99,7 @@ fn translate_stmt(stmt: &Statement, locals: &mut Locals) -> Vec<Stmt> {
         Statement::ReturnStatement(ret) => {
             let s: Stmt = match &ret.argument {
                 Some(arg) => {
-                    let expr = expressions::translate_expr(arg);
+                    let expr = expressions::translate_expr(arg, &Ctx::new(&*locals));
                     parse_quote!(return #expr;)
                 }
                 None => parse_quote!(return;),
@@ -112,7 +107,7 @@ fn translate_stmt(stmt: &Statement, locals: &mut Locals) -> Vec<Stmt> {
             vec![s]
         }
         Statement::ExpressionStatement(es) => {
-            let expr = expressions::translate_expr(&es.expression);
+            let expr = expressions::translate_expr(&es.expression, &Ctx::new(&*locals));
             vec![parse_quote!(#expr;)]
         }
         Statement::VariableDeclaration(decl) => translate_variable_declaration(decl, locals),
@@ -173,7 +168,7 @@ fn condition_expr(test: &Expression, locals: &Locals) -> Expr {
             }
         }
     }
-    expressions::translate_expr(test)
+    expressions::translate_expr(test, &Ctx::new(locals))
 }
 
 /// If `expr` is a bare identifier of a collection (`Vec`/`String`) or `Option`
@@ -215,7 +210,7 @@ fn translate_for_of(stmt: &ForOfStatement, locals: &mut Locals) -> Vec<Stmt> {
     let Some(pat) = for_of_binding(&stmt.left) else {
         return vec![];
     };
-    let iter = expressions::translate_expr(&stmt.right);
+    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals));
     let body = statement_block(&stmt.body, locals);
     vec![parse_quote!(for &#pat in &#iter #body)]
 }
@@ -241,7 +236,7 @@ fn translate_for(stmt: &ForStatement, locals: &mut Locals) -> Vec<Stmt> {
         .unwrap_or_else(|| parse_quote!(true));
     let body = translate_stmt(&stmt.body, locals);
     let update: Option<Stmt> = stmt.update.as_ref().map(|u| {
-        let e = expressions::translate_expr(u);
+        let e = expressions::translate_expr(u, &Ctx::new(&*locals));
         parse_quote!(#e;)
     });
     vec![parse_quote!({
@@ -274,7 +269,7 @@ fn statement_block(stmt: &Statement, locals: &mut Locals) -> Block {
 /// variant pattern (`Status::Pending`); a `default` case becomes `_`. `break`
 /// is dropped — Rust `match` arms don't fall through.
 fn translate_switch(sw: &SwitchStatement, locals: &mut Locals) -> Stmt {
-    let disc = expressions::translate_expr(&sw.discriminant);
+    let disc = expressions::translate_expr(&sw.discriminant, &Ctx::new(&*locals));
     let enum_path = discriminant_path(&sw.discriminant, locals);
     let arms: Vec<Arm> = sw
         .cases
@@ -339,7 +334,10 @@ fn translate_variable_declaration(decl: &VariableDeclaration, locals: &mut Local
                     locals.insert(name.to_string(), path);
                 }
             }
-            let init = d.init.as_ref().map(|e| expressions::translate_init(e, ty.as_ref()));
+            let init = d
+                .init
+                .as_ref()
+                .map(|e| expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals)));
             build_local(&name, mutable, ty.as_ref(), init.as_ref())
         })
         .collect()

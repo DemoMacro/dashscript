@@ -8,6 +8,7 @@
 //! directions. Parsing reuses `oxc_parser`; DashScript never parses itself.
 
 pub mod bindings;
+pub mod context;
 pub mod declarations;
 pub mod expressions;
 pub mod functions;
@@ -394,5 +395,26 @@ mod tests {
         assert!(rust.contains("enum Shape"), "got:\n{rust}");
         assert!(rust.contains("Circle { radius: f64 }"), "got:\n{rust}");
         assert!(rust.contains("Square { side: f64 }"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_null_equality_to_is_none() {
+        let src = "function f(m: number | null): boolean { return m === null; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("m.is_none()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_null_inequality_to_is_some() {
+        let src = "function f(m: number | null): boolean { return m !== null; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("m.is_some()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_nullish_coalescing_to_unwrap_or_else() {
+        let src = "function f(m: number | null): number { return m ?? 0; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("m.unwrap_or_else(|| 0.0)"), "got:\n{rust}");
     }
 }
