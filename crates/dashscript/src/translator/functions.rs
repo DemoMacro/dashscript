@@ -120,6 +120,8 @@ fn translate_stmt(stmt: &Statement, locals: &mut Locals) -> Vec<Stmt> {
         Statement::WhileStatement(while_stmt) => vec![translate_while(while_stmt, locals)],
         Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals),
         Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals)],
+        Statement::BreakStatement(_) => vec![parse_quote!(break;)],
+        Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
         _ => vec![],
     }
 }

@@ -269,6 +269,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_break_and_continue() {
+        let src = "function f(): void { let i = 0; while (i < 10) { i++; if (i == 5) { continue; } if (i == 8) { break; } } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("continue;"), "got:\n{rust}");
+        assert!(rust.contains("break;"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_math_methods() {
         let src =
             "function f(x: number): number { return Math.floor(x) + Math.max(x, 0) + Math.pow(x, 2); }";
