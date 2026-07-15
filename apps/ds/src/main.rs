@@ -1,6 +1,6 @@
 //! `ds` — the DashScript toolchain entry point.
 //!
-//! Wired: `run`, `build`, `add`. Planned: `check`, `fmt`, `test`.
+//! Wired: `run`, `build`, `add`, `check`, `fmt`. Planned: `test`.
 
 use std::{
     error::Error,
@@ -26,15 +26,23 @@ fn main() -> ExitCode {
             Some(file) => run_cmd(&file, CommandKind::Add),
             None => usage_exit("usage: ds add <file.rs>"),
         },
+        Some("check") => match args.next() {
+            Some(file) => report(check(&file)),
+            None => usage_exit("usage: ds check <file.ds>"),
+        },
+        Some("fmt") => match args.next() {
+            Some(file) => report(fmt(&file)),
+            None => usage_exit("usage: ds fmt <file.ds>"),
+        },
         Some(other) => {
             eprintln!("ds: unknown subcommand '{other}'");
-            eprintln!("available: run <file.ds>, build <file.ds>, add <file.rs>");
+            eprintln!("available: run <file.ds>, build <file.ds>, add <file.rs>, check <file.ds>, fmt <file.ds>");
             ExitCode::FAILURE
         }
         None => {
             eprintln!("ds: DashScript toolchain");
             eprintln!("usage: ds <command> [args]");
-            eprintln!("commands: run <file.ds>, build <file.ds>, add <file.rs>");
+            eprintln!("commands: run <file.ds>, build <file.ds>, add <file.rs>, check <file.ds>, fmt <file.ds>");
             ExitCode::FAILURE
         }
     }
@@ -52,6 +60,11 @@ fn run_cmd(file: &str, kind: CommandKind) -> ExitCode {
         CommandKind::Build => build(file),
         CommandKind::Add => add(file),
     };
+    report(result)
+}
+
+/// Report a command result, printing any error to stderr.
+fn report(result: Result<ExitCode, Box<dyn Error>>) -> ExitCode {
     match result {
         Ok(code) => code,
         Err(err) => {
@@ -141,6 +154,25 @@ fn add(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     fs::write(&out, ds)?;
     println!("ds: generated {}", out.display());
     Ok(ExitCode::SUCCESS)
+}
+
+/// Lint a `.ds` file by delegating to `oxlint` (reused from oxc — DashScript
+/// does not implement its own linter).
+fn check(file: &str) -> Result<ExitCode, Box<dyn Error>> {
+    let status = Command::new("oxlint")
+        .arg(file)
+        .status()
+        .map_err(|e| format!("failed to invoke oxlint (install via `cargo install oxlint`): {e}"))?;
+    Ok(status_to_code(status))
+}
+
+/// Format a `.ds` file in place by delegating to `oxfmt` (reused from oxc).
+fn fmt(file: &str) -> Result<ExitCode, Box<dyn Error>> {
+    let status = Command::new("oxfmt")
+        .arg(file)
+        .status()
+        .map_err(|e| format!("failed to invoke oxfmt (install via `cargo install oxlint`): {e}"))?;
+    Ok(status_to_code(status))
 }
 
 fn invoke_cargo<const N: usize>(project: &Path, args: [&str; N]) -> Result<ExitStatus, Box<dyn Error>> {
