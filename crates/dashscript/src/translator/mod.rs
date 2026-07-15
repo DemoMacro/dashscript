@@ -12,6 +12,7 @@ pub mod context;
 pub mod declarations;
 pub mod expressions;
 pub mod functions;
+pub mod registry;
 pub mod types;
 
 use oxc_allocator::Allocator;
@@ -44,11 +45,14 @@ impl Translator {
             ));
         }
 
+        // First pass: collect discriminated-union enum shapes so later
+        // expression translation can build variant constructors.
+        let registry = registry::build_registry(&ret.program.body);
         let items = ret
             .program
             .body
             .iter()
-            .filter_map(functions::translate_statement)
+            .filter_map(|s| functions::translate_statement(s, &registry))
             .collect();
         let file = syn::File { shebang: None, attrs: Vec::new(), items };
         Ok(prettyplease::unparse(&file))
@@ -416,5 +420,12 @@ mod tests {
         let src = "function f(m: number | null): number { return m ?? 0; }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("m.unwrap_or_else(|| 0.0)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_discriminated_union_variant_construction() {
+        let src = "type Shape = { kind: \"circle\"; radius: number } | { kind: \"square\"; side: number }; function f(): void { const s: Shape = { kind: \"circle\", radius: 3 }; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("Shape::Circle { radius: 3.0 }"), "got:\n{rust}");
     }
 }

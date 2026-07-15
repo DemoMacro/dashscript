@@ -119,10 +119,15 @@ fn is_option(ty: &Type) -> bool {
 }
 
 /// `Point { x: 1 }` — needs the target type's name from the binding annotation.
+/// A `{ kind: "circle", … }` literal whose target is a registered
+/// discriminated union instead builds a variant (`Shape::Circle { … }`).
 fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) -> Expr {
     let Some(path) = ty_hint.and_then(types::type_path) else {
         return parse_quote!(::core::todo!());
     };
+    if let Some(expr) = variant_construct(obj, path, ctx) {
+        return expr;
+    }
     let fields: Vec<syn::FieldValue> = obj
         .properties
         .iter()
@@ -134,6 +139,47 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
         })
         .collect();
     parse_quote!(#path { #(#fields),* })
+}
+
+/// `{ kind: "circle", radius: 2 }` → `Shape::Circle { radius: 2.0 }` when `path`
+/// is a registered discriminated-union enum and the literal carries a matching
+/// `kind` string. Returns `None` for a plain struct literal (no `kind`, or a
+/// `kind` whose value isn't a registered variant of this enum).
+fn variant_construct(obj: &ObjectExpression, path: &syn::Path, ctx: &Ctx<'_>) -> Option<Expr> {
+    let type_name = path.segments.last()?.ident.to_string();
+    let kind_value = kind_string(obj)?;
+    let shape = ctx.variant(&type_name, &kind_value)?;
+    let variant = &shape.name;
+    let fields: Vec<syn::FieldValue> = obj
+        .properties
+        .iter()
+        .filter_map(|p| {
+            let ObjectPropertyKind::ObjectProperty(op) = p else { return None };
+            let key = bindings::property_key_name(&op.key)?;
+            // The discriminant is consumed by the variant name, not a field.
+            if key == "kind" {
+                return None;
+            }
+            let value = translate_expr(&op.value, ctx);
+            Some(parse_quote!(#key: #value))
+        })
+        .collect();
+    Some(parse_quote!(#path::#variant { #(#fields),* }))
+}
+
+/// The value of a `kind: "…"` string-literal property, if the object has one.
+fn kind_string(obj: &ObjectExpression) -> Option<String> {
+    for p in &obj.properties {
+        let ObjectPropertyKind::ObjectProperty(op) = p else {
+            continue;
+        };
+        if bindings::property_key_name(&op.key).is_some_and(|k| k == "kind") {
+            if let Expression::StringLiteral(s) = &op.value {
+                return Some(s.value.to_string());
+            }
+        }
+    }
+    None
 }
 
 /// `[1, 2, 3]` → `vec![1.0, 2.0, 3.0]`. Spread / holes are unmapped yet.
