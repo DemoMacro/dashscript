@@ -1,0 +1,11 @@
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface Polyline {
+  points: Point[];
+  label: string | null;
+}
+
+declare function distance(a: number, b: number): number;

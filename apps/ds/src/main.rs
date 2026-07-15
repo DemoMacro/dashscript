@@ -1,6 +1,6 @@
 //! `ds` — the DashScript toolchain entry point.
 //!
-//! Wired: `run`, `build`. Planned: `check`, `fmt`, `add`, `test`.
+//! Wired: `run`, `build`, `add`. Planned: `check`, `fmt`, `test`.
 
 use std::{
     error::Error,
@@ -9,7 +9,7 @@ use std::{
     process::{Command, ExitCode, ExitStatus},
 };
 
-use dashscript::{Manifest, Translator};
+use dashscript::{Bindgen, Manifest, Translator};
 
 fn main() -> ExitCode {
     let mut args = std::env::args().skip(1);
@@ -22,15 +22,19 @@ fn main() -> ExitCode {
             Some(file) => run_cmd(&file, CommandKind::Build),
             None => usage_exit("usage: ds build <file.ds>"),
         },
+        Some("add") => match args.next() {
+            Some(file) => run_cmd(&file, CommandKind::Add),
+            None => usage_exit("usage: ds add <file.rs>"),
+        },
         Some(other) => {
             eprintln!("ds: unknown subcommand '{other}'");
-            eprintln!("available: run <file.ds>, build <file.ds>");
+            eprintln!("available: run <file.ds>, build <file.ds>, add <file.rs>");
             ExitCode::FAILURE
         }
         None => {
             eprintln!("ds: DashScript toolchain");
             eprintln!("usage: ds <command> [args]");
-            eprintln!("commands: run <file.ds>, build <file.ds>");
+            eprintln!("commands: run <file.ds>, build <file.ds>, add <file.rs>");
             ExitCode::FAILURE
         }
     }
@@ -39,12 +43,14 @@ fn main() -> ExitCode {
 enum CommandKind {
     Run,
     Build,
+    Add,
 }
 
 fn run_cmd(file: &str, kind: CommandKind) -> ExitCode {
     let result = match kind {
         CommandKind::Run => run(file),
         CommandKind::Build => build(file),
+        CommandKind::Add => add(file),
     };
     match result {
         Ok(code) => code,
@@ -120,6 +126,21 @@ fn build(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     println!("ds: emitted {}", project.display());
     let status = invoke_cargo(&project, ["check", "--quiet"])?;
     Ok(status_to_code(status))
+}
+
+/// Generate a `.ds` type declaration from a Rust source file (bindgen),
+/// written beside it as `<stem>.ds`.
+fn add(file: &str) -> Result<ExitCode, Box<dyn Error>> {
+    let path = Path::new(file);
+    let rust = fs::read_to_string(path)
+        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    let ds = Bindgen::new()
+        .generate(&rust)
+        .map_err(|e| format!("bindgen {}: {e}", path.display()))?;
+    let out = path.with_extension("ds");
+    fs::write(&out, ds)?;
+    println!("ds: generated {}", out.display());
+    Ok(ExitCode::SUCCESS)
 }
 
 fn invoke_cargo<const N: usize>(project: &Path, args: [&str; N]) -> Result<ExitStatus, Box<dyn Error>> {
