@@ -48,8 +48,10 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Option<Item> {
 
 /// A union becomes an `enum`: string literals yield unit variants
 /// (`"red" | "green"` → `Red, Green`), type references yield tuple variants
-/// (`Circle | Square` → `Circle(Circle), Square(Square)`). Mixed unions or
-/// those with other members fall back to a type alias.
+/// (`Circle | Square` → `Circle(Circle), Square(Square)`), and object literals
+/// carrying a string-literal discriminant yield named-field variants
+/// (`{ kind: "circle"; radius: number }` → `Circle { radius: f64 }`). Mixed
+/// unions or those with other members fall back to a type alias.
 fn union_to_enum(name: &Ident, u: &TSUnionType) -> Option<ItemEnum> {
     let str_variants: Vec<Ident> = u.types.iter().filter_map(string_literal_variant).collect();
     if str_variants.len() == u.types.len() {
@@ -58,6 +60,10 @@ fn union_to_enum(name: &Ident, u: &TSUnionType) -> Option<ItemEnum> {
     let ref_variants: Vec<syn::Variant> = u.types.iter().filter_map(type_ref_variant).collect();
     if ref_variants.len() == u.types.len() {
         return Some(parse_quote! { enum #name { #(#ref_variants),* } });
+    }
+    let field_variants: Vec<syn::Variant> = u.types.iter().filter_map(discriminated_variant).collect();
+    if !field_variants.is_empty() && field_variants.len() == u.types.len() {
+        return Some(parse_quote! { enum #name { #(#field_variants),* } });
     }
     None
 }
@@ -85,6 +91,41 @@ fn type_ref_variant(ty: &TSType) -> Option<syn::Variant> {
     let name: &str = &id.name;
     let variant = bindings::type_ident(name);
     Some(parse_quote!(#variant(#variant)))
+}
+
+/// `{ kind: "circle"; radius: number }` → `Circle { radius: f64 }` — a
+/// named-field variant of a discriminated union. The property whose *type* is
+/// a string literal is the discriminant: its value names the variant and is not
+/// emitted as a field. The remaining properties become the variant's named
+/// fields. Returns `None` when the literal has no string-literal discriminant.
+fn discriminated_variant(ty: &TSType) -> Option<syn::Variant> {
+    let TSType::TSTypeLiteral(lit) = ty else {
+        return None;
+    };
+    let mut variant_name: Option<Ident> = None;
+    let mut fields: Vec<TokenStream> = Vec::new();
+    for sig in &lit.members {
+        let TSSignature::TSPropertySignature(ps) = sig else {
+            continue;
+        };
+        let Some(key) = bindings::property_key_name(&ps.key) else {
+            continue;
+        };
+        let Some(ta) = ps.type_annotation.as_ref() else {
+            continue;
+        };
+        // A string-literal-typed property is the discriminant → variant name.
+        if let TSType::TSLiteralType(lt) = &ta.type_annotation {
+            if let TSLiteral::StringLiteral(s) = &lt.literal {
+                variant_name = Some(bindings::pascal(&s.value));
+                continue;
+            }
+        }
+        let field_ty = types::translate_type(&ta.type_annotation);
+        fields.push(quote!(#key: #field_ty));
+    }
+    let variant = variant_name?;
+    Some(parse_quote!(#variant { #(#fields),* }))
 }
 
 /// One struct field from a property signature: `pub name: Type,`.

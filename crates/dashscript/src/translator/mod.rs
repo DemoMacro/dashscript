@@ -386,4 +386,13 @@ mod tests {
         assert!(rust.contains("Circle(Circle)"), "got:\n{rust}");
         assert!(rust.contains("Square(Square)"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_discriminated_union_to_field_variants() {
+        let src = "type Shape = { kind: \"circle\"; radius: number } | { kind: \"square\"; side: number };";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("enum Shape"), "got:\n{rust}");
+        assert!(rust.contains("Circle { radius: f64 }"), "got:\n{rust}");
+        assert!(rust.contains("Square { side: f64 }"), "got:\n{rust}");
+    }
 }
