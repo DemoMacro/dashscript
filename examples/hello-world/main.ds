@@ -1,12 +1,41 @@
-// hello-world — data modeling in DashScript.
-//
-// `interface Point` becomes a Rust `struct Point`; the object literal becomes
-// a struct literal; `p.x` / `p.y` map one-to-one to Rust field access.
+// hello-world — DashScript data modeling + control flow, transpiled to Rust.
 
-interface Point { x: number; y: number }
+interface Point {
+  x: number;
+  y: number;
+}
+
+// `magnitudeSquared` becomes Rust `magnitude_squared` (camelCase → snake_case).
+function magnitudeSquared(p: Point): number {
+  return p.x * p.x + p.y * p.y;
+}
 
 function main(): void {
   const p: Point = { x: 3, y: 4 };
-  console.log(p.x);
-  console.log(p.y);
+
+  // if / else with a comparison
+  if (p.x >= p.y) {
+    console.log("x is bigger");
+  } else {
+    console.log("y is bigger");
+  }
+
+  // DashScript exposes Rust ownership: `magnitudeSquared(p)` moves `p`, so it
+  // must be the last use of `p`. (Template literal → format!; call → call.)
+  console.log(`magnitude squared: ${magnitudeSquared(p)}`);
+
+  // while loop with update (i++ → i += 1.0)
+  let i = 0;
+  while (i < 3) {
+    console.log(i);
+    i++;
+  }
+
+  // for...of over a Vec (borrows, does not consume) + logical &&
+  const xs: number[] = [10, 20, 30];
+  for (const v of xs) {
+    if (v > 5 && v < 25) {
+      console.log(v);
+    }
+  }
 }

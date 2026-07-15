@@ -110,4 +110,63 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("vec![1.0, 2.0, 3.0]"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_if_else() {
+        let src = "function main(): void { let x = 1; if (x > 0) { console.log(1); } else { console.log(2); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("if x > 0.0"), "got:\n{rust}");
+        assert!(rust.contains(" else "), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_while_with_update() {
+        let src = "function main(): void { let i = 0; while (i < 10) { i++; } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("while i < 10.0"), "got:\n{rust}");
+        assert!(rust.contains("i += 1.0"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_for_of_as_borrow() {
+        let src = "function main(): void { const xs: number[] = [1, 2]; for (const v of xs) { console.log(v); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("for &v in &xs"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_arithmetic_and_comparison() {
+        let src = "function f(): void { console.log(1 + 2 * 3); console.log(4 >= 2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("1.0 + 2.0 * 3.0"), "got:\n{rust}");
+        assert!(rust.contains("4.0 >= 2.0"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_logical_and_unary() {
+        let src = "function f(): void { let b = true; console.log(b && !b); console.log(-5); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `prettyplease` prints a space after unary `!`/`-` (`! b`, `- 5.0`); the
+        // structure — `&&` then logical-not, and unary negation — is what we check.
+        assert!(rust.contains("b && "), "got:\n{rust}");
+        assert!(rust.contains("! b"), "got:\n{rust}");
+        assert!(rust.contains("- 5.0"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_compound_assignment() {
+        let src = "function f(): void { let n = 0; n += 5; n = n * 2; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("n += 5.0"), "got:\n{rust}");
+        assert!(rust.contains("n = n * 2.0"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_template_literal() {
+        let src = "function greet(name: string): string { return `Hello, ${name}!`; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("format!"), "got:\n{rust}");
+        assert!(rust.contains("\"Hello, {}!\""), "got:\n{rust}");
+        assert!(rust.contains("name)"), "got:\n{rust}");
+    }
 }

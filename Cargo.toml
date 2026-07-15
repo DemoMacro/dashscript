@@ -21,6 +21,7 @@ oxc_allocator = "0.140"
 oxc_parser = "0.140"
 oxc_ast = "0.140"
 oxc_span = "0.140"
+oxc_syntax = "0.140"
 
 # Rust source emission (translator) — pulled in when codegen lands.
 prettyplease = "0.2"

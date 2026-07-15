@@ -1,12 +1,17 @@
 //! `Expression` → `syn::Expr`.
 
 use oxc_ast::ast::{
-    Argument, ArrayExpression, ArrayExpressionElement, CallExpression, Expression,
-    IdentifierReference, ObjectExpression, ObjectPropertyKind, StaticMemberExpression, StringLiteral,
+    Argument, ArrayExpression, ArrayExpressionElement, AssignmentExpression, AssignmentTarget,
+    BinaryExpression, CallExpression, Expression, IdentifierReference, LogicalExpression,
+    ObjectExpression, ObjectPropertyKind, SimpleAssignmentTarget, StaticMemberExpression,
+    StringLiteral, TemplateLiteral, UnaryExpression, UpdateExpression,
+};
+use oxc_syntax::operator::{
+    AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator, UpdateOperator,
 };
 use proc_macro2::Span;
-use quote::format_ident;
-use syn::{parse_quote, parse_str, Expr, Type};
+use quote::quote;
+use syn::{parse_quote, parse_str, BinOp, Expr, Type, UnOp};
 
 use super::{bindings, types};
 
@@ -23,6 +28,12 @@ pub fn translate_expr(expr: &Expression) -> Expr {
         Expression::CallExpression(call) => translate_call(call),
         Expression::ArrayExpression(arr) => array_expr(arr),
         Expression::StaticMemberExpression(sm) => member_expr(sm),
+        Expression::TemplateLiteral(t) => template_expr(t),
+        Expression::BinaryExpression(bin) => binary_expr(bin),
+        Expression::LogicalExpression(log) => logical_expr(log),
+        Expression::UnaryExpression(un) => unary_expr(un),
+        Expression::AssignmentExpression(a) => assignment_expr(a),
+        Expression::UpdateExpression(u) => update_expr(u),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -37,6 +48,10 @@ pub fn translate_argument(arg: &Argument) -> Expr {
         Argument::CallExpression(call) => translate_call(call),
         Argument::ArrayExpression(arr) => array_expr(arr),
         Argument::StaticMemberExpression(sm) => member_expr(sm),
+        Argument::TemplateLiteral(t) => template_expr(t),
+        Argument::BinaryExpression(bin) => binary_expr(bin),
+        Argument::LogicalExpression(log) => logical_expr(log),
+        Argument::UnaryExpression(un) => unary_expr(un),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -87,29 +102,166 @@ fn array_element(elem: &ArrayExpressionElement) -> Option<Expr> {
 fn member_expr(sm: &StaticMemberExpression) -> Expr {
     let obj = translate_expr(&sm.object);
     let field_name: &str = &sm.property.name;
-    let field = format_ident!("{}", field_name);
+    let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)
 }
 
 fn ident_expr(id: &IdentifierReference) -> Expr {
     let name: &str = &id.name;
-    let ident = format_ident!("{}", name);
+    let ident = bindings::snake(name);
     parse_quote!(#ident)
 }
 
-/// `console.log(x)` → `println!("{}", x)`. Other calls are unmapped yet.
+/// `` `Hello, ${name}!` `` → `format!("Hello, {}!", name)`.
+///
+/// `{`/`}` in the literal are escaped (`{{`/`}}`) so they survive `format!`.
+fn template_expr(t: &TemplateLiteral) -> Expr {
+    let mut fmt = String::new();
+    for (i, q) in t.quasis.iter().enumerate() {
+        let raw: &str = q.value.raw.as_str();
+        fmt.push_str(&raw.replace('{', "{{").replace('}', "}}"));
+        if i < t.expressions.len() {
+            fmt.push_str("{}");
+        }
+    }
+    let exprs: Vec<Expr> = t.expressions.iter().map(translate_expr).collect();
+    let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
+    parse_quote!(::std::format!(#fmt_lit, #(#exprs),*))
+}
+
+/// Binary ops. TS `==`/`===` collapse to Rust `==` (Rust has no coercive `==`);
+/// likewise `!=`/`!==`. `**`, bitwise, shifts, `in`, `instanceof` are unmapped.
+///
+/// We build `syn::Expr::Binary` directly (not `quote!` tokens) so `prettyplease`
+/// adds parentheses by precedence instead of emitting a redundant pair around
+/// every sub-expression.
+fn binary_expr(bin: &BinaryExpression) -> Expr {
+    let left = translate_expr(&bin.left);
+    let right = translate_expr(&bin.right);
+    let op = match bin.operator {
+        BinaryOperator::Addition => BinOp::Add(Default::default()),
+        BinaryOperator::Subtraction => BinOp::Sub(Default::default()),
+        BinaryOperator::Multiplication => BinOp::Mul(Default::default()),
+        BinaryOperator::Division => BinOp::Div(Default::default()),
+        BinaryOperator::Remainder => BinOp::Rem(Default::default()),
+        BinaryOperator::Equality | BinaryOperator::StrictEquality => BinOp::Eq(Default::default()),
+        BinaryOperator::Inequality | BinaryOperator::StrictInequality => {
+            BinOp::Ne(Default::default())
+        }
+        BinaryOperator::LessThan => BinOp::Lt(Default::default()),
+        BinaryOperator::LessEqualThan => BinOp::Le(Default::default()),
+        BinaryOperator::GreaterThan => BinOp::Gt(Default::default()),
+        BinaryOperator::GreaterEqualThan => BinOp::Ge(Default::default()),
+        _ => return parse_quote!(::core::todo!()),
+    };
+    Expr::Binary(syn::ExprBinary {
+        attrs: Vec::new(),
+        left: Box::new(left),
+        op,
+        right: Box::new(right),
+    })
+}
+
+/// `&&`/`||` are a separate `LogicalExpression` in oxc (not `BinaryExpression`).
+/// `??` (nullish coalescing) maps to `Option` semantics in wave 3.
+fn logical_expr(log: &LogicalExpression) -> Expr {
+    let left = translate_expr(&log.left);
+    let right = translate_expr(&log.right);
+    let op = match log.operator {
+        LogicalOperator::And => BinOp::And(Default::default()),
+        LogicalOperator::Or => BinOp::Or(Default::default()),
+        LogicalOperator::Coalesce => return parse_quote!(::core::todo!()),
+    };
+    Expr::Binary(syn::ExprBinary {
+        attrs: Vec::new(),
+        left: Box::new(left),
+        op,
+        right: Box::new(right),
+    })
+}
+
+/// Unary `-`/`!`. (`+` is a no-op; `~`, `typeof`, `void`, `delete` are unmapped.)
+fn unary_expr(un: &UnaryExpression) -> Expr {
+    let arg = translate_expr(&un.argument);
+    match un.operator {
+        UnaryOperator::UnaryPlus => arg,
+        UnaryOperator::UnaryNegation => Expr::Unary(syn::ExprUnary {
+            attrs: Vec::new(),
+            op: UnOp::Neg(Default::default()),
+            expr: Box::new(arg),
+        }),
+        UnaryOperator::LogicalNot => Expr::Unary(syn::ExprUnary {
+            attrs: Vec::new(),
+            op: UnOp::Not(Default::default()),
+            expr: Box::new(arg),
+        }),
+        _ => parse_quote!(::core::todo!()),
+    }
+}
+
+/// `x = …`, `x += …`, … — only simple identifier targets (no `obj.x = …`).
+fn assignment_expr(a: &AssignmentExpression) -> Expr {
+    let Some(target) = assignment_target(&a.left) else {
+        return parse_quote!(::core::todo!());
+    };
+    let right = translate_expr(&a.right);
+    let tokens = match a.operator {
+        AssignmentOperator::Assign => quote!(#target = #right),
+        AssignmentOperator::Addition => quote!(#target += #right),
+        AssignmentOperator::Subtraction => quote!(#target -= #right),
+        AssignmentOperator::Multiplication => quote!(#target *= #right),
+        AssignmentOperator::Division => quote!(#target /= #right),
+        AssignmentOperator::Remainder => quote!(#target %= #right),
+        _ => quote!(::core::todo!()),
+    };
+    syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+}
+
+/// `i++` / `i--` → `i += 1.0` / `i -= 1.0`. Statement-context only: TS returns
+/// the old value, which we don't preserve — fine for `i++;` but not `return i++`.
+/// The step is `1.0` because `.ds` `number` is `f64`; an integer step would be a
+/// type error against an `f64` target.
+fn update_expr(u: &UpdateExpression) -> Expr {
+    let Some(target) = simple_target(&u.argument) else {
+        return parse_quote!(::core::todo!());
+    };
+    let tokens = match u.operator {
+        UpdateOperator::Increment => quote!(#target += 1.0),
+        UpdateOperator::Decrement => quote!(#target -= 1.0),
+    };
+    syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+}
+
+fn assignment_target(target: &AssignmentTarget) -> Option<Expr> {
+    match target {
+        AssignmentTarget::AssignmentTargetIdentifier(id) => Some(ident_expr(id)),
+        _ => None,
+    }
+}
+
+fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
+    match target {
+        SimpleAssignmentTarget::AssignmentTargetIdentifier(id) => Some(ident_expr(id)),
+        _ => None,
+    }
+}
+
+/// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
+/// its arguments to a plain Rust call expression.
 fn translate_call(call: &CallExpression) -> Expr {
     if is_console_log(&call.callee) {
-        match call.arguments.as_slice() {
+        return match call.arguments.as_slice() {
             [arg] => {
                 let value = translate_argument(arg);
                 parse_quote!(::std::println!("{}", #value))
             }
-            _ => parse_quote!(::core::todo!()), // multi-arg console.* not mapped yet
-        }
-    } else {
-        parse_quote!(::core::todo!())
+            // multi-arg `console.*` is not mapped yet
+            _ => parse_quote!(::core::todo!()),
+        };
     }
+    let callee = translate_expr(&call.callee);
+    let args: Vec<Expr> = call.arguments.iter().map(translate_argument).collect();
+    parse_quote!(#callee(#(#args),*))
 }
 
 /// True when `callee` is `console.log` (a static member access).
@@ -142,10 +294,6 @@ fn bool_expr(value: bool) -> Expr {
 }
 
 /// Render an `f64` as a valid Rust literal expression.
-///
-/// `quote!` has no `ToTokens` for floats, and `NaN` / `Infinity` are not Rust
-/// literals — so we format to a string and let `syn` parse it, mapping the
-/// non-finite cases to `f64` constants.
 fn numeric_expr(value: f64) -> Expr {
     let s = if value.is_nan() {
         "f64::NAN".to_string()

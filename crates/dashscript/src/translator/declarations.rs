@@ -12,14 +12,16 @@ use super::{bindings, types};
 /// Fields are `pub`: a TS interface describes a value's public shape, so the
 /// Rust struct exposes its fields to match.
 pub fn translate_interface(iface: &TSInterfaceDeclaration) -> ItemStruct {
-    let name = bindings::ident_of(&iface.id);
+    let name: &str = &iface.id.name;
+    let name = bindings::type_ident(name);
     let fields: Vec<TokenStream> = iface.body.body.iter().filter_map(struct_field).collect();
     parse_quote! { struct #name { #(#fields)* } }
 }
 
 /// `type Point = { x: number }` → `struct`; `type Id = number` → `type Id = f64;`.
 pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Option<Item> {
-    let name = bindings::ident_of(&alias.id);
+    let name: &str = &alias.id.name;
+    let name = bindings::type_ident(name);
     match &alias.type_annotation {
         TSType::TSTypeLiteral(lit) => {
             let fields: Vec<TokenStream> = lit.members.iter().filter_map(struct_field).collect();

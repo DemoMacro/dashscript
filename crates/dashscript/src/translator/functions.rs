@@ -1,8 +1,8 @@
 //! Function & variable declarations, and statement translation → `syn`.
 
 use oxc_ast::ast::{
-    FormalParameters, Function, FunctionBody, Statement, TSType, VariableDeclaration,
-    VariableDeclarationKind,
+    FormalParameters, ForOfStatement, ForStatementLeft, Function, FunctionBody, IfStatement,
+    Statement, TSType, VariableDeclaration, VariableDeclarationKind, WhileStatement,
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
@@ -73,6 +73,7 @@ fn translate_body(body: Option<&FunctionBody>) -> Block {
 /// Translate a function-body statement into zero or more `syn::Stmt`s.
 fn translate_stmt(stmt: &Statement) -> Vec<Stmt> {
     match stmt {
+        Statement::BlockStatement(block) => block.body.iter().flat_map(translate_stmt).collect(),
         Statement::ReturnStatement(ret) => {
             let s: Stmt = match &ret.argument {
                 Some(arg) => {
@@ -88,8 +89,59 @@ fn translate_stmt(stmt: &Statement) -> Vec<Stmt> {
             vec![parse_quote!(#expr;)]
         }
         Statement::VariableDeclaration(decl) => translate_variable_declaration(decl),
+        Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt)],
+        Statement::WhileStatement(while_stmt) => vec![translate_while(while_stmt)],
+        Statement::ForOfStatement(for_of) => translate_for_of(for_of),
         _ => vec![],
     }
+}
+
+fn translate_if(stmt: &IfStatement) -> Stmt {
+    let cond = expressions::translate_expr(&stmt.test);
+    let then_block = statement_block(&stmt.consequent);
+    match &stmt.alternate {
+        Some(alt) => {
+            let else_block = statement_block(alt);
+            parse_quote!(if #cond #then_block else #else_block)
+        }
+        None => parse_quote!(if #cond #then_block),
+    }
+}
+
+fn translate_while(stmt: &WhileStatement) -> Stmt {
+    let cond = expressions::translate_expr(&stmt.test);
+    let body = statement_block(&stmt.body);
+    parse_quote!(while #cond #body)
+}
+
+/// `for (const v of xs)` → `for &v in &xs { … }`.
+///
+/// The `&v` pattern destructures the borrow so `v` is an owned `f64` (Copy),
+/// avoiding a `&f64`/`f64` mismatch on comparisons inside the body. This works
+/// for Copy elements (DashScript `number`/`boolean`); iterating owned values
+/// out of a `Vec<String>` is unsupported yet.
+fn translate_for_of(stmt: &ForOfStatement) -> Vec<Stmt> {
+    let Some(pat) = for_of_binding(&stmt.left) else {
+        return vec![];
+    };
+    let iter = expressions::translate_expr(&stmt.right);
+    let body = statement_block(&stmt.body);
+    vec![parse_quote!(for &#pat in &#iter #body)]
+}
+
+/// Binding name from `for (const v of …)`; other left forms are unmapped.
+fn for_of_binding(left: &ForStatementLeft) -> Option<Ident> {
+    let ForStatementLeft::VariableDeclaration(decl) = left else {
+        return None;
+    };
+    let d = decl.declarations.first()?;
+    Some(bindings::binding_name(&d.id))
+}
+
+/// Turn any statement into a `{ … }` block (used by if/while/for bodies).
+fn statement_block(stmt: &Statement) -> Block {
+    let stmts: Vec<Stmt> = translate_stmt(stmt);
+    parse_quote!({ #(#stmts)* })
 }
 
 /// `let x` → `let mut x` (TS `let` is mutable); `const`/`var` → `let`.
