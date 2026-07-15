@@ -260,6 +260,15 @@ mod tests {
     }
 
     #[test]
+    fn translates_string_concatenation_to_format() {
+        let src = "function greet(first: string, last: string): string { return first + \" \" + last; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("format!"), "got:\n{rust}");
+        // three operands → three placeholders
+        assert!(rust.contains("\"{}{}{}\""), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_type_union_to_tagged_enum() {
         let src = "interface Circle { radius: number } interface Square { side: number } type Shape = Circle | Square;";
         let rust = Translator::new().translate(src).expect("should translate");

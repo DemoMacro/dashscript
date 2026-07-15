@@ -213,10 +213,16 @@ fn template_expr(t: &TemplateLiteral) -> Expr {
 /// Binary ops. TS `==`/`===` collapse to Rust `==` (Rust has no coercive `==`);
 /// likewise `!=`/`!==`. `**`, bitwise, shifts, `in`, `instanceof` are unmapped.
 ///
+/// A `+` chain that contains a string literal is TS string concatenation and is
+/// mapped to `format!` — Rust's `+` does not apply to `String`.
+///
 /// We build `syn::Expr::Binary` directly (not `quote!` tokens) so `prettyplease`
 /// adds parentheses by precedence instead of emitting a redundant pair around
 /// every sub-expression.
 fn binary_expr(bin: &BinaryExpression) -> Expr {
+    if matches!(bin.operator, BinaryOperator::Addition) && concat_is_string(bin) {
+        return string_concat(bin);
+    }
     let left = translate_expr(&bin.left);
     let right = translate_expr(&bin.right);
     let op = match bin.operator {
@@ -241,6 +247,47 @@ fn binary_expr(bin: &BinaryExpression) -> Expr {
         op,
         right: Box::new(right),
     })
+}
+
+/// True when a `+` chain is string concatenation: any leaf operand is a string
+/// literal. TS makes the entire chain a string concat as soon as one operand is
+/// a string, so this syntactic check is sound — and the only unhandled case
+/// (`stringVar + stringVar`, no literal) fails loudly under `cargo check`.
+fn concat_is_string(bin: &BinaryExpression) -> bool {
+    operand_is_string(&bin.left) || operand_is_string(&bin.right)
+}
+
+fn operand_is_string(expr: &Expression) -> bool {
+    match expr {
+        Expression::StringLiteral(_) => true,
+        Expression::BinaryExpression(inner) if matches!(inner.operator, BinaryOperator::Addition) => {
+            concat_is_string(inner)
+        }
+        _ => false,
+    }
+}
+
+/// Flatten a `+` chain to its leaf operands (left to right) and emit
+/// `format!("{}", …)` with one `{}` placeholder per operand.
+fn string_concat(bin: &BinaryExpression) -> Expr {
+    let mut parts: Vec<Expr> = Vec::new();
+    flatten_add(&bin.left, &mut parts);
+    flatten_add(&bin.right, &mut parts);
+    let fmt = syn::LitStr::new(&"{}".repeat(parts.len()), Span::call_site());
+    parse_quote!(::std::format!(#fmt, #(#parts),*))
+}
+
+/// Flatten a `+` chain, translating each leaf to `syn::Expr`. A non-`+`
+/// sub-expression (e.g. `a * b` inside a concat) is a leaf, translated as a whole.
+fn flatten_add(expr: &Expression, parts: &mut Vec<Expr>) {
+    if let Expression::BinaryExpression(bin) = expr {
+        if matches!(bin.operator, BinaryOperator::Addition) {
+            flatten_add(&bin.left, parts);
+            flatten_add(&bin.right, parts);
+            return;
+        }
+    }
+    parts.push(translate_expr(expr));
 }
 
 /// `&&`/`||` are a separate `LogicalExpression` in oxc (not `BinaryExpression`).
