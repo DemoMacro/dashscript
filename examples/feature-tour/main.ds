@@ -23,6 +23,15 @@ function describe(v: Vector): string {
   return "magnitude " + mag + " => " + (mag > 5 ? "large" : "small");
 }
 
+type Shape = { kind: "circle"; radius: number } | { kind: "square"; side: number };
+
+function area(s: Shape): number {
+  switch (s.kind) {
+    case "circle": return s.radius * s.radius;
+    case "square": return s.side * s.side;
+  }
+}
+
 function main(): void {
   const v: Vector = { x: 3, y: 4 };
   console.log("magnitude:", magnitude(v));
@@ -34,6 +43,12 @@ function main(): void {
 
   const u: Vector = { x: 1, y: 2 };
   console.log(describe(u));
+
+  // discriminated union: construct a variant, then destructure it in a switch
+  const c: Shape = { kind: "circle", radius: 3 };
+  console.log("circle area:", area(c));
+  const sq: Shape = { kind: "square", side: 4 };
+  console.log("square area:", area(sq));
 
   // string methods + concatenation
   const greeting = "Hello, World";

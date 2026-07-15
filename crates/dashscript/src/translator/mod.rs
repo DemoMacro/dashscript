@@ -428,4 +428,15 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("Shape::Circle { radius: 3.0 }"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_discriminated_union_switch_destructure() {
+        let src = "type Shape = { kind: \"circle\"; radius: number } | { kind: \"square\"; side: number }; function area(s: Shape): number { switch (s.kind) { case \"circle\": return s.radius * s.radius; case \"square\": return s.side * s.side; } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("match s"), "got:\n{rust}");
+        assert!(rust.contains("Shape::Circle { radius }"), "got:\n{rust}");
+        assert!(rust.contains("Shape::Square { side }"), "got:\n{rust}");
+        // narrowing: each `s.radius` reads as the destructured `radius` binding.
+        assert!(rust.contains("radius * radius"), "got:\n{rust}");
+    }
 }

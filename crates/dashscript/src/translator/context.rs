@@ -8,7 +8,7 @@
 //! `x.is_none()`, `a ?? b`, enum construction, array callbacks — can decide
 //! without a full type checker.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use syn::Path;
 
@@ -17,16 +17,43 @@ use super::registry::{TypeRegistry, VariantShape};
 /// Local binding name → its type's path (e.g. `Option<f64>`, `Vec<f64>`).
 pub type Locals = HashMap<String, Path>;
 
+/// Field rewriting active inside one `match` arm of a discriminated union:
+/// within the arm body, `scrut.field` (for any `field` in `fields`) reads as the
+/// destructured binding `field`. `scrut == None` disables rewriting. Names are
+/// stored snake-cased to match Rust identifiers and the locals table.
+#[derive(Clone, Default)]
+pub struct Narrow {
+    scrut: Option<String>,
+    fields: HashSet<String>,
+}
+
+impl Narrow {
+    /// A narrowing scope: `scrut` is the variable being matched, `fields` the
+    /// data-field names of the active variant (all snake-cased).
+    #[must_use]
+    pub fn of(scrut: String, fields: HashSet<String>) -> Self {
+        Self { scrut: Some(scrut), fields }
+    }
+
+    /// True when `scrut.field` (both snake-cased) should read as the arm's
+    /// `field` binding in the current scope.
+    #[must_use]
+    pub fn binds(&self, scrut: &str, field: &str) -> bool {
+        self.scrut.as_deref() == Some(scrut) && self.fields.contains(field)
+    }
+}
+
 /// Read-only type context for translating one function body's expressions.
 pub struct Ctx<'a> {
     locals: &'a Locals,
     registry: &'a TypeRegistry,
+    narrow: &'a Narrow,
 }
 
 impl<'a> Ctx<'a> {
     #[must_use]
-    pub fn new(locals: &'a Locals, registry: &'a TypeRegistry) -> Self {
-        Self { locals, registry }
+    pub fn new(locals: &'a Locals, registry: &'a TypeRegistry, narrow: &'a Narrow) -> Self {
+        Self { locals, registry, narrow }
     }
 
     /// The type path of a local binding named `name`, if it is known.
@@ -46,6 +73,13 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn variant(&self, type_name: &str, kind: &str) -> Option<&'a VariantShape> {
         self.registry.get(type_name)?.get(kind)
+    }
+
+    /// True when `scrut.field` (both snake-cased) is narrowed to an arm binding
+    /// in the current scope.
+    #[must_use]
+    pub fn narrow_binds(&self, scrut: &str, field: &str) -> bool {
+        self.narrow.binds(scrut, field)
     }
 }
 

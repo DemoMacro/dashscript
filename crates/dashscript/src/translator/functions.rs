@@ -10,7 +10,7 @@ use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, Pat, ReturnType, Stmt, Type};
 
-use super::context::{Ctx, Locals};
+use super::context::{Ctx, Locals, Narrow};
 use super::registry::TypeRegistry;
 use super::{bindings, declarations, expressions, types};
 
@@ -49,7 +49,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
     for fp in &func.params.items {
         register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
     }
-    let block = translate_body(func.body.as_deref(), &mut locals, registry);
+    let block = translate_body(func.body.as_deref(), &mut locals, registry, &Narrow::default());
     parse_quote! {
         fn #name(#(#inputs),*) #output #block
     }
@@ -84,12 +84,17 @@ fn register_local(
     locals.insert(name.to_string(), path);
 }
 
-fn translate_body(body: Option<&FunctionBody>, locals: &mut Locals, registry: &TypeRegistry) -> Block {
+fn translate_body(
+    body: Option<&FunctionBody>,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Block {
     let stmts: Vec<Stmt> = body
         .map(|b| {
             b.statements
                 .iter()
-                .flat_map(|s| translate_stmt(s, locals, registry))
+                .flat_map(|s| translate_stmt(s, locals, registry, narrow))
                 .collect()
         })
         .unwrap_or_default();
@@ -97,17 +102,22 @@ fn translate_body(body: Option<&FunctionBody>, locals: &mut Locals, registry: &T
 }
 
 /// Translate a function-body statement into zero or more `syn::Stmt`s.
-fn translate_stmt(stmt: &Statement, locals: &mut Locals, registry: &TypeRegistry) -> Vec<Stmt> {
+fn translate_stmt(
+    stmt: &Statement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Vec<Stmt> {
     match stmt {
         Statement::BlockStatement(block) => block
             .body
             .iter()
-            .flat_map(|s| translate_stmt(s, locals, registry))
+            .flat_map(|s| translate_stmt(s, locals, registry, narrow))
             .collect(),
         Statement::ReturnStatement(ret) => {
             let s: Stmt = match &ret.argument {
                 Some(arg) => {
-                    let expr = expressions::translate_expr(arg, &Ctx::new(&*locals, registry));
+                    let expr = expressions::translate_expr(arg, &Ctx::new(&*locals, registry, narrow));
                     parse_quote!(return #expr;)
                 }
                 None => parse_quote!(return;),
@@ -115,45 +125,57 @@ fn translate_stmt(stmt: &Statement, locals: &mut Locals, registry: &TypeRegistry
             vec![s]
         }
         Statement::ExpressionStatement(es) => {
-            let expr = expressions::translate_expr(&es.expression, &Ctx::new(&*locals, registry));
+            let expr = expressions::translate_expr(&es.expression, &Ctx::new(&*locals, registry, narrow));
             vec![parse_quote!(#expr;)]
         }
-        Statement::VariableDeclaration(decl) => translate_variable_declaration(decl, locals, registry),
-        Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt, locals, registry)],
-        Statement::WhileStatement(while_stmt) => vec![translate_while(while_stmt, locals, registry)],
-        Statement::DoWhileStatement(dws) => vec![translate_do_while(dws, locals, registry)],
-        Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals, registry),
-        Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals, registry),
-        Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals, registry)],
+        Statement::VariableDeclaration(decl) => {
+            translate_variable_declaration(decl, locals, registry, narrow)
+        }
+        Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt, locals, registry, narrow)],
+        Statement::WhileStatement(while_stmt) => vec![translate_while(while_stmt, locals, registry, narrow)],
+        Statement::DoWhileStatement(dws) => vec![translate_do_while(dws, locals, registry, narrow)],
+        Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals, registry, narrow),
+        Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals, registry, narrow),
+        Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals, registry, narrow)],
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
         Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
         _ => vec![],
     }
 }
 
-fn translate_if(stmt: &IfStatement, locals: &mut Locals, registry: &TypeRegistry) -> Stmt {
-    let cond = condition_expr(&stmt.test, locals, registry);
-    let then_block = statement_block(&stmt.consequent, locals, registry);
+fn translate_if(stmt: &IfStatement, locals: &mut Locals, registry: &TypeRegistry, narrow: &Narrow) -> Stmt {
+    let cond = condition_expr(&stmt.test, locals, registry, narrow);
+    let then_block = statement_block(&stmt.consequent, locals, registry, narrow);
     match &stmt.alternate {
         Some(alt) => {
-            let else_block = statement_block(alt, locals, registry);
+            let else_block = statement_block(alt, locals, registry, narrow);
             parse_quote!(if #cond #then_block else #else_block)
         }
         None => parse_quote!(if #cond #then_block),
     }
 }
 
-fn translate_while(stmt: &WhileStatement, locals: &mut Locals, registry: &TypeRegistry) -> Stmt {
-    let cond = condition_expr(&stmt.test, locals, registry);
-    let body = statement_block(&stmt.body, locals, registry);
+fn translate_while(
+    stmt: &WhileStatement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Stmt {
+    let cond = condition_expr(&stmt.test, locals, registry, narrow);
+    let body = statement_block(&stmt.body, locals, registry, narrow);
     parse_quote!(while #cond #body)
 }
 
 /// `do { body } while (test)` → `loop { body; if !(test) { break; } }` — Rust
 /// has no do-while, so the body runs once then the test gates each repeat.
-fn translate_do_while(stmt: &DoWhileStatement, locals: &mut Locals, registry: &TypeRegistry) -> Stmt {
-    let body = statement_block(&stmt.body, locals, registry);
-    let test = condition_expr(&stmt.test, locals, registry);
+fn translate_do_while(
+    stmt: &DoWhileStatement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Stmt {
+    let body = statement_block(&stmt.body, locals, registry, narrow);
+    let test = condition_expr(&stmt.test, locals, registry, narrow);
     parse_quote!(loop {
         #body
         if !(#test) {
@@ -165,7 +187,7 @@ fn translate_do_while(stmt: &DoWhileStatement, locals: &mut Locals, registry: &T
 /// Translate an `if`/`while` test. A bare identifier of a `Vec`/`String` type
 /// maps to an emptiness check, and an `Option` maps to `is_some`; negation flips
 /// to `is_empty`/`is_none`. Anything else translates as a plain boolean expr.
-fn condition_expr(test: &Expression, locals: &Locals, registry: &TypeRegistry) -> Expr {
+fn condition_expr(test: &Expression, locals: &Locals, registry: &TypeRegistry, narrow: &Narrow) -> Expr {
     if let Some(expr) = truthiness(test, false, locals) {
         return expr;
     }
@@ -176,7 +198,7 @@ fn condition_expr(test: &Expression, locals: &Locals, registry: &TypeRegistry) -
             }
         }
     }
-    expressions::translate_expr(test, &Ctx::new(locals, registry))
+    expressions::translate_expr(test, &Ctx::new(locals, registry, narrow))
 }
 
 /// If `expr` is a bare identifier of a collection (`Vec`/`String`) or `Option`
@@ -214,12 +236,17 @@ fn truthiness(expr: &Expression, negated: bool, locals: &Locals) -> Option<Expr>
 /// avoiding a `&f64`/`f64` mismatch on comparisons inside the body. This works
 /// for Copy elements (DashScript `number`/`boolean`); iterating owned values
 /// out of a `Vec<String>` is unsupported yet.
-fn translate_for_of(stmt: &ForOfStatement, locals: &mut Locals, registry: &TypeRegistry) -> Vec<Stmt> {
+fn translate_for_of(
+    stmt: &ForOfStatement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Vec<Stmt> {
     let Some(pat) = for_of_binding(&stmt.left) else {
         return vec![];
     };
-    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry));
-    let body = statement_block(&stmt.body, locals, registry);
+    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
+    let body = statement_block(&stmt.body, locals, registry, narrow);
     vec![parse_quote!(for &#pat in &#iter #body)]
 }
 
@@ -230,21 +257,26 @@ fn translate_for_of(stmt: &ForOfStatement, locals: &mut Locals, registry: &TypeR
 /// in a block so the loop's own bindings (e.g. `i`) don't collide across loops.
 /// A `continue` inside the body skips the `update` step — a known limitation;
 /// use a `while` if the update must run every iteration.
-fn translate_for(stmt: &ForStatement, locals: &mut Locals, registry: &TypeRegistry) -> Vec<Stmt> {
+fn translate_for(
+    stmt: &ForStatement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Vec<Stmt> {
     let init: Vec<Stmt> = match &stmt.init {
         Some(ForStatementInit::VariableDeclaration(decl)) => {
-            translate_variable_declaration(decl, locals, registry)
+            translate_variable_declaration(decl, locals, registry, narrow)
         }
         _ => Vec::new(),
     };
     let test = stmt
         .test
         .as_ref()
-        .map(|t| condition_expr(t, locals, registry))
+        .map(|t| condition_expr(t, locals, registry, narrow))
         .unwrap_or_else(|| parse_quote!(true));
-    let body = translate_stmt(&stmt.body, locals, registry);
+    let body = translate_stmt(&stmt.body, locals, registry, narrow);
     let update: Option<Stmt> = stmt.update.as_ref().map(|u| {
-        let e = expressions::translate_expr(u, &Ctx::new(&*locals, registry));
+        let e = expressions::translate_expr(u, &Ctx::new(&*locals, registry, narrow));
         parse_quote!(#e;)
     });
     vec![parse_quote!({
@@ -266,25 +298,104 @@ fn for_of_binding(left: &ForStatementLeft) -> Option<Ident> {
 }
 
 /// Turn any statement into a `{ … }` block (used by if/while/for bodies).
-fn statement_block(stmt: &Statement, locals: &mut Locals, registry: &TypeRegistry) -> Block {
-    let stmts: Vec<Stmt> = translate_stmt(stmt, locals, registry);
+fn statement_block(stmt: &Statement, locals: &mut Locals, registry: &TypeRegistry, narrow: &Narrow) -> Block {
+    let stmts: Vec<Stmt> = translate_stmt(stmt, locals, registry, narrow);
     parse_quote!({ #(#stmts)* })
 }
 
 /// `switch (s) { case "x": …; default: … }` → `match s { … }`.
 ///
-/// When `s` is a variable of enum type, each string-literal case becomes a
-/// variant pattern (`Status::Pending`); a `default` case becomes `_`. `break`
-/// is dropped — Rust `match` arms don't fall through.
-fn translate_switch(sw: &SwitchStatement, locals: &mut Locals, registry: &TypeRegistry) -> Stmt {
-    let disc = expressions::translate_expr(&sw.discriminant, &Ctx::new(&*locals, registry));
+/// Two shapes: `switch (x.kind) { … }` on a discriminated-union local
+/// destructures variants (`Shape::Circle { radius } => …`, with `s.radius` in
+/// the arm body narrowed to `radius`); `switch (e) { … }` on a bare enum
+/// identifier maps each string-literal case to a unit/tuple variant pattern.
+fn translate_switch(
+    sw: &SwitchStatement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Stmt {
+    if let Some((scrut, type_name)) = discriminant_member(&sw.discriminant, locals, registry) {
+        return discriminated_match(sw, &scrut, &type_name, locals, registry);
+    }
+    let disc = expressions::translate_expr(&sw.discriminant, &Ctx::new(&*locals, registry, narrow));
     let enum_path = discriminant_path(&sw.discriminant, locals);
     let arms: Vec<Arm> = sw
         .cases
         .iter()
-        .filter_map(|c| switch_arm(c, enum_path.as_ref(), locals, registry))
+        .filter_map(|c| switch_arm(c, enum_path.as_ref(), locals, registry, narrow))
         .collect();
     parse_quote!(match #disc { #(#arms)* })
+}
+
+/// When `disc` is `x.kind` and `x` is a local of a registered discriminated
+/// union, return `(x's snake name, the enum's type name)`.
+fn discriminant_member(
+    disc: &Expression,
+    locals: &Locals,
+    registry: &TypeRegistry,
+) -> Option<(String, String)> {
+    let Expression::StaticMemberExpression(sm) = disc else {
+        return None;
+    };
+    if sm.property.name.as_str() != "kind" {
+        return None;
+    }
+    let Expression::Identifier(obj) = &sm.object else {
+        return None;
+    };
+    let scrut = bindings::snake(&obj.name).to_string();
+    let type_name = locals.get(&scrut)?.segments.last()?.ident.to_string();
+    registry.contains_key(&type_name).then_some((scrut, type_name))
+}
+
+/// `switch (s.kind) { case "circle": … }` → `match s { Shape::Circle { radius } => … }`.
+/// Each arm body is translated under a [`Narrow`] that rewrites `s.field` to the
+/// `field` binding.
+fn discriminated_match(
+    sw: &SwitchStatement,
+    scrut: &str,
+    type_name: &str,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+) -> Stmt {
+    let scrut_ident = format_ident!("{}", scrut);
+    let arms: Vec<Arm> = sw
+        .cases
+        .iter()
+        .filter_map(|c| discriminated_arm(c, scrut, type_name, locals, registry))
+        .collect();
+    parse_quote!(match #scrut_ident { #(#arms)* })
+}
+
+/// One arm of a discriminated-union match: `case "circle"` →
+/// `Shape::Circle { radius } => <body with s.radius narrowed to radius>`.
+/// A `default` arm becomes `_ => <body>` with no narrowing.
+fn discriminated_arm(
+    c: &SwitchCase,
+    scrut: &str,
+    type_name: &str,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+) -> Option<Arm> {
+    let (pat, narrow) = match &c.test {
+        Some(Expression::StringLiteral(s)) => {
+            let value = s.value.to_string();
+            let shape = registry.get(type_name)?.get(&value)?.clone();
+            let type_ident = format_ident!("{}", type_name);
+            let variant = shape.name;
+            let field_idents: Vec<Ident> = shape.fields.clone();
+            let narrow = Narrow::of(
+                scrut.to_string(),
+                field_idents.iter().map(|f| f.to_string()).collect(),
+            );
+            let pat: Pat = parse_quote!(#type_ident::#variant { #(#field_idents),* });
+            (pat, narrow)
+        }
+        _ => (parse_quote!(_), Narrow::default()),
+    };
+    let body = case_body(&c.consequent, locals, registry, &narrow);
+    Some(parse_quote!(#pat => #body,))
 }
 
 fn discriminant_path(disc: &Expression, locals: &Locals) -> Option<syn::Path> {
@@ -298,12 +409,13 @@ fn switch_arm(
     enum_path: Option<&syn::Path>,
     locals: &mut Locals,
     registry: &TypeRegistry,
+    narrow: &Narrow,
 ) -> Option<Arm> {
     let pat = match &c.test {
         Some(test) => switch_pattern(test, enum_path),
         None => parse_quote!(_),
     };
-    let body = case_body(&c.consequent, locals, registry);
+    let body = case_body(&c.consequent, locals, registry, narrow);
     Some(parse_quote!(#pat => #body,))
 }
 
@@ -322,11 +434,11 @@ fn switch_pattern(test: &Expression, enum_path: Option<&syn::Path>) -> Pat {
     parse_quote!(#path::#variant)
 }
 
-fn case_body(stmts: &[Statement], locals: &mut Locals, registry: &TypeRegistry) -> Block {
+fn case_body(stmts: &[Statement], locals: &mut Locals, registry: &TypeRegistry, narrow: &Narrow) -> Block {
     let rust: Vec<Stmt> = stmts
         .iter()
         .filter(|s| !matches!(s, Statement::BreakStatement(_)))
-        .flat_map(|s| translate_stmt(s, locals, registry))
+        .flat_map(|s| translate_stmt(s, locals, registry, narrow))
         .collect();
     parse_quote!({ #(#rust)* })
 }
@@ -336,6 +448,7 @@ fn translate_variable_declaration(
     decl: &VariableDeclaration,
     locals: &mut Locals,
     registry: &TypeRegistry,
+    narrow: &Narrow,
 ) -> Vec<Stmt> {
     let mutable = matches!(decl.kind, VariableDeclarationKind::Let);
     decl.declarations
@@ -352,7 +465,7 @@ fn translate_variable_declaration(
                 }
             }
             let init = d.init.as_ref().map(|e| {
-                expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry))
+                expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry, narrow))
             });
             build_local(&name, mutable, ty.as_ref(), init.as_ref())
         })

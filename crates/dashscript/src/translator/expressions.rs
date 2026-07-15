@@ -206,6 +206,15 @@ fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return p;
         }
     }
+    // Inside a discriminated-union match arm, `s.field` reads as the `field`
+    // binding the pattern destructured (TS narrowing).
+    if let Expression::Identifier(id) = &sm.object {
+        let scrut = bindings::snake(&id.name);
+        let field = bindings::snake(field_name);
+        if ctx.narrow_binds(&scrut.to_string(), &field.to_string()) {
+            return parse_quote!(#field);
+        }
+    }
     let obj = translate_expr(&sm.object, ctx);
     // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a field).
     if field_name == "length" {
