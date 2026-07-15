@@ -269,6 +269,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_string_compound_append() {
+        let src = "function f(): void { let s = \"a\"; s += \"bc\"; console.log(s); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".push_str(\"bc\")"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_type_union_to_tagged_enum() {
         let src = "interface Circle { radius: number } interface Square { side: number } type Shape = Circle | Square;";
         let rust = Translator::new().translate(src).expect("should translate");

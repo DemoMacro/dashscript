@@ -343,7 +343,14 @@ fn assignment_expr(a: &AssignmentExpression) -> Expr {
     let right = translate_expr(&a.right);
     let tokens = match a.operator {
         AssignmentOperator::Assign => quote!(#target = #right),
-        AssignmentOperator::Addition => quote!(#target += #right),
+        // `s += "lit"` is string append (String has no AddAssign) → `push_str`.
+        AssignmentOperator::Addition => match &a.right {
+            Expression::StringLiteral(s) => {
+                let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+                quote!(#target.push_str(#lit))
+            }
+            _ => quote!(#target += #right),
+        },
         AssignmentOperator::Subtraction => quote!(#target -= #right),
         AssignmentOperator::Multiplication => quote!(#target *= #right),
         AssignmentOperator::Division => quote!(#target /= #right),
