@@ -595,6 +595,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_for_each_to_for_each() {
+        let src = "function f(): void { const xs: number[] = [1, 2]; xs.forEach((n) => console.log(n)); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".for_each(|n|"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_index_of_to_find() {
         let src = "function f(): void { const s = \"hello\"; const i = s.indexOf(\"ll\"); }";
         let rust = Translator::new().translate(src).expect("should translate");

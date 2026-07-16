@@ -162,6 +162,9 @@ function main(): void {
   console.log("join:", xs.join("-"));
   console.log("reduce:", xs.reduce((a, b) => a + b, 0));
 
+  // array iteration with side effects: `.forEach(cb)` → for_each
+  xs.forEach((n) => console.log("each:", n));
+
   // array spread: `[...xs, v]` → `[xs.as_slice(), &[v][..]].concat()`
   const tail: number[] = [...xs, 4];
   console.log("tail:", tail.length);

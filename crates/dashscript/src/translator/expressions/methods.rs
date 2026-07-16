@@ -115,6 +115,15 @@ pub(super) fn array_method(
             let cb = arrow_expr(arrow, ctx, false);
             parse_quote!(#recv.iter().copied().all(#cb))
         }
+        // `.forEach(cb)` → `for_each` (side-effecting; returns `()`). The
+        // callback takes the item by value (after `.copied()`), so `|n|`.
+        "forEach" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, false);
+            parse_quote!(#recv.iter().copied().for_each(#cb))
+        }
         // `.join(sep)` → `Vec<String>.join(sep)` (each element stringified first).
         "join" => {
             let sep = str_method_arg(args.first()?, ctx);

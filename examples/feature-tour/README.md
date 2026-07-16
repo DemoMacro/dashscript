@@ -62,6 +62,9 @@ some >2: true
 every >0: true
 join: 1-2-3
 reduce: 6
+each: 1
+each: 2
+each: 3
 tail: 4
 array destructure: 10 20
 sorted: 1 2 3
@@ -128,6 +131,7 @@ set: 42
 | `xs.some` / `.every`                   | `….any(\|n\| …)` / `….all(\|n\| …)`                        |
 | `xs.join("-")`                         | `….map(to_string).collect().join("-")`                     |
 | `xs.reduce((a, b) => …, 0)`            | `….fold(0.0, \|a, b\| …)`                                  |
+| `xs.forEach((n) => …)`                 | `….iter().copied().for_each(\|n\| …)`                      |
 | `[...xs, 4]`                           | `[xs.as_slice(), &[4][..]].concat()`                       |
 | `const [a, b] = xs`                    | `let a = xs[0]; let b = xs[1];`                            |
 | `xs.concat(ys)`                        | `[xs.as_slice(), ys.as_slice()].concat()`                  |
