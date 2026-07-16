@@ -160,6 +160,9 @@ pub(super) fn array_method(
                 None => parse_quote!(#recv.iter().copied().reduce(#cb)),
             }
         }
+        // `.flat()` → flatten one level (`Vec<Vec<T>>::concat` → `Vec<T>`).
+        // A depth argument is unsupported.
+        "flat" if args.is_empty() => parse_quote!(#recv.concat()),
         // `.concat(ys, …)` → concatenate slices into a new `Vec`. Arguments
         // are assumed to be arrays; scalar concat args are unsupported.
         "concat" => {

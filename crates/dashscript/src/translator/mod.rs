@@ -654,6 +654,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_flat_to_concat() {
+        let src = "function f(xss: number[][]): number[] { return xss.flat(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".concat()"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_for_each_to_for_each() {
         let src = "function f(): void { const xs: number[] = [1, 2]; xs.forEach((n) => console.log(n)); }";
         let rust = Translator::new().translate(src).expect("should translate");

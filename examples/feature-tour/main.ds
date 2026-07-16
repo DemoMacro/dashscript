@@ -178,6 +178,9 @@ function main(): void {
   // flatMap: map each element to an array, then flatten into one
   const pairs = xs.flatMap((n) => [n, n * 2]);
   console.log("flatMap:", pairs.length);
+  // nested array + `.flat()` (one level) → Vec::concat
+  const nested: number[][] = [[1, 2], [3]];
+  console.log("flat:", nested.flat().length);
 
   // array iteration with side effects: `.forEach(cb)` → for_each
   xs.forEach((n) => console.log("each:", n));
