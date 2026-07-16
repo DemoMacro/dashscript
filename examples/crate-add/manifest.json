@@ -1,0 +1,7 @@
+{
+  "name": "crate-add",
+  "target": "rust",
+  "dependencies": {
+    "rust:adler": "1.0.2"
+  }
+}

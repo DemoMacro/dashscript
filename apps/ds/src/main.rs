@@ -9,7 +9,7 @@ use std::{
     process::{Command, ExitCode, ExitStatus},
 };
 
-use dashscript::{Bindgen, Manifest, Translator};
+use dashscript::{fetch, Bindgen, Manifest, Translator};
 
 fn main() -> ExitCode {
     let mut args = std::env::args().skip(1);
@@ -23,8 +23,12 @@ fn main() -> ExitCode {
             None => usage_exit("usage: ds build <file.ds>"),
         },
         Some("add") => match args.next() {
-            Some(file) => run_cmd(&file, CommandKind::Add),
-            None => usage_exit("usage: ds add <file.rs>"),
+            Some(spec) => report(add(&spec)),
+            None => usage_exit("usage: ds add <crate|rust:crate|file.rs>"),
+        },
+        Some("remove") => match args.next() {
+            Some(name) => report(remove(&name)),
+            None => usage_exit("usage: ds remove <crate|rust:crate>"),
         },
         Some("check") => match args.next() {
             Some(file) => report(check(&file)),
@@ -36,13 +40,13 @@ fn main() -> ExitCode {
         },
         Some(other) => {
             eprintln!("ds: unknown subcommand '{other}'");
-            eprintln!("available: run <file.ds>, build <file.ds>, add <file.rs>, check <file.ds>, fmt <file.ds>");
+            eprintln!("available: run <file.ds>, build <file.ds>, add <crate|file.rs>, remove <crate>, check <file.ds>, fmt <file.ds>");
             ExitCode::FAILURE
         }
         None => {
             eprintln!("ds: DashScript toolchain");
             eprintln!("usage: ds <command> [args]");
-            eprintln!("commands: run <file.ds>, build <file.ds>, add <file.rs>, check <file.ds>, fmt <file.ds>");
+            eprintln!("commands: run <file.ds>, build <file.ds>, add <crate|file.rs>, remove <crate>, check <file.ds>, fmt <file.ds>");
             ExitCode::FAILURE
         }
     }
@@ -51,14 +55,12 @@ fn main() -> ExitCode {
 enum CommandKind {
     Run,
     Build,
-    Add,
 }
 
 fn run_cmd(file: &str, kind: CommandKind) -> ExitCode {
     let result = match kind {
         CommandKind::Run => run(file),
         CommandKind::Build => build(file),
-        CommandKind::Add => add(file),
     };
     report(result)
 }
@@ -190,9 +192,45 @@ fn build(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     Ok(status_to_code(status))
 }
 
-/// Generate a `.ds` type declaration from a Rust source file (bindgen),
+/// Add a dependency to the project.
+///
+/// A `.rs` path runs bindgen on that local file (writes `<stem>.ds` beside
+/// it — the `bindgen-demo` flow). Any other spec is a crate name, with or
+/// without a `rust:` prefix: cargo downloads it into its global registry and
+/// DashScript records it in `manifest.json`. No `.ds` declaration is generated
+/// — type information comes from the crate source itself (read directly by the
+/// language server, the way rust-analyzer reads `~/.cargo`).
+fn add(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
+    if spec.ends_with(".rs") {
+        return add_local_file(spec);
+    }
+    let crate_name = spec.strip_prefix("rust:").unwrap_or(spec);
+    let version = fetch::add_via_cargo(crate_name, cargo_bin())
+        .map_err(|e| format!("ds add {crate_name}: {e}"))?;
+    let manifest_path = Path::new("manifest.json");
+    let mut manifest = read_manifest(manifest_path).unwrap_or_else(|_| default_manifest());
+    manifest.add_dependency("rust", crate_name, &version);
+    fs::write(manifest_path, format!("{}\n", manifest.to_json()?))?;
+    println!("ds: added rust:{crate_name} = {version}");
+    Ok(ExitCode::SUCCESS)
+}
+
+/// Remove a crate dependency from `manifest.json`.
+fn remove(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
+    let name = spec.strip_prefix("rust:").unwrap_or(spec);
+    let manifest_path = Path::new("manifest.json");
+    let mut manifest = read_manifest(manifest_path)?;
+    if !manifest.remove_dependency("rust", name) {
+        return Err(format!("rust:{name} is not in {}", manifest_path.display()).into());
+    }
+    fs::write(manifest_path, format!("{}\n", manifest.to_json()?))?;
+    println!("ds: removed rust:{name}");
+    Ok(ExitCode::SUCCESS)
+}
+
+/// Generate a `.ds` type declaration from a local Rust source file (bindgen),
 /// written beside it as `<stem>.ds`.
-fn add(file: &str) -> Result<ExitCode, Box<dyn Error>> {
+fn add_local_file(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     let path = Path::new(file);
     let rust = fs::read_to_string(path)
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
@@ -203,6 +241,31 @@ fn add(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     fs::write(&out, ds)?;
     println!("ds: generated {}", out.display());
     Ok(ExitCode::SUCCESS)
+}
+
+/// Path to the cargo binary — the system `cargo` today; a DashScript-managed
+/// toolchain replaces this once the self-contained Rust layer lands.
+fn cargo_bin() -> &'static Path {
+    Path::new("cargo")
+}
+
+/// A manifest named after the current directory, with defaults.
+fn default_manifest() -> Manifest {
+    let name = std::env::current_dir()
+        .ok()
+        .and_then(|d| d.file_name().map(|n| n.to_string_lossy().into_owned()))
+        .unwrap_or_else(|| "dashscript".to_string());
+    Manifest {
+        name,
+        ..Manifest::default()
+    }
+}
+
+/// Read and parse a `manifest.json`.
+fn read_manifest(path: &Path) -> Result<Manifest, Box<dyn Error>> {
+    let json = fs::read_to_string(path)
+        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    Ok(Manifest::from_json(&json)?)
 }
 
 /// Check a `.ds` file for translatability in-process: syntax errors (from

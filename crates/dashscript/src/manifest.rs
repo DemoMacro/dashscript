@@ -81,4 +81,75 @@ impl Manifest {
         out.push_str("\n[workspace]\n");
         out
     }
+
+    /// Record a dependency under its target prefix (`rust:serde`). Returns
+    /// `true` if newly added, `false` if it already existed (the requirement is
+    /// still updated in place).
+    pub fn add_dependency(&mut self, target: &str, name: &str, req: &str) -> bool {
+        self.dependencies
+            .insert(format!("{target}:{name}"), req.to_string())
+            .is_none()
+    }
+
+    /// Remove a target-prefixed dependency (`rust:serde`). Returns `true` if it
+    /// was present and removed.
+    pub fn remove_dependency(&mut self, target: &str, name: &str) -> bool {
+        self.dependencies.remove(&format!("{target}:{name}")).is_some()
+    }
+
+    /// Serialize back to a pretty `manifest.json` document (2-space indent), so
+    /// `ds add` / `ds remove` can persist dependency changes.
+    ///
+    /// # Errors
+    /// Returns a [`serde_json::Error`] if serialization fails (symmetric with
+    /// [`Self::from_json`]).
+    pub fn to_json(&self) -> Result<String, serde_json::Error> {
+        serde_json::to_string_pretty(self)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Manifest;
+
+    #[test]
+    fn add_dependency_inserts_and_reports_new() {
+        let mut m = Manifest::default();
+        assert!(m.add_dependency("rust", "serde", "1.0"));
+        assert!(!m.add_dependency("rust", "serde", "2.0")); // already present
+        assert_eq!(m.dependencies.get("rust:serde"), Some(&"2.0".to_string()));
+    }
+
+    #[test]
+    fn remove_dependency_reports_presence() {
+        let mut m = Manifest::default();
+        m.add_dependency("rust", "serde", "1.0");
+        assert!(m.remove_dependency("rust", "serde"));
+        assert!(!m.remove_dependency("rust", "serde"));
+    }
+
+    #[test]
+    fn add_dependency_flows_into_cargo_toml() {
+        let mut m = Manifest {
+            name: "demo".to_string(),
+            ..Manifest::default()
+        };
+        m.add_dependency("rust", "serde", "1.0");
+        let toml = m.to_cargo_toml();
+        assert!(toml.contains("serde = \"1.0\""), "got:\n{toml}");
+    }
+
+    #[test]
+    fn to_json_roundtrips_through_from_json() {
+        let mut m = Manifest {
+            name: "demo".to_string(),
+            ..Manifest::default()
+        };
+        m.add_dependency("rust", "serde", "1.0");
+        let json = m.to_json().expect("should serialize");
+        assert!(json.contains("\"rust:serde\": \"1.0\""), "got:\n{json}");
+        let m2 = Manifest::from_json(&json).expect("should parse");
+        assert_eq!(m2.name, "demo");
+        assert_eq!(m2.dependencies.get("rust:serde"), Some(&"1.0".to_string()));
+    }
 }

@@ -10,6 +10,7 @@
 //! crates.io).
 
 pub mod bindgen;
+pub mod fetch;
 pub mod manifest;
 pub mod translator;
 
