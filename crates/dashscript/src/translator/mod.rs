@@ -865,7 +865,7 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(
             rust.contains(
-                "xs.sort_by(|a, b| a.partial_cmp(&b).unwrap_or(::core::cmp::Ordering::Equal));",
+                "xs.sort_by(|a, b| a.partial_cmp(b).unwrap_or(::core::cmp::Ordering::Equal));",
             ),
             "got:\n{rust}"
         );

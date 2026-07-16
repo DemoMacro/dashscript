@@ -243,7 +243,7 @@ pub(super) fn array_method(
         "sort" if args.is_empty() => {
             // `partial_cmp` is `None` for NaN; fall back to `Equal` so a NaN
             // element never panics (TS sort never throws on NaN).
-            parse_quote!(#recv.sort_by(|a, b| a.partial_cmp(&b).unwrap_or(::core::cmp::Ordering::Equal)))
+            parse_quote!(#recv.sort_by(|a, b| a.partial_cmp(b).unwrap_or(::core::cmp::Ordering::Equal)))
         }
         _ => return None,
     })
