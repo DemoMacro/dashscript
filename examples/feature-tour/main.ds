@@ -131,6 +131,11 @@ function main(): void {
   const tail: number[] = [...xs, 4];
   console.log("tail:", tail.length);
 
+  // array destructuring: `const [a, b] = xs` → positional indexed lets
+  const pair: number[] = [10, 20];
+  const [first, second] = pair;
+  console.log("array destructure:", first, second);
+
   // mutate an element: `ys[i] = v` → `ys[i as usize] = v`
   let ys: number[] = [1, 2, 3];
   ys[0] = 9;

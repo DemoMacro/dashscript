@@ -1,9 +1,9 @@
 //! Function & variable declarations, and statement translation → `syn`.
 
 use oxc_ast::ast::{
-    Argument, BindingPattern, DoWhileStatement, Expression, FormalParameters, ForInStatement,
-    ForOfStatement, ForStatement, ForStatementInit, ForStatementLeft, Function, FunctionBody,
-    IfStatement, ObjectPattern, Statement, SwitchCase, SwitchStatement, TSType,
+    Argument, ArrayPattern, BindingPattern, DoWhileStatement, Expression, FormalParameters,
+    ForInStatement, ForOfStatement, ForStatement, ForStatementInit, ForStatementLeft, Function,
+    FunctionBody, IfStatement, ObjectPattern, Statement, SwitchCase, SwitchStatement, TSType,
     VariableDeclaration, VariableDeclarationKind, WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
@@ -558,25 +558,30 @@ fn translate_variable_declaration(
     let mutable = matches!(decl.kind, VariableDeclarationKind::Let);
     decl.declarations
         .iter()
-        .map(|d| match &d.id {
-            BindingPattern::ObjectPattern(obj) => {
-                destructure_object(obj, d.init.as_ref(), locals, mutable, registry, narrow)
-            }
-            _ => {
-                let name = bindings::binding_name(&d.id);
-                let ty = d
-                    .type_annotation
-                    .as_ref()
-                    .map(|ta| types::translate_type(&ta.type_annotation));
-                if let Some(ty) = &ty {
-                    if let Some(path) = path_of(ty) {
-                        locals.insert(name.to_string(), path);
-                    }
+        .flat_map(|d| -> Vec<Stmt> {
+            match &d.id {
+                BindingPattern::ObjectPattern(obj) => {
+                    vec![destructure_object(obj, d.init.as_ref(), locals, mutable, registry, narrow)]
                 }
-                let init = d.init.as_ref().map(|e| {
-                    expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry, narrow))
-                });
-                build_local(&name, mutable, ty.as_ref(), init.as_ref())
+                BindingPattern::ArrayPattern(arr) => {
+                    destructure_array(arr, d.init.as_ref(), locals, mutable, registry, narrow)
+                }
+                _ => {
+                    let name = bindings::binding_name(&d.id);
+                    let ty = d
+                        .type_annotation
+                        .as_ref()
+                        .map(|ta| types::translate_type(&ta.type_annotation));
+                    if let Some(ty) = &ty {
+                        if let Some(path) = path_of(ty) {
+                            locals.insert(name.to_string(), path);
+                        }
+                    }
+                    let init = d.init.as_ref().map(|e| {
+                        expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry, narrow))
+                    });
+                    vec![build_local(&name, mutable, ty.as_ref(), init.as_ref())]
+                }
             }
         })
         .collect()
@@ -614,6 +619,33 @@ fn destructure_object(
         })
         .collect();
     parse_quote!(let #path { #(#fields),* } = #value;)
+}
+
+/// `const [a, b] = xs` → `let a = xs[0 as usize]; let b = xs[1 as usize];`
+/// (positional indexing). Holes (`[, c]`) and `…rest` are unsupported; only
+/// plain-identifier elements.
+fn destructure_array(
+    arr: &ArrayPattern,
+    init: Option<&Expression>,
+    locals: &mut Locals,
+    mutable: bool,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Vec<Stmt> {
+    let Some(init_expr) = init else {
+        return vec![parse_quote!(let _ = ::core::todo!();)];
+    };
+    let value = expressions::translate_expr(init_expr, &Ctx::new(&*locals, registry, narrow));
+    arr.elements
+        .iter()
+        .enumerate()
+        .filter_map(|(i, elem)| {
+            let pat = elem.as_ref()?;
+            let name = bindings::binding_name(pat);
+            let idx = syn::Index::from(i);
+            Some(build_local(&name, mutable, None, Some(&parse_quote!(#value[#idx]))))
+        })
+        .collect()
 }
 
 /// The `syn::Path` of an expression's type, when the expression is a plain

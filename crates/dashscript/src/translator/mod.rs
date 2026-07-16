@@ -495,6 +495,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_destructuring_to_indexed_lets() {
+        let src = "function f(): void { const xs: number[] = [1, 2]; const [a, b] = xs; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let a = xs[0];"), "got:\n{rust}");
+        assert!(rust.contains("let b = xs[1];"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_object_literal_argument_to_struct_init() {
         let src = "interface V { x: number; y: number; } function g(v: V): number { return v.x; } function f(): number { return g({ x: 1, y: 2 }); }";
         let rust = Translator::new().translate(src).expect("should translate");
