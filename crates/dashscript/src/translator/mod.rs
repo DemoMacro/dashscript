@@ -7,6 +7,7 @@
 //! Rust crates into the same `syn` tree (syn → .ds) — one AST, two
 //! directions. Parsing reuses `oxc_parser`; DashScript never parses itself.
 
+mod analysis;
 pub mod bindings;
 pub mod context;
 pub mod declarations;
@@ -171,10 +172,32 @@ mod tests {
     }
 
     #[test]
-    fn translates_mutable_let_as_let_mut() {
+    fn translates_unmutated_let_is_plain_let() {
         let src = "function main(): void { let n: number = 0; console.log(n); }";
         let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let n:"), "got:\n{rust}");
+        assert!(!rust.contains("let mut n"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_mutated_let_is_let_mut() {
+        let src = "function main(): void { let n: number = 0; n = 5; console.log(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("let mut n"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_mutated_let_by_compound_assign_is_let_mut() {
+        let src = "function main(): void { let n: number = 0; n += 5; console.log(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let mut n"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_mutated_vec_by_method_is_let_mut() {
+        let src = "function main(): void { let xs: number[] = [1]; xs.push(2); console.log(xs); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let mut xs"), "got:\n{rust}");
     }
 
     #[test]

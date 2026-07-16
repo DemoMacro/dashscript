@@ -14,8 +14,37 @@ use syn::Path;
 
 use super::registry::{TypeRegistry, VariantShape};
 
-/// Local binding name → its type's path (e.g. `Option<f64>`, `Vec<f64>`).
-pub type Locals = HashMap<String, Path>;
+/// A function body's locals: their declared types, plus the set of names that
+/// are mutated (assigned / updated / mutator-method receiver) — so a `.ds`
+/// `let` only becomes `let mut` when the binding is actually changed.
+pub struct Locals {
+    types: HashMap<String, Path>,
+    pub mutated: HashSet<String>,
+}
+
+impl Locals {
+    #[must_use]
+    pub fn new() -> Self {
+        Self { types: HashMap::new(), mutated: HashSet::new() }
+    }
+
+    /// The type path of a local binding named `name`, if known.
+    #[must_use]
+    pub fn get(&self, name: &str) -> Option<&Path> {
+        self.types.get(name)
+    }
+
+    /// Record a local's type path.
+    pub fn insert(&mut self, name: String, path: Path) {
+        self.types.insert(name, path);
+    }
+}
+
+impl Default for Locals {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 /// Field rewriting active inside one `match` arm of a discriminated union:
 /// within the arm body, `scrut.field` (for any `field` in `fields`) reads as the

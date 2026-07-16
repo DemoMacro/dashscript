@@ -69,6 +69,9 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
             Some(parse_quote!(let #name = #name.unwrap_or(#default);))
         })
         .collect();
+    if let Some(body) = func.body.as_deref() {
+        locals.mutated = super::analysis::collect_mutations(&body.statements);
+    }
     let mut block = translate_body(
         func.body.as_deref(),
         &mut locals,
@@ -602,19 +605,22 @@ fn translate_variable_declaration(
     registry: &TypeRegistry,
     narrow: &Narrow,
 ) -> Vec<Stmt> {
-    let mutable = matches!(decl.kind, VariableDeclarationKind::Let);
+    let kind_let = matches!(decl.kind, VariableDeclarationKind::Let);
     decl.declarations
         .iter()
         .flat_map(|d| -> Vec<Stmt> {
             match &d.id {
                 BindingPattern::ObjectPattern(obj) => {
-                    destructure_object(obj, d.init.as_ref(), locals, mutable, registry, narrow)
+                    destructure_object(obj, d.init.as_ref(), locals, kind_let, registry, narrow)
                 }
                 BindingPattern::ArrayPattern(arr) => {
-                    destructure_array(arr, d.init.as_ref(), locals, mutable, registry, narrow)
+                    destructure_array(arr, d.init.as_ref(), locals, kind_let, registry, narrow)
                 }
                 _ => {
                     let name = bindings::binding_name(&d.id);
+                    // A `let` is `mut` only when the binding is mutated in this
+                    // function; `const`/`var` are never `mut`.
+                    let mutable = kind_let && locals.mutated.contains(&name.to_string());
                     let ty = d
                         .type_annotation
                         .as_ref()
