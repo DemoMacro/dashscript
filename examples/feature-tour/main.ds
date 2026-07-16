@@ -187,6 +187,9 @@ function main(): void {
   console.log("at:", xs.at(2), xs.at(-1));
   console.log("indexOf:", xs.indexOf(2));
   console.log("lastIndexOf:", xs.lastIndexOf(2));
+  // reverse search: findLastIndex → rposition; reduceRight → rev().fold
+  console.log("findLastIndex >1:", xs.findLastIndex((n) => n > 1));
+  console.log("reduceRight:", xs.reduceRight((a, b) => a - b, 0));
   console.log("findIndex >1:", xs.findIndex((n) => n > 1));
   console.log("includes 2:", xs.includes(2));
   console.log("find 2:", xs.find((n) => n === 2)!);

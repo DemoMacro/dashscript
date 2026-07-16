@@ -172,6 +172,46 @@ pub(super) fn array_method(
                 None => parse_quote!(#recv.iter().copied().reduce(#cb)),
             }
         }
+        // `.findLast(cb)` → last match as `Option<T>` (reverse `find`); `find`
+        // takes `&Item`, so the closure param destructures as `|&n|`.
+        "findLast" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, true);
+            parse_quote!(#recv.iter().copied().rev().find(#cb))
+        }
+        // `.findLastIndex(cb)` → last index where cb holds, or -1 (`rposition`
+        // searches from the end and returns the original index).
+        "findLastIndex" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, false);
+            parse_quote!(
+                #recv
+                    .iter()
+                    .copied()
+                    .rposition(#cb)
+                    .map(|i| i as f64)
+                    .unwrap_or(-1.0)
+            )
+        }
+        // `.reduceRight(cb, init)` → reverse `fold`; `.reduceRight(cb)` → reverse
+        // `reduce` (yields `Option<T>`, as the no-seed form does).
+        "reduceRight" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, false);
+            match args.get(1) {
+                Some(init) => {
+                    let init = translate_argument(init, ctx);
+                    parse_quote!(#recv.iter().copied().rev().fold(#init, #cb))
+                }
+                None => parse_quote!(#recv.iter().copied().rev().reduce(#cb)),
+            }
+        }
         // `.flat()` → flatten one level (`Vec<Vec<T>>::concat` → `Vec<T>`).
         // A depth argument is unsupported.
         "flat" if args.is_empty() => parse_quote!(#recv.concat()),

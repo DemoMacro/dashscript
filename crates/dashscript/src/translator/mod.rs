@@ -1063,6 +1063,27 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_find_last_to_rev_find() {
+        let src = "function f(xs: number[]): number { return xs.findLast((n) => n > 1)!; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".rev().find("), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_find_last_index_to_rposition() {
+        let src = "function f(xs: number[]): number { return xs.findLastIndex((n) => n > 1); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".rposition("), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_reduce_right_to_rev_fold() {
+        let src = "function f(xs: number[]): number { return xs.reduceRight((a, b) => a + b, 0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".rev().fold("), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");
