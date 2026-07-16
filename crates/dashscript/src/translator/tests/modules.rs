@@ -86,3 +86,22 @@ fn import_keeps_type_name_pascalcase() {
         .expect("should translate");
     assert!(rust.contains("use other::{add, Point}"), "got: {rust}");
 }
+
+#[test]
+fn import_default_value_emits_use() {
+    // A default import (`import foo`) lowers like a named one: Rust crates have
+    // no default export, so the local name names the crate item directly.
+    let rust = Translator::new()
+        .translate("import foo from \"serde\";")
+        .expect("should translate");
+    assert!(rust.contains("use serde::foo"), "got: {rust}");
+}
+
+#[test]
+fn import_default_type_keeps_pascalcase() {
+    // A default import naming a type keeps PascalCase, like a named type import.
+    let rust = Translator::new()
+        .translate("import Foo from \"serde\";")
+        .expect("should translate");
+    assert!(rust.contains("use serde::Foo"), "got: {rust}");
+}

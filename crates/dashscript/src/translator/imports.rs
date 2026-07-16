@@ -65,18 +65,22 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
     }
 }
 
-/// The local binding of a named import (`import { foo }` → `foo`), in the form
-/// the imported item has in its module: a binding starting uppercase names a
-/// type (interface/type alias, kept PascalCase); otherwise it names a value
-/// (function, snake_cased). Default and namespace imports are excluded.
+/// The local binding of a named or default import — `import { foo }` and
+/// `import foo` — in the form the imported item has in its module: a binding
+/// starting uppercase names a type (interface/type alias, kept PascalCase);
+/// otherwise it names a value (function, snake_cased). A namespace import
+/// (`import * as ns`) is excluded — it needs its own lowering, tracked
+/// separately.
 pub(crate) fn named_local(spec: &ImportDeclarationSpecifier) -> Option<Ident> {
-    let ImportDeclarationSpecifier::ImportSpecifier(s) = spec else {
-        return None;
+    let local = match spec {
+        ImportDeclarationSpecifier::ImportSpecifier(s) => &s.local,
+        ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => &s.local,
+        ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => return None,
     };
-    let name: &str = &s.local.name;
+    let name: &str = &local.name;
     if name.chars().next().is_some_and(char::is_uppercase) {
         Some(bindings::type_ident(name))
     } else {
-        Some(bindings::ident_of(&s.local))
+        Some(bindings::ident_of(local))
     }
 }
