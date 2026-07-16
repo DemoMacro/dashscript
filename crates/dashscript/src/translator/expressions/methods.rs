@@ -305,6 +305,12 @@ pub(super) fn string_method(
             let i = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.chars().nth(#i).map(|c| c.to_string()).unwrap_or_default())
         }
+        // `.charCodeAt(i)` → the `i`-th char's code point as `f64` (TS returns
+        // `NaN` out of range; UTF-16 vs Rust's `char` differ for non-BMP).
+        "charCodeAt" => {
+            let i = usize_arg(args.first()?, ctx);
+            parse_quote!(#obj.chars().nth(#i).map(|c| c as u32 as f64).unwrap_or(f64::NAN))
+        }
         // `.padStart(n)` → right-align to width `n` (fills on the left with
         // spaces, TS's default pad). A custom fill character (`padStart(n,ch)`)
         // is unsupported — Rust's `format!` fill char must be a literal.

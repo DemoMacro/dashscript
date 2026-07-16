@@ -970,6 +970,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_string_char_code_at_to_code_point() {
+        let src = "function f(s: string): number { return s.charCodeAt(0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("as u32 as f64"), "got:\n{rust}");
+        assert!(rust.contains("f64::NAN"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_console_warn_to_eprintln() {
         let src = "function f(): void { console.warn(\"careful\"); }";
         let rust = Translator::new().translate(src).expect("should translate");

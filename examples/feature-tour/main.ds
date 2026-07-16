@@ -145,6 +145,7 @@ function main(): void {
   console.log("sliced str:", "hello".slice(1, 4));
   console.log("trimmed:", "  ab".trimStart());
   console.log("charAt:", "hello".charAt(1));
+  console.log("charCode:", "A".charCodeAt(0));
   // string padding: `.padStart(n)`/`.padEnd(n)` → format! alignment (spaces)
   console.log("pad:", "[" + "5".padStart(3) + "]", "[" + "5".padEnd(3) + "]");
 
