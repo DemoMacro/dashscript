@@ -720,6 +720,27 @@ fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
                 AssignmentOperator::Multiplication => quote!(#target *= #right),
                 AssignmentOperator::Division => quote!(#target /= #right),
                 AssignmentOperator::Remainder => quote!(#target %= #right),
+                AssignmentOperator::Exponential => quote!(#target = #target.powf(#right)),
+                // Bitwise compound reads & writes the target, so it must be a
+                // simple identifier lvalue; the result is cast back to `f64`.
+                AssignmentOperator::BitwiseAnd => {
+                    quote!(#target = ((#target as i32) & (#right as i32)) as f64)
+                }
+                AssignmentOperator::BitwiseOR => {
+                    quote!(#target = ((#target as i32) | (#right as i32)) as f64)
+                }
+                AssignmentOperator::BitwiseXOR => {
+                    quote!(#target = ((#target as i32) ^ (#right as i32)) as f64)
+                }
+                AssignmentOperator::ShiftLeft => {
+                    quote!(#target = ((#target as i32).wrapping_shl(#right as u32)) as f64)
+                }
+                AssignmentOperator::ShiftRight => {
+                    quote!(#target = ((#target as i32).wrapping_shr(#right as u32)) as f64)
+                }
+                AssignmentOperator::ShiftRightZeroFill => {
+                    quote!(#target = (((#target as i32) as u32).wrapping_shr(#right as u32)) as f64)
+                }
                 _ => quote!(::core::todo!()),
             };
             syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))

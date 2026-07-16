@@ -728,4 +728,13 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("!(a as i32)"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_bitwise_compound_assign() {
+        let src = "function f(a: number, b: number): void { a &= b; a <<= b; a **= 2; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("a = ((a as i32) &"), "got:\n{rust}");
+        assert!(rust.contains(".wrapping_shl("), "got:\n{rust}");
+        assert!(rust.contains("a = a.powf(2.0)"), "got:\n{rust}");
+    }
 }
