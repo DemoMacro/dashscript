@@ -1,17 +1,29 @@
 //! `ds lsp` — the DashScript language server over stdio.
 //!
-//! Stage 2: publishes translatability diagnostics (`Translator::check`) on
-//! textDocument open/change. Crate go-to-definition (a rust-analyzer backend,
-//! stage 3) and in-file definition (stage 4) arrive next.
+//! Stage 2: translatability diagnostics (`Translator::check`).
+//! Stage 3: crate go-to-definition — a cursor on `import { X } from "crate"`
+//! is mapped to the emitted `use crate::X` position, then forwarded to a
+//! rust-analyzer backend that resolves it to the crate's `~/.cargo` source.
 
-use std::error::Error;
+use std::{
+    collections::HashMap,
+    error::Error,
+    io::BufReader,
+    path::{Path, PathBuf},
+    process::{Child, Command, Stdio},
+    sync::atomic::{AtomicI32, Ordering},
+    thread::{self, JoinHandle},
+};
 
+use crossbeam_channel::{unbounded, Receiver, Sender};
 use dashscript::Translator;
-use lsp_server::{Connection, Message, Notification, Response};
+use lsp_server::{Connection, Message, Notification, Request, RequestId, Response};
 use lsp_types::{
-    Diagnostic, DiagnosticSeverity, DidChangeTextDocumentParams, DidOpenTextDocumentParams,
-    Position, PublishDiagnosticsParams, Range, ServerCapabilities, TextDocumentSyncCapability,
-    TextDocumentSyncKind, Uri,
+    ClientCapabilities, Diagnostic, DiagnosticSeverity,
+    DidChangeTextDocumentParams, DidOpenTextDocumentParams, GotoDefinitionParams,
+    GotoDefinitionResponse, InitializeParams,
+    OneOf, Position, PublishDiagnosticsParams, Range, ServerCapabilities,
+    TextDocumentItem, TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use serde_json::Value;
@@ -19,26 +31,22 @@ use serde_json::Value;
 /// Run the language server on stdio until the client requests shutdown.
 pub fn run() -> Result<(), Box<dyn Error>> {
     let (connection, io_threads) = Connection::stdio();
-    let capabilities = serde_json::to_value(server_capabilities())?;
-    let _initialize_params = connection.initialize(capabilities)?;
+    let init_value = connection.initialize(serde_json::to_value(server_capabilities())?)?;
+    let init: InitializeParams = serde_json::from_value(init_value)?;
+    // The backend binary path comes from the client's `initializationOptions`
+    // (the extension forwards `dashscript.rustAnalyzerPath`); default to PATH.
+    let ra_path = init
+        .initialization_options
+        .as_ref()
+        .and_then(|o| o.get("rustAnalyzerPath"))
+        .and_then(Value::as_str)
+        .map(str::to_string)
+        .unwrap_or_else(|| "rust-analyzer".to_string());
 
-    while let Ok(message) = &connection.receiver.recv() {
-        match message {
-            Message::Request(request) => {
-                if connection.handle_shutdown(request)? {
-                    break;
-                }
-                // definition/hover return null until stages 3/4.
-                let _ = connection.sender.send(Message::Response(Response::new_ok(
-                    request.id.clone(),
-                    Value::Null,
-                )));
-            }
-            Message::Notification(notification) => {
-                handle_notification(&connection, notification);
-            }
-            Message::Response(_) => {}
-        }
+    let mut server = Server { conn: connection, docs: HashMap::new(), ra_path, ra: None };
+    server.main_loop()?;
+    if let Some(ra) = server.ra.take() {
+        ra.shutdown();
     }
     io_threads.join()?;
     Ok(())
@@ -47,35 +55,262 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 fn server_capabilities() -> ServerCapabilities {
     ServerCapabilities {
         text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)),
+        definition_provider: Some(OneOf::Left(true)),
         ..Default::default()
     }
 }
 
-fn handle_notification(connection: &Connection, notification: &Notification) {
-    let params = notification.params.clone();
-    match notification.method.as_str() {
-        "textDocument/didOpen" => {
-            if let Ok(params) = serde_json::from_value::<DidOpenTextDocumentParams>(params) {
-                publish_diagnostics(
-                    connection,
-                    &params.text_document.uri,
-                    &params.text_document.text,
+struct Server {
+    conn: Connection,
+    /// uri string → latest `.ds` text. String keys sidestep `Uri`'s interior
+    /// mutability (which trips clippy::mutable_key_type in a HashMap).
+    docs: HashMap<String, String>,
+    ra_path: String,
+    ra: Option<RaClient>,
+}
+
+impl Server {
+    fn main_loop(&mut self) -> Result<(), Box<dyn Error>> {
+        while let Ok(message) = self.conn.receiver.recv() {
+            match message {
+                Message::Request(req) => {
+                    if self.conn.handle_shutdown(&req)? {
+                        break;
+                    }
+                    self.handle_request(req);
+                }
+                Message::Notification(not) => self.handle_notification(&not),
+                Message::Response(_) => {}
+            }
+        }
+        Ok(())
+    }
+
+    fn handle_request(&mut self, req: Request) {
+        let id = req.id.clone();
+        let method = req.method.clone();
+        let resp = match method.as_str() {
+            "textDocument/definition" => {
+                let result = req
+                    .extract::<GotoDefinitionParams>("textDocument/definition")
+                    .ok()
+                    .and_then(|(_, params)| self.on_definition(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            // Other requests (hover, completion, …) return null until wired.
+            _ => Response::new_ok(id, Value::Null),
+        };
+        let _ = self.conn.sender.send(resp.into());
+    }
+
+    fn handle_notification(&mut self, not: &Notification) {
+        let params = not.params.clone();
+        match not.method.as_str() {
+            "textDocument/didOpen" => {
+                if let Ok(p) = serde_json::from_value::<DidOpenTextDocumentParams>(params) {
+                    let key = p.text_document.uri.as_str().to_string();
+                    let text = p.text_document.text.clone();
+                    self.docs.insert(key, text.clone());
+                    self.refresh(&p.text_document.uri, &text);
+                    publish_diagnostics(&self.conn, &p.text_document.uri, &text);
+                }
+            }
+            "textDocument/didChange" => {
+                if let Ok(p) = serde_json::from_value::<DidChangeTextDocumentParams>(params) {
+                    // Full sync: the single change carries the whole new text.
+                    if let Some(change) = p.content_changes.into_iter().next() {
+                        let key = p.text_document.uri.as_str().to_string();
+                        self.docs.insert(key, change.text.clone());
+                        self.refresh(&p.text_document.uri, &change.text);
+                        publish_diagnostics(&self.conn, &p.text_document.uri, &change.text);
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    /// Emit the `.ds` text to a cache Cargo project and tell rust-analyzer
+    /// about the resulting `main.rs`. Errors are swallowed — diagnostics and
+    /// go-to-definition degrade gracefully when emission or the backend fails.
+    fn refresh(&mut self, uri: &Uri, text: &str) {
+        let Some(src_path) = uri_to_path(uri) else { return };
+        let Some(cache) = self.cache_dir(uri) else { return };
+        if crate::emit_cargo_project(text, &src_path, &cache).is_err() {
+            return;
+        }
+        let main_rs = cache.join("src").join("main.rs");
+        let Ok(main_text) = std::fs::read_to_string(&main_rs) else { return };
+        let Ok(main_uri) = path_to_uri(&main_rs) else { return };
+        if self.ensure_ra(&cache).is_ok() {
+            if let Some(ra) = self.ra.as_ref() {
+                ra.notify(
+                    "textDocument/didOpen",
+                    DidOpenTextDocumentParams {
+                        text_document: TextDocumentItem {
+                            uri: main_uri,
+                            language_id: "rust".to_string(),
+                            version: 0,
+                            text: main_text,
+                        },
+                    },
                 );
             }
         }
-        "textDocument/didChange" => {
-            if let Ok(params) = serde_json::from_value::<DidChangeTextDocumentParams>(params) {
-                // Full sync: the single change carries the whole new text.
-                if let Some(change) = params.content_changes.into_iter().next() {
-                    publish_diagnostics(connection, &params.text_document.uri, &change.text);
-                }
-            }
+    }
+
+    /// Spawn rust-analyzer once, rooted at the cache Cargo project.
+    fn ensure_ra(&mut self, root: &Path) -> Result<(), Box<dyn Error>> {
+        if self.ra.is_none() {
+            let root_uri = path_to_uri(root)?.as_str().to_string();
+            self.ra = Some(RaClient::spawn(&self.ra_path, &root_uri)?);
         }
-        _ => {}
+        Ok(())
+    }
+
+    fn cache_dir(&self, uri: &Uri) -> Option<PathBuf> {
+        let path = uri_to_path(uri)?;
+        let stem = path.file_stem()?.to_str()?.to_string();
+        Some(std::env::temp_dir().join("dashscript-lsp").join(stem))
+    }
+
+    /// Map a definition request to the crate source: locate the import
+    /// specifier under the cursor, emit the Cargo project, map the symbol to
+    /// its `use` position in `main.rs`, and let rust-analyzer resolve it.
+    fn on_definition(&mut self, params: &GotoDefinitionParams) -> Option<Value> {
+        let tdp = &params.text_document_position_params;
+        let uri = &tdp.text_document.uri;
+        let text = self.docs.get(uri.as_str())?.clone();
+        let (module, symbol) = locate_import(&text, tdp.position)?;
+        self.refresh(uri, &text);
+        let cache = self.cache_dir(uri)?;
+        let main_rs = cache.join("src").join("main.rs");
+        let main_text = std::fs::read_to_string(&main_rs).ok()?;
+        let rust_pos = map_symbol_pos(&main_text, &module, &symbol)?;
+        let main_uri = path_to_uri(&main_rs).ok()?;
+        let ra = self.ra.as_ref()?;
+        let resp = ra.definition(main_uri.as_str(), rust_pos).ok()?;
+        serde_json::to_value(resp).ok()
     }
 }
 
-/// Run `Translator::check` on the document and push the diagnostics.
+// === rust-analyzer backend ===
+
+/// A synchronous LSP client driving a rust-analyzer subprocess over its
+/// stdin/stdout. We are the *client* here (VS Code is the client of `ds lsp`).
+struct RaClient {
+    tx: Sender<Message>,
+    rx: Receiver<Message>,
+    next_id: AtomicI32,
+    _child: Child,
+    _reader: JoinHandle<()>,
+    _writer: JoinHandle<()>,
+}
+
+impl RaClient {
+    fn spawn(path: &str, root_uri: &str) -> Result<Self, Box<dyn Error>> {
+        let mut child = Command::new(path)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::null())
+            .spawn()
+            .map_err(|e| format!("cannot spawn rust-analyzer '{path}': {e}"))?;
+        let stdout = child.stdout.take().ok_or("rust-analyzer: no stdout")?;
+        let stdin = child.stdin.take().ok_or("rust-analyzer: no stdin")?;
+
+        // Writer thread: drain our outgoing channel onto the child's stdin.
+        let (tx_write, rx_write) = unbounded::<Message>();
+        let mut stdin = stdin;
+        let writer = thread::spawn(move || {
+            for msg in rx_write.iter() {
+                if msg.write(&mut stdin).is_err() {
+                    break;
+                }
+            }
+        });
+
+        // Reader thread: frame the child's stdout into our incoming channel.
+        let (tx_read, rx_read) = unbounded::<Message>();
+        let reader = thread::spawn(move || {
+            let mut reader = BufReader::new(stdout);
+            while let Ok(Some(msg)) = Message::read(&mut reader) {
+                if tx_read.send(msg).is_err() {
+                    break;
+                }
+            }
+        });
+
+        let client = RaClient {
+            tx: tx_write,
+            rx: rx_read,
+            next_id: AtomicI32::new(1),
+            _child: child,
+            _reader: reader,
+            _writer: writer,
+        };
+
+        let params = serde_json::json!({
+            "processId": std::process::id(),
+            "rootUri": root_uri,
+            "capabilities": ClientCapabilities::default(),
+        });
+        let _ = client.request("initialize", params)?;
+        client.notify("initialized", serde_json::json!({}));
+        Ok(client)
+    }
+
+    fn next_id(&self) -> RequestId {
+        RequestId::from(self.next_id.fetch_add(1, Ordering::SeqCst))
+    }
+
+    fn notify(&self, method: &str, params: impl serde::Serialize) {
+        let _ = self.tx.send(Notification::new(method.into(), params).into());
+    }
+
+    /// Send a request and block for its response, skipping any notifications
+    /// rust-analyzer emits in the meantime (progress, diagnostics, …).
+    fn request(&self, method: &str, params: impl serde::Serialize) -> Result<Value, Box<dyn Error>> {
+        let id = self.next_id();
+        self.tx.send(Request::new(id.clone(), method.into(), params).into())?;
+        loop {
+            match self.rx.recv() {
+                Ok(Message::Response(r)) if r.id == id => {
+                    return r.response_result.map_err(|e| format!("rust-analyzer {method}: {e:?}").into());
+                }
+                Ok(_) => continue,
+                Err(e) => return Err(format!("rust-analyzer {method}: channel {e}").into()),
+            }
+        }
+    }
+
+    fn definition(
+        &self,
+        uri: &str,
+        position: Position,
+    ) -> Result<GotoDefinitionResponse, Box<dyn Error>> {
+        let params = serde_json::json!({
+            "textDocument": { "uri": uri },
+            "position": position,
+        });
+        let value = self.request("textDocument/definition", params)?;
+        if value.is_null() {
+            return Err("rust-analyzer returned no definition".into());
+        }
+        Ok(serde_json::from_value(value)?)
+    }
+
+    /// Best-effort shutdown: send `shutdown` + `exit`; the child is dropped on
+    /// `RaClient` drop regardless.
+    fn shutdown(self) {
+        let id = self.next_id();
+        let _ = self.tx.send(Request::new(id, "shutdown".into(), Value::Null).into());
+        let _ = self.tx.send(Notification::new("exit".into(), Value::Null).into());
+    }
+}
+
+// === diagnostics + mapping helpers ===
+
 fn publish_diagnostics(connection: &Connection, uri: &Uri, text: &str) {
     let diagnostics = Translator::new()
         .check(text)
@@ -83,10 +318,9 @@ fn publish_diagnostics(connection: &Connection, uri: &Uri, text: &str) {
         .map(|diag| to_lsp_diagnostic(diag, text))
         .collect();
     let params = PublishDiagnosticsParams { uri: uri.clone(), diagnostics, version: None };
-    let _ = connection.sender.send(Message::Notification(Notification::new(
-        "textDocument/publishDiagnostics".into(),
-        params,
-    )));
+    let _ = connection
+        .sender
+        .send(Notification::new("textDocument/publishDiagnostics".into(), params).into());
 }
 
 fn to_lsp_diagnostic(diag: &OxcDiagnostic, text: &str) -> Diagnostic {
@@ -105,7 +339,78 @@ fn to_lsp_diagnostic(diag: &OxcDiagnostic, text: &str) -> Diagnostic {
     }
 }
 
-/// An oxc byte (offset, length) → an LSP `Range` (0-based line/character).
+/// If the cursor sits on a bare-crate import specifier (`import { X } from
+/// "crate"`), return the crate module ident and the symbol name as written in
+/// the emitted `use crate::X`.
+fn locate_import(text: &str, pos: Position) -> Option<(String, String)> {
+    let byte = position_to_byte(text, pos)?;
+    for imp in Translator::new().crate_imports(text) {
+        for sym in &imp.symbols {
+            if byte >= sym.span.start as usize && byte <= sym.span.end as usize {
+                return Some((imp.module.clone(), sym.name.clone()));
+            }
+        }
+    }
+    None
+}
+
+/// Find the position of `symbol` within the `use <module>::…` line of the
+/// emitted Rust source — the position forwarded to rust-analyzer.
+fn map_symbol_pos(main_rs: &str, module: &str, symbol: &str) -> Option<Position> {
+    let needle = format!("{module}::");
+    for (line_idx, line) in main_rs.lines().enumerate() {
+        if !line.trim_start().starts_with("use ") || !line.contains(&needle) {
+            continue;
+        }
+        if let Some(col) = find_word_col(line, symbol) {
+            return Some(Position { line: line_idx as u32, character: col });
+        }
+    }
+    None
+}
+
+/// Column (in characters) of the first whole-word occurrence of `word`.
+fn find_word_col(line: &str, word: &str) -> Option<u32> {
+    let bytes = line.as_bytes();
+    let mut from = 0;
+    while let Some(rel) = line[from..].find(word) {
+        let start = from + rel;
+        let end = start + word.len();
+        let before = if start == 0 { b' ' } else { bytes[start - 1] };
+        let after = bytes.get(end).copied().unwrap_or(b' ');
+        if !is_ident_byte(before) && !is_ident_byte(after) {
+            return Some(line[..start].chars().count() as u32);
+        }
+        from = start + word.len();
+    }
+    None
+}
+
+fn is_ident_byte(b: u8) -> bool {
+    b.is_ascii_alphanumeric() || b == b'_'
+}
+
+/// An LSP `Position` (0-based line/character) → a `.ds` byte offset. The
+/// character column is counted in Unicode scalars; `.ds` sources are ASCII
+/// where this matters, so it agrees with the UTF-16 the protocol specifies.
+fn position_to_byte(text: &str, pos: Position) -> Option<usize> {
+    let mut line = 0u32;
+    let mut col = 0u32;
+    for (i, ch) in text.char_indices() {
+        if line == pos.line && col == pos.character {
+            return Some(i);
+        }
+        if ch == '\n' {
+            line += 1;
+            col = 0;
+        } else {
+            col += 1;
+        }
+    }
+    (line == pos.line && col == pos.character).then_some(text.len())
+}
+
+/// An oxc byte (offset, length) → an LSP `Range`.
 fn byte_range(text: &str, offset: u32, len: u32) -> Range {
     let start = offset as usize;
     let end = start.saturating_add(len as usize).min(text.len());
@@ -115,10 +420,37 @@ fn byte_range(text: &str, offset: u32, len: u32) -> Range {
 fn byte_to_position(text: &str, byte_offset: usize) -> Position {
     let byte_offset = byte_offset.min(text.len());
     let prefix = &text[..byte_offset];
-    let line = prefix.bytes().filter(|&byte| byte == b'\n').count() as u32;
-    let line_start = prefix.rfind('\n').map(|idx| idx + 1).unwrap_or(0);
+    let line = prefix.bytes().filter(|&b| b == b'\n').count() as u32;
+    let line_start = prefix.rfind('\n').map(|i| i + 1).unwrap_or(0);
     let character = text[line_start..byte_offset].chars().count() as u32;
     Position { line, character }
+}
+
+fn uri_to_path(uri: &Uri) -> Option<PathBuf> {
+    let s = uri.as_str();
+    let path = s.strip_prefix("file://").unwrap_or(s);
+    // Windows drive: `file:///E:/…` → drop the leading `/` before the drive letter.
+    let path = if path.starts_with('/')
+        && path.as_bytes().get(1).is_some_and(|c| c.is_ascii_alphabetic())
+        && path.as_bytes().get(2) == Some(&b':')
+    {
+        &path[1..]
+    } else {
+        path
+    };
+    Some(PathBuf::from(path))
+}
+
+fn path_to_uri(path: &Path) -> Result<Uri, Box<dyn Error>> {
+    let abs = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
+    let s = abs.to_str().ok_or("non-utf8 path")?;
+    let normalized = s.replace('\\', "/");
+    let uri_str = if normalized.starts_with('/') {
+        format!("file://{normalized}")
+    } else {
+        format!("file:///{normalized}")
+    };
+    Ok(uri_str.parse::<Uri>().map_err(|e| format!("bad file uri {uri_str}: {e}"))?)
 }
 
 #[cfg(test)]
@@ -147,5 +479,29 @@ mod tests {
     fn range_clamps_past_end_of_text() {
         let range = byte_range("ab", 0, 100);
         assert_eq!(range.end, Position { line: 0, character: 2 });
+    }
+
+    #[test]
+    fn locate_import_resolves_named_specifier() {
+        let text = "import { Adler32 } from \"adler\";";
+        // `Adler32` starts at character 9 on line 0.
+        let (module, symbol) = locate_import(text, Position { line: 0, character: 9 }).unwrap();
+        assert_eq!(module, "adler");
+        assert_eq!(symbol, "Adler32");
+    }
+
+    #[test]
+    fn map_symbol_pos_finds_use_clause() {
+        // The translator emits `use adler::Adler32;` — `Adler32` begins at
+        // column 11 (`use adler::` is 11 characters).
+        let main_rs = "use adler::Adler32;\n\nfn main() {}\n";
+        let pos = map_symbol_pos(main_rs, "adler", "Adler32").unwrap();
+        assert_eq!(pos, Position { line: 0, character: 11 });
+    }
+
+    #[test]
+    fn map_symbol_pos_whole_word_only() {
+        // `Adler` is a prefix of `Adler32` — it must not match.
+        assert!(map_symbol_pos("use adler::Adler32;\n", "adler", "Adler").is_none());
     }
 }

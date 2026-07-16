@@ -96,11 +96,13 @@ fn usage_exit(msg: &str) -> ExitCode {
 /// translated to `src/<module>.rs` and declared with a leading `mod <module>;`
 /// so the main file's `use <module>::x;` resolves. v1: a single layer — an
 /// imported module that itself imports is not followed.
-fn emit_cargo_project(src_path: &Path, project_dir: &Path) -> Result<(), Box<dyn Error>> {
-    let src = fs::read_to_string(src_path)
-        .map_err(|e| format!("cannot read {}: {e}", src_path.display()))?;
+pub(crate) fn emit_cargo_project(
+    src: &str,
+    src_path: &Path,
+    project_dir: &Path,
+) -> Result<(), Box<dyn Error>> {
     let rust = Translator::new()
-        .translate(&src)
+        .translate(src)
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;
     let cargo_toml = resolve_manifest(src_path);
     fs::create_dir_all(project_dir.join("src"))?;
@@ -109,7 +111,7 @@ fn emit_cargo_project(src_path: &Path, project_dir: &Path) -> Result<(), Box<dyn
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
-    for imp in Translator::new().imports(&src) {
+    for imp in Translator::new().imports(src) {
         if !seen.insert(imp.module.clone()) {
             continue; // dedupe repeated imports of the same module
         }
@@ -180,8 +182,10 @@ fn resolve_manifest(src_path: &Path) -> String {
 /// Rust toolchain (downloaded on demand, no `rustup`) will replace this later.
 fn run(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     let path = Path::new(file);
+    let src = fs::read_to_string(path)
+        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     let project = std::env::temp_dir().join(format!("dashscript-{}", std::process::id()));
-    emit_cargo_project(path, &project)?;
+    emit_cargo_project(&src, path, &project)?;
     let status = invoke_cargo(&project, ["run", "--quiet"])?;
     Ok(status_to_code(status))
 }
@@ -194,8 +198,10 @@ fn build(file: &str) -> Result<ExitCode, Box<dyn Error>> {
         .file_stem()
         .and_then(|s| s.to_str())
         .ok_or("invalid file path")?;
+    let src = fs::read_to_string(path)
+        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     let project = PathBuf::from("dist").join(stem);
-    emit_cargo_project(path, &project)?;
+    emit_cargo_project(&src, path, &project)?;
     println!("ds: emitted {}", project.display());
     let status = invoke_cargo(&project, ["check", "--quiet"])?;
     Ok(status_to_code(status))

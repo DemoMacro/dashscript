@@ -15,13 +15,17 @@ import {
 let client: LanguageClient | undefined;
 
 export function activate(context: ExtensionContext): void {
-  const dsPath = workspace.getConfiguration("dashscript").get<string>("dsPath") ?? "ds";
+  const config = workspace.getConfiguration("dashscript");
+  const dsPath = config.get<string>("dsPath") ?? "ds";
+  const rustAnalyzerPath = config.get<string>("rustAnalyzerPath") ?? "rust-analyzer";
   const serverOptions: ServerOptions = {
     run: { command: dsPath, args: ["lsp"], transport: TransportKind.stdio },
     debug: { command: dsPath, args: ["lsp"], transport: TransportKind.stdio },
   };
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: "file", language: "dashscript" }],
+    // Forwarded to `ds lsp` so it can spawn the rust-analyzer backend.
+    initializationOptions: { rustAnalyzerPath },
   };
   client = new LanguageClient(
     "dashscriptLsp",

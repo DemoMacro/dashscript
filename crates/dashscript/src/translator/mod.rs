@@ -96,6 +96,14 @@ impl Translator {
     pub fn imports(&self, source: &str) -> Vec<imports::ImportRef> {
         imports::collect_imports(source)
     }
+
+    /// The bare-crate imports in a `.ds` file (`import { X } from "crate"`),
+    /// each with its `.ds` byte span. Used by `ds lsp` to resolve
+    /// go-to-definition on an import specifier to the crate's `~/.cargo` source.
+    #[must_use]
+    pub fn crate_imports(&self, source: &str) -> Vec<imports::CrateImport> {
+        imports::collect_crate_imports(source)
+    }
 }
 
 #[cfg(test)]
