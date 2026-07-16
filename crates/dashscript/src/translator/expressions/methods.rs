@@ -201,7 +201,9 @@ pub(super) fn array_method(
         // lexicographic; DashScript treats number arrays numerically). A
         // comparator argument is unsupported — it would return `Ordering`.
         "sort" if args.is_empty() => {
-            parse_quote!(#recv.sort_by(|a, b| a.partial_cmp(&b).unwrap()))
+            // `partial_cmp` is `None` for NaN; fall back to `Equal` so a NaN
+            // element never panics (TS sort never throws on NaN).
+            parse_quote!(#recv.sort_by(|a, b| a.partial_cmp(&b).unwrap_or(::core::cmp::Ordering::Equal)))
         }
         _ => return None,
     })
@@ -393,16 +395,18 @@ pub(super) fn global_function(
             let a = translate_argument(args.first()?, ctx);
             parse_quote!(::std::format!("{}", #a))
         }
+        // A malformed string yields NaN in TS, never a throw — `unwrap_or`
+        // matches that without a runtime panic.
         "parseInt" | "parseFloat" => {
             let a = translate_argument(args.first()?, ctx);
-            parse_quote!(#a.trim().parse::<f64>().unwrap())
+            parse_quote!(#a.trim().parse::<f64>().unwrap_or(f64::NAN))
         }
         // `Number(s)` parses a string; `Number(n)` passes a number through.
         "Number" => {
             let a = args.first()?;
             let e = translate_argument(a, ctx);
             if matches!(a, Argument::StringLiteral(_)) || ident_string_local(a, ctx) {
-                parse_quote!(#e.trim().parse::<f64>().unwrap())
+                parse_quote!(#e.trim().parse::<f64>().unwrap_or(f64::NAN))
             } else {
                 e
             }

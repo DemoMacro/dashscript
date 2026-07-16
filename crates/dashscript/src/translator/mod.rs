@@ -841,7 +841,9 @@ mod tests {
         let src = "function f(): void { let xs: number[] = [2, 1]; xs.sort(); }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(
-            rust.contains("xs.sort_by(|a, b| a.partial_cmp(&b).unwrap());"),
+            rust.contains(
+                "xs.sort_by(|a, b| a.partial_cmp(&b).unwrap_or(::core::cmp::Ordering::Equal));",
+            ),
             "got:\n{rust}"
         );
     }
@@ -857,21 +859,30 @@ mod tests {
     fn translates_parse_int_to_parse_f64() {
         let src = "function f(): number { return parseInt(\"100\"); }";
         let rust = Translator::new().translate(src).expect("should translate");
-        assert!(rust.contains(".trim().parse::<f64>().unwrap()"), "got:\n{rust}");
+        assert!(
+            rust.contains(".trim().parse::<f64>().unwrap_or(f64::NAN)"),
+            "got:\n{rust}"
+        );
     }
 
     #[test]
     fn translates_number_global_string_to_parse() {
         let src = "function f(): number { return Number(\"42\"); }";
         let rust = Translator::new().translate(src).expect("should translate");
-        assert!(rust.contains("\"42\".to_string().trim().parse::<f64>().unwrap()"), "got:\n{rust}");
+        assert!(
+            rust.contains("\"42\".to_string().trim().parse::<f64>().unwrap_or(f64::NAN)"),
+            "got:\n{rust}"
+        );
     }
 
     #[test]
     fn translates_number_global_string_var_to_parse() {
         let src = "function f(s: string): number { return Number(s); }";
         let rust = Translator::new().translate(src).expect("should translate");
-        assert!(rust.contains("s.trim().parse::<f64>().unwrap()"), "got:\n{rust}");
+        assert!(
+            rust.contains("s.trim().parse::<f64>().unwrap_or(f64::NAN)"),
+            "got:\n{rust}"
+        );
     }
 
     #[test]
