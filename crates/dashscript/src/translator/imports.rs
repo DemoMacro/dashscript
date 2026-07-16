@@ -108,6 +108,9 @@ pub struct CrateImport {
     pub module: String,
     /// The symbols imported from this crate, with their `.ds` byte spans.
     pub symbols: Vec<CrateImportSymbol>,
+    /// The `.ds` byte span of the import source string (`"adler"`), for
+    /// cursor hit-testing on the crate name (go-to-definition → crate root).
+    pub source_span: Span,
 }
 
 /// The bare-crate imports in a `.ds` file (`import { X } from "crate"`), with
@@ -142,7 +145,7 @@ pub(crate) fn collect_crate_imports(source: &str) -> Vec<CrateImport> {
                     Some(CrateImportSymbol { name, span: local.span })
                 })
                 .collect();
-            Some(CrateImport { module, symbols })
+            Some(CrateImport { module, symbols, source_span: imp.source.span })
         })
         .collect()
 }

@@ -197,13 +197,18 @@ impl Server {
         uri: &Uri,
         text: &str,
         module: String,
-        symbol: String,
+        symbol: Option<String>,
     ) -> Option<Value> {
         self.refresh(uri, text);
         let cache = self.cache_dir(uri)?;
         let main_rs = cache.join("src").join("main.rs");
         let main_text = std::fs::read_to_string(&main_rs).ok()?;
-        let rust_pos = map_symbol_pos(&main_text, &module, &symbol)?;
+        // A symbol → its position in `use module::symbol`; no symbol (cursor on
+        // the crate name) → the crate's own position, so RA resolves the root.
+        let rust_pos = match &symbol {
+            Some(sym) => map_symbol_pos(&main_text, &module, sym)?,
+            None => map_module_pos(&main_text, &module)?,
+        };
         let main_uri = path_to_uri(&main_rs).ok()?;
         let ra = self.ra.as_ref()?;
         let resp = ra.definition(main_uri.as_str(), rust_pos).ok()?;
@@ -368,13 +373,18 @@ fn to_lsp_diagnostic(diag: &OxcDiagnostic, text: &str) -> Diagnostic {
 /// If the cursor sits on a bare-crate import specifier (`import { X } from
 /// "crate"`), return the crate module ident and the symbol name as written in
 /// the emitted `use crate::X`.
-fn locate_import(text: &str, pos: Position) -> Option<(String, String)> {
+fn locate_import(text: &str, pos: Position) -> Option<(String, Option<String>)> {
     let byte = position_to_byte(text, pos)?;
     for imp in Translator::new().crate_imports(text) {
+        // A specifier under the cursor → resolve that symbol.
         for sym in &imp.symbols {
             if byte >= sym.span.start as usize && byte <= sym.span.end as usize {
-                return Some((imp.module.clone(), sym.name.clone()));
+                return Some((imp.module.clone(), Some(sym.name.clone())));
             }
+        }
+        // The import source string under the cursor → resolve the crate root.
+        if byte >= imp.source_span.start as usize && byte <= imp.source_span.end as usize {
+            return Some((imp.module.clone(), None));
         }
     }
     None
@@ -390,6 +400,21 @@ fn map_symbol_pos(main_rs: &str, module: &str, symbol: &str) -> Option<Position>
         }
         if let Some(col) = find_word_col(line, symbol) {
             return Some(Position { line: line_idx as u32, character: col });
+        }
+    }
+    None
+}
+
+/// Find the position of the crate (module) name within the emitted
+/// `use <module>::…` line — forwarded to rust-analyzer to resolve the crate
+/// root (its `lib.rs`), for a go-to-definition on the import source string.
+fn map_module_pos(main_rs: &str, module: &str) -> Option<Position> {
+    let needle = format!("{module}::");
+    for (line_idx, line) in main_rs.lines().enumerate() {
+        if line.trim_start().starts_with("use ") && line.contains(&needle) {
+            if let Some(col) = find_word_col(line, module) {
+                return Some(Position { line: line_idx as u32, character: col });
+            }
         }
     }
     None
@@ -513,7 +538,7 @@ mod tests {
         // `Adler32` starts at character 9 on line 0.
         let (module, symbol) = locate_import(text, Position { line: 0, character: 9 }).unwrap();
         assert_eq!(module, "adler");
-        assert_eq!(symbol, "Adler32");
+        assert_eq!(symbol.as_deref(), Some("Adler32"));
     }
 
     #[test]
@@ -546,5 +571,21 @@ mod tests {
         assert_eq!(word_at(text, 10).as_deref(), Some("foo"));
         assert_eq!(word_at(text, 12).as_deref(), Some("foo"));
         assert_eq!(word_at(text, 13), None); // `(` is not an ident char
+    }
+
+    #[test]
+    fn locate_import_resolves_crate_root_on_source_string() {
+        let text = "import { Adler32 } from \"adler\";";
+        // Cursor inside the `"adler"` source string (character 27 = the `l`).
+        let (module, symbol) = locate_import(text, Position { line: 0, character: 27 }).unwrap();
+        assert_eq!(module, "adler");
+        assert!(symbol.is_none(), "expected no symbol (crate root): {symbol:?}");
+    }
+
+    #[test]
+    fn map_module_pos_finds_crate_name() {
+        // `use adler::Adler32;` — `adler` begins at column 4 (`use ` is 4 chars).
+        let pos = map_module_pos("use adler::Adler32;\n", "adler").unwrap();
+        assert_eq!(pos, Position { line: 0, character: 4 });
     }
 }
