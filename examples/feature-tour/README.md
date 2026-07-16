@@ -38,6 +38,11 @@ evens: 2
 slice: 2 3
 indexOf: 1
 includes 2: true
+find 2: 2
+some >2: true
+every >0: true
+join: 1-2-3
+reduce: 6
 sum 1..5: 15
 counted: 8
 empty
@@ -74,6 +79,10 @@ set: 42
 | `xs.slice(1, 3)`                       | `xs[1.0 as usize..3.0 as usize].to_vec()`       |
 | `xs.indexOf(2)`                        | `….position(\|y\| y == 2.0).unwrap_or(-1.0)`    |
 | `xs.includes(2)`                       | `….contains(&2.0)`                              |
+| `xs.find((n) => …)`                    | `….iter().copied().find(\|&n\| …)`              |
+| `xs.some` / `.every`                   | `….any(\|n\| …)` / `….all(\|n\| …)`             |
+| `xs.join("-")`                         | `….map(to_string).collect().join("-")`          |
+| `xs.reduce((a, b) => …, 0)`            | `….fold(0.0, \|a, b\| …)`                       |
 | `for (let i = …; …; i++)`              | `{ let mut i …; while … { …; i += 1.0; } }`     |
 | `for (const n of xs)`                  | `for &n in &xs`                                 |
 | `continue` / `break`                   | `continue` / `break`                            |

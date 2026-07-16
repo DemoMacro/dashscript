@@ -1,6 +1,7 @@
 //! Method-call mappings for `.ds` expressions: array callbacks
-//! (`.map`/`.filter`/`.slice`/`.indexOf`), string methods
-//! (`.includes`/`.split`/…), and name-only renames (`.toUpperCase`).
+//! (`.map`/`.filter`/`.find`/`.some`/`.every`/`.reduce`/`.join`/`.slice`/
+//! `.indexOf`/`.includes`), string methods (`.includes`/`.split`/…), and
+//! name-only renames (`.toUpperCase`).
 
 use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
 use proc_macro2::Span;
@@ -11,11 +12,14 @@ use super::super::bindings;
 use super::super::context::Ctx;
 use super::{arrow_expr, translate_argument, translate_expr};
 
-/// Array methods on a `Vec` of Copy elements: `.map`/`.filter` take a callback
-/// (`xs.iter().copied().<m>(f).collect::<Vec<_>>()`, with `.filter`'s param
-/// destructured since its closure receives `&Item`); `.slice(a, b)` →
-/// `xs[a as usize..b as usize].to_vec()` (`.slice(a)` / `.slice()` clamp the
-/// range / clone). Returns `None` otherwise.
+/// Array methods on a `Vec` of Copy elements. The callback methods share a
+/// `xs.iter().copied().<m>(f)` core: `.map`/`.filter` collect back into a
+/// `Vec`; `.find`/`.some`/`.every`/`.reduce` return a scalar. A closure that
+/// receives `&Item` (`filter`/`find`) destructures its param as `|&n|`; one that
+/// receives the item by value (`map`/`some`/`every`/`reduce`) uses a plain
+/// `|n|`. `.slice(a, b)` → `xs[a as usize..b as usize].to_vec()`; `.join(sep)`
+/// stringifies each element first; `.indexOf`/`.includes` test membership.
+/// Returns `None` for an unmapped name.
 pub(super) fn array_method(
     sm: &StaticMemberExpression,
     args: &[Argument],
@@ -68,6 +72,52 @@ pub(super) fn array_method(
         "includes" => {
             let needle = translate_argument(args.first()?, ctx);
             parse_quote!(#recv.contains(&#needle))
+        }
+        // `.find(cb)` → first match as `Option<T>` (TS `T | undefined`); the
+        // closure receives `&Item`, so its param destructures as `|&n|`.
+        "find" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, true);
+            parse_quote!(#recv.iter().copied().find(#cb))
+        }
+        // `.some(cb)` → `any` (true if any element matches); `any` takes the
+        // item by value (after `.copied()`), so the param is a plain `|n|`.
+        "some" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, false);
+            parse_quote!(#recv.iter().copied().any(#cb))
+        }
+        // `.every(cb)` → `all` (true if all elements match); same value param.
+        "every" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, false);
+            parse_quote!(#recv.iter().copied().all(#cb))
+        }
+        // `.join(sep)` → `Vec<String>.join(sep)` (each element stringified first).
+        "join" => {
+            let sep = str_method_arg(args.first()?, ctx);
+            parse_quote!(#recv.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(#sep))
+        }
+        // `.reduce(cb, init)` → `fold`; `.reduce(cb)` (no seed) → `reduce`,
+        // which yields `Option<T>` (an empty `.ds` array has no first element).
+        "reduce" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, false);
+            match args.get(1) {
+                Some(init) => {
+                    let init = translate_argument(init, ctx);
+                    parse_quote!(#recv.iter().copied().fold(#init, #cb))
+                }
+                None => parse_quote!(#recv.iter().copied().reduce(#cb)),
+            }
         }
         _ => return None,
     })

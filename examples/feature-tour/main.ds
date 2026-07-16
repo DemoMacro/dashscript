@@ -100,6 +100,11 @@ function main(): void {
   console.log("slice:", sliced[0], sliced[1]);
   console.log("indexOf:", xs.indexOf(2));
   console.log("includes 2:", xs.includes(2));
+  console.log("find 2:", xs.find((n) => n === 2)!);
+  console.log("some >2:", xs.some((n) => n > 2));
+  console.log("every >0:", xs.every((n) => n > 0));
+  console.log("join:", xs.join("-"));
+  console.log("reduce:", xs.reduce((a, b) => a + b, 0));
 
   // loops: a C-style for, a for-of, break and continue
   let sum = 0;

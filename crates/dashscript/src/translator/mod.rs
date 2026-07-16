@@ -539,4 +539,44 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("xs.contains(&2.0)"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_array_find_to_iter_copied_find() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const r = xs.find((n) => n > 1); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `.find`'s closure receives `&Item`, so its param is `|&n|`.
+        assert!(rust.contains(".iter().copied().find(|&n|"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_some_every_to_any_all() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const a = xs.some((n) => n > 2); const b = xs.every((n) => n > 0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `any`/`all` take the item by value → a plain `|n|` (not `|&n|`).
+        assert!(rust.contains(".any(|n|"), "got:\n{rust}");
+        assert!(rust.contains(".all(|n|"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_join_to_vec_string_join() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const s = xs.join(\"-\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".map(|x| x.to_string())"), "got:\n{rust}");
+        assert!(rust.contains(".collect::<Vec<_>>()"), "got:\n{rust}");
+        assert!(rust.contains(".join(\"-\")"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_reduce_with_seed_to_fold() {
+        let src = "function f(): number { const xs: number[] = [1, 2, 3]; return xs.reduce((a, b) => a + b, 0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".fold(0.0, |a, b|"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_reduce_without_seed_to_reduce() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const r = xs.reduce((a, b) => a + b); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".iter().copied().reduce(|a, b|"), "got:\n{rust}");
+    }
 }
