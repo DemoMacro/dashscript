@@ -124,6 +124,10 @@ function main(): void {
   console.log("trimmed:", "  ab".trimStart());
   console.log("charAt:", "hello".charAt(1));
 
+  // number formatting: `x.toFixed(n)` → format! with n decimal places
+  const pi = 3.14159;
+  console.log("fixed:", pi.toFixed(2));
+
   // arrow function as a value
   const square = (n: number) => n * n;
   console.log("square:", square(9));

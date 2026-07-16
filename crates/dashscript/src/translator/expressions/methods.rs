@@ -145,6 +145,25 @@ pub(super) fn array_method(
     })
 }
 
+/// Methods on a `.ds` `number` (`f64`). `.toFixed(n)` → a formatted string
+/// with `n` decimal places. Returns `None` for an unmapped name.
+pub(super) fn number_method(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let recv = translate_expr(&sm.object, ctx);
+    Some(match sm.property.name.as_str() {
+        // `(3.14).toFixed(2)` → `format!("{:.*}", n, …)`. In Rust the `*`
+        // precision argument comes first, the value second.
+        "toFixed" => {
+            let prec = usize_arg(args.first()?, ctx);
+            parse_quote!(format!("{:.*}", #prec, #recv))
+        }
+        _ => return None,
+    })
+}
+
 /// A handful of TS method names map to a different Rust method name; the
 /// receiver and arguments are passed through unchanged. Unmapped methods fall
 /// through to a plain call on the receiver expression.

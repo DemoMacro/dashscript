@@ -46,6 +46,7 @@ parsed: 100
 sliced str: ell
 trimmed: ab
 charAt: e
+fixed: 3.14
 square: 81
 doubled: 2 4 6
 evens: 2
@@ -108,6 +109,7 @@ set: 42
 | `"hello".indexOf("ll")`                | `….find(…).map(\|b\| b as f64).unwrap_or(-1.0)`       |
 | `"hello".slice(1, 4)`                  | `….to_string()[1..4].to_string()`                     |
 | `"  ab".trimStart()`                   | `….trim_start()`                                      |
+| `pi.toFixed(2)`                        | `format!("{:.*}", 2.0 as usize, pi)`                  |
 | `"hello".charAt(1)`                    | `….chars().nth(…).map(to_string).unwrap_or_default()` |
 | `function id<T>(x: T): T`              | `fn id<T>(x: T) -> T`                                 |
 | `(n) => n * n`                         | `\|n\| n * n`                                         |

@@ -882,6 +882,9 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = methods::string_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        if let Some(expr) = methods::number_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(method) = methods::map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object, ctx);
             let args: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
