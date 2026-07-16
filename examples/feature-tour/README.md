@@ -29,6 +29,7 @@ hello, world
 true
 ababab
 split: 3
+str indexOf: 2
 square: 81
 doubled: 2 4 6
 evens: 2
@@ -60,6 +61,7 @@ set: 42
 | `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`               |
 | `"ab".repeat(3)`                       | `….repeat(3.0 as usize)`                        |
 | `"a,b,c".split(",")`                   | `….split(…).map(to_string).collect()`           |
+| `"hello".indexOf("ll")`                | `….find(…).map(\|b\| b as f64).unwrap_or(-1.0)` |
 | `(n) => n * n`                         | `\|n\| n * n`                                   |
 | `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()`     |
 | `xs.filter((n) => n > 1)`              | `xs.iter().copied().filter(\|&n\| …).collect()` |

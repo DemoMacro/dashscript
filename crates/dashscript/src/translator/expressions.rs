@@ -666,10 +666,10 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
-        if let Some(expr) = string_method(sm, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
-        if let Some(expr) = array_method(sm, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = string_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
         if let Some(method) = map_method(&sm.property.name) {
@@ -800,6 +800,11 @@ fn string_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) 
             // `split` yields `&str`; map to owned so the result is `Vec<String>`.
             let delim = str_method_arg(args.first()?, ctx);
             parse_quote!(#obj.split(#delim).map(|part| part.to_string()).collect::<Vec<String>>())
+        }
+        // `.indexOf(s)` → byte offset (ASCII == char index), or -1.
+        "indexOf" => {
+            let needle = str_method_arg(args.first()?, ctx);
+            parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1.0))
         }
         _ => return None,
     })

@@ -509,4 +509,11 @@ mod tests {
         assert!(rust.contains(".position(|y| y == 2.0)"), "got:\n{rust}");
         assert!(rust.contains(".unwrap_or(-1.0)"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_string_index_of_to_find() {
+        let src = "function f(): void { const s = \"hello\"; const i = s.indexOf(\"ll\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".find(\"ll\").map(|b| b as f64).unwrap_or(-1.0)"), "got:\n{rust}");
+    }
 }

@@ -78,6 +78,7 @@ function main(): void {
   // string → string[]: split maps to split().map(to_string).collect()
   const parts = "a,b,c".split(",");
   console.log("split:", parts.length);
+  console.log("str indexOf:", "hello".indexOf("ll"));
 
   // arrow function as a value
   const square = (n: number) => n * n;
