@@ -607,4 +607,11 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("Vector { y: 9.0, ..v }"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_array_spread_to_slice_concat() {
+        let src = "function f(): void { const xs: number[] = [1, 2]; const ys = [...xs, 3]; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("[xs.as_slice(), &[3.0][..]].concat()"), "got:\n{rust}");
+    }
 }

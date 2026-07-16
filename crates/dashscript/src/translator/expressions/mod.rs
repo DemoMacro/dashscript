@@ -33,7 +33,7 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         Expression::NullLiteral(_) => parse_quote!(None),
         Expression::Identifier(id) => ident_or_undefined(id),
         Expression::CallExpression(call) => translate_call(call, ctx),
-        Expression::ArrayExpression(arr) => array_expr(arr),
+        Expression::ArrayExpression(arr) => array_expr(arr, ctx),
         Expression::StaticMemberExpression(sm) => member_expr(sm, ctx),
         Expression::ComputedMemberExpression(cm) => computed_member(cm, ctx),
         Expression::TemplateLiteral(t) => template_expr(t, ctx),
@@ -61,7 +61,7 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::NullLiteral(_) => parse_quote!(None),
         Argument::Identifier(id) => ident_or_undefined(id),
         Argument::CallExpression(call) => translate_call(call, ctx),
-        Argument::ArrayExpression(arr) => array_expr(arr),
+        Argument::ArrayExpression(arr) => array_expr(arr, ctx),
         Argument::StaticMemberExpression(sm) => member_expr(sm, ctx),
         Argument::ComputedMemberExpression(cm) => computed_member(cm, ctx),
         Argument::TemplateLiteral(t) => template_expr(t, ctx),
@@ -232,10 +232,50 @@ fn kind_string(obj: &ObjectExpression) -> Option<String> {
     None
 }
 
-/// `[1, 2, 3]` → `vec![1.0, 2.0, 3.0]`. Spread / holes are unmapped yet.
-fn array_expr(arr: &ArrayExpression) -> Expr {
+/// `[1, 2, 3]` → `vec![1.0, 2.0, 3.0]`. A spread (`[...xs, 4]`) builds via
+/// slice concat: `[xs.as_slice(), &[4.0][..]].concat()`.
+fn array_expr(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
+    if arr
+        .elements
+        .iter()
+        .any(|e| matches!(e, ArrayExpressionElement::SpreadElement(_)))
+    {
+        return spread_array(arr, ctx);
+    }
     let elems: Vec<Expr> = arr.elements.iter().filter_map(array_element).collect();
     parse_quote!(vec![#(#elems),*])
+}
+
+/// `[...xs, 4]` → `[xs.as_slice(), &[4.0][..]].concat()`: consecutive literals
+/// batch into one `&[..]` slice, each spread into `arg.as_slice()`.
+fn spread_array(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
+    let mut segments: Vec<Expr> = Vec::new();
+    let mut literals: Vec<Expr> = Vec::new();
+    for e in &arr.elements {
+        match e {
+            ArrayExpressionElement::SpreadElement(sp) => {
+                flush_literals(&mut literals, &mut segments);
+                let arg = translate_expr(&sp.argument, ctx);
+                segments.push(parse_quote!(#arg.as_slice()));
+            }
+            other => {
+                if let Some(expr) = array_element(other) {
+                    literals.push(expr);
+                }
+            }
+        }
+    }
+    flush_literals(&mut literals, &mut segments);
+    parse_quote!([#(#segments),*].concat())
+}
+
+/// Flush pending literals into a `&[a, b, ..]` slice segment.
+fn flush_literals(literals: &mut Vec<Expr>, segments: &mut Vec<Expr>) {
+    if literals.is_empty() {
+        return;
+    }
+    let owned = std::mem::take(literals);
+    segments.push(parse_quote!(&[#(#owned),*][..]))
 }
 
 fn array_element(elem: &ArrayExpressionElement) -> Option<Expr> {

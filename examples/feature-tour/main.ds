@@ -116,6 +116,10 @@ function main(): void {
   console.log("join:", xs.join("-"));
   console.log("reduce:", xs.reduce((a, b) => a + b, 0));
 
+  // array spread: `[...xs, v]` → `[xs.as_slice(), &[v][..]].concat()`
+  const tail: number[] = [...xs, 4];
+  console.log("tail:", tail.length);
+
   // mutate an element: `ys[i] = v` → `ys[i as usize] = v`
   let ys: number[] = [1, 2, 3];
   ys[0] = 9;
