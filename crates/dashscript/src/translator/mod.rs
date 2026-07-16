@@ -624,6 +624,30 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_concat_to_slice_concat() {
+        let src = "function f(): void { const a: number[] = [1, 2]; const b: number[] = [3]; const c = a.concat(b); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("[a.as_slice(), b.as_slice()].concat()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_reverse_to_in_place_reverse() {
+        let src = "function f(): void { let xs: number[] = [1, 2]; xs.reverse(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("xs.reverse();"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_sort_to_numeric_sort_by() {
+        let src = "function f(): void { let xs: number[] = [2, 1]; xs.sort(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(
+            rust.contains("xs.sort_by(|a, b| a.partial_cmp(&b).unwrap());"),
+            "got:\n{rust}"
+        );
+    }
+
+    #[test]
     fn translates_string_global_to_format() {
         let src = "function f(): string { return String(42); }";
         let rust = Translator::new().translate(src).expect("should translate");

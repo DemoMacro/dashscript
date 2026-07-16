@@ -56,6 +56,9 @@ join: 1-2-3
 reduce: 6
 tail: 4
 array destructure: 10 20
+sorted: 1 2 3
+reversed: 3 2 1
+concat size: 5
 ys[0]: 9
 wv.x: 10
 sum 1..5: 15
@@ -113,6 +116,9 @@ set: 42
 | `xs.reduce((a, b) => …, 0)`            | `….fold(0.0, \|a, b\| …)`                             |
 | `[...xs, 4]`                           | `[xs.as_slice(), &[4][..]].concat()`                  |
 | `const [a, b] = xs`                    | `let a = xs[0]; let b = xs[1];`                       |
+| `xs.concat(ys)`                        | `[xs.as_slice(), ys.as_slice()].concat()`             |
+| `xs.reverse()`                         | `xs.reverse()`                                        |
+| `xs.sort()`                            | `xs.sort_by(\|a, b\| a.partial_cmp(&b).unwrap())`     |
 | `for (let i = …; …; i++)`              | `{ let mut i …; while … { …; i += 1.0; } }`           |
 | `for (const n of xs)`                  | `for &n in &xs`                                       |
 | `continue` / `break`                   | `continue` / `break`                                  |

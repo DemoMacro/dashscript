@@ -119,6 +119,28 @@ pub(super) fn array_method(
                 None => parse_quote!(#recv.iter().copied().reduce(#cb)),
             }
         }
+        // `.concat(ys, …)` → concatenate slices into a new `Vec`. Arguments
+        // are assumed to be arrays; scalar concat args are unsupported.
+        "concat" => {
+            let parts: Vec<Expr> = args
+                .iter()
+                .map(|a| {
+                    let e = translate_argument(a, ctx);
+                    parse_quote!(#e.as_slice())
+                })
+                .collect();
+            parse_quote!([#recv.as_slice(), #(#parts),*].concat())
+        }
+        // `.reverse()` → in-place `Vec::reverse`. Mutates; needs a mutable
+        // (`let`) array. TS returns the same reference — DashScript uses it
+        // statement-style.
+        "reverse" if args.is_empty() => parse_quote!(#recv.reverse()),
+        // `.sort()` → in-place numeric ascending sort (TS default sort is
+        // lexicographic; DashScript treats number arrays numerically). A
+        // comparator argument is unsupported — it would return `Ordering`.
+        "sort" if args.is_empty() => {
+            parse_quote!(#recv.sort_by(|a, b| a.partial_cmp(&b).unwrap()))
+        }
         _ => return None,
     })
 }

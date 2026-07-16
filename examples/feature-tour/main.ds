@@ -136,6 +136,17 @@ function main(): void {
   const [first, second] = pair;
   console.log("array destructure:", first, second);
 
+  // in-place array mutations: `.sort()` (numeric ascending) and `.reverse()`
+  // need a `let` (mutable) array; `.concat(ys)` returns a new array.
+  let nums: number[] = [3, 1, 2];
+  nums.sort();
+  console.log("sorted:", nums[0], nums[1], nums[2]);
+  nums.reverse();
+  console.log("reversed:", nums[0], nums[1], nums[2]);
+  const more: number[] = [4, 5];
+  const combined = nums.concat(more);
+  console.log("concat size:", combined.length);
+
   // mutate an element: `ys[i] = v` → `ys[i as usize] = v`
   let ys: number[] = [1, 2, 3];
   ys[0] = 9;
