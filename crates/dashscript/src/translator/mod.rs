@@ -703,4 +703,13 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("return x;"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_bitwise_and_or_xor() {
+        let src = "function f(a: number, b: number): number { return (a & b) + (a | b) + (a ^ b); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("as i32) &"), "got:\n{rust}");
+        assert!(rust.contains("as i32) |"), "got:\n{rust}");
+        assert!(rust.contains("as i32) ^"), "got:\n{rust}");
+    }
 }

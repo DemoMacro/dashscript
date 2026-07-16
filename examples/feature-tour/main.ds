@@ -66,6 +66,7 @@ function main(): void {
   console.log("prices size:", prices.length);
   console.log("2^10:", 2 ** 10);
   console.log("trig:", Math.sin(0), Math.cos(0));
+  console.log("bitwise:", 6 & 3);
 
   const lin: Kind = "linear";
   const rot: Kind = "rotational";

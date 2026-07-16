@@ -474,6 +474,11 @@ fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
         let exp = translate_expr(&bin.right, ctx);
         return parse_quote!(#base.powf(#exp));
     }
+    // Bitwise `&`/`|`/`^` operate on `i32` in both TS and Rust; cast each f64
+    // operand down and the result back up to `.ds`'s `number` (`f64`).
+    if let Some(expr) = bitwise_expr(bin, ctx) {
+        return expr;
+    }
     let left = translate_expr(&bin.left, ctx);
     let right = translate_expr(&bin.right, ctx);
     let op = match bin.operator {
@@ -497,6 +502,25 @@ fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
         left: Box::new(left),
         op,
         right: Box::new(right),
+    })
+}
+
+/// Bitwise `&`/`|`/`^`: TS applies these to `i32`, so each `f64` operand is
+/// cast down, the op applied, and the result cast back to `f64` (`.ds` number).
+fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    if !matches!(
+        bin.operator,
+        BinaryOperator::BitwiseAnd | BinaryOperator::BitwiseOR | BinaryOperator::BitwiseXOR
+    ) {
+        return None;
+    }
+    let left = translate_expr(&bin.left, ctx);
+    let right = translate_expr(&bin.right, ctx);
+    Some(match bin.operator {
+        BinaryOperator::BitwiseAnd => parse_quote!(((#left as i32) & (#right as i32)) as f64),
+        BinaryOperator::BitwiseOR => parse_quote!(((#left as i32) | (#right as i32)) as f64),
+        BinaryOperator::BitwiseXOR => parse_quote!(((#left as i32) ^ (#right as i32)) as f64),
+        _ => unreachable!(),
     })
 }
 
