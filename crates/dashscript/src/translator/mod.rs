@@ -721,4 +721,11 @@ mod tests {
         assert!(rust.contains(".wrapping_shr("), "got:\n{rust}");
         assert!(rust.contains("as u32).wrapping_shr"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_bitwise_not() {
+        let src = "function f(a: number): number { return ~a; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("!(a as i32)"), "got:\n{rust}");
+    }
 }

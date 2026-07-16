@@ -662,7 +662,7 @@ fn coalesce_expr(left: &Expression, right: &Expression, ctx: &Ctx<'_>) -> Expr {
     translate_expr(left, ctx)
 }
 
-/// Unary `-`/`!`. (`+` is a no-op; `~`, `typeof`, `void`, `delete` are unmapped.)
+/// Unary `-`/`!`/`~`. (`+` is a no-op; `typeof`, `void`, `delete` are unmapped.)
 fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
     let arg = translate_expr(&un.argument, ctx);
     match un.operator {
@@ -677,6 +677,8 @@ fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
             op: UnOp::Not(Default::default()),
             expr: Box::new(arg),
         }),
+        // `~a` → `!(a as i32) as f64` (TS `~` is 32-bit bitwise NOT).
+        UnaryOperator::BitwiseNot => parse_quote!((!(#arg as i32)) as f64),
         _ => parse_quote!(::core::todo!()),
     }
 }
