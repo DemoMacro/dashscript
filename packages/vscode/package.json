@@ -1,0 +1,68 @@
+{
+  "name": "@dashscript/vscode",
+  "displayName": "DashScript",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Language support for DashScript (.ds) — a TypeScript-flavored syntax that transpiles to Rust.",
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "dashscript",
+    "rust",
+    "transpiler",
+    "typescript",
+    "vscode"
+  ],
+  "homepage": "https://github.com/DemoMacro/dashscript#readme",
+  "bugs": {
+    "url": "https://github.com/DemoMacro/dashscript/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Demo Macro",
+    "email": "abc@imst.xyz",
+    "url": "https://www.demomacro.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoMacro/dashscript.git"
+  },
+  "publisher": "demomacro",
+  "files": [
+    "dist",
+    "syntaxes",
+    "language-configuration.json"
+  ],
+  "main": "./dist/extension.mjs",
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack -w",
+    "vscode:prepublish": "vp pack"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "dashscript",
+        "aliases": [
+          "DashScript",
+          "ds"
+        ],
+        "extensions": [
+          ".ds"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "dashscript",
+        "scopeName": "source.ds",
+        "path": "./syntaxes/dashscript.tmLanguage.json"
+      }
+    ]
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  }
+}

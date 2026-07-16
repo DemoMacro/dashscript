@@ -1,0 +1,8 @@
+{
+  "scopeName": "source.ds",
+  "patterns": [
+    {
+      "include": "source.ts"
+    }
+  ]
+}
