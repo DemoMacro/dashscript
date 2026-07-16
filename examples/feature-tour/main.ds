@@ -151,6 +151,8 @@ function main(): void {
   console.log("as string:", String(42));
   console.log("number:", Number("3.14"));
   console.log("parsed:", parseInt("100"));
+  // parseInt(s, radix) → i64::from_str_radix (radix 16 reads hex)
+  console.log("parsed hex:", parseInt("ff", 16));
   // boolean coercion: `Boolean(x)` → truthiness (empty string / zero → false)
   console.log("bool:", Boolean("hi"), Boolean(""));
   console.log("sliced str:", "hello".slice(1, 4));

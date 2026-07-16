@@ -477,9 +477,26 @@ pub(super) fn global_function(
         }
         // A malformed string yields NaN in TS, never a throw — `unwrap_or`
         // matches that without a runtime panic.
-        "parseInt" | "parseFloat" => {
+        "parseFloat" => {
             let a = translate_argument(args.first()?, ctx);
             parse_quote!(#a.trim().parse::<f64>().unwrap_or(f64::NAN))
+        }
+        // `parseInt(s)` → base-10 parse; `parseInt(s, radix)` →
+        // `i64::from_str_radix` (an out-of-range radix yields NaN, as in TS).
+        // This does not honor a `0x` prefix the way TS auto-detection does.
+        "parseInt" => {
+            let a = translate_argument(args.first()?, ctx);
+            match args.get(1) {
+                Some(radix) => {
+                    let r = translate_argument(radix, ctx);
+                    parse_quote!(
+                        i64::from_str_radix(#a.trim(), #r as u32)
+                            .map(|x| x as f64)
+                            .unwrap_or(f64::NAN)
+                    )
+                }
+                None => parse_quote!(#a.trim().parse::<f64>().unwrap_or(f64::NAN)),
+            }
         }
         // `Number(s)` parses a string; `Number(n)` passes a number through.
         "Number" => {

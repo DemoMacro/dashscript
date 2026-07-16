@@ -866,6 +866,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_parse_int_with_radix_to_from_str_radix() {
+        let src = "function f(s: string): number { return parseInt(s, 16); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("from_str_radix("), "got:\n{rust}");
+        assert!(rust.contains("as u32"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_number_global_string_to_parse() {
         let src = "function f(): number { return Number(\"42\"); }";
         let rust = Translator::new().translate(src).expect("should translate");
