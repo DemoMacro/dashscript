@@ -1,10 +1,10 @@
 //! Function & variable declarations, and statement translation → `syn`.
 
 use oxc_ast::ast::{
-    Argument, BindingPattern, DoWhileStatement, Expression, FormalParameters, ForOfStatement,
-    ForStatement, ForStatementInit, ForStatementLeft, Function, FunctionBody, IfStatement,
-    ObjectPattern, Statement, SwitchCase, SwitchStatement, TSType, VariableDeclaration,
-    VariableDeclarationKind, WhileStatement,
+    Argument, BindingPattern, DoWhileStatement, Expression, FormalParameters, ForInStatement,
+    ForOfStatement, ForStatement, ForStatementInit, ForStatementLeft, Function, FunctionBody,
+    IfStatement, ObjectPattern, Statement, SwitchCase, SwitchStatement, TSType,
+    VariableDeclaration, VariableDeclarationKind, WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
@@ -162,6 +162,7 @@ fn translate_stmt(
         }
         Statement::DoWhileStatement(dws) => vec![translate_do_while(dws, locals, registry, narrow, return_path)],
         Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals, registry, narrow, return_path),
+        Statement::ForInStatement(for_in) => translate_for_in(for_in, locals, registry, narrow, return_path),
         Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals, registry, narrow, return_path),
         Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals, registry, narrow, return_path)],
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
@@ -316,6 +317,24 @@ fn translate_for_of(
     let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
     let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
     vec![parse_quote!(for &#pat in &#iter #body)]
+}
+
+/// `for (const k in m)` → `for k in m.keys().cloned()` — iterates a map's keys
+/// as owned `String`s (the `.ds` `Record` is a `HashMap<String, …>`). A struct
+/// source has no keys iterator, so only a `Record`/`HashMap` is supported.
+fn translate_for_in(
+    stmt: &ForInStatement,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+    return_path: Option<&Path>,
+) -> Vec<Stmt> {
+    let Some(pat) = for_of_binding(&stmt.left) else {
+        return vec![];
+    };
+    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
+    vec![parse_quote!(for #pat in #iter.keys().cloned() #body)]
 }
 
 /// `for (init; test; update) body` → `{ init; while test { body; update; } }`.

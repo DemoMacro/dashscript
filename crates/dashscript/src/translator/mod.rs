@@ -657,4 +657,11 @@ mod tests {
         assert!(rust.contains(".trim_start()"), "got:\n{rust}");
         assert!(rust.contains(".trim_end()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_for_in_to_keys_cloned() {
+        let src = "function f(m: Record<string, number>): void { for (const k in m) { console.log(k); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("for k in m.keys().cloned()"), "got:\n{rust}");
+    }
 }
