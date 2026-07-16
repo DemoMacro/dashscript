@@ -22,6 +22,16 @@ pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Optio
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, "ln", Vec::new()))
         }
+        // `Math.log1p(x)` → `x.ln_1p()`; `Math.expm1(x)` → `x.exp_m1()`
+        // (Rust's f64 names differ from JS).
+        "log1p" => {
+            let recv = math_receiver(args.first()?, ctx);
+            Some(method_call(recv, "ln_1p", Vec::new()))
+        }
+        "expm1" => {
+            let recv = math_receiver(args.first()?, ctx);
+            Some(method_call(recv, "exp_m1", Vec::new()))
+        }
         "max" | "min" => {
             let a = math_receiver(args.first()?, ctx);
             let b = translate_argument(args.get(1)?, ctx);
@@ -37,6 +47,15 @@ pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Optio
             let y = math_receiver(args.first()?, ctx);
             let x = translate_argument(args.get(1)?, ctx);
             Some(method_call(y, "atan2", vec![x]))
+        }
+        // `Math.hypot(a, b)` → `(a.powi(2) + b.powi(2)).sqrt()` (std has no
+        // `f64::hypot`; the Pythagorean form is exact for finite inputs). Both
+        // args go through `math_receiver` so a bare literal like `4` gets an
+        // `_f64` suffix — otherwise `4.powi(2)` is an ambiguous `{float}`.
+        "hypot" => {
+            let a = math_receiver(args.first()?, ctx);
+            let b = math_receiver(args.get(1)?, ctx);
+            Some(parse_quote!((#a.powi(2) + #b.powi(2)).sqrt()))
         }
         _ => None,
     }

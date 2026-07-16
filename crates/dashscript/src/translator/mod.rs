@@ -995,6 +995,30 @@ mod tests {
     }
 
     #[test]
+    fn translates_math_hypot_to_pythagoras() {
+        let src = "function f(a: number, b: number): number { return Math.hypot(a, b); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(
+            rust.contains("a.powi(2) + b.powi(2)).sqrt()"),
+            "got:\n{rust}"
+        );
+    }
+
+    #[test]
+    fn translates_math_log1p_to_ln_1p() {
+        let src = "function f(x: number): number { return Math.log1p(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".ln_1p("), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_math_expm1_to_exp_m1() {
+        let src = "function f(x: number): number { return Math.expm1(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".exp_m1("), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");
