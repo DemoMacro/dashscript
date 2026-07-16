@@ -20,12 +20,13 @@ use super::registry::{TypeRegistry, VariantShape};
 pub struct Locals {
     types: HashMap<String, Path>,
     pub mutated: HashSet<String>,
+    pub use_counts: HashMap<String, u32>,
 }
 
 impl Locals {
     #[must_use]
     pub fn new() -> Self {
-        Self { types: HashMap::new(), mutated: HashSet::new() }
+        Self { types: HashMap::new(), mutated: HashSet::new(), use_counts: HashMap::new() }
     }
 
     /// The type path of a local binding named `name`, if known.
@@ -89,6 +90,14 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn local_type(&self, name: &str) -> Option<&'a Path> {
         self.locals.get(name)
+    }
+
+    /// How often local `name` (snake-cased) is read in this body. A non-`Copy`
+    /// local read more than once must be cloned when passed by value — its
+    /// first move would break a later read. `0` when unknown.
+    #[must_use]
+    pub fn use_count(&self, name: &str) -> u32 {
+        self.locals.use_counts.get(name).copied().unwrap_or(0)
     }
 
     /// True when `name` is a local of an `Option<…>` type.

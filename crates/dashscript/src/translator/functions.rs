@@ -70,7 +70,9 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         })
         .collect();
     if let Some(body) = func.body.as_deref() {
-        locals.mutated = super::analysis::collect_mutations(&body.statements);
+        let analysis = super::analysis::analyze(&body.statements);
+        locals.mutated = analysis.mutated;
+        locals.use_counts = analysis.use_counts;
     }
     let mut block = translate_body(
         func.body.as_deref(),

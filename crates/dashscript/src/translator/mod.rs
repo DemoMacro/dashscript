@@ -1269,4 +1269,47 @@ mod tests {
         assert!(rust.contains(".wrapping_shl("), "got:\n{rust}");
         assert!(rust.contains("a = a.powf(2.0)"), "got:\n{rust}");
     }
+
+    #[test]
+    fn single_use_moves_without_clone() {
+        let src = "interface V { x: number } function consume(v: V): void {} function f(v: V): void { consume(v); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(!rust.contains(".clone()"), "a single use moves (last use), got:\n{rust}");
+    }
+
+    #[test]
+    fn multi_use_clones_non_copy_local() {
+        let src = "interface V { x: number } function consume(v: V): void {} function f(v: V): void { consume(v); consume(v); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("consume(v.clone())"), "a reused non-Copy local is cloned, got:\n{rust}");
+    }
+
+    #[test]
+    fn multi_use_with_field_read_clones_call_arg() {
+        // `v` is read twice (call + field); the call must clone so `v.x` works.
+        let src = "interface V { x: number } function consume(v: V): void {} function f(v: V): void { consume(v); console.log(v.x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("consume(v.clone())"), "call clones when v is read again, got:\n{rust}");
+    }
+
+    #[test]
+    fn scalar_multi_use_not_cloned() {
+        let src = "function consume(n: number): void {} function f(n: number): void { consume(n); consume(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(!rust.contains(".clone()"), "a scalar is Copy, got:\n{rust}");
+    }
+
+    #[test]
+    fn option_of_scalar_multi_use_not_cloned() {
+        let src = "function consume(o: number | null): void {} function f(o: number | null): void { consume(o); consume(o); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(!rust.contains(".clone()"), "Option<f64> is Copy, got:\n{rust}");
+    }
+
+    #[test]
+    fn struct_and_enum_derive_clone() {
+        let src = "interface V { x: number } type K = \"a\" | \"b\";";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.matches("#[derive(Clone)]").count() >= 2, "both struct and enum derive Clone, got:\n{rust}");
+    }
 }

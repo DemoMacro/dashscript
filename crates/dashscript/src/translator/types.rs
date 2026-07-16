@@ -80,3 +80,25 @@ pub fn type_path(ty: &Type) -> Option<&syn::Path> {
         None
     }
 }
+
+/// True when a type path is `Copy`: the scalar numerics and `bool`, or
+/// `Option<T>` where `T` is itself `Copy`. A `Copy` value passed by value is
+/// duplicated on read, so it never needs cloning; everything else
+/// (`String`/`Vec`/`HashMap`/user `struct`/`enum`) is non-`Copy` and would move.
+pub fn is_copy_path(path: &syn::Path) -> bool {
+    let Some(seg) = path.segments.last() else { return false };
+    match seg.ident.to_string().as_str() {
+        "f64" | "i64" | "u64" | "i32" | "u32" | "usize" | "isize" | "bool" => true,
+        "Option" => {
+            if let syn::PathArguments::AngleBracketed(args) = &seg.arguments {
+                if let Some(syn::GenericArgument::Type(ty)) = args.args.first() {
+                    if let Some(inner) = type_path(ty) {
+                        return is_copy_path(inner);
+                    }
+                }
+            }
+            false
+        }
+        _ => false,
+    }
+}

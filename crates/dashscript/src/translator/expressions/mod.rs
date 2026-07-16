@@ -1015,6 +1015,9 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 .and_then(|opt| opt.as_ref())
                 .map(|p| -> Type { parse_quote!(#p) });
             let val = translate_argument_init(a, hint_ty.as_ref(), ctx);
+            // A non-`Copy` local read elsewhere too is cloned at the call site
+            // (TS reference reuse vs Rust move); done before the `Some` wrap.
+            let val = clone_owned_local(a, val, ctx);
             // A supplied value for a defaulted parameter wraps in `Some`.
             if defaults.is_some_and(|d| d.get(i) == Some(&true)) {
                 parse_quote!(Some(#val))
@@ -1030,6 +1033,28 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         }
     }
     parse_quote!(#callee(#(#args),*))
+}
+
+/// A bare-local argument passed by value to a user function. TS reference
+/// semantics lets the caller reuse the value afterwards, but Rust would move
+/// it; when the local is also read elsewhere (use count > 1) and is not
+/// `Copy`, clone it at the call site so those later reads still see a value.
+/// A scalar is `Copy` (never cloned); a local read only here is moved, which
+/// is the idiomatic last use.
+fn clone_owned_local(arg: &Argument, val: Expr, ctx: &Ctx<'_>) -> Expr {
+    let Argument::Identifier(id) = arg else { return val };
+    if id.name.as_str() == "undefined" {
+        return val;
+    }
+    let name = bindings::snake(&id.name).to_string();
+    if ctx.use_count(&name) <= 1 {
+        return val;
+    }
+    match ctx.local_type(&name) {
+        Some(ty) if types::is_copy_path(ty) => val,
+        Some(_) => parse_quote!(#val.clone()),
+        None => val,
+    }
 }
 
 /// `.ds` string literal → Rust `String` (`"…".to_string()`).
