@@ -309,7 +309,7 @@ fn array_expr(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
     {
         return spread_array(arr, ctx);
     }
-    let elems: Vec<Expr> = arr.elements.iter().filter_map(array_element).collect();
+    let elems: Vec<Expr> = arr.elements.iter().filter_map(|e| array_element(e, ctx)).collect();
     parse_quote!(vec![#(#elems),*])
 }
 
@@ -326,7 +326,7 @@ fn spread_array(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
                 segments.push(parse_quote!(#arg.as_slice()));
             }
             other => {
-                if let Some(expr) = array_element(other) {
+                if let Some(expr) = array_element(other, ctx) {
                     literals.push(expr);
                 }
             }
@@ -345,12 +345,14 @@ fn flush_literals(literals: &mut Vec<Expr>, segments: &mut Vec<Expr>) {
     segments.push(parse_quote!(&[#(#owned),*][..]))
 }
 
-fn array_element(elem: &ArrayExpressionElement) -> Option<Expr> {
+fn array_element(elem: &ArrayExpressionElement, ctx: &Ctx<'_>) -> Option<Expr> {
+    // A spread element is handled earlier by `spread_array`; an elision (array
+    // hole) has no Rust equivalent and is dropped. Any other element is an
+    // expression — translate it through the main expression path so an array
+    // literal may hold any expression, not just value literals.
     match elem {
-        ArrayExpressionElement::StringLiteral(s) => Some(string_expr(s)),
-        ArrayExpressionElement::NumericLiteral(n) => Some(numeric_expr(n.value)),
-        ArrayExpressionElement::BooleanLiteral(b) => Some(bool_expr(b.value)),
-        _ => None,
+        ArrayExpressionElement::SpreadElement(_) | ArrayExpressionElement::Elision(_) => None,
+        _ => Some(translate_expr(elem.as_expression()?, ctx)),
     }
 }
 

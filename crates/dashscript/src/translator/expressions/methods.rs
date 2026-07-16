@@ -39,6 +39,12 @@ pub(super) fn array_method(
             let cb = translate_argument(args.first()?, ctx);
             parse_quote!(#recv.iter().copied().map(#cb).collect::<Vec<_>>())
         }
+        // `.flatMap(cb)` → `flat_map` then collect; `cb` returns a `Vec` per
+        // element (TS `flatMap` requires an array return), flattened into one.
+        "flatMap" => {
+            let cb = translate_argument(args.first()?, ctx);
+            parse_quote!(#recv.iter().copied().flat_map(#cb).collect::<Vec<_>>())
+        }
         "filter" => {
             let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
                 return None;

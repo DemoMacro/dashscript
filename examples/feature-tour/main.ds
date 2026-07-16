@@ -168,6 +168,9 @@ function main(): void {
   console.log("every >0:", xs.every((n) => n > 0));
   console.log("join:", xs.join("-"));
   console.log("reduce:", xs.reduce((a, b) => a + b, 0));
+  // flatMap: map each element to an array, then flatten into one
+  const pairs = xs.flatMap((n) => [n, n * 2]);
+  console.log("flatMap:", pairs.length);
 
   // array iteration with side effects: `.forEach(cb)` → for_each
   xs.forEach((n) => console.log("each:", n));

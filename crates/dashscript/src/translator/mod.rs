@@ -603,6 +603,21 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_flat_map_to_flat_map_collect() {
+        let src = "function f(): void { const xs: number[] = [1, 2]; const ys = xs.flatMap((n) => [n, n]); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".flat_map(|n|"), "got:\n{rust}");
+        assert!(rust.contains(".collect::<Vec<_>>()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_literal_with_expression_elements() {
+        let src = "function f(n: number): number[] { return [n, n * 2, n + 1]; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("vec![n, n * 2.0, n + 1.0]"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_for_each_to_for_each() {
         let src = "function f(): void { const xs: number[] = [1, 2]; xs.forEach((n) => console.log(n)); }";
         let rust = Translator::new().translate(src).expect("should translate");
