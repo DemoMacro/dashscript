@@ -306,6 +306,19 @@ pub(super) fn map_method(name: &str) -> Option<Ident> {
     Some(format_ident!("{}", mapped))
 }
 
+/// A string method's receiver. A string literal stays a bare `&str` — every
+/// `str` method is `&self`, so the literal needs no `.to_string()` (which would
+/// trip clippy `unnecessary_to_string`). Any other receiver (a `String` local,
+/// a call result) is translated as-is.
+fn str_receiver(obj: &Expression, ctx: &Ctx<'_>) -> Expr {
+    if let Expression::StringLiteral(s) = obj {
+        let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+        parse_quote!(#lit)
+    } else {
+        translate_expr(obj, ctx)
+    }
+}
+
 /// String methods whose arguments need adapting to Rust's `&str`-oriented API:
 /// `includes`/`startsWith`/`endsWith` → `contains`/`starts_with`/`ends_with`;
 /// `replace` → `replacen(.., 1)` (TS replaces the first match only); `repeat`
@@ -315,7 +328,7 @@ pub(super) fn string_method(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    let obj = translate_expr(&sm.object, ctx);
+    let obj = str_receiver(&sm.object, ctx);
     let name: &str = &sm.property.name;
     Some(match name {
         "includes" => {
