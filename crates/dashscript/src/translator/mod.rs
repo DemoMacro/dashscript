@@ -1064,6 +1064,21 @@ mod tests {
     }
 
     #[test]
+    fn translates_string_pad_start_with_fill_char() {
+        let src = "function f(s: string): string { return s.padStart(5, \"0\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("chars().cycle().take"), "got:\n{rust}");
+        assert!(rust.contains("saturating_sub"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_string_pad_end_with_fill_char() {
+        let src = "function f(s: string): string { return s.padEnd(5, \"-\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("chars().cycle().take"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_code_at_to_code_point() {
         let src = "function f(s: string): number { return s.charCodeAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");

@@ -158,6 +158,8 @@ function main(): void {
   console.log("fromCharCode:", String.fromCharCode(66));
   // string padding: `.padStart(n)`/`.padEnd(n)` → format! alignment (spaces)
   console.log("pad:", "[" + "5".padStart(3) + "]", "[" + "5".padEnd(3) + "]");
+  // pad with a fill string: "5".padStart(3,"0") → "005"; multi-char pads cycle
+  console.log("pad ch:", "5".padStart(3, "0"), "5".padEnd(4, "ab"));
 
   // number formatting: `x.toFixed(n)` → format! with n decimal places
   const pi = 3.14159;

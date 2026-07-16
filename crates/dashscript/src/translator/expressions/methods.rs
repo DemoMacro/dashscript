@@ -338,16 +338,38 @@ pub(super) fn string_method(
             parse_quote!(#obj.chars().nth(#i).map(|c| c as u32 as f64).unwrap_or(f64::NAN))
         }
         // `.padStart(n)` → right-align to width `n` (fills on the left with
-        // spaces, TS's default pad). A custom fill character (`padStart(n,ch)`)
-        // is unsupported — Rust's `format!` fill char must be a literal.
+        // spaces, TS's default pad).
         "padStart" if args.len() <= 1 => {
             let n = usize_arg(args.first()?, ctx);
             parse_quote!(format!("{:>1$}", #obj, #n))
+        }
+        // `.padStart(n, ch)` → fill the left with `ch` (its chars cycled) to
+        // width `n`. Rust's `format!` fill must be a literal char, so a dynamic
+        // pad is built by cycling `ch`'s chars to the needed width (matches TS:
+        // `"5".padStart(6, "ab")` → `"ababa5"`).
+        "padStart" if args.len() >= 2 => {
+            let n = usize_arg(args.first()?, ctx);
+            let ch = str_method_arg(args.get(1)?, ctx);
+            parse_quote!({
+                let __s = #obj;
+                let __need = (#n).saturating_sub(__s.chars().count());
+                format!("{}{}", #ch.chars().cycle().take(__need).collect::<String>(), __s)
+            })
         }
         // `.padEnd(n)` → left-align to width `n` (fills on the right).
         "padEnd" if args.len() <= 1 => {
             let n = usize_arg(args.first()?, ctx);
             parse_quote!(format!("{:<1$}", #obj, #n))
+        }
+        // `.padEnd(n, ch)` → fill the right with `ch` (cycled) to width `n`.
+        "padEnd" if args.len() >= 2 => {
+            let n = usize_arg(args.first()?, ctx);
+            let ch = str_method_arg(args.get(1)?, ctx);
+            parse_quote!({
+                let __s = #obj;
+                let __need = (#n).saturating_sub(__s.chars().count());
+                format!("{}{}", __s, #ch.chars().cycle().take(__need).collect::<String>())
+            })
         }
         _ => return None,
     })
