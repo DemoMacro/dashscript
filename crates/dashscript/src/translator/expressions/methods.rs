@@ -84,6 +84,18 @@ pub(super) fn array_method(
                     .unwrap_or(-1.0)
             )
         }
+        // `.lastIndexOf(x)` → last index of `x`, or -1 (`rposition`).
+        "lastIndexOf" => {
+            let needle = translate_argument(args.first()?, ctx);
+            parse_quote!(
+                #recv
+                    .iter()
+                    .copied()
+                    .rposition(|y| y == #needle)
+                    .map(|i| i as f64)
+                    .unwrap_or(-1.0)
+            )
+        }
         // `.findIndex(cb)` → first index where cb holds, or -1. `position` takes
         // the item by value (after `.copied()`), so the param is `|n|`.
         "findIndex" => {

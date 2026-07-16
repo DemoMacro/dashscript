@@ -661,6 +661,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_last_index_of_to_rposition() {
+        let src = "function f(xs: number[]): number { return xs.lastIndexOf(2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".rposition(|y| y == "), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_destructure_rest_to_slice() {
         let src = "function f(): void { const xs: number[] = [1, 2, 3]; const [a, ...rest] = xs; }";
         let rust = Translator::new().translate(src).expect("should translate");

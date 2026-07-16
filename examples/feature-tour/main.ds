@@ -168,6 +168,7 @@ function main(): void {
   // array `.at(i)` → signed index (negatives count from the end)
   console.log("at:", xs.at(2), xs.at(-1));
   console.log("indexOf:", xs.indexOf(2));
+  console.log("lastIndexOf:", xs.lastIndexOf(2));
   console.log("findIndex >1:", xs.findIndex((n) => n > 1));
   console.log("includes 2:", xs.includes(2));
   console.log("find 2:", xs.find((n) => n === 2)!);
