@@ -132,6 +132,21 @@ mod tests {
     }
 
     #[test]
+    fn translates_optional_chain_to_as_ref_map() {
+        let src = "interface V { x: number } function f(): void { const v: V | null = null; const x = v?.x; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("v.as_ref().map(|__c| __c.x)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_optional_chain_coalesce_to_unwrap_or() {
+        let src = "interface V { x: number } function f(): number { const v: V | null = null; return v?.x ?? -1; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("unwrap_or(-1.0)"), "got:\n{rust}");
+        assert!(rust.contains("__c.x"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_number_to_fixed_to_format_precision() {
         let src = "function f(): string { const pi = 3.14159; return pi.toFixed(2); }";
         let rust = Translator::new().translate(src).expect("should translate");

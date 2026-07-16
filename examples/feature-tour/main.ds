@@ -114,6 +114,10 @@ function main(): void {
   console.log("default:", greet("world"));
   console.log("override:", greet("world", "hi"));
 
+  // optional chaining: `v?.x` → as_ref().map; `?? default` → unwrap_or
+  const none: Vector | null = null;
+  console.log("chain none:", none?.x ?? -1);
+
   // string methods + concatenation
   const greeting = "Hello, World";
   console.log(greeting.toLowerCase());

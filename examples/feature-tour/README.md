@@ -38,6 +38,7 @@ item tag: new
 identity: 42
 default: hello, world
 override: hi, world
+chain none: -1
 hello, world
 true
 ababab
@@ -137,6 +138,7 @@ set: 42
 | `continue` / `break`                   | `continue` / `break`                                       |
 | `number \| null`, `…!`                 | `Option<f64>`, `….unwrap()`                                |
 | `if (items)` / `if (maybe)`            | `!items.is_empty()` / `maybe.is_some()`                    |
+| `v?.x` (Option receiver)               | `v.as_ref().map(\|__c\| __c.x)`                            |
 
 ## License
 

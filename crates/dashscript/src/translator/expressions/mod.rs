@@ -54,6 +54,23 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         // User-written parens are unwrapped; `prettyplease` re-adds any needed
         // for precedence (e.g. `(a + b) * c` round-trips correctly).
         Expression::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
+        Expression::ChainExpression(c) => chain_expr(&c.expression, ctx),
+        _ => parse_quote!(::core::todo!()),
+    }
+}
+
+/// Optional chaining `a?.field` → `a.as_ref().map(|__c| __c.field)`. The
+/// receiver is an `Option`; the access maps over a reference and yields
+/// another `Option`. Only a single optional field access is handled; indexed
+/// access, optional calls, and chained `a?.b?.c` fall back to `todo!()`.
+fn chain_expr(elem: &oxc_ast::ast::ChainElement, ctx: &Ctx<'_>) -> Expr {
+    use oxc_ast::ast::ChainElement;
+    match elem {
+        ChainElement::StaticMemberExpression(sm) => {
+            let obj = translate_expr(&sm.object, ctx);
+            let field = bindings::snake(&sm.property.name);
+            parse_quote!(#obj.as_ref().map(|__c| __c.#field))
+        }
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -702,6 +719,12 @@ fn coalesce_expr(left: &Expression, right: &Expression, ctx: &Ctx<'_>) -> Expr {
     if let Some(name) = option_local_name(left, ctx) {
         let ident = bindings::snake(name);
         return parse_quote!(#ident.unwrap_or_else(|| #right_val));
+    }
+    // An optional-chain result is itself an `Option`, so the right side
+    // supplies the default via `unwrap_or`.
+    if matches!(left, Expression::ChainExpression(_)) {
+        let left_val = translate_expr(left, ctx);
+        return parse_quote!(#left_val.unwrap_or(#right_val));
     }
     translate_expr(left, ctx)
 }
