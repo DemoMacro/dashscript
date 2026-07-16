@@ -13,3 +13,4 @@ mod clone_move;
 mod narrowing;
 mod check;
 mod fmt;
+mod modules;

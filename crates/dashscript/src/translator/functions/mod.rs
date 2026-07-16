@@ -16,8 +16,8 @@ use destructure::{destructure_array, destructure_object};
 use switch::translate_switch;
 
 use oxc_ast::ast::{
-    Argument, BindingPattern, Expression, FormalParameters, Function, FunctionBody, Statement,
-    TSType, VariableDeclaration, VariableDeclarationKind,
+    Argument, BindingPattern, Declaration, Expression, FormalParameters, Function, FunctionBody,
+    Statement, TSType, VariableDeclaration, VariableDeclarationKind,
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
@@ -39,7 +39,41 @@ pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Option<
             Some(syn::Item::Struct(declarations::translate_interface(iface)))
         }
         Statement::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
+        // `export function/interface/type` lowers the declaration and marks it
+        // `pub` so another `.ds` module can `import` it. Re-export lists
+        // (`export { x } from "…"`) have no declaration and fall to `_`.
+        Statement::ExportNamedDeclaration(exp) => {
+            let decl = exp.declaration.as_ref()?;
+            let mut item = translate_exported_declaration(decl, registry)?;
+            make_pub(&mut item);
+            Some(item)
+        }
         _ => None,
+    }
+}
+
+/// Translate the inner declaration of an `export` (`export function` /
+/// `export interface` / `export type`). Re-exports and unsupported kinds
+/// (class, enum) yield `None`.
+fn translate_exported_declaration(decl: &Declaration, registry: &TypeRegistry) -> Option<syn::Item> {
+    match decl {
+        Declaration::FunctionDeclaration(func) => Some(syn::Item::Fn(translate_function(func, registry))),
+        Declaration::TSInterfaceDeclaration(iface) => {
+            Some(syn::Item::Struct(declarations::translate_interface(iface)))
+        }
+        Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
+        _ => None,
+    }
+}
+
+/// Mark a top-level item `pub` — used for `export`ed declarations.
+fn make_pub(item: &mut syn::Item) {
+    match item {
+        syn::Item::Fn(f) => f.vis = parse_quote!(pub),
+        syn::Item::Struct(s) => s.vis = parse_quote!(pub),
+        syn::Item::Enum(e) => e.vis = parse_quote!(pub),
+        syn::Item::Type(t) => t.vis = parse_quote!(pub),
+        _ => {}
     }
 }
 
