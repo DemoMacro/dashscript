@@ -1,15 +1,15 @@
 //! Function & variable declarations, and statement translation → `syn`.
 
 use oxc_ast::ast::{
-    BindingPattern, DoWhileStatement, Expression, FormalParameters, ForOfStatement, ForStatement,
-    ForStatementInit, ForStatementLeft, Function, FunctionBody, IfStatement, ObjectPattern,
-    Statement, SwitchCase, SwitchStatement, TSType, VariableDeclaration, VariableDeclarationKind,
-    WhileStatement,
+    Argument, BindingPattern, DoWhileStatement, Expression, FormalParameters, ForOfStatement,
+    ForStatement, ForStatementInit, ForStatementLeft, Function, FunctionBody, IfStatement,
+    ObjectPattern, Statement, SwitchCase, SwitchStatement, TSType, VariableDeclaration,
+    VariableDeclarationKind, WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
-use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, Pat, Path, ReturnType, Stmt, Type};
+use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, LitStr, Pat, Path, ReturnType, Stmt, Type};
 
 use super::context::{Ctx, Locals, Narrow};
 use super::registry::TypeRegistry;
@@ -166,8 +166,40 @@ fn translate_stmt(
         Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals, registry, narrow, return_path)],
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
         Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
+        Statement::ThrowStatement(t) => vec![throw_stmt(&t.argument, locals, registry, narrow)],
         _ => vec![],
     }
+}
+
+/// `throw new Error("msg")` / `throw "msg"` → `panic!("msg")`; any other
+/// `throw expr` → `panic!("{}", expr)` (Rust has no `throw`; `.ds` errors are
+/// treated as unrecoverable panics, since there is no `try`/`catch` yet).
+fn throw_stmt(
+    arg: &Expression,
+    locals: &Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Stmt {
+    if let Some(lit) = thrown_message(arg) {
+        return parse_quote!(panic!(#lit););
+    }
+    let ctx = Ctx::new(locals, registry, narrow);
+    let e = expressions::translate_expr(arg, &ctx);
+    parse_quote!(panic!("{}", #e);)
+}
+
+/// The string literal carried by `throw new Error("msg")` or `throw "msg"`.
+fn thrown_message(arg: &Expression) -> Option<LitStr> {
+    if let Expression::StringLiteral(s) = arg {
+        return Some(LitStr::new(s.value.as_str(), proc_macro2::Span::call_site()));
+    }
+    let Expression::NewExpression(new) = arg else {
+        return None;
+    };
+    if let Argument::StringLiteral(s) = new.arguments.first()? {
+        return Some(LitStr::new(s.value.as_str(), proc_macro2::Span::call_site()));
+    }
+    None
 }
 
 fn translate_if(

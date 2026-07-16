@@ -628,4 +628,18 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".trim().parse::<f64>().unwrap()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_throw_new_error_to_panic() {
+        let src = "function f(): void { throw new Error(\"boom\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("panic!(\"boom\")"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_throw_string_to_panic() {
+        let src = "function f(): void { throw \"oops\"; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("panic!(\"oops\")"), "got:\n{rust}");
+    }
 }
