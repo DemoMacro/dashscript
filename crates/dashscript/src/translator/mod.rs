@@ -532,4 +532,11 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".get(\"a\").copied().unwrap()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_array_includes_to_contains() {
+        let src = "function f(): boolean { const xs: number[] = [1, 2, 3]; return xs.includes(2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("xs.contains(&2.0)"), "got:\n{rust}");
+    }
 }

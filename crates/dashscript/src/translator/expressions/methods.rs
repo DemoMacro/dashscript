@@ -64,6 +64,11 @@ pub(super) fn array_method(
                     .unwrap_or(-1.0)
             )
         }
+        // `.includes(x)` → Vec::contains (by reference).
+        "includes" => {
+            let needle = translate_argument(args.first()?, ctx);
+            parse_quote!(#recv.contains(&#needle))
+        }
         _ => return None,
     })
 }
