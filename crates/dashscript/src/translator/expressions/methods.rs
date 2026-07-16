@@ -194,6 +194,11 @@ pub(super) fn string_method(
                 None => parse_quote!(#obj[#start..].to_string()),
             }
         }
+        // `.charAt(i)` → the `i`-th char as a `String` ("" if out of range).
+        "charAt" => {
+            let i = usize_arg(args.first()?, ctx);
+            parse_quote!(#obj.chars().nth(#i).map(|c| c.to_string()).unwrap_or_default())
+        }
         _ => return None,
     })
 }

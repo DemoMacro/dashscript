@@ -39,6 +39,7 @@ as string: 42
 parsed: 100
 sliced str: ell
 trimmed: ab
+charAt: e
 square: 81
 doubled: 2 4 6
 evens: 2
@@ -63,51 +64,52 @@ set: 42
 
 ## What it demonstrates
 
-| `.ds`                                  | Rust                                            |
-| -------------------------------------- | ----------------------------------------------- |
-| `interface Vector { … }`               | `struct Vector { … }`                           |
-| `Record<string, number>`               | `HashMap<String, f64>`                          |
-| `{ alice: 90, … }` (Record)            | `HashMap::from([(…, …)])`                       |
-| `m["k"]` (HashMap)                     | `m.get("k").copied().unwrap()`                  |
-| `m["k"] = v` (HashMap)                 | `m.insert("k".to_string(), v)`                  |
-| `xs[i] = v`                            | `xs[i as usize] = v`                            |
-| `v.x = v`                              | `v.x = v`                                       |
-| `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                         |
-| `{ ...base, x: 99 }` (typed)           | `Vector { x: 99.0, ..base }`                    |
-| `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                      |
-| `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                      |
-| `type Kind = "a" \| "b"`               | `enum Kind { A, B }`                            |
-| `switch (kind) { case … }`             | `match kind { Kind::A => … }`                   |
-| `{ kind: "c"; r } \| { kind: "s"; s }` | `enum Shape { Circle { r }, Square { s } }`     |
-| `switch (s.kind) { case …: s.r }`      | `match s { Shape::Circle { r } => r }`          |
-| `Math.sqrt(…)`, `x ** 2`               | `….sqrt()`, `x.powf(2.0)`                       |
-| `Math.sin(…)`, `Math.atan2(y, x)`      | `….sin()`, `….atan2(…)`                         |
-| `String(42)`                           | `format!("{}", 42.0)`                           |
-| `parseInt("100")`                      | `….trim().parse::<f64>().unwrap()`              |
-| `a + b + " => " + …`                   | `format!("{}{}{}{}", …)` (string concat)        |
-| `cond ? "a" : "b"`                     | `if cond { … } else { … }`                      |
-| `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`               |
-| `"ab".repeat(3)`                       | `….repeat(3.0 as usize)`                        |
-| `"a,b,c".split(",")`                   | `….split(…).map(to_string).collect()`           |
-| `"hello".indexOf("ll")`                | `….find(…).map(\|b\| b as f64).unwrap_or(-1.0)` |
-| `"hello".slice(1, 4)`                  | `….to_string()[1..4].to_string()`               |
-| `"  ab".trimStart()`                   | `….trim_start()`                                |
-| `(n) => n * n`                         | `\|n\| n * n`                                   |
-| `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()`     |
-| `xs.filter((n) => n > 1)`              | `xs.iter().copied().filter(\|&n\| …).collect()` |
-| `xs.slice(1, 3)`                       | `xs[1.0 as usize..3.0 as usize].to_vec()`       |
-| `xs.indexOf(2)`                        | `….position(\|y\| y == 2.0).unwrap_or(-1.0)`    |
-| `xs.includes(2)`                       | `….contains(&2.0)`                              |
-| `xs.find((n) => …)`                    | `….iter().copied().find(\|&n\| …)`              |
-| `xs.some` / `.every`                   | `….any(\|n\| …)` / `….all(\|n\| …)`             |
-| `xs.join("-")`                         | `….map(to_string).collect().join("-")`          |
-| `xs.reduce((a, b) => …, 0)`            | `….fold(0.0, \|a, b\| …)`                       |
-| `[...xs, 4]`                           | `[xs.as_slice(), &[4][..]].concat()`            |
-| `for (let i = …; …; i++)`              | `{ let mut i …; while … { …; i += 1.0; } }`     |
-| `for (const n of xs)`                  | `for &n in &xs`                                 |
-| `continue` / `break`                   | `continue` / `break`                            |
-| `number \| null`, `…!`                 | `Option<f64>`, `….unwrap()`                     |
-| `if (items)` / `if (maybe)`            | `!items.is_empty()` / `maybe.is_some()`         |
+| `.ds`                                  | Rust                                                  |
+| -------------------------------------- | ----------------------------------------------------- |
+| `interface Vector { … }`               | `struct Vector { … }`                                 |
+| `Record<string, number>`               | `HashMap<String, f64>`                                |
+| `{ alice: 90, … }` (Record)            | `HashMap::from([(…, …)])`                             |
+| `m["k"]` (HashMap)                     | `m.get("k").copied().unwrap()`                        |
+| `m["k"] = v` (HashMap)                 | `m.insert("k".to_string(), v)`                        |
+| `xs[i] = v`                            | `xs[i as usize] = v`                                  |
+| `v.x = v`                              | `v.x = v`                                             |
+| `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                               |
+| `{ ...base, x: 99 }` (typed)           | `Vector { x: 99.0, ..base }`                          |
+| `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                            |
+| `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                            |
+| `type Kind = "a" \| "b"`               | `enum Kind { A, B }`                                  |
+| `switch (kind) { case … }`             | `match kind { Kind::A => … }`                         |
+| `{ kind: "c"; r } \| { kind: "s"; s }` | `enum Shape { Circle { r }, Square { s } }`           |
+| `switch (s.kind) { case …: s.r }`      | `match s { Shape::Circle { r } => r }`                |
+| `Math.sqrt(…)`, `x ** 2`               | `….sqrt()`, `x.powf(2.0)`                             |
+| `Math.sin(…)`, `Math.atan2(y, x)`      | `….sin()`, `….atan2(…)`                               |
+| `String(42)`                           | `format!("{}", 42.0)`                                 |
+| `parseInt("100")`                      | `….trim().parse::<f64>().unwrap()`                    |
+| `a + b + " => " + …`                   | `format!("{}{}{}{}", …)` (string concat)              |
+| `cond ? "a" : "b"`                     | `if cond { … } else { … }`                            |
+| `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`                     |
+| `"ab".repeat(3)`                       | `….repeat(3.0 as usize)`                              |
+| `"a,b,c".split(",")`                   | `….split(…).map(to_string).collect()`                 |
+| `"hello".indexOf("ll")`                | `….find(…).map(\|b\| b as f64).unwrap_or(-1.0)`       |
+| `"hello".slice(1, 4)`                  | `….to_string()[1..4].to_string()`                     |
+| `"  ab".trimStart()`                   | `….trim_start()`                                      |
+| `"hello".charAt(1)`                    | `….chars().nth(…).map(to_string).unwrap_or_default()` |
+| `(n) => n * n`                         | `\|n\| n * n`                                         |
+| `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()`           |
+| `xs.filter((n) => n > 1)`              | `xs.iter().copied().filter(\|&n\| …).collect()`       |
+| `xs.slice(1, 3)`                       | `xs[1.0 as usize..3.0 as usize].to_vec()`             |
+| `xs.indexOf(2)`                        | `….position(\|y\| y == 2.0).unwrap_or(-1.0)`          |
+| `xs.includes(2)`                       | `….contains(&2.0)`                                    |
+| `xs.find((n) => …)`                    | `….iter().copied().find(\|&n\| …)`                    |
+| `xs.some` / `.every`                   | `….any(\|n\| …)` / `….all(\|n\| …)`                   |
+| `xs.join("-")`                         | `….map(to_string).collect().join("-")`                |
+| `xs.reduce((a, b) => …, 0)`            | `….fold(0.0, \|a, b\| …)`                             |
+| `[...xs, 4]`                           | `[xs.as_slice(), &[4][..]].concat()`                  |
+| `for (let i = …; …; i++)`              | `{ let mut i …; while … { …; i += 1.0; } }`           |
+| `for (const n of xs)`                  | `for &n in &xs`                                       |
+| `continue` / `break`                   | `continue` / `break`                                  |
+| `number \| null`, `…!`                 | `Option<f64>`, `….unwrap()`                           |
+| `if (items)` / `if (maybe)`            | `!items.is_empty()` / `maybe.is_some()`               |
 
 ## License
 

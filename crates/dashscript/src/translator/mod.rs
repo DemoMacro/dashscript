@@ -680,4 +680,12 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".atan2("), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_string_char_at_to_chars_nth() {
+        let src = "function f(s: string): string { return s.charAt(0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".chars().nth("), "got:\n{rust}");
+        assert!(rust.contains(".unwrap_or_default()"), "got:\n{rust}");
+    }
 }

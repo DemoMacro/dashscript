@@ -101,6 +101,7 @@ function main(): void {
   console.log("parsed:", parseInt("100"));
   console.log("sliced str:", "hello".slice(1, 4));
   console.log("trimmed:", "  ab".trimStart());
+  console.log("charAt:", "hello".charAt(1));
 
   // arrow function as a value
   const square = (n: number) => n * n;
