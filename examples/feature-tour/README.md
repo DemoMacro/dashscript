@@ -36,6 +36,8 @@ split: 3
 str indexOf: 2
 as string: 42
 parsed: 100
+sliced str: ell
+trimmed: ab
 square: 81
 doubled: 2 4 6
 evens: 2
@@ -86,6 +88,8 @@ set: 42
 | `"ab".repeat(3)`                       | `….repeat(3.0 as usize)`                        |
 | `"a,b,c".split(",")`                   | `….split(…).map(to_string).collect()`           |
 | `"hello".indexOf("ll")`                | `….find(…).map(\|b\| b as f64).unwrap_or(-1.0)` |
+| `"hello".slice(1, 4)`                  | `….to_string()[1..4].to_string()`               |
+| `"  ab".trimStart()`                   | `….trim_start()`                                |
 | `(n) => n * n`                         | `\|n\| n * n`                                   |
 | `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()`     |
 | `xs.filter((n) => n > 1)`              | `xs.iter().copied().filter(\|&n\| …).collect()` |

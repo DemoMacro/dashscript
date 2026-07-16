@@ -642,4 +642,19 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("panic!(\"oops\")"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_string_slice_to_byte_range() {
+        let src = "function f(): string { return \"hello\".slice(1, 4); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("[1.0 as usize..4.0 as usize].to_string()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_trim_start_end_to_trim_methods() {
+        let src = "function f(): void { const a = \"  x\".trimStart(); const b = \"x  \".trimEnd(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".trim_start()"), "got:\n{rust}");
+        assert!(rust.contains(".trim_end()"), "got:\n{rust}");
+    }
 }

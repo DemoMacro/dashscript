@@ -131,6 +131,8 @@ pub(super) fn map_method(name: &str) -> Option<Ident> {
         "toUpperCase" => "to_uppercase",
         "toLowerCase" => "to_lowercase",
         "trim" => "trim",
+        "trimStart" => "trim_start",
+        "trimEnd" => "trim_end",
         "push" => "push",
         "pop" => "pop",
         _ => return None,
@@ -180,6 +182,17 @@ pub(super) fn string_method(
         "indexOf" => {
             let needle = str_method_arg(args.first()?, ctx);
             parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1.0))
+        }
+        // `.slice(a, b)` / `.substring` → byte slice `s[a..b]` (ASCII), owned.
+        "slice" | "substring" => {
+            let start = usize_arg(args.first()?, ctx);
+            match args.get(1) {
+                Some(end) => {
+                    let end = usize_arg(end, ctx);
+                    parse_quote!(#obj[#start..#end].to_string())
+                }
+                None => parse_quote!(#obj[#start..].to_string()),
+            }
         }
         _ => return None,
     })
