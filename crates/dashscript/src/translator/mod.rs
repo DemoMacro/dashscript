@@ -426,6 +426,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_object_destructure_default_to_unwrap_or() {
+        let src = "interface User { name?: string; } function f(u: User): void { const { name = \"anon\" } = u; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".unwrap_or(\"anon\".to_string())"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_c_style_for_loop() {
         let src = "function f(): void { let total = 0; for (let i = 0; i < 5; i++) { total += i; } console.log(total); }";
         let rust = Translator::new().translate(src).expect("should translate");
@@ -602,7 +609,7 @@ mod tests {
     fn translates_object_destructuring_to_struct_pattern() {
         let src = "interface V { x: number; y: number; } function f(v: V): number { const { x, y } = v; return x + y; }";
         let rust = Translator::new().translate(src).expect("should translate");
-        assert!(rust.contains("let V { x, y } = v;"), "got:\n{rust}");
+        assert!(rust.contains("let V { x, y, .. } = v;"), "got:\n{rust}");
     }
 
     #[test]

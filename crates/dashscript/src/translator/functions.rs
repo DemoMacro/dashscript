@@ -602,7 +602,7 @@ fn translate_variable_declaration(
         .flat_map(|d| -> Vec<Stmt> {
             match &d.id {
                 BindingPattern::ObjectPattern(obj) => {
-                    vec![destructure_object(obj, d.init.as_ref(), locals, mutable, registry, narrow)]
+                    destructure_object(obj, d.init.as_ref(), locals, mutable, registry, narrow)
                 }
                 BindingPattern::ArrayPattern(arr) => {
                     destructure_array(arr, d.init.as_ref(), locals, mutable, registry, narrow)
@@ -639,27 +639,38 @@ fn destructure_object(
     mutable: bool,
     registry: &TypeRegistry,
     narrow: &Narrow,
-) -> Stmt {
+) -> Vec<Stmt> {
     let Some(init_expr) = init else {
-        return parse_quote!(let _ = ::core::todo!(););
+        return vec![parse_quote!(let _ = ::core::todo!();)];
     };
-    let value = expressions::translate_expr(init_expr, &Ctx::new(&*locals, registry, narrow));
+    let ctx = Ctx::new(&*locals, registry, narrow);
+    let value = expressions::translate_expr(init_expr, &ctx);
     let Some(path) = expr_type_path(init_expr, locals) else {
-        return parse_quote!(let _ = #value;);
+        return vec![parse_quote!(let _ = #value;)];
     };
-    let fields: Vec<TokenStream> = obj
-        .properties
-        .iter()
-        .filter_map(|p| {
-            let name = bindings::property_key_name(&p.key)?;
-            if mutable {
-                Some(quote!(mut #name))
-            } else {
-                Some(quote!(#name))
-            }
-        })
-        .collect();
-    parse_quote!(let #path { #(#fields),* } = #value;)
+    let mut fields: Vec<TokenStream> = Vec::new();
+    // `{ x = d }`: a default on a (typically optional) field — after the struct
+    // pattern binds `x: Option<T>`, shadow it with `x.unwrap_or(d)`. Each
+    // statement is emitted at the enclosing scope (no wrapping block) so the
+    // binding stays visible to later statements.
+    let mut defaults: Vec<(Ident, Expr)> = Vec::new();
+    for p in &obj.properties {
+        let Some(name) = bindings::property_key_name(&p.key) else {
+            continue;
+        };
+        fields.push(if mutable { quote!(mut #name) } else { quote!(#name) });
+        if let BindingPattern::AssignmentPattern(ap) = &p.value {
+            let default = expressions::translate_expr(&ap.right, &ctx);
+            defaults.push((name, default));
+        }
+    }
+    // `..` lets a partial destructure (`{ tag }` on a struct with more fields)
+    // compile; it's a no-op when all fields are listed.
+    let mut out: Vec<Stmt> = vec![parse_quote!(let #path { #(#fields),*, .. } = #value;)];
+    for (name, default) in &defaults {
+        out.push(parse_quote!(let #name = #name.unwrap_or(#default);));
+    }
+    out
 }
 
 /// `const [a, b] = xs` → `let a = xs[0 as usize]; let b = xs[1 as usize];`

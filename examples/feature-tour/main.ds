@@ -116,6 +116,9 @@ function main(): void {
   console.log("item name:", widget.name);
   const tagged: Item = { name: "gadget", tag: "new" };
   console.log("item tag:", tagged.tag!);
+  // destructure default: `{ tag = "none" }` → unwrap_or on the Option field
+  const { tag = "none" } = widget;
+  console.log("default tag:", tag);
 
   // generic function: `<T>` passes through; Rust monomorphizes each call
   console.log("identity:", identity(42));
