@@ -57,6 +57,22 @@ pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Optio
             let b = math_receiver(args.get(1)?, ctx);
             Some(parse_quote!((#a.powi(2) + #b.powi(2)).sqrt()))
         }
+        // `Math.clz32(x)` → count of leading zero bits of `x as u32`.
+        "clz32" => {
+            let recv = math_receiver(args.first()?, ctx);
+            Some(parse_quote!((#recv as u32).leading_zeros() as f64))
+        }
+        // `Math.fround(x)` → round-trip through `f32`: `x as f32 as f64`.
+        "fround" => {
+            let recv = math_receiver(args.first()?, ctx);
+            Some(parse_quote!((#recv as f32) as f64))
+        }
+        // `Math.imul(a, b)` → 32-bit wrapping multiply of `a as i32`, `b as i32`.
+        "imul" => {
+            let a = math_receiver(args.first()?, ctx);
+            let b = math_receiver(args.get(1)?, ctx);
+            Some(parse_quote!((#a as i32).wrapping_mul(#b as i32) as f64))
+        }
         _ => None,
     }
 }

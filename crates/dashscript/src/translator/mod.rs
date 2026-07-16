@@ -1042,6 +1042,27 @@ mod tests {
     }
 
     #[test]
+    fn translates_math_clz32_to_leading_zeros() {
+        let src = "function f(x: number): number { return Math.clz32(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("as u32).leading_zeros()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_math_fround_to_f32_round_trip() {
+        let src = "function f(x: number): number { return Math.fround(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("as f32) as f64"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_math_imul_to_wrapping_mul() {
+        let src = "function f(a: number, b: number): number { return Math.imul(a, b); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("as i32).wrapping_mul("), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");
