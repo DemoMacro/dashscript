@@ -95,6 +95,10 @@ function main(): void {
   console.log("split:", parts.length);
   console.log("str indexOf:", "hello".indexOf("ll"));
 
+  // global conversion: `String(x)` → `format!`; `parseInt(s)` → `s.parse()`
+  console.log("as string:", String(42));
+  console.log("parsed:", parseInt("100"));
+
   // arrow function as a value
   const square = (n: number) => n * n;
   console.log("square:", square(9));

@@ -614,4 +614,18 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("[xs.as_slice(), &[3.0][..]].concat()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_string_global_to_format() {
+        let src = "function f(): string { return String(42); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("format!(\"{}\", 42.0)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_parse_int_to_parse_f64() {
+        let src = "function f(): number { return parseInt(\"100\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".trim().parse::<f64>().unwrap()"), "got:\n{rust}");
+    }
 }

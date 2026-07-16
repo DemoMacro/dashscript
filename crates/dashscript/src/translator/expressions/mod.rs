@@ -752,6 +752,12 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
             }
         }
     }
+    // Global conversion functions: `String(x)`, `parseInt(s)`, `parseFloat(s)`.
+    if let Expression::Identifier(id) = &call.callee {
+        if let Some(expr) = methods::global_function(id, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
+    }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
         if let Some(expr) = methods::array_method(sm, call.arguments.as_slice(), ctx) {

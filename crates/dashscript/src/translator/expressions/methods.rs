@@ -3,7 +3,7 @@
 //! `.indexOf`/`.includes`), string methods (`.includes`/`.split`/…), and
 //! name-only renames (`.toUpperCase`).
 
-use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
+use oxc_ast::ast::{Argument, Expression, IdentifierReference, StaticMemberExpression};
 use proc_macro2::Span;
 use quote::format_ident;
 use syn::{parse_quote, Expr, Ident};
@@ -201,6 +201,29 @@ fn str_method_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
 fn usize_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     let e = translate_argument(arg, ctx);
     parse_quote!(#e as usize)
+}
+
+/// Global conversion functions called as plain identifiers: `String(x)` →
+/// `format!("{}", x)`; `parseInt(s)`/`parseFloat(s)` → `s.trim().parse::<f64>()`
+/// (`.ds` `number` is `f64`, so both share one parse path). Returns `None` for
+/// any other name (falls through to a plain call).
+pub(super) fn global_function(
+    id: &IdentifierReference,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let name: &str = &id.name;
+    Some(match name {
+        "String" => {
+            let a = translate_argument(args.first()?, ctx);
+            parse_quote!(::std::format!("{}", #a))
+        }
+        "parseInt" | "parseFloat" => {
+            let a = translate_argument(args.first()?, ctx);
+            parse_quote!(#a.trim().parse::<f64>().unwrap())
+        }
+        _ => return None,
+    })
 }
 
 /// True when `callee` is `console.log` (a static member access).

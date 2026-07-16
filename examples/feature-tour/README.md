@@ -34,6 +34,8 @@ true
 ababab
 split: 3
 str indexOf: 2
+as string: 42
+parsed: 100
 square: 81
 doubled: 2 4 6
 evens: 2
@@ -76,6 +78,8 @@ set: 42
 | `{ kind: "c"; r } \| { kind: "s"; s }` | `enum Shape { Circle { r }, Square { s } }`     |
 | `switch (s.kind) { case …: s.r }`      | `match s { Shape::Circle { r } => r }`          |
 | `Math.sqrt(…)`, `x ** 2`               | `….sqrt()`, `x.powf(2.0)`                       |
+| `String(42)`                           | `format!("{}", 42.0)`                           |
+| `parseInt("100")`                      | `….trim().parse::<f64>().unwrap()`              |
 | `a + b + " => " + …`                   | `format!("{}{}{}{}", …)` (string concat)        |
 | `cond ? "a" : "b"`                     | `if cond { … } else { … }`                      |
 | `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`               |
