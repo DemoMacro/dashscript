@@ -876,6 +876,20 @@ mod tests {
     }
 
     #[test]
+    fn translates_string_pad_start_to_right_align() {
+        let src = "function f(s: string): string { return s.padStart(5); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("format!(\"{:>1$}\""), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_string_pad_end_to_left_align() {
+        let src = "function f(s: string): string { return s.padEnd(5); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("format!(\"{:<1$}\""), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_console_warn_to_eprintln() {
         let src = "function f(): void { console.warn(\"careful\"); }";
         let rust = Translator::new().translate(src).expect("should translate");

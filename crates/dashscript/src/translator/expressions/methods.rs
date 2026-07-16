@@ -275,6 +275,18 @@ pub(super) fn string_method(
             let i = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.chars().nth(#i).map(|c| c.to_string()).unwrap_or_default())
         }
+        // `.padStart(n)` → right-align to width `n` (fills on the left with
+        // spaces, TS's default pad). A custom fill character (`padStart(n,ch)`)
+        // is unsupported — Rust's `format!` fill char must be a literal.
+        "padStart" if args.len() <= 1 => {
+            let n = usize_arg(args.first()?, ctx);
+            parse_quote!(format!("{:>1$}", #obj, #n))
+        }
+        // `.padEnd(n)` → left-align to width `n` (fills on the right).
+        "padEnd" if args.len() <= 1 => {
+            let n = usize_arg(args.first()?, ctx);
+            parse_quote!(format!("{:<1$}", #obj, #n))
+        }
         _ => return None,
     })
 }
