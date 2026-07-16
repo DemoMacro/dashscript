@@ -44,6 +44,10 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         Expression::AssignmentExpression(a) => assignment_expr(a, ctx),
         Expression::UpdateExpression(u) => update_expr(u),
         Expression::TSNonNullExpression(nn) => nonnull_expr(nn, ctx),
+        // A TS type assertion (`x as T` / `<T>x`) has no runtime effect — the
+        // inner expression is passed through unchanged.
+        Expression::TSAsExpression(a) => translate_expr(&a.expression, ctx),
+        Expression::TSTypeAssertion(t) => translate_expr(&t.expression, ctx),
         Expression::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
         // User-written parens are unwrapped; `prettyplease` re-adds any needed
         // for precedence (e.g. `(a + b) * c` round-trips correctly).
@@ -70,6 +74,8 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::ConditionalExpression(c) => conditional_expr(c, ctx),
         Argument::UnaryExpression(un) => unary_expr(un, ctx),
         Argument::TSNonNullExpression(nn) => nonnull_expr(nn, ctx),
+        Argument::TSAsExpression(a) => translate_expr(&a.expression, ctx),
+        Argument::TSTypeAssertion(t) => translate_expr(&t.expression, ctx),
         Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         _ => parse_quote!(::core::todo!()),

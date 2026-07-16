@@ -696,4 +696,11 @@ mod tests {
         assert!(rust.contains("eprintln!("), "got:\n{rust}");
         assert!(rust.contains("\"careful\".to_string()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn unwraps_type_assertion_as_expression() {
+        let src = "function f(x: number): number { return x as number; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("return x;"), "got:\n{rust}");
+    }
 }
