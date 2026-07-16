@@ -249,10 +249,15 @@ fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
         .iter()
         .filter_map(|p| {
             let ObjectPropertyKind::ObjectProperty(op) = p else { return None };
-            let key = bindings::property_key_name(&op.key)?;
-            let key_str = key.to_string();
             let value = translate_expr(&op.value, ctx);
-            Some(parse_quote!((#key_str.to_string(), #value)))
+            let key = if op.computed {
+                // `[k]: v` — a dynamic key (an expression, typically a String).
+                translate_expr(op.key.as_expression()?, ctx)
+            } else {
+                let key_str = bindings::property_key_name(&op.key)?.to_string();
+                parse_quote!(#key_str.to_string())
+            };
+            Some(parse_quote!((#key, #value)))
         })
         .collect();
     parse_quote!(::std::collections::HashMap::from([#(#entries),*]))

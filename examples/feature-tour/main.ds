@@ -77,6 +77,10 @@ function main(): void {
   console.log("values:", Object.values(scores).length);
   // `key in record` → HashMap::contains_key
   console.log("has alice:", "alice" in scores);
+  // computed key: `{ [k]: v }` → a dynamic HashMap entry
+  const dynName = "dynamic";
+  const byKey: Record<string, number> = { [dynName]: 42 };
+  console.log("computed key:", byKey["dynamic"]);
 
   // mutable map: `m["k"] = v` → `m.insert("k".to_string(), v)`
   let prices: Record<string, number> = { apple: 3 };
