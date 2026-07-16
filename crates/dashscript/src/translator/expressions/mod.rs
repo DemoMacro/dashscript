@@ -12,11 +12,14 @@ use oxc_syntax::operator::{
     AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator, UpdateOperator,
 };
 use proc_macro2::Span;
-use quote::{format_ident, quote};
-use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Pat, Path, Type, UnOp};
+use quote::quote;
+use syn::{parse_quote, parse_str, BinOp, Expr, Pat, Path, Type, UnOp};
 
 use super::context::Ctx;
 use super::{bindings, types};
+
+mod math;
+mod methods;
 
 /// Translate an expression to its `syn::Expr` form.
 ///
@@ -211,8 +214,8 @@ fn array_element(elem: &ArrayExpressionElement) -> Option<Expr> {
 fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     let field_name: &str = &sm.property.name;
     // `Math.PI` / `Math.E` → the corresponding Rust constant.
-    if is_ident(&sm.object, "Math") {
-        if let Some(p) = math_constant(field_name) {
+    if methods::is_ident(&sm.object, "Math") {
+        if let Some(p) = math::math_constant(field_name) {
             return p;
         }
     }
@@ -232,65 +235,6 @@ fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     }
     let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)
-}
-
-/// `Math.<m>(args)` → the idiomatic Rust float operation. Single-arg methods
-/// (`floor`, `ceil`, `abs`, …) become a method on the argument; `max`/`min`
-/// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
-fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    match name {
-        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp" | "ln" => {
-            let recv = math_receiver(args.first()?, ctx);
-            Some(method_call(recv, name, Vec::new()))
-        }
-        "max" | "min" => {
-            let a = math_receiver(args.first()?, ctx);
-            let b = translate_argument(args.get(1)?, ctx);
-            Some(method_call(a, name, vec![b]))
-        }
-        "pow" => {
-            let a = math_receiver(args.first()?, ctx);
-            let b = translate_argument(args.get(1)?, ctx);
-            Some(method_call(a, "powf", vec![b]))
-        }
-        _ => None,
-    }
-}
-
-/// Build `recv.method(args)` as an `ExprMethodCall` so `prettyplease`
-/// parenthesizes the receiver by precedence — `(a + b).sqrt()`, not
-/// `a + b.sqrt()` (which would bind `.sqrt()` to `b` only).
-fn method_call(recv: Expr, method: &str, args: Vec<Expr>) -> Expr {
-    Expr::MethodCall(syn::ExprMethodCall {
-        attrs: Vec::new(),
-        receiver: Box::new(recv),
-        dot_token: Default::default(),
-        method: format_ident!("{}", method),
-        turbofish: None,
-        args: args.into_iter().collect(),
-        paren_token: Default::default(),
-    })
-}
-
-/// A `Math.` receiver: a numeric literal gets an `_f64` suffix so a bare
-/// literal like `3` isn't an ambiguous `{float}` (`3.0.max(7.0)` won't infer);
-/// any other receiver translates normally (its context already pins `f64`).
-fn math_receiver(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
-    if let Argument::NumericLiteral(n) = arg {
-        let s = format!("{}_f64", n.value);
-        return parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN));
-    }
-    translate_argument(arg, ctx)
-}
-
-/// `Math.PI` → `std::f64::consts::PI`, `Math.E` → `…::E`.
-fn math_constant(name: &str) -> Option<Expr> {
-    let path = match name {
-        "PI" => quote!(::std::f64::consts::PI),
-        "E" => quote!(::std::f64::consts::E),
-        _ => return None,
-    };
-    syn::parse2(path).ok()
 }
 
 /// Base of `**`: a numeric literal gets an `_f64` suffix so `2 ** 3` isn't an
@@ -650,7 +594,7 @@ fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
 fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
-    if is_console_log(&call.callee) {
+    if methods::is_console_log(&call.callee) {
         let vals: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
         let placeholders: String = vals.iter().map(|_| "{}").collect::<Vec<_>>().join(" ");
         let fmt = syn::LitStr::new(&placeholders, Span::call_site());
@@ -658,21 +602,21 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     }
     // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
-        if is_ident(&sm.object, "Math") {
-            if let Some(expr) = math_method(&sm.property.name, call.arguments.as_slice(), ctx) {
+        if methods::is_ident(&sm.object, "Math") {
+            if let Some(expr) = math::math_method(&sm.property.name, call.arguments.as_slice(), ctx) {
                 return expr;
             }
         }
     }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
-        if let Some(expr) = array_method(sm, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = methods::array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
-        if let Some(expr) = string_method(sm, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = methods::string_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
-        if let Some(method) = map_method(&sm.property.name) {
+        if let Some(method) = methods::map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object, ctx);
             let args: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
             return parse_quote!(#obj.#method(#(#args),*));
@@ -697,154 +641,6 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         })
         .collect();
     parse_quote!(#callee(#(#args),*))
-}
-
-/// Array methods on a `Vec` of Copy elements: `.map`/`.filter` take a callback
-/// (`xs.iter().copied().<m>(f).collect::<Vec<_>>()`, with `.filter`'s param
-/// destructured since its closure receives `&Item`); `.slice(a, b)` →
-/// `xs[a as usize..b as usize].to_vec()` (`.slice(a)` / `.slice()` clamp the
-/// range / clone). Returns `None` otherwise.
-fn array_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    let Expression::Identifier(id) = &sm.object else {
-        return None;
-    };
-    let recv = bindings::snake(&id.name);
-    let path = ctx.local_type(&recv.to_string())?;
-    let is_vec = path.segments.last().is_some_and(|s| s.ident == "Vec");
-    if !is_vec {
-        return None;
-    }
-    Some(match sm.property.name.as_str() {
-        "map" => {
-            let cb = translate_argument(args.first()?, ctx);
-            parse_quote!(#recv.iter().copied().map(#cb).collect::<Vec<_>>())
-        }
-        "filter" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, true);
-            parse_quote!(#recv.iter().copied().filter(#cb).collect::<Vec<_>>())
-        }
-        // `.ds` indices are `f64`; cast each bound to `usize`.
-        "slice" => {
-            let start = args.first().map(|a| usize_arg(a, ctx));
-            let end = args.get(1).map(|a| usize_arg(a, ctx));
-            match (start, end) {
-                (Some(s), Some(e)) => parse_quote!(#recv[#s..#e].to_vec()),
-                (Some(s), None) => parse_quote!(#recv[#s..].to_vec()),
-                (None, _) => parse_quote!(#recv.clone()),
-            }
-        }
-        // `.indexOf(x)` → first index of `x`, or -1 (TS returns a `number`).
-        "indexOf" => {
-            let needle = translate_argument(args.first()?, ctx);
-            parse_quote!(
-                #recv
-                    .iter()
-                    .copied()
-                    .position(|y| y == #needle)
-                    .map(|i| i as f64)
-                    .unwrap_or(-1.0)
-            )
-        }
-        _ => return None,
-    })
-}
-
-/// A handful of TS method names map to a different Rust method name; the
-/// receiver and arguments are passed through unchanged. Unmapped methods fall
-/// through to a plain call on the receiver expression.
-fn map_method(name: &str) -> Option<Ident> {
-    let mapped = match name {
-        "toUpperCase" => "to_uppercase",
-        "toLowerCase" => "to_lowercase",
-        "trim" => "trim",
-        "push" => "push",
-        "pop" => "pop",
-        _ => return None,
-    };
-    Some(format_ident!("{}", mapped))
-}
-
-/// String methods whose arguments need adapting to Rust's `&str`-oriented API:
-/// `includes`/`startsWith`/`endsWith` → `contains`/`starts_with`/`ends_with`;
-/// `replace` → `replacen(.., 1)` (TS replaces the first match only); `repeat`
-/// → `repeat(n as usize)`. Returns `None` for unmapped names.
-fn string_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    let obj = translate_expr(&sm.object, ctx);
-    let name: &str = &sm.property.name;
-    Some(match name {
-        "includes" => {
-            let a = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.contains(#a))
-        }
-        "startsWith" => {
-            let a = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.starts_with(#a))
-        }
-        "endsWith" => {
-            let a = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.ends_with(#a))
-        }
-        "replace" => {
-            let a = str_method_arg(args.first()?, ctx);
-            let b = str_method_arg(args.get(1)?, ctx);
-            parse_quote!(#obj.replacen(#a, #b, 1))
-        }
-        "repeat" => {
-            let n = usize_arg(args.first()?, ctx);
-            parse_quote!(#obj.repeat(#n))
-        }
-        "split" => {
-            // `split` yields `&str`; map to owned so the result is `Vec<String>`.
-            let delim = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.split(#delim).map(|part| part.to_string()).collect::<Vec<String>>())
-        }
-        // `.indexOf(s)` → byte offset (ASCII == char index), or -1.
-        "indexOf" => {
-            let needle = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1.0))
-        }
-        _ => return None,
-    })
-}
-
-/// A string-method argument as a `&str`: a string literal stays a bare literal
-/// (a perfect `Pattern`); any other expression (a `String` var or call) gets
-/// `.as_str()` so it satisfies Rust's `&str`-typed string APIs.
-fn str_method_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
-    if let Argument::StringLiteral(s) = arg {
-        let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
-        return parse_quote!(#lit);
-    }
-    let e = translate_argument(arg, ctx);
-    parse_quote!(#e.as_str())
-}
-
-/// A `.ds` `number` argument cast to `usize` (e.g. for `repeat`).
-fn usize_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
-    let e = translate_argument(arg, ctx);
-    parse_quote!(#e as usize)
-}
-
-/// True when `callee` is `console.log` (a static member access).
-fn is_console_log(callee: &Expression) -> bool {
-    let Expression::StaticMemberExpression(member) = callee else {
-        return false;
-    };
-    is_ident(&member.object, "console") && {
-        let prop: &str = &member.property.name;
-        prop == "log"
-    }
-}
-
-fn is_ident(expr: &Expression, expected: &str) -> bool {
-    let Expression::Identifier(ident) = expr else {
-        return false;
-    };
-    let name: &str = &ident.name;
-    name == expected
 }
 
 /// `.ds` string literal → Rust `String` (`"…".to_string()`).
