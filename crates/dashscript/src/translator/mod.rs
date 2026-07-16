@@ -326,6 +326,20 @@ mod tests {
     }
 
     #[test]
+    fn translates_object_keys_to_hashmap_keys() {
+        let src = "function f(m: Record<string, number>): number { return Object.keys(m).length; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".keys().map(|k| k.to_string()).collect"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_object_values_to_hashmap_values() {
+        let src = "function f(m: Record<string, number>): number { return Object.values(m).length; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".values().cloned().collect"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_length_to_len() {
         let src = "function f(): void { let n = \"hi\".length; }";
         let rust = Translator::new().translate(src).expect("should translate");

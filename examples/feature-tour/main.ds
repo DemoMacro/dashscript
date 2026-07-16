@@ -72,6 +72,9 @@ function main(): void {
   const scores: Record<string, number> = { alice: 90, bob: 85 };
   console.log("record size:", scores.length);
   console.log("alice:", scores["alice"]);
+  // Object.keys/values on a Record (HashMap) → its keys/values as Vecs
+  console.log("keys:", Object.keys(scores).length);
+  console.log("values:", Object.values(scores).length);
 
   // mutable map: `m["k"] = v` → `m.insert("k".to_string(), v)`
   let prices: Record<string, number> = { apple: 3 };

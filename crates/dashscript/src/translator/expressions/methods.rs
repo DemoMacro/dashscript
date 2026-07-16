@@ -318,6 +318,21 @@ fn usize_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     parse_quote!(#e as usize)
 }
 
+/// `Object.<m>(record)` on a `Record` (a `HashMap`): `keys` → the map's keys
+/// as `Vec<String>`, `values` → its values (cloned, so Copy and Clone both
+/// work), `entries` → `(K, V)` pairs. Returns `None` for any other member.
+pub(super) fn object_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let r = translate_argument(args.first()?, ctx);
+    Some(match name {
+        "keys" => parse_quote!(#r.keys().map(|k| k.to_string()).collect::<Vec<_>>()),
+        "values" => parse_quote!(#r.values().cloned().collect::<Vec<_>>()),
+        "entries" => {
+            parse_quote!(#r.iter().map(|(k, v)| (k.clone(), v.clone())).collect::<Vec<_>>())
+        }
+        _ => return None,
+    })
+}
+
 /// Global conversion functions called as plain identifiers: `String(x)` →
 /// `format!("{}", x)`; `parseInt(s)`/`parseFloat(s)` → `s.trim().parse::<f64>()`
 /// (`.ds` `number` is `f64`, so both share one parse path). Returns `None` for

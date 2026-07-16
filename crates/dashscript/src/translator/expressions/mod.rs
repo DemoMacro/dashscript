@@ -892,6 +892,12 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `Object.keys(m)` / `Object.values(m)` on a `Record` (a `HashMap`).
+        if methods::is_ident(&sm.object, "Object") {
+            if let Some(expr) = methods::object_method(&sm.property.name, call.arguments.as_slice(), ctx) {
+                return expr;
+            }
+        }
     }
     // Global conversion functions: `String(x)`, `parseInt(s)`, `parseFloat(s)`.
     if let Expression::Identifier(id) = &call.callee {
