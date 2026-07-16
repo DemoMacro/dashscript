@@ -444,6 +444,9 @@ fn uri_to_path(uri: &Uri) -> Option<PathBuf> {
 fn path_to_uri(path: &Path) -> Result<Uri, Box<dyn Error>> {
     let abs = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
     let s = abs.to_str().ok_or("non-utf8 path")?;
+    // Strip the `\\?\` verbatim prefix `canonicalize` adds on Windows; a file
+    // URI carrying it (`file:////?/C:/…`) is rejected by rust-analyzer.
+    let s = s.strip_prefix(r"\\?\").unwrap_or(s);
     let normalized = s.replace('\\', "/");
     let uri_str = if normalized.starts_with('/') {
         format!("file://{normalized}")
@@ -503,5 +506,15 @@ mod tests {
     fn map_symbol_pos_whole_word_only() {
         // `Adler` is a prefix of `Adler32` — it must not match.
         assert!(map_symbol_pos("use adler::Adler32;\n", "adler", "Adler").is_none());
+    }
+
+    #[test]
+    fn path_to_uri_has_no_verbatim_prefix() {
+        // On Windows `canonicalize` prefixes `\\?\`; the URI must not leak it,
+        // or rust-analyzer rejects `file:////?/C:/…` with "url is not a file".
+        let uri = path_to_uri(&std::env::temp_dir()).unwrap();
+        let s = uri.as_str();
+        assert!(s.starts_with("file:///"), "bad scheme: {s}");
+        assert!(!s.contains("//?/"), "verbatim prefix leaked: {s}");
     }
 }
