@@ -193,6 +193,9 @@ function main(): void {
   const pair: number[] = [10, 20];
   const [first, second] = pair;
   console.log("array destructure:", first, second);
+  // array destructuring with rest: `...rest` → the remaining slice as a Vec
+  const [head, ...tail] = xs;
+  console.log("rest destructure:", head, tail.length);
 
   // in-place array mutations: `.sort()` (numeric ascending) and `.reverse()`
   // need a `let` (mutable) array; `.concat(ys)` returns a new array.

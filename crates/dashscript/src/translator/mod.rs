@@ -661,6 +661,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_destructure_rest_to_slice() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const [a, ...rest] = xs; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let rest = xs[1..].to_vec()"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_for_each_to_for_each() {
         let src = "function f(): void { const xs: number[] = [1, 2]; xs.forEach((n) => console.log(n)); }";
         let rust = Translator::new().translate(src).expect("should translate");

@@ -677,7 +677,8 @@ fn destructure_array(
         return vec![parse_quote!(let _ = ::core::todo!();)];
     };
     let value = expressions::translate_expr(init_expr, &Ctx::new(&*locals, registry, narrow));
-    arr.elements
+    let mut stmts: Vec<Stmt> = arr
+        .elements
         .iter()
         .enumerate()
         .filter_map(|(i, elem)| {
@@ -686,7 +687,20 @@ fn destructure_array(
             let idx = syn::Index::from(i);
             Some(build_local(&name, mutable, None, Some(&parse_quote!(#value[#idx]))))
         })
-        .collect()
+        .collect();
+    // `...rest` collects the remaining elements (after the last bound position)
+    // as a new `Vec`. A default on the rest is unsupported.
+    if let Some(rest) = &arr.rest {
+        let name = bindings::binding_name(&rest.argument);
+        let start = syn::Index::from(arr.elements.len());
+        stmts.push(build_local(
+            &name,
+            mutable,
+            None,
+            Some(&parse_quote!(#value[#start..].to_vec())),
+        ));
+    }
+    stmts
 }
 
 /// The `syn::Path` of an expression's type, when the expression is a plain
