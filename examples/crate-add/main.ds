@@ -1,0 +1,17 @@
+import { Adler32 } from "adler";
+
+// `Adler32` is adler's rolling-hash state type. Importing a crate's public
+// type into `.ds` lowers to `use adler::Adler32;` — exactly like importing a
+// type from a local module (`import { Point } from "./geom"`). The crate is
+// brought in by `ds add adler`, which records `rust:adler` in `manifest.json`.
+
+function emptySlot(): Adler32 | null {
+  return null;
+}
+
+function main(): void {
+  const slot: Adler32 | null = emptySlot();
+  if (slot === null) {
+    console.log("adler crate linked; no hash computed yet");
+  }
+}

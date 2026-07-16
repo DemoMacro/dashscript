@@ -68,6 +68,13 @@ pub fn type_ident(name: &str) -> Ident {
     format_ident!("{}", name)
 }
 
+/// A crate name (`serde`, `cfg-if`) → a Rust module identifier (`serde`,
+/// `cfg_if`). Hyphens become underscores: Rust crate names may contain `-`, but
+/// `use` paths and module idents may not.
+pub fn crate_mod(name: &str) -> Ident {
+    format_ident!("{}", name.replace('-', "_"))
+}
+
 /// Convert a string-literal union member (`"in_progress"`) to an `enum` variant
 /// in Rust `UpperCamelCase` (`InProgress`). Non-alphanumeric chars split words.
 pub fn pascal(name: &str) -> Ident {

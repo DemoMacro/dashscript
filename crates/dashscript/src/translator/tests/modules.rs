@@ -42,13 +42,31 @@ fn import_groups_multiple_names() {
 }
 
 #[test]
-fn import_bare_specifier_is_dropped() {
-    // Bare (crate) specifiers are not local modules — not mapped by the
-    // translator yet (crate imports arrive through `ds add` + manifest.json).
+fn import_bare_crate_emits_use() {
+    // A bare specifier is a crate added via `ds add`; it lowers to a `use`.
     let rust = Translator::new()
-        .translate("import { foo } from \"react\";")
+        .translate("import { foo } from \"serde\";")
         .expect("should translate");
-    assert!(!rust.contains("use react"), "got: {rust}");
+    assert!(rust.contains("use serde::foo"), "got: {rust}");
+}
+
+#[test]
+fn import_bare_crate_hyphen_to_underscore() {
+    // A crate name may contain a hyphen, but a `use` path / module ident may
+    // not — `cfg-if` becomes `cfg_if`.
+    let rust = Translator::new()
+        .translate("import { x } from \"cfg-if\";")
+        .expect("should translate");
+    assert!(rust.contains("use cfg_if::x"), "got: {rust}");
+    assert!(!rust.contains("cfg-if"), "hyphen leaked: {rust}");
+}
+
+#[test]
+fn collect_skips_bare_crate_import() {
+    // A bare specifier is a crate, not a local `.ds` file — it must not be
+    // collected for module assembly (only relative imports are).
+    let imports = Translator::new().imports("import { foo } from \"serde\";");
+    assert!(imports.is_empty(), "bare import collected: {imports:?}");
 }
 
 #[test]

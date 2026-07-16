@@ -16,7 +16,9 @@ fn check_flags_unsupported_class() {
 
 #[test]
 fn check_flags_unsupported_import() {
-    let diags = Translator::new().check("import { x } from \"m\";");
+    // A default import (`import x`) has no named specifier and is not mapped
+    // yet — only named imports (`import { x }`) lower to a `use`.
+    let diags = Translator::new().check("import x from \"m\";");
     assert_eq!(diags.len(), 1);
     assert!(diags[0].message.contains("import"));
 }

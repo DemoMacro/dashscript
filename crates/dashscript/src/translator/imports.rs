@@ -1,10 +1,9 @@
-//! `.ds` module imports — resolve `import { x } from "./other"` into the local
-//! `.ds` modules a file depends on, so `ds build` can emit one Rust module per
-//! dependency (plus the matching `mod` declarations and `use` aliases).
-//!
-//! Only *relative* imports (`./other`) are local; a *bare* specifier
-//! (`"react"` — a crate) is not a local file and is excluded here (crate
-//! imports arrive through `ds add` + `manifest.json`).
+//! `.ds` module imports. A relative import (`import { x } from "./other"`)
+//! resolves to a local `.ds` file, so `ds build` emits one Rust module per
+//! dependency (the matching `mod` declarations and `use` aliases). A *bare*
+//! specifier (`import { X } from "serde"`) is a crate added via `ds add`: it is
+//! not a local file (so it is excluded from module assembly below) but still
+//! lowers to `use serde::X` — see [`module_ident`].
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{ImportDeclarationSpecifier, Statement};
@@ -36,24 +35,34 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
             let Statement::ImportDeclaration(imp) = stmt else {
                 return None;
             };
+            // A bare specifier is a crate (provided by cargo via `ds add`), not
+            // a local `.ds` file — only relative imports are assembled into
+            // `mod` decls.
+            if !imp.source.value.starts_with('.') {
+                return None;
+            }
             let module = module_ident(&imp.source.value)?.to_string();
             Some(ImportRef { module, source: imp.source.value.to_string() })
         })
         .collect()
 }
 
-/// The Rust module name for an import source, or `None` for a bare specifier
-/// (`"react"`) or an unsupported path. `import { x } from "./other"` → `other`.
+/// The Rust module name for an import source. A relative path (`./other`) maps
+/// to the local file stem (`other`); a bare specifier (`serde`, `cfg-if`) maps
+/// to the crate's module ident (`serde`, `cfg_if` — hyphens become underscores,
+/// since a `use` path may not contain `-`).
 pub(crate) fn module_ident(source: &str) -> Option<Ident> {
-    if !source.starts_with('.') {
-        return None; // bare (crate) import not yet supported
+    if source.starts_with('.') {
+        let stem = source.rsplit(['/', '\\']).next()?;
+        let stem = stem.trim_end_matches(".ds").trim_end_matches(".ts");
+        if stem.is_empty() || stem == "." || stem == ".." {
+            return None;
+        }
+        Some(bindings::snake(stem))
+    } else {
+        // Bare specifier: a crate, fetched by `ds add` and resolved by cargo.
+        Some(bindings::crate_mod(source))
     }
-    let stem = source.rsplit(['/', '\\']).next()?;
-    let stem = stem.trim_end_matches(".ds").trim_end_matches(".ts");
-    if stem.is_empty() || stem == "." || stem == ".." {
-        return None;
-    }
-    Some(bindings::snake(stem))
 }
 
 /// The local binding of a named import (`import { foo }` → `foo`), in the form
