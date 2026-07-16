@@ -688,4 +688,12 @@ mod tests {
         assert!(rust.contains(".chars().nth("), "got:\n{rust}");
         assert!(rust.contains(".unwrap_or_default()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_console_warn_to_eprintln() {
+        let src = "function f(): void { console.warn(\"careful\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("eprintln!("), "got:\n{rust}");
+        assert!(rust.contains("\"careful\".to_string()"), "got:\n{rust}");
+    }
 }

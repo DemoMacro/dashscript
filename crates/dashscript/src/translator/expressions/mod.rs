@@ -738,11 +738,11 @@ fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
 fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
-    if methods::is_console_log(&call.callee) {
+    if let Some(macro_name) = methods::console_method(&call.callee) {
         let vals: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
         let placeholders: String = vals.iter().map(|_| "{}").collect::<Vec<_>>().join(" ");
         let fmt = syn::LitStr::new(&placeholders, Span::call_site());
-        return parse_quote!(::std::println!(#fmt, #(#vals),*));
+        return parse_quote!(::std::#macro_name!(#fmt, #(#vals),*));
     }
     // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
     if let Expression::StaticMemberExpression(sm) = &call.callee {

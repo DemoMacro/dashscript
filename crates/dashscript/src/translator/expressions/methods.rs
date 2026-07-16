@@ -244,15 +244,21 @@ pub(super) fn global_function(
     })
 }
 
-/// True when `callee` is `console.log` (a static member access).
-pub(super) fn is_console_log(callee: &Expression) -> bool {
+/// The Rust macro for a `console.<m>(…)` call: `log` → `println!`, `warn`/
+/// `error` → `eprintln!`. Returns `None` for any other member.
+pub(super) fn console_method(callee: &Expression) -> Option<Ident> {
     let Expression::StaticMemberExpression(member) = callee else {
-        return false;
+        return None;
     };
-    is_ident(&member.object, "console") && {
-        let prop: &str = &member.property.name;
-        prop == "log"
+    if !is_ident(&member.object, "console") {
+        return None;
     }
+    let name = match member.property.name.as_str() {
+        "log" => "println",
+        "warn" | "error" => "eprintln",
+        _ => return None,
+    };
+    Some(format_ident!("{}", name))
 }
 
 /// True when `expr` is an `Identifier` whose name equals `expected`.
