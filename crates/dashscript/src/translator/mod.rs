@@ -110,6 +110,28 @@ mod tests {
     }
 
     #[test]
+    fn translates_default_param_to_option_unwrap_or_and_call_none() {
+        let src = "function greet(name: string, greeting: string = \"hello\"): string { return greeting + \" \" + name; } function f(): string { return greet(\"world\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("greeting: Option<String>"), "got:\n{rust}");
+        assert!(
+            rust.contains("let greeting = greeting.unwrap_or(\"hello\".to_string());"),
+            "got:\n{rust}"
+        );
+        assert!(rust.contains("greet(\"world\".to_string(), None)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_default_param_supplied_wraps_some() {
+        let src = "function greet(name: string, greeting: string = \"hi\"): string { return greeting + name; } function f(): string { return greet(\"world\", \"hey\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(
+            rust.contains("greet(\"world\".to_string(), Some(\"hey\".to_string()))"),
+            "got:\n{rust}"
+        );
+    }
+
+    #[test]
     fn translates_number_to_fixed_to_format_precision() {
         let src = "function f(): string { const pi = 3.14159; return pi.toFixed(2); }";
         let rust = Translator::new().translate(src).expect("should translate");

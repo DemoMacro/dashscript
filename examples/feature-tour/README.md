@@ -36,6 +36,8 @@ square area: 16
 item name: widget
 item tag: new
 identity: 42
+default: hello, world
+override: hi, world
 hello, world
 true
 ababab
@@ -113,6 +115,7 @@ set: 42
 | `pi.toFixed(2)`                        | `format!("{:.*}", 2.0 as usize, pi)`                       |
 | `"hello".charAt(1)`                    | `….chars().nth(…).map(to_string).unwrap_or_default()`      |
 | `function id<T>(x: T): T`              | `fn id<T>(x: T) -> T`                                      |
+| `function f(x = 5)`                    | `fn f(x: Option<T>); let x = x.unwrap_or(5)`               |
 | `(n) => n * n`                         | `\|n\| n * n`                                              |
 | `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()`                |
 | `xs.filter((n) => n > 1)`              | `xs.iter().copied().filter(\|&n\| …).collect()`            |

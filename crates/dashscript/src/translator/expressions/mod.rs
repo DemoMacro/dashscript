@@ -897,7 +897,11 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         Expression::Identifier(id) => ctx.function_params(&id.name),
         _ => None,
     };
-    let args: Vec<Expr> = call
+    let defaults: Option<&[bool]> = match &call.callee {
+        Expression::Identifier(id) => ctx.function_defaults(&id.name),
+        _ => None,
+    };
+    let mut args: Vec<Expr> = call
         .arguments
         .iter()
         .enumerate()
@@ -906,9 +910,21 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 .and_then(|h| h.get(i))
                 .and_then(|opt| opt.as_ref())
                 .map(|p| -> Type { parse_quote!(#p) });
-            translate_argument_init(a, hint_ty.as_ref(), ctx)
+            let val = translate_argument_init(a, hint_ty.as_ref(), ctx);
+            // A supplied value for a defaulted parameter wraps in `Some`.
+            if defaults.is_some_and(|d| d.get(i) == Some(&true)) {
+                parse_quote!(Some(#val))
+            } else {
+                val
+            }
         })
         .collect();
+    // Omitted trailing defaulted parameters pass `None`.
+    if let Some(h) = hints {
+        while args.len() < h.len() {
+            args.push(parse_quote!(None));
+        }
+    }
     parse_quote!(#callee(#(#args),*))
 }
 

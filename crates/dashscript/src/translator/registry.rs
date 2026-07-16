@@ -35,6 +35,9 @@ pub struct TypeRegistry {
     /// Function name (original `.ds` spelling) → each parameter's type path,
     /// or `None` where the parameter has no annotation.
     pub functions: HashMap<String, Vec<Option<Path>>>,
+    /// Function name → per-parameter "has a default initializer?" flag. Callers
+    /// wrap a supplied value in `Some`, and an omitted trailing one in `None`.
+    pub function_defaults: HashMap<String, Vec<bool>>,
     /// Struct/interface name → its optional (`?:`) field names. A struct
     /// literal that omits one of these is filled with `None`.
     pub structs: HashMap<String, HashSet<String>>,
@@ -46,6 +49,7 @@ impl TypeRegistry {
         Self {
             unions: HashMap::new(),
             functions: HashMap::new(),
+            function_defaults: HashMap::new(),
             structs: HashMap::new(),
         }
     }
@@ -81,7 +85,9 @@ pub fn build_registry(statements: &[Statement]) -> TypeRegistry {
                 }
             }
             Statement::FunctionDeclaration(func) => {
-                registry.functions.insert(function_name(func), function_params(func));
+                let name = function_name(func);
+                registry.functions.insert(name.clone(), function_params(func));
+                registry.function_defaults.insert(name, function_default_flags(func));
             }
             _ => {}
         }
@@ -107,6 +113,11 @@ fn function_params(func: &Function) -> Vec<Option<Path>> {
                 .and_then(|ta| path_of_type(&ta.type_annotation))
         })
         .collect()
+}
+
+/// Per-parameter "has a default initializer (`= …`)" flag.
+fn function_default_flags(func: &Function) -> Vec<bool> {
+    func.params.items.iter().map(|fp| fp.initializer.is_some()).collect()
 }
 
 /// The `syn::Path` of a `.ds` type annotation, when it is a path-like type.

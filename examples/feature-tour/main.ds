@@ -49,6 +49,10 @@ function identity<T>(x: T): T {
   return x;
 }
 
+function greet(name: string, greeting: string = "hello"): string {
+  return greeting + ", " + name;
+}
+
 function main(): void {
   const v: Vector = { x: 3, y: 4 };
   console.log("magnitude:", magnitude(v));
@@ -105,6 +109,10 @@ function main(): void {
 
   // generic function: `<T>` passes through; Rust monomorphizes each call
   console.log("identity:", identity(42));
+
+  // default parameter: omitted value passes None; a supplied one wraps Some
+  console.log("default:", greet("world"));
+  console.log("override:", greet("world", "hi"));
 
   // string methods + concatenation
   const greeting = "Hello, World";

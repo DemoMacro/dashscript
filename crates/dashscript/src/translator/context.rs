@@ -82,6 +82,13 @@ impl<'a> Ctx<'a> {
         self.registry.functions.get(name).map(Vec::as_slice)
     }
 
+    /// Per-parameter "has a default initializer?" flags for the function named
+    /// `name` (original `.ds` spelling), if any.
+    #[must_use]
+    pub fn function_defaults(&self, name: &str) -> Option<&'a [bool]> {
+        self.registry.function_defaults.get(name).map(Vec::as_slice)
+    }
+
     /// The optional (`?:`) field names of the struct/interface named
     /// `type_name`, when it has any. Lets a literal that omits an optional
     /// field fill in `None`.

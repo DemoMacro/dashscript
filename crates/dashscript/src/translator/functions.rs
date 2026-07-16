@@ -53,13 +53,34 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
     for fp in &func.params.items {
         register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
     }
-    let block = translate_body(
+    // Default parameters unwrap their `Option` at the top of the body, so the
+    // rest of the function sees the plain value.
+    let defaults: Vec<Stmt> = func
+        .params
+        .items
+        .iter()
+        .filter_map(|fp| {
+            let init = fp.initializer.as_deref()?;
+            let name = bindings::binding_name(&fp.pattern);
+            let default = expressions::translate_expr(
+                init,
+                &Ctx::new(&locals, registry, &Narrow::default()),
+            );
+            Some(parse_quote!(let #name = #name.unwrap_or(#default);))
+        })
+        .collect();
+    let mut block = translate_body(
         func.body.as_deref(),
         &mut locals,
         registry,
         &Narrow::default(),
         return_path.as_ref(),
     );
+    if !defaults.is_empty() {
+        let mut stmts = defaults;
+        stmts.extend(block.stmts);
+        block.stmts = stmts;
+    }
     // Generic type parameters pass through verbatim (`<T>`); Rust monomorphizes
     // and infers each call. Constraints/defaults are ignored (no `where`).
     let generics: Vec<Ident> = func
@@ -99,6 +120,12 @@ fn translate_params(params: &FormalParameters) -> Vec<FnArg> {
                 .as_ref()
                 .map(|ta| types::translate_type(&ta.type_annotation))
                 .unwrap_or_else(|| parse_quote!(_));
+            // A parameter with a default becomes `Option<T>` (callers pass None).
+            let ty = if fp.initializer.is_some() {
+                parse_quote!(Option<#ty>)
+            } else {
+                ty
+            };
             parse_quote!(#pat : #ty)
         })
         .collect()
