@@ -766,6 +766,48 @@ mod tests {
     }
 
     #[test]
+    fn translates_boolean_global_zero_to_false() {
+        let src = "function f(): boolean { return Boolean(0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("return false;"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_boolean_global_nonzero_to_true() {
+        let src = "function f(): boolean { return Boolean(42); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("return true;"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_boolean_global_string_literal_to_is_empty() {
+        let src = "function f(): boolean { return Boolean(\"\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("!\"\".to_string().is_empty()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_boolean_global_vec_to_is_empty() {
+        let src = "function f(xs: number[]): boolean { return Boolean(xs); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("!xs.is_empty()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_boolean_global_number_var_to_ne_zero() {
+        let src = "function f(n: number): boolean { return Boolean(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("n != 0.0"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_boolean_global_option_to_is_some() {
+        let src = "function f(m: number | null): boolean { return Boolean(m); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("m.is_some()"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_throw_new_error_to_panic() {
         let src = "function f(): void { throw new Error(\"boom\"); }";
         let rust = Translator::new().translate(src).expect("should translate");

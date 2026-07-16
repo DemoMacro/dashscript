@@ -10,7 +10,7 @@ use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::{arrow_expr, translate_argument, translate_expr};
+use super::{arrow_expr, bool_expr, string_expr, translate_argument, translate_expr};
 
 /// Array methods on a `Vec` of Copy elements. The callback methods share a
 /// `xs.iter().copied().<m>(f)` core: `.map`/`.filter` collect back into a
@@ -316,8 +316,45 @@ pub(super) fn global_function(
                 e
             }
         }
+        // `Boolean(x)` → the Rust truthiness of `x` (see `bool_cast`).
+        "Boolean" => bool_cast(args.first()?, ctx),
         _ => return None,
     })
+}
+
+/// `Boolean(x)` → the Rust truthiness of `x`. A literal folds at compile time
+/// when possible: a number (`0`/`NaN` → `false`, else `true`), a string
+/// (`!is_empty()`), `true`/`false` to itself. An identifier dispatches on its
+/// known type: a `Vec`/`HashMap`/`String` → `!is_empty()`, an `Option` →
+/// `is_some()`, a `bool` → itself, anything else (an `f64`) → `!= 0.0`. An
+/// expression of unknown type falls back to `!= 0.0` (TS `Boolean` is most
+/// often applied to numbers).
+fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    match arg {
+        Argument::BooleanLiteral(b) => bool_expr(b.value),
+        Argument::NumericLiteral(n) => bool_expr(n.value != 0.0 && !n.value.is_nan()),
+        Argument::StringLiteral(s) => {
+            let e = string_expr(s);
+            parse_quote!(!#e.is_empty())
+        }
+        Argument::Identifier(id) => {
+            let name = bindings::snake(&id.name);
+            let last = ctx
+                .local_type(&name.to_string())
+                .and_then(|p| p.segments.last())
+                .map(|s| s.ident.to_string());
+            match last.as_deref() {
+                Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#name.is_empty()),
+                Some("Option") => parse_quote!(#name.is_some()),
+                Some("bool") => parse_quote!(#name),
+                _ => parse_quote!(#name != 0.0),
+            }
+        }
+        _ => {
+            let e = translate_argument(arg, ctx);
+            parse_quote!(#e != 0.0)
+        }
+    }
 }
 
 /// True when `arg` is an identifier bound to a `string` local.

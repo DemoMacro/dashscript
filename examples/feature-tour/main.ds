@@ -133,6 +133,8 @@ function main(): void {
   console.log("as string:", String(42));
   console.log("number:", Number("3.14"));
   console.log("parsed:", parseInt("100"));
+  // boolean coercion: `Boolean(x)` → truthiness (empty string / zero → false)
+  console.log("bool:", Boolean("hi"), Boolean(""));
   console.log("sliced str:", "hello".slice(1, 4));
   console.log("trimmed:", "  ab".trimStart());
   console.log("charAt:", "hello".charAt(1));
