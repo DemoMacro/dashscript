@@ -163,6 +163,9 @@ function main(): void {
   const pi = 3.14159;
   console.log("fixed:", pi.toFixed(2));
 
+  // number → radix string: `(255).toString(16)` → format!("{:x}", … as u32)
+  console.log("hex:", (255).toString(16));
+
   // arrow function as a value
   const square = (n: number) => n * n;
   console.log("square:", square(9));

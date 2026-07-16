@@ -1019,6 +1019,29 @@ mod tests {
     }
 
     #[test]
+    fn translates_number_to_string_radix_hex() {
+        let src = "function f(n: number): string { return n.toString(16); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("\"{:x}\""), "got:\n{rust}");
+        assert!(rust.contains("as u32"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_number_to_string_radix_binary() {
+        let src = "function f(): string { return (255).toString(2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("\"{:b}\""), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_number_to_string_no_arg_is_display() {
+        let src = "function f(n: number): string { return n.toString(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".to_string()"), "got:\n{rust}");
+        assert!(!rust.contains("as u32"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");
