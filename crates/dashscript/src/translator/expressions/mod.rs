@@ -505,12 +505,19 @@ fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     })
 }
 
-/// Bitwise `&`/`|`/`^`: TS applies these to `i32`, so each `f64` operand is
-/// cast down, the op applied, and the result cast back to `f64` (`.ds` number).
+/// Bitwise `&`/`|`/`^` and shifts `<<`/`>>`/`>>>`: TS applies these to `i32`,
+/// so each `f64` operand is cast down, the op applied, and the result cast back
+/// to `f64` (`.ds` number). Shifts use `wrapping_shl`/`shr` (which mask the
+/// count); `>>>` casts to `u32` first for the zero-fill.
 fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
     if !matches!(
         bin.operator,
-        BinaryOperator::BitwiseAnd | BinaryOperator::BitwiseOR | BinaryOperator::BitwiseXOR
+        BinaryOperator::BitwiseAnd
+            | BinaryOperator::BitwiseOR
+            | BinaryOperator::BitwiseXOR
+            | BinaryOperator::ShiftLeft
+            | BinaryOperator::ShiftRight
+            | BinaryOperator::ShiftRightZeroFill
     ) {
         return None;
     }
@@ -520,6 +527,18 @@ fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
         BinaryOperator::BitwiseAnd => parse_quote!(((#left as i32) & (#right as i32)) as f64),
         BinaryOperator::BitwiseOR => parse_quote!(((#left as i32) | (#right as i32)) as f64),
         BinaryOperator::BitwiseXOR => parse_quote!(((#left as i32) ^ (#right as i32)) as f64),
+        // `<<`/`>>` use `wrapping_shl`/`shr` (they mask the shift count, so a
+        // large `.ds` count won't panic like Rust's plain `<<` would).
+        BinaryOperator::ShiftLeft => {
+            parse_quote!(((#left as i32).wrapping_shl(#right as u32)) as f64)
+        }
+        BinaryOperator::ShiftRight => {
+            parse_quote!(((#left as i32).wrapping_shr(#right as u32)) as f64)
+        }
+        // `>>>` is logical (zero-fill): cast to `u32` before the shift.
+        BinaryOperator::ShiftRightZeroFill => {
+            parse_quote!((((#left as i32) as u32).wrapping_shr(#right as u32)) as f64)
+        }
         _ => unreachable!(),
     })
 }
