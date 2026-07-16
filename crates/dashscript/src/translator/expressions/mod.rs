@@ -718,19 +718,34 @@ fn logical_expr(log: &LogicalExpression, ctx: &Ctx<'_>) -> Expr {
     if matches!(log.operator, LogicalOperator::Coalesce) {
         return coalesce_expr(&log.left, &log.right, ctx);
     }
+    // A `bool` left operand short-circuits as Rust `&&`/`||` (TS `bool || bool`
+    // is itself a bool). A value operand uses a truthiness block: TS `a || b`
+    // returns `a` when truthy else `b`, so bind `a` once and branch.
+    if methods::expr_is_bool(&log.left, ctx) {
+        let left = translate_expr(&log.left, ctx);
+        let right = translate_expr(&log.right, ctx);
+        let op = match log.operator {
+            LogicalOperator::And => BinOp::And(Default::default()),
+            LogicalOperator::Or => BinOp::Or(Default::default()),
+            LogicalOperator::Coalesce => unreachable!(),
+        };
+        return Expr::Binary(syn::ExprBinary {
+            attrs: Vec::new(),
+            left: Box::new(left),
+            op,
+            right: Box::new(right),
+        });
+    }
     let left = translate_expr(&log.left, ctx);
     let right = translate_expr(&log.right, ctx);
-    let op = match log.operator {
-        LogicalOperator::And => BinOp::And(Default::default()),
-        LogicalOperator::Or => BinOp::Or(Default::default()),
-        LogicalOperator::Coalesce => unreachable!("?? is handled above"),
-    };
-    Expr::Binary(syn::ExprBinary {
-        attrs: Vec::new(),
-        left: Box::new(left),
-        op,
-        right: Box::new(right),
-    })
+    let cond = methods::truthy_cond(&log.left, ctx);
+    match log.operator {
+        // `a || b`: a truthy → a, else b
+        LogicalOperator::Or => parse_quote!({ let __l = #left; if #cond { __l } else { #right } }),
+        // `a && b`: a truthy → b, else a
+        LogicalOperator::And => parse_quote!({ let __l = #left; if #cond { #right } else { __l } }),
+        LogicalOperator::Coalesce => unreachable!(),
+    }
 }
 
 /// `a ?? b`: when `a` is an `Option`-typed local, `a.unwrap_or_else(|| b)`; when

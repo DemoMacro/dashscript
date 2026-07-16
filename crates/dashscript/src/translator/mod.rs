@@ -1108,6 +1108,22 @@ mod tests {
     }
 
     #[test]
+    fn translates_logical_or_value_returns_left_when_truthy() {
+        let src = "function f(s: string): string { return s || \"default\"; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let __l = "), "got:\n{rust}");
+        assert!(rust.contains("!__l.is_empty()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_logical_or_bool_short_circuits() {
+        let src = "function f(a: boolean, b: boolean): boolean { return a || b; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("a || b"), "got:\n{rust}");
+        assert!(!rust.contains("__l"), "bool should short-circuit, not block");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");

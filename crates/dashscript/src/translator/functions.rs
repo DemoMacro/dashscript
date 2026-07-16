@@ -617,6 +617,10 @@ fn translate_variable_declaration(
                         if let Some(path) = path_of(ty) {
                             locals.insert(name.to_string(), path);
                         }
+                    } else if let Some(path) = d.init.as_ref().and_then(infer_literal_type) {
+                        // No annotation: infer a scalar type from a literal init
+                        // so type-sensitive mappings (||, ??, truthiness) work.
+                        locals.insert(name.to_string(), path);
                     }
                     let init = d.init.as_ref().map(|e| {
                         expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry, narrow))
@@ -770,4 +774,16 @@ fn build_local(name: &Ident, mutable: bool, ty: Option<&Type>, init: Option<&Exp
     }
     tokens.extend(quote!(;));
     syn::parse2(tokens).expect("dashscript: generated `let` should parse")
+}
+
+/// The scalar type inferred from a literal initializer, when a `let` has no
+/// type annotation: `true` → `bool`, `1` → `f64`, `"x"` → `String`. Lets
+/// type-sensitive mappings (truthiness, `??`) work on unannotated locals.
+fn infer_literal_type(expr: &Expression) -> Option<Path> {
+    match expr {
+        Expression::BooleanLiteral(_) => Some(parse_quote!(bool)),
+        Expression::NumericLiteral(_) => Some(parse_quote!(f64)),
+        Expression::StringLiteral(_) => Some(parse_quote!(String)),
+        _ => None,
+    }
 }

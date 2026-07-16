@@ -549,6 +549,47 @@ fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     }
 }
 
+/// A truthiness test for the block-local `__l`, picking the check by the
+/// original left operand's type — used by `||`/`&&` value semantics. Mirrors
+/// `bool_cast` but references `__l` rather than re-evaluating the operand.
+pub(super) fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
+    let l: Ident = format_ident!("__l");
+    match left {
+        Expression::StringLiteral(_) => parse_quote!(!#l.is_empty()),
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            let last = ctx
+                .local_type(&name)
+                .and_then(|p| p.segments.last())
+                .map(|s| s.ident.to_string());
+            match last.as_deref() {
+                Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#l.is_empty()),
+                Some("Option") => parse_quote!(#l.is_some()),
+                Some("bool") => parse_quote!(#l),
+                _ => parse_quote!(#l != 0.0),
+            }
+        }
+        Expression::NumericLiteral(n) => bool_expr(n.value != 0.0 && !n.value.is_nan()),
+        Expression::BooleanLiteral(b) => bool_expr(b.value),
+        _ => parse_quote!(#l != 0.0),
+    }
+}
+
+/// True when `expr` is a `bool` operand (a `BooleanLiteral`, or a local
+/// annotated `boolean`) — those short-circuit as Rust `&&`/`||`.
+pub(super) fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    match expr {
+        Expression::BooleanLiteral(_) => true,
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name)
+                .and_then(|p| p.segments.last())
+                .is_some_and(|s| s.ident == "bool")
+        }
+        _ => false,
+    }
+}
+
 /// True when `arg` is an identifier bound to a `string` local.
 fn ident_string_local(arg: &Argument, ctx: &Ctx<'_>) -> bool {
     let Argument::Identifier(id) = arg else { return false };
