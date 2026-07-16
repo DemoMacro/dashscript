@@ -169,7 +169,7 @@ function main(): void {
   console.log("pad ch:", "5".padStart(3, "0"), "5".padEnd(4, "ab"));
 
   // number formatting: `x.toFixed(n)` → format! with n decimal places
-  const pi = 3.14159;
+  const pi = Math.PI;
   console.log("fixed:", pi.toFixed(2));
 
   // number → radix string: `(255).toString(16)` → format!("{:x}", … as u32)
