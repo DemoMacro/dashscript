@@ -550,6 +550,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_find_index_to_position() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const i = xs.findIndex((n) => n > 1); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".position(|n| n > 1.0)"), "got:\n{rust}");
+        assert!(rust.contains(".unwrap_or(-1.0)"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_index_of_to_find() {
         let src = "function f(): void { const s = \"hello\"; const i = s.indexOf(\"ll\"); }";
         let rust = Translator::new().translate(src).expect("should translate");

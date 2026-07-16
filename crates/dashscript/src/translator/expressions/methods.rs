@@ -68,6 +68,22 @@ pub(super) fn array_method(
                     .unwrap_or(-1.0)
             )
         }
+        // `.findIndex(cb)` → first index where cb holds, or -1. `position` takes
+        // the item by value (after `.copied()`), so the param is `|n|`.
+        "findIndex" => {
+            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
+                return None;
+            };
+            let cb = arrow_expr(arrow, ctx, false);
+            parse_quote!(
+                #recv
+                    .iter()
+                    .copied()
+                    .position(#cb)
+                    .map(|i| i as f64)
+                    .unwrap_or(-1.0)
+            )
+        }
         // `.includes(x)` → Vec::contains (by reference).
         "includes" => {
             let needle = translate_argument(args.first()?, ctx);

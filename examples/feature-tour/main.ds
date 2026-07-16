@@ -142,6 +142,7 @@ function main(): void {
   const sliced = xs.slice(1, 3);
   console.log("slice:", sliced[0], sliced[1]);
   console.log("indexOf:", xs.indexOf(2));
+  console.log("findIndex >1:", xs.findIndex((n) => n > 1));
   console.log("includes 2:", xs.includes(2));
   console.log("find 2:", xs.find((n) => n === 2)!);
   console.log("some >2:", xs.some((n) => n > 2));
