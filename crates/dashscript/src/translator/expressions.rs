@@ -736,6 +736,18 @@ fn array_method(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -
                 (None, _) => parse_quote!(#recv.clone()),
             }
         }
+        // `.indexOf(x)` → first index of `x`, or -1 (TS returns a `number`).
+        "indexOf" => {
+            let needle = translate_argument(args.first()?, ctx);
+            parse_quote!(
+                #recv
+                    .iter()
+                    .copied()
+                    .position(|y| y == #needle)
+                    .map(|i| i as f64)
+                    .unwrap_or(-1.0)
+            )
+        }
         _ => return None,
     })
 }

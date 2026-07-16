@@ -501,4 +501,12 @@ mod tests {
         // `f({ x, y })` borrows the struct name from the callee's parameter type.
         assert!(rust.contains("g(V { x: 1.0, y: 2.0 })"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_array_index_of_to_position() {
+        let src = "function f(): void { const xs: number[] = [1, 2, 3]; const i = xs.indexOf(2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".position(|y| y == 2.0)"), "got:\n{rust}");
+        assert!(rust.contains(".unwrap_or(-1.0)"), "got:\n{rust}");
+    }
 }
