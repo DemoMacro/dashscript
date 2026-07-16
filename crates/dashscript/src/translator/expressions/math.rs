@@ -12,10 +12,15 @@ use super::translate_argument;
 /// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
 pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     match name {
-        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp" | "ln"
+        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp"
         | "log10" | "log2" | "sin" | "cos" | "tan" | "asin" | "acos" | "atan" | "cbrt" => {
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, name, Vec::new()))
+        }
+        // `Math.log(x)` (TS natural log) → `x.ln()` (Rust spells it `ln`).
+        "log" => {
+            let recv = math_receiver(args.first()?, ctx);
+            Some(method_call(recv, "ln", Vec::new()))
         }
         "max" | "min" => {
             let a = math_receiver(args.first()?, ctx);

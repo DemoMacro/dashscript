@@ -876,6 +876,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_math_log_to_ln() {
+        let src = "function f(x: number): number { return Math.log(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".ln("), "got:\n{rust}");
+        assert!(!rust.contains("Math.log"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_math_atan2_to_atan2() {
         let src = "function f(y: number, x: number): number { return Math.atan2(y, x); }";
         let rust = Translator::new().translate(src).expect("should translate");
