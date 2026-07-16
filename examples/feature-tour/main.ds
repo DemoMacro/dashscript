@@ -207,6 +207,8 @@ function main(): void {
   console.log("sorted:", nums[0], nums[1], nums[2]);
   nums.reverse();
   console.log("reversed:", nums[0], nums[1], nums[2]);
+  nums.fill(7);
+  console.log("filled:", nums[0], nums[1], nums[2]);
   const more: number[] = [4, 5];
   const combined = nums.concat(more);
   console.log("concat size:", combined.length);

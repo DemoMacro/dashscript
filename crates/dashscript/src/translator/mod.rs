@@ -668,6 +668,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_fill_to_vec_fill() {
+        let src = "function f(): void { let xs: number[] = [0]; xs.fill(1); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".fill(1.0)"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_destructure_rest_to_slice() {
         let src = "function f(): void { const xs: number[] = [1, 2, 3]; const [a, ...rest] = xs; }";
         let rust = Translator::new().translate(src).expect("should translate");

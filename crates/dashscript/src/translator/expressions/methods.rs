@@ -187,6 +187,12 @@ pub(super) fn array_method(
                 .collect();
             parse_quote!([#recv.as_slice(), #(#parts),*].concat())
         }
+        // `.fill(v)` → in-place `Vec::fill` (every element set to `v`). Mutates;
+        // a start/end range is unsupported.
+        "fill" if args.len() == 1 => {
+            let v = translate_argument(args.first()?, ctx);
+            parse_quote!(#recv.fill(#v))
+        }
         // `.reverse()` → in-place `Vec::reverse`. Mutates; needs a mutable
         // (`let`) array. TS returns the same reference — DashScript uses it
         // statement-style.
