@@ -10,15 +10,27 @@ importers:
     devDependencies:
       '@funish/basis':
         specifier: 0.3.0
-        version: 0.3.0
+        version: 0.3.0(typescript@6.0.3)
       '@types/node':
         specifier: 26.1.1
         version: 26.1.1
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
       vite-plus:
         specifier: 0.2.4
-        version: 0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))
+        version: 0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))
 
   packages/dashscript: {}
+
+  packages/vscode:
+    devDependencies:
+      '@types/vscode':
+        specifier: ^1.125.0
+        version: 1.125.0
+      vscode-languageclient:
+        specifier: ^10.1.0
+        version: 10.1.0
 
 packages:
 
@@ -640,6 +652,9 @@ packages:
   '@types/node@26.1.1':
     resolution: {integrity: sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==}
 
+  '@types/vscode@1.125.0':
+    resolution: {integrity: sha512-0icm/ZQAaism87P0ekHqi4/Ju9du+Tm0RUW+y7vqRsxY2cY0FNRX1nAnaW7nT6npPt2tfHiheZ55Zm9UhqonFA==}
+
   '@vitest/browser-preview@4.1.10':
     resolution: {integrity: sha512-14MJrL59ZFkqXLjwfSk6RzTDy5Czf9UG4+8q8L6Gxjs2aPjEce/cVNYV14bXAc2BvMjUNu904+ZEZA1Xc1wtvQ==}
     peerDependencies:
@@ -816,8 +831,16 @@ packages:
     resolution: {integrity: sha512-8OG92q3R35qjC/4i6BLBMg8IB+fClWu/1PEwg2Z9Rn+BuNaiEgJzpzn+pxWOdHJWDCAwu2JP0wCDTozAM4QirQ==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
+  balanced-match@4.0.4:
+    resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
+    engines: {node: 18 || 20 || >=22}
+
   birpc@4.0.0:
     resolution: {integrity: sha512-LShSxJP0KTmd101b6DRyGBj57LZxSDYWKitQNW/mi8GRMvZb078Uf9+pveax1DrVL89vm7mWe+TovdI/UDOuPw==}
+
+  brace-expansion@5.0.7:
+    resolution: {integrity: sha512-7oFy703dxfY3/NLxC1fh2SUCQ0H9rmAY+5EpDVfXjUTTs+HEwR2nYaqLv+GWcTsumwxPfiz6CzCNkwXwBUwqCA==}
+    engines: {node: 18 || 20 || >=22}
 
   c12@4.0.0-beta.5:
     resolution: {integrity: sha512-yWGCPCQGJeFq4R0mFg5HOhC3Rg+B0PCdM+ldXWUhughoGgeeq8/tjRmXh4/lmhKWyhf+KOFxB/JMXf0Yv1Fd5A==}
@@ -1062,6 +1085,10 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
+  minimatch@10.2.5:
+    resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
+    engines: {node: 18 || 20 || >=22}
+
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
 
@@ -1211,6 +1238,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
@@ -1311,6 +1343,11 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
 
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
@@ -1422,6 +1459,23 @@ packages:
       jsdom:
         optional: true
 
+  vscode-jsonrpc@9.0.1:
+    resolution: {integrity: sha512-rfuA6T75H6m5EkbhtEPzre9pT0HPcDI2MMy4+nPFIBks5J8JBAUHD4tRYSgaBOijIEC7SRkC1kKyXTLqbmh9jw==}
+    engines: {node: '>=14.0.0'}
+
+  vscode-languageclient@10.1.0:
+    resolution: {integrity: sha512-XXRx6lqVitQy/oOLr9MfNYRG+MbQkhXkDaxbQMiKxEm8zZNfheRFUKNb8UYNh2stn9btl2wQM5wZFJjJvoc+jA==}
+    engines: {vscode: ^1.91.0}
+
+  vscode-languageserver-protocol@3.18.2:
+    resolution: {integrity: sha512-XRyDbT0Pp3sSNti3JmxVEUMySWCSi1hhM+/KUlCy1hV1zmrqpM1OwO12EAki8blhmLuIMpaJrYbo0OzGVfK2Qg==}
+
+  vscode-languageserver-textdocument@1.0.13:
+    resolution: {integrity: sha512-nx0ZHwMGIsVkzFG3/VLeJYBLTaFBRuNdGDvevvjuoayU5EOS2fEYazOhtCM3PI9ClMMg5igc0uwXtAq4tJj+Dw==}
+
+  vscode-languageserver-types@3.18.0:
+    resolution: {integrity: sha512-8TsGPNMIMiiBdkORgRSvLjuiEIiAFtO+KssmYWxQ+uSVvlf7RjK8YKCOjPzZ+YA04jXEV7+7LvkSmHkhpNS99g==}
+
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
@@ -1517,9 +1571,9 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@funish/basis@0.3.0':
+  '@funish/basis@0.3.0(typescript@6.0.3)':
     dependencies:
-      '@funish/build': 0.2.0
+      '@funish/build': 0.2.0(typescript@6.0.3)
       c12: 4.0.0-beta.5(jiti@2.7.0)
       citty: 0.2.2
       consola: 3.4.2
@@ -1550,7 +1604,7 @@ snapshots:
       - unrun
       - vue-tsc
 
-  '@funish/build@0.2.0':
+  '@funish/build@0.2.0(typescript@6.0.3)':
     dependencies:
       c12: 4.0.0-beta.5(jiti@2.7.0)
       citty: 0.2.2
@@ -1563,7 +1617,7 @@ snapshots:
       pkg-types: 2.3.1
       pretty-bytes: 7.1.0
       tinyglobby: 0.2.16
-      tsdown: 0.22.0
+      tsdown: 0.22.0(typescript@6.0.3)
     transitivePeerDependencies:
       - '@arethetypeswrong/core'
       - '@ts-macro/tsc'
@@ -1902,6 +1956,8 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
+  '@types/vscode@1.125.0': {}
+
   '@vitest/browser-preview@4.1.10(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))(vitest@4.1.10)':
     dependencies:
       '@testing-library/dom': 10.4.1
@@ -1972,7 +2028,7 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
-  '@voidzero-dev/vite-plus-core@0.2.4(@types/node@26.1.1)(jiti@2.7.0)':
+  '@voidzero-dev/vite-plus-core@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)':
     dependencies:
       '@oxc-project/runtime': 0.138.0
       '@oxc-project/types': 0.138.0
@@ -1982,6 +2038,7 @@ snapshots:
       '@types/node': 26.1.1
       fsevents: 2.3.3
       jiti: 2.7.0
+      typescript: 6.0.3
 
   '@voidzero-dev/vite-plus-darwin-arm64@0.2.4':
     optional: true
@@ -2027,7 +2084,13 @@ snapshots:
       estree-walker: 3.0.3
       pathe: 2.0.3
 
+  balanced-match@4.0.4: {}
+
   birpc@4.0.0: {}
+
+  brace-expansion@5.0.7:
+    dependencies:
+      balanced-match: 4.0.4
 
   c12@4.0.0-beta.5(jiti@2.7.0):
     dependencies:
@@ -2196,6 +2259,10 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  minimatch@10.2.5:
+    dependencies:
+      brace-expansion: 5.0.7
+
   mlly@1.8.2:
     dependencies:
       acorn: 8.17.0
@@ -2220,7 +2287,7 @@ snapshots:
 
   obug@2.1.3: {}
 
-  oxfmt@0.57.0(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))):
+  oxfmt@0.57.0(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))):
     dependencies:
       tinypool: 2.1.0
     optionalDependencies:
@@ -2243,7 +2310,7 @@ snapshots:
       '@oxfmt/binding-win32-arm64-msvc': 0.57.0
       '@oxfmt/binding-win32-ia32-msvc': 0.57.0
       '@oxfmt/binding-win32-x64-msvc': 0.57.0
-      vite-plus: 0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))
+      vite-plus: 0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))
 
   oxlint-tsgolint@0.24.0:
     optionalDependencies:
@@ -2254,7 +2321,7 @@ snapshots:
       '@oxlint-tsgolint/win32-arm64': 0.24.0
       '@oxlint-tsgolint/win32-x64': 0.24.0
 
-  oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))):
+  oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.72.0
       '@oxlint/binding-android-arm64': 1.72.0
@@ -2276,7 +2343,7 @@ snapshots:
       '@oxlint/binding-win32-ia32-msvc': 1.72.0
       '@oxlint/binding-win32-x64-msvc': 1.72.0
       oxlint-tsgolint: 0.24.0
-      vite-plus: 0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))
+      vite-plus: 0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))
 
   parse-ms@4.0.0: {}
 
@@ -2333,7 +2400,7 @@ snapshots:
 
   resolve-pkg-maps@1.0.0: {}
 
-  rolldown-plugin-dts@0.25.2(rolldown@1.2.0):
+  rolldown-plugin-dts@0.25.2(rolldown@1.2.0)(typescript@6.0.3):
     dependencies:
       '@babel/generator': 8.0.0-rc.6
       '@babel/helper-validator-identifier': 8.0.0-rc.6
@@ -2344,6 +2411,8 @@ snapshots:
       get-tsconfig: 5.0.0-beta.5
       obug: 2.1.3
       rolldown: 1.2.0
+    optionalDependencies:
+      typescript: 6.0.3
     transitivePeerDependencies:
       - oxc-resolver
 
@@ -2391,6 +2460,8 @@ snapshots:
 
   semver@7.8.0: {}
 
+  semver@7.8.5: {}
+
   shebang-command@2.0.0:
     dependencies:
       shebang-regex: 3.0.0
@@ -2437,7 +2508,7 @@ snapshots:
 
   tree-kill@1.2.2: {}
 
-  tsdown@0.22.0:
+  tsdown@0.22.0(typescript@6.0.3):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -2448,12 +2519,14 @@ snapshots:
       obug: 2.1.3
       picomatch: 4.0.5
       rolldown: 1.2.0
-      rolldown-plugin-dts: 0.25.2(rolldown@1.2.0)
+      rolldown-plugin-dts: 0.25.2(rolldown@1.2.0)(typescript@6.0.3)
       semver: 7.8.0
       tinyexec: 1.2.4
       tinyglobby: 0.2.16
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
+    optionalDependencies:
+      typescript: 6.0.3
     transitivePeerDependencies:
       - '@ts-macro/tsc'
       - '@typescript/native-preview'
@@ -2462,6 +2535,8 @@ snapshots:
 
   tslib@2.8.1:
     optional: true
+
+  typescript@6.0.3: {}
 
   ufo@1.6.4: {}
 
@@ -2474,7 +2549,7 @@ snapshots:
 
   unicorn-magic@0.3.0: {}
 
-  vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0)):
+  vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0)):
     dependencies:
       '@oxc-project/types': 0.138.0
       '@oxlint/plugins': 1.68.0
@@ -2487,9 +2562,9 @@ snapshots:
       '@vitest/snapshot': 4.1.10
       '@vitest/spy': 4.1.10
       '@vitest/utils': 4.1.10
-      '@voidzero-dev/vite-plus-core': 0.2.4(@types/node@26.1.1)(jiti@2.7.0)
-      oxfmt: 0.57.0(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0)))
-      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0)))
+      '@voidzero-dev/vite-plus-core': 0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)
+      oxfmt: 0.57.0(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0)))
+      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@types/node@26.1.1)(jiti@2.7.0)(typescript@6.0.3)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0)))
       oxlint-tsgolint: 0.24.0
       vitest: 4.1.10(@types/node@26.1.1)(@vitest/browser-preview@4.1.10)(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))
     optionalDependencies:
@@ -2571,6 +2646,24 @@ snapshots:
       '@vitest/browser-preview': 4.1.10(vite@8.1.4(@types/node@26.1.1)(jiti@2.7.0))(vitest@4.1.10)
     transitivePeerDependencies:
       - msw
+
+  vscode-jsonrpc@9.0.1: {}
+
+  vscode-languageclient@10.1.0:
+    dependencies:
+      minimatch: 10.2.5
+      semver: 7.8.5
+      vscode-languageserver-protocol: 3.18.2
+      vscode-languageserver-textdocument: 1.0.13
+
+  vscode-languageserver-protocol@3.18.2:
+    dependencies:
+      vscode-jsonrpc: 9.0.1
+      vscode-languageserver-types: 3.18.0
+
+  vscode-languageserver-textdocument@1.0.13: {}
+
+  vscode-languageserver-types@3.18.0: {}
 
   which@2.0.2:
     dependencies:
