@@ -10,7 +10,7 @@
 //! (which emits the enum); both read the same "string-literal property is the
 //! discriminant" rule.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
     Function, Statement, TSLiteral, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeLiteral,
@@ -35,6 +35,9 @@ pub struct TypeRegistry {
     /// Function name (original `.ds` spelling) → each parameter's type path,
     /// or `None` where the parameter has no annotation.
     pub functions: HashMap<String, Vec<Option<Path>>>,
+    /// Struct/interface name → its optional (`?:`) field names. A struct
+    /// literal that omits one of these is filled with `None`.
+    pub structs: HashMap<String, HashSet<String>>,
 }
 
 impl TypeRegistry {
@@ -43,6 +46,7 @@ impl TypeRegistry {
         Self {
             unions: HashMap::new(),
             functions: HashMap::new(),
+            structs: HashMap::new(),
         }
     }
 }
@@ -63,6 +67,17 @@ pub fn build_registry(statements: &[Statement]) -> TypeRegistry {
             Statement::TSTypeAliasDeclaration(alias) => {
                 if let Some(variants) = discriminated_enum(alias) {
                     registry.unions.insert(alias.id.name.to_string(), variants);
+                }
+                if let Some(optionals) = struct_optional_fields_of_alias(alias) {
+                    if !optionals.is_empty() {
+                        registry.structs.insert(alias.id.name.to_string(), optionals);
+                    }
+                }
+            }
+            Statement::TSInterfaceDeclaration(iface) => {
+                let optionals = collect_optionals(&iface.body.body);
+                if !optionals.is_empty() {
+                    registry.structs.insert(iface.id.name.to_string(), optionals);
                 }
             }
             Statement::FunctionDeclaration(func) => {
@@ -147,4 +162,30 @@ fn variant_of(lit: &TSTypeLiteral) -> Option<(String, Ident, Vec<Ident>)> {
     let value = kind_value?;
     let name = bindings::pascal(&value);
     Some((value, name, fields))
+}
+
+/// Names of the optional (`?:`) properties among a list of signatures. These
+/// become `Option<T>` struct fields; a literal that omits one is filled `None`.
+fn collect_optionals(members: &[TSSignature]) -> HashSet<String> {
+    members
+        .iter()
+        .filter_map(|sig| {
+            let TSSignature::TSPropertySignature(ps) = sig else {
+                return None;
+            };
+            if !ps.optional {
+                return None;
+            }
+            bindings::property_key_name(&ps.key).map(|k| k.to_string())
+        })
+        .collect()
+}
+
+/// Optional fields of a `type T = { … }` alias (not a union). `None` when the
+/// alias is not a plain object-literal type.
+fn struct_optional_fields_of_alias(alias: &TSTypeAliasDeclaration) -> Option<HashSet<String>> {
+    let TSType::TSTypeLiteral(lit) = &alias.type_annotation else {
+        return None;
+    };
+    Some(collect_optionals(&lit.members))
 }

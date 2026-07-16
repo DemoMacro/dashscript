@@ -139,5 +139,11 @@ fn struct_field(sig: &TSSignature) -> Option<TokenStream> {
         .as_ref()
         .map(|ta| types::translate_type(&ta.type_annotation))
         .unwrap_or_else(|| parse_quote!(_));
+    // An optional (`?:`) field wraps in `Option<T>`.
+    let ty = if ps.optional {
+        quote!(Option<#ty>)
+    } else {
+        quote!(#ty)
+    };
     Some(quote!(pub #key: #ty,))
 }

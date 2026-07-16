@@ -1,5 +1,7 @@
 //! `Expression` → `syn::Expr`.
 
+use std::collections::HashSet;
+
 use oxc_ast::ast::{
     Argument, ArrayExpression, ArrayExpressionElement, ArrowFunctionExpression,
     AssignmentExpression, AssignmentTarget, BinaryExpression, CallExpression,
@@ -153,6 +155,7 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
     }
     // A `…v` spread records a struct-update base (`Struct { …, ..v }`); only an
     // identifier base is supported. If multiple spreads appear, the last wins.
+    let optionals = optional_fields_for(path, ctx);
     let mut base: Option<Expr> = None;
     let fields: Vec<syn::FieldValue> = obj
         .properties
@@ -160,7 +163,12 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
         .filter_map(|p| match p {
             ObjectPropertyKind::ObjectProperty(op) => {
                 let key = bindings::property_key_name(&op.key)?;
-                let value = translate_expr(&op.value, ctx);
+                let mut value = translate_expr(&op.value, ctx);
+                // An optional field's supplied value is wrapped in `Some`.
+                let key_str = key.to_string();
+                if optionals.is_some_and(|s| s.contains(&key_str)) {
+                    value = parse_quote!(Some(#value));
+                }
                 Some(parse_quote!(#key: #value))
             }
             ObjectPropertyKind::SpreadProperty(sp) => {
@@ -171,8 +179,44 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
         .collect();
     match base {
         Some(b) => parse_quote!(#path { #(#fields),*, ..#b }),
-        None => parse_quote!(#path { #(#fields),* }),
+        None => {
+            let extras = missing_optionals(path, &fields, ctx);
+            parse_quote!(#path { #(#fields),*, #(#extras),* })
+        }
     }
+}
+
+/// The optional (`?:`) field names of the struct named by `path`, if any.
+fn optional_fields_for<'a>(path: &syn::Path, ctx: &Ctx<'a>) -> Option<&'a HashSet<String>> {
+    let type_name = path.segments.last()?.ident.to_string();
+    ctx.struct_optionals(&type_name)
+}
+
+/// `None` initializers for optional (`?:`) fields the literal omitted, so a
+/// partial struct literal still names every field. Only fields registered as
+/// optional on this struct type and absent from `present` are filled.
+fn missing_optionals(path: &syn::Path, present: &[syn::FieldValue], ctx: &Ctx<'_>) -> Vec<syn::FieldValue> {
+    let Some(type_name) = path.segments.last().map(|s| s.ident.to_string()) else {
+        return Vec::new();
+    };
+    let Some(optionals) = ctx.struct_optionals(&type_name) else {
+        return Vec::new();
+    };
+    let present: HashSet<String> = present
+        .iter()
+        .filter_map(|f| match &f.member {
+            syn::Member::Named(id) => Some(id.to_string()),
+            syn::Member::Unnamed(_) => None,
+        })
+        .collect();
+    optionals
+        .iter()
+        .filter(|name| !present.contains(*name))
+        .map(|name| {
+            let id = Ident::new(name.as_str(), Span::call_site());
+            parse_quote!(#id: None)
+        })
+        .collect()
 }
 
 /// True when `path` names a `HashMap` (the target of a `Record<K, V>`).

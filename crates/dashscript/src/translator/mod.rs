@@ -86,6 +86,23 @@ mod tests {
     }
 
     #[test]
+    fn translates_optional_field_to_option_and_fills_none() {
+        let src =
+            "interface V { x: number; y?: number; } function f(): void { const v: V = { x: 1 }; console.log(v.x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("pub y: Option<f64>"), "got:\n{rust}");
+        assert!(rust.contains("V { x: 1.0, y: None }"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_optional_field_supplied_wraps_some() {
+        let src =
+            "interface V { x: number; y?: number; } function f(): void { const v: V = { x: 1, y: 2 }; console.log(v.x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("V { x: 1.0, y: Some(2.0) }"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_type_to_vec() {
         let src = "interface Box { items: number[]; ids: Array<string>; }";
         let rust = Translator::new().translate(src).expect("should translate");

@@ -82,6 +82,14 @@ impl<'a> Ctx<'a> {
         self.registry.functions.get(name).map(Vec::as_slice)
     }
 
+    /// The optional (`?:`) field names of the struct/interface named
+    /// `type_name`, when it has any. Lets a literal that omits an optional
+    /// field fill in `None`.
+    #[must_use]
+    pub fn struct_optionals(&self, type_name: &str) -> Option<&'a HashSet<String>> {
+        self.registry.structs.get(type_name)
+    }
+
     /// True when `scrut.field` (both snake-cased) is narrowed to an arm binding
     /// in the current scope.
     #[must_use]

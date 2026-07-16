@@ -5,6 +5,11 @@ interface Vector {
   y: number;
 }
 
+interface Item {
+  name: string;
+  tag?: string;
+}
+
 type Kind = "linear" | "rotational";
 
 function magnitude(v: Vector): number {
@@ -87,6 +92,12 @@ function main(): void {
   console.log("circle area:", area(c));
   const sq: Shape = { kind: "square", side: 4 };
   console.log("square area:", area(sq));
+
+  // optional fields: `?:` → Option<T>; omitting one fills `None`
+  const widget: Item = { name: "widget" };
+  console.log("item name:", widget.name);
+  const tagged: Item = { name: "gadget", tag: "new" };
+  console.log("item tag:", tagged.tag!);
 
   // string methods + concatenation
   const greeting = "Hello, World";

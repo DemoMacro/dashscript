@@ -33,6 +33,8 @@ magnitude 2.23606797749979 => small
 updated: 99 5
 circle area: 9
 square area: 16
+item name: widget
+item tag: new
 hello, world
 true
 ababab
@@ -82,6 +84,8 @@ set: 42
 | `v.x = v`                              | `v.x = v`                                             |
 | `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                               |
 | `{ ...base, x: 99 }` (typed)           | `Vector { x: 99.0, ..base }`                          |
+| `interface V { y?: T }`                | `pub y: Option<T>`                                    |
+| `{ x: 1 }` (omit optional `y?`)        | `V { x: …, y: None }`                                 |
 | `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                            |
 | `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                            |
 | `type Kind = "a" \| "b"`               | `enum Kind { A, B }`                                  |
