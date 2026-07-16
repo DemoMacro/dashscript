@@ -483,6 +483,13 @@ fn ident_or_undefined(id: &IdentifierReference) -> Expr {
 /// `x!` (TS non-null assertion) → `x.unwrap()`. The author asserts non-null, so
 /// a panic on `None` is their explicit choice, not an implicit assumption.
 fn nonnull_expr(nn: &TSNonNullExpression, ctx: &Ctx<'_>) -> Expr {
+    // Inside an `if (opt)` narrowing, `opt!` reads the bound inner value
+    // directly — no `Option::unwrap` after an `is_some` check.
+    if let Expression::Identifier(id) = &nn.expression {
+        if ctx.is_narrowed_some(&bindings::snake(&id.name).to_string()) {
+            return translate_expr(&nn.expression, ctx);
+        }
+    }
     let inner = translate_expr(&nn.expression, ctx);
     parse_quote!(#inner.unwrap())
 }

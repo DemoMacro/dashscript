@@ -55,6 +55,7 @@ impl Default for Locals {
 pub struct Narrow {
     scrut: Option<String>,
     fields: HashSet<String>,
+    option_some: HashSet<String>,
 }
 
 impl Narrow {
@@ -62,7 +63,7 @@ impl Narrow {
     /// data-field names of the active variant (all snake-cased).
     #[must_use]
     pub fn of(scrut: String, fields: HashSet<String>) -> Self {
-        Self { scrut: Some(scrut), fields }
+        Self { scrut: Some(scrut), fields, option_some: HashSet::new() }
     }
 
     /// True when `scrut.field` (both snake-cased) should read as the arm's
@@ -70,6 +71,22 @@ impl Narrow {
     #[must_use]
     pub fn binds(&self, scrut: &str, field: &str) -> bool {
         self.scrut.as_deref() == Some(scrut) && self.fields.contains(field)
+    }
+
+    /// A child scope that also narrows `name` (snake-cased) from `Option<T>` to
+    /// `T`, matching an `if let Some(name) = name` branch.
+    #[must_use]
+    pub fn with_option_some(&self, name: String) -> Self {
+        let mut next = self.clone();
+        next.option_some.insert(name);
+        next
+    }
+
+    /// True when `name` (snake-cased) is narrowed from `Option` to its inner
+    /// value in this scope.
+    #[must_use]
+    pub fn is_option_some(&self, name: &str) -> bool {
+        self.option_some.contains(name)
     }
 }
 
@@ -140,6 +157,14 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn narrow_binds(&self, scrut: &str, field: &str) -> bool {
         self.narrow.binds(scrut, field)
+    }
+
+    /// True when `name` (snake-cased) is narrowed from `Option<T>` to `T` in the
+    /// current scope — an `if (name)` truthiness branch on a `Copy` inner type,
+    /// so `name!`/`name` read the bound inner value, not `Option::unwrap`.
+    #[must_use]
+    pub fn is_narrowed_some(&self, name: &str) -> bool {
+        self.narrow.is_option_some(name)
     }
 }
 

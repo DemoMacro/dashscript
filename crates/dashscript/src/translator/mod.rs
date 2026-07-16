@@ -512,7 +512,33 @@ mod tests {
 
     #[test]
     fn translates_if_option_truthiness() {
+        // `if (m)` on `Option<f64>` (Copy), branch unused → `if let Some(_)`.
         let src = "function f(): void { let m: number | null = 1; if (m) { console.log(1); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("if let Some(_) = m"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn narrows_option_truthiness_branch_binding() {
+        // The branch reads `m!`, so the inner value binds and `m!` needs no unwrap.
+        let src = "function f(): void { let m: number | null = 1; if (m) { console.log(m!); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("if let Some(m) = m"), "got:\n{rust}");
+        assert!(!rust.contains(".unwrap()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn non_copy_option_truthiness_keeps_is_some() {
+        // `Option<String>` inner is not Copy: narrowing would move out of it.
+        let src = "function f(): void { let m: string | null = \"a\"; if (m) { console.log(1); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("m.is_some()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn mutated_option_truthiness_keeps_is_some() {
+        // `m` is reassigned: an `if let` binding cannot be reassigned.
+        let src = "function f(): void { let m: number | null = 1; if (m) { m = 2; } }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("m.is_some()"), "got:\n{rust}");
     }

@@ -11,7 +11,8 @@ use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_quote, Arm, Block, Expr, FnArg, Ident, ItemFn, LitStr, Pat, Path, ReturnType, Stmt, Type};
 
-use super::context::{Ctx, Locals, Narrow};
+use super::analysis;
+use super::context::{is_option_path, Ctx, Locals, Narrow};
 use super::registry::TypeRegistry;
 use super::{bindings, declarations, expressions, types};
 
@@ -281,6 +282,28 @@ fn translate_if(
     narrow: &Narrow,
     return_path: Option<&Path>,
 ) -> Stmt {
+    // `if (opt)` where `opt: Option<T>`, `T: Copy`, and `opt` is never mutated
+    // → `if let Some(opt) = opt`. The bound copy leaves `opt` usable after the
+    // branch (no move); `opt!`/`opt` inside read the inner value, so the
+    // unwrap-after-is_some pattern is avoided.
+    if let Some((name, ident_expr)) = option_truthiness_target(&stmt.test, locals) {
+        let child = narrow.with_option_some(name.clone());
+        let then_block = statement_block(&stmt.consequent, locals, registry, &child, return_path);
+        // Bind the inner value only if the branch reads it; else discard it so
+        // no `unused_variables` lint fires.
+        let bind = if analysis::references(&stmt.consequent, &name) {
+            format_ident!("{}", name)
+        } else {
+            format_ident!("_")
+        };
+        return match &stmt.alternate {
+            Some(alt) => {
+                let else_block = statement_block(alt, locals, registry, narrow, return_path);
+                parse_quote!(if let Some(#bind) = #ident_expr #then_block else #else_block)
+            }
+            None => parse_quote!(if let Some(#bind) = #ident_expr #then_block),
+        };
+    }
     let cond = condition_expr(&stmt.test, locals, registry, narrow);
     let then_block = statement_block(&stmt.consequent, locals, registry, narrow, return_path);
     match &stmt.alternate {
@@ -290,6 +313,27 @@ fn translate_if(
         }
         None => parse_quote!(if #cond #then_block),
     }
+}
+
+/// The target of an `if (opt)` test that can narrow soundly: a bare identifier
+/// of `Option<T>` where `T: Copy` and the binding is never mutated. Returns its
+/// snake-cased name and a bare-identifier expression. A non-`Copy` inner type
+/// is left alone (the value would move out of the Option); so is a mutated
+/// binding (an `if let` binding cannot be reassigned).
+fn option_truthiness_target(test: &Expression, locals: &Locals) -> Option<(String, Expr)> {
+    let Expression::Identifier(id) = test else {
+        return None;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    let path = locals.get(&name)?;
+    if !is_option_path(path) || !types::is_copy_path(path) {
+        return None;
+    }
+    if locals.mutated.contains(&name) {
+        return None;
+    }
+    let ident = format_ident!("{}", name);
+    Some((name, parse_quote!(#ident)))
 }
 
 fn translate_while(

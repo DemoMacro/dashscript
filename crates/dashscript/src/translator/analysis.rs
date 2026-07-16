@@ -44,6 +44,16 @@ pub(super) fn analyze(stmts: &[Statement]) -> Analysis {
     a
 }
 
+/// Whether `stmt` reads the local `needle` (snake-cased) anywhere — as a bare
+/// identifier or a non-null assertion `needle!`. Used to decide whether an
+/// `if (opt)` narrowing binds the inner value (`Some(x)`) or discards it
+/// (`Some(_)`), so an unused binding never triggers `unused_variables`.
+pub(super) fn references(stmt: &Statement, needle: &str) -> bool {
+    let mut a = Analysis::default();
+    walk_stmt(stmt, &mut a);
+    a.use_counts.contains_key(needle)
+}
+
 fn walk_stmt(stmt: &Statement, a: &mut Analysis) {
     match stmt {
         Statement::BlockStatement(b) => {
@@ -162,6 +172,8 @@ fn walk_expr(expr: &Expression, a: &mut Analysis) {
             }
         }
         Expression::ParenthesizedExpression(p) => walk_expr(&p.expression, a),
+        // `x!` reads `x` — a non-null assertion dereferences the Option value.
+        Expression::TSNonNullExpression(nn) => walk_expr(&nn.expression, a),
         Expression::StaticMemberExpression(sm) => walk_expr(&sm.object, a),
         Expression::ComputedMemberExpression(cm) => {
             walk_expr(&cm.object, a);
