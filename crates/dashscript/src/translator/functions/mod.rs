@@ -48,6 +48,21 @@ pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Option<
             make_pub(&mut item);
             Some(item)
         }
+        // `import { foo, bar } from "./other"` → `use other::{foo, bar};`.
+        // A bare specifier (`"react"`) is not a local module and yields `None`.
+        Statement::ImportDeclaration(imp) => {
+            let mod_ident = super::imports::module_ident(&imp.source.value)?;
+            let names: Vec<Ident> = imp
+                .specifiers
+                .as_ref()?
+                .iter()
+                .filter_map(super::imports::named_local)
+                .collect();
+            if names.is_empty() {
+                return None;
+            }
+            Some(syn::Item::Use(parse_quote!(use #mod_ident::{#(#names),*};)))
+        }
         _ => None,
     }
 }

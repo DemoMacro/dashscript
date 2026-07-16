@@ -80,6 +80,11 @@ fn usage_exit(msg: &str) -> ExitCode {
 }
 
 /// Translate a `.ds` file into a buildable Cargo project at `project_dir`.
+///
+/// Each local module the file imports (`import { x } from "./other"`) is
+/// translated to `src/<module>.rs` and declared with a leading `mod <module>;`
+/// so the main file's `use <module>::x;` resolves. v1: a single layer — an
+/// imported module that itself imports is not followed.
 fn emit_cargo_project(src_path: &Path, project_dir: &Path) -> Result<(), Box<dyn Error>> {
     let src = fs::read_to_string(src_path)
         .map_err(|e| format!("cannot read {}: {e}", src_path.display()))?;
@@ -89,8 +94,52 @@ fn emit_cargo_project(src_path: &Path, project_dir: &Path) -> Result<(), Box<dyn
     let cargo_toml = resolve_manifest(src_path);
     fs::create_dir_all(project_dir.join("src"))?;
     fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
-    fs::write(project_dir.join("src").join("main.rs"), rust)?;
+
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut mod_decls = String::new();
+    for imp in Translator::new().imports(&src) {
+        if !seen.insert(imp.module.clone()) {
+            continue; // dedupe repeated imports of the same module
+        }
+        let dep_path = resolve_local_module(base, &imp.source)?;
+        let dep_src = fs::read_to_string(&dep_path)
+            .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
+        let dep_rust = Translator::new()
+            .translate(&dep_src)
+            .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
+        fs::write(
+            project_dir.join("src").join(format!("{}.rs", imp.module)),
+            dep_rust,
+        )?;
+        mod_decls.push_str(&format!("mod {};\n", imp.module));
+    }
+
+    let main = if mod_decls.is_empty() {
+        rust
+    } else {
+        format!("{mod_decls}\n{rust}")
+    };
+    fs::write(project_dir.join("src").join("main.rs"), main)?;
     Ok(())
+}
+
+/// Resolve a relative `.ds` import (`"./other"` or `"./other.ds"`) against the
+/// importing file's directory. Errors clearly when no matching file exists.
+fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf, Box<dyn Error>> {
+    let candidate = if source.ends_with(".ds") {
+        base.join(source)
+    } else {
+        base.join(format!("{source}.ds"))
+    };
+    if candidate.exists() {
+        return Ok(candidate);
+    }
+    Err(format!(
+        "dashscript: import '{source}' does not resolve to a .ds file (tried {})",
+        candidate.display()
+    )
+    .into())
 }
 
 /// Resolve the Cargo manifest for `src_path`: the sibling `manifest.json` if

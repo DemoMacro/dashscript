@@ -14,6 +14,7 @@ pub mod context;
 pub mod declarations;
 pub mod expressions;
 pub mod functions;
+pub mod imports;
 pub mod registry;
 pub mod types;
 
@@ -87,6 +88,13 @@ impl Translator {
             ));
         }
         Ok(Codegen::new().build(&ret.program).code)
+    }
+
+    /// The local `.ds` modules this file imports (`import { x } from "./other"`
+    /// → `other`), for `ds build` to assemble one Rust module per dependency.
+    #[must_use]
+    pub fn imports(&self, source: &str) -> Vec<imports::ImportRef> {
+        imports::collect_imports(source)
     }
 }
 
