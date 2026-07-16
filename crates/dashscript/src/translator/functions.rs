@@ -209,6 +209,12 @@ fn translate_stmt(
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
         Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
         Statement::ThrowStatement(t) => vec![throw_stmt(&t.argument, locals, registry, narrow)],
+        // try-catch cannot map soundly: `throw` is an unrecoverable panic, and
+        // catching it (catch_unwind) breaks function-return semantics. Surface
+        // it as a compile error rather than silently dropping the block.
+        Statement::TryStatement(_) => vec![parse_quote!(
+            compile_error!("DashScript does not support try-catch (throw is an unrecoverable panic)");
+        )],
         _ => vec![],
     }
 }

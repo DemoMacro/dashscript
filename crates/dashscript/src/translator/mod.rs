@@ -1139,6 +1139,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_try_catch_to_compile_error() {
+        let src = "function f(): void { try { console.log(\"x\"); } catch (e) {} }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("compile_error!"), "got:\n{rust}");
+        assert!(rust.contains("try-catch"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");
