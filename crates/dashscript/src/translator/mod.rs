@@ -579,4 +579,25 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".iter().copied().reduce(|a, b|"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_hashmap_index_assign_to_insert() {
+        let src = "function f(): void { let m: Record<string, number> = { a: 1 }; m[\"b\"] = 2; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".insert(\"b\".to_string(), 2.0)"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_array_index_assign_to_usize_index() {
+        let src = "function f(): void { let xs: number[] = [1, 2, 3]; xs[0] = 9; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("xs[0.0 as usize] = 9.0"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_field_assign_to_field() {
+        let src = "function f(v: Vector): void { v.x = 5; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("v.x = 5.0"), "got:\n{rust}");
+    }
 }

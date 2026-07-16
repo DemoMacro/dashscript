@@ -13,7 +13,7 @@ use oxc_syntax::operator::{
 };
 use proc_macro2::Span;
 use quote::quote;
-use syn::{parse_quote, parse_str, BinOp, Expr, Pat, Path, Type, UnOp};
+use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Pat, Path, Type, UnOp};
 
 use super::context::Ctx;
 use super::{bindings, types};
@@ -589,29 +589,45 @@ fn conditional_expr(c: &ConditionalExpression, ctx: &Ctx<'_>) -> Expr {
     parse_quote!(if #test { #then } else { #els })
 }
 
-/// `x = …`, `x += …`, … — only simple identifier targets (no `obj.x = …`).
+/// The lvalue kind of an assignment's left-hand side. A plain target is any
+/// Rust lvalue (`x`, `obj.field`, `arr[i as usize]`); a `m["k"]` on a
+/// `HashMap` local is an insert (the map takes the key and value separately).
+enum AssignTarget {
+    Plain(Expr),
+    HashInsert { map: Ident, key: Expr },
+}
+
+/// `x = …`, `x += …`, …. Plain targets (`x`, `obj.field`, `arr[i as usize]`)
+/// take every compound op; a `m["k"]` HashMap index becomes `m.insert(k, v)`
+/// (only `=` — HashMap has no compound-assign semantics).
 fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
-    let Some(target) = assignment_target(&a.left) else {
-        return parse_quote!(::core::todo!());
-    };
     let right = translate_expr(&a.right, ctx);
-    let tokens = match a.operator {
-        AssignmentOperator::Assign => quote!(#target = #right),
-        // `s += "lit"` is string append (String has no AddAssign) → `push_str`.
-        AssignmentOperator::Addition => match &a.right {
-            Expression::StringLiteral(s) => {
-                let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
-                quote!(#target.push_str(#lit))
-            }
-            _ => quote!(#target += #right),
+    match assignment_target_kind(&a.left, ctx) {
+        Some(AssignTarget::Plain(target)) => {
+            let tokens = match a.operator {
+                AssignmentOperator::Assign => quote!(#target = #right),
+                // `s += "lit"` is string append (String has no AddAssign) → `push_str`.
+                AssignmentOperator::Addition => match &a.right {
+                    Expression::StringLiteral(s) => {
+                        let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+                        quote!(#target.push_str(#lit))
+                    }
+                    _ => quote!(#target += #right),
+                },
+                AssignmentOperator::Subtraction => quote!(#target -= #right),
+                AssignmentOperator::Multiplication => quote!(#target *= #right),
+                AssignmentOperator::Division => quote!(#target /= #right),
+                AssignmentOperator::Remainder => quote!(#target %= #right),
+                _ => quote!(::core::todo!()),
+            };
+            syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+        }
+        Some(AssignTarget::HashInsert { map, key }) => match a.operator {
+            AssignmentOperator::Assign => parse_quote!(#map.insert(#key, #right)),
+            _ => parse_quote!(::core::todo!()),
         },
-        AssignmentOperator::Subtraction => quote!(#target -= #right),
-        AssignmentOperator::Multiplication => quote!(#target *= #right),
-        AssignmentOperator::Division => quote!(#target /= #right),
-        AssignmentOperator::Remainder => quote!(#target %= #right),
-        _ => quote!(::core::todo!()),
-    };
-    syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+        None => parse_quote!(::core::todo!()),
+    }
 }
 
 /// `i++` / `i--` → `i += 1.0` / `i -= 1.0`. Statement-context only: TS returns
@@ -629,9 +645,34 @@ fn update_expr(u: &UpdateExpression) -> Expr {
     syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
 }
 
-fn assignment_target(target: &AssignmentTarget) -> Option<Expr> {
+/// Resolve an assignment's left-hand side to an [`AssignTarget`]. Member
+/// targets (`obj.field`, `arr[i]`) become plain Rust lvalues; a `m["k"]` on a
+/// `HashMap` local is recognized as an insert.
+fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<AssignTarget> {
     match target {
-        AssignmentTarget::AssignmentTargetIdentifier(id) => Some(ident_expr(id)),
+        AssignmentTarget::AssignmentTargetIdentifier(id) => {
+            Some(AssignTarget::Plain(ident_expr(id)))
+        }
+        AssignmentTarget::StaticMemberExpression(sm) => {
+            let obj = translate_expr(&sm.object, ctx);
+            let field = bindings::snake(&sm.property.name);
+            Some(AssignTarget::Plain(parse_quote!(#obj.#field)))
+        }
+        AssignmentTarget::ComputedMemberExpression(cm) => {
+            // `m["k"] = v` on a HashMap → `m.insert(key, v)`.
+            if is_hashmap_local(&cm.object, ctx) {
+                let Expression::Identifier(id) = &cm.object else {
+                    return None;
+                };
+                let map = bindings::snake(&id.name);
+                let key = translate_expr(&cm.expression, ctx);
+                return Some(AssignTarget::HashInsert { map, key });
+            }
+            // `xs[i] = v` → `xs[i as usize] = v`.
+            let obj = translate_expr(&cm.object, ctx);
+            let idx = translate_expr(&cm.expression, ctx);
+            Some(AssignTarget::Plain(parse_quote!(#obj[#idx as usize])))
+        }
         _ => None,
     }
 }

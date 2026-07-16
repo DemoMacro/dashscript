@@ -22,6 +22,7 @@ destructured: 7 8
 sum: 7
 record size: 2
 alice: 90
+prices size: 2
 2^10: 1024
 kinds: linear rotational
 magnitude 2.23606797749979 => small
@@ -43,6 +44,8 @@ some >2: true
 every >0: true
 join: 1-2-3
 reduce: 6
+ys[0]: 9
+wv.x: 10
 sum 1..5: 15
 counted: 8
 empty
@@ -59,6 +62,9 @@ set: 42
 | `Record<string, number>`               | `HashMap<String, f64>`                          |
 | `{ alice: 90, … }` (Record)            | `HashMap::from([(…, …)])`                       |
 | `m["k"]` (HashMap)                     | `m.get("k").copied().unwrap()`                  |
+| `m["k"] = v` (HashMap)                 | `m.insert("k".to_string(), v)`                  |
+| `xs[i] = v`                            | `xs[i as usize] = v`                            |
+| `v.x = v`                              | `v.x = v`                                       |
 | `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                         |
 | `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                      |
 | `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                      |

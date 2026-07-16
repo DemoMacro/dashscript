@@ -59,6 +59,11 @@ function main(): void {
   const scores: Record<string, number> = { alice: 90, bob: 85 };
   console.log("record size:", scores.length);
   console.log("alice:", scores["alice"]);
+
+  // mutable map: `m["k"] = v` → `m.insert("k".to_string(), v)`
+  let prices: Record<string, number> = { apple: 3 };
+  prices["banana"] = 2;
+  console.log("prices size:", prices.length);
   console.log("2^10:", 2 ** 10);
 
   const lin: Kind = "linear";
@@ -105,6 +110,16 @@ function main(): void {
   console.log("every >0:", xs.every((n) => n > 0));
   console.log("join:", xs.join("-"));
   console.log("reduce:", xs.reduce((a, b) => a + b, 0));
+
+  // mutate an element: `ys[i] = v` → `ys[i as usize] = v`
+  let ys: number[] = [1, 2, 3];
+  ys[0] = 9;
+  console.log("ys[0]:", ys[0]);
+
+  // mutate a field: `v.x = v` → `v.x = v`
+  let wv: Vector = makeVector(1, 2);
+  wv.x = 10;
+  console.log("wv.x:", wv.x);
 
   // loops: a C-style for, a for-of, break and continue
   let sum = 0;
