@@ -20,6 +20,7 @@ use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Pat, Path, Type, UnOp};
 use super::context::Ctx;
 use super::{bindings, types};
 
+mod fmt_merge;
 mod math;
 mod methods;
 
@@ -745,8 +746,17 @@ fn string_concat(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
                 }
             }
             _ => {
-                fmt.push_str("{}");
-                parts.push(translate_expr(leaf, ctx));
+                let e = translate_expr(leaf, ctx);
+                match fmt_merge::inline_arg(e) {
+                    fmt_merge::Inlined::Format { fmt: ifmt, args } => {
+                        fmt.push_str(&fmt_merge::renumber_format(&ifmt, parts.len()));
+                        parts.extend(args);
+                    }
+                    fmt_merge::Inlined::Display(e) => {
+                        fmt.push_str("{}");
+                        parts.push(e);
+                    }
+                }
             }
         }
     }
@@ -1023,8 +1033,17 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                     }
                 }
                 _ => {
-                    fmt.push_str("{}");
-                    vals.push(translate_argument(a, ctx));
+                    let e = translate_argument(a, ctx);
+                    match fmt_merge::inline_arg(e) {
+                        fmt_merge::Inlined::Format { fmt: ifmt, args } => {
+                            fmt.push_str(&fmt_merge::renumber_format(&ifmt, vals.len()));
+                            vals.extend(args);
+                        }
+                        fmt_merge::Inlined::Display(e) => {
+                            fmt.push_str("{}");
+                            vals.push(e);
+                        }
+                    }
                 }
             }
         }
