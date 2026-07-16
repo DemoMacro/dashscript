@@ -177,6 +177,10 @@ function main(): void {
   // value ||: returns the left operand when truthy, else the right
   const label2: string = "" || "fallback";
   console.log("or value:", label2);
+  // nullish assignment: x ??= y sets x to Some(y) when x is None
+  let counter: number | null = null;
+  counter ??= 10;
+  console.log("nullish assign:", counter!);
 
   // arrow function as a value
   const square = (n: number) => n * n;

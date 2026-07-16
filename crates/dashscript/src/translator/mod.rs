@@ -1124,6 +1124,21 @@ mod tests {
     }
 
     #[test]
+    fn translates_logical_nullish_assign() {
+        let src = "function f(x: number | null): void { x ??= 5; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("is_none()"), "got:\n{rust}");
+        assert!(rust.contains("Some("), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_logical_or_assign() {
+        let src = "function f(x: number): void { x ||= 5; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("if !"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");

@@ -845,7 +845,19 @@ fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
                 AssignmentOperator::ShiftRightZeroFill => {
                     quote!(#target = (((#target as i32) as u32).wrapping_shr(#right as u32)) as f64)
                 }
-                _ => quote!(::core::todo!()),
+                // `x ??= y` on an Option<T>: assign Some(y) when x is None.
+                AssignmentOperator::LogicalNullish => {
+                    quote!(if #target.is_none() { #target = Some(#right) })
+                }
+                // `x ||= y` / `x &&= y`: assign y based on x's truthiness.
+                AssignmentOperator::LogicalOr => {
+                    let truthy = assign_truthy(&a.left, &target, ctx);
+                    quote!(if !(#truthy) { #target = #right })
+                }
+                AssignmentOperator::LogicalAnd => {
+                    let truthy = assign_truthy(&a.left, &target, ctx);
+                    quote!(if #truthy { #target = #right })
+                }
             };
             syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
         }
@@ -870,6 +882,26 @@ fn update_expr(u: &UpdateExpression) -> Expr {
         UpdateOperator::Decrement => quote!(#target -= 1.0),
     };
     syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+}
+
+/// The truthiness test for an assignment target, picking the check by its
+/// declared type (an identifier local) — used by `||=`/`&&=`. Falls back to a
+/// numeric `!= 0.0` when the type is unknown or the target isn't an identifier.
+fn assign_truthy(left: &AssignmentTarget, target: &Expr, ctx: &Ctx<'_>) -> Expr {
+    if let AssignmentTarget::AssignmentTargetIdentifier(id) = left {
+        let name = bindings::snake(&id.name).to_string();
+        let last = ctx
+            .local_type(&name)
+            .and_then(|p| p.segments.last())
+            .map(|s| s.ident.to_string());
+        return match last.as_deref() {
+            Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#target.is_empty()),
+            Some("Option") => parse_quote!(#target.is_some()),
+            Some("bool") => parse_quote!(#target),
+            _ => parse_quote!(#target != 0.0),
+        };
+    }
+    parse_quote!(#target != 0.0)
 }
 
 /// Resolve an assignment's left-hand side to an [`AssignTarget`]. Member
