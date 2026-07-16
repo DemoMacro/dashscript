@@ -73,6 +73,11 @@ function main(): void {
   const u: Vector = { x: 1, y: 2 };
   console.log(describe(u));
 
+  // object spread: `{ ...base, field: val }` → `Struct { field: val, ..base }`
+  const base: Vector = makeVector(2, 5);
+  const updated: Vector = { ...base, x: 99 };
+  console.log("updated:", updated.x, updated.y);
+
   // discriminated union: construct a variant, then destructure it in a switch
   const c: Shape = { kind: "circle", radius: 3 };
   console.log("circle area:", area(c));

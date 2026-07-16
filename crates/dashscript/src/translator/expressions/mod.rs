@@ -145,17 +145,28 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
     if let Some(expr) = variant_construct(obj, path, ctx) {
         return expr;
     }
+    // A `…v` spread records a struct-update base (`Struct { …, ..v }`); only an
+    // identifier base is supported. If multiple spreads appear, the last wins.
+    let mut base: Option<Expr> = None;
     let fields: Vec<syn::FieldValue> = obj
         .properties
         .iter()
-        .filter_map(|p| {
-            let ObjectPropertyKind::ObjectProperty(op) = p else { return None };
-            let key = bindings::property_key_name(&op.key)?;
-            let value = translate_expr(&op.value, ctx);
-            Some(parse_quote!(#key: #value))
+        .filter_map(|p| match p {
+            ObjectPropertyKind::ObjectProperty(op) => {
+                let key = bindings::property_key_name(&op.key)?;
+                let value = translate_expr(&op.value, ctx);
+                Some(parse_quote!(#key: #value))
+            }
+            ObjectPropertyKind::SpreadProperty(sp) => {
+                base = Some(translate_expr(&sp.argument, ctx));
+                None
+            }
         })
         .collect();
-    parse_quote!(#path { #(#fields),* })
+    match base {
+        Some(b) => parse_quote!(#path { #(#fields),*, ..#b }),
+        None => parse_quote!(#path { #(#fields),* }),
+    }
 }
 
 /// True when `path` names a `HashMap` (the target of a `Record<K, V>`).

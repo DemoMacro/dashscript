@@ -26,6 +26,7 @@ prices size: 2
 2^10: 1024
 kinds: linear rotational
 magnitude 2.23606797749979 => small
+updated: 99 5
 circle area: 9
 square area: 16
 hello, world
@@ -66,6 +67,7 @@ set: 42
 | `xs[i] = v`                            | `xs[i as usize] = v`                            |
 | `v.x = v`                              | `v.x = v`                                       |
 | `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                         |
+| `{ ...base, x: 99 }` (typed)           | `Vector { x: 99.0, ..base }`                    |
 | `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                      |
 | `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                      |
 | `type Kind = "a" \| "b"`               | `enum Kind { A, B }`                            |

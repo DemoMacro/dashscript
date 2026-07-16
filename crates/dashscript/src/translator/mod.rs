@@ -600,4 +600,11 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("v.x = 5.0"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_object_spread_to_struct_update() {
+        let src = "function f(v: Vector): Vector { return { ...v, y: 9 }; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("Vector { y: 9.0, ..v }"), "got:\n{rust}");
+    }
 }
