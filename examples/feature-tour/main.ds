@@ -257,4 +257,8 @@ function main(): void {
   if (maybe) {
     console.log("set:", maybe!);
   }
+
+  // a `.ds` name that is a Rust keyword (`type`) → a raw identifier `r#type`
+  const type = 99;
+  console.log("keyword:", type);
 }

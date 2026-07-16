@@ -1,6 +1,7 @@
 //! `BindingPattern` / `PropertyKey` → `syn::Ident`.
 
 use oxc_ast::ast::{BindingIdentifier, BindingPattern, PropertyKey};
+use proc_macro2::Span;
 use quote::format_ident;
 use syn::Ident;
 
@@ -22,7 +23,35 @@ pub fn snake(name: &str) -> Ident {
             out.push(c);
         }
     }
-    format_ident!("{}", out)
+    // A `.ds` name that lands on a Rust keyword (`dyn`, `match`, `type`, …) is
+    // emitted as a valid identifier so the generated code still parses.
+    if is_rust_keyword(&out) {
+        keyword_ident(&out)
+    } else {
+        format_ident!("{}", out)
+    }
+}
+
+/// Turn a Rust keyword into a valid identifier: most become raw identifiers
+/// (`r#dyn`); `self`/`crate`/`super` can't be raw, so they get a `_` suffix.
+fn keyword_ident(name: &str) -> Ident {
+    match name {
+        "self" | "crate" | "super" => format_ident!("{}_", name),
+        _ => Ident::new_raw(name, Span::call_site()),
+    }
+}
+
+/// Whether `s` is a Rust strict or reserved keyword (lowercase — `snake`
+/// already lowercased its input, so `Self`/`true` arrive as `self`/`true`).
+fn is_rust_keyword(s: &str) -> bool {
+    matches!(
+        s,
+        "as" | "break" | "const" | "continue" | "crate" | "dyn" | "else" | "enum" | "extern"
+            | "false" | "fn" | "for" | "if" | "impl" | "in" | "let" | "loop" | "match" | "mod"
+            | "move" | "mut" | "pub" | "ref" | "return" | "self" | "static" | "struct" | "super"
+            | "trait" | "true" | "type" | "unsafe" | "use" | "where" | "while" | "async" | "await"
+            | "union" | "yield" | "try"
+    )
 }
 
 /// Identifier name from a `BindingIdentifier`.

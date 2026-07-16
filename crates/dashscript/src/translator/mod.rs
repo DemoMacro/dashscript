@@ -682,6 +682,14 @@ mod tests {
     }
 
     #[test]
+    fn escapes_rust_keyword_variable_to_raw_ident() {
+        let src = "function f(): number { const type = 5; return type; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("let r#type = 5.0"), "got:\n{rust}");
+        assert!(rust.contains("return r#type"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_destructure_rest_to_slice() {
         let src = "function f(): void { const xs: number[] = [1, 2, 3]; const [a, ...rest] = xs; }";
         let rust = Translator::new().translate(src).expect("should translate");
