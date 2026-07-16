@@ -1,6 +1,6 @@
 //! `ds` — the DashScript toolchain entry point.
 //!
-//! Wired: `run`, `build`, `add`, `check`, `fmt`. Planned: `test`.
+//! Wired: `run`, `build`, `add`, `check`, `fmt`, `lsp`. Planned: `test`.
 
 use std::{
     error::Error,
@@ -10,6 +10,8 @@ use std::{
 };
 
 use dashscript::{fetch, Bindgen, Manifest, Translator};
+
+mod lsp;
 
 fn main() -> ExitCode {
     let mut args = std::env::args().skip(1);
@@ -37,6 +39,13 @@ fn main() -> ExitCode {
         Some("fmt") => match args.next() {
             Some(file) => report(fmt(&file)),
             None => usage_exit("usage: ds fmt <file.ds>"),
+        },
+        Some("lsp") => match lsp::run() {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(err) => {
+                eprintln!("ds lsp: {err}");
+                ExitCode::FAILURE
+            }
         },
         Some(other) => {
             eprintln!("ds: unknown subcommand '{other}'");

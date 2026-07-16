@@ -1,12 +1,40 @@
 //! DashScript VS Code extension entry.
 //!
-//! Stage 1 ships syntax highlighting only — declared statically in
-//! `package.json` (language id + TextMate grammar + language configuration),
-//! so no activation logic is needed yet. Stage 2 wires `activate` /
-//! `deactivate` to a `vscode-languageclient` that spawns the `ds lsp` server.
+//! Wires the `.ds` language (declared statically in `package.json`) to the
+//! `ds lsp` language server over stdio. Stage 3 extends the server with crate
+//! go-to-definition via a rust-analyzer backend.
 
-export function activate(): void {
-  // Stage 2: start the `ds` language server client.
+import { ExtensionContext, workspace } from "vscode";
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  ServerOptions,
+  TransportKind,
+} from "vscode-languageclient/node";
+
+let client: LanguageClient | undefined;
+
+export function activate(context: ExtensionContext): void {
+  const dsPath = workspace.getConfiguration("dashscript").get<string>("dsPath") ?? "ds";
+  const serverOptions: ServerOptions = {
+    run: { command: dsPath, args: ["lsp"], transport: TransportKind.stdio },
+    debug: { command: dsPath, args: ["lsp"], transport: TransportKind.stdio },
+  };
+  const clientOptions: LanguageClientOptions = {
+    documentSelector: [{ scheme: "file", language: "dashscript" }],
+  };
+  client = new LanguageClient(
+    "dashscriptLsp",
+    "DashScript Language Server",
+    serverOptions,
+    clientOptions,
+  );
+  // `LanguageClient` carries its own `dispose()` (stops the server), so it
+  // satisfies VS Code's `Disposable` shape. `start()` returns `Promise<void>`.
+  context.subscriptions.push(client);
+  void client.start();
 }
 
-export function deactivate(): void {}
+export function deactivate(): Promise<void> | undefined {
+  return client?.stop();
+}

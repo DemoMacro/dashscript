@@ -13,4 +13,7 @@ path = "src/main.rs"
 
 [dependencies]
 dashscript = { workspace = true }
+lsp-server = "0.10.0"
+lsp-types = "0.97.0"
 oxc_diagnostics = { workspace = true }
+serde_json = { workspace = true }

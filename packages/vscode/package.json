@@ -40,6 +40,10 @@
     "dev": "vp pack -w",
     "vscode:prepublish": "vp pack"
   },
+  "devDependencies": {
+    "@types/vscode": "^1.125.0",
+    "vscode-languageclient": "^10.1.0"
+  },
   "contributes": {
     "languages": [
       {
@@ -60,7 +64,22 @@
         "scopeName": "source.ds",
         "path": "./syntaxes/dashscript.tmLanguage.json"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "DashScript",
+      "properties": {
+        "dashscript.dsPath": {
+          "type": "string",
+          "default": "ds",
+          "description": "Path to the `ds` DashScript CLI binary (resolved from PATH)."
+        },
+        "dashscript.rustAnalyzerPath": {
+          "type": "string",
+          "default": "rust-analyzer",
+          "description": "Path to the `rust-analyzer` binary used for crate go-to-definition."
+        }
+      }
+    }
   },
   "engines": {
     "vscode": "^1.85.0"
