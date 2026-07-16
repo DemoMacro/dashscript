@@ -5,7 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/DemoMacro/dashscript)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
 
-> A TypeScript-frontend language (`.ds`) that transpiles to idiomatic **Rust** (with **Go** and **Zig** backends planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, linting, and formatting, and ship native code — declared in a `manifest.json` that compiles to `Cargo.toml`, with auto-generated type declarations so your `.ds` code gets full type hints for any Rust crate.
+> A TypeScript-frontend language (`.ds`) that transpiles to idiomatic **Rust** (with **Go** and **Zig** backends planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, with `ds check` / `ds fmt` built on its AST in-process, and ship native code — declared in a `manifest.json` that compiles to `Cargo.toml`, with auto-generated type declarations so your `.ds` code gets full type hints for any Rust crate.
 
 ## Packages
 
@@ -79,16 +79,16 @@ $ ds add rust:serde
 
 `ds add` runs **bindgen** — it reads a Rust crate and emits a `.ds` declaration file, so importing the crate in `.ds` gives you editor completion and type checking. There is no separate `ds gen` step.
 
-### Check & format (powered by oxc)
+### Check & format
 
-`.ds` is TypeScript-flavored, so checking and formatting reuse oxc directly — no reimplementation:
+`.ds` is parsed with `oxc_parser`; `ds check` then verifies the file is _translatable_ to valid Rust (syntax errors plus constructs the translator cannot lower), and `ds fmt` formats it — both built in-process on the parsed AST (no external oxlint/oxfmt dependency):
 
 ```bash
-$ ds check        # lint & type-check .ds (oxc — oxlint)
-$ ds fmt          # format .ds (oxc — oxfmt)
+$ ds check        # verify .ds is translatable to valid Rust
+$ ds fmt          # format .ds in place
 ```
 
-The transpiled Rust is then verified with `cargo check` / `cargo clippy` on the generated project.
+The emitted Rust is finally verified with `cargo check` / `cargo clippy` on the generated project.
 
 ## Development
 

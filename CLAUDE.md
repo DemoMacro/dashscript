@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-You are a senior developer working on **DashScript** — a TypeScript-frontend language (`.ds`) that **transpiles to idiomatic Rust**, with Go and Zig backends planned. DashScript does **not** implement its own parser, linter, or formatter: it reuses [`oxc`](https://oxc.rs/) (`oxc_parser` + `oxc_ast` + `oxc_allocator`, plus `oxlint`/`oxfmt`) for the TypeScript-flavored front end, then translates the resulting AST into Rust source and a `Cargo.toml`. The core is Rust; the `ds` CLI ships as a single `dashscript` package (npm + standalone binary).
+You are a senior developer working on **DashScript** — a TypeScript-frontend language (`.ds`) that **transpiles to idiomatic Rust**, with Go and Zig backends planned. DashScript does **not** implement its own parser: it reuses [`oxc`](https://oxc.rs/) (`oxc_parser` + `oxc_ast` + `oxc_allocator`) for the TypeScript-flavored front end, then translates the resulting AST into Rust source and a `Cargo.toml`. `check` and `fmt` are built in-process on that same parsed AST — `oxc_linter` and `oxc_formatter` are `publish = false` in oxc's workspace (not on crates.io), so DashScript reuses oxc as a _capability_ (AST + diagnostics + codegen) rather than depending on those crates. The core is Rust; the `ds` CLI ships as a single `dashscript` package (npm + standalone binary).
 
 > Coding standards, design patterns, and the contribution workflow live in [CONTRIBUTING.md](./CONTRIBUTING.md). This file is the architectural context an agent must understand before changing code. Read both.
 
@@ -21,23 +21,23 @@ You are a senior developer working on **DashScript** — a TypeScript-frontend l
 
 **Core philosophy**
 
-- **Dash** — fast. Reuse oxc (one of the fastest TS toolchains) for parse/lint/fmt, emit native Rust, and validate the output with `cargo check` / `cargo clippy`.
+- **Dash** — fast. Reuse oxc (one of the fastest TS parsers) for the front end, build `check`/`fmt` on the same parsed AST in-process, emit native Rust, and validate the output with `cargo check` / `cargo clippy`.
 - **Script** — a typed, TypeScript-flavored surface. Developers write what they know; DashScript maps it to Rust.
 - **Bridge** — the AST-to-Rust translation table, plus manifest and bindgen, carry TS-front semantics into the Rust world safely.
 
 ## Tech Stack
 
-| Layer                | Technology                                               | Role                                                                          |
-| -------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Parsing              | `oxc_parser` + `oxc_ast` + `oxc_allocator` (Rust crates) | `.ds` → AST. **Reused, not reimplemented.**                                   |
-| Lint & format        | oxc (`oxlint` / `oxfmt`)                                 | `ds check` / `ds fmt` on `.ds`. **Reused.**                                   |
-| Translation core     | Rust                                                     | AST → Rust source (the only logic DashScript owns)                            |
-| Rust emission        | `syn` AST construction + `prettyplease` printer          | idiomatic, `cargo fmt`-clean output                                           |
-| Manifest             | `manifest.json` → `Cargo.toml`                           | dependency resolution; never `package.json`                                   |
-| Bindgen              | Rust (`syn`-style crate metadata) → `.ds` declaration    | type hints for Rust crates                                                    |
-| Rust toolchain       | pinned standalone build, DashScript-managed              | downloaded on demand like an npm dependency; no system `rustup` for end users |
-| JS surface           | TypeScript (ESM, strict)                                 | single `dashscript` npm package (CLI wrapper, types)                          |
-| Build / check / test | vite-plus (`vp pack` / `vp check` / `vp test`), `cargo`  | unified toolchain                                                             |
+| Layer                | Technology                                               | Role                                                                                    |
+| -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Parsing              | `oxc_parser` + `oxc_ast` + `oxc_allocator` (Rust crates) | `.ds` → AST. **Reused, not reimplemented.**                                             |
+| Check & format       | `oxc_parser` AST + `oxc_diagnostics` + `oxc_codegen`     | `ds check` (translatability) / `ds fmt` (pretty-print); not a shell-out to oxlint/oxfmt |
+| Translation core     | Rust                                                     | AST → Rust source (the only logic DashScript owns)                                      |
+| Rust emission        | `syn` AST construction + `prettyplease` printer          | idiomatic, `cargo fmt`-clean output                                                     |
+| Manifest             | `manifest.json` → `Cargo.toml`                           | dependency resolution; never `package.json`                                             |
+| Bindgen              | Rust (`syn`-style crate metadata) → `.ds` declaration    | type hints for Rust crates                                                              |
+| Rust toolchain       | pinned standalone build, DashScript-managed              | downloaded on demand like an npm dependency; no system `rustup` for end users           |
+| JS surface           | TypeScript (ESM, strict)                                 | single `dashscript` npm package (CLI wrapper, types)                                    |
+| Build / check / test | vite-plus (`vp pack` / `vp check` / `vp test`), `cargo`  | unified toolchain                                                                       |
 
 ## Compilation Pipeline
 
@@ -48,10 +48,10 @@ You are a senior developer working on **DashScript** — a TypeScript-frontend l
   → manifest (DashScript)        manifest.json → Cargo.toml
   → output                       a buildable Cargo project, then cargo check / clippy
 
-.ds check / ds fmt               reuse oxc directly (oxlint / oxfmt) — no own checker/formatter
+.ds check / ds fmt               built in-process on the oxc_parser AST (oxc_linter/oxc_formatter are publish=false)
 ```
 
-There is no separate semantic-analysis, type-checking, or IR stage of our own. oxc resolves the front-end structure and validates `.ds` syntax; DashScript's job is the mapping table from oxc AST nodes to Rust constructs. Target-language correctness is delegated to `cargo check` / `cargo clippy` on the generated project.
+Correctness is a three-layer chain: (1) **structure** — `oxc_parser` parses `.ds` and reports syntax errors; (2) **translatability** — DashScript's own `check` walks the AST and flags any construct the translator cannot lower to valid Rust (the translator is the single source of truth for "what maps"); (3) **target** — `cargo check` / `cargo clippy` on the emitted project is the final arbiter. There is no cross-target IR: oxc gives structure, the translator is the mapping table, `cargo` gives Rust correctness.
 
 ## Architecture: Translation Model
 
@@ -108,8 +108,8 @@ Unified entry `ds`, subcommand style:
 
 ```
 ds build <file.ds>            # parse with oxc → translate → emit Rust project + Cargo.toml
-ds check                      # lint & type-check .ds (oxc — oxlint)
-ds fmt                        # format .ds (oxc — oxfmt)
+ds check                      # verify .ds is translatable to valid Rust (parser + translatability rules)
+ds fmt                        # format .ds in place (built-in formatter)
 ds add rust:<crate>           # fetch crate + generate .ds declaration (bindgen)
 ds run <file.ds>              # translate → emit a Cargo project → cargo run
 ds test                       # run .ds tests (planned)
@@ -121,17 +121,23 @@ ds test                       # run .ds tests (planned)
 
 Each decision states its trade-off so contributors know what _not_ to "fix".
 
-**Reuse oxc for parsing/lint/format (vs a hand-written `.ds` toolchain).**
-DashScript's surface is TypeScript-flavored; oxc is already the fastest, spec-compliant TS toolchain. Reusing it for parse, lint, and format avoids re-deriving TS grammar and checker logic. ✅ speed + correctness for free · ❌ coupled to oxc's AST shape; a breaking oxc change is a translator change.
+**Reuse oxc for parsing, check, and format (vs depending on `oxc_linter`/`oxc_formatter`).**
+DashScript's surface is TypeScript-flavored, so it reuses `oxc_parser`/`oxc_ast`/`oxc_allocator` (the _published_ part of oxc) rather than re-deriving TS grammar. `oxc_linter` and `oxc_formatter`, however, are `publish = false` in oxc's workspace — not on crates.io. So: `ds check` reuses `oxc_parser` + `oxc_diagnostics` to report _translatability_ (does this `.ds` lower to valid Rust? — something eslint-style rules cannot express); `ds fmt` reuses `oxc_codegen` (published, pretty-print by default, not minified). ✅ no giant git dependency, keeps the "fast" promise · ❌ coupled to oxc's published API surface.
 
 **Transpiler, not a full language (vs own type-checker / IR).**
-A TS-front → Rust mapping table plus `cargo check` on the output covers the goal with a fraction of the surface area. oxc gives structure and lint; `cargo` gives correctness. ✅ small scope, fast to ship · ❌ no cross-target IR — adding Go/Zig backends later means a new mapping table each, not a shared lowering.
+A TS-front → Rust mapping table plus `cargo check` on the output covers the goal with a fraction of the surface area. oxc gives structure; `cargo` gives correctness. ✅ small scope, fast to ship · ❌ no cross-target IR — adding Go/Zig backends later means a new mapping table each, not a shared lowering.
+
+**`.ds`: TypeScript surface, Rust semantics (vs a new surface syntax).**
+`.ds` is written in a TypeScript-flavored syntax developers already know, but its semantics are Rust's — the goal is to express the full Rust type/memory-safety model (ownership, borrowing, lifetimes, traits), with TypeScript as the _presentation_ only. Today the translator covers a safe TS→Rust subset (auto clone/borrow/narrowing bridge the gaps); Rust-only constructs (explicit lifetimes, trait bounds, `unsafe`) are reached incrementally as real demand drives each, never speculatively. ✅ familiar to write, sound underneath · ❌ "covers full Rust" is a direction, not a present-tense claim.
 
 **`manifest.json` (vs `package.json`).**
 A `package.json` at the project root is claimed by npm/pnpm and would mislead JS tooling. A dedicated `manifest.json` avoids the collision and carries DashScript-specific fields (`target`, prefixed dependencies). ✅ no ecosystem clash · ❌ one more file format to document.
 
 **Target-prefixed dependencies (`rust:serde`) (vs bare names).**
 A prefix records which backend a dependency belongs to, so a project can mix targets (e.g. a Rust app with a Zig FFI) and so future `go:` / `zig:` backends slot in without schema changes. It also mirrors the `ds add rust:<crate>` command verbatim. ✅ multi-target ready · ❌ slightly more to type for the common single-target case.
+
+**`ds add` mirrors `pnpm add` (vs reading a local `.rs` file).**
+`ds add rust:<crate>` fetches the crate (like `pnpm add` adds a package) and runs bindgen to emit a `.ds` type declaration for it, so importing the crate in `.ds` gives editor completion and types; the dependency is also recorded in `manifest.json`. Bindgen must therefore map a crate's public surface — `struct`/`enum`/`fn`/`trait`/`impl` — not just the struct+fn subset it starts with. ✅ one command: fetch + types + manifest · ❌ bindgen coverage grows with the crates people actually use.
 
 **One `dashscript` package (vs a separate `@dashscript/cli`).**
 The CLI is the product; splitting it into a sub-package adds an install step with no benefit. One package, one binary name (`ds`). ✅ simplest install (`pnpm add dashscript`) · ❌ coarser release granularity.

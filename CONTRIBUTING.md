@@ -45,7 +45,7 @@ packages/
 ### Rust — core crate (`crates/dashscript`)
 
 - **Functions / variables**: `snake_case`. **Types / traits / enums**: `PascalCase`. **Constants**: `SCREAMING_SNAKE_CASE`. **Modules / files**: `snake_case`.
-- **Reuse oxc, don't reimplement** — consume `oxc_parser` / `oxc_ast` / `oxc_allocator` as given, and lean on `oxlint` / `oxfmt` for `.ds` check/format. If you are tempted to parse, lint, or format yourself, you are probably duplicating oxc.
+- **Reuse oxc for parsing, build check/fmt on the AST** — consume `oxc_parser` / `oxc_ast` / `oxc_allocator` as given. `oxc_linter` / `oxc_formatter` are `publish = false` (not on crates.io), so `ds check` and `ds fmt` are built in-process on the parsed AST; do not shell out to external oxlint/oxfmt.
 - **One mapping rule per AST node kind** in `translator/`. Unmapped nodes must raise a diagnostic — never silently emit broken Rust.
 - **Diagnostics over panics** — collect errors, recover, and report as many as possible. Reserve `unwrap`/`panic!` for true invariants in tests.
 - **No logic in bindings** — `apps/ds` and the npm package are thin. If you are writing translation logic there, it belongs in the core crate.
