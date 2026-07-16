@@ -156,7 +156,7 @@ fn translate_body(
     narrow: &Narrow,
     return_path: Option<&Path>,
 ) -> Block {
-    let stmts: Vec<Stmt> = body
+    let mut stmts: Vec<Stmt> = body
         .map(|b| {
             b.statements
                 .iter()
@@ -164,7 +164,26 @@ fn translate_body(
                 .collect()
         })
         .unwrap_or_default();
+    // A trailing `return expr;` is the block's implicit value — emit it as a
+    // bare trailing expression (no `return`, no `;`) for idiomatic Rust and to
+    // keep clippy::needless_return quiet. A bare `return;` (void) stays as-is.
+    drop_trailing_return(&mut stmts);
     parse_quote!({ #(#stmts)* })
+}
+
+/// Replace a trailing `return expr;` with a bare `expr` (no `return`, no `;`)
+/// so the block's value is the expression — idiomatic Rust, and keeps
+/// clippy::needless_return quiet. A bare `return;` (void) is left untouched.
+fn drop_trailing_return(stmts: &mut [Stmt]) {
+    let trailing_value = match stmts.last() {
+        Some(Stmt::Expr(Expr::Return(ret), _)) => ret.expr.clone(),
+        _ => None,
+    };
+    if let Some(value) = trailing_value {
+        if let Some(slot) = stmts.last_mut() {
+            *slot = Stmt::Expr(*value, None);
+        }
+    }
 }
 
 /// Translate a function-body statement into zero or more `syn::Stmt`s.
@@ -366,8 +385,21 @@ fn translate_for_of(
     let Some(pat) = for_of_binding(&stmt.left) else {
         return vec![];
     };
-    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
+    // Translate the iterable before the body — `Ctx` borrows `locals`
+    // immutably while `statement_block` borrows it mutably, so they can't overlap.
+    let slice = match &stmt.right {
+        Expression::ArrayExpression(arr) => {
+            expressions::array_slice_expr(arr, &Ctx::new(&*locals, registry, narrow))
+        }
+        _ => None,
+    };
     let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
+    if let Some(slice) = slice {
+        // A spread-free inline array literal iterates as a borrowed slice
+        // `&[…]` (idiomatic; avoids clippy::useless_vec).
+        return vec![parse_quote!(for &#pat in #slice #body)];
+    }
+    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
     vec![parse_quote!(for &#pat in &#iter #body)]
 }
 
@@ -591,11 +623,12 @@ fn case_body(
     narrow: &Narrow,
     return_path: Option<&Path>,
 ) -> Block {
-    let rust: Vec<Stmt> = stmts
+    let mut rust: Vec<Stmt> = stmts
         .iter()
         .filter(|s| !matches!(s, Statement::BreakStatement(_)))
         .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
         .collect();
+    drop_trailing_return(&mut rust);
     parse_quote!({ #(#rust)* })
 }
 

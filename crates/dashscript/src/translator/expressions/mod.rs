@@ -180,10 +180,19 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
         .filter_map(|p| match p {
             ObjectPropertyKind::ObjectProperty(op) => {
                 let key = bindings::property_key_name(&op.key)?;
-                let mut value = translate_expr(&op.value, ctx);
-                // An optional field's supplied value is wrapped in `Some`.
                 let key_str = key.to_string();
-                if optionals.is_some_and(|s| s.contains(&key_str)) {
+                let is_optional = optionals.is_some_and(|s| s.contains(&key_str));
+                // Field-init shorthand: a non-optional `x: x` becomes `x`
+                // (value is the same-named bare identifier) for idiomatic Rust.
+                if !is_optional {
+                    if let Expression::Identifier(id) = &op.value {
+                        if bindings::snake(&id.name) == key {
+                            return Some(parse_quote!(#key));
+                        }
+                    }
+                }
+                let mut value = translate_expr(&op.value, ctx);
+                if is_optional {
                     value = parse_quote!(Some(#value));
                 }
                 Some(parse_quote!(#key: #value))
@@ -316,6 +325,21 @@ fn array_expr(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
     }
     let elems: Vec<Expr> = arr.elements.iter().filter_map(|e| array_element(e, ctx)).collect();
     parse_quote!(vec![#(#elems),*])
+}
+
+/// A spread-free inline array literal as a borrowed slice `&[…]`, for `for …
+/// in` iteration (idiomatic; avoids clippy::useless_vec). Returns `None` when
+/// the array has a spread (those need a `Vec` concat).
+pub(super) fn array_slice_expr(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    if arr
+        .elements
+        .iter()
+        .any(|e| matches!(e, ArrayExpressionElement::SpreadElement(_)))
+    {
+        return None;
+    }
+    let elems: Vec<Expr> = arr.elements.iter().filter_map(|e| array_element(e, ctx)).collect();
+    Some(parse_quote!(&[#(#elems),*]))
 }
 
 /// `[...xs, 4]` → `[xs.as_slice(), &[4.0][..]].concat()`: consecutive literals
@@ -545,16 +569,27 @@ fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     // `"k" in m` → key membership. A `Record`/HashMap uses `contains_key`; an
     // array (`Vec`) treats the left as an index bound: `(i as usize) < len`.
     if matches!(bin.operator, BinaryOperator::In) {
-        let key = translate_expr(&bin.left, ctx);
         let right = translate_expr(&bin.right, ctx);
         let is_vec = matches!(&bin.right, Expression::Identifier(id)
             if ctx.local_type(&bindings::snake(&id.name).to_string())
                 .and_then(|p| p.segments.last())
                 .is_some_and(|s| s.ident == "Vec"));
         return if is_vec {
+            let key = translate_expr(&bin.left, ctx);
             parse_quote!((#key as usize) < #right.len())
         } else {
-            parse_quote!(#right.contains_key(&#key))
+            // A string-literal key borrows as `&str` directly (a `HashMap` keys
+            // it via `Borrow<str>`); avoid the needless `.to_string()`.
+            match &bin.left {
+                Expression::StringLiteral(s) => {
+                    let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+                    parse_quote!(#right.contains_key(#lit))
+                }
+                _ => {
+                    let key = translate_expr(&bin.left, ctx);
+                    parse_quote!(#right.contains_key(&#key))
+                }
+            }
         };
     }
     // Bitwise `&`/`|`/`^` operate on `i32` in both TS and Rust; cast each f64
@@ -689,27 +724,47 @@ fn operand_is_string(expr: &Expression) -> bool {
     }
 }
 
-/// Flatten a `+` chain to its leaf operands (left to right) and emit
-/// `format!("{}", …)` with one `{}` placeholder per operand.
+/// Flatten a `+` chain to its leaf operands (left to right) and emit a single
+/// `format!(…)`. String-literal leaves fold into the format string as literal
+/// text; every other leaf is a `{}` placeholder — so `"a" + x + "b"` becomes
+/// `format!("a{}b", x)` with no needless `.to_string()`.
 fn string_concat(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
+    let mut leaves: Vec<&Expression> = Vec::new();
+    collect_leaves(&bin.left, &mut leaves);
+    collect_leaves(&bin.right, &mut leaves);
+    let mut fmt = String::new();
     let mut parts: Vec<Expr> = Vec::new();
-    flatten_add(&bin.left, &mut parts, ctx);
-    flatten_add(&bin.right, &mut parts, ctx);
-    let fmt = syn::LitStr::new(&"{}".repeat(parts.len()), Span::call_site());
-    parse_quote!(::std::format!(#fmt, #(#parts),*))
+    for leaf in leaves {
+        match leaf {
+            Expression::StringLiteral(s) => {
+                for ch in s.value.chars() {
+                    fmt.push(ch);
+                    if ch == '{' || ch == '}' {
+                        fmt.push(ch);
+                    }
+                }
+            }
+            _ => {
+                fmt.push_str("{}");
+                parts.push(translate_expr(leaf, ctx));
+            }
+        }
+    }
+    let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
+    parse_quote!(::std::format!(#fmt_lit, #(#parts),*))
 }
 
-/// Flatten a `+` chain, translating each leaf to `syn::Expr`. A non-`+`
-/// sub-expression (e.g. `a * b` inside a concat) is a leaf, translated as a whole.
-fn flatten_add(expr: &Expression, parts: &mut Vec<Expr>, ctx: &Ctx<'_>) {
+/// Flatten a `+` chain to its leaf operands (borrows, untranslated). A non-`+`
+/// sub-expression (e.g. `a * b` inside a concat) is one leaf.
+fn collect_leaves<'a>(expr: &'a Expression<'a>, leaves: &mut Vec<&'a Expression<'a>>) {
     if let Expression::BinaryExpression(bin) = expr {
         if matches!(bin.operator, BinaryOperator::Addition) {
-            flatten_add(&bin.left, parts, ctx);
-            flatten_add(&bin.right, parts, ctx);
+            collect_leaves(&bin.left, leaves);
+            collect_leaves(&bin.right, leaves);
             return;
         }
     }
-    parts.push(translate_expr(expr, ctx));
+    leaves.push(expr);
 }
 
 /// `&&`/`||` are a separate `LogicalExpression` in oxc (not `BinaryExpression`).
@@ -947,10 +1002,34 @@ fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
 /// its arguments to a plain Rust call expression.
 fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     if let Some(macro_name) = methods::console_method(&call.callee) {
-        let vals: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
-        let placeholders: String = vals.iter().map(|_| "{}").collect::<Vec<_>>().join(" ");
-        let fmt = syn::LitStr::new(&placeholders, Span::call_site());
-        return parse_quote!(::std::#macro_name!(#fmt, #(#vals),*));
+        // String-literal args fold into the format string as literal text
+        // (labels); every other arg is a `{}` placeholder. This emits
+        // `println!("a {}", v)` instead of `println!("{}", "a".to_string(), v)`
+        // — no needless `.to_string()` and no empty-format-string lint.
+        let mut fmt = String::new();
+        let mut vals: Vec<Expr> = Vec::new();
+        for (i, a) in call.arguments.iter().enumerate() {
+            if i > 0 {
+                fmt.push(' ');
+            }
+            match a {
+                Argument::StringLiteral(s) => {
+                    // Escape `{`/`}` so a literal brace isn't a placeholder.
+                    for ch in s.value.chars() {
+                        fmt.push(ch);
+                        if ch == '{' || ch == '}' {
+                            fmt.push(ch);
+                        }
+                    }
+                }
+                _ => {
+                    fmt.push_str("{}");
+                    vals.push(translate_argument(a, ctx));
+                }
+            }
+        }
+        let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
+        return parse_quote!(::std::#macro_name!(#fmt_lit, #(#vals),*));
     }
     // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
