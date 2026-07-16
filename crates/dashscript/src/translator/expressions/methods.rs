@@ -254,6 +254,12 @@ pub(super) fn string_method(
             let b = str_method_arg(args.get(1)?, ctx);
             parse_quote!(#obj.replacen(#a, #b, 1))
         }
+        // `.replaceAll(a, b)` → `replace` (all matches; TS `replace` does one).
+        "replaceAll" => {
+            let a = str_method_arg(args.first()?, ctx);
+            let b = str_method_arg(args.get(1)?, ctx);
+            parse_quote!(#obj.replace(#a, #b))
+        }
         "repeat" => {
             let n = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.repeat(#n))
