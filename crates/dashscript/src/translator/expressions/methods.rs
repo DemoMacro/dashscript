@@ -56,6 +56,16 @@ pub(super) fn array_method(
                 (None, _) => parse_quote!(#recv.clone()),
             }
         }
+        // `.at(i)` → element at signed index `i` (TS allows negatives to count
+        // from the end). `i` is `f64`; bind it once so a side-effecting index
+        // expression evaluates only once, then branch on its sign.
+        "at" => {
+            let idx = translate_argument(args.first()?, ctx);
+            parse_quote!({
+                let __at_i = #idx;
+                #recv[if __at_i >= 0.0 { __at_i as usize } else { (#recv.len() as f64 + __at_i) as usize }]
+            })
+        }
         // `.indexOf(x)` → first index of `x`, or -1 (TS returns a `number`).
         "indexOf" => {
             let needle = translate_argument(args.first()?, ctx);

@@ -595,6 +595,14 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_at_to_signed_runtime_index() {
+        let src = "function f(xs: number[], i: number): number { return xs.at(i); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("__at_i >= 0.0"), "got:\n{rust}");
+        assert!(rust.contains("len() as f64 + __at_i"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_for_each_to_for_each() {
         let src = "function f(): void { const xs: number[] = [1, 2]; xs.forEach((n) => console.log(n)); }";
         let rust = Translator::new().translate(src).expect("should translate");
