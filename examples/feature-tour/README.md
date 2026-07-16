@@ -35,6 +35,7 @@ circle area: 9
 square area: 16
 item name: widget
 item tag: new
+identity: 42
 hello, world
 true
 ababab
@@ -108,6 +109,7 @@ set: 42
 | `"hello".slice(1, 4)`                  | `….to_string()[1..4].to_string()`                     |
 | `"  ab".trimStart()`                   | `….trim_start()`                                      |
 | `"hello".charAt(1)`                    | `….chars().nth(…).map(to_string).unwrap_or_default()` |
+| `function id<T>(x: T): T`              | `fn id<T>(x: T) -> T`                                 |
 | `(n) => n * n`                         | `\|n\| n * n`                                         |
 | `xs.map((n) => n * 2)`                 | `xs.iter().copied().map(\|n\| …).collect()`           |
 | `xs.filter((n) => n > 1)`              | `xs.iter().copied().filter(\|&n\| …).collect()`       |

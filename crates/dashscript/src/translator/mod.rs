@@ -103,6 +103,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_generic_function_params() {
+        let src = "function id<T>(x: T): T { return x; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("fn id<T>(x: T) -> T"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_array_type_to_vec() {
         let src = "interface Box { items: number[]; ids: Array<string>; }";
         let rust = Translator::new().translate(src).expect("should translate");

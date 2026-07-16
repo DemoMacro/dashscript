@@ -60,8 +60,22 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         &Narrow::default(),
         return_path.as_ref(),
     );
-    parse_quote! {
-        fn #name(#(#inputs),*) #output #block
+    // Generic type parameters pass through verbatim (`<T>`); Rust monomorphizes
+    // and infers each call. Constraints/defaults are ignored (no `where`).
+    let generics: Vec<Ident> = func
+        .type_parameters
+        .as_deref()
+        .map_or_else(Vec::new, |tp| {
+            tp.params.iter().map(|p| bindings::type_ident(&p.name.name)).collect()
+        });
+    if generics.is_empty() {
+        parse_quote! {
+            fn #name(#(#inputs),*) #output #block
+        }
+    } else {
+        parse_quote! {
+            fn #name<#(#generics),*>(#(#inputs),*) #output #block
+        }
     }
 }
 

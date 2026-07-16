@@ -45,6 +45,10 @@ function area(s: Shape): number {
   }
 }
 
+function identity<T>(x: T): T {
+  return x;
+}
+
 function main(): void {
   const v: Vector = { x: 3, y: 4 };
   console.log("magnitude:", magnitude(v));
@@ -98,6 +102,9 @@ function main(): void {
   console.log("item name:", widget.name);
   const tagged: Item = { name: "gadget", tag: "new" };
   console.log("item tag:", tagged.tag!);
+
+  // generic function: `<T>` passes through; Rust monomorphizes each call
+  console.log("identity:", identity(42));
 
   // string methods + concatenation
   const greeting = "Hello, World";
