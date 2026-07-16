@@ -217,6 +217,9 @@ function main(): void {
   const pair: number[] = [10, 20];
   const [first, second] = pair;
   console.log("array destructure:", first, second);
+  // array destructure with a hole: the middle position is skipped (xs[1])
+  const [, midSkip] = xs;
+  console.log("hole skip:", midSkip);
   // array destructuring with rest: `...rest` → the remaining slice as a Vec
   const [head, ...tail] = xs;
   console.log("rest destructure:", head, tail.length);

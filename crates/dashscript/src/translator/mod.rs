@@ -1092,6 +1092,15 @@ mod tests {
     }
 
     #[test]
+    fn translates_array_destructure_skips_holes() {
+        let src = "function f(xs: number[]): void { const [a, , c] = xs; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("xs[0]"), "got:\n{rust}");
+        assert!(rust.contains("xs[2]"), "got:\n{rust}");
+        assert!(!rust.contains("xs[1]"), "hole must be skipped");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");
