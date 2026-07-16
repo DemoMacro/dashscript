@@ -516,4 +516,13 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".find(\"ll\").map(|b| b as f64).unwrap_or(-1.0)"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_record_to_hashmap_literal() {
+        let src = "function f(): void { const m: Record<string, number> = { a: 1, b: 2 }; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("HashMap<String, f64>"), "got:\n{rust}");
+        assert!(rust.contains("HashMap::from"), "got:\n{rust}");
+        assert!(rust.contains("\"a\".to_string()"), "got:\n{rust}");
+    }
 }

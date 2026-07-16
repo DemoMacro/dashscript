@@ -138,6 +138,10 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
     let Some(path) = ty_hint.and_then(types::type_path) else {
         return parse_quote!(::core::todo!());
     };
+    // `Record<K, V>` (a `HashMap`) → `HashMap::from([(key, value), …])`.
+    if is_hashmap(path) {
+        return hashmap_literal(obj, ctx);
+    }
     if let Some(expr) = variant_construct(obj, path, ctx) {
         return expr;
     }
@@ -152,6 +156,28 @@ fn object_expr(obj: &ObjectExpression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) ->
         })
         .collect();
     parse_quote!(#path { #(#fields),* })
+}
+
+/// True when `path` names a `HashMap` (the target of a `Record<K, V>`).
+fn is_hashmap(path: &syn::Path) -> bool {
+    path.segments.last().is_some_and(|s| s.ident == "HashMap")
+}
+
+/// `{ a: 1, b: 2 }` as a `HashMap` → `HashMap::from([("a".to_string(), 1.0), …])`.
+/// Keys are the `.ds` property names, owned so the map outlives the literal.
+fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
+    let entries: Vec<Expr> = obj
+        .properties
+        .iter()
+        .filter_map(|p| {
+            let ObjectPropertyKind::ObjectProperty(op) = p else { return None };
+            let key = bindings::property_key_name(&op.key)?;
+            let key_str = key.to_string();
+            let value = translate_expr(&op.value, ctx);
+            Some(parse_quote!((#key_str.to_string(), #value)))
+        })
+        .collect();
+    parse_quote!(::std::collections::HashMap::from([#(#entries),*]))
 }
 
 /// `{ kind: "circle", radius: 2 }` → `Shape::Circle { radius: 2.0 }` when `path`

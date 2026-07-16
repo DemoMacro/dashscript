@@ -38,6 +38,17 @@ fn reference_type(r: &TSTypeReference) -> Type {
             return parse_quote!(Vec<#inner_ty>);
         }
     }
+    // `Record<K, V>` → `HashMap<K, V>` (the TS record/map type).
+    if name == "Record" {
+        if let Some(args) = r.type_arguments.as_ref() {
+            let ps = &args.params;
+            if ps.len() == 2 {
+                let k_ty = translate_type(&ps[0]);
+                let v_ty = translate_type(&ps[1]);
+                return parse_quote!(::std::collections::HashMap<#k_ty, #v_ty>);
+            }
+        }
+    }
     let ident = format_ident!("{}", name);
     parse_quote!(#ident)
 }

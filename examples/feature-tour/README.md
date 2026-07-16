@@ -20,6 +20,7 @@ magnitude: 5
 makeVector: 5 6
 destructured: 7 8
 sum: 7
+record size: 2
 2^10: 1024
 kinds: linear rotational
 magnitude 2.23606797749979 => small
@@ -48,6 +49,8 @@ set: 42
 | `.ds`                                  | Rust                                            |
 | -------------------------------------- | ----------------------------------------------- |
 | `interface Vector { … }`               | `struct Vector { … }`                           |
+| `Record<string, number>`               | `HashMap<String, f64>`                          |
+| `{ alice: 90, … }` (Record)            | `HashMap::from([(…, …)])`                       |
 | `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                         |
 | `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                      |
 | `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                      |
