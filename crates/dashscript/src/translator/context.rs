@@ -72,7 +72,14 @@ impl<'a> Ctx<'a> {
     /// `type_name`, if that type is a registered discriminated union.
     #[must_use]
     pub fn variant(&self, type_name: &str, kind: &str) -> Option<&'a VariantShape> {
-        self.registry.get(type_name)?.get(kind)
+        self.registry.unions.get(type_name)?.get(kind)
+    }
+
+    /// The parameter type paths declared by the function named `name` (original
+    /// `.ds` spelling), if any. Each entry is `None` for an unannotated param.
+    #[must_use]
+    pub fn function_params(&self, name: &str) -> Option<&'a [Option<Path>]> {
+        self.registry.functions.get(name).map(Vec::as_slice)
     }
 
     /// True when `scrut.field` (both snake-cased) is narrowed to an arm binding

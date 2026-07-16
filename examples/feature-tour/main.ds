@@ -15,6 +15,10 @@ function makeVector(x: number, y: number): Vector {
   return { x: x, y: y };
 }
 
+function sum(v: Vector): number {
+  return v.x + v.y;
+}
+
 function label(kind: Kind): string {
   switch (kind) {
     case "linear": return "linear";
@@ -47,6 +51,9 @@ function main(): void {
   const dv: Vector = makeVector(7, 8);
   const { x, y } = dv;
   console.log("destructured:", x, y);
+
+  // object literal as an argument (borrows its name from the param type)
+  console.log("sum:", sum({ x: 3, y: 4 }));
   console.log("2^10:", 2 ** 10);
 
   const lin: Kind = "linear";

@@ -19,6 +19,7 @@ Output:
 magnitude: 5
 makeVector: 5 6
 destructured: 7 8
+sum: 7
 2^10: 1024
 kinds: linear rotational
 magnitude 2.23606797749979 => small
@@ -47,6 +48,7 @@ set: 42
 | `interface Vector { … }`               | `struct Vector { … }`                           |
 | `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                         |
 | `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                      |
+| `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                      |
 | `type Kind = "a" \| "b"`               | `enum Kind { A, B }`                            |
 | `switch (kind) { case … }`             | `match kind { Kind::A => … }`                   |
 | `{ kind: "c"; r } \| { kind: "s"; s }` | `enum Shape { Circle { r }, Square { s } }`     |

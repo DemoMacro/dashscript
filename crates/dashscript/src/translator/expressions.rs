@@ -13,7 +13,7 @@ use oxc_syntax::operator::{
 };
 use proc_macro2::Span;
 use quote::{format_ident, quote};
-use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Pat, Type, UnOp};
+use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Pat, Path, Type, UnOp};
 
 use super::context::Ctx;
 use super::{bindings, types};
@@ -71,6 +71,16 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         _ => parse_quote!(::core::todo!()),
     }
+}
+
+/// Translate a call argument; an object literal borrows its struct name from
+/// the callee's declared parameter type (when known). Other arguments fall
+/// through to [`translate_argument`].
+pub fn translate_argument_init(arg: &Argument, hint: Option<&Type>, ctx: &Ctx<'_>) -> Expr {
+    if let Argument::ObjectExpression(obj) = arg {
+        return object_expr(obj, hint, ctx);
+    }
+    translate_argument(arg, ctx)
 }
 
 /// Translate an initializer; an object literal borrows its struct name from
@@ -669,7 +679,23 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         }
     }
     let callee = translate_expr(&call.callee, ctx);
-    let args: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
+    // `f({ x, y })` borrows the struct name from `f`'s declared parameter type.
+    let hints: Option<&[Option<Path>]> = match &call.callee {
+        Expression::Identifier(id) => ctx.function_params(&id.name),
+        _ => None,
+    };
+    let args: Vec<Expr> = call
+        .arguments
+        .iter()
+        .enumerate()
+        .map(|(i, a)| {
+            let hint_ty = hints
+                .and_then(|h| h.get(i))
+                .and_then(|opt| opt.as_ref())
+                .map(|p| -> Type { parse_quote!(#p) });
+            translate_argument_init(a, hint_ty.as_ref(), ctx)
+        })
+        .collect();
     parse_quote!(#callee(#(#args),*))
 }
 

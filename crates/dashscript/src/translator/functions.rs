@@ -390,7 +390,7 @@ fn discriminant_member(
     };
     let scrut = bindings::snake(&obj.name).to_string();
     let type_name = locals.get(&scrut)?.segments.last()?.ident.to_string();
-    registry.contains_key(&type_name).then_some((scrut, type_name))
+    registry.unions.contains_key(&type_name).then_some((scrut, type_name))
 }
 
 /// `switch (s.kind) { case "circle": … }` → `match s { Shape::Circle { radius } => … }`.
@@ -427,7 +427,7 @@ fn discriminated_arm(
     let (pat, narrow) = match &c.test {
         Some(Expression::StringLiteral(s)) => {
             let value = s.value.to_string();
-            let shape = registry.get(type_name)?.get(&value)?.clone();
+            let shape = registry.unions.get(type_name)?.get(&value)?.clone();
             let type_ident = format_ident!("{}", type_name);
             let variant = shape.name;
             let field_idents: Vec<Ident> = shape.fields.clone();

@@ -493,4 +493,12 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("let V { x, y } = v;"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_object_literal_argument_to_struct_init() {
+        let src = "interface V { x: number; y: number; } function g(v: V): number { return v.x; } function f(): number { return g({ x: 1, y: 2 }); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `f({ x, y })` borrows the struct name from the callee's parameter type.
+        assert!(rust.contains("g(V { x: 1.0, y: 2.0 })"), "got:\n{rust}");
+    }
 }
