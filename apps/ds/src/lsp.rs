@@ -21,7 +21,7 @@ use lsp_server::{Connection, Message, Notification, Request, RequestId, Response
 use lsp_types::{
     ClientCapabilities, Diagnostic, DiagnosticSeverity,
     DidChangeTextDocumentParams, DidOpenTextDocumentParams, GotoDefinitionParams,
-    GotoDefinitionResponse, InitializeParams,
+    GotoDefinitionResponse, InitializeParams, Location,
     OneOf, Position, PublishDiagnosticsParams, Range, ServerCapabilities,
     TextDocumentItem, TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
 };
@@ -182,8 +182,24 @@ impl Server {
         let tdp = &params.text_document_position_params;
         let uri = &tdp.text_document.uri;
         let text = self.docs.get(uri.as_str())?.clone();
-        let (module, symbol) = locate_import(&text, tdp.position)?;
-        self.refresh(uri, &text);
+        // A crate import specifier is resolved by rust-analyzer; anything else
+        // (a local function/type/interface/import binding) is resolved in-file.
+        if let Some((module, symbol)) = locate_import(&text, tdp.position) {
+            self.definition_via_ra(uri, &text, module, symbol)
+        } else {
+            self.definition_local(uri, &text, tdp.position)
+        }
+    }
+
+    /// Forward an import specifier to rust-analyzer → the crate's `~/.cargo` source.
+    fn definition_via_ra(
+        &mut self,
+        uri: &Uri,
+        text: &str,
+        module: String,
+        symbol: String,
+    ) -> Option<Value> {
+        self.refresh(uri, text);
         let cache = self.cache_dir(uri)?;
         let main_rs = cache.join("src").join("main.rs");
         let main_text = std::fs::read_to_string(&main_rs).ok()?;
@@ -192,6 +208,16 @@ impl Server {
         let ra = self.ra.as_ref()?;
         let resp = ra.definition(main_uri.as_str(), rust_pos).ok()?;
         serde_json::to_value(resp).ok()
+    }
+
+    /// Resolve an in-file reference to a local declaration — a function, type,
+    /// interface, or import binding — in the same `.ds` document.
+    fn definition_local(&self, uri: &Uri, text: &str, pos: Position) -> Option<Value> {
+        let byte = position_to_byte(text, pos)?;
+        let word = word_at(text, byte)?;
+        let decl = Translator::new().declarations(text).into_iter().find(|d| d.name == word)?;
+        let range = byte_range(text, decl.span.start, decl.span.end - decl.span.start);
+        serde_json::to_value(GotoDefinitionResponse::Scalar(Location { uri: uri.clone(), range })).ok()
     }
 }
 
@@ -386,6 +412,23 @@ fn find_word_col(line: &str, word: &str) -> Option<u32> {
     None
 }
 
+/// The identifier covering `byte` in `text`, if the cursor sits on one.
+fn word_at(text: &str, byte: usize) -> Option<String> {
+    let bytes = text.as_bytes();
+    if byte >= bytes.len() || !is_ident_byte(bytes[byte]) {
+        return None;
+    }
+    let mut start = byte;
+    while start > 0 && is_ident_byte(bytes[start - 1]) {
+        start -= 1;
+    }
+    let mut end = byte;
+    while end < bytes.len() && is_ident_byte(bytes[end]) {
+        end += 1;
+    }
+    Some(text[start..end].to_string())
+}
+
 fn is_ident_byte(b: u8) -> bool {
     b.is_ascii_alphanumeric() || b == b'_'
 }
@@ -427,33 +470,13 @@ fn byte_to_position(text: &str, byte_offset: usize) -> Position {
 }
 
 fn uri_to_path(uri: &Uri) -> Option<PathBuf> {
-    let s = uri.as_str();
-    let path = s.strip_prefix("file://").unwrap_or(s);
-    // Windows drive: `file:///E:/…` → drop the leading `/` before the drive letter.
-    let path = if path.starts_with('/')
-        && path.as_bytes().get(1).is_some_and(|c| c.is_ascii_alphabetic())
-        && path.as_bytes().get(2) == Some(&b':')
-    {
-        &path[1..]
-    } else {
-        path
-    };
-    Some(PathBuf::from(path))
+    url::Url::parse(uri.as_str()).ok()?.to_file_path().ok()
 }
 
 fn path_to_uri(path: &Path) -> Result<Uri, Box<dyn Error>> {
-    let abs = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
-    let s = abs.to_str().ok_or("non-utf8 path")?;
-    // Strip the `\\?\` verbatim prefix `canonicalize` adds on Windows; a file
-    // URI carrying it (`file:////?/C:/…`) is rejected by rust-analyzer.
-    let s = s.strip_prefix(r"\\?\").unwrap_or(s);
-    let normalized = s.replace('\\', "/");
-    let uri_str = if normalized.starts_with('/') {
-        format!("file://{normalized}")
-    } else {
-        format!("file:///{normalized}")
-    };
-    Ok(uri_str.parse::<Uri>().map_err(|e| format!("bad file uri {uri_str}: {e}"))?)
+    let url = url::Url::from_file_path(path)
+        .map_err(|_| format!("not an absolute file path: {}", path.display()))?;
+    Ok(url.as_str().parse::<Uri>()?)
 }
 
 #[cfg(test)]
@@ -510,11 +533,18 @@ mod tests {
 
     #[test]
     fn path_to_uri_has_no_verbatim_prefix() {
-        // On Windows `canonicalize` prefixes `\\?\`; the URI must not leak it,
-        // or rust-analyzer rejects `file:////?/C:/…` with "url is not a file".
         let uri = path_to_uri(&std::env::temp_dir()).unwrap();
         let s = uri.as_str();
         assert!(s.starts_with("file:///"), "bad scheme: {s}");
         assert!(!s.contains("//?/"), "verbatim prefix leaked: {s}");
+    }
+
+    #[test]
+    fn word_at_extracts_identifier_under_cursor() {
+        let text = "const x = foo();";
+        // `foo` spans bytes 10..13.
+        assert_eq!(word_at(text, 10).as_deref(), Some("foo"));
+        assert_eq!(word_at(text, 12).as_deref(), Some("foo"));
+        assert_eq!(word_at(text, 13), None); // `(` is not an ident char
     }
 }

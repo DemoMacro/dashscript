@@ -105,3 +105,15 @@ fn import_default_type_keeps_pascalcase() {
         .expect("should translate");
     assert!(rust.contains("use serde::Foo"), "got: {rust}");
 }
+
+#[test]
+fn declarations_list_local_bindings() {
+    let decls = Translator::new().declarations(
+        "function foo() {}\ninterface Bar {}\ntype Baz = number\nimport { qux } from \"./other\";",
+    );
+    let names: Vec<&str> = decls.iter().map(|d| d.name.as_str()).collect();
+    assert!(names.contains(&"foo"), "missing foo: {names:?}");
+    assert!(names.contains(&"Bar"), "missing Bar: {names:?}");
+    assert!(names.contains(&"Baz"), "missing Baz: {names:?}");
+    assert!(names.contains(&"qux"), "missing qux: {names:?}");
+}

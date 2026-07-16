@@ -6,7 +6,7 @@
 //! lowers to `use serde::X` — see [`module_ident`].
 
 use oxc_allocator::Allocator;
-use oxc_ast::ast::{ImportDeclarationSpecifier, Statement};
+use oxc_ast::ast::{BindingIdentifier, Declaration, ImportDeclarationSpecifier, Statement};
 use oxc_parser::Parser;
 use oxc_span::{SourceType, Span};
 use syn::Ident;
@@ -145,4 +145,74 @@ pub(crate) fn collect_crate_imports(source: &str) -> Vec<CrateImport> {
             Some(CrateImport { module, symbols })
         })
         .collect()
+}
+
+/// A locally declarable name — `function`, `interface`, `type`, an `export`ed
+/// form, or an `import` binding — with the byte span of its binding. Used by
+/// `ds lsp` for in-file go-to-definition (the rust-analyzer backend handles
+/// crate imports; this handles everything declared inside the `.ds` file).
+#[derive(Debug, Clone)]
+pub struct LocalSymbol {
+    /// The bound name as written in `.ds` (e.g. `foo`, `Point`).
+    pub name: String,
+    /// The `.ds` byte span of the binding identifier.
+    pub span: Span,
+}
+
+/// Every declarable name in a `.ds` file with its binding span.
+pub(crate) fn collect_declarations(source: &str) -> Vec<LocalSymbol> {
+    let allocator = Allocator::default();
+    let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+    let mut out = Vec::new();
+    for stmt in &ret.program.body {
+        collect_from_statement(stmt, &mut out);
+    }
+    out
+}
+
+fn collect_from_statement(stmt: &Statement, out: &mut Vec<LocalSymbol>) {
+    match stmt {
+        Statement::FunctionDeclaration(f) => extend_binding(&f.id, out),
+        Statement::TSInterfaceDeclaration(i) => out.push(symbol(&i.id)),
+        Statement::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id)),
+        Statement::ImportDeclaration(imp) => {
+            if let Some(specs) = &imp.specifiers {
+                for spec in specs {
+                    let local = match spec {
+                        ImportDeclarationSpecifier::ImportSpecifier(s) => Some(&s.local),
+                        ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => Some(&s.local),
+                        ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => None,
+                    };
+                    if let Some(local) = local {
+                        out.push(LocalSymbol { name: local.name.to_string(), span: local.span });
+                    }
+                }
+            }
+        }
+        Statement::ExportNamedDeclaration(exp) => {
+            if let Some(decl) = &exp.declaration {
+                collect_from_declaration(decl, out);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn collect_from_declaration(decl: &Declaration, out: &mut Vec<LocalSymbol>) {
+    match decl {
+        Declaration::FunctionDeclaration(f) => extend_binding(&f.id, out),
+        Declaration::TSInterfaceDeclaration(i) => out.push(symbol(&i.id)),
+        Declaration::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id)),
+        _ => {}
+    }
+}
+
+fn extend_binding(id: &Option<BindingIdentifier>, out: &mut Vec<LocalSymbol>) {
+    if let Some(id) = id {
+        out.push(symbol(id));
+    }
+}
+
+fn symbol(id: &BindingIdentifier) -> LocalSymbol {
+    LocalSymbol { name: id.name.to_string(), span: id.span }
 }

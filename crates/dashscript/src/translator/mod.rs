@@ -104,6 +104,14 @@ impl Translator {
     pub fn crate_imports(&self, source: &str) -> Vec<imports::CrateImport> {
         imports::collect_crate_imports(source)
     }
+
+    /// The locally declarable names in a `.ds` file (`function`, `interface`,
+    /// `type`, `export`, `import`), each with its binding byte span. Used by
+    /// `ds lsp` for in-file go-to-definition (everything but crate imports).
+    #[must_use]
+    pub fn declarations(&self, source: &str) -> Vec<imports::LocalSymbol> {
+        imports::collect_declarations(source)
+    }
 }
 
 #[cfg(test)]
