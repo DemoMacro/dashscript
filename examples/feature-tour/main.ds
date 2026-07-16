@@ -65,6 +65,7 @@ function main(): void {
   prices["banana"] = 2;
   console.log("prices size:", prices.length);
   console.log("2^10:", 2 ** 10);
+  console.log("trig:", Math.sin(0), Math.cos(0));
 
   const lin: Kind = "linear";
   const rot: Kind = "rotational";

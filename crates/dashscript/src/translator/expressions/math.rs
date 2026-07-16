@@ -12,7 +12,8 @@ use super::translate_argument;
 /// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
 pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     match name {
-        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp" | "ln" => {
+        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp" | "ln"
+        | "log10" | "log2" | "sin" | "cos" | "tan" | "asin" | "acos" | "atan" | "cbrt" => {
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, name, Vec::new()))
         }
@@ -25,6 +26,12 @@ pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Optio
             let a = math_receiver(args.first()?, ctx);
             let b = translate_argument(args.get(1)?, ctx);
             Some(method_call(a, "powf", vec![b]))
+        }
+        // `Math.atan2(y, x)` → `y.atan2(x)` (2-arg, unlike the 1-arg `atan`).
+        "atan2" => {
+            let y = math_receiver(args.first()?, ctx);
+            let x = translate_argument(args.get(1)?, ctx);
+            Some(method_call(y, "atan2", vec![x]))
         }
         _ => None,
     }

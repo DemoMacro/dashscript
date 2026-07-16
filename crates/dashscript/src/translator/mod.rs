@@ -664,4 +664,20 @@ mod tests {
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("for k in m.keys().cloned()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_math_trig_and_log_methods() {
+        let src = "function f(x: number): number { return Math.sin(x) + Math.log10(x) + Math.cbrt(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".sin("), "got:\n{rust}");
+        assert!(rust.contains(".log10("), "got:\n{rust}");
+        assert!(rust.contains(".cbrt("), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_math_atan2_to_atan2() {
+        let src = "function f(y: number, x: number): number { return Math.atan2(y, x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".atan2("), "got:\n{rust}");
+    }
 }

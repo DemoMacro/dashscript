@@ -24,6 +24,7 @@ record size: 2
 alice: 90
 prices size: 2
 2^10: 1024
+trig: 0 1
 kinds: linear rotational
 magnitude 2.23606797749979 => small
 updated: 99 5
@@ -80,6 +81,7 @@ set: 42
 | `{ kind: "c"; r } \| { kind: "s"; s }` | `enum Shape { Circle { r }, Square { s } }`     |
 | `switch (s.kind) { case …: s.r }`      | `match s { Shape::Circle { r } => r }`          |
 | `Math.sqrt(…)`, `x ** 2`               | `….sqrt()`, `x.powf(2.0)`                       |
+| `Math.sin(…)`, `Math.atan2(y, x)`      | `….sin()`, `….atan2(…)`                         |
 | `String(42)`                           | `format!("{}", 42.0)`                           |
 | `parseInt("100")`                      | `….trim().parse::<f64>().unwrap()`              |
 | `a + b + " => " + …`                   | `format!("{}{}{}{}", …)` (string concat)        |
