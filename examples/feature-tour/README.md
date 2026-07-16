@@ -45,6 +45,7 @@ ababab
 split: 3
 str indexOf: 2
 as string: 42
+number: 3.14
 parsed: 100
 sliced str: ell
 trimmed: ab
@@ -108,6 +109,7 @@ set: 42
 | `~a`                                   | `!(a as i32) as f64`                                       |
 | `String(42)`                           | `format!("{}", 42.0)`                                      |
 | `parseInt("100")`                      | `….trim().parse::<f64>().unwrap()`                         |
+| `Number("3.14")` (string)              | `….trim().parse::<f64>().unwrap()`                         |
 | `a + b + " => " + …`                   | `format!("{}{}{}{}", …)` (string concat)                   |
 | `cond ? "a" : "b"`                     | `if cond { … } else { … }`                                 |
 | `s.toLowerCase()`, `.includes`         | `.to_lowercase()`, `.contains(…)`                          |

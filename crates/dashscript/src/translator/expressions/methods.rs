@@ -306,8 +306,25 @@ pub(super) fn global_function(
             let a = translate_argument(args.first()?, ctx);
             parse_quote!(#a.trim().parse::<f64>().unwrap())
         }
+        // `Number(s)` parses a string; `Number(n)` passes a number through.
+        "Number" => {
+            let a = args.first()?;
+            let e = translate_argument(a, ctx);
+            if matches!(a, Argument::StringLiteral(_)) || ident_string_local(a, ctx) {
+                parse_quote!(#e.trim().parse::<f64>().unwrap())
+            } else {
+                e
+            }
+        }
         _ => return None,
     })
+}
+
+/// True when `arg` is an identifier bound to a `string` local.
+fn ident_string_local(arg: &Argument, ctx: &Ctx<'_>) -> bool {
+    let Argument::Identifier(id) = arg else { return false };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|p| p.is_ident("String"))
 }
 
 /// The Rust macro for a `console.<m>(…)` call: `log` → `println!`, `warn`/

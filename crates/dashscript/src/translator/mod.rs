@@ -745,6 +745,27 @@ mod tests {
     }
 
     #[test]
+    fn translates_number_global_string_to_parse() {
+        let src = "function f(): number { return Number(\"42\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("\"42\".to_string().trim().parse::<f64>().unwrap()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_number_global_string_var_to_parse() {
+        let src = "function f(s: string): number { return Number(s); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("s.trim().parse::<f64>().unwrap()"), "got:\n{rust}");
+    }
+
+    #[test]
+    fn translates_number_global_number_passes_through() {
+        let src = "function f(n: number): number { return Number(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("return n;"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_throw_new_error_to_panic() {
         let src = "function f(): void { throw new Error(\"boom\"); }";
         let rust = Translator::new().translate(src).expect("should translate");

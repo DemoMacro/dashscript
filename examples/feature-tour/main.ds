@@ -131,6 +131,7 @@ function main(): void {
 
   // global conversion: `String(x)` → `format!`; `parseInt(s)` → `s.parse()`
   console.log("as string:", String(42));
+  console.log("number:", Number("3.14"));
   console.log("parsed:", parseInt("100"));
   console.log("sliced str:", "hello".slice(1, 4));
   console.log("trimmed:", "  ab".trimStart());
