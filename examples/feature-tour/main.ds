@@ -75,6 +75,8 @@ function main(): void {
   // Object.keys/values on a Record (HashMap) → its keys/values as Vecs
   console.log("keys:", Object.keys(scores).length);
   console.log("values:", Object.values(scores).length);
+  // `key in record` → HashMap::contains_key
+  console.log("has alice:", "alice" in scores);
 
   // mutable map: `m["k"] = v` → `m.insert("k".to_string(), v)`
   let prices: Record<string, number> = { apple: 3 };

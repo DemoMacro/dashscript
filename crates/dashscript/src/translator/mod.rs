@@ -412,6 +412,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_in_operator_to_contains_key() {
+        let src = "function f(m: Record<string, number>): boolean { return \"k\" in m; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".contains_key(&"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_c_style_for_loop() {
         let src = "function f(): void { let total = 0; for (let i = 0; i < 5; i++) { total += i; } console.log(total); }";
         let rust = Translator::new().translate(src).expect("should translate");

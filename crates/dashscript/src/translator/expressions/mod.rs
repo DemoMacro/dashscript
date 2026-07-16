@@ -537,6 +537,13 @@ fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
         let exp = translate_expr(&bin.right, ctx);
         return parse_quote!(#base.powf(#exp));
     }
+    // `"k" in m` → `m.contains_key(&k)` (a `Record`/HashMap key check). `in`
+    // on a struct or array is unsupported.
+    if matches!(bin.operator, BinaryOperator::In) {
+        let key = translate_expr(&bin.left, ctx);
+        let map = translate_expr(&bin.right, ctx);
+        return parse_quote!(#map.contains_key(&#key));
+    }
     // Bitwise `&`/`|`/`^` operate on `i32` in both TS and Rust; cast each f64
     // operand down and the result back up to `.ds`'s `number` (`f64`).
     if let Some(expr) = bitwise_expr(bin, ctx) {
