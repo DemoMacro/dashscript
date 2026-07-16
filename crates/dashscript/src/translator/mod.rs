@@ -319,6 +319,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_to_string_to_display() {
+        let src = "function f(n: number): string { return n.toString(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".to_string()"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_length_to_len() {
         let src = "function f(): void { let n = \"hi\".length; }";
         let rust = Translator::new().translate(src).expect("should translate");

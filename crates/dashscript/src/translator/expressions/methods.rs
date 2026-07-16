@@ -217,6 +217,9 @@ pub(super) fn map_method(name: &str) -> Option<Ident> {
         "trimEnd" => "trim_end",
         "push" => "push",
         "pop" => "pop",
+        // `.toString()` → `.to_string()` (Rust's `Display`); a radix argument
+        // (`(255).toString(16)`) is unsupported.
+        "toString" => "to_string",
         _ => return None,
     };
     Some(format_ident!("{}", mapped))
