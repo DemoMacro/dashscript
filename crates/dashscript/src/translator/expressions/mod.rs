@@ -273,11 +273,17 @@ fn pow_receiver(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
     translate_expr(expr, ctx)
 }
 
-/// `arr[i]` → `arr[i as usize]`. A `.ds` index is `f64`; Rust indexes by
-/// `usize`, so the index is cast. Bounds are unchecked (panics out of range) —
-/// a safe `.get`-based mapping can come later.
+/// `arr[i]` → `arr[i as usize]`; `m["k"]` on a `HashMap` →
+/// `m.get("k").copied().unwrap()`. A `.ds` index is `f64`; Rust indexes by
+/// `usize`, so the Vec/array index is cast. A HashMap key is looked up with
+/// `.get` (typed: the key is assumed present, so `unwrap` panics if absent —
+/// matching the non-optional type).
 fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> Expr {
     let obj = translate_expr(&cm.object, ctx);
+    if is_hashmap_local(&cm.object, ctx) {
+        let key = index_key(&cm.expression, ctx);
+        return parse_quote!(#obj.get(#key).copied().unwrap());
+    }
     let idx = translate_expr(&cm.expression, ctx);
     let idx = Expr::Cast(syn::ExprCast {
         attrs: Vec::new(),
@@ -286,6 +292,26 @@ fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> Expr {
         ty: Box::new(parse_quote!(usize)),
     });
     parse_quote!(#obj[#idx])
+}
+
+/// True when `expr` is a local whose type is a `HashMap`.
+fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(is_hashmap)
+}
+
+/// A HashMap key: a string literal stays bare (a `&str` for `HashMap::get`);
+/// any other expression gets `.as_str()`.
+fn index_key(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
+    if let Expression::StringLiteral(s) = expr {
+        let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+        return parse_quote!(#lit);
+    }
+    let e = translate_expr(expr, ctx);
+    parse_quote!(#e.as_str())
 }
 
 fn ident_expr(id: &IdentifierReference) -> Expr {

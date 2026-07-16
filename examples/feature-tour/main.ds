@@ -58,6 +58,7 @@ function main(): void {
   // Record (a map type) → HashMap
   const scores: Record<string, number> = { alice: 90, bob: 85 };
   console.log("record size:", scores.length);
+  console.log("alice:", scores["alice"]);
   console.log("2^10:", 2 ** 10);
 
   const lin: Kind = "linear";

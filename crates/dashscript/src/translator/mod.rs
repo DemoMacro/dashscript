@@ -525,4 +525,11 @@ mod tests {
         assert!(rust.contains("HashMap::from"), "got:\n{rust}");
         assert!(rust.contains("\"a\".to_string()"), "got:\n{rust}");
     }
+
+    #[test]
+    fn translates_hashmap_index_to_get() {
+        let src = "function f(): number { const m: Record<string, number> = { a: 1 }; return m[\"a\"]; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".get(\"a\").copied().unwrap()"), "got:\n{rust}");
+    }
 }

@@ -21,6 +21,7 @@ makeVector: 5 6
 destructured: 7 8
 sum: 7
 record size: 2
+alice: 90
 2^10: 1024
 kinds: linear rotational
 magnitude 2.23606797749979 => small
@@ -51,6 +52,7 @@ set: 42
 | `interface Vector { … }`               | `struct Vector { … }`                           |
 | `Record<string, number>`               | `HashMap<String, f64>`                          |
 | `{ alice: 90, … }` (Record)            | `HashMap::from([(…, …)])`                       |
+| `m["k"]` (HashMap)                     | `m.get("k").copied().unwrap()`                  |
 | `return { x, y }` (typed return)       | `Vector { x: …, y: … }`                         |
 | `const { x, y } = v` (typed source)    | `let Vector { x, y } = v;`                      |
 | `f({ x, y })` (typed param)            | `f(Vector { x: …, y: … })`                      |
