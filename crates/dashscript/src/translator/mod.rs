@@ -978,6 +978,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_string_from_char_code_to_char() {
+        let src = "function f(): string { return String.fromCharCode(65); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("char::from_u32("), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_console_warn_to_eprintln() {
         let src = "function f(): void { console.warn(\"careful\"); }";
         let rust = Translator::new().translate(src).expect("should translate");

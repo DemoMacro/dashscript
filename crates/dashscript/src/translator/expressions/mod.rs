@@ -905,6 +905,12 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `String.fromCharCode(n)` → a one-char `String`.
+        if methods::is_ident(&sm.object, "String") {
+            if let Some(expr) = methods::string_static(&sm.property.name, call.arguments.as_slice(), ctx) {
+                return expr;
+            }
+        }
     }
     // Global conversion functions: `String(x)`, `parseInt(s)`, `parseFloat(s)`.
     if let Expression::Identifier(id) = &call.callee {

@@ -360,6 +360,18 @@ pub(super) fn object_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Opt
     })
 }
 
+/// `String.<m>(…)`: `fromCharCode(n)` → a one-char `String` from the code
+/// point (or `""` if `n` isn't a valid `char`). Returns `None` otherwise.
+pub(super) fn string_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let n = translate_argument(args.first()?, ctx);
+    Some(match name {
+        "fromCharCode" => {
+            parse_quote!(char::from_u32(#n as u32).map(|c| c.to_string()).unwrap_or_default())
+        }
+        _ => return None,
+    })
+}
+
 /// Global conversion functions called as plain identifiers: `String(x)` →
 /// `format!("{}", x)`; `parseInt(s)`/`parseFloat(s)` → `s.trim().parse::<f64>()`
 /// (`.ds` `number` is `f64`, so both share one parse path). Returns `None` for
