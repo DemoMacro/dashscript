@@ -1101,6 +1101,13 @@ mod tests {
     }
 
     #[test]
+    fn translates_object_destructure_rename() {
+        let src = "function f(v: Vector): void { const { x: renamed } = v; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("x: renamed"), "got:\n{rust}");
+    }
+
+    #[test]
     fn translates_string_char_at_to_chars_nth() {
         let src = "function f(s: string): string { return s.charAt(0); }";
         let rust = Translator::new().translate(src).expect("should translate");

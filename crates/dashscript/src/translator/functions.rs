@@ -655,13 +655,32 @@ fn destructure_object(
     // binding stays visible to later statements.
     let mut defaults: Vec<(Ident, Expr)> = Vec::new();
     for p in &obj.properties {
-        let Some(name) = bindings::property_key_name(&p.key) else {
+        let Some(key_name) = bindings::property_key_name(&p.key) else {
             continue;
         };
-        fields.push(if mutable { quote!(mut #name) } else { quote!(#name) });
+        // `{ x: y }`: a renamed binding emits the Rust field-pattern `x: y`;
+        // the shorthand `{ x }` stays as a bare `x`.
+        let renamed = match &p.value {
+            BindingPattern::BindingIdentifier(id) => {
+                let var = bindings::ident_of(id);
+                (var != key_name).then_some(var)
+            }
+            _ => None,
+        };
+        let field = match &renamed {
+            Some(var) => {
+                let binding = if mutable { quote!(mut #var) } else { quote!(#var) };
+                quote!(#key_name: #binding)
+            }
+            None => {
+                if mutable { quote!(mut #key_name) } else { quote!(#key_name) }
+            }
+        };
+        fields.push(field);
         if let BindingPattern::AssignmentPattern(ap) = &p.value {
             let default = expressions::translate_expr(&ap.right, &ctx);
-            defaults.push((name, default));
+            let var = renamed.clone().unwrap_or_else(|| key_name.clone());
+            defaults.push((var, default));
         }
     }
     // `..` lets a partial destructure (`{ tag }` on a struct with more fields)
@@ -673,9 +692,10 @@ fn destructure_object(
     out
 }
 
-/// `const [a, b] = xs` → `let a = xs[0 as usize]; let b = xs[1 as usize];`
-/// (positional indexing). Holes (`[, c]`) and `…rest` are unsupported; only
-/// plain-identifier elements.
+/// `const [a, b] = xs` → `let a = xs[0]; let b = xs[1];` (positional indexing
+/// via `syn::Index`, which carries no literal suffix). Holes (`[, c]`) are
+/// skipped — a `None` element is filtered out while its original index is
+/// kept; `...rest` collects the tail as a new `Vec`.
 fn destructure_array(
     arr: &ArrayPattern,
     init: Option<&Expression>,

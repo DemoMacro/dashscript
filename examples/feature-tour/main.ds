@@ -64,6 +64,9 @@ function main(): void {
   const dv: Vector = makeVector(7, 8);
   const { x, y } = dv;
   console.log("destructured:", x, y);
+  // object destructure with rename: `{ x: px }` binds field x to a new name
+  const { x: px } = dv;
+  console.log("renamed:", px);
 
   // object literal as an argument (borrows its name from the param type)
   console.log("sum:", sum({ x: 3, y: 4 }));
