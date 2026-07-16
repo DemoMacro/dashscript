@@ -5,8 +5,9 @@
 //! - [`manifest`]   — `manifest.json` → `Cargo.toml`
 //! - [`bindgen`]    — Rust crate → `.ds` type declaration
 //!
-//! Parsing, linting, and formatting of `.ds` reuse [oxc](https://oxc.rs/);
-//! DashScript does not reimplement them.
+//! Parsing reuses [oxc](https://oxc.rs/) (`oxc_parser`); `check` and `fmt` are
+//! built in-process on the parsed AST (`oxc_linter`/`oxc_formatter` are not on
+//! crates.io).
 
 pub mod bindgen;
 pub mod manifest;

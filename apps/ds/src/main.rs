@@ -156,23 +156,37 @@ fn add(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     Ok(ExitCode::SUCCESS)
 }
 
-/// Lint a `.ds` file by delegating to `oxlint` (reused from oxc — DashScript
-/// does not implement its own linter).
+/// Check a `.ds` file for translatability in-process: syntax errors (from
+/// `oxc_parser`) plus any top-level statement the translator cannot lower to
+/// Rust. No external oxlint dependency.
 fn check(file: &str) -> Result<ExitCode, Box<dyn Error>> {
-    let status = Command::new("oxlint")
-        .arg(file)
-        .status()
-        .map_err(|e| format!("failed to invoke oxlint (install via `cargo install oxlint`): {e}"))?;
-    Ok(status_to_code(status))
+    let path = Path::new(file);
+    let source = fs::read_to_string(path)
+        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    let diagnostics = Translator::new().check(&source);
+    if diagnostics.is_empty() {
+        println!("ds: no issues found in {file}");
+        return Ok(ExitCode::SUCCESS);
+    }
+    for diag in &diagnostics {
+        // `with_source_code` attaches the file text so the fancy Debug render
+        // (miette `fancy-no-syscall`) can print line/column + context.
+        let report = diag.clone().with_source_code(source.clone());
+        eprintln!("{report:?}");
+    }
+    Ok(ExitCode::FAILURE)
 }
 
-/// Format a `.ds` file in place by delegating to `oxfmt` (reused from oxc).
+/// Format a `.ds` file in place with `oxc_codegen` (pretty-print). No external
+/// oxfmt dependency.
 fn fmt(file: &str) -> Result<ExitCode, Box<dyn Error>> {
-    let status = Command::new("oxfmt")
-        .arg(file)
-        .status()
-        .map_err(|e| format!("failed to invoke oxfmt (install via `cargo install oxlint`): {e}"))?;
-    Ok(status_to_code(status))
+    let path = Path::new(file);
+    let source = fs::read_to_string(path)
+        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    let formatted = Translator::new().format(&source)?;
+    fs::write(path, formatted)?;
+    println!("ds: formatted {file}");
+    Ok(ExitCode::SUCCESS)
 }
 
 fn invoke_cargo<const N: usize>(project: &Path, args: [&str; N]) -> Result<ExitStatus, Box<dyn Error>> {

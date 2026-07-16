@@ -8,6 +8,7 @@
 //! directions. Parsing reuses `oxc_parser`; DashScript never parses itself.
 
 mod analysis;
+mod check;
 pub mod bindings;
 pub mod context;
 pub mod declarations;
@@ -17,6 +18,8 @@ pub mod registry;
 pub mod types;
 
 use oxc_allocator::Allocator;
+use oxc_codegen::Codegen;
+use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
 use oxc_span::SourceType;
 
@@ -57,6 +60,33 @@ impl Translator {
             .collect();
         let file = syn::File { shebang: None, attrs: Vec::new(), items };
         Ok(prettyplease::unparse(&file))
+    }
+
+    /// Check `.ds` source for translatability without emitting Rust.
+    ///
+    /// Returns syntax errors from `oxc_parser` plus one diagnostic per
+    /// top-level statement the translator cannot map. An empty `Vec` means the
+    /// file is translatable to valid Rust (as far as DashScript can tell).
+    #[must_use]
+    pub fn check(&self, source: &str) -> Vec<OxcDiagnostic> {
+        check::check(source)
+    }
+
+    /// Format `.ds` source with `oxc_codegen` (pretty-print, not minified).
+    ///
+    /// # Errors
+    /// Returns an error string if `oxc_parser` reports syntax diagnostics — a
+    /// file with syntax errors cannot be formatted.
+    pub fn format(&self, source: &str) -> Result<String, String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Err(format!(
+                "dashscript: oxc reported {} parse diagnostic(s) — fix syntax before formatting",
+                ret.diagnostics.len()
+            ));
+        }
+        Ok(Codegen::new().build(&ret.program).code)
     }
 }
 
