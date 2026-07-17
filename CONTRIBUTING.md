@@ -59,7 +59,7 @@ packages/
 ### Rust — core crate (`crates/dashscript`)
 
 - **Functions / variables**: `snake_case`. **Types / traits / enums**: `PascalCase`. **Constants**: `SCREAMING_SNAKE_CASE`. **Modules / files**: `snake_case`.
-- **Reuse oxc for parsing, build check/fmt on the AST** — consume `oxc_parser` / `oxc_ast` / `oxc_allocator` as given. `oxc_linter` / `oxc_formatter` are `publish = false` (not on crates.io), so `ds check` and `ds fmt` are built in-process on the parsed AST; do not shell out to external oxlint/oxfmt.
+- **Reuse oxc for parsing, build lint/fmt on the AST** — consume `oxc_parser` / `oxc_ast` / `oxc_allocator` as given. `oxc_linter` / `oxc_formatter` are `publish = false` (not on crates.io), so `ds lint` and `ds fmt` are built in-process on the parsed AST; do not shell out to external oxlint/oxfmt.
 - **One mapping rule per AST node kind** in `translator/`. Unmapped nodes must raise a diagnostic — never silently emit broken Rust.
 - **Diagnostics over panics** — collect errors, recover, and report as many as possible. Reserve `unwrap`/`panic!` for true invariants in tests.
 - **No logic in bindings** — `apps/ds` and the npm package are thin. If you are writing translation logic there, it belongs in the core crate.
@@ -79,7 +79,7 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 ### DashScript manifest (`manifest.json`)
 
 - Use **target-prefixed** dependency keys (`rust:serde`) — they mirror `ds add <target>:<crate>` exactly.
-- Prefer a `target` field for the project's primary backend so future `--target` outputs (`wasm`, `napi`) have a default; `ds build` today compiles a native binary regardless.
+- Set `target` to the output shape (`bin` default — native binary; `rust` — translated crate; `wasm`/`napi` planned); `--target` overrides it on `ds build`.
 - `manifest` must round-trip cleanly: every target-prefixed dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
 
 ## Conformance / Support Matrix
