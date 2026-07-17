@@ -54,7 +54,7 @@ $ ds run main.ds                # translate → compile (cached) → run
 ```json
 {
   "name": "my-app",
-  "target": "rust",
+  "target": "bin",
   "dependencies": {
     "rust:serde": "1.0",
     "rust:tokio": "1.0"

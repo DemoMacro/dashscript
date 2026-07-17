@@ -1,5 +1,5 @@
 {
   "name": "feature-tour",
-  "target": "rust",
+  "target": "bin",
   "dependencies": {}
 }

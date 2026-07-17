@@ -23,7 +23,7 @@ This:
 ```json
 {
   "name": "crate-add",
-  "target": "rust",
+  "target": "bin",
   "dependencies": {
     "rust:adler": "1.0.2"
   }

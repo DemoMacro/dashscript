@@ -1,5 +1,5 @@
 {
   "name": "hello-world",
-  "target": "rust",
+  "target": "bin",
   "dependencies": {}
 }
