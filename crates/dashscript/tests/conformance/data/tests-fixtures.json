@@ -836,6 +836,18 @@
       "fixture": "function f(a: number, b: number): void { a &= b; a <<= b; a **= 2; }"
     },
     {
+      "id": "operators.translates_comparison_chain_short_circuits",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(v: number): boolean { return v > 5 && v < 25; }"
+    },
+    {
+      "id": "operators.translates_logical_not_short_circuits",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(flag: boolean): boolean { return !flag && flag; }"
+    },
+    {
       "id": "strings.translates_string_method_call",
       "category": "strings",
       "source": "translator-tests",

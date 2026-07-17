@@ -136,3 +136,24 @@ use super::super::Translator;
         assert!(rust.contains(".wrapping_shl("), "got:\n{rust}");
         assert!(rust.contains("a = a.powf(2.0)"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_comparison_chain_short_circuits() {
+        let src = "function f(v: number): boolean { return v > 5 && v < 25; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // Comparisons yield bool — the chain short-circuits as Rust `&&`,
+        // without a truthiness block (`__l != 0.0` would fail: bool ≠ f64).
+        assert!(rust.contains("v > 5.0 && v < 25.0"), "got:\n{rust}");
+        assert!(!rust.contains("__l"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_logical_not_short_circuits() {
+        let src = "function f(flag: boolean): boolean { return !flag && flag; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // `!flag` yields bool — short-circuits as Rust `&&`.
+        assert!(rust.contains("!flag"), "got:\n{rust}");
+        assert!(!rust.contains("__l"), "got:\n{rust}");
+    }

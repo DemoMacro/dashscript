@@ -318,7 +318,7 @@ pub(in crate::translator::expressions) fn array_method(
         // copying `[start, end)` to index `target`. `start` defaults to 0, `end`
         // to the length. Mutates; bounds bound once so side-effecting index
         // args evaluate only once.
-        "copyWithin" if args.len() >= 1 => {
+        "copyWithin" if !args.is_empty() => {
             let target = usize_arg(args.first()?, ctx);
             let start = match args.get(1) {
                 Some(a) => usize_arg(a, ctx),

@@ -973,6 +973,20 @@
     "note": ""
   },
   {
+    "id": "operators.translates_comparison_chain_short_circuits",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_logical_not_short_circuits",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "strings.translates_string_method_call",
     "category": "strings",
     "status": "supported",

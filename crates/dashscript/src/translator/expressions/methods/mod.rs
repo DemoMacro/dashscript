@@ -316,8 +316,10 @@ pub(super) fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
     }
 }
 
-/// True when `expr` is a `bool` operand (a `BooleanLiteral`, or a local
-/// annotated `boolean`) — those short-circuit as Rust `&&`/`||`.
+/// True when `expr` is a `bool` operand (a `BooleanLiteral`, a comparison, a
+/// logical not, a predicate method call, or a local annotated `boolean`) —
+/// those short-circuit as Rust `&&`/`||` instead of routing through a
+/// truthiness block (which would produce `bool != 0.0` and fail to compile).
 pub(super) fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     match expr {
         Expression::BooleanLiteral(_) => true,
@@ -331,6 +333,26 @@ pub(super) fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
         {
             expr_is_bool(&log.left, ctx) && expr_is_bool(&log.right, ctx)
         }
+        // A comparison (`<`, `>`, `==`, `!=`, `<=`, `>=`, strict or not) yields
+        // bool — `v > 5 && v < 25` short-circuits as Rust `&&`.
+        Expression::BinaryExpression(b)
+            if matches!(
+                b.operator,
+                oxc_ast::ast::BinaryOperator::LessThan
+                    | oxc_ast::ast::BinaryOperator::GreaterThan
+                    | oxc_ast::ast::BinaryOperator::LessEqualThan
+                    | oxc_ast::ast::BinaryOperator::GreaterEqualThan
+                    | oxc_ast::ast::BinaryOperator::Equality
+                    | oxc_ast::ast::BinaryOperator::Inequality
+                    | oxc_ast::ast::BinaryOperator::StrictEquality
+                    | oxc_ast::ast::BinaryOperator::StrictInequality
+            ) =>
+        {
+            true
+        }
+        // `!x` (logical not) yields bool.
+        Expression::UnaryExpression(u)
+            if matches!(u.operator, oxc_ast::ast::UnaryOperator::LogicalNot) => true,
         // A predicate method *call* (`s.includes(...)`, `xs.some(...)`) returns
         // bool — the outer node is a `CallExpression` whose callee is the member.
         Expression::CallExpression(call) => match &call.callee {

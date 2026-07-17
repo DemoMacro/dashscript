@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 399 features: **343** supported, **1** partial, **0** unsupported, **55** untested
+- 401 features: **345** supported, **1** partial, **0** unsupported, **55** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -333,22 +333,24 @@
 
 ## operators
 
-| feature                                             | status       | detail / note |
-| --------------------------------------------------- | ------------ | ------------- |
-| operators.translates_arithmetic_and_comparison      | 🟢 supported |               |
-| operators.translates_logical_and_unary              | 🟢 supported |               |
-| operators.translates_compound_assignment            | 🟢 supported |               |
-| operators.translates_template_literal               | 🟢 supported |               |
-| operators.translates_ternary_to_if_expression       | 🟢 supported |               |
-| operators.translates_length_to_len                  | 🟢 supported |               |
-| operators.translates_exponent_operator              | 🟢 supported |               |
-| operators.translates_in_operator_to_contains_key    | 🟢 supported |               |
-| operators.translates_arrow_function_expression_body | 🟢 supported |               |
-| operators.translates_field_assign_to_field          | 🟢 supported |               |
-| operators.translates_bitwise_and_or_xor             | 🟢 supported |               |
-| operators.translates_bitwise_shifts                 | 🟢 supported |               |
-| operators.translates_bitwise_not                    | 🟢 supported |               |
-| operators.translates_bitwise_compound_assign        | 🟢 supported |               |
+| feature                                              | status       | detail / note |
+| ---------------------------------------------------- | ------------ | ------------- |
+| operators.translates_arithmetic_and_comparison       | 🟢 supported |               |
+| operators.translates_logical_and_unary               | 🟢 supported |               |
+| operators.translates_compound_assignment             | 🟢 supported |               |
+| operators.translates_template_literal                | 🟢 supported |               |
+| operators.translates_ternary_to_if_expression        | 🟢 supported |               |
+| operators.translates_length_to_len                   | 🟢 supported |               |
+| operators.translates_exponent_operator               | 🟢 supported |               |
+| operators.translates_in_operator_to_contains_key     | 🟢 supported |               |
+| operators.translates_arrow_function_expression_body  | 🟢 supported |               |
+| operators.translates_field_assign_to_field           | 🟢 supported |               |
+| operators.translates_bitwise_and_or_xor              | 🟢 supported |               |
+| operators.translates_bitwise_shifts                  | 🟢 supported |               |
+| operators.translates_bitwise_not                     | 🟢 supported |               |
+| operators.translates_bitwise_compound_assign         | 🟢 supported |               |
+| operators.translates_comparison_chain_short_circuits | 🟢 supported |               |
+| operators.translates_logical_not_short_circuits      | 🟢 supported |               |
 
 ## strings
 
