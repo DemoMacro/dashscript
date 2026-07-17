@@ -47,7 +47,7 @@ use super::super::Translator;
 
     #[test]
     fn translates_object_spread_to_struct_update() {
-        let src = "function f(v: Vector): Vector { return { ...v, y: 9 }; }";
+        let src = "interface Vector { x: number; y: number; } function f(v: Vector): Vector { return { ...v, y: 9 }; }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("Vector { y: 9.0, ..v }"), "got:\n{rust}");
     }
@@ -73,7 +73,7 @@ use super::super::Translator;
 
     #[test]
     fn translates_object_destructure_rename() {
-        let src = "function f(v: Vector): void { const { x: renamed } = v; }";
+        let src = "interface Vector { x: number; } function f(v: Vector): void { const { x: renamed } = v; }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("x: renamed"), "got:\n{rust}");
     }

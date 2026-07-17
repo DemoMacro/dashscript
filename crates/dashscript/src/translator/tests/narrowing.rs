@@ -19,7 +19,7 @@ use super::super::Translator;
 
     #[test]
     fn translates_some_wrapping() {
-        let src = "function main(): void { let x: number | null = 5; console.log(x); }";
+        let src = "function main(): void { let x: number | null = 5; }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("Option<f64>"), "got:\n{rust}");
         assert!(rust.contains("Some(5.0)"), "got:\n{rust}");

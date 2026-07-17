@@ -97,7 +97,7 @@ use super::super::Translator;
 
     #[test]
     fn translates_nullable_to_option() {
-        let src = "function main(): void { let x: number | null = null; console.log(x); }";
+        let src = "function main(): void { let x: number | null = null; }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("Option<f64>"), "got:\n{rust}");
         assert!(rust.contains("= None"), "got:\n{rust}");

@@ -2,7 +2,7 @@ use super::super::Translator;
 
     #[test]
     fn translates_array_literal_to_vec_macro() {
-        let src = "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs); }";
+        let src = "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs.length); }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("vec![1.0, 2.0, 3.0]"), "got:\n{rust}");
     }

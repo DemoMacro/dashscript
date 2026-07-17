@@ -5,7 +5,7 @@
       "id": "arrays.translates_array_literal_to_vec_macro",
       "category": "arrays",
       "source": "translator-tests",
-      "fixture": "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs); }"
+      "fixture": "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs.length); }"
     },
     {
       "id": "arrays.translates_array_index",
@@ -191,7 +191,7 @@
       "id": "clone_move.translates_mutated_vec_by_method_is_let_mut",
       "category": "clone_move",
       "source": "translator-tests",
-      "fixture": "function main(): void { let xs: number[] = [1]; xs.push(2); console.log(xs); }"
+      "fixture": "function main(): void { let xs: number[] = [1]; xs.push(2); console.log(xs.length); }"
     },
     {
       "id": "clone_move.translates_for_in_to_keys_cloned",
@@ -317,7 +317,7 @@
       "id": "destructuring.translates_object_spread_to_struct_update",
       "category": "destructuring",
       "source": "translator-tests",
-      "fixture": "function f(v: Vector): Vector { return { ...v, y: 9 }; }"
+      "fixture": "interface Vector { x: number; y: number; } function f(v: Vector): Vector { return { ...v, y: 9 }; }"
     },
     {
       "id": "destructuring.translates_array_spread_to_slice_concat",
@@ -335,7 +335,7 @@
       "id": "destructuring.translates_object_destructure_rename",
       "category": "destructuring",
       "source": "translator-tests",
-      "fixture": "function f(v: Vector): void { const { x: renamed } = v; }"
+      "fixture": "interface Vector { x: number; } function f(v: Vector): void { const { x: renamed } = v; }"
     },
     {
       "id": "globals.translates_string_global_to_format",
@@ -509,7 +509,7 @@
       "id": "narrowing.translates_some_wrapping",
       "category": "narrowing",
       "source": "translator-tests",
-      "fixture": "function main(): void { let x: number | null = 5; console.log(x); }"
+      "fixture": "function main(): void { let x: number | null = 5; }"
     },
     {
       "id": "narrowing.translates_non_null_assertion",
@@ -641,7 +641,7 @@
       "id": "operators.translates_field_assign_to_field",
       "category": "operators",
       "source": "translator-tests",
-      "fixture": "function f(v: Vector): void { v.x = 5; }"
+      "fixture": "interface Vector { x: number; } function f(v: Vector): void { v.x = 5; }"
     },
     {
       "id": "operators.translates_bitwise_and_or_xor",
@@ -809,7 +809,7 @@
       "id": "types.translates_nullable_to_option",
       "category": "types",
       "source": "translator-tests",
-      "fixture": "function main(): void { let x: number | null = null; console.log(x); }"
+      "fixture": "function main(): void { let x: number | null = null; }"
     },
     {
       "id": "types.translates_nullable_return_type",

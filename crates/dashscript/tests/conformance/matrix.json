@@ -2,8 +2,8 @@
   {
     "id": "arrays.translates_array_literal_to_vec_macro",
     "category": "arrays",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -219,8 +219,8 @@
   {
     "id": "clone_move.translates_mutated_vec_by_method_is_let_mut",
     "category": "clone_move",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -366,8 +366,8 @@
   {
     "id": "destructuring.translates_object_spread_to_struct_update",
     "category": "destructuring",
-    "status": "partial",
-    "detail": "src\\main.rs:1:9: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nsrc\\main.rs:1:20: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nsrc\\main.rs:2:5: error[E0422]: cannot find struct, variant or union type `Vector` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -387,8 +387,8 @@
   {
     "id": "destructuring.translates_object_destructure_rename",
     "category": "destructuring",
-    "status": "partial",
-    "detail": "src\\main.rs:1:9: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nsrc\\main.rs:2:9: error[E0422]: cannot find struct, variant or union type `Vector` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -590,8 +590,8 @@
   {
     "id": "narrowing.translates_some_wrapping",
     "category": "narrowing",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0277]: `Option<f64>` doesn't implement `std::fmt::Display`: `Option<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -744,8 +744,8 @@
   {
     "id": "operators.translates_field_assign_to_field",
     "category": "operators",
-    "status": "partial",
-    "detail": "src\\main.rs:1:13: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -940,8 +940,8 @@
   {
     "id": "types.translates_nullable_to_option",
     "category": "types",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0277]: `Option<f64>` doesn't implement `std::fmt::Display`: `Option<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {

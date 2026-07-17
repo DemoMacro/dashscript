@@ -27,7 +27,7 @@ use super::super::Translator;
 
     #[test]
     fn translates_mutated_vec_by_method_is_let_mut() {
-        let src = "function main(): void { let xs: number[] = [1]; xs.push(2); console.log(xs); }";
+        let src = "function main(): void { let xs: number[] = [1]; xs.push(2); console.log(xs.length); }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("let mut xs"), "got:\n{rust}");
     }

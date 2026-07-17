@@ -94,7 +94,7 @@ use super::super::Translator;
 
     #[test]
     fn translates_field_assign_to_field() {
-        let src = "function f(v: Vector): void { v.x = 5; }";
+        let src = "interface Vector { x: number; } function f(v: Vector): void { v.x = 5; }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("v.x = 5.0"), "got:\n{rust}");
     }

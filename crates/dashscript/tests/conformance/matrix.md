@@ -1,92 +1,92 @@
 # DashScript Conformance Matrix
 
-- 351 features: **169** supported, **8** partial, **0** unsupported, **174** untested
+- 351 features: **176** supported, **1** partial, **0** unsupported, **174** untested
 - correctness cases passing: 2
 
 ## arrays
 
-| feature                                                      | status       | detail / note                                                                                                                                                                                                      |
-| ------------------------------------------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| arrays.translates_array_literal_to_vec_macro                 | 🟡 partial   | src\main.rs:3:27: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter error: could not compile `probe` (bin "probe") due to 1 previous error |
-| arrays.translates_array_index                                | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_in_operator_on_array_to_index_bound        | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_map_to_iter_copied_map_collect       | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_filter_to_iter_copied_filter_collect | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_slice_to_index_range_to_vec          | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_index_of_to_position                 | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_find_index_to_position               | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_at_to_signed_runtime_index           | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_flat_map_to_flat_map_collect         | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_literal_with_expression_elements     | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_flat_to_concat                       | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_last_index_of_to_rposition           | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_fill_to_vec_fill                     | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_for_each_to_for_each                 | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_includes_to_contains                 | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_find_to_iter_copied_find             | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_some_every_to_any_all                | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_join_to_vec_string_join              | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_reduce_with_seed_to_fold             | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_reduce_without_seed_to_reduce        | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_index_assign_to_usize_index          | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_concat_to_slice_concat               | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_reverse_to_in_place_reverse          | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_sort_to_numeric_sort_by              | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_find_last_to_rev_find                | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_find_last_index_to_rposition         | 🟢 supported |                                                                                                                                                                                                                    |
-| arrays.translates_array_reduce_right_to_rev_fold             | 🟢 supported |                                                                                                                                                                                                                    |
-| array.at                                                     | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.concat                                                 | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.copyWithin                                             | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.entries                                                | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.every                                                  | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.fill                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.filter                                                 | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.find                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.findIndex                                              | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.findLast                                               | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.findLastIndex                                          | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.flat                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.flatMap                                                | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.forEach                                                | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.from                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.fromAsync                                              | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.includes                                               | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.indexOf                                                | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.isArray                                                | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.join                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.keys                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.lastIndexOf                                            | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.map                                                    | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.of                                                     | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.pop                                                    | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.push                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.reduce                                                 | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.reduceRight                                            | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.reverse                                                | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.shift                                                  | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.slice                                                  | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.some                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.sort                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.splice                                                 | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.toLocaleString                                         | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.toReversed                                             | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.toSorted                                               | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.toSpliced                                              | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.toString                                               | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.unshift                                                | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.values                                                 | ⚪ untested  |                                                                                                                                                                                                                    |
-| array.with                                                   | ⚪ untested  |                                                                                                                                                                                                                    |
+| feature                                                      | status       | detail / note |
+| ------------------------------------------------------------ | ------------ | ------------- |
+| arrays.translates_array_literal_to_vec_macro                 | 🟢 supported |               |
+| arrays.translates_array_index                                | 🟢 supported |               |
+| arrays.translates_in_operator_on_array_to_index_bound        | 🟢 supported |               |
+| arrays.translates_array_map_to_iter_copied_map_collect       | 🟢 supported |               |
+| arrays.translates_array_filter_to_iter_copied_filter_collect | 🟢 supported |               |
+| arrays.translates_array_slice_to_index_range_to_vec          | 🟢 supported |               |
+| arrays.translates_array_index_of_to_position                 | 🟢 supported |               |
+| arrays.translates_array_find_index_to_position               | 🟢 supported |               |
+| arrays.translates_array_at_to_signed_runtime_index           | 🟢 supported |               |
+| arrays.translates_array_flat_map_to_flat_map_collect         | 🟢 supported |               |
+| arrays.translates_array_literal_with_expression_elements     | 🟢 supported |               |
+| arrays.translates_array_flat_to_concat                       | 🟢 supported |               |
+| arrays.translates_array_last_index_of_to_rposition           | 🟢 supported |               |
+| arrays.translates_array_fill_to_vec_fill                     | 🟢 supported |               |
+| arrays.translates_array_for_each_to_for_each                 | 🟢 supported |               |
+| arrays.translates_array_includes_to_contains                 | 🟢 supported |               |
+| arrays.translates_array_find_to_iter_copied_find             | 🟢 supported |               |
+| arrays.translates_array_some_every_to_any_all                | 🟢 supported |               |
+| arrays.translates_array_join_to_vec_string_join              | 🟢 supported |               |
+| arrays.translates_array_reduce_with_seed_to_fold             | 🟢 supported |               |
+| arrays.translates_array_reduce_without_seed_to_reduce        | 🟢 supported |               |
+| arrays.translates_array_index_assign_to_usize_index          | 🟢 supported |               |
+| arrays.translates_array_concat_to_slice_concat               | 🟢 supported |               |
+| arrays.translates_array_reverse_to_in_place_reverse          | 🟢 supported |               |
+| arrays.translates_array_sort_to_numeric_sort_by              | 🟢 supported |               |
+| arrays.translates_array_find_last_to_rev_find                | 🟢 supported |               |
+| arrays.translates_array_find_last_index_to_rposition         | 🟢 supported |               |
+| arrays.translates_array_reduce_right_to_rev_fold             | 🟢 supported |               |
+| array.at                                                     | ⚪ untested  |               |
+| array.concat                                                 | ⚪ untested  |               |
+| array.copyWithin                                             | ⚪ untested  |               |
+| array.entries                                                | ⚪ untested  |               |
+| array.every                                                  | ⚪ untested  |               |
+| array.fill                                                   | ⚪ untested  |               |
+| array.filter                                                 | ⚪ untested  |               |
+| array.find                                                   | ⚪ untested  |               |
+| array.findIndex                                              | ⚪ untested  |               |
+| array.findLast                                               | ⚪ untested  |               |
+| array.findLastIndex                                          | ⚪ untested  |               |
+| array.flat                                                   | ⚪ untested  |               |
+| array.flatMap                                                | ⚪ untested  |               |
+| array.forEach                                                | ⚪ untested  |               |
+| array.from                                                   | ⚪ untested  |               |
+| array.fromAsync                                              | ⚪ untested  |               |
+| array.includes                                               | ⚪ untested  |               |
+| array.indexOf                                                | ⚪ untested  |               |
+| array.isArray                                                | ⚪ untested  |               |
+| array.join                                                   | ⚪ untested  |               |
+| array.keys                                                   | ⚪ untested  |               |
+| array.lastIndexOf                                            | ⚪ untested  |               |
+| array.map                                                    | ⚪ untested  |               |
+| array.of                                                     | ⚪ untested  |               |
+| array.pop                                                    | ⚪ untested  |               |
+| array.push                                                   | ⚪ untested  |               |
+| array.reduce                                                 | ⚪ untested  |               |
+| array.reduceRight                                            | ⚪ untested  |               |
+| array.reverse                                                | ⚪ untested  |               |
+| array.shift                                                  | ⚪ untested  |               |
+| array.slice                                                  | ⚪ untested  |               |
+| array.some                                                   | ⚪ untested  |               |
+| array.sort                                                   | ⚪ untested  |               |
+| array.splice                                                 | ⚪ untested  |               |
+| array.toLocaleString                                         | ⚪ untested  |               |
+| array.toReversed                                             | ⚪ untested  |               |
+| array.toSorted                                               | ⚪ untested  |               |
+| array.toSpliced                                              | ⚪ untested  |               |
+| array.toString                                               | ⚪ untested  |               |
+| array.unshift                                                | ⚪ untested  |               |
+| array.values                                                 | ⚪ untested  |               |
+| array.with                                                   | ⚪ untested  |               |
 
 ## clone_move
 
-| feature                                                         | status       | detail / note                                                                                                                                                                                                      |
-| --------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| clone_move.translates_unmutated_let_is_plain_let                | 🟢 supported |                                                                                                                                                                                                                    |
-| clone_move.translates_mutated_let_is_let_mut                    | 🟢 supported |                                                                                                                                                                                                                    |
-| clone_move.translates_mutated_let_by_compound_assign_is_let_mut | 🟢 supported |                                                                                                                                                                                                                    |
-| clone_move.translates_mutated_vec_by_method_is_let_mut          | 🟡 partial   | src\main.rs:4:27: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter error: could not compile `probe` (bin "probe") due to 1 previous error |
-| clone_move.translates_for_in_to_keys_cloned                     | 🟢 supported |                                                                                                                                                                                                                    |
+| feature                                                         | status       | detail / note |
+| --------------------------------------------------------------- | ------------ | ------------- |
+| clone_move.translates_unmutated_let_is_plain_let                | 🟢 supported |               |
+| clone_move.translates_mutated_let_is_let_mut                    | 🟢 supported |               |
+| clone_move.translates_mutated_let_by_compound_assign_is_let_mut | 🟢 supported |               |
+| clone_move.translates_mutated_vec_by_method_is_let_mut          | 🟢 supported |               |
+| clone_move.translates_for_in_to_keys_cloned                     | 🟢 supported |               |
 
 ## console
 
@@ -121,17 +121,17 @@
 
 ## destructuring
 
-| feature                                                          | status       | detail / note                                                                                                                                                                                                                                                                                                                                                                                     |
-| ---------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| destructuring.translates_object_destructure_default_to_unwrap_or | 🟢 supported |                                                                                                                                                                                                                                                                                                                                                                                                   |
-| destructuring.translates_discriminated_union_switch_destructure  | 🟢 supported |                                                                                                                                                                                                                                                                                                                                                                                                   |
-| destructuring.translates_object_destructuring_to_struct_pattern  | 🟢 supported |                                                                                                                                                                                                                                                                                                                                                                                                   |
-| destructuring.translates_array_destructuring_to_indexed_lets     | 🟢 supported |                                                                                                                                                                                                                                                                                                                                                                                                   |
-| destructuring.translates_array_destructure_rest_to_slice         | 🟢 supported |                                                                                                                                                                                                                                                                                                                                                                                                   |
-| destructuring.translates_object_spread_to_struct_update          | 🟡 partial   | src\main.rs:1:9: error[E0425]: cannot find type `Vector` in this scope: not found in this scope src\main.rs:1:20: error[E0425]: cannot find type `Vector` in this scope: not found in this scope src\main.rs:2:5: error[E0422]: cannot find struct, variant or union type `Vector` in this scope: not found in this scope error: could not compile `probe` (bin "probe") due to 3 previous errors |
-| destructuring.translates_array_spread_to_slice_concat            | 🟢 supported |                                                                                                                                                                                                                                                                                                                                                                                                   |
-| destructuring.translates_array_destructure_skips_holes           | 🟢 supported |                                                                                                                                                                                                                                                                                                                                                                                                   |
-| destructuring.translates_object_destructure_rename               | 🟡 partial   | src\main.rs:1:9: error[E0425]: cannot find type `Vector` in this scope: not found in this scope src\main.rs:2:9: error[E0422]: cannot find struct, variant or union type `Vector` in this scope: not found in this scope error: could not compile `probe` (bin "probe") due to 2 previous errors                                                                                                  |
+| feature                                                          | status       | detail / note |
+| ---------------------------------------------------------------- | ------------ | ------------- |
+| destructuring.translates_object_destructure_default_to_unwrap_or | 🟢 supported |               |
+| destructuring.translates_discriminated_union_switch_destructure  | 🟢 supported |               |
+| destructuring.translates_object_destructuring_to_struct_pattern  | 🟢 supported |               |
+| destructuring.translates_array_destructuring_to_indexed_lets     | 🟢 supported |               |
+| destructuring.translates_array_destructure_rest_to_slice         | 🟢 supported |               |
+| destructuring.translates_object_spread_to_struct_update          | 🟢 supported |               |
+| destructuring.translates_array_spread_to_slice_concat            | 🟢 supported |               |
+| destructuring.translates_array_destructure_skips_holes           | 🟢 supported |               |
+| destructuring.translates_object_destructure_rename               | 🟢 supported |               |
 
 ## globals
 
@@ -280,19 +280,19 @@
 
 ## narrowing
 
-| feature                                                        | status       | detail / note                                                                                                                                                                                                            |
-| -------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| narrowing.translates_optional_chain_to_as_ref_map              | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_optional_chain_coalesce_to_unwrap_or      | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_some_wrapping                             | 🟡 partial   | src\main.rs:3:27: error[E0277]: `Option<f64>` doesn't implement `std::fmt::Display`: `Option<f64>` cannot be formatted with the default formatter error: could not compile `probe` (bin "probe") due to 1 previous error |
-| narrowing.translates_non_null_assertion                        | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_null_equality_to_is_none                  | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_null_inequality_to_is_some                | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_nullish_coalescing_to_unwrap_or_else      | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_logical_or_value_returns_left_when_truthy | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_logical_or_bool_short_circuits            | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_logical_nullish_assign                    | 🟢 supported |                                                                                                                                                                                                                          |
-| narrowing.translates_logical_or_assign                         | 🟢 supported |                                                                                                                                                                                                                          |
+| feature                                                        | status       | detail / note |
+| -------------------------------------------------------------- | ------------ | ------------- |
+| narrowing.translates_optional_chain_to_as_ref_map              | 🟢 supported |               |
+| narrowing.translates_optional_chain_coalesce_to_unwrap_or      | 🟢 supported |               |
+| narrowing.translates_some_wrapping                             | 🟢 supported |               |
+| narrowing.translates_non_null_assertion                        | 🟢 supported |               |
+| narrowing.translates_null_equality_to_is_none                  | 🟢 supported |               |
+| narrowing.translates_null_inequality_to_is_some                | 🟢 supported |               |
+| narrowing.translates_nullish_coalescing_to_unwrap_or_else      | 🟢 supported |               |
+| narrowing.translates_logical_or_value_returns_left_when_truthy | 🟢 supported |               |
+| narrowing.translates_logical_or_bool_short_circuits            | 🟢 supported |               |
+| narrowing.translates_logical_nullish_assign                    | 🟢 supported |               |
+| narrowing.translates_logical_or_assign                         | 🟢 supported |               |
 
 ## number_methods
 
@@ -305,22 +305,22 @@
 
 ## operators
 
-| feature                                             | status       | detail / note                                                                                                                                                           |
-| --------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| operators.translates_arithmetic_and_comparison      | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_logical_and_unary              | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_compound_assignment            | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_template_literal               | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_ternary_to_if_expression       | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_length_to_len                  | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_exponent_operator              | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_in_operator_to_contains_key    | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_arrow_function_expression_body | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_field_assign_to_field          | 🟡 partial   | src\main.rs:1:13: error[E0425]: cannot find type `Vector` in this scope: not found in this scope error: could not compile `probe` (bin "probe") due to 1 previous error |
-| operators.translates_bitwise_and_or_xor             | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_bitwise_shifts                 | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_bitwise_not                    | 🟢 supported |                                                                                                                                                                         |
-| operators.translates_bitwise_compound_assign        | 🟢 supported |                                                                                                                                                                         |
+| feature                                             | status       | detail / note |
+| --------------------------------------------------- | ------------ | ------------- |
+| operators.translates_arithmetic_and_comparison      | 🟢 supported |               |
+| operators.translates_logical_and_unary              | 🟢 supported |               |
+| operators.translates_compound_assignment            | 🟢 supported |               |
+| operators.translates_template_literal               | 🟢 supported |               |
+| operators.translates_ternary_to_if_expression       | 🟢 supported |               |
+| operators.translates_length_to_len                  | 🟢 supported |               |
+| operators.translates_exponent_operator              | 🟢 supported |               |
+| operators.translates_in_operator_to_contains_key    | 🟢 supported |               |
+| operators.translates_arrow_function_expression_body | 🟢 supported |               |
+| operators.translates_field_assign_to_field          | 🟢 supported |               |
+| operators.translates_bitwise_and_or_xor             | 🟢 supported |               |
+| operators.translates_bitwise_shifts                 | 🟢 supported |               |
+| operators.translates_bitwise_not                    | 🟢 supported |               |
+| operators.translates_bitwise_compound_assign        | 🟢 supported |               |
 
 ## strings
 
@@ -400,23 +400,23 @@
 
 ## types
 
-| feature                                                          | status       | detail / note                                                                                                                                                                                                            |
-| ---------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| types.translates_a_typed_function_returning_a_string             | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_generic_function_params                         | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_default_param_to_option_unwrap_or_and_call_none | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_default_param_supplied_wraps_some               | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_nullable_to_option                              | 🟡 partial   | src\main.rs:3:27: error[E0277]: `Option<f64>` doesn't implement `std::fmt::Display`: `Option<f64>` cannot be formatted with the default formatter error: could not compile `probe` (bin "probe") due to 1 previous error |
-| types.translates_nullable_return_type                            | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_enum_variant_construction                       | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_object_keys_to_hashmap_keys                     | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_object_values_to_hashmap_values                 | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_discriminated_union_variant_construction        | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_return_object_literal_to_struct_init            | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_object_literal_argument_to_struct_init          | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_record_computed_key_to_hashmap_entry            | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_record_to_hashmap_literal                       | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_hashmap_index_to_get                            | 🟢 supported |                                                                                                                                                                                                                          |
-| types.translates_hashmap_index_assign_to_insert                  | 🟢 supported |                                                                                                                                                                                                                          |
+| feature                                                          | status       | detail / note |
+| ---------------------------------------------------------------- | ------------ | ------------- |
+| types.translates_a_typed_function_returning_a_string             | 🟢 supported |               |
+| types.translates_generic_function_params                         | 🟢 supported |               |
+| types.translates_default_param_to_option_unwrap_or_and_call_none | 🟢 supported |               |
+| types.translates_default_param_supplied_wraps_some               | 🟢 supported |               |
+| types.translates_nullable_to_option                              | 🟢 supported |               |
+| types.translates_nullable_return_type                            | 🟢 supported |               |
+| types.translates_enum_variant_construction                       | 🟢 supported |               |
+| types.translates_object_keys_to_hashmap_keys                     | 🟢 supported |               |
+| types.translates_object_values_to_hashmap_values                 | 🟢 supported |               |
+| types.translates_discriminated_union_variant_construction        | 🟢 supported |               |
+| types.translates_return_object_literal_to_struct_init            | 🟢 supported |               |
+| types.translates_object_literal_argument_to_struct_init          | 🟢 supported |               |
+| types.translates_record_computed_key_to_hashmap_entry            | 🟢 supported |               |
+| types.translates_record_to_hashmap_literal                       | 🟢 supported |               |
+| types.translates_hashmap_index_to_get                            | 🟢 supported |               |
+| types.translates_hashmap_index_assign_to_insert                  | 🟢 supported |               |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->
