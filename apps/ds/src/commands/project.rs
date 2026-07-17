@@ -157,6 +157,38 @@ pub(crate) fn manifest_root() -> PathBuf {
     PathBuf::from(".")
 }
 
+/// Collect every `.ds` file under the current project (the nearest
+/// `manifest.json` walking up, else the cwd), skipping generated/vendored
+/// directories (`target`, `.cache`, `dist`, `node_modules`, `.git`). Used by
+/// `ds lint` / `ds check` / `ds fmt` with no argument — the way `vp check` and
+/// `oxlint` check the whole project when given no target. Sorted for stable
+/// output.
+pub(crate) fn collect_ds_files() -> Vec<PathBuf> {
+    let root = manifest_root();
+    let mut out = Vec::new();
+    walk_ds(&root, &mut out);
+    out.sort();
+    out
+}
+
+/// Recursive worker for [`collect_ds_files`].
+fn walk_ds(dir: &Path, out: &mut Vec<PathBuf>) {
+    let Ok(entries) = fs::read_dir(dir) else { return };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+                if matches!(name, "target" | ".cache" | "dist" | "node_modules" | ".git") {
+                    continue;
+                }
+            }
+            walk_ds(&path, out);
+        } else if path.extension().and_then(|e| e.to_str()) == Some("ds") {
+            out.push(path);
+        }
+    }
+}
+
 /// The global fallback cache for a lone `.ds` file (no `manifest.json` found
 /// walking up): `~/.cache/dash/<hash(canonical_path)>/`, keyed by the file's
 /// canonical path so the same file reuses it across runs.

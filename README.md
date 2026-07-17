@@ -91,12 +91,13 @@ $ ds add rust:serde
 
 ### Check & format
 
-`.ds` is parsed with `oxc_parser`. `ds lint` verifies a file is _translatable_ to valid Rust (syntax errors plus constructs the translator cannot lower); `ds check` is lint plus a format check (the way `vp check` lints + checks formatting); `ds fmt` formats in place — all built in-process on the parsed AST (no external oxlint/oxfmt dependency):
+`.ds` is parsed with `oxc_parser`. `ds check` is the composite — translatability plus a format check, the way `vp check` lints + checks formatting; `ds lint` checks translatability alone; `ds fmt` formats in place. With no argument each runs over every `.ds` in the project (like `vp check` / `oxlint`), and `ds check --fix` writes the formatting fix instead of just reporting it. All built in-process on the parsed AST (no external oxlint/oxfmt dependency):
 
 ```bash
-$ ds lint <file>   # translatability check
-$ ds check <file>  # lint + format check (like `vp check`)
-$ ds fmt <file>    # format .ds in place
+$ ds check          # lint + format check, whole project (like `vp check`)
+$ ds check --fix    # ...and write formatting fixes
+$ ds lint           # translatability check only
+$ ds fmt            # format every .ds in place
 ```
 
 The emitted Rust is finally verified with `cargo check` / `cargo clippy` on the generated project.

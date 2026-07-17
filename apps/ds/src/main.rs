@@ -63,20 +63,27 @@ fn main() -> ExitCode {
             Some(name) => report(deps::remove(&name)),
             None => usage_exit("usage: ds remove <crate|rust:crate>"),
         },
-        // `ds lint` = translatability only (the old `ds check`). `ds check`
-        // below is the composite lint + fmt check, matching `vp check`.
-        Some("lint") => match args.next() {
-            Some(file) => report(check::lint(&file)),
-            None => usage_exit("usage: ds lint <file.ds>"),
-        },
-        Some("check") => match args.next() {
-            Some(file) => report(check::check(&file)),
-            None => usage_exit("usage: ds check <file.ds>"),
-        },
-        Some("fmt") => match args.next() {
-            Some(file) => report(check::fmt(&file)),
-            None => usage_exit("usage: ds fmt <file.ds>"),
-        },
+        // `ds check` is the composite (lint + format, like `vp check`) and the
+        // one you reach for most, so it leads. `--fix` writes the formatting
+        // fix instead of just reporting it. `lint` (translatability only) and
+        // `fmt` (format in place) are the focused variants. All three take an
+        // optional file — no argument runs over every `.ds` in the project.
+        Some("check") => {
+            let mut fix = false;
+            let mut file: Option<String> = None;
+            for a in args.by_ref() {
+                if a == "--fix" {
+                    fix = true;
+                } else if !a.starts_with('-') {
+                    file = Some(a);
+                } else {
+                    return usage_exit(&format!("ds check: unknown option '{a}'"));
+                }
+            }
+            report(check::check(file.as_deref(), fix))
+        }
+        Some("lint") => report(check::lint(args.next().as_deref())),
+        Some("fmt") => report(check::fmt(args.next().as_deref())),
         // `ds install` = ensure manifest deps are fetched + a Cargo.lock exists
         // (like `pnpm install` / `vp install`). No node_modules equivalent —
         // cargo's `~/.cargo/registry` is the dependency store.
@@ -127,9 +134,9 @@ fn print_help() {
     println!("    --filter <name>      build one workspace member");
     println!();
     println!("Check & format:");
-    println!("  lint <file>          Translatability check (in-process)");
-    println!("  check <file>         Lint + format check (in-process)");
-    println!("  fmt <file>           Format .ds in place (in-process)");
+    println!("  check [<file>] [--fix]  Lint + format check (--fix writes fixes)");
+    println!("  lint [<file>]           Translatability check");
+    println!("  fmt [<file>]            Format .ds in place");
     println!();
     println!("Dependencies:");
     println!("  add <crate|file.rs>  Add a crate (rust:<name>) or bindgen a local .rs");
