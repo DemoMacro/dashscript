@@ -176,7 +176,34 @@ fn resolve_manifest(src_path: &Path) -> String {
     .to_cargo_toml()
 }
 
-/// Build a `.ds` file into a Cargo project in a temp dir and `cargo run` it.
+/// The fixed cache directory for a `.ds` entry file: a per-file Cargo project
+/// under the platform cache dir (`~/.cache/dash/<hash>` on Linux) so repeated
+/// `ds run` of the same file reuses cargo's `target/` (incremental builds)
+/// instead of recompiling std + every dependency from scratch each run. The key
+/// is the source file's canonical path — the same file reuses the cache; source
+/// or manifest changes are handled by cargo's own incremental logic (the files
+/// are overwritten in place). Falls back to a temp dir if no platform cache dir
+/// is resolvable, so `ds run` always works.
+///
+/// `build` deliberately does *not* use this — it emits to `dist/<stem>/` so the
+/// generated Rust is inspectable. Cache reuse is a `run`-only experience gain.
+fn cache_project_dir(src_path: &Path) -> PathBuf {
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+
+    let key = {
+        let canonical = fs::canonicalize(src_path).unwrap_or_else(|_| src_path.to_path_buf());
+        let mut hasher = DefaultHasher::new();
+        canonical.hash(&mut hasher);
+        format!("{:016x}", hasher.finish())
+    };
+    match dirs::cache_dir() {
+        Some(cache) => cache.join("dash").join(&key),
+        None => std::env::temp_dir().join(format!("dash-{key}")),
+    }
+}
+
+/// Build a `.ds` file into its cached Cargo project and `cargo run` it.
 ///
 /// Execution is delegated to the system `cargo` for now — a DashScript-managed
 /// Rust toolchain (downloaded on demand, no `rustup`) will replace this later.
@@ -184,7 +211,7 @@ fn run(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     let path = Path::new(file);
     let src = fs::read_to_string(path)
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
-    let project = std::env::temp_dir().join(format!("dashscript-{}", std::process::id()));
+    let project = cache_project_dir(path);
     emit_cargo_project(&src, path, &project)?;
     let status = invoke_cargo(&project, ["run", "--quiet"])?;
     Ok(status_to_code(status))

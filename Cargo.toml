@@ -40,6 +40,9 @@ proc-macro2 = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 url = "2"
+# Platform-standard cache dir (`~/.cache`, `~/Library/Caches`, `%LocalAppData%`)
+# for `ds run`'s fixed build cache — see `apps/ds::cache_project_dir`.
+dirs = "5"
 
 # dev-only — the conformance test harness (`tests/conformance.rs`).
 tempfile = "3"
