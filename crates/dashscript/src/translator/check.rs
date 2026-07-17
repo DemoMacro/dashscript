@@ -48,9 +48,10 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
         }
         Statement::ExportAllDeclaration(s) => err("module `export *` is not supported yet", s.span),
         Statement::ClassDeclaration(s) => err("classes are not supported yet", s.span),
-        Statement::TSEnumDeclaration(s) => {
-            err("TypeScript `enum` is not supported (use a union type instead)", s.span)
-        }
+        Statement::TSEnumDeclaration(s) => err(
+            "TypeScript `enum` is not supported (use a union type instead)",
+            s.span,
+        ),
         Statement::ExpressionStatement(s) => err(
             "a top-level expression is not allowed — only function/interface/type \
              declarations may sit at module scope",

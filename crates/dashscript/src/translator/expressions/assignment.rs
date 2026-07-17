@@ -1,6 +1,8 @@
 //! Assignment (`x = …`, `x += …`) and update (`i++`) expressions.
 
-use oxc_ast::ast::{AssignmentExpression, AssignmentTarget, Expression, SimpleAssignmentTarget, UpdateExpression};
+use oxc_ast::ast::{
+    AssignmentExpression, AssignmentTarget, Expression, SimpleAssignmentTarget, UpdateExpression,
+};
 use oxc_syntax::operator::{AssignmentOperator, UpdateOperator};
 use quote::quote;
 use syn::{parse_quote, Expr, Ident};
@@ -31,7 +33,8 @@ pub(super) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
                 // `s += "lit"` is string append (String has no AddAssign) → `push_str`.
                 AssignmentOperator::Addition => match &a.right {
                     Expression::StringLiteral(s) => {
-                        let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+                        let lit =
+                            syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
                         quote!(#target.push_str(#lit))
                     }
                     _ => quote!(#target += #right),

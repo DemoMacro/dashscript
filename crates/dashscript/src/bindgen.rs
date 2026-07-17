@@ -5,7 +5,9 @@
 //! cross-language analogue of `@types` / DefinitelyTyped. The reverse of the
 //! [`translator`](crate::translator): Rust (`syn`) → `.ds`.
 
-use syn::{FnArg, GenericArgument, ItemFn, ItemStruct, PathArguments, ReturnType, Type, Visibility};
+use syn::{
+    FnArg, GenericArgument, ItemFn, ItemStruct, PathArguments, ReturnType, Type, Visibility,
+};
 
 /// Generates a `.ds` type declaration from Rust source.
 #[derive(Default)]
@@ -66,7 +68,11 @@ fn struct_decl(s: &ItemStruct) -> Option<String> {
     if fields.is_empty() {
         return Some(format!("interface {} {{}}\n\n", s.ident));
     }
-    Some(format!("interface {} {{\n{}\n}}\n\n", s.ident, fields.join("\n")))
+    Some(format!(
+        "interface {} {{\n{}\n}}\n\n",
+        s.ident,
+        fields.join("\n")
+    ))
 }
 
 /// `pub fn add(a: f64, b: f64) -> f64` → `declare function add(a: number, b: number): number;`.
@@ -113,10 +119,14 @@ fn reverse_path(tp: &syn::TypePath) -> String {
         | "u128" | "usize" | "isize" => "number".to_string(),
         "String" | "str" => "string".to_string(),
         "bool" => "boolean".to_string(),
-        "Vec" => generic_arg(tp, 0)
-            .map_or_else(|| "any[]".to_string(), |t| format!("{}[]", reverse_type(&t))),
-        "Option" => generic_arg(tp, 0)
-            .map_or_else(|| "any".to_string(), |t| format!("{} | null", reverse_type(&t))),
+        "Vec" => generic_arg(tp, 0).map_or_else(
+            || "any[]".to_string(),
+            |t| format!("{}[]", reverse_type(&t)),
+        ),
+        "Option" => generic_arg(tp, 0).map_or_else(
+            || "any".to_string(),
+            |t| format!("{} | null", reverse_type(&t)),
+        ),
         _ => name,
     }
 }
@@ -164,7 +174,10 @@ mod tests {
     fn generates_function_declaration() {
         let rust = "pub fn add(a: f64, b: f64) -> f64 { a + b }";
         let ds = Bindgen::new().generate(rust).expect("should bindgen");
-        assert!(ds.contains("declare function add(a: number, b: number): number"), "got:\n{ds}");
+        assert!(
+            ds.contains("declare function add(a: number, b: number): number"),
+            "got:\n{ds}"
+        );
     }
 
     #[test]

@@ -48,8 +48,7 @@ fn extract_format_call(expr: &Expr) -> Option<(String, Vec<Expr>)> {
         proc_macro2::TokenTree::Literal(l) => l,
         _ => return None,
     };
-    let lit_str =
-        syn::parse2::<syn::LitStr>(proc_macro2::TokenTree::Literal(lit).into()).ok()?;
+    let lit_str = syn::parse2::<syn::LitStr>(proc_macro2::TokenTree::Literal(lit).into()).ok()?;
     let fmt = lit_str.value();
     // Everything after the literal, split on top-level commas. `Group` tokens
     // are atomic under `into_iter`, so commas inside `()`/`[]`/`{}` stay nested.

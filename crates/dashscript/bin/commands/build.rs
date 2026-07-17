@@ -37,7 +37,10 @@ pub(crate) fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
                     target = Some(args[i + 1].clone());
                     i += 2;
                 } else {
-                    return Err("usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]".into());
+                    return Err(
+                        "usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]"
+                            .into(),
+                    );
                 }
             }
             "--filter" => {
@@ -45,7 +48,10 @@ pub(crate) fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
                     filter = Some(args[i + 1].clone());
                     i += 2;
                 } else {
-                    return Err("usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]".into());
+                    return Err(
+                        "usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]"
+                            .into(),
+                    );
                 }
             }
             f if !f.starts_with('-') => {
@@ -86,8 +92,8 @@ pub(crate) fn build_at(
     dest_root: &Path,
 ) -> Result<ExitCode, Box<dyn Error>> {
     let path = Path::new(entry);
-    let src = fs::read_to_string(path)
-        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    let src =
+        fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     let name = project_name(path);
     let target = resolve_target(path, target_override);
 
@@ -184,8 +190,9 @@ pub(crate) fn workspace_build(
         .into());
     }
 
-    let target =
-        target_override.map(|t| t.to_string()).unwrap_or_else(|| "bin".to_string());
+    let target = target_override
+        .map(|t| t.to_string())
+        .unwrap_or_else(|| "bin".to_string());
     if target == "rust" {
         // Rust crates are emitted, not compiled — no shared `target/` to gain.
         // Each member's crate lands in its own `<member>/dist/<name>/` so the
@@ -211,17 +218,23 @@ pub(crate) fn workspace_build(
     let cache = root.join(".cache").join("dash");
     fs::create_dir_all(&cache)?;
     let names: Vec<String> = selected.iter().map(|(n, _, _)| n.clone()).collect();
-    fs::write(cache.join("Cargo.toml"), Manifest::workspace_root_toml(&names))?;
+    fs::write(
+        cache.join("Cargo.toml"),
+        Manifest::workspace_root_toml(&names),
+    )?;
 
     for (name, member_dir, entry) in &selected {
         let path = Path::new(entry);
-        let src = fs::read_to_string(path)
-            .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+        let src =
+            fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
         let member_manifest =
             read_manifest(&member_dir.join("manifest.json")).unwrap_or_else(|_| default_manifest());
         let member_cache = cache.join(name);
         fs::create_dir_all(member_cache.join("src"))?;
-        fs::write(member_cache.join("Cargo.toml"), member_manifest.to_member_toml())?;
+        fs::write(
+            member_cache.join("Cargo.toml"),
+            member_manifest.to_member_toml(),
+        )?;
         translate_sources(&src, path, &member_cache)?;
         println!("ds: {name} (workspace member)");
     }

@@ -51,11 +51,19 @@ pub(super) fn destructure_object(
         };
         let field = match &renamed {
             Some(var) => {
-                let binding = if mutable { quote!(mut #var) } else { quote!(#var) };
+                let binding = if mutable {
+                    quote!(mut #var)
+                } else {
+                    quote!(#var)
+                };
                 quote!(#key_name: #binding)
             }
             None => {
-                if mutable { quote!(mut #key_name) } else { quote!(#key_name) }
+                if mutable {
+                    quote!(mut #key_name)
+                } else {
+                    quote!(#key_name)
+                }
             }
         };
         fields.push(field);
@@ -98,7 +106,12 @@ pub(super) fn destructure_array(
             let pat = elem.as_ref()?;
             let name = bindings::binding_name(pat);
             let idx = syn::Index::from(i);
-            Some(build_local(&name, mutable, None, Some(&parse_quote!(#value[#idx]))))
+            Some(build_local(
+                &name,
+                mutable,
+                None,
+                Some(&parse_quote!(#value[#idx])),
+            ))
         })
         .collect();
     // `...rest` collects the remaining elements (after the last bound position)

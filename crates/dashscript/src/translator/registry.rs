@@ -74,20 +74,28 @@ pub fn build_registry(statements: &[Statement]) -> TypeRegistry {
                 }
                 if let Some(optionals) = struct_optional_fields_of_alias(alias) {
                     if !optionals.is_empty() {
-                        registry.structs.insert(alias.id.name.to_string(), optionals);
+                        registry
+                            .structs
+                            .insert(alias.id.name.to_string(), optionals);
                     }
                 }
             }
             Statement::TSInterfaceDeclaration(iface) => {
                 let optionals = collect_optionals(&iface.body.body);
                 if !optionals.is_empty() {
-                    registry.structs.insert(iface.id.name.to_string(), optionals);
+                    registry
+                        .structs
+                        .insert(iface.id.name.to_string(), optionals);
                 }
             }
             Statement::FunctionDeclaration(func) => {
                 let name = function_name(func);
-                registry.functions.insert(name.clone(), function_params(func));
-                registry.function_defaults.insert(name, function_default_flags(func));
+                registry
+                    .functions
+                    .insert(name.clone(), function_params(func));
+                registry
+                    .function_defaults
+                    .insert(name, function_default_flags(func));
             }
             _ => {}
         }
@@ -117,7 +125,11 @@ fn function_params(func: &Function) -> Vec<Option<Path>> {
 
 /// Per-parameter "has a default initializer (`= …`)" flag.
 fn function_default_flags(func: &Function) -> Vec<bool> {
-    func.params.items.iter().map(|fp| fp.initializer.is_some()).collect()
+    func.params
+        .items
+        .iter()
+        .map(|fp| fp.initializer.is_some())
+        .collect()
 }
 
 /// The `syn::Path` of a `.ds` type annotation, when it is a path-like type.

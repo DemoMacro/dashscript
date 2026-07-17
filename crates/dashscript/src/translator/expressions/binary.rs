@@ -182,7 +182,9 @@ fn operand_is_string(expr: &Expression, ctx: &Ctx<'_>) -> bool {
                 .and_then(|p| p.segments.last())
                 .is_some_and(|s| s.ident == "String")
         }
-        Expression::BinaryExpression(inner) if matches!(inner.operator, BinaryOperator::Addition) => {
+        Expression::BinaryExpression(inner)
+            if matches!(inner.operator, BinaryOperator::Addition) =>
+        {
             concat_is_string(inner, ctx)
         }
         _ => false,

@@ -26,7 +26,11 @@ pub struct Locals {
 impl Locals {
     #[must_use]
     pub fn new() -> Self {
-        Self { types: HashMap::new(), mutated: HashSet::new(), use_counts: HashMap::new() }
+        Self {
+            types: HashMap::new(),
+            mutated: HashSet::new(),
+            use_counts: HashMap::new(),
+        }
     }
 
     /// The type path of a local binding named `name`, if known.
@@ -63,7 +67,11 @@ impl Narrow {
     /// data-field names of the active variant (all snake-cased).
     #[must_use]
     pub fn of(scrut: String, fields: HashSet<String>) -> Self {
-        Self { scrut: Some(scrut), fields, option_some: HashSet::new() }
+        Self {
+            scrut: Some(scrut),
+            fields,
+            option_some: HashSet::new(),
+        }
     }
 
     /// True when `scrut.field` (both snake-cased) should read as the arm's
@@ -100,7 +108,11 @@ pub struct Ctx<'a> {
 impl<'a> Ctx<'a> {
     #[must_use]
     pub fn new(locals: &'a Locals, registry: &'a TypeRegistry, narrow: &'a Narrow) -> Self {
-        Self { locals, registry, narrow }
+        Self {
+            locals,
+            registry,
+            narrow,
+        }
     }
 
     /// The type path of a local binding named `name`, if it is known.

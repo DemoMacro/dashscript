@@ -19,10 +19,9 @@ use crossbeam_channel::{unbounded, Receiver, Sender};
 use dashscript::Translator;
 use lsp_server::{Connection, Message, Notification, Request, RequestId, Response};
 use lsp_types::{
-    ClientCapabilities, Diagnostic, DiagnosticSeverity,
-    DidChangeTextDocumentParams, DidOpenTextDocumentParams, GotoDefinitionParams,
-    GotoDefinitionResponse, InitializeParams, Location,
-    OneOf, Position, PublishDiagnosticsParams, Range, ServerCapabilities,
+    ClientCapabilities, Diagnostic, DiagnosticSeverity, DidChangeTextDocumentParams,
+    DidOpenTextDocumentParams, GotoDefinitionParams, GotoDefinitionResponse, InitializeParams,
+    Location, OneOf, Position, PublishDiagnosticsParams, Range, ServerCapabilities,
     TextDocumentItem, TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
 };
 use oxc_diagnostics::OxcDiagnostic;
@@ -43,7 +42,12 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         .map(str::to_string)
         .unwrap_or_else(|| "rust-analyzer".to_string());
 
-    let mut server = Server { conn: connection, docs: HashMap::new(), ra_path, ra: None };
+    let mut server = Server {
+        conn: connection,
+        docs: HashMap::new(),
+        ra_path,
+        ra: None,
+    };
     server.main_loop()?;
     if let Some(ra) = server.ra.take() {
         ra.shutdown();
@@ -135,14 +139,22 @@ impl Server {
     /// about the resulting `main.rs`. Errors are swallowed — diagnostics and
     /// go-to-definition degrade gracefully when emission or the backend fails.
     fn refresh(&mut self, uri: &Uri, text: &str) {
-        let Some(src_path) = uri_to_path(uri) else { return };
-        let Some(cache) = self.cache_dir(uri) else { return };
+        let Some(src_path) = uri_to_path(uri) else {
+            return;
+        };
+        let Some(cache) = self.cache_dir(uri) else {
+            return;
+        };
         if crate::commands::project::emit_cargo_project(text, &src_path, &cache).is_err() {
             return;
         }
         let main_rs = cache.join("src").join("main.rs");
-        let Ok(main_text) = std::fs::read_to_string(&main_rs) else { return };
-        let Ok(main_uri) = path_to_uri(&main_rs) else { return };
+        let Ok(main_text) = std::fs::read_to_string(&main_rs) else {
+            return;
+        };
+        let Ok(main_uri) = path_to_uri(&main_rs) else {
+            return;
+        };
         if self.ensure_ra(&cache).is_ok() {
             if let Some(ra) = self.ra.as_ref() {
                 ra.notify(
@@ -220,9 +232,16 @@ impl Server {
     fn definition_local(&self, uri: &Uri, text: &str, pos: Position) -> Option<Value> {
         let byte = position_to_byte(text, pos)?;
         let word = word_at(text, byte)?;
-        let decl = Translator::new().declarations(text).into_iter().find(|d| d.name == word)?;
+        let decl = Translator::new()
+            .declarations(text)
+            .into_iter()
+            .find(|d| d.name == word)?;
         let range = byte_range(text, decl.span.start, decl.span.end - decl.span.start);
-        serde_json::to_value(GotoDefinitionResponse::Scalar(Location { uri: uri.clone(), range })).ok()
+        serde_json::to_value(GotoDefinitionResponse::Scalar(Location {
+            uri: uri.clone(),
+            range,
+        }))
+        .ok()
     }
 }
 
@@ -302,18 +321,27 @@ impl RaClient {
     }
 
     fn notify(&self, method: &str, params: impl serde::Serialize) {
-        let _ = self.tx.send(Notification::new(method.into(), params).into());
+        let _ = self
+            .tx
+            .send(Notification::new(method.into(), params).into());
     }
 
     /// Send a request and block for its response, skipping any notifications
     /// rust-analyzer emits in the meantime (progress, diagnostics, …).
-    fn request(&self, method: &str, params: impl serde::Serialize) -> Result<Value, Box<dyn Error>> {
+    fn request(
+        &self,
+        method: &str,
+        params: impl serde::Serialize,
+    ) -> Result<Value, Box<dyn Error>> {
         let id = self.next_id();
-        self.tx.send(Request::new(id.clone(), method.into(), params).into())?;
+        self.tx
+            .send(Request::new(id.clone(), method.into(), params).into())?;
         loop {
             match self.rx.recv() {
                 Ok(Message::Response(r)) if r.id == id => {
-                    return r.response_result.map_err(|e| format!("rust-analyzer {method}: {e:?}").into());
+                    return r
+                        .response_result
+                        .map_err(|e| format!("rust-analyzer {method}: {e:?}").into());
                 }
                 Ok(_) => continue,
                 Err(e) => return Err(format!("rust-analyzer {method}: channel {e}").into()),
@@ -341,8 +369,12 @@ impl RaClient {
     /// `RaClient` drop regardless.
     fn shutdown(self) {
         let id = self.next_id();
-        let _ = self.tx.send(Request::new(id, "shutdown".into(), Value::Null).into());
-        let _ = self.tx.send(Notification::new("exit".into(), Value::Null).into());
+        let _ = self
+            .tx
+            .send(Request::new(id, "shutdown".into(), Value::Null).into());
+        let _ = self
+            .tx
+            .send(Notification::new("exit".into(), Value::Null).into());
     }
 }
 
@@ -354,7 +386,11 @@ fn publish_diagnostics(connection: &Connection, uri: &Uri, text: &str) {
         .iter()
         .map(|diag| to_lsp_diagnostic(diag, text))
         .collect();
-    let params = PublishDiagnosticsParams { uri: uri.clone(), diagnostics, version: None };
+    let params = PublishDiagnosticsParams {
+        uri: uri.clone(),
+        diagnostics,
+        version: None,
+    };
     let _ = connection
         .sender
         .send(Notification::new("textDocument/publishDiagnostics".into(), params).into());
@@ -405,7 +441,10 @@ fn map_symbol_pos(main_rs: &str, module: &str, symbol: &str) -> Option<Position>
             continue;
         }
         if let Some(col) = find_word_col(line, symbol) {
-            return Some(Position { line: line_idx as u32, character: col });
+            return Some(Position {
+                line: line_idx as u32,
+                character: col,
+            });
         }
     }
     None
@@ -419,7 +458,10 @@ fn map_module_pos(main_rs: &str, module: &str) -> Option<Position> {
     for (line_idx, line) in main_rs.lines().enumerate() {
         if line.trim_start().starts_with("use ") && line.contains(&needle) {
             if let Some(col) = find_word_col(line, module) {
-                return Some(Position { line: line_idx as u32, character: col });
+                return Some(Position {
+                    line: line_idx as u32,
+                    character: col,
+                });
             }
         }
     }
@@ -488,7 +530,10 @@ fn position_to_byte(text: &str, pos: Position) -> Option<usize> {
 fn byte_range(text: &str, offset: u32, len: u32) -> Range {
     let start = offset as usize;
     let end = start.saturating_add(len as usize).min(text.len());
-    Range { start: byte_to_position(text, start), end: byte_to_position(text, end) }
+    Range {
+        start: byte_to_position(text, start),
+        end: byte_to_position(text, end),
+    }
 }
 
 fn byte_to_position(text: &str, byte_offset: usize) -> Position {
@@ -517,10 +562,34 @@ mod tests {
     #[test]
     fn position_tracks_lines_and_columns() {
         let text = "abc\ndef\nghi";
-        assert_eq!(byte_to_position(text, 0), Position { line: 0, character: 0 });
-        assert_eq!(byte_to_position(text, 3), Position { line: 0, character: 3 });
-        assert_eq!(byte_to_position(text, 4), Position { line: 1, character: 0 });
-        assert_eq!(byte_to_position(text, 8), Position { line: 2, character: 0 });
+        assert_eq!(
+            byte_to_position(text, 0),
+            Position {
+                line: 0,
+                character: 0
+            }
+        );
+        assert_eq!(
+            byte_to_position(text, 3),
+            Position {
+                line: 0,
+                character: 3
+            }
+        );
+        assert_eq!(
+            byte_to_position(text, 4),
+            Position {
+                line: 1,
+                character: 0
+            }
+        );
+        assert_eq!(
+            byte_to_position(text, 8),
+            Position {
+                line: 2,
+                character: 0
+            }
+        );
     }
 
     #[test]
@@ -528,21 +597,46 @@ mod tests {
         let text = "hello\nworld";
         // "world" spans bytes 6..11 → line 1, characters 0..5.
         let range = byte_range(text, 6, 5);
-        assert_eq!(range.start, Position { line: 1, character: 0 });
-        assert_eq!(range.end, Position { line: 1, character: 5 });
+        assert_eq!(
+            range.start,
+            Position {
+                line: 1,
+                character: 0
+            }
+        );
+        assert_eq!(
+            range.end,
+            Position {
+                line: 1,
+                character: 5
+            }
+        );
     }
 
     #[test]
     fn range_clamps_past_end_of_text() {
         let range = byte_range("ab", 0, 100);
-        assert_eq!(range.end, Position { line: 0, character: 2 });
+        assert_eq!(
+            range.end,
+            Position {
+                line: 0,
+                character: 2
+            }
+        );
     }
 
     #[test]
     fn locate_import_resolves_named_specifier() {
         let text = "import { Adler32 } from \"adler\";";
         // `Adler32` starts at character 9 on line 0.
-        let (module, symbol) = locate_import(text, Position { line: 0, character: 9 }).unwrap();
+        let (module, symbol) = locate_import(
+            text,
+            Position {
+                line: 0,
+                character: 9,
+            },
+        )
+        .unwrap();
         assert_eq!(module, "adler");
         assert_eq!(symbol.as_deref(), Some("Adler32"));
     }
@@ -553,7 +647,13 @@ mod tests {
         // column 11 (`use adler::` is 11 characters).
         let main_rs = "use adler::Adler32;\n\nfn main() {}\n";
         let pos = map_symbol_pos(main_rs, "adler", "Adler32").unwrap();
-        assert_eq!(pos, Position { line: 0, character: 11 });
+        assert_eq!(
+            pos,
+            Position {
+                line: 0,
+                character: 11
+            }
+        );
     }
 
     #[test]
@@ -583,15 +683,31 @@ mod tests {
     fn locate_import_resolves_crate_root_on_source_string() {
         let text = "import { Adler32 } from \"adler\";";
         // Cursor inside the `"adler"` source string (character 27 = the `l`).
-        let (module, symbol) = locate_import(text, Position { line: 0, character: 27 }).unwrap();
+        let (module, symbol) = locate_import(
+            text,
+            Position {
+                line: 0,
+                character: 27,
+            },
+        )
+        .unwrap();
         assert_eq!(module, "adler");
-        assert!(symbol.is_none(), "expected no symbol (crate root): {symbol:?}");
+        assert!(
+            symbol.is_none(),
+            "expected no symbol (crate root): {symbol:?}"
+        );
     }
 
     #[test]
     fn map_module_pos_finds_crate_name() {
         // `use adler::Adler32;` — `adler` begins at column 4 (`use ` is 4 chars).
         let pos = map_module_pos("use adler::Adler32;\n", "adler").unwrap();
-        assert_eq!(pos, Position { line: 0, character: 4 });
+        assert_eq!(
+            pos,
+            Position {
+                line: 0,
+                character: 4
+            }
+        );
     }
 }

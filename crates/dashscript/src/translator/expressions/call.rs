@@ -57,13 +57,17 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
         if builtins::is_ident(&sm.object, "Math") {
-            if let Some(expr) = builtins::math_method(&sm.property.name, call.arguments.as_slice(), ctx) {
+            if let Some(expr) =
+                builtins::math_method(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
                 return expr;
             }
         }
         // `Object.keys(m)` / `Object.values(m)` on a `Record` (a `HashMap`).
         if builtins::is_ident(&sm.object, "Object") {
-            if let Some(expr) = builtins::object_method(&sm.property.name, call.arguments.as_slice(), ctx) {
+            if let Some(expr) =
+                builtins::object_method(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
                 return expr;
             }
         }
@@ -75,13 +79,17 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         }
         // `String.fromCharCode(n)` → a one-char `String`.
         if builtins::is_ident(&sm.object, "String") {
-            if let Some(expr) = builtins::string_static(&sm.property.name, call.arguments.as_slice(), ctx) {
+            if let Some(expr) =
+                builtins::string_static(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
                 return expr;
             }
         }
         // `Number.isNaN(x)` / `Number.isFinite(x)` / `Number.isInteger(x)`.
         if builtins::is_ident(&sm.object, "Number") {
-            if let Some(expr) = builtins::number_static(&sm.property.name, call.arguments.as_slice(), ctx) {
+            if let Some(expr) =
+                builtins::number_static(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
                 return expr;
             }
         }
@@ -105,7 +113,11 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         }
         if let Some(method) = builtins::map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object, ctx);
-            let args: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
+            let args: Vec<Expr> = call
+                .arguments
+                .iter()
+                .map(|a| translate_argument(a, ctx))
+                .collect();
             return parse_quote!(#obj.#method(#(#args),*));
         }
     }
@@ -156,7 +168,9 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
 /// A scalar is `Copy` (never cloned); a local read only here is moved, which
 /// is the idiomatic last use.
 fn clone_owned_local(arg: &Argument, val: Expr, ctx: &Ctx<'_>) -> Expr {
-    let Argument::Identifier(id) = arg else { return val };
+    let Argument::Identifier(id) = arg else {
+        return val;
+    };
     if id.name.as_str() == "undefined" {
         return val;
     }

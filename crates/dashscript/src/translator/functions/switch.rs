@@ -54,7 +54,10 @@ fn discriminant_member(
     };
     let scrut = bindings::snake(&obj.name).to_string();
     let type_name = locals.get(&scrut)?.segments.last()?.ident.to_string();
-    registry.unions.contains_key(&type_name).then_some((scrut, type_name))
+    registry
+        .unions
+        .contains_key(&type_name)
+        .then_some((scrut, type_name))
 }
 
 /// `switch (s.kind) { case "circle": … }` → `match s { Shape::Circle { radius } => … }`.
@@ -109,7 +112,9 @@ fn discriminated_arm(
 }
 
 fn discriminant_path(disc: &Expression, locals: &Locals) -> Option<syn::Path> {
-    let Expression::Identifier(id) = disc else { return None };
+    let Expression::Identifier(id) = disc else {
+        return None;
+    };
     let name: &str = &id.name;
     locals.get(&bindings::snake(name).to_string()).cloned()
 }

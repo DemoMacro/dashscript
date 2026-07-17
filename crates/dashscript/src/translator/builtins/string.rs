@@ -182,7 +182,11 @@ pub(in crate::translator) fn string_method(
 /// `char` is a Unicode scalar value, so the two TS methods lower identically
 /// (`fromCharCode`'s UTF-16 surrogate distinction doesn't arise). Returns
 /// `None` otherwise.
-pub(in crate::translator) fn string_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+pub(in crate::translator) fn string_static(
+    name: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
     let n = translate_argument(args.first()?, ctx);
     Some(match name {
         "fromCharCode" | "fromCodePoint" => {

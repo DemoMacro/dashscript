@@ -124,7 +124,9 @@ pub fn translate_init(expr: &Expression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) 
     // Identifiers/calls may already yield an `Option`, so only literals wrap.
     let is_value_literal = matches!(
         expr,
-        Expression::NumericLiteral(_) | Expression::StringLiteral(_) | Expression::BooleanLiteral(_)
+        Expression::NumericLiteral(_)
+            | Expression::StringLiteral(_)
+            | Expression::BooleanLiteral(_)
     );
     if is_value_literal && ty_hint.is_some_and(is_option) {
         let value = translate_expr(expr, ctx);
@@ -180,7 +182,10 @@ fn ident_or_undefined(id: &IdentifierReference) -> Expr {
 
 /// The source name of `expr` when it is a plain identifier bound to an
 /// `Option<…>` local; `None` otherwise.
-pub(in crate::translator) fn option_local_name<'a>(expr: &'a Expression, ctx: &Ctx<'_>) -> Option<&'a str> {
+pub(in crate::translator) fn option_local_name<'a>(
+    expr: &'a Expression,
+    ctx: &Ctx<'_>,
+) -> Option<&'a str> {
     let Expression::Identifier(id) = expr else {
         return None;
     };
@@ -188,7 +193,8 @@ pub(in crate::translator) fn option_local_name<'a>(expr: &'a Expression, ctx: &C
     if name == "undefined" {
         return None;
     }
-    ctx.is_option(&bindings::snake(name).to_string()).then_some(name)
+    ctx.is_option(&bindings::snake(name).to_string())
+        .then_some(name)
 }
 
 /// True when `path` names a `HashMap` (the target of a `Record<K, V>`).
@@ -250,7 +256,11 @@ fn template_expr(t: &TemplateLiteral, ctx: &Ctx<'_>) -> Expr {
             fmt.push_str("{}");
         }
     }
-    let exprs: Vec<Expr> = t.expressions.iter().map(|e| translate_expr(e, ctx)).collect();
+    let exprs: Vec<Expr> = t
+        .expressions
+        .iter()
+        .map(|e| translate_expr(e, ctx))
+        .collect();
     let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
     parse_quote!(::std::format!(#fmt_lit, #(#exprs),*))
 }

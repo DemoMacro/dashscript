@@ -80,7 +80,11 @@ pub(in crate::translator) fn number_constant(name: &str) -> Option<Expr> {
 /// part, `isSafeInteger` adds the ±(2^53 − 1) bound. `parseFloat`/`parseInt`
 /// mirror the global functions (TS `Number.parseFloat === parseFloat`).
 /// Returns `None` otherwise.
-pub(in crate::translator) fn number_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+pub(in crate::translator) fn number_static(
+    name: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
     let x = translate_argument(args.first()?, ctx);
     Some(match name {
         "isNaN" => parse_quote!(#x.is_nan()),

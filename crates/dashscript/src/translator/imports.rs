@@ -42,7 +42,10 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
                 return None;
             }
             let module = module_ident(&imp.source.value)?.to_string();
-            Some(ImportRef { module, source: imp.source.value.to_string() })
+            Some(ImportRef {
+                module,
+                source: imp.source.value.to_string(),
+            })
         })
         .collect()
 }
@@ -142,10 +145,17 @@ pub(crate) fn collect_crate_imports(source: &str) -> Vec<CrateImport> {
                         ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => return None,
                     };
                     let name = named_local(spec)?.to_string();
-                    Some(CrateImportSymbol { name, span: local.span })
+                    Some(CrateImportSymbol {
+                        name,
+                        span: local.span,
+                    })
                 })
                 .collect();
-            Some(CrateImport { module, symbols, source_span: imp.source.span })
+            Some(CrateImport {
+                module,
+                symbols,
+                source_span: imp.source.span,
+            })
         })
         .collect()
 }
@@ -187,7 +197,10 @@ fn collect_from_statement(stmt: &Statement, out: &mut Vec<LocalSymbol>) {
                         ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => None,
                     };
                     if let Some(local) = local {
-                        out.push(LocalSymbol { name: local.name.to_string(), span: local.span });
+                        out.push(LocalSymbol {
+                            name: local.name.to_string(),
+                            span: local.span,
+                        });
                     }
                 }
             }
@@ -217,5 +230,8 @@ fn extend_binding(id: &Option<BindingIdentifier>, out: &mut Vec<LocalSymbol>) {
 }
 
 fn symbol(id: &BindingIdentifier) -> LocalSymbol {
-    LocalSymbol { name: id.name.to_string(), span: id.span }
+    LocalSymbol {
+        name: id.name.to_string(),
+        span: id.span,
+    }
 }

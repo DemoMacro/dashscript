@@ -13,7 +13,11 @@ use super::str_method_arg;
 /// work), `entries` → `(K, V)` pairs. `is`/`hasOwn`/`getOwnPropertyNames`/
 /// `assign`/`fromEntries` round out the static set DashScript maps on a
 /// `Record`. Returns `None` for any other member.
-pub(in crate::translator) fn object_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+pub(in crate::translator) fn object_method(
+    name: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
     let r = translate_argument(args.first()?, ctx);
     Some(match name {
         "keys" => parse_quote!(#r.keys().map(|k| k.to_string()).collect::<Vec<_>>()),
@@ -42,7 +46,11 @@ pub(in crate::translator) fn object_method(name: &str, args: &[Argument], ctx: &
         // `Object.assign(target, …srcs)` → a cloned target with each source
         // merged in (Record = HashMap, so `extend` merges by key).
         "assign" => {
-            let srcs: Vec<Expr> = args.iter().skip(1).map(|a| translate_argument(a, ctx)).collect();
+            let srcs: Vec<Expr> = args
+                .iter()
+                .skip(1)
+                .map(|a| translate_argument(a, ctx))
+                .collect();
             parse_quote!({
                 let mut __m = #r.clone();
                 #(__m.extend(#srcs.clone());)*

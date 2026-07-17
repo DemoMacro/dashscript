@@ -110,7 +110,12 @@ pub(super) fn translate_do_while(
 /// Translate an `if`/`while` test. A bare identifier of a `Vec`/`String` type
 /// maps to an emptiness check, and an `Option` maps to `is_some`; negation flips
 /// to `is_empty`/`is_none`. Anything else translates as a plain boolean expr.
-fn condition_expr(test: &Expression, locals: &Locals, registry: &TypeRegistry, narrow: &Narrow) -> Expr {
+fn condition_expr(
+    test: &Expression,
+    locals: &Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+) -> Expr {
     if let Some(expr) = truthiness(test, false, locals) {
         return expr;
     }

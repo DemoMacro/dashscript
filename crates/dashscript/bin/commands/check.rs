@@ -72,7 +72,11 @@ pub(crate) fn check(target: Option<&str>, fix: bool) -> Result<ExitCode, Box<dyn
         }
         any_failed |= file_failed;
     }
-    Ok(if any_failed { ExitCode::FAILURE } else { ExitCode::SUCCESS })
+    Ok(if any_failed {
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
+    })
 }
 
 /// Lint translatability only (`ds lint [<file>]`, the old `ds check`): syntax
@@ -97,7 +101,11 @@ pub(crate) fn lint(target: Option<&str>) -> Result<ExitCode, Box<dyn Error>> {
             eprintln!("{report:?}");
         }
     }
-    Ok(if failed { ExitCode::FAILURE } else { ExitCode::SUCCESS })
+    Ok(if failed {
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
+    })
 }
 
 /// Format `.ds` in place with `oxc_codegen` (`ds fmt [<file>]`). No argument →

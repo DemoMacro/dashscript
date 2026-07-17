@@ -86,7 +86,9 @@ pub fn type_path(ty: &Type) -> Option<&syn::Path> {
 /// duplicated on read, so it never needs cloning; everything else
 /// (`String`/`Vec`/`HashMap`/user `struct`/`enum`) is non-`Copy` and would move.
 pub fn is_copy_path(path: &syn::Path) -> bool {
-    let Some(seg) = path.segments.last() else { return false };
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
     match seg.ident.to_string().as_str() {
         "f64" | "i64" | "u64" | "i32" | "u32" | "usize" | "isize" | "bool" => true,
         "Option" => {

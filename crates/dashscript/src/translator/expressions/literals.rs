@@ -19,10 +19,19 @@ pub(super) fn numeric_expr(value: f64) -> Expr {
     let s = if value.is_nan() {
         "f64::NAN".to_string()
     } else if value.is_infinite() {
-        if value > 0.0 { "f64::INFINITY" } else { "f64::NEG_INFINITY" }.to_string()
+        if value > 0.0 {
+            "f64::INFINITY"
+        } else {
+            "f64::NEG_INFINITY"
+        }
+        .to_string()
     } else {
         let s = format!("{value}");
-        if s.contains('.') || s.contains('e') || s.contains('E') { s } else { format!("{s}.0") }
+        if s.contains('.') || s.contains('e') || s.contains('E') {
+            s
+        } else {
+            format!("{s}.0")
+        }
     };
     parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN))
 }

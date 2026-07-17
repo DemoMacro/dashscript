@@ -173,7 +173,9 @@ pub(crate) fn collect_ds_files() -> Vec<PathBuf> {
 
 /// Recursive worker for [`collect_ds_files`].
 fn walk_ds(dir: &Path, out: &mut Vec<PathBuf>) {
-    let Ok(entries) = fs::read_dir(dir) else { return };
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
     for entry in entries.flatten() {
         let path = entry.path();
         if path.is_dir() {
@@ -271,8 +273,8 @@ pub(crate) fn resolve_target(src_path: &Path, override_target: Option<&str>) -> 
 
 /// Read and parse a `manifest.json`.
 pub(crate) fn read_manifest(path: &Path) -> Result<Manifest, Box<dyn Error>> {
-    let json = fs::read_to_string(path)
-        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    let json =
+        fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     Ok(Manifest::from_json(&json)?)
 }
 

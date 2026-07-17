@@ -8,9 +8,9 @@
 //! directions. Parsing reuses `oxc_parser`; DashScript never parses itself.
 
 mod analysis;
+pub mod bindings;
 mod builtins;
 mod check;
-pub mod bindings;
 pub mod context;
 pub mod declarations;
 pub mod expressions;
@@ -60,7 +60,11 @@ impl Translator {
             .iter()
             .filter_map(|s| functions::translate_statement(s, &registry))
             .collect();
-        let file = syn::File { shebang: None, attrs: Vec::new(), items };
+        let file = syn::File {
+            shebang: None,
+            attrs: Vec::new(),
+            items,
+        };
         Ok(prettyplease::unparse(&file))
     }
 

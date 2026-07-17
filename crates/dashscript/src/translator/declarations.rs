@@ -1,7 +1,7 @@
 //! Type declarations (`interface` / `type`) → `syn` items.
 
 use oxc_ast::ast::{
-    TSLiteral, TSInterfaceDeclaration, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeName,
+    TSInterfaceDeclaration, TSLiteral, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeName,
     TSUnionType,
 };
 use proc_macro2::TokenStream;
@@ -28,7 +28,9 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Option<Item> {
     match &alias.type_annotation {
         TSType::TSTypeLiteral(lit) => {
             let fields: Vec<TokenStream> = lit.members.iter().filter_map(struct_field).collect();
-            Some(Item::Struct(parse_quote! { #[derive(Clone)] struct #name { #(#fields)* } }))
+            Some(Item::Struct(
+                parse_quote! { #[derive(Clone)] struct #name { #(#fields)* } },
+            ))
         }
         TSType::TSUnionType(u) => {
             // A union of string literals or named types becomes an `enum`;
@@ -61,7 +63,8 @@ fn union_to_enum(name: &Ident, u: &TSUnionType) -> Option<ItemEnum> {
     if ref_variants.len() == u.types.len() {
         return Some(parse_quote! { #[derive(Clone)] enum #name { #(#ref_variants),* } });
     }
-    let field_variants: Vec<syn::Variant> = u.types.iter().filter_map(discriminated_variant).collect();
+    let field_variants: Vec<syn::Variant> =
+        u.types.iter().filter_map(discriminated_variant).collect();
     if !field_variants.is_empty() && field_variants.len() == u.types.len() {
         return Some(parse_quote! { #[derive(Clone)] enum #name { #(#field_variants),* } });
     }

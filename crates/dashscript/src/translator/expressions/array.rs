@@ -16,14 +16,21 @@ pub(super) fn array_expr(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
     {
         return spread_array(arr, ctx);
     }
-    let elems: Vec<Expr> = arr.elements.iter().filter_map(|e| array_element(e, ctx)).collect();
+    let elems: Vec<Expr> = arr
+        .elements
+        .iter()
+        .filter_map(|e| array_element(e, ctx))
+        .collect();
     parse_quote!(vec![#(#elems),*])
 }
 
 /// A spread-free inline array literal as a borrowed slice `&[…]`, for `for …
 /// in` iteration (idiomatic; avoids clippy::useless_vec). Returns `None` when
 /// the array has a spread (those need a `Vec` concat).
-pub(in crate::translator) fn array_slice_expr(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+pub(in crate::translator) fn array_slice_expr(
+    arr: &ArrayExpression,
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
     if arr
         .elements
         .iter()
@@ -31,7 +38,11 @@ pub(in crate::translator) fn array_slice_expr(arr: &ArrayExpression, ctx: &Ctx<'
     {
         return None;
     }
-    let elems: Vec<Expr> = arr.elements.iter().filter_map(|e| array_element(e, ctx)).collect();
+    let elems: Vec<Expr> = arr
+        .elements
+        .iter()
+        .filter_map(|e| array_element(e, ctx))
+        .collect();
     Some(parse_quote!(&[#(#elems),*]))
 }
 

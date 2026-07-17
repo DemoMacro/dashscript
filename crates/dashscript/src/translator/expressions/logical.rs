@@ -17,12 +17,22 @@ use super::translate_expr;
 /// directly instead of routing through a truthiness block. The translator has no
 /// type info for call results, so this is a curated list of common predicates.
 const BOOL_METHODS: &[&str] = &[
-    "includes", "startsWith", "endsWith", // string / array
-    "some", "every",                       // array
-    "isArray",                             // Array
-    "isNaN", "isFinite", "isInteger", "isSafeInteger", // Number
-    "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", // Object
-    "isFrozen", "isSealed", "isExtensible", // Object (no-op introspection)
+    "includes",
+    "startsWith",
+    "endsWith", // string / array
+    "some",
+    "every",   // array
+    "isArray", // Array
+    "isNaN",
+    "isFinite",
+    "isInteger",
+    "isSafeInteger", // Number
+    "hasOwnProperty",
+    "isPrototypeOf",
+    "propertyIsEnumerable", // Object
+    "isFrozen",
+    "isSealed",
+    "isExtensible", // Object (no-op introspection)
 ];
 
 /// `&&`/`||` are a separate `LogicalExpression` in oxc (not `BinaryExpression`).
@@ -148,11 +158,16 @@ pub(super) fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
         }
         // `!x` (logical not) yields bool.
         Expression::UnaryExpression(u)
-            if matches!(u.operator, oxc_ast::ast::UnaryOperator::LogicalNot) => true,
+            if matches!(u.operator, oxc_ast::ast::UnaryOperator::LogicalNot) =>
+        {
+            true
+        }
         // A predicate method *call* (`s.includes(...)`, `xs.some(...)`) returns
         // bool — the outer node is a `CallExpression` whose callee is the member.
         Expression::CallExpression(call) => match &call.callee {
-            Expression::StaticMemberExpression(sm) => BOOL_METHODS.contains(&sm.property.name.as_str()),
+            Expression::StaticMemberExpression(sm) => {
+                BOOL_METHODS.contains(&sm.property.name.as_str())
+            }
             _ => false,
         },
         Expression::Identifier(id) => {

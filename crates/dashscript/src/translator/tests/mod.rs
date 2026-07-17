@@ -1,16 +1,16 @@
 // End-to-end tests for `Translator::translate`, grouped by feature area.
-mod types;
-mod control_flow;
-mod operators;
 mod arrays;
-mod strings;
-mod number_methods;
-mod math;
-mod globals;
-mod destructuring;
-mod console;
-mod clone_move;
-mod narrowing;
 mod check;
+mod clone_move;
+mod console;
+mod control_flow;
+mod destructuring;
 mod fmt;
+mod globals;
+mod math;
 mod modules;
+mod narrowing;
+mod number_methods;
+mod operators;
+mod strings;
+mod types;

@@ -34,7 +34,9 @@ use super::{bindings, declarations, expressions, types};
 /// and are not mapped at module scope.
 pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Option<syn::Item> {
     match stmt {
-        Statement::FunctionDeclaration(func) => Some(syn::Item::Fn(translate_function(func, registry))),
+        Statement::FunctionDeclaration(func) => {
+            Some(syn::Item::Fn(translate_function(func, registry)))
+        }
         Statement::TSInterfaceDeclaration(iface) => {
             Some(syn::Item::Struct(declarations::translate_interface(iface)))
         }
@@ -71,9 +73,14 @@ pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Option<
 /// Translate the inner declaration of an `export` (`export function` /
 /// `export interface` / `export type`). Re-exports and unsupported kinds
 /// (class, enum) yield `None`.
-fn translate_exported_declaration(decl: &Declaration, registry: &TypeRegistry) -> Option<syn::Item> {
+fn translate_exported_declaration(
+    decl: &Declaration,
+    registry: &TypeRegistry,
+) -> Option<syn::Item> {
     match decl {
-        Declaration::FunctionDeclaration(func) => Some(syn::Item::Fn(translate_function(func, registry))),
+        Declaration::FunctionDeclaration(func) => {
+            Some(syn::Item::Fn(translate_function(func, registry)))
+        }
         Declaration::TSInterfaceDeclaration(iface) => {
             Some(syn::Item::Struct(declarations::translate_interface(iface)))
         }
@@ -117,7 +124,10 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         .as_ref()
         .and_then(|ta| match &ta.type_annotation {
             TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
-            ty => Some(ReturnType::Type(Default::default(), Box::new(types::translate_type(ty)))),
+            ty => Some(ReturnType::Type(
+                Default::default(),
+                Box::new(types::translate_type(ty)),
+            )),
         })
         .unwrap_or(ReturnType::Default);
     // The return-type path threads down to `return {…}` so the object literal
@@ -132,10 +142,8 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         .filter_map(|fp| {
             let init = fp.initializer.as_deref()?;
             let name = bindings::binding_name(&fp.pattern);
-            let default = expressions::translate_expr(
-                init,
-                &Ctx::new(&locals, registry, &Narrow::default()),
-            );
+            let default =
+                expressions::translate_expr(init, &Ctx::new(&locals, registry, &Narrow::default()));
             Some(parse_quote!(let #name = #name.unwrap_or(#default);))
         })
         .collect();
@@ -153,12 +161,12 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
     }
     // Generic type parameters pass through verbatim (`<T>`); Rust monomorphizes
     // and infers each call. Constraints/defaults are ignored (no `where`).
-    let generics: Vec<Ident> = func
-        .type_parameters
-        .as_deref()
-        .map_or_else(Vec::new, |tp| {
-            tp.params.iter().map(|p| bindings::type_ident(&p.name.name)).collect()
-        });
+    let generics: Vec<Ident> = func.type_parameters.as_deref().map_or_else(Vec::new, |tp| {
+        tp.params
+            .iter()
+            .map(|p| bindings::type_ident(&p.name.name))
+            .collect()
+    });
     if generics.is_empty() {
         parse_quote! {
             fn #name(#(#inputs),*) #output #block
@@ -276,8 +284,11 @@ fn translate_stmt(
                     // An object literal borrows the struct name from the return
                     // type; everything else translates as a plain expression.
                     let ret_ty = return_path.map(|p| -> Type { parse_quote!(#p) });
-                    let expr =
-                        expressions::translate_init(arg, ret_ty.as_ref(), &Ctx::new(&*locals, registry, narrow));
+                    let expr = expressions::translate_init(
+                        arg,
+                        ret_ty.as_ref(),
+                        &Ctx::new(&*locals, registry, narrow),
+                    );
                     parse_quote!(return #expr;)
                 }
                 None => parse_quote!(return;),
@@ -285,21 +296,44 @@ fn translate_stmt(
             vec![s]
         }
         Statement::ExpressionStatement(es) => {
-            let expr = expressions::translate_expr(&es.expression, &Ctx::new(&*locals, registry, narrow));
+            let expr =
+                expressions::translate_expr(&es.expression, &Ctx::new(&*locals, registry, narrow));
             vec![parse_quote!(#expr;)]
         }
         Statement::VariableDeclaration(decl) => {
             translate_variable_declaration(decl, locals, registry, narrow)
         }
-        Statement::IfStatement(if_stmt) => vec![translate_if(if_stmt, locals, registry, narrow, return_path)],
-        Statement::WhileStatement(while_stmt) => {
-            vec![translate_while(while_stmt, locals, registry, narrow, return_path)]
+        Statement::IfStatement(if_stmt) => {
+            vec![translate_if(if_stmt, locals, registry, narrow, return_path)]
         }
-        Statement::DoWhileStatement(dws) => vec![translate_do_while(dws, locals, registry, narrow, return_path)],
-        Statement::ForOfStatement(for_of) => translate_for_of(for_of, locals, registry, narrow, return_path),
-        Statement::ForInStatement(for_in) => translate_for_in(for_in, locals, registry, narrow, return_path),
-        Statement::ForStatement(for_stmt) => translate_for(for_stmt, locals, registry, narrow, return_path),
-        Statement::SwitchStatement(sw) => vec![translate_switch(sw, locals, registry, narrow, return_path)],
+        Statement::WhileStatement(while_stmt) => {
+            vec![translate_while(
+                while_stmt,
+                locals,
+                registry,
+                narrow,
+                return_path,
+            )]
+        }
+        Statement::DoWhileStatement(dws) => vec![translate_do_while(
+            dws,
+            locals,
+            registry,
+            narrow,
+            return_path,
+        )],
+        Statement::ForOfStatement(for_of) => {
+            translate_for_of(for_of, locals, registry, narrow, return_path)
+        }
+        Statement::ForInStatement(for_in) => {
+            translate_for_in(for_in, locals, registry, narrow, return_path)
+        }
+        Statement::ForStatement(for_stmt) => {
+            translate_for(for_stmt, locals, registry, narrow, return_path)
+        }
+        Statement::SwitchStatement(sw) => {
+            vec![translate_switch(sw, locals, registry, narrow, return_path)]
+        }
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
         Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
         Statement::ThrowStatement(t) => vec![throw_stmt(&t.argument, locals, registry, narrow)],
@@ -412,12 +446,7 @@ fn control_flow_in(stmts: &[Statement]) -> bool {
 /// `throw new Error("msg")` / `throw "msg"` → `panic!("msg")`; any other
 /// `throw expr` → `panic!("{}", expr)` (Rust has no `throw`; `.ds` errors are
 /// treated as unrecoverable panics, since there is no `try`/`catch` yet).
-fn throw_stmt(
-    arg: &Expression,
-    locals: &Locals,
-    registry: &TypeRegistry,
-    narrow: &Narrow,
-) -> Stmt {
+fn throw_stmt(arg: &Expression, locals: &Locals, registry: &TypeRegistry, narrow: &Narrow) -> Stmt {
     if let Some(lit) = thrown_message(arg) {
         return parse_quote!(panic!(#lit););
     }
@@ -429,13 +458,19 @@ fn throw_stmt(
 /// The string literal carried by `throw new Error("msg")` or `throw "msg"`.
 fn thrown_message(arg: &Expression) -> Option<LitStr> {
     if let Expression::StringLiteral(s) = arg {
-        return Some(LitStr::new(s.value.as_str(), proc_macro2::Span::call_site()));
+        return Some(LitStr::new(
+            s.value.as_str(),
+            proc_macro2::Span::call_site(),
+        ));
     }
     let Expression::NewExpression(new) = arg else {
         return None;
     };
     if let Argument::StringLiteral(s) = new.arguments.first()? {
-        return Some(LitStr::new(s.value.as_str(), proc_macro2::Span::call_site()));
+        return Some(LitStr::new(
+            s.value.as_str(),
+            proc_macro2::Span::call_site(),
+        ));
     }
     None
 }
@@ -478,7 +513,11 @@ fn translate_variable_declaration(
                         locals.insert(name.to_string(), path);
                     }
                     let init = d.init.as_ref().map(|e| {
-                        expressions::translate_init(e, ty.as_ref(), &Ctx::new(&*locals, registry, narrow))
+                        expressions::translate_init(
+                            e,
+                            ty.as_ref(),
+                            &Ctx::new(&*locals, registry, narrow),
+                        )
                     });
                     vec![build_local(&name, mutable, ty.as_ref(), init.as_ref())]
                 }

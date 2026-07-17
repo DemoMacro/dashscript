@@ -16,7 +16,11 @@ use super::translate_expr;
 /// `Point { x: 1 }` — needs the target type's name from the binding annotation.
 /// A `{ kind: "circle", … }` literal whose target is a registered
 /// discriminated union instead builds a variant (`Shape::Circle { … }`).
-pub(super) fn object_expr(obj: &ObjectExpression, ty_hint: Option<&syn::Type>, ctx: &Ctx<'_>) -> Expr {
+pub(super) fn object_expr(
+    obj: &ObjectExpression,
+    ty_hint: Option<&syn::Type>,
+    ctx: &Ctx<'_>,
+) -> Expr {
     let Some(path) = ty_hint.and_then(types::type_path) else {
         return parse_quote!(::core::todo!());
     };
@@ -78,7 +82,11 @@ fn optional_fields_for<'a>(path: &syn::Path, ctx: &Ctx<'a>) -> Option<&'a HashSe
 /// `None` initializers for optional (`?:`) fields the literal omitted, so a
 /// partial struct literal still names every field. Only fields registered as
 /// optional on this struct type and absent from `present` are filled.
-fn missing_optionals(path: &syn::Path, present: &[syn::FieldValue], ctx: &Ctx<'_>) -> Vec<syn::FieldValue> {
+fn missing_optionals(
+    path: &syn::Path,
+    present: &[syn::FieldValue],
+    ctx: &Ctx<'_>,
+) -> Vec<syn::FieldValue> {
     let Some(type_name) = path.segments.last().map(|s| s.ident.to_string()) else {
         return Vec::new();
     };
@@ -109,7 +117,9 @@ fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
         .properties
         .iter()
         .filter_map(|p| {
-            let ObjectPropertyKind::ObjectProperty(op) = p else { return None };
+            let ObjectPropertyKind::ObjectProperty(op) = p else {
+                return None;
+            };
             let value = translate_expr(&op.value, ctx);
             let key = if op.computed {
                 // `[k]: v` — a dynamic key (an expression, typically a String).
@@ -137,7 +147,9 @@ fn variant_construct(obj: &ObjectExpression, path: &syn::Path, ctx: &Ctx<'_>) ->
         .properties
         .iter()
         .filter_map(|p| {
-            let ObjectPropertyKind::ObjectProperty(op) = p else { return None };
+            let ObjectPropertyKind::ObjectProperty(op) = p else {
+                return None;
+            };
             let key = bindings::property_key_name(&op.key)?;
             // The discriminant is consumed by the variant name, not a field.
             if key == "kind" {

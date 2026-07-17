@@ -51,8 +51,8 @@ pub(crate) fn remove(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
 /// written beside it as `<stem>.ds`.
 fn add_local_file(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     let path = Path::new(file);
-    let rust = fs::read_to_string(path)
-        .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    let rust =
+        fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     let ds = Bindgen::new()
         .generate(&rust)
         .map_err(|e| format!("bindgen {}: {e}", path.display()))?;
@@ -69,7 +69,8 @@ fn add_local_file(file: &str) -> Result<ExitCode, Box<dyn Error>> {
 /// compiles without re-downloading.
 pub(crate) fn install() -> Result<ExitCode, Box<dyn Error>> {
     let root = manifest_root();
-    let manifest = read_manifest(&root.join("manifest.json")).unwrap_or_else(|_| default_manifest());
+    let manifest =
+        read_manifest(&root.join("manifest.json")).unwrap_or_else(|_| default_manifest());
     // Reuse the build cache (`<root>/.cache/dash/<name>/`) — not a separate dir — so
     // the `Cargo.lock` `cargo fetch` writes here is the same one `build`/`run`
     // use. No duplicate cargo project, no throwaway lockfile.

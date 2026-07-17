@@ -136,7 +136,8 @@ impl Manifest {
             .dependencies
             .iter()
             .filter_map(|(key, req)| {
-                key.strip_prefix(&prefix).map(|name| format!("{name} = {req:?}"))
+                key.strip_prefix(&prefix)
+                    .map(|name| format!("{name} = {req:?}"))
             })
             .collect();
 
@@ -206,10 +207,7 @@ impl Manifest {
     /// used by several members compiles once — cargo's native equivalent of a
     /// hoisted `node_modules`.
     pub fn workspace_root_toml(member_names: &[String]) -> String {
-        let members: Vec<String> = member_names
-            .iter()
-            .map(|n| format!("\"{n}\""))
-            .collect();
+        let members: Vec<String> = member_names.iter().map(|n| format!("\"{n}\"")).collect();
         let mut out = String::from("[workspace]\n");
         out.push_str(&format!("members = [{}]\n", members.join(", ")));
         out.push_str("resolver = \"2\"\n");
@@ -229,7 +227,9 @@ impl Manifest {
     /// Remove a target-prefixed dependency (`rust:serde`). Returns `true` if it
     /// was present and removed.
     pub fn remove_dependency(&mut self, target: &str, name: &str) -> bool {
-        self.dependencies.remove(&format!("{target}:{name}")).is_some()
+        self.dependencies
+            .remove(&format!("{target}:{name}"))
+            .is_some()
     }
 
     /// Serialize back to a pretty `manifest.json` document (2-space indent), so
@@ -327,7 +327,10 @@ mod tests {
             toml.contains("homepage = \"https://demo.example\""),
             "got:\n{toml}"
         );
-        assert!(toml.contains("keywords = [\"ts\", \"rust\"]"), "got:\n{toml}");
+        assert!(
+            toml.contains("keywords = [\"ts\", \"rust\"]"),
+            "got:\n{toml}"
+        );
         assert!(
             toml.contains("authors = [\"Jane <jane@example.com>\"]"),
             "got:\n{toml}"
@@ -376,8 +379,14 @@ mod tests {
         assert!(toml.contains("serde = \"1.0\""), "got:\n{toml}");
         // A member must not repeat [profile] or [workspace] — the workspace
         // root owns them, and cargo rejects a member that redeclares either.
-        assert!(!toml.contains("[profile"), "member must not pin profile, got:\n{toml}");
-        assert!(!toml.contains("[workspace]"), "member must not declare workspace, got:\n{toml}");
+        assert!(
+            !toml.contains("[profile"),
+            "member must not pin profile, got:\n{toml}"
+        );
+        assert!(
+            !toml.contains("[workspace]"),
+            "member must not declare workspace, got:\n{toml}"
+        );
     }
 
     #[test]
@@ -385,12 +394,18 @@ mod tests {
         let toml = Manifest::workspace_root_toml(&["app-a".to_string(), "app-b".to_string()]);
         // Members sit directly under the root (<name>), mirroring the
         // single-package `.cache/dash/<name>/` — no `members/` layer.
-        assert!(toml.contains("members = [\"app-a\", \"app-b\"]"), "got:\n{toml}");
+        assert!(
+            toml.contains("members = [\"app-a\", \"app-b\"]"),
+            "got:\n{toml}"
+        );
         assert!(toml.contains("resolver = \"2\""), "got:\n{toml}");
         assert!(
             toml.contains("[profile.release]\npanic = \"unwind\""),
             "workspace pins release panic=unwind, got:\n{toml}"
         );
-        assert!(!toml.contains("[package]"), "workspace root has no [package], got:\n{toml}");
+        assert!(
+            !toml.contains("[package]"),
+            "workspace root has no [package], got:\n{toml}"
+        );
     }
 }

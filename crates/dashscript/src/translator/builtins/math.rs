@@ -11,11 +11,15 @@ use super::super::expressions::translate_argument;
 /// `Math.<m>(args)` → the idiomatic Rust float operation. Single-arg methods
 /// (`floor`, `ceil`, `abs`, …) become a method on the argument; `max`/`min`
 /// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
-pub(in crate::translator) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+pub(in crate::translator) fn math_method(
+    name: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
     match name {
-        "floor" | "ceil" | "abs" | "sqrt" | "trunc" | "exp"
-        | "log10" | "log2" | "sin" | "cos" | "tan" | "asin" | "acos" | "atan" | "cbrt"
-        | "sinh" | "cosh" | "tanh" | "asinh" | "acosh" | "atanh" => {
+        "floor" | "ceil" | "abs" | "sqrt" | "trunc" | "exp" | "log10" | "log2" | "sin" | "cos"
+        | "tan" | "asin" | "acos" | "atan" | "cbrt" | "sinh" | "cosh" | "tanh" | "asinh"
+        | "acosh" | "atanh" => {
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, name, Vec::new()))
         }

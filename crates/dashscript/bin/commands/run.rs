@@ -58,8 +58,8 @@ fn shell_exec(command: &str) -> Result<ExitCode, Box<dyn Error>> {
 /// List the scripts in `manifest.json` (`ds run` with no argument) — like
 /// `pnpm run` with no script name.
 pub(crate) fn list_scripts() -> Result<ExitCode, Box<dyn Error>> {
-    let manifest =
-        read_manifest(&manifest_root().join("manifest.json")).unwrap_or_else(|_| default_manifest());
+    let manifest = read_manifest(&manifest_root().join("manifest.json"))
+        .unwrap_or_else(|_| default_manifest());
     if manifest.scripts.is_empty() {
         eprintln!("ds: no scripts in manifest.json");
         return Ok(ExitCode::SUCCESS);

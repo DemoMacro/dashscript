@@ -5,7 +5,10 @@ use super::super::Translator;
 fn format_pretty_prints_a_function() {
     let src = "function f(x:number):number{return x+1;}";
     let out = Translator::new().format(src).expect("should format");
-    assert!(out.contains("function f(x: number): number {"), "got: {out}");
+    assert!(
+        out.contains("function f(x: number): number {"),
+        "got: {out}"
+    );
     assert!(out.contains("return x + 1;"));
 }
 

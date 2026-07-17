@@ -25,7 +25,15 @@ use super::bindings;
 
 /// Method names whose receiver they mutate, so the receiver needs `let mut`.
 const MUTATORS: &[&str] = &[
-    "push", "pop", "shift", "unshift", "sort", "reverse", "fill", "splice", "copyWithin",
+    "push",
+    "pop",
+    "shift",
+    "unshift",
+    "sort",
+    "reverse",
+    "fill",
+    "splice",
+    "copyWithin",
 ];
 
 /// The body facts: the set of mutated bindings and per-local read counts.
@@ -241,7 +249,9 @@ fn record_mutation(name: &str, a: &mut Analysis) {
 }
 
 fn count_name(name: &str, a: &mut Analysis) {
-    *a.use_counts.entry(bindings::snake(name).to_string()).or_default() += 1;
+    *a.use_counts
+        .entry(bindings::snake(name).to_string())
+        .or_default() += 1;
 }
 
 /// A read of a bare identifier local (`undefined` is not a value local).
