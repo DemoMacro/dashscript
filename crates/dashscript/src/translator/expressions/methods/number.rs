@@ -44,3 +44,21 @@ pub(in crate::translator::expressions) fn number_method(
         _ => return None,
     })
 }
+
+/// `Number.<CONST>` → the matching `f64` constant. TS's `Number.EPSILON` /
+/// `MAX_VALUE` / `NaN` / `±INFINITY` map directly to `f64`'s associated
+/// constants; `MAX_SAFE_INTEGER` / `MIN_SAFE_INTEGER` are 2^53 − 1 (the
+/// largest integer exactly representable in f64). Returns `None` otherwise.
+pub(in crate::translator::expressions) fn number_constant(name: &str) -> Option<Expr> {
+    Some(match name {
+        "EPSILON" => parse_quote!(::std::f64::EPSILON),
+        "MAX_SAFE_INTEGER" => parse_quote!(9_007_199_254_740_991f64),
+        "MAX_VALUE" => parse_quote!(::std::f64::MAX),
+        "MIN_SAFE_INTEGER" => parse_quote!(-9_007_199_254_740_991f64),
+        "MIN_VALUE" => parse_quote!(::std::f64::MIN_POSITIVE),
+        "NaN" => parse_quote!(::std::f64::NAN),
+        "NEGATIVE_INFINITY" => parse_quote!(::std::f64::NEG_INFINITY),
+        "POSITIVE_INFINITY" => parse_quote!(::std::f64::INFINITY),
+        _ => return None,
+    })
+}

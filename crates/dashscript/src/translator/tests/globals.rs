@@ -122,3 +122,14 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("9_007_199_254_740_991.0"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_number_constants() {
+        let src = "function f(): number { return Number.EPSILON + Number.MAX_VALUE + Number.NaN + Number.POSITIVE_INFINITY; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("f64::EPSILON"), "got:\n{rust}");
+        assert!(rust.contains("f64::MAX"), "got:\n{rust}");
+        assert!(rust.contains("f64::NAN"), "got:\n{rust}");
+        assert!(rust.contains("f64::INFINITY"), "got:\n{rust}");
+    }

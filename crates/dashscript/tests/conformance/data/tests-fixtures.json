@@ -452,6 +452,12 @@
       "fixture": "function f(n: number): boolean { return Number.isSafeInteger(n); }"
     },
     {
+      "id": "globals.translates_number_constants",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(): number { return Number.EPSILON + Number.MAX_VALUE + Number.NaN + Number.POSITIVE_INFINITY; }"
+    },
+    {
       "id": "math.translates_math_methods",
       "category": "math",
       "source": "translator-tests",

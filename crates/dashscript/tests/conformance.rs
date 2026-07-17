@@ -194,11 +194,15 @@ fn probe_token(id: &str) -> Option<String> {
         // in a fixture — so leave them untested rather than mis-associate.
         "global" if matches!(name, "isNaN" | "isFinite") => None,
         "global" => Some(format!("{name}(")),
-        // `number` method names (toFixed, isNaN, …) are unique to `number` — not
-        // shared with string/array — so `.method(` is unambiguous. Number
-        // *constants* (EPSILON, MAX_VALUE) are not calls → None. String/array
-        // method names overlap receivers (`.includes(`) and stay untested.
-        "number" if const_like => None,
+        // Number constants start uppercase (EPSILON, MAX_VALUE, NaN);
+        // methods lowercase (toFixed, toString). `NaN` is mixed-case, so the
+        // all-caps test above misses it — first-letter case is the robust split
+        // for `number` (no Number constant starts lowercase, no method starts
+        // uppercase). `.method(` is unambiguous (Number method names aren't
+        // shared with string/array in the translator).
+        "number" if name.starts_with(|c: char| c.is_ascii_uppercase()) => {
+            Some(format!("Number.{name}"))
+        }
         "number" => Some(format!(".{name}(")),
         // Object static methods (Object.keys(m)) are unambiguous — no
         // instance shares the `Object.<m>(` form. keys/values/entries are

@@ -395,6 +395,13 @@ fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return p;
         }
     }
+    // `Number.EPSILON` / `Number.MAX_VALUE` / `Number.NaN` / … → the matching
+    // `f64` constant.
+    if methods::is_ident(&sm.object, "Number") {
+        if let Some(p) = methods::number_constant(field_name) {
+            return p;
+        }
+    }
     // Inside a discriminated-union match arm, `s.field` reads as the `field`
     // binding the pattern destructured (TS narrowing).
     if let Expression::Identifier(id) = &sm.object {

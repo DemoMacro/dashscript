@@ -7,7 +7,7 @@ mod number;
 mod string;
 
 pub(super) use array::array_method;
-pub(super) use number::number_method;
+pub(super) use number::{number_constant, number_method};
 pub(super) use string::string_method;
 
 use oxc_ast::ast::{Argument, Expression, IdentifierReference};

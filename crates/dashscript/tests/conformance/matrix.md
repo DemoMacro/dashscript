@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 372 features: **279** supported, **1** partial, **0** unsupported, **92** untested
+- 373 features: **283** supported, **1** partial, **0** unsupported, **89** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -156,14 +156,15 @@
 | globals.translates_boolean_global_option_to_is_some          | 🟢 supported |               |
 | globals.translates_number_static_type_checks                 | 🟢 supported |               |
 | globals.translates_number_is_safe_integer                    | 🟢 supported |               |
-| number.EPSILON                                               | ⚪ untested  |               |
+| globals.translates_number_constants                          | 🟢 supported |               |
+| number.EPSILON                                               | 🟢 supported |               |
 | number.MAX_SAFE_INTEGER                                      | ⚪ untested  |               |
-| number.MAX_VALUE                                             | ⚪ untested  |               |
+| number.MAX_VALUE                                             | 🟢 supported |               |
 | number.MIN_SAFE_INTEGER                                      | ⚪ untested  |               |
 | number.MIN_VALUE                                             | ⚪ untested  |               |
 | number.NEGATIVE_INFINITY                                     | ⚪ untested  |               |
 | number.NaN                                                   | ⚪ untested  |               |
-| number.POSITIVE_INFINITY                                     | ⚪ untested  |               |
+| number.POSITIVE_INFINITY                                     | 🟢 supported |               |
 | number.isFinite                                              | 🟢 supported |               |
 | number.isInteger                                             | 🟢 supported |               |
 | number.isNaN                                                 | 🟢 supported |               |
