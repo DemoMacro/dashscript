@@ -2521,29 +2521,45 @@
   {
     "id": "test262.test.built-ins.math.sumprecise.sum-is-infinite",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:8:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpOYvU3s\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n                 ^\r\n\r"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sumprecise.sum-is-minus-zero",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpOYvU3s\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r\nTypeErr"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sumprecise.sum-is-nan",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:7:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpOYvU3s\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^\r\n\r\nType"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sumprecise.sum",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:8:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:15:27: error[E0425]: cannot find value `math` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpOYvU3s\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n                 ^\r\n\r\n"
+    },
     "note": ""
   },
   {

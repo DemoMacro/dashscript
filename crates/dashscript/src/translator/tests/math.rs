@@ -243,3 +243,17 @@ fn translates_math_tonumber_coerces_nullish_and_object() {
         .expect("should translate");
     assert!(rust.contains("NAN"), "object -> NaN: {rust}");
 }
+
+#[test]
+fn translates_math_sumprecise_state_machine() {
+    // Math.sumPrecise (ES2026): NaN/±∞/-0 propagate via the spec state machine.
+    let rust = Translator::new()
+        .translate("function f(): void { console.log(Math.sumPrecise([Infinity, -Infinity])); }")
+        .expect("should translate");
+    assert!(rust.contains("NAN"), "mixed inf -> NaN: {rust}");
+    let rust = Translator::new()
+        .translate("function f(): void { console.log(Math.sumPrecise([-0])); }")
+        .expect("should translate");
+    // The state machine detects -0 via is_sign_negative (so all-`-0` stays -0).
+    assert!(rust.contains("is_sign_negative"), "-0 detection: {rust}");
+}

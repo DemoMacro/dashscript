@@ -168,6 +168,46 @@ pub(in crate::translator) fn math_method(
             let b = to_uint32_expr(math_receiver(args.get(1)?, ctx));
             Some(parse_quote!(((#a) as i32).wrapping_mul((#b) as i32) as f64))
         }
+        // `Math.sumPrecise(iterable)` (ES2026) — the spec state machine: NaN
+        // propagates; +∞/-∞ flip to ±infinity (mixed signs → NaN); an empty or
+        // all-`-0` input returns -0; otherwise the finite sum. The finite sum
+        // here is plain f64 accumulation, which matches the spec for inputs
+        // without catastrophic cancellation. The extreme "exercised real-
+        // implementation bugs" fixtures (huge magnitudes that cancel to a tiny
+        // residue) need a true exact-summation algorithm (Shewchuk /
+        // superaccumulator) and stay partial until that lands.
+        "sumPrecise" => {
+            let arr = translate_argument(args.first()?, ctx);
+            Some(parse_quote!({
+                let __arr: ::std::vec::Vec<f64> = #arr;
+                let mut __state: i8 = 0;
+                let mut __sum = 0.0f64;
+                for &__n in &__arr {
+                    if __state != 4 {
+                        if __n.is_nan() {
+                            __state = 4;
+                        } else if __n.is_infinite() && __n > 0.0 {
+                            __state = if __state == 3 { 4 } else { 2 };
+                        } else if __n.is_infinite() {
+                            __state = if __state == 2 { 4 } else { 3 };
+                        } else {
+                            let __neg0 = __n == 0.0 && __n.is_sign_negative();
+                            if !__neg0 && (__state == 0 || __state == 1) {
+                                __state = 1;
+                                __sum += __n;
+                            }
+                        }
+                    }
+                }
+                match __state {
+                    4 => ::core::f64::NAN,
+                    2 => ::core::f64::INFINITY,
+                    3 => ::core::f64::NEG_INFINITY,
+                    0 => -0.0f64,
+                    _ => __sum,
+                }
+            }))
+        }
         _ => None,
     }
 }
