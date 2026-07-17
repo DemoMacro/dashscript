@@ -8,7 +8,7 @@
 
 ## Features
 
-- 🦀 **TypeScript → Rust** — write TypeScript-flavored `.ds`, ship native Rust
+- 🦀 **TypeScript → Rust → native binary** — write TypeScript-flavored `.ds`, compile to a native binary (or a Rust crate with `--emit rust`)
 - ⚡ **Powered by oxc** — reuses [oxc](https://oxc.rs/) for parsing, lint, and format; no reimplementation
 - 📦 **One package** — `dashscript` provides the `ds` CLI, the core, and types
 - 🗂️ **`manifest.json` → `Cargo.toml`** — target-prefixed dependencies (`rust:serde`) compile straight to Cargo
@@ -30,7 +30,7 @@ $ pnpm add -g dashscript
 
 ## Quick Start
 
-### Write `.ds`, compile to Rust
+### Write `.ds`, compile to a native binary
 
 ```typescript
 // main.ds — TypeScript-flavored source
@@ -42,10 +42,12 @@ const message: string = greet("DashScript");
 ```
 
 ```bash
-$ ds build main.ds
+$ ds build main.ds              # → dist/<name> — a native binary (default)
+$ ds build main.ds --emit rust  # → dist/<name>/ — the translated Rust crate
+$ ds run main.ds                # translate → compile (cached) → run
 ```
 
-DashScript parses with oxc, translates the AST to idiomatic Rust, and emits a buildable Cargo project.
+`ds build` parses with oxc, translates the AST to idiomatic Rust, and compiles a **native binary** into `dist/<name>` (the way `vp pack` ships a runnable artifact). `--emit rust` stops at the Rust crate; `ds run` compiles and runs in one step, reusing the in-project cache (`.cache/build/<name>/`, or `~/.cache/dash/` for a lone file).
 
 ### Declare dependencies — `manifest.json` → `Cargo.toml`
 
@@ -71,19 +73,21 @@ $ ds add rust:serde
 ### Check & format (powered by oxc)
 
 ```bash
-$ ds check   # lint & type-check .ds (oxc — oxlint)
-$ ds fmt     # format .ds (oxc — oxfmt)
+$ ds check   # verify .ds is translatable to valid Rust (in-process)
+$ ds fmt     # format .ds in place (in-process)
 ```
 
 ## CLI
 
-| Command               | Description                                                   |
-| --------------------- | ------------------------------------------------------------- |
-| `ds build <file.ds>`  | Parse with oxc → translate → emit Rust project + `Cargo.toml` |
-| `ds check`            | Lint & type-check `.ds` (oxlint)                              |
-| `ds fmt`              | Format `.ds` (oxfmt)                                          |
-| `ds add rust:<crate>` | Fetch crate + generate `.ds` declaration (bindgen)            |
-| `ds run <file.ds>`    | Build then run the generated Rust (planned)                   |
+| Command                       | Description                                                                  |
+| ----------------------------- | ---------------------------------------------------------------------------- |
+| `ds build <file.ds>`          | Parse → translate → compile to a native binary in `dist/<name>`              |
+| `ds build --emit rust <file>` | Parse → translate → emit a Rust crate (`Cargo.toml` + src) in `dist/<name>/` |
+| `ds run <file.ds>`            | Translate → compile (cached) → run                                           |
+| `ds check`                    | Verify `.ds` is translatable to valid Rust (in-process, on the oxc AST)      |
+| `ds fmt`                      | Format `.ds` in place (in-process)                                           |
+| `ds add rust:<crate>`         | Fetch crate via cargo + record `rust:<crate>` in `manifest.json`             |
+| `ds add <file>.rs`            | Bindgen a local Rust file → `<stem>.ds` declaration                          |
 
 ## Under the Hood
 

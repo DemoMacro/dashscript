@@ -10,7 +10,7 @@ nullable `Option`, and truthiness.
 From this directory:
 
 ```sh
-ds run main.ds       # parse → translate → emit a Cargo project → cargo run
+ds run main.ds       # translate → compile (cached) → run
 ```
 
 Output:

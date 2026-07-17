@@ -52,16 +52,16 @@ function main(): void {
 ```
 
 `ds check main.ds` reports no issues (the crate import is translatable), and
-`ds build main.ds` turns `manifest.json` into a `Cargo.toml` with
-`adler = "1.0.2"` and compiles it with cargo — reusing the source `ds add`
-already fetched.
+`ds build main.ds` compiles `adler` (resolved from `manifest.json`) into a
+native binary in `dist/` — reusing the source `ds add` already fetched.
 
 ## Build reuses cargo's cache (no re-download)
 
-`ds build` turns `manifest.json` into a `Cargo.toml` and runs `cargo check`.
-cargo reuses the `~/.cargo` source that `ds add` already fetched — nothing is
-downloaded twice. (Running `ds add` and `ds build` separately is the intended
-flow, mirroring `npm install` then `tsc`.)
+`ds build` turns `manifest.json` into a `Cargo.toml` and compiles in
+`.cache/build/<name>/`. cargo reuses the `~/.cargo` source that `ds add`
+already fetched — nothing is downloaded twice, and repeat builds are
+incremental. (Running `ds add` and `ds build` separately is the intended
+flow, mirroring `npm install` then `vp pack`.)
 
 ## Type information comes from source, not from generated stubs
 
