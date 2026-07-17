@@ -236,6 +236,12 @@
       "fixture": "function f(xs: number[]): string { return xs.toString(); }"
     },
     {
+      "id": "arrays.translates_array_copy_within",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): void { xs.copyWithin(0, 1, 3); }"
+    },
+    {
       "id": "clone_move.translates_unmutated_let_is_plain_let",
       "category": "clone_move",
       "source": "translator-tests",
@@ -503,7 +509,7 @@
       "id": "globals.translates_number_constants",
       "category": "globals",
       "source": "translator-tests",
-      "fixture": "function f(): number { return Number.EPSILON + Number.MAX_VALUE + Number.NaN + Number.POSITIVE_INFINITY; }"
+      "fixture": "function f(): number { return Number.EPSILON + Number.MAX_SAFE_INTEGER + Number.MAX_VALUE + Number.MIN_SAFE_INTEGER + Number.MIN_VALUE + Number.NaN + Number.NEGATIVE_INFINITY + Number.POSITIVE_INFINITY; }"
     },
     {
       "id": "globals.translates_number_parse_float",
@@ -1158,6 +1164,18 @@
       "category": "types",
       "source": "translator-tests",
       "fixture": "function f(m: Record<string, number>): Record<string, number> { return Object.fromEntries(Object.entries(m)); }"
+    },
+    {
+      "id": "types.translates_object_freeze_to_passthrough",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): Record<string, number> { return Object.freeze(m); }"
+    },
+    {
+      "id": "types.translates_object_is_frozen_to_false",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): boolean { return Object.isFrozen(m); }"
     }
   ]
 }

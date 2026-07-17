@@ -313,6 +313,28 @@ pub(in crate::translator::expressions) fn array_method(
         "toString" if args.is_empty() => {
             parse_quote!(#recv.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(","))
         }
+        // `.copyWithin(target[, start[, end]])` → in-place `Vec::copy_within`,
+        // copying `[start, end)` to index `target`. `start` defaults to 0, `end`
+        // to the length. Mutates; bounds bound once so side-effecting index
+        // args evaluate only once.
+        "copyWithin" if args.len() >= 1 => {
+            let target = usize_arg(args.first()?, ctx);
+            let start = match args.get(1) {
+                Some(a) => usize_arg(a, ctx),
+                None => parse_quote!(0usize),
+            };
+            let end = match args.get(2) {
+                Some(a) => usize_arg(a, ctx),
+                None => parse_quote!(__n),
+            };
+            parse_quote!({
+                let __n = #recv.len();
+                let __t = #target;
+                let __s = #start;
+                let __e = #end;
+                #recv.copy_within(__s..__e, __t);
+            })
+        }
         _ => return None,
     })
 }

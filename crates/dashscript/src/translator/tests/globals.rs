@@ -126,11 +126,15 @@ use super::super::Translator;
 
     #[test]
     fn translates_number_constants() {
-        let src = "function f(): number { return Number.EPSILON + Number.MAX_VALUE + Number.NaN + Number.POSITIVE_INFINITY; }";
+        let src = "function f(): number { return Number.EPSILON + Number.MAX_SAFE_INTEGER + Number.MAX_VALUE + Number.MIN_SAFE_INTEGER + Number.MIN_VALUE + Number.NaN + Number.NEGATIVE_INFINITY + Number.POSITIVE_INFINITY; }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("f64::EPSILON"), "got:\n{rust}");
+        assert!(rust.contains("9_007_199_254_740_991f64"), "got:\n{rust}");
         assert!(rust.contains("f64::MAX"), "got:\n{rust}");
+        assert!(rust.contains("-9_007_199_254_740_991f64"), "got:\n{rust}");
+        assert!(rust.contains("f64::MIN_POSITIVE"), "got:\n{rust}");
         assert!(rust.contains("f64::NAN"), "got:\n{rust}");
+        assert!(rust.contains("f64::NEG_INFINITY"), "got:\n{rust}");
         assert!(rust.contains("f64::INFINITY"), "got:\n{rust}");
     }
 

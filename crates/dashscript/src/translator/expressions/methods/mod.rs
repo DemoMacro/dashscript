@@ -113,6 +113,14 @@ pub(super) fn object_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Opt
         "fromEntries" => {
             parse_quote!(#r.into_iter().collect::<::std::collections::HashMap<_, _>>())
         }
+        // `Object.freeze`/`seal`/`preventExtensions` are no-ops returning the
+        // value unchanged — Rust has no runtime immutability to enforce, and a
+        // DashScript `Record` is already as strict as it gets at compile time.
+        "freeze" | "seal" | "preventExtensions" => parse_quote!(#r),
+        // `Object.isFrozen`/`isSealed` → `false`: DashScript never freezes a
+        // Record, so it is always mutable. `isExtensible` → `true` (likewise).
+        "isFrozen" | "isSealed" => parse_quote!(false),
+        "isExtensible" => parse_quote!(true),
         _ => return None,
     })
 }

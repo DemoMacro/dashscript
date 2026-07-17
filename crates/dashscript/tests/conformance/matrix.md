@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 398 features: **331** supported, **1** partial, **0** unsupported, **66** untested
+- 401 features: **343** supported, **1** partial, **0** unsupported, **57** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -46,9 +46,10 @@
 | arrays.translates_array_from_mapped                          | 🟢 supported |               |
 | arrays.translates_array_splice                               | 🟢 supported |               |
 | arrays.translates_array_to_string_join                       | 🟢 supported |               |
+| arrays.translates_array_copy_within                          | 🟢 supported |               |
 | array.at                                                     | 🟢 supported |               |
 | array.concat                                                 | 🟢 supported |               |
-| array.copyWithin                                             | ⚪ untested  |               |
+| array.copyWithin                                             | 🟢 supported |               |
 | array.entries                                                | 🟢 supported |               |
 | array.every                                                  | 🟢 supported |               |
 | array.fill                                                   | 🟢 supported |               |
@@ -172,11 +173,11 @@
 | globals.translates_global_is_nan                             | 🟢 supported |               |
 | globals.translates_global_is_finite                          | 🟢 supported |               |
 | number.EPSILON                                               | 🟢 supported |               |
-| number.MAX_SAFE_INTEGER                                      | ⚪ untested  |               |
+| number.MAX_SAFE_INTEGER                                      | 🟢 supported |               |
 | number.MAX_VALUE                                             | 🟢 supported |               |
-| number.MIN_SAFE_INTEGER                                      | ⚪ untested  |               |
-| number.MIN_VALUE                                             | ⚪ untested  |               |
-| number.NEGATIVE_INFINITY                                     | ⚪ untested  |               |
+| number.MIN_SAFE_INTEGER                                      | 🟢 supported |               |
+| number.MIN_VALUE                                             | 🟢 supported |               |
+| number.NEGATIVE_INFINITY                                     | 🟢 supported |               |
 | number.NaN                                                   | 🟢 supported |               |
 | number.POSITIVE_INFINITY                                     | 🟢 supported |               |
 | number.isFinite                                              | 🟢 supported |               |
@@ -199,7 +200,7 @@
 | object.defineProperty                                        | ⚪ untested  |               |
 | object.defineSetter                                          | ⚪ untested  |               |
 | object.entries                                               | 🟢 supported |               |
-| object.freeze                                                | ⚪ untested  |               |
+| object.freeze                                                | 🟢 supported |               |
 | object.fromEntries                                           | 🟢 supported |               |
 | object.getOwnPropertyDescriptor                              | ⚪ untested  |               |
 | object.getOwnPropertyDescriptors                             | ⚪ untested  |               |
@@ -211,7 +212,7 @@
 | object.hasOwnProperty                                        | ⚪ untested  |               |
 | object.is                                                    | 🟢 supported |               |
 | object.isExtensible                                          | ⚪ untested  |               |
-| object.isFrozen                                              | ⚪ untested  |               |
+| object.isFrozen                                              | 🟢 supported |               |
 | object.isPrototypeOf                                         | ⚪ untested  |               |
 | object.isSealed                                              | ⚪ untested  |               |
 | object.keys                                                  | 🟢 supported |               |
@@ -228,8 +229,8 @@
 | object.values                                                | 🟢 supported |               |
 | global.parseInt                                              | 🟢 supported |               |
 | global.parseFloat                                            | 🟢 supported |               |
-| global.isNaN                                                 | ⚪ untested  |               |
-| global.isFinite                                              | ⚪ untested  |               |
+| global.isNaN                                                 | 🟢 supported |               |
+| global.isFinite                                              | 🟢 supported |               |
 | global.encodeURI                                             | ⚪ untested  |               |
 | global.decodeURI                                             | ⚪ untested  |               |
 | global.Number                                                | 🟢 supported |               |
@@ -465,5 +466,7 @@
 | types.translates_object_get_own_property_names_to_keys           | 🟢 supported |               |
 | types.translates_object_assign_to_extend                         | 🟢 supported |               |
 | types.translates_object_from_entries_to_collect                  | 🟢 supported |               |
+| types.translates_object_freeze_to_passthrough                    | 🟢 supported |               |
+| types.translates_object_is_frozen_to_false                       | 🟢 supported |               |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->

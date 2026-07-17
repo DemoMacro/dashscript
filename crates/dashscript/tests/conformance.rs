@@ -189,10 +189,12 @@ fn probe_token(id: &str) -> Option<String> {
     match cat {
         "math" if const_like => Some(format!("Math.{name}")),
         "math" => Some(format!("Math.{name}(")),
-        // `isNaN`/`isFinite` as bare globals aren't supported (DashScript uses
-        // `Number.isNaN`), and `isNaN(` would accidentally match `Number.isNaN(`
-        // in a fixture — so leave them untested rather than mis-associate.
-        "global" if matches!(name, "isNaN" | "isFinite") => None,
+        // `global.isNaN`/`isFinite`/`parseFloat` lower to the same `f64` ops as
+        // their `Number.*` counterparts (TS `Number.isNaN ≢ isNaN` for type
+        // coercion, but DashScript's `number` is already `f64`, so both lower
+        // to `.is_nan()`). `isNaN(` would also match `Number.isNaN(` in a
+        // fixture — but since both forms map and both are supported, the
+        // cross-match still reports the correct status.
         "global" => Some(format!("{name}(")),
         // Number has three call shapes, all under the `number.<name>` bcd id:
         // constants `Number.<CONST>` (EPSILON, NaN — uppercase, no call), static

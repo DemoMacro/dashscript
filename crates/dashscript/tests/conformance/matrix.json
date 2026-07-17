@@ -273,6 +273,13 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_copy_within",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "clone_move.translates_unmutated_let_is_plain_let",
     "category": "clone_move",
     "status": "supported",
@@ -1351,6 +1358,20 @@
     "note": ""
   },
   {
+    "id": "types.translates_object_freeze_to_passthrough",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_is_frozen_to_false",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "correctness.parse_int_radix",
     "category": "correctness",
     "status": "supported",
@@ -1385,7 +1406,7 @@
   {
     "id": "array.copyWithin",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2351,7 +2372,7 @@
   {
     "id": "number.MAX_SAFE_INTEGER",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2365,21 +2386,21 @@
   {
     "id": "number.MIN_SAFE_INTEGER",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "number.MIN_VALUE",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "number.NEGATIVE_INFINITY",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2540,7 +2561,7 @@
   {
     "id": "object.freeze",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2624,7 +2645,7 @@
   {
     "id": "object.isFrozen",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2743,14 +2764,14 @@
   {
     "id": "global.isNaN",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "global.isFinite",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

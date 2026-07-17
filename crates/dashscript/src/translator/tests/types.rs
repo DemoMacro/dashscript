@@ -283,3 +283,21 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("collect::<::std::collections::HashMap<_, _>>()"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_object_freeze_to_passthrough() {
+        let src = "function f(m: Record<string, number>): Record<string, number> { return Object.freeze(m); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // freeze/seal/preventExtensions are no-ops returning the value unchanged.
+        assert!(!rust.contains("freeze"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_object_is_frozen_to_false() {
+        let src = "function f(m: Record<string, number>): boolean { return Object.isFrozen(m); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // A Record is never frozen in DashScript → always false.
+        assert!(rust.contains("false"), "got:\n{rust}");
+    }

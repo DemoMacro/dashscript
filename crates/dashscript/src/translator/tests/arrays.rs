@@ -338,3 +338,11 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".join(\",\")"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_array_copy_within() {
+        let src = "function f(xs: number[]): void { xs.copyWithin(0, 1, 3); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".copy_within("), "got:\n{rust}");
+    }
