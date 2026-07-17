@@ -344,10 +344,22 @@
       "fixture": "function f(): void { throw \"oops\"; }"
     },
     {
-      "id": "control_flow.translates_try_catch_to_compile_error",
+      "id": "control_flow.translates_try_catch_to_catch_unwind",
       "category": "control_flow",
       "source": "translator-tests",
-      "fixture": "function f(): void { try { console.log(\"x\"); } catch (e) {} }"
+      "fixture": "function f(): void { try { throw new Error(\"oops\"); } catch (e) { console.log(e); } }"
+    },
+    {
+      "id": "control_flow.translates_try_finally_runs_after_match",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { try { console.log(\"a\"); } catch (e) {} finally { console.log(\"b\"); } }"
+    },
+    {
+      "id": "control_flow.translates_try_block_with_return_rejected",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): number { try { return 1; } catch (e) { return 0; } }"
     },
     {
       "id": "destructuring.translates_object_destructure_default_to_unwrap_or",

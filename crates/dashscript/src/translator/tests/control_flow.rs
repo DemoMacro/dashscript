@@ -97,9 +97,32 @@ use super::super::Translator;
 
 
     #[test]
-    fn translates_try_catch_to_compile_error() {
-        let src = "function f(): void { try { console.log(\"x\"); } catch (e) {} }";
+    fn translates_try_catch_to_catch_unwind() {
+        let src = "function f(): void { try { throw new Error(\"oops\"); } catch (e) { console.log(e); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("catch_unwind"), "got:\n{rust}");
+        assert!(rust.contains("AssertUnwindSafe"), "got:\n{rust}");
+        // The catch param `e` is bound as the panic payload's message (String).
+        assert!(rust.contains("let e ="), "got:\n{rust}");
+        assert!(rust.contains("downcast_ref::<&'static str>"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_try_finally_runs_after_match() {
+        let src = "function f(): void { try { console.log(\"a\"); } catch (e) {} finally { console.log(\"b\"); } }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("catch_unwind"), "got:\n{rust}");
+        assert!(rust.contains("\"b\""), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_try_block_with_return_rejected() {
+        // A `return` in the try block cannot cross the catch_unwind closure
+        // boundary — surfaced as a compile_error, not silent miscompilation.
+        let src = "function f(): number { try { return 1; } catch (e) { return 0; } }";
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("compile_error!"), "got:\n{rust}");
-        assert!(rust.contains("try-catch"), "got:\n{rust}");
+        assert!(rust.contains("catch boundary"), "got:\n{rust}");
     }

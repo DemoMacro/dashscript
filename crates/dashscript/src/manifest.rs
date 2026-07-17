@@ -75,6 +75,13 @@ impl Manifest {
             out.push_str(&deps.join("\n"));
             out.push('\n');
         }
+        // `panic = "unwind"` is pinned on release (dev already defaults to
+        // unwind) so a `.ds` `try/catch` — which lowers to `catch_unwind` —
+        // reliably catches a `throw` (→ `panic!`). DashScript owns this
+        // manifest, so it owns the panic strategy: that is precisely what makes
+        // `catch_unwind` sound, where on an arbitrary user `Cargo.toml` it
+        // would not be (a `panic = "abort"` build silently drops the catch).
+        out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
         // An empty `[workspace]` table makes the emitted project its own
         // workspace root, so it is never absorbed by a parent workspace (e.g.
         // DashScript's own repo when `ds build` emits under `dist/`).
@@ -151,5 +158,18 @@ mod tests {
         let m2 = Manifest::from_json(&json).expect("should parse");
         assert_eq!(m2.name, "demo");
         assert_eq!(m2.dependencies.get("rust:serde"), Some(&"1.0".to_string()));
+    }
+
+    #[test]
+    fn cargo_toml_pins_panic_unwind_for_try_catch() {
+        let m = Manifest {
+            name: "demo".to_string(),
+            ..Manifest::default()
+        };
+        let toml = m.to_cargo_toml();
+        assert!(
+            toml.contains("[profile.release]\npanic = \"unwind\""),
+            "release must pin panic=unwind so try/catch's catch_unwind is sound, got:\n{toml}"
+        );
     }
 }
