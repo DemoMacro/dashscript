@@ -2386,7 +2386,7 @@
   {
     "id": "object.keys",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2463,7 +2463,7 @@
   {
     "id": "object.values",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

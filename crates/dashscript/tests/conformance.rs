@@ -180,8 +180,9 @@ fn conformance_matrix() {
 /// For a bcd catalog id with an unambiguous call form, the substring a
 /// translator-tests fixture would contain if it exercised that API — used to
 /// associate bcd entries with already-run fixtures. `math.abs` → `Math.abs(`,
-/// `math.PI` → `Math.PI`, `global.parseInt` → `parseInt(`. String/array/number
-/// methods are ambiguous (`.includes(` could be either receiver) → `None`.
+/// `math.PI` → `Math.PI`, `global.parseInt` → `parseInt(`, `object.keys` →
+/// `Object.keys(`. String/array instance methods are receiver-ambiguous
+/// (`.includes(` could be either) and stay `None`.
 fn probe_token(id: &str) -> Option<String> {
     let (cat, name) = id.split_once('.')?;
     let const_like = name.bytes().all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_');
@@ -199,6 +200,10 @@ fn probe_token(id: &str) -> Option<String> {
         // method names overlap receivers (`.includes(`) and stay untested.
         "number" if const_like => None,
         "number" => Some(format!(".{name}(")),
+        // Object static methods (Object.keys(m)) are unambiguous — no
+        // instance shares the `Object.<m>(` form. keys/values/entries are
+        // mapped; the rest have no fixture and stay untested.
+        "object" => Some(format!("Object.{name}(")),
         _ => None,
     }
 }

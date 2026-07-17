@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 361 features: **209** supported, **1** partial, **0** unsupported, **151** untested
+- 361 features: **211** supported, **1** partial, **0** unsupported, **149** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -194,7 +194,7 @@
 | object.isFrozen                                              | ⚪ untested  |               |
 | object.isPrototypeOf                                         | ⚪ untested  |               |
 | object.isSealed                                              | ⚪ untested  |               |
-| object.keys                                                  | ⚪ untested  |               |
+| object.keys                                                  | 🟢 supported |               |
 | object.lookupGetter                                          | ⚪ untested  |               |
 | object.lookupSetter                                          | ⚪ untested  |               |
 | object.preventExtensions                                     | ⚪ untested  |               |
@@ -205,7 +205,7 @@
 | object.toLocaleString                                        | ⚪ untested  |               |
 | object.toString                                              | ⚪ untested  |               |
 | object.valueOf                                               | ⚪ untested  |               |
-| object.values                                                | ⚪ untested  |               |
+| object.values                                                | 🟢 supported |               |
 | global.parseInt                                              | 🟢 supported |               |
 | global.parseFloat                                            | ⚪ untested  |               |
 | global.isNaN                                                 | ⚪ untested  |               |
