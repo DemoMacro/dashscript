@@ -1,0 +1,845 @@
+{
+  "_comment": "Auto-extracted from translator/tests/*.rs by scripts/extract-tests.mjs. DO NOT edit by hand. Each entry is a verified-translatable .ds snippet; the conformance runner cargo-checks it. No `expect` — status is recorded informationally.",
+  "features": [
+    {
+      "id": "arrays.translates_array_literal_to_vec_macro",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs); }"
+    },
+    {
+      "id": "arrays.translates_array_index",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2]; console.log(xs[0]); }"
+    },
+    {
+      "id": "arrays.translates_in_operator_on_array_to_index_bound",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[], i: number): boolean { return i in xs; }"
+    },
+    {
+      "id": "arrays.translates_array_map_to_iter_copied_map_collect",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const ys = xs.map(n => n * 2); }"
+    },
+    {
+      "id": "arrays.translates_array_filter_to_iter_copied_filter_collect",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const ys = xs.filter(n => n > 1); }"
+    },
+    {
+      "id": "arrays.translates_array_slice_to_index_range_to_vec",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3, 4]; const ys = xs.slice(1, 3); const zs = xs.slice(2); }"
+    },
+    {
+      "id": "arrays.translates_array_index_of_to_position",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const i = xs.indexOf(2); }"
+    },
+    {
+      "id": "arrays.translates_array_find_index_to_position",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const i = xs.findIndex((n) => n > 1); }"
+    },
+    {
+      "id": "arrays.translates_array_at_to_signed_runtime_index",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[], i: number): number { return xs.at(i); }"
+    },
+    {
+      "id": "arrays.translates_array_flat_map_to_flat_map_collect",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2]; const ys = xs.flatMap((n) => [n, n]); }"
+    },
+    {
+      "id": "arrays.translates_array_literal_with_expression_elements",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): number[] { return [n, n * 2, n + 1]; }"
+    },
+    {
+      "id": "arrays.translates_array_flat_to_concat",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xss: number[][]): number[] { return xss.flat(); }"
+    },
+    {
+      "id": "arrays.translates_array_last_index_of_to_rposition",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number { return xs.lastIndexOf(2); }"
+    },
+    {
+      "id": "arrays.translates_array_fill_to_vec_fill",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let xs: number[] = [0]; xs.fill(1); }"
+    },
+    {
+      "id": "arrays.translates_array_for_each_to_for_each",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2]; xs.forEach((n) => console.log(n)); }"
+    },
+    {
+      "id": "arrays.translates_array_includes_to_contains",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): boolean { const xs: number[] = [1, 2, 3]; return xs.includes(2); }"
+    },
+    {
+      "id": "arrays.translates_array_find_to_iter_copied_find",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const r = xs.find((n) => n > 1); }"
+    },
+    {
+      "id": "arrays.translates_array_some_every_to_any_all",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const a = xs.some((n) => n > 2); const b = xs.every((n) => n > 0); }"
+    },
+    {
+      "id": "arrays.translates_array_join_to_vec_string_join",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const s = xs.join(\"-\"); }"
+    },
+    {
+      "id": "arrays.translates_array_reduce_with_seed_to_fold",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): number { const xs: number[] = [1, 2, 3]; return xs.reduce((a, b) => a + b, 0); }"
+    },
+    {
+      "id": "arrays.translates_array_reduce_without_seed_to_reduce",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const r = xs.reduce((a, b) => a + b); }"
+    },
+    {
+      "id": "arrays.translates_array_index_assign_to_usize_index",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let xs: number[] = [1, 2, 3]; xs[0] = 9; }"
+    },
+    {
+      "id": "arrays.translates_array_concat_to_slice_concat",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const a: number[] = [1, 2]; const b: number[] = [3]; const c = a.concat(b); }"
+    },
+    {
+      "id": "arrays.translates_array_reverse_to_in_place_reverse",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let xs: number[] = [1, 2]; xs.reverse(); }"
+    },
+    {
+      "id": "arrays.translates_array_sort_to_numeric_sort_by",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let xs: number[] = [2, 1]; xs.sort(); }"
+    },
+    {
+      "id": "arrays.translates_array_find_last_to_rev_find",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number { return xs.findLast((n) => n > 1)!; }"
+    },
+    {
+      "id": "arrays.translates_array_find_last_index_to_rposition",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number { return xs.findLastIndex((n) => n > 1); }"
+    },
+    {
+      "id": "arrays.translates_array_reduce_right_to_rev_fold",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number { return xs.reduceRight((a, b) => a + b, 0); }"
+    },
+    {
+      "id": "clone_move.translates_unmutated_let_is_plain_let",
+      "category": "clone_move",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let n: number = 0; console.log(n); }"
+    },
+    {
+      "id": "clone_move.translates_mutated_let_is_let_mut",
+      "category": "clone_move",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let n: number = 0; n = 5; console.log(n); }"
+    },
+    {
+      "id": "clone_move.translates_mutated_let_by_compound_assign_is_let_mut",
+      "category": "clone_move",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let n: number = 0; n += 5; console.log(n); }"
+    },
+    {
+      "id": "clone_move.translates_mutated_vec_by_method_is_let_mut",
+      "category": "clone_move",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let xs: number[] = [1]; xs.push(2); console.log(xs); }"
+    },
+    {
+      "id": "clone_move.translates_for_in_to_keys_cloned",
+      "category": "clone_move",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): void { for (const k in m) { console.log(k); } }"
+    },
+    {
+      "id": "console.translates_multi_arg_console_log",
+      "category": "console",
+      "source": "translator-tests",
+      "fixture": "function f(): void { console.log(\"x\", 1, true); }"
+    },
+    {
+      "id": "console.translates_console_warn_to_eprintln",
+      "category": "console",
+      "source": "translator-tests",
+      "fixture": "function f(): void { console.warn(\"careful\"); }"
+    },
+    {
+      "id": "control_flow.translates_if_else",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let x = 1; if (x > 0) { console.log(1); } else { console.log(2); } }"
+    },
+    {
+      "id": "control_flow.translates_while_with_update",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let i = 0; while (i < 10) { i++; } }"
+    },
+    {
+      "id": "control_flow.translates_for_of_as_borrow",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function main(): void { const xs: number[] = [1, 2]; for (const v of xs) { console.log(v); } }"
+    },
+    {
+      "id": "control_flow.translates_switch_to_match",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "type Status = \"pending\" | \"done\"; function f(s: Status): void { switch (s) { case \"pending\": console.log(\"p\"); break; default: console.log(\"?\"); } }"
+    },
+    {
+      "id": "control_flow.translates_do_while",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let i = 0; do { i++; } while (i < 3); }"
+    },
+    {
+      "id": "control_flow.translates_c_style_for_loop",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let total = 0; for (let i = 0; i < 5; i++) { total += i; } console.log(total); }"
+    },
+    {
+      "id": "control_flow.translates_break_and_continue",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let i = 0; while (i < 10) { i++; if (i == 5) { continue; } if (i == 8) { break; } } }"
+    },
+    {
+      "id": "control_flow.translates_if_collection_truthiness",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1]; if (xs) { console.log(1); } }"
+    },
+    {
+      "id": "control_flow.translates_if_option_truthiness",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let m: number | null = 1; if (m) { console.log(1); } }"
+    },
+    {
+      "id": "control_flow.translates_throw_new_error_to_panic",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { throw new Error(\"boom\"); }"
+    },
+    {
+      "id": "control_flow.translates_throw_string_to_panic",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { throw \"oops\"; }"
+    },
+    {
+      "id": "control_flow.translates_try_catch_to_compile_error",
+      "category": "control_flow",
+      "source": "translator-tests",
+      "fixture": "function f(): void { try { console.log(\"x\"); } catch (e) {} }"
+    },
+    {
+      "id": "destructuring.translates_object_destructure_default_to_unwrap_or",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "interface User { name?: string; } function f(u: User): void { const { name = \"anon\" } = u; }"
+    },
+    {
+      "id": "destructuring.translates_discriminated_union_switch_destructure",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "type Shape = { kind: \"circle\"; radius: number } | { kind: \"square\"; side: number }; function area(s: Shape): number { switch (s.kind) { case \"circle\": return s.radius * s.radius; case \"square\": return s.side * s.side; } }"
+    },
+    {
+      "id": "destructuring.translates_object_destructuring_to_struct_pattern",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "interface V { x: number; y: number; } function f(v: V): number { const { x, y } = v; return x + y; }"
+    },
+    {
+      "id": "destructuring.translates_array_destructuring_to_indexed_lets",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2]; const [a, b] = xs; }"
+    },
+    {
+      "id": "destructuring.translates_array_destructure_rest_to_slice",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2, 3]; const [a, ...rest] = xs; }"
+    },
+    {
+      "id": "destructuring.translates_object_spread_to_struct_update",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "function f(v: Vector): Vector { return { ...v, y: 9 }; }"
+    },
+    {
+      "id": "destructuring.translates_array_spread_to_slice_concat",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const xs: number[] = [1, 2]; const ys = [...xs, 3]; }"
+    },
+    {
+      "id": "destructuring.translates_array_destructure_skips_holes",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): void { const [a, , c] = xs; }"
+    },
+    {
+      "id": "destructuring.translates_object_destructure_rename",
+      "category": "destructuring",
+      "source": "translator-tests",
+      "fixture": "function f(v: Vector): void { const { x: renamed } = v; }"
+    },
+    {
+      "id": "globals.translates_string_global_to_format",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(): string { return String(42); }"
+    },
+    {
+      "id": "globals.translates_parse_int_to_parse_f64",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(): number { return parseInt(\"100\"); }"
+    },
+    {
+      "id": "globals.translates_parse_int_with_radix_to_from_str_radix",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): number { return parseInt(s, 16); }"
+    },
+    {
+      "id": "globals.translates_number_global_string_to_parse",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(): number { return Number(\"42\"); }"
+    },
+    {
+      "id": "globals.translates_number_global_string_var_to_parse",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): number { return Number(s); }"
+    },
+    {
+      "id": "globals.translates_number_global_number_passes_through",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): number { return Number(n); }"
+    },
+    {
+      "id": "globals.translates_boolean_global_zero_to_false",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(): boolean { return Boolean(0); }"
+    },
+    {
+      "id": "globals.translates_boolean_global_nonzero_to_true",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(): boolean { return Boolean(42); }"
+    },
+    {
+      "id": "globals.translates_boolean_global_string_literal_to_is_empty",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(): boolean { return Boolean(\"\"); }"
+    },
+    {
+      "id": "globals.translates_boolean_global_vec_to_is_empty",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): boolean { return Boolean(xs); }"
+    },
+    {
+      "id": "globals.translates_boolean_global_number_var_to_ne_zero",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): boolean { return Boolean(n); }"
+    },
+    {
+      "id": "globals.translates_boolean_global_option_to_is_some",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(m: number | null): boolean { return Boolean(m); }"
+    },
+    {
+      "id": "math.translates_math_constants",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(): number { return Math.PI; }"
+    },
+    {
+      "id": "math.translates_math_trig_and_log_methods",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.sin(x) + Math.log10(x) + Math.cbrt(x); }"
+    },
+    {
+      "id": "math.translates_math_log_to_ln",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.log(x); }"
+    },
+    {
+      "id": "math.translates_math_atan2_to_atan2",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(y: number, x: number): number { return Math.atan2(y, x); }"
+    },
+    {
+      "id": "math.translates_math_hypot_to_pythagoras",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(a: number, b: number): number { return Math.hypot(a, b); }"
+    },
+    {
+      "id": "math.translates_math_log1p_to_ln_1p",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.log1p(x); }"
+    },
+    {
+      "id": "math.translates_math_expm1_to_exp_m1",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.expm1(x); }"
+    },
+    {
+      "id": "math.translates_math_clz32_to_leading_zeros",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.clz32(x); }"
+    },
+    {
+      "id": "math.translates_math_fround_to_f32_round_trip",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.fround(x); }"
+    },
+    {
+      "id": "math.translates_math_imul_to_wrapping_mul",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(a: number, b: number): number { return Math.imul(a, b); }"
+    },
+    {
+      "id": "narrowing.translates_optional_chain_to_as_ref_map",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "interface V { x: number } function f(): void { const v: V | null = null; const x = v?.x; }"
+    },
+    {
+      "id": "narrowing.translates_optional_chain_coalesce_to_unwrap_or",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "interface V { x: number } function f(): number { const v: V | null = null; return v?.x ?? -1; }"
+    },
+    {
+      "id": "narrowing.translates_some_wrapping",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let x: number | null = 5; console.log(x); }"
+    },
+    {
+      "id": "narrowing.translates_non_null_assertion",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(x: number | null): void { console.log(x!); }"
+    },
+    {
+      "id": "narrowing.translates_null_equality_to_is_none",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(m: number | null): boolean { return m === null; }"
+    },
+    {
+      "id": "narrowing.translates_null_inequality_to_is_some",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(m: number | null): boolean { return m !== null; }"
+    },
+    {
+      "id": "narrowing.translates_nullish_coalescing_to_unwrap_or_else",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(m: number | null): number { return m ?? 0; }"
+    },
+    {
+      "id": "narrowing.translates_logical_or_value_returns_left_when_truthy",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s || \"default\"; }"
+    },
+    {
+      "id": "narrowing.translates_logical_or_bool_short_circuits",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(a: boolean, b: boolean): boolean { return a || b; }"
+    },
+    {
+      "id": "narrowing.translates_logical_nullish_assign",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(x: number | null): void { x ??= 5; }"
+    },
+    {
+      "id": "narrowing.translates_logical_or_assign",
+      "category": "narrowing",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): void { x ||= 5; }"
+    },
+    {
+      "id": "number_methods.translates_number_to_fixed_to_format_precision",
+      "category": "number_methods",
+      "source": "translator-tests",
+      "fixture": "function f(): string { const pi = 3.14159; return pi.toFixed(2); }"
+    },
+    {
+      "id": "number_methods.translates_number_to_string_radix_hex",
+      "category": "number_methods",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): string { return n.toString(16); }"
+    },
+    {
+      "id": "number_methods.translates_number_to_string_radix_binary",
+      "category": "number_methods",
+      "source": "translator-tests",
+      "fixture": "function f(): string { return (255).toString(2); }"
+    },
+    {
+      "id": "number_methods.translates_number_to_string_no_arg_is_display",
+      "category": "number_methods",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): string { return n.toString(); }"
+    },
+    {
+      "id": "operators.translates_arithmetic_and_comparison",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(): void { console.log(1 + 2 * 3); console.log(4 >= 2); }"
+    },
+    {
+      "id": "operators.translates_logical_and_unary",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let b = true; console.log(b && !b); console.log(-5); }"
+    },
+    {
+      "id": "operators.translates_compound_assignment",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let n = 0; n += 5; n = n * 2; }"
+    },
+    {
+      "id": "operators.translates_template_literal",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function greet(name: string): string { return `Hello, ${name}!`; }"
+    },
+    {
+      "id": "operators.translates_ternary_to_if_expression",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): string { return x > 0 ? \"pos\" : \"neg\"; }"
+    },
+    {
+      "id": "operators.translates_length_to_len",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let n = \"hi\".length; }"
+    },
+    {
+      "id": "operators.translates_exponent_operator",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return x ** 2; }"
+    },
+    {
+      "id": "operators.translates_in_operator_to_contains_key",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): boolean { return \"k\" in m; }"
+    },
+    {
+      "id": "operators.translates_arrow_function_expression_body",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const double = (x: number) => x * 2; console.log(double(5)); }"
+    },
+    {
+      "id": "operators.translates_field_assign_to_field",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(v: Vector): void { v.x = 5; }"
+    },
+    {
+      "id": "operators.translates_bitwise_and_or_xor",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(a: number, b: number): number { return (a & b) + (a | b) + (a ^ b); }"
+    },
+    {
+      "id": "operators.translates_bitwise_shifts",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(a: number, b: number): number { return (a << b) + (a >> b) + (a >>> b); }"
+    },
+    {
+      "id": "operators.translates_bitwise_not",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(a: number): number { return ~a; }"
+    },
+    {
+      "id": "operators.translates_bitwise_compound_assign",
+      "category": "operators",
+      "source": "translator-tests",
+      "fixture": "function f(a: number, b: number): void { a &= b; a <<= b; a **= 2; }"
+    },
+    {
+      "id": "strings.translates_string_method_call",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let s = \"hello\".toUpperCase(); console.log(s); }"
+    },
+    {
+      "id": "strings.translates_to_string_to_display",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): string { return n.toString(); }"
+    },
+    {
+      "id": "strings.translates_string_concatenation_to_format",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function greet(first: string, last: string): string { return first + \" \" + last; }"
+    },
+    {
+      "id": "strings.translates_string_predicate_methods",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): boolean { return s.includes(\"x\") && s.startsWith(\"a\"); }"
+    },
+    {
+      "id": "strings.translates_string_replace_all_to_replace",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.replaceAll(\"a\", \"b\"); }"
+    },
+    {
+      "id": "strings.translates_string_compound_append",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let s = \"a\"; s += \"bc\"; console.log(s); }"
+    },
+    {
+      "id": "strings.translates_string_split_to_vec_string",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const parts = \"a,b,c\".split(\",\"); }"
+    },
+    {
+      "id": "strings.translates_string_index_of_to_find",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const s = \"hello\"; const i = s.indexOf(\"ll\"); }"
+    },
+    {
+      "id": "strings.translates_string_slice_to_byte_range",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): string { return \"hello\".slice(1, 4); }"
+    },
+    {
+      "id": "strings.translates_trim_start_end_to_trim_methods",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const a = \"  x\".trimStart(); const b = \"x  \".trimEnd(); }"
+    },
+    {
+      "id": "strings.translates_string_char_at_to_chars_nth",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.charAt(0); }"
+    },
+    {
+      "id": "strings.translates_string_pad_start_to_right_align",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.padStart(5); }"
+    },
+    {
+      "id": "strings.translates_string_pad_end_to_left_align",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.padEnd(5); }"
+    },
+    {
+      "id": "strings.translates_string_pad_start_with_fill_char",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.padStart(5, \"0\"); }"
+    },
+    {
+      "id": "strings.translates_string_pad_end_with_fill_char",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.padEnd(5, \"-\"); }"
+    },
+    {
+      "id": "strings.translates_string_char_code_at_to_code_point",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): number { return s.charCodeAt(0); }"
+    },
+    {
+      "id": "strings.translates_string_from_char_code_to_char",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): string { return String.fromCharCode(65); }"
+    },
+    {
+      "id": "types.translates_a_typed_function_returning_a_string",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function greet(name: string): string { return \"Hello\"; }"
+    },
+    {
+      "id": "types.translates_generic_function_params",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function id<T>(x: T): T { return x; }"
+    },
+    {
+      "id": "types.translates_default_param_to_option_unwrap_or_and_call_none",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function greet(name: string, greeting: string = \"hello\"): string { return greeting + \" \" + name; } function f(): string { return greet(\"world\"); }"
+    },
+    {
+      "id": "types.translates_default_param_supplied_wraps_some",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function greet(name: string, greeting: string = \"hi\"): string { return greeting + name; } function f(): string { return greet(\"world\", \"hey\"); }"
+    },
+    {
+      "id": "types.translates_nullable_to_option",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function main(): void { let x: number | null = null; console.log(x); }"
+    },
+    {
+      "id": "types.translates_nullable_return_type",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(): number | null { return null; }"
+    },
+    {
+      "id": "types.translates_enum_variant_construction",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "type Status = \"pending\" | \"done\"; function f(): void { let s: Status = \"done\"; }"
+    },
+    {
+      "id": "types.translates_object_keys_to_hashmap_keys",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): number { return Object.keys(m).length; }"
+    },
+    {
+      "id": "types.translates_object_values_to_hashmap_values",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): number { return Object.values(m).length; }"
+    },
+    {
+      "id": "types.translates_discriminated_union_variant_construction",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "type Shape = { kind: \"circle\"; radius: number } | { kind: \"square\"; side: number }; function f(): void { const s: Shape = { kind: \"circle\", radius: 3 }; }"
+    },
+    {
+      "id": "types.translates_return_object_literal_to_struct_init",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "interface V { x: number; y: number; } function f(): V { return { x: 1, y: 2 }; }"
+    },
+    {
+      "id": "types.translates_object_literal_argument_to_struct_init",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "interface V { x: number; y: number; } function g(v: V): number { return v.x; } function f(): number { return g({ x: 1, y: 2 }); }"
+    },
+    {
+      "id": "types.translates_record_computed_key_to_hashmap_entry",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(k: string): void { const m: Record<string, number> = { [k]: 1 }; }"
+    },
+    {
+      "id": "types.translates_record_to_hashmap_literal",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(): void { const m: Record<string, number> = { a: 1, b: 2 }; }"
+    },
+    {
+      "id": "types.translates_hashmap_index_to_get",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(): number { const m: Record<string, number> = { a: 1 }; return m[\"a\"]; }"
+    },
+    {
+      "id": "types.translates_hashmap_index_assign_to_insert",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let m: Record<string, number> = { a: 1 }; m[\"b\"] = 2; }"
+    }
+  ]
+}

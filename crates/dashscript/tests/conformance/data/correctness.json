@@ -1,0 +1,23 @@
+{
+  "_comment": "Hand-written correctness cases (the only hand-written fixtures). Each carries `expect_output`; the fixture declares `function main()` and the runner `cargo run`s it, comparing stdout. `console.log(x)` lowers to `println!(\"{}\", x)` (Display, not Debug), so fixtures log primitives or joined strings — never a bare Vec/struct.",
+  "features": [
+    {
+      "id": "correctness.parse_int_radix",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { console.log(parseInt(\"ff\", 16)); }",
+      "expect": "supported",
+      "expect_output": "255",
+      "note": "parseInt('ff', 16) prints 255"
+    },
+    {
+      "id": "correctness.array_join",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs.join(\"-\")); }",
+      "expect": "supported",
+      "expect_output": "1-2-3",
+      "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
+    }
+  ]
+}

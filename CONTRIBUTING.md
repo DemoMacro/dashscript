@@ -82,6 +82,51 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 - Prefer a `target` field for the project's primary backend so `ds build` has a default.
 - `manifest` must round-trip cleanly: every target-prefixed dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
 
+## Conformance / Support Matrix
+
+`crates/dashscript/tests/conformance.rs` answers a question the per-node translation tests (`translator/tests/`) do not: **does the translated Rust actually compile?** Those tests assert the output _contains_ a substring; they never run `cargo check`. Conformance runs the full three-layer chain per fixture — `Translator::check` (translatability), then `translate` + `cargo check` (the emitted Rust must compile) — and records `supported` | `partial` (translates but won't compile) | `unsupported` (`check` flags it). A `partial` here is a real translator gap the substring tests missed.
+
+Feature data lives in `crates/dashscript/tests/conformance/data/`:
+
+- `tests-fixtures.json` — **auto-extracted** from `translator/tests/*.rs` by `scripts/extract-tests.mjs`. Every `let src = "..."` in a `translates_*` `#[test]` becomes a fixture (**zero hand-written**). These are recorded informationally — no `expect`, so the run reports the current state and surfaces its partials without asserting them.
+- `bcd-catalog.json` — the ES built-in API **catalog**, auto-derived from MDN `browser-compat-data` by `scripts/sync-bcd.mjs`. Coverage-gap data only: bcd lists which APIs _exist_, never how to _call_ them, so these are recorded `untested` and never run. They show which ES APIs the extracted fixtures do not yet exercise.
+- `correctness.json` — the **only** hand-written fixtures. Each carries `expect` + `expect_output`; the runner `cargo run`s the emitted program and compares stdout. These are asserted (regression guard).
+
+Regenerate the auto-derived lists (from the repo root, after `pnpm install`):
+
+```bash
+node scripts/extract-tests.mjs   # translator/tests → tests-fixtures.json
+node scripts/sync-bcd.mjs        # @mdn/browser-compat-data → bcd-catalog.json
+```
+
+Run the harness:
+
+```bash
+cargo test -p dashscript --test conformance
+```
+
+Each run rewrites `tests/conformance/matrix.md` (human-readable) and `matrix.json` (machine-readable) beside the source. Only `correctness.json` entries are asserted; `tests-fixtures.json` entries are recorded informationally — the partials they surface are the actionable output.
+
+**Adding a correctness case** — append to `data/correctness.json` (the fixture must declare `function main()`):
+
+```json
+{
+  "id": "correctness.array_join",
+  "category": "correctness",
+  "source": "manual",
+  "fixture": "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs.join(\"-\")); }",
+  "expect": "supported",
+  "expect_output": "1-2-3",
+  "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
+}
+```
+
+> `console.log(x)` lowers to `println!("{}", x)` — **Display**, not Debug. Correctness fixtures must log primitives or joined strings; never a bare `Vec`/`struct` (no `Display` ⇒ the emitted Rust won't compile). Verify a new mapping with `cargo run` before trusting a fixture.
+
+**Adding a support-matrix fixture** — don't hand-write one. Add a `translates_*` `#[test]` to the relevant `translator/tests/*.rs` file; `extract-tests.mjs` picks up its `let src` on the next run. Support-matrix coverage grows from the translation tests that already exist.
+
+**Fixture shape note:** bind array literals to a typed local first (`const xs: number[] = [1, 2, 3]; xs.map(...)`). An unannotated `[1, 2, 3]` lowers to `vec![1.0, ..]` whose element type is undecided, so chained methods fail trait resolution. This mirrors how `examples/` and `translator/tests/` write arrays.
+
 ## Adding a Translation Rule, Manifest Field, or Bindgen Target
 
 Most changes fall into one of three shapes:

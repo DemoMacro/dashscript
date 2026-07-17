@@ -1,0 +1,2421 @@
+[
+  {
+    "id": "arrays.translates_array_literal_to_vec_macro",
+    "category": "arrays",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_index",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_in_operator_on_array_to_index_bound",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_map_to_iter_copied_map_collect",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_filter_to_iter_copied_filter_collect",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_slice_to_index_range_to_vec",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_index_of_to_position",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_find_index_to_position",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_at_to_signed_runtime_index",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_flat_map_to_flat_map_collect",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_literal_with_expression_elements",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_flat_to_concat",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_last_index_of_to_rposition",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_fill_to_vec_fill",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_for_each_to_for_each",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_includes_to_contains",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_find_to_iter_copied_find",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_some_every_to_any_all",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_join_to_vec_string_join",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reduce_with_seed_to_fold",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reduce_without_seed_to_reduce",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_index_assign_to_usize_index",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_concat_to_slice_concat",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reverse_to_in_place_reverse",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_sort_to_numeric_sort_by",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_find_last_to_rev_find",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_find_last_index_to_rposition",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reduce_right_to_rev_fold",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_unmutated_let_is_plain_let",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_mutated_let_is_let_mut",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_mutated_let_by_compound_assign_is_let_mut",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_mutated_vec_by_method_is_let_mut",
+    "category": "clone_move",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_for_in_to_keys_cloned",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "console.translates_multi_arg_console_log",
+    "category": "console",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "console.translates_console_warn_to_eprintln",
+    "category": "console",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_if_else",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_while_with_update",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_for_of_as_borrow",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_switch_to_match",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_do_while",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_c_style_for_loop",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_break_and_continue",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_if_collection_truthiness",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_if_option_truthiness",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_throw_new_error_to_panic",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_throw_string_to_panic",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_try_catch_to_compile_error",
+    "category": "control_flow",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error: DashScript does not support try-catch (throw is an unrecoverable panic)\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_object_destructure_default_to_unwrap_or",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_discriminated_union_switch_destructure",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_object_destructuring_to_struct_pattern",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_array_destructuring_to_indexed_lets",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_array_destructure_rest_to_slice",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_object_spread_to_struct_update",
+    "category": "destructuring",
+    "status": "partial",
+    "detail": "src\\main.rs:1:9: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nsrc\\main.rs:1:20: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nsrc\\main.rs:2:5: error[E0422]: cannot find struct, variant or union type `Vector` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_array_spread_to_slice_concat",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_array_destructure_skips_holes",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_object_destructure_rename",
+    "category": "destructuring",
+    "status": "partial",
+    "detail": "src\\main.rs:1:9: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nsrc\\main.rs:2:9: error[E0422]: cannot find struct, variant or union type `Vector` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_string_global_to_format",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_parse_int_to_parse_f64",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_parse_int_with_radix_to_from_str_radix",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_string_to_parse",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_string_var_to_parse",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_number_passes_through",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_boolean_global_zero_to_false",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_boolean_global_nonzero_to_true",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_boolean_global_string_literal_to_is_empty",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_boolean_global_vec_to_is_empty",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_boolean_global_number_var_to_ne_zero",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_boolean_global_option_to_is_some",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_constants",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_trig_and_log_methods",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_log_to_ln",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_atan2_to_atan2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_hypot_to_pythagoras",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_log1p_to_ln_1p",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_expm1_to_exp_m1",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_clz32_to_leading_zeros",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_fround_to_f32_round_trip",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_imul_to_wrapping_mul",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_optional_chain_to_as_ref_map",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_optional_chain_coalesce_to_unwrap_or",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_some_wrapping",
+    "category": "narrowing",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0277]: `Option<f64>` doesn't implement `std::fmt::Display`: `Option<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_non_null_assertion",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_null_equality_to_is_none",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_null_inequality_to_is_some",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_nullish_coalescing_to_unwrap_or_else",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_logical_or_value_returns_left_when_truthy",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_logical_or_bool_short_circuits",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_logical_nullish_assign",
+    "category": "narrowing",
+    "status": "partial",
+    "detail": "src\\main.rs:3:9: error[E0384]: cannot assign to immutable argument `x`: cannot assign to immutable argument\nsrc\\main.rs:3:9: warning: value assigned to `x` is never read\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_logical_or_assign",
+    "category": "narrowing",
+    "status": "partial",
+    "detail": "src\\main.rs:3:9: error[E0384]: cannot assign to immutable argument `x`: cannot assign to immutable argument\nsrc\\main.rs:3:9: warning: value assigned to `x` is never read\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_fixed_to_format_precision",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_string_radix_hex",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_string_radix_binary",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_string_no_arg_is_display",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_arithmetic_and_comparison",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_logical_and_unary",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_compound_assignment",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_template_literal",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_ternary_to_if_expression",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_length_to_len",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_exponent_operator",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_in_operator_to_contains_key",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_arrow_function_expression_body",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_field_assign_to_field",
+    "category": "operators",
+    "status": "partial",
+    "detail": "src\\main.rs:1:9: error[E0425]: cannot find type `Vector` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_and_or_xor",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_shifts",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_not",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_compound_assign",
+    "category": "operators",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0384]: cannot assign to immutable argument `a`: cannot assign to immutable argument\nsrc\\main.rs:3:5: error[E0384]: cannot assign to immutable argument `a`: cannot assign to immutable argument\nsrc\\main.rs:4:5: error[E0384]: cannot assign to immutable argument `a`: cannot assign to immutable argument\nsrc\\main.rs:4:5: warning: value assigned to `a` is never read\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_method_call",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_to_string_to_display",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_concatenation_to_format",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_predicate_methods",
+    "category": "strings",
+    "status": "partial",
+    "detail": "src\\main.rs:4:19: error[E0308]: mismatched types: expected `bool`, found floating-point number\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_replace_all_to_replace",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_compound_append",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_split_to_vec_string",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_index_of_to_find",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_slice_to_byte_range",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_trim_start_end_to_trim_methods",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_char_at_to_chars_nth",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_pad_start_to_right_align",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_pad_end_to_left_align",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_pad_start_with_fill_char",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_pad_end_with_fill_char",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_char_code_at_to_code_point",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_from_char_code_to_char",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_a_typed_function_returning_a_string",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_generic_function_params",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_default_param_to_option_unwrap_or_and_call_none",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_default_param_supplied_wraps_some",
+    "category": "types",
+    "status": "partial",
+    "detail": "src\\main.rs:3:16: error[E0308]: mismatched types: expected `&str`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "types.translates_nullable_to_option",
+    "category": "types",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0277]: `Option<f64>` doesn't implement `std::fmt::Display`: `Option<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "types.translates_nullable_return_type",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_enum_variant_construction",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_keys_to_hashmap_keys",
+    "category": "types",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0308]: mismatched types: expected `f64`, found `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_values_to_hashmap_values",
+    "category": "types",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0308]: mismatched types: expected `f64`, found `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "types.translates_discriminated_union_variant_construction",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_return_object_literal_to_struct_init",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_literal_argument_to_struct_init",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_record_computed_key_to_hashmap_entry",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_record_to_hashmap_literal",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_hashmap_index_to_get",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_hashmap_index_assign_to_insert",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.at",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.concat",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.copyWithin",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.entries",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.every",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.fill",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.filter",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.find",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.findIndex",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.findLast",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.findLastIndex",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.flat",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.flatMap",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.forEach",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.from",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.fromAsync",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.includes",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.indexOf",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.isArray",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.join",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.keys",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.lastIndexOf",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.map",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.of",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.pop",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.push",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.reduce",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.reduceRight",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.reverse",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.shift",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.slice",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.some",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.sort",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.splice",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.toLocaleString",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.toReversed",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.toSorted",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.toSpliced",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.toString",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.unshift",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.values",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "array.with",
+    "category": "arrays",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.anchor",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.at",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.big",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.blink",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.bold",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.charAt",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.charCodeAt",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.codePointAt",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.concat",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.endsWith",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.fixed",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.fontcolor",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.fontsize",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.fromCharCode",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.fromCodePoint",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.includes",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.indexOf",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.isWellFormed",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.italics",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.lastIndexOf",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.link",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.localeCompare",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.match",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.matchAll",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.normalize",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.padEnd",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.padStart",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.raw",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.repeat",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.replace",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.replaceAll",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.search",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.slice",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.small",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.split",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.startsWith",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.strike",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.sub",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.substr",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.substring",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.sup",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.toLocaleLowerCase",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.toLocaleUpperCase",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.toLowerCase",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.toString",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.toUpperCase",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.toWellFormed",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.trim",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.trimEnd",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.trimStart",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.unicode_code_point_escapes",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "string.valueOf",
+    "category": "strings",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.E",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.LN10",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.LN2",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.LOG10E",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.LOG2E",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.PI",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.SQRT1_2",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.SQRT2",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.abs",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.acos",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.acosh",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.asin",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.asinh",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.atan",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.atan2",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.atanh",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.cbrt",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.ceil",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.clz32",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.cos",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.cosh",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.exp",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.expm1",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.f16round",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.floor",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.fround",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.hypot",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.imul",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.log",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.log10",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.log1p",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.log2",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.max",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.min",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.pow",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.random",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.round",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.sign",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.sin",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.sinh",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.sqrt",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.sumPrecise",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.tan",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.tanh",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.trunc",
+    "category": "math",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.EPSILON",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.MAX_SAFE_INTEGER",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.MAX_VALUE",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.MIN_SAFE_INTEGER",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.MIN_VALUE",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.NEGATIVE_INFINITY",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.NaN",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.POSITIVE_INFINITY",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.isFinite",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.isInteger",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.isNaN",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.isSafeInteger",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.parseFloat",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.parseInt",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.toExponential",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.toFixed",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.toLocaleString",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.toPrecision",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.toString",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number.valueOf",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.assign",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.constructor",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.create",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.defineGetter",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.defineProperties",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.defineProperty",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.defineSetter",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.entries",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.freeze",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.fromEntries",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.getOwnPropertyDescriptor",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.getOwnPropertyDescriptors",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.getOwnPropertyNames",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.getOwnPropertySymbols",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.getPrototypeOf",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.groupBy",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.hasOwn",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.hasOwnProperty",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.is",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.isExtensible",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.isFrozen",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.isPrototypeOf",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.isSealed",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.keys",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.lookupGetter",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.lookupSetter",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.preventExtensions",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.propertyIsEnumerable",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.proto",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.seal",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.setPrototypeOf",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.toLocaleString",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.toString",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.valueOf",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "object.values",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.parseInt",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.parseFloat",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.isNaN",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.isFinite",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.encodeURI",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.decodeURI",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.Number",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.String",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "global.Boolean",
+    "category": "globals",
+    "status": "untested",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "correctness.parse_int_radix",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "parseInt('ff', 16) prints 255"
+  },
+  {
+    "id": "correctness.array_join",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
+  }
+]
