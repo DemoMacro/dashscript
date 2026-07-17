@@ -1674,8 +1674,11 @@
   {
     "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a7",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:7:13: error[E0384]: cannot assign twice to immutable variable `i`: cannot assign twice to immutable variable\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1932,8 +1935,11 @@
   {
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a7",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:7:13: error[E0384]: cannot assign twice to immutable variable `i`: cannot assign twice to immutable variable\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2371,7 +2377,11 @@
     "id": "test262.test.built-ins.math.round.s15.8.2.15_a7",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:15:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:20:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:25:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:30:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:35:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:40:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable",
+    "detail": "oracle diff: line 4: ds=\"1\" node=\"Infinity\"; line 5: ds=\"-9007199254740990\" node=\"-9007199254740991\"; line 6: ds=\"-6755399441055742\" node=\"-6755399441055743\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 4: ds=\"1\" node=\"Infinity\"; line 5: ds=\"-9007199254740990\" node=\"-9007199254740991\"; line 6: ds=\"-6755399441055742\" node=\"-6755399441055743\""
+    },
     "note": ""
   },
   {

@@ -496,9 +496,14 @@ fn translate_variable_declaration(
                 }
                 _ => {
                     let name = bindings::binding_name(&d.id);
-                    // A `let` is `mut` only when the binding is mutated in this
-                    // function; `const`/`var` are never `mut`.
-                    let mutable = kind_let && locals.mutated.contains(&name.to_string());
+                    // `mut` when a reassignable binding (`let`/`var`) is actually
+                    // mutated in this function. JS `var` is reassignable, so
+                    // `var i = …; i++` needs `let mut i` (E0384 otherwise);
+                    // `const` is never reassignable.
+                    let mutable = matches!(
+                        decl.kind,
+                        VariableDeclarationKind::Let | VariableDeclarationKind::Var
+                    ) && locals.mutated.contains(&name.to_string());
                     let ty = d
                         .type_annotation
                         .as_ref()

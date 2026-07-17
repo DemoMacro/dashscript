@@ -16,6 +16,15 @@ fn translates_mutated_let_is_let_mut() {
 }
 
 #[test]
+fn translates_mutated_var_is_let_mut() {
+    // JS `var` is reassignable (unlike `const`), so `var n = …; n = …` needs
+    // `let mut n` — same as `let`. test262 leans heavily on `for (var i …)`.
+    let src = "function main(): void { var n = 0; n = 5; console.log(n); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("let mut n"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_mutated_let_by_compound_assign_is_let_mut() {
     let src = "function main(): void { let n: number = 0; n += 5; console.log(n); }";
     let rust = Translator::new().translate(src).expect("should translate");
