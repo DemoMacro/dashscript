@@ -41,6 +41,15 @@ pub(in crate::translator::expressions) fn number_method(
             let fmt_lit = syn::LitStr::new(fmt, Span::call_site());
             parse_quote!(format!(#fmt_lit, (#recv) as u32))
         }
+        // `(n).toExponential(fracDigits)` → scientific notation with that many
+        // digits after the point. Rust's `{:.*e}` takes precision then value,
+        // matching TS's `fracDigits` semantics.
+        "toExponential" => {
+            let prec = usize_arg(args.first()?, ctx);
+            parse_quote!(format!("{:.*e}", #prec, #recv))
+        }
+        // `(n).valueOf()` → the number itself (an `f64` identity).
+        "valueOf" if args.is_empty() => parse_quote!(#recv),
         _ => return None,
     })
 }

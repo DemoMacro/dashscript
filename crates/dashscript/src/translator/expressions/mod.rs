@@ -1087,6 +1087,12 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `Array.of(…)` / `Array.isArray(x)` / `Array.from(…)`.
+        if methods::is_ident(&sm.object, "Array") {
+            if let Some(expr) = methods::array_static(sm, call.arguments.as_slice(), ctx) {
+                return expr;
+            }
+        }
         // `String.fromCharCode(n)` → a one-char `String`.
         if methods::is_ident(&sm.object, "String") {
             if let Some(expr) = methods::string_static(&sm.property.name, call.arguments.as_slice(), ctx) {

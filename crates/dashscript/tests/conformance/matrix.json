@@ -231,6 +231,48 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_of",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_is_array_vec_true",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_from_clone",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_from_mapped",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_splice",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_to_string_join",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "clone_move.translates_unmutated_let_is_plain_let",
     "category": "clone_move",
     "status": "supported",
@@ -526,6 +568,48 @@
   },
   {
     "id": "globals.translates_number_constants",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_parse_float",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_parse_int_radix",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_to_exponential",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_value_of",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_global_is_nan",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_global_is_finite",
     "category": "globals",
     "status": "supported",
     "detail": "",
@@ -1043,6 +1127,48 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_from_code_point",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_value_of",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_to_locale_lower",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_to_locale_upper",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_is_well_formed",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_to_well_formed",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "types.translates_a_typed_function_returning_a_string",
     "category": "types",
     "status": "supported",
@@ -1176,6 +1302,41 @@
     "note": ""
   },
   {
+    "id": "types.translates_object_is_nan_equal",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_has_own_to_contains_key",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_get_own_property_names_to_keys",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_assign_to_extend",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_from_entries_to_collect",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "correctness.parse_int_radix",
     "category": "correctness",
     "status": "supported",
@@ -1217,7 +1378,7 @@
   {
     "id": "array.entries",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1294,7 +1455,7 @@
   {
     "id": "array.from",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1322,7 +1483,7 @@
   {
     "id": "array.isArray",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1357,7 +1518,7 @@
   {
     "id": "array.of",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1427,7 +1588,7 @@
   {
     "id": "array.splice",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1588,7 +1749,7 @@
   {
     "id": "string.fromCodePoint",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1609,7 +1770,7 @@
   {
     "id": "string.isWellFormed",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1777,14 +1938,14 @@
   {
     "id": "string.toLocaleLowerCase",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.toLocaleUpperCase",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1812,7 +1973,7 @@
   {
     "id": "string.toWellFormed",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1847,7 +2008,7 @@
   {
     "id": "string.valueOf",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2211,7 +2372,7 @@
   {
     "id": "number.NaN",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2253,21 +2414,21 @@
   {
     "id": "number.parseFloat",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "number.parseInt",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "number.toExponential",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2302,14 +2463,14 @@
   {
     "id": "number.valueOf",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "object.assign",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2358,7 +2519,7 @@
   {
     "id": "object.entries",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2372,7 +2533,7 @@
   {
     "id": "object.fromEntries",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2393,7 +2554,7 @@
   {
     "id": "object.getOwnPropertyNames",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2421,7 +2582,7 @@
   {
     "id": "object.hasOwn",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2435,7 +2596,7 @@
   {
     "id": "object.is",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2561,7 +2722,7 @@
   {
     "id": "global.parseFloat",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

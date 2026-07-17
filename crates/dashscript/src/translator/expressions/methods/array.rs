@@ -290,6 +290,80 @@ pub(in crate::translator::expressions) fn array_method(
                 __v
             })
         }
+        // `.splice(start, deleteCount, …items)` → in-place `Vec::splice`
+        // replacing the range with the item iterator. Mutates; bounds bound
+        // once so a side-effecting index arg evaluates only once. Statement-
+        // style (TS returns the removed items; DashScript discards them).
+        "splice" if args.len() >= 2 => {
+            let start = usize_arg(args.first()?, ctx);
+            let del = usize_arg(args.get(1)?, ctx);
+            let items: Vec<Expr> = args
+                .iter()
+                .skip(2)
+                .map(|a| translate_argument(a, ctx))
+                .collect();
+            parse_quote!({
+                let __start = #start;
+                let __del = #del;
+                #recv.splice(__start..(__start + __del), [#(#items),*]);
+            })
+        }
+        // `.toString()` → a comma-joined string of the elements (TS's default
+        // `Array.prototype.toString` joins with `,`).
+        "toString" if args.is_empty() => {
+            parse_quote!(#recv.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(","))
+        }
+        _ => return None,
+    })
+}
+
+/// `Array.<m>(…)`: `of(…)` → a fresh `vec![…]`; `isArray(x)` folds at compile
+/// time (DashScript types are static — a Vec local is always an array, a
+/// non-Vec local never is, and an unclassified receiver is unsupported);
+/// `from(src[, mapFn])` clones a `Vec` source (mapping each element when a
+/// callback is given). Returns `None` for any other name.
+pub(in crate::translator::expressions) fn array_static(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    Some(match sm.property.name.as_str() {
+        // `Array.of(a, b, c)` → `vec![a, b, c]`.
+        "of" => {
+            let items: Vec<Expr> = args.iter().map(|a| translate_argument(a, ctx)).collect();
+            parse_quote!(vec![#(#items),*])
+        }
+        // `Array.isArray(x)` — DashScript types are known at compile time, so a
+        // Vec local is always an array and a non-Vec local never is. A non-
+        // identifier receiver (a call, literal, …) can't be classified → None.
+        "isArray" if args.len() == 1 => {
+            let Argument::Identifier(id) = args.first()? else {
+                return None;
+            };
+            let name = bindings::snake(&id.name);
+            let is_vec = ctx
+                .local_type(&name.to_string())
+                .and_then(|p| p.segments.last())
+                .is_some_and(|s| s.ident == "Vec");
+            if is_vec {
+                parse_quote!(true)
+            } else {
+                parse_quote!(false)
+            }
+        }
+        // `Array.from(src)` → `src.clone()`; `Array.from(src, mapFn)` → a
+        // mapped clone. `src` is assumed to be a `Vec` (the common DashScript
+        // case); a `String` source (char-by-char) is unsupported.
+        "from" => {
+            let src = translate_argument(args.first()?, ctx);
+            match args.get(1) {
+                None => parse_quote!(#src.clone()),
+                Some(cb) => {
+                    let cb = translate_argument(cb, ctx);
+                    parse_quote!(#src.iter().copied().map(#cb).collect::<Vec<_>>())
+                }
+            }
+        }
         _ => return None,
     })
 }

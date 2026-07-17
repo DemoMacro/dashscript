@@ -200,6 +200,42 @@
       "fixture": "function f(): void { let xs: number[] = [1, 2]; xs.unshift(0); xs.shift(); xs.pop(); }"
     },
     {
+      "id": "arrays.translates_array_of",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): number[] { return Array.of(1, 2, 3); }"
+    },
+    {
+      "id": "arrays.translates_array_is_array_vec_true",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): boolean { return Array.isArray(xs); }"
+    },
+    {
+      "id": "arrays.translates_array_from_clone",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number[] { return Array.from(xs); }"
+    },
+    {
+      "id": "arrays.translates_array_from_mapped",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number[] { return Array.from(xs, n => n * 2); }"
+    },
+    {
+      "id": "arrays.translates_array_splice",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): void { xs.splice(1, 2); }"
+    },
+    {
+      "id": "arrays.translates_array_to_string_join",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): string { return xs.toString(); }"
+    },
+    {
       "id": "clone_move.translates_unmutated_let_is_plain_let",
       "category": "clone_move",
       "source": "translator-tests",
@@ -456,6 +492,42 @@
       "category": "globals",
       "source": "translator-tests",
       "fixture": "function f(): number { return Number.EPSILON + Number.MAX_VALUE + Number.NaN + Number.POSITIVE_INFINITY; }"
+    },
+    {
+      "id": "globals.translates_number_parse_float",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): number { return Number.parseFloat(s); }"
+    },
+    {
+      "id": "globals.translates_number_parse_int_radix",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): number { return Number.parseInt(s, 16); }"
+    },
+    {
+      "id": "globals.translates_number_to_exponential",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): string { return n.toExponential(2); }"
+    },
+    {
+      "id": "globals.translates_number_value_of",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): number { return n.valueOf(); }"
+    },
+    {
+      "id": "globals.translates_global_is_nan",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): boolean { return isNaN(n); }"
+    },
+    {
+      "id": "globals.translates_global_is_finite",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): boolean { return isFinite(n); }"
     },
     {
       "id": "math.translates_math_methods",
@@ -896,6 +968,42 @@
       "fixture": "function f(s: string): string { return s.replace(\"a\", \"b\").substring(1); }"
     },
     {
+      "id": "strings.translates_string_from_code_point",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(): string { return String.fromCodePoint(65); }"
+    },
+    {
+      "id": "strings.translates_string_value_of",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.valueOf(); }"
+    },
+    {
+      "id": "strings.translates_string_to_locale_lower",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.toLocaleLowerCase(); }"
+    },
+    {
+      "id": "strings.translates_string_to_locale_upper",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.toLocaleUpperCase(); }"
+    },
+    {
+      "id": "strings.translates_string_is_well_formed",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): boolean { return s.isWellFormed(); }"
+    },
+    {
+      "id": "strings.translates_string_to_well_formed",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.toWellFormed(); }"
+    },
+    {
       "id": "types.translates_a_typed_function_returning_a_string",
       "category": "types",
       "source": "translator-tests",
@@ -1008,6 +1116,36 @@
       "category": "types",
       "source": "translator-tests",
       "fixture": "function f(): void { let m: Record<string, number> = { a: 1 }; m[\"b\"] = 2; }"
+    },
+    {
+      "id": "types.translates_object_is_nan_equal",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(a: number, b: number): boolean { return Object.is(a, b); }"
+    },
+    {
+      "id": "types.translates_object_has_own_to_contains_key",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): boolean { return Object.hasOwn(m, \"a\"); }"
+    },
+    {
+      "id": "types.translates_object_get_own_property_names_to_keys",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): number { return Object.getOwnPropertyNames(m).length; }"
+    },
+    {
+      "id": "types.translates_object_assign_to_extend",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(a: Record<string, number>, b: Record<string, number>): Record<string, number> { return Object.assign(a, b); }"
+    },
+    {
+      "id": "types.translates_object_from_entries_to_collect",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "function f(m: Record<string, number>): Record<string, number> { return Object.fromEntries(Object.entries(m)); }"
     }
   ]
 }

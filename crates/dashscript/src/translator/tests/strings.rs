@@ -215,3 +215,51 @@ use super::super::Translator;
         assert!(rust.contains(".replacen("), "got:\n{rust}");
         assert!(rust.contains("[1.0 as usize..]"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_string_from_code_point() {
+        let src = "function f(): string { return String.fromCodePoint(65); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("char::from_u32"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_value_of() {
+        let src = "function f(s: string): string { return s.valueOf(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(!rust.contains("valueOf"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_to_locale_lower() {
+        let src = "function f(s: string): string { return s.toLocaleLowerCase(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".to_lowercase()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_to_locale_upper() {
+        let src = "function f(s: string): string { return s.toLocaleUpperCase(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".to_uppercase()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_is_well_formed() {
+        let src = "function f(s: string): boolean { return s.isWellFormed(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("true"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_to_well_formed() {
+        let src = "function f(s: string): string { return s.toWellFormed(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".to_string()"), "got:\n{rust}");
+    }

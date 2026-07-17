@@ -133,3 +133,52 @@ use super::super::Translator;
         assert!(rust.contains("f64::NAN"), "got:\n{rust}");
         assert!(rust.contains("f64::INFINITY"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_number_parse_float() {
+        let src = "function f(s: string): number { return Number.parseFloat(s); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".trim().parse::<f64>().unwrap_or(f64::NAN)"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_number_parse_int_radix() {
+        let src = "function f(s: string): number { return Number.parseInt(s, 16); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("from_str_radix("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_number_to_exponential() {
+        let src = "function f(n: number): string { return n.toExponential(2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("{:.*e}"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_number_value_of() {
+        let src = "function f(n: number): number { return n.valueOf(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        // valueOf is an identity on f64 — the receiver passes through, no `Number`.
+        assert!(!rust.contains("Number") && !rust.contains("valueOf"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_global_is_nan() {
+        let src = "function f(n: number): boolean { return isNaN(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".is_nan()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_global_is_finite() {
+        let src = "function f(n: number): boolean { return isFinite(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".is_finite()"), "got:\n{rust}");
+    }

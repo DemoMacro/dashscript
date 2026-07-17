@@ -243,3 +243,43 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(!rust.contains("return"), "x as number unwraps to trailing x, got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_object_is_nan_equal() {
+        let src = "function f(a: number, b: number): boolean { return Object.is(a, b); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("is_nan()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_object_has_own_to_contains_key() {
+        let src = "function f(m: Record<string, number>): boolean { return Object.hasOwn(m, \"a\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".contains_key(\"a\")"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_object_get_own_property_names_to_keys() {
+        let src = "function f(m: Record<string, number>): number { return Object.getOwnPropertyNames(m).length; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".keys().map("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_object_assign_to_extend() {
+        let src = "function f(a: Record<string, number>, b: Record<string, number>): Record<string, number> { return Object.assign(a, b); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".extend("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_object_from_entries_to_collect() {
+        let src = "function f(m: Record<string, number>): Record<string, number> { return Object.fromEntries(Object.entries(m)); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("collect::<::std::collections::HashMap<_, _>>()"), "got:\n{rust}");
+    }

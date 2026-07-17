@@ -290,3 +290,51 @@ use super::super::Translator;
         assert!(rust.contains(".remove(0)"), "got:\n{rust}");
         assert!(rust.contains(".pop()"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_array_of() {
+        let src = "function f(): number[] { return Array.of(1, 2, 3); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("vec![1.0, 2.0, 3.0]"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_is_array_vec_true() {
+        let src = "function f(xs: number[]): boolean { return Array.isArray(xs); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("true") && !rust.contains("Array"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_from_clone() {
+        let src = "function f(xs: number[]): number[] { return Array.from(xs); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".clone()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_from_mapped() {
+        let src = "function f(xs: number[]): number[] { return Array.from(xs, n => n * 2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".iter().copied().map("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_splice() {
+        let src = "function f(xs: number[]): void { xs.splice(1, 2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".splice("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_to_string_join() {
+        let src = "function f(xs: number[]): string { return xs.toString(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".join(\",\")"), "got:\n{rust}");
+    }

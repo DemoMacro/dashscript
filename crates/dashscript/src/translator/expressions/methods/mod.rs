@@ -6,7 +6,7 @@ mod array;
 mod number;
 mod string;
 
-pub(super) use array::array_method;
+pub(super) use array::{array_method, array_static};
 pub(super) use number::{number_constant, number_method};
 pub(super) use string::string_method;
 
@@ -70,7 +70,9 @@ pub(super) fn map_method(name: &str) -> Option<Ident> {
 
 /// `Object.<m>(record)` on a `Record` (a `HashMap`): `keys` → the map's keys
 /// as `Vec<String>`, `values` → its values (cloned, so Copy and Clone both
-/// work), `entries` → `(K, V)` pairs. Returns `None` for any other member.
+/// work), `entries` → `(K, V)` pairs. `is`/`hasOwn`/`getOwnPropertyNames`/
+/// `assign`/`fromEntries` round out the static set DashScript maps on a
+/// `Record`. Returns `None` for any other member.
 pub(super) fn object_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     let r = translate_argument(args.first()?, ctx);
     Some(match name {
@@ -79,16 +81,51 @@ pub(super) fn object_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Opt
         "entries" => {
             parse_quote!(#r.iter().map(|(k, v)| (k.clone(), v.clone())).collect::<Vec<_>>())
         }
+        // `Object.is(a, b)` → value identity: equal, or both NaN (TS `Object.is`
+        // treats `NaN === NaN`, unlike `===`). `+0`/`-0` differ in TS but not
+        // under Rust `==` — that edge is not honored.
+        "is" if args.len() == 2 => {
+            let b = translate_argument(args.get(1)?, ctx);
+            parse_quote!((#r == #b) || (#r.is_nan() && #b.is_nan()))
+        }
+        // `Object.hasOwn(m, key)` → `HashMap::contains_key` (a Record owns its
+        // keys). `key` is a `&str` (a literal stays a bare pattern).
+        "hasOwn" if args.len() == 2 => {
+            let k = str_method_arg(args.get(1)?, ctx);
+            parse_quote!(#r.contains_key(#k))
+        }
+        // `Object.getOwnPropertyNames(m)` ≡ `Object.keys(m)` for a Record (a
+        // HashMap's keys are its own string property names).
+        "getOwnPropertyNames" => {
+            parse_quote!(#r.keys().map(|k| k.to_string()).collect::<Vec<_>>())
+        }
+        // `Object.assign(target, …srcs)` → a cloned target with each source
+        // merged in (Record = HashMap, so `extend` merges by key).
+        "assign" => {
+            let srcs: Vec<Expr> = args.iter().skip(1).map(|a| translate_argument(a, ctx)).collect();
+            parse_quote!({
+                let mut __m = #r.clone();
+                #(__m.extend(#srcs.clone());)*
+                __m
+            })
+        }
+        // `Object.fromEntries(entries)` → collect `(K, V)` pairs into a HashMap.
+        "fromEntries" => {
+            parse_quote!(#r.into_iter().collect::<::std::collections::HashMap<_, _>>())
+        }
         _ => return None,
     })
 }
 
-/// `String.<m>(…)`: `fromCharCode(n)` → a one-char `String` from the code
-/// point (or `""` if `n` isn't a valid `char`). Returns `None` otherwise.
+/// `String.<m>(…)`: `fromCharCode(n)`/`fromCodePoint(n)` → a one-char
+/// `String` from the code point (or `""` if `n` isn't a valid `char`). Rust's
+/// `char` is a Unicode scalar value, so the two TS methods lower identically
+/// (`fromCharCode`'s UTF-16 surrogate distinction doesn't arise). Returns
+/// `None` otherwise.
 pub(super) fn string_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     let n = translate_argument(args.first()?, ctx);
     Some(match name {
-        "fromCharCode" => {
+        "fromCharCode" | "fromCodePoint" => {
             parse_quote!(char::from_u32(#n as u32).map(|c| c.to_string()).unwrap_or_default())
         }
         _ => return None,
@@ -97,7 +134,9 @@ pub(super) fn string_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Opt
 
 /// `Number.<m>(x)`: static type checks on an `f64`. `isNaN` → `is_nan`,
 /// `isFinite` → `is_finite`, `isInteger` → a finite value with no fractional
-/// part, `isSafeInteger` adds the ±(2^53 − 1) bound. Returns `None` otherwise.
+/// part, `isSafeInteger` adds the ±(2^53 − 1) bound. `parseFloat`/`parseInt`
+/// mirror the global functions (TS `Number.parseFloat === parseFloat`).
+/// Returns `None` otherwise.
 pub(super) fn number_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     let x = translate_argument(args.first()?, ctx);
     Some(match name {
@@ -107,6 +146,22 @@ pub(super) fn number_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Opt
         "isSafeInteger" => {
             parse_quote!(#x.is_finite() && #x.fract() == 0.0 && #x.abs() <= 9_007_199_254_740_991.0)
         }
+        // `Number.parseFloat(s)` ≡ the global `parseFloat(s)` — base-10 f64
+        // parse, NaN on a malformed string (never a throw, as in TS).
+        "parseFloat" => parse_quote!(#x.trim().parse::<f64>().unwrap_or(f64::NAN)),
+        // `Number.parseInt(s)` / `Number.parseInt(s, radix)` ≡ the global
+        // `parseInt` — base-10 by default, `i64::from_str_radix` with a radix.
+        "parseInt" => match args.get(1) {
+            Some(radix) => {
+                let r = translate_argument(radix, ctx);
+                parse_quote!(
+                    i64::from_str_radix(#x.trim(), #r as u32)
+                        .map(|v| v as f64)
+                        .unwrap_or(f64::NAN)
+                )
+            }
+            None => parse_quote!(#x.trim().parse::<f64>().unwrap_or(f64::NAN)),
+        },
         _ => return None,
     })
 }
@@ -161,6 +216,17 @@ pub(super) fn global_function(
         }
         // `Boolean(x)` → the Rust truthiness of `x` (see `bool_cast`).
         "Boolean" => bool_cast(args.first()?, ctx),
+        // `isNaN(x)` → `x.is_nan()` (DashScript's `number` is `f64`, so the TS
+        // global's ToNumber coercion is already done).
+        "isNaN" => {
+            let a = translate_argument(args.first()?, ctx);
+            parse_quote!(#a.is_nan())
+        }
+        // `isFinite(x)` → `x.is_finite()`.
+        "isFinite" => {
+            let a = translate_argument(args.first()?, ctx);
+            parse_quote!(#a.is_finite())
+        }
         _ => return None,
     })
 }

@@ -160,6 +160,18 @@ pub(in crate::translator::expressions) fn string_method(
             let needle = str_method_arg(args.first()?, ctx);
             parse_quote!(#obj.rfind(#needle).map(|b| b as f64).unwrap_or(-1.0))
         }
+        // `.valueOf()` → the string itself (a String identity).
+        "valueOf" if args.is_empty() => parse_quote!(#obj),
+        // `.toLocaleLowerCase()` / `.toLocaleUpperCase()` → the non-locale
+        // case fold (Rust has no locale-aware Unicode case mapping; the default
+        // fold matches the common root-locale case).
+        "toLocaleLowerCase" if args.is_empty() => parse_quote!(#obj.to_lowercase()),
+        "toLocaleUpperCase" if args.is_empty() => parse_quote!(#obj.to_uppercase()),
+        // `.isWellFormed()` → `true` (a Rust `&str`/`String` is always valid
+        // UTF-8, so it is always well-formed — lone surrogates can't occur).
+        "isWellFormed" if args.is_empty() => parse_quote!(true),
+        // `.toWellFormed()` → the string unchanged (already well-formed).
+        "toWellFormed" if args.is_empty() => parse_quote!(#obj.to_string()),
         _ => return None,
     })
 }

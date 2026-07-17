@@ -194,14 +194,23 @@ fn probe_token(id: &str) -> Option<String> {
         // in a fixture — so leave them untested rather than mis-associate.
         "global" if matches!(name, "isNaN" | "isFinite") => None,
         "global" => Some(format!("{name}(")),
-        // Number constants start uppercase (EPSILON, MAX_VALUE, NaN);
-        // methods lowercase (toFixed, toString). `NaN` is mixed-case, so the
-        // all-caps test above misses it — first-letter case is the robust split
-        // for `number` (no Number constant starts lowercase, no method starts
-        // uppercase). `.method(` is unambiguous (Number method names aren't
-        // shared with string/array in the translator).
+        // Number has three call shapes, all under the `number.<name>` bcd id:
+        // constants `Number.<CONST>` (EPSILON, NaN — uppercase, no call), static
+        // methods `Number.<m>(` (isNaN/isFinite/isInteger/isSafeInteger/
+        // parseFloat/parseInt), and instance methods `.<m>(` (toFixed,
+        // toExponential, valueOf). `NaN` is mixed-case so first-letter case is
+        // the constant/non-constant split; the static set is enumerated.
         "number" if name.starts_with(|c: char| c.is_ascii_uppercase()) => {
             Some(format!("Number.{name}"))
+        }
+        "number"
+            if matches!(
+                name,
+                "isNaN" | "isFinite" | "isInteger" | "isSafeInteger"
+                    | "parseFloat" | "parseInt"
+            ) =>
+        {
+            Some(format!("Number.{name}("))
         }
         "number" => Some(format!(".{name}(")),
         // Object static methods (Object.keys(m)) are unambiguous — no

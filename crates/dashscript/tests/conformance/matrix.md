@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 373 features: **283** supported, **1** partial, **0** unsupported, **89** untested
+- 396 features: **329** supported, **1** partial, **0** unsupported, **66** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -40,10 +40,16 @@
 | arrays.translates_array_to_spliced_to_clone_splice           | 🟢 supported |               |
 | arrays.translates_array_with_to_clone_index_assign           | 🟢 supported |               |
 | arrays.translates_array_shift_unshift_pop                    | 🟢 supported |               |
+| arrays.translates_array_of                                   | 🟢 supported |               |
+| arrays.translates_array_is_array_vec_true                    | 🟢 supported |               |
+| arrays.translates_array_from_clone                           | 🟢 supported |               |
+| arrays.translates_array_from_mapped                          | 🟢 supported |               |
+| arrays.translates_array_splice                               | 🟢 supported |               |
+| arrays.translates_array_to_string_join                       | 🟢 supported |               |
 | array.at                                                     | 🟢 supported |               |
 | array.concat                                                 | 🟢 supported |               |
 | array.copyWithin                                             | ⚪ untested  |               |
-| array.entries                                                | ⚪ untested  |               |
+| array.entries                                                | 🟢 supported |               |
 | array.every                                                  | 🟢 supported |               |
 | array.fill                                                   | 🟢 supported |               |
 | array.filter                                                 | 🟢 supported |               |
@@ -54,16 +60,16 @@
 | array.flat                                                   | 🟢 supported |               |
 | array.flatMap                                                | 🟢 supported |               |
 | array.forEach                                                | 🟢 supported |               |
-| array.from                                                   | ⚪ untested  |               |
+| array.from                                                   | 🟢 supported |               |
 | array.fromAsync                                              | ⚪ untested  |               |
 | array.includes                                               | 🟢 supported |               |
 | array.indexOf                                                | 🟢 supported |               |
-| array.isArray                                                | ⚪ untested  |               |
+| array.isArray                                                | 🟢 supported |               |
 | array.join                                                   | 🟢 supported |               |
 | array.keys                                                   | 🟢 supported |               |
 | array.lastIndexOf                                            | 🟢 supported |               |
 | array.map                                                    | 🟢 supported |               |
-| array.of                                                     | ⚪ untested  |               |
+| array.of                                                     | 🟢 supported |               |
 | array.pop                                                    | 🟢 supported |               |
 | array.push                                                   | 🟢 supported |               |
 | array.reduce                                                 | 🟢 supported |               |
@@ -73,7 +79,7 @@
 | array.slice                                                  | 🟢 supported |               |
 | array.some                                                   | 🟢 supported |               |
 | array.sort                                                   | 🟢 supported |               |
-| array.splice                                                 | ⚪ untested  |               |
+| array.splice                                                 | 🟢 supported |               |
 | array.toLocaleString                                         | ⚪ untested  |               |
 | array.toReversed                                             | 🟢 supported |               |
 | array.toSorted                                               | 🟢 supported |               |
@@ -157,45 +163,51 @@
 | globals.translates_number_static_type_checks                 | 🟢 supported |               |
 | globals.translates_number_is_safe_integer                    | 🟢 supported |               |
 | globals.translates_number_constants                          | 🟢 supported |               |
+| globals.translates_number_parse_float                        | 🟢 supported |               |
+| globals.translates_number_parse_int_radix                    | 🟢 supported |               |
+| globals.translates_number_to_exponential                     | 🟢 supported |               |
+| globals.translates_number_value_of                           | 🟢 supported |               |
+| globals.translates_global_is_nan                             | 🟢 supported |               |
+| globals.translates_global_is_finite                          | 🟢 supported |               |
 | number.EPSILON                                               | 🟢 supported |               |
 | number.MAX_SAFE_INTEGER                                      | ⚪ untested  |               |
 | number.MAX_VALUE                                             | 🟢 supported |               |
 | number.MIN_SAFE_INTEGER                                      | ⚪ untested  |               |
 | number.MIN_VALUE                                             | ⚪ untested  |               |
 | number.NEGATIVE_INFINITY                                     | ⚪ untested  |               |
-| number.NaN                                                   | ⚪ untested  |               |
+| number.NaN                                                   | 🟢 supported |               |
 | number.POSITIVE_INFINITY                                     | 🟢 supported |               |
 | number.isFinite                                              | 🟢 supported |               |
 | number.isInteger                                             | 🟢 supported |               |
 | number.isNaN                                                 | 🟢 supported |               |
 | number.isSafeInteger                                         | 🟢 supported |               |
-| number.parseFloat                                            | ⚪ untested  |               |
-| number.parseInt                                              | ⚪ untested  |               |
-| number.toExponential                                         | ⚪ untested  |               |
+| number.parseFloat                                            | 🟢 supported |               |
+| number.parseInt                                              | 🟢 supported |               |
+| number.toExponential                                         | 🟢 supported |               |
 | number.toFixed                                               | 🟢 supported |               |
 | number.toLocaleString                                        | ⚪ untested  |               |
 | number.toPrecision                                           | ⚪ untested  |               |
 | number.toString                                              | 🟢 supported |               |
-| number.valueOf                                               | ⚪ untested  |               |
-| object.assign                                                | ⚪ untested  |               |
+| number.valueOf                                               | 🟢 supported |               |
+| object.assign                                                | 🟢 supported |               |
 | object.constructor                                           | ⚪ untested  |               |
 | object.create                                                | ⚪ untested  |               |
 | object.defineGetter                                          | ⚪ untested  |               |
 | object.defineProperties                                      | ⚪ untested  |               |
 | object.defineProperty                                        | ⚪ untested  |               |
 | object.defineSetter                                          | ⚪ untested  |               |
-| object.entries                                               | ⚪ untested  |               |
+| object.entries                                               | 🟢 supported |               |
 | object.freeze                                                | ⚪ untested  |               |
-| object.fromEntries                                           | ⚪ untested  |               |
+| object.fromEntries                                           | 🟢 supported |               |
 | object.getOwnPropertyDescriptor                              | ⚪ untested  |               |
 | object.getOwnPropertyDescriptors                             | ⚪ untested  |               |
-| object.getOwnPropertyNames                                   | ⚪ untested  |               |
+| object.getOwnPropertyNames                                   | 🟢 supported |               |
 | object.getOwnPropertySymbols                                 | ⚪ untested  |               |
 | object.getPrototypeOf                                        | ⚪ untested  |               |
 | object.groupBy                                               | ⚪ untested  |               |
-| object.hasOwn                                                | ⚪ untested  |               |
+| object.hasOwn                                                | 🟢 supported |               |
 | object.hasOwnProperty                                        | ⚪ untested  |               |
-| object.is                                                    | ⚪ untested  |               |
+| object.is                                                    | 🟢 supported |               |
 | object.isExtensible                                          | ⚪ untested  |               |
 | object.isFrozen                                              | ⚪ untested  |               |
 | object.isPrototypeOf                                         | ⚪ untested  |               |
@@ -213,7 +225,7 @@
 | object.valueOf                                               | ⚪ untested  |               |
 | object.values                                                | 🟢 supported |               |
 | global.parseInt                                              | 🟢 supported |               |
-| global.parseFloat                                            | ⚪ untested  |               |
+| global.parseFloat                                            | 🟢 supported |               |
 | global.isNaN                                                 | ⚪ untested  |               |
 | global.isFinite                                              | ⚪ untested  |               |
 | global.encodeURI                                             | ⚪ untested  |               |
@@ -364,6 +376,12 @@
 | strings.translates_string_lower_trim_methods         | 🟢 supported |               |
 | strings.translates_string_ends_with_to_ends_with     | 🟢 supported |               |
 | strings.translates_string_replace_substring_methods  | 🟢 supported |               |
+| strings.translates_string_from_code_point            | 🟢 supported |               |
+| strings.translates_string_value_of                   | 🟢 supported |               |
+| strings.translates_string_to_locale_lower            | 🟢 supported |               |
+| strings.translates_string_to_locale_upper            | 🟢 supported |               |
+| strings.translates_string_is_well_formed             | 🟢 supported |               |
+| strings.translates_string_to_well_formed             | 🟢 supported |               |
 | string.anchor                                        | ⚪ untested  |               |
 | string.at                                            | 🟢 supported |               |
 | string.big                                           | ⚪ untested  |               |
@@ -378,10 +396,10 @@
 | string.fontcolor                                     | ⚪ untested  |               |
 | string.fontsize                                      | ⚪ untested  |               |
 | string.fromCharCode                                  | 🟢 supported |               |
-| string.fromCodePoint                                 | ⚪ untested  |               |
+| string.fromCodePoint                                 | 🟢 supported |               |
 | string.includes                                      | 🟢 supported |               |
 | string.indexOf                                       | 🟢 supported |               |
-| string.isWellFormed                                  | ⚪ untested  |               |
+| string.isWellFormed                                  | 🟢 supported |               |
 | string.italics                                       | ⚪ untested  |               |
 | string.lastIndexOf                                   | 🟢 supported |               |
 | string.link                                          | ⚪ untested  |               |
@@ -405,17 +423,17 @@
 | string.substr                                        | ⚪ untested  |               |
 | string.substring                                     | 🟢 supported |               |
 | string.sup                                           | ⚪ untested  |               |
-| string.toLocaleLowerCase                             | ⚪ untested  |               |
-| string.toLocaleUpperCase                             | ⚪ untested  |               |
+| string.toLocaleLowerCase                             | 🟢 supported |               |
+| string.toLocaleUpperCase                             | 🟢 supported |               |
 | string.toLowerCase                                   | 🟢 supported |               |
 | string.toString                                      | ⚪ untested  |               |
 | string.toUpperCase                                   | 🟢 supported |               |
-| string.toWellFormed                                  | ⚪ untested  |               |
+| string.toWellFormed                                  | 🟢 supported |               |
 | string.trim                                          | 🟢 supported |               |
 | string.trimEnd                                       | 🟢 supported |               |
 | string.trimStart                                     | 🟢 supported |               |
 | string.unicode_code_point_escapes                    | ⚪ untested  |               |
-| string.valueOf                                       | ⚪ untested  |               |
+| string.valueOf                                       | 🟢 supported |               |
 
 ## types
 
@@ -440,5 +458,10 @@
 | types.translates_record_to_hashmap_literal                       | 🟢 supported |               |
 | types.translates_hashmap_index_to_get                            | 🟢 supported |               |
 | types.translates_hashmap_index_assign_to_insert                  | 🟢 supported |               |
+| types.translates_object_is_nan_equal                             | 🟢 supported |               |
+| types.translates_object_has_own_to_contains_key                  | 🟢 supported |               |
+| types.translates_object_get_own_property_names_to_keys           | 🟢 supported |               |
+| types.translates_object_assign_to_extend                         | 🟢 supported |               |
+| types.translates_object_from_entries_to_collect                  | 🟢 supported |               |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->
