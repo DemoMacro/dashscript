@@ -91,6 +91,9 @@ out
 .nuxt
 dist
 
+# VS Code extension package (built by `vsce package`)
+*.vsix
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js

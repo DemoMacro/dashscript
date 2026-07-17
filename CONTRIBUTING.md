@@ -17,6 +17,20 @@ For the Rust core, `cargo build` / `cargo test` / `cargo clippy` apply to `crate
 
 Prerequisites: **Node.js 18+**, **pnpm 9+**, **Rust stable** (to build DashScript itself — the toolchain it ships to end users is separate and DashScript-managed).
 
+### Editor support — `.ds` in VS Code
+
+Syntax highlight, live diagnostics, and go-to-definition ship as a VS Code extension (`packages/vscode`) backed by the `ds lsp` server. After `pnpm install`:
+
+1. Put `ds` on your PATH: `cargo install --path apps/ds`.
+2. (Optional, for crate go-to-definition) Put `rust-analyzer` on your PATH: `rustup component add rust-analyzer`.
+3. Build and install the extension:
+   ```bash
+   pnpm --filter dashscript-vscode package
+   code --install-extension packages/vscode/dashscript-vscode-*.vsix
+   ```
+
+After install, opening any `.ds` file gives TS-based syntax highlight, real-time `ds check` diagnostics, and go-to-definition — in-file symbols and imported crate names (resolved via the rust-analyzer backend).
+
 ## Contribution Workflow
 
 1. **Fork & clone** — fork on GitHub, clone your fork, add `upstream` (`git remote add upstream https://github.com/DemoMacro/dashscript.git`).

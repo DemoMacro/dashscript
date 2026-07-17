@@ -21,7 +21,6 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter \"./packages/**\" -r dev",
-    "demo": "pnpm --filter @dashscript/vscode demo",
     "build": "pnpm --filter \"./packages/**\" -r build",
     "check": "vp check --fix",
     "test": "vp test run",

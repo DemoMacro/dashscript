@@ -1,5 +1,7 @@
 {
   "scopeName": "source.ds",
+  "name": "DashScript",
+  "fileTypes": ["ds"],
   "patterns": [
     {
       "include": "source.ts"
