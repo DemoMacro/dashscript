@@ -228,3 +228,18 @@ fn translates_math_sign_keeps_signed_zero() {
     assert!(rust.contains("== 0.0"), "zero special-case: {rust}");
     assert!(rust.contains(".signum()"), "non-zero signum: {rust}");
 }
+
+#[test]
+fn translates_math_tonumber_coerces_nullish_and_object() {
+    // JS Math applies ToNumber to its argument: null → +0, undefined or an
+    // object → NaN (no `valueOf` modeled), a boolean → 1/0.
+    let rust = Translator::new()
+        .translate("function f(): void { console.log(Math.log10(null)); }")
+        .expect("should translate");
+    assert!(rust.contains("0.0f64"), "null -> +0: {rust}");
+    assert!(!rust.contains("None"), "not Option: {rust}");
+    let rust = Translator::new()
+        .translate("function f(): void { console.log(Math.max({})); }")
+        .expect("should translate");
+    assert!(rust.contains("NAN"), "object -> NaN: {rust}");
+}

@@ -209,6 +209,13 @@ fn math_receiver(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         let s = format!("{}_f64", v);
         return parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN));
     }
+    // JS Math applies ToNumber to a non-number argument (`null` → +0,
+    // `undefined`/an object → NaN, a boolean → 1/0). DashScript is statically
+    // typed, so a real `number` arg (a variable, an arithmetic expression)
+    // falls through to `translate_argument` and keeps its own f64 type.
+    if let Some(e) = to_number_expr(arg) {
+        return e;
+    }
     translate_argument(arg, ctx)
 }
 
@@ -243,6 +250,31 @@ fn math_numeric_literal(arg: &Argument) -> Option<String> {
                 _ => None,
             }
         }
+        _ => None,
+    }
+}
+
+/// JS `ToNumber` coercion for a `Math.` argument that isn't already a number
+/// (a real `number` arg keeps its own type under `translate_argument`):
+/// `null` → +0, `undefined` → NaN, a boolean → 1/0, an object/array/function/
+/// regex → NaN (DashScript doesn't model `valueOf`, so any non-primitive
+/// coerces to NaN). String ToNumber parsing is not yet modeled.
+fn to_number_expr(arg: &Argument) -> Option<Expr> {
+    match arg {
+        Argument::NullLiteral(_) => Some(parse_quote!(0.0f64)),
+        Argument::Identifier(id) if id.name.as_str() == "undefined" => {
+            Some(parse_quote!(::core::f64::NAN))
+        }
+        Argument::BooleanLiteral(b) => Some(if b.value {
+            parse_quote!(1.0f64)
+        } else {
+            parse_quote!(0.0f64)
+        }),
+        Argument::ObjectExpression(_)
+        | Argument::ArrayExpression(_)
+        | Argument::FunctionExpression(_)
+        | Argument::ArrowFunctionExpression(_)
+        | Argument::RegExpLiteral(_) => Some(parse_quote!(::core::f64::NAN)),
         _ => None,
     }
 }
