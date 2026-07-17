@@ -194,6 +194,12 @@
       "fixture": "function f(xs: number[]): number[] { return xs.with(0, 9); }"
     },
     {
+      "id": "arrays.translates_array_shift_unshift_pop",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(): void { let xs: number[] = [1, 2]; xs.unshift(0); xs.shift(); xs.pop(); }"
+    },
+    {
       "id": "clone_move.translates_unmutated_let_is_plain_let",
       "category": "clone_move",
       "source": "translator-tests",

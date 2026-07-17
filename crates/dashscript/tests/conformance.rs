@@ -301,18 +301,15 @@ fn render_md(outcomes: &[Outcome]) -> String {
         for o in outcomes.iter().filter(|o| o.category == cat) {
             let badge = badge(o.status);
             let note = if o.detail.is_empty() { o.note.clone() } else { o.detail.clone() };
-            let mut row = format!(
-                "| {} | {} {} | {} |",
-                o.id,
-                badge,
-                o.status,
-                note.replace('|', "\\|").replace(['\n', '\r'], " ")
-            );
-            if let Some(c) = o.correct {
-                row.push_str(&format!(" _correct: {}_", c));
-            }
-            s.push_str(&row);
-            s.push('\n');
+            let note = note.replace('|', "\\|").replace(['\n', '\r'], " ");
+            // `correct` folds into the detail column rather than adding a 4th
+            // column — the header declares only 3, so a trailing column would
+            // break the markdown table render.
+            let correct_suffix = match o.correct {
+                Some(c) => format!(" _correct: {}_", c),
+                None => String::new(),
+            };
+            s.push_str(&format!("| {} | {} {} | {}{} |\n", o.id, badge, o.status, note, correct_suffix));
         }
         s.push('\n');
     }

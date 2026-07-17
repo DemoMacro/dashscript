@@ -280,3 +280,13 @@ use super::super::Translator;
         assert!(rust.contains(".clone()"), "got:\n{rust}");
         assert!(rust.contains("__v[0.0 as usize] = 9.0"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_array_shift_unshift_pop() {
+        let src = "function f(): void { let xs: number[] = [1, 2]; xs.unshift(0); xs.shift(); xs.pop(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".insert(0,"), "got:\n{rust}");
+        assert!(rust.contains(".remove(0)"), "got:\n{rust}");
+        assert!(rust.contains(".pop()"), "got:\n{rust}");
+    }

@@ -224,6 +224,13 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_shift_unshift_pop",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "clone_move.translates_unmutated_let_is_plain_let",
     "category": "clone_move",
     "status": "supported",
@@ -1350,7 +1357,7 @@
   {
     "id": "array.pop",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1385,7 +1392,7 @@
   {
     "id": "array.shift",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1455,7 +1462,7 @@
   {
     "id": "array.unshift",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

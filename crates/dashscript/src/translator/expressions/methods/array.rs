@@ -233,6 +233,15 @@ pub(in crate::translator::expressions) fn array_method(
         // (`let`) array. TS returns the same reference — DashScript uses it
         // statement-style.
         "reverse" if args.is_empty() => parse_quote!(#recv.reverse()),
+        // `.shift()` → drop the first element (TS returns it; statement-style,
+        // matching push/pop). Panics on an empty Vec — TS yields `undefined`.
+        "shift" if args.is_empty() => parse_quote!(#recv.remove(0)),
+        // `.unshift(x)` → insert `x` at the front (TS returns the new length;
+        // statement-style).
+        "unshift" if args.len() == 1 => {
+            let v = translate_argument(args.first()?, ctx);
+            parse_quote!(#recv.insert(0, #v))
+        }
         // `.sort()` → in-place numeric ascending sort (TS default sort is
         // lexicographic; DashScript treats number arrays numerically). A
         // comparator argument is unsupported — it would return `Ordering`.

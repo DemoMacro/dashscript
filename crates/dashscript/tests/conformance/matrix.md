@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 371 features: **275** supported, **1** partial, **0** unsupported, **95** untested
+- 372 features: **279** supported, **1** partial, **0** unsupported, **92** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -39,6 +39,7 @@
 | arrays.translates_array_to_reversed_to_rev_collect           | 🟢 supported |               |
 | arrays.translates_array_to_spliced_to_clone_splice           | 🟢 supported |               |
 | arrays.translates_array_with_to_clone_index_assign           | 🟢 supported |               |
+| arrays.translates_array_shift_unshift_pop                    | 🟢 supported |               |
 | array.at                                                     | 🟢 supported |               |
 | array.concat                                                 | 🟢 supported |               |
 | array.copyWithin                                             | ⚪ untested  |               |
@@ -63,12 +64,12 @@
 | array.lastIndexOf                                            | 🟢 supported |               |
 | array.map                                                    | 🟢 supported |               |
 | array.of                                                     | ⚪ untested  |               |
-| array.pop                                                    | ⚪ untested  |               |
+| array.pop                                                    | 🟢 supported |               |
 | array.push                                                   | 🟢 supported |               |
 | array.reduce                                                 | 🟢 supported |               |
 | array.reduceRight                                            | 🟢 supported |               |
 | array.reverse                                                | 🟢 supported |               |
-| array.shift                                                  | ⚪ untested  |               |
+| array.shift                                                  | 🟢 supported |               |
 | array.slice                                                  | 🟢 supported |               |
 | array.some                                                   | 🟢 supported |               |
 | array.sort                                                   | 🟢 supported |               |
@@ -78,7 +79,7 @@
 | array.toSorted                                               | 🟢 supported |               |
 | array.toSpliced                                              | 🟢 supported |               |
 | array.toString                                               | ⚪ untested  |               |
-| array.unshift                                                | ⚪ untested  |               |
+| array.unshift                                                | 🟢 supported |               |
 | array.values                                                 | 🟢 supported |               |
 | array.with                                                   | 🟢 supported |               |
 
@@ -118,10 +119,10 @@
 
 ## correctness
 
-| feature                     | status       | detail / note                                                  |
-| --------------------------- | ------------ | -------------------------------------------------------------- | --------------- |
-| correctness.parse_int_radix | 🟢 supported | parseInt('ff', 16) prints 255                                  | _correct: true_ |
-| correctness.array_join      | 🟢 supported | [1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0) | _correct: true_ |
+| feature                     | status       | detail / note                                                                  |
+| --------------------------- | ------------ | ------------------------------------------------------------------------------ |
+| correctness.parse_int_radix | 🟢 supported | parseInt('ff', 16) prints 255 _correct: true_                                  |
+| correctness.array_join      | 🟢 supported | [1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0) _correct: true_ |
 
 ## destructuring
 
