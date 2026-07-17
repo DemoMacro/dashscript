@@ -19,7 +19,7 @@ pub mod registry;
 pub mod types;
 
 use oxc_allocator::Allocator;
-use oxc_codegen::Codegen;
+use oxc_codegen::{Codegen, CodegenOptions, IndentChar};
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
 use oxc_span::SourceType;
@@ -73,7 +73,9 @@ impl Translator {
         check::check(source)
     }
 
-    /// Format `.ds` source with `oxc_codegen` (pretty-print, not minified).
+    /// Format `.ds` source with `oxc_codegen` (pretty-print, 2-space indent,
+    /// not minified) — the same indentation style as prettier / `vp fmt`, so
+    /// `.ds` written by hand (TypeScript-style) is already formatted.
     ///
     /// # Errors
     /// Returns an error string if `oxc_parser` reports syntax diagnostics — a
@@ -87,7 +89,14 @@ impl Translator {
                 ret.diagnostics.len()
             ));
         }
-        Ok(Codegen::new().build(&ret.program).code)
+        Ok(Codegen::new()
+            .with_options(CodegenOptions {
+                indent_char: IndentChar::Space,
+                indent_width: 2,
+                ..CodegenOptions::default()
+            })
+            .build(&ret.program)
+            .code)
     }
 
     /// The local `.ds` modules this file imports (`import { x } from "./other"`
