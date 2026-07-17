@@ -164,7 +164,7 @@ impl Server {
     fn ensure_ra(&mut self, root: &Path) -> Result<(), Box<dyn Error>> {
         if self.ra.is_none() {
             let root_uri = path_to_uri(root)?.as_str().to_string();
-            self.ra = Some(RaClient::spawn(&self.ra_path, &root_uri)?);
+            self.ra = Some(RaClient::spawn(&self.ra_path, &root_uri, root)?);
         }
         Ok(())
     }
@@ -240,8 +240,14 @@ struct RaClient {
 }
 
 impl RaClient {
-    fn spawn(path: &str, root_uri: &str) -> Result<Self, Box<dyn Error>> {
+    fn spawn(path: &str, root_uri: &str, root_dir: &Path) -> Result<Self, Box<dyn Error>> {
+        // `current_dir(root_dir)` is load-bearing: rust-analyzer otherwise inherits
+        // `ds lsp`'s cwd (the VS Code workspace folder). When that folder is itself a
+        // Cargo workspace — e.g. opening a file from this repo's root — RA analyses
+        // the workspace's own `Cargo.toml` instead of the emitted cache project, so
+        // crate imports (`use adler::Adler32`) fail to resolve.
         let mut child = Command::new(path)
+            .current_dir(root_dir)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
