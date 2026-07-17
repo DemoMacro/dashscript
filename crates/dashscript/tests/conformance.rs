@@ -13,9 +13,6 @@
 //!   (actual) run the same source and stdout is diffed line by line. Result
 //!   `supported` (match) | `partial` (compile fail or stdout diff); Node absent
 //!   → oracle skipped (compile-only).
-//! - `bcd-catalog.json` — ES built-in API catalog auto-derived from MDN
-//!   browser-compat-data by `scripts/sync-bcd.mjs`. Coverage-gap data only (bcd
-//!   lists APIs, never call sites) → recorded `untested`, never run.
 //! - `correctness.json` — hand-written correctness cases (the *only* hand-written
 //!   fixtures). Each carries `expect` + `expect_output`; the runner cargo-runs
 //!   the emitted program and compares stdout. Asserted (regression guard).
@@ -37,7 +34,6 @@ use serde::{Deserialize, Serialize};
 use tempfile::TempDir;
 
 const TESTS_JSON: &str = include_str!("conformance/data/tests-fixtures.json");
-const BCD_JSON: &str = include_str!("conformance/data/bcd-catalog.json");
 const CORRECTNESS_JSON: &str = include_str!("conformance/data/correctness.json");
 const TEST262_JSON: &str = include_str!("conformance/data/test262.json");
 
@@ -120,7 +116,6 @@ struct Outcome {
 #[test]
 fn conformance_matrix() {
     let tests: FeatureFile = serde_json::from_str(TESTS_JSON).expect("parse tests-fixtures.json");
-    let bcd: FeatureFile = serde_json::from_str(BCD_JSON).expect("parse bcd-catalog.json");
     let correct: FeatureFile =
         serde_json::from_str(CORRECTNESS_JSON).expect("parse correctness.json");
     let test262: FeatureFile = serde_json::from_str(TEST262_JSON).expect("parse test262.json");
@@ -135,7 +130,6 @@ fn conformance_matrix() {
         .features
         .into_iter()
         .chain(test262.features.into_iter().take(test262_limit))
-        .chain(bcd.features)
         .chain(correct.features)
         .collect();
 
@@ -148,23 +142,17 @@ fn conformance_matrix() {
     fs::create_dir_all(project.join("src")).expect("create probe src");
 
     let mut outcomes: Vec<Outcome> = Vec::with_capacity(raws.len());
-    // (fixture text, observed status) of run features, for bcd association.
-    let mut tested: Vec<(String, &'static str)> = Vec::new();
 
     // Node is the test262 ground-truth oracle. Probe once; if absent, the
     // differential layer degrades to compile-only (oracle → node-missing).
     let node_ok = node_available();
 
     // Phase 1 — run translator-tests + correctness fixtures (the slow cargo
-    // part). bcd catalog entries carry no fixture and are deferred to phase 2.
+    // part) and test262 differential cases.
     for raw in &raws {
-        if raw.source == "bcd" {
-            continue;
-        }
         if raw.source == "test262" {
             let (status, detail, oracle) =
                 run_test262(raw, &project, &target_dir, tmp.path(), node_ok);
-            tested.push((raw.fixture.clone(), status));
             outcomes.push(outcome(raw, status, detail, None, oracle));
             continue;
         }
@@ -222,25 +210,7 @@ fn conformance_matrix() {
             None
         };
 
-        tested.push((raw.fixture.clone(), status));
         outcomes.push(outcome(raw, status, detail, correct, None));
-    }
-
-    // Phase 2 — associate bcd catalog entries with a run fixture. math/global
-    // have an unambiguous call form (`Math.abs(`, `parseInt(`); a fixture
-    // containing it proves the API is exercised and inherits that status.
-    // String/array/number methods are ambiguous (`.includes(`) → stay untested.
-    for raw in &raws {
-        if raw.source != "bcd" {
-            continue;
-        }
-        if let Some(token) = probe_token(&raw.id) {
-            if let Some(&(_, st)) = tested.iter().find(|(f, _)| f.contains(token.as_str())) {
-                outcomes.push(outcome(raw, st, String::new(), None, None));
-                continue;
-            }
-        }
-        outcomes.push(outcome(raw, "untested", String::new(), None, None));
     }
 
     write_matrix(&outcomes);
@@ -270,60 +240,6 @@ fn conformance_matrix() {
         mismatches.len(),
         report
     );
-}
-
-/// For a bcd catalog id with an unambiguous call form, the substring a
-/// translator-tests fixture would contain if it exercised that API — used to
-/// associate bcd entries with already-run fixtures. `math.abs` → `Math.abs(`,
-/// `math.PI` → `Math.PI`, `global.parseInt` → `parseInt(`, `object.keys` →
-/// `Object.keys(`. String/array instance methods are receiver-ambiguous
-/// (`.includes(` could be either) and stay `None`.
-fn probe_token(id: &str) -> Option<String> {
-    let (cat, name) = id.split_once('.')?;
-    let const_like = name
-        .bytes()
-        .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_');
-    match cat {
-        "math" if const_like => Some(format!("Math.{name}")),
-        "math" => Some(format!("Math.{name}(")),
-        // `global.isNaN`/`isFinite`/`parseFloat` lower to the same `f64` ops as
-        // their `Number.*` counterparts (TS `Number.isNaN ≢ isNaN` for type
-        // coercion, but DashScript's `number` is already `f64`, so both lower
-        // to `.is_nan()`). `isNaN(` would also match `Number.isNaN(` in a
-        // fixture — but since both forms map and both are supported, the
-        // cross-match still reports the correct status.
-        "global" => Some(format!("{name}(")),
-        // Number has three call shapes, all under the `number.<name>` bcd id:
-        // constants `Number.<CONST>` (EPSILON, NaN — uppercase, no call), static
-        // methods `Number.<m>(` (isNaN/isFinite/isInteger/isSafeInteger/
-        // parseFloat/parseInt), and instance methods `.<m>(` (toFixed,
-        // toExponential, valueOf). `NaN` is mixed-case so first-letter case is
-        // the constant/non-constant split; the static set is enumerated.
-        "number" if name.starts_with(|c: char| c.is_ascii_uppercase()) => {
-            Some(format!("Number.{name}"))
-        }
-        "number"
-            if matches!(
-                name,
-                "isNaN" | "isFinite" | "isInteger" | "isSafeInteger" | "parseFloat" | "parseInt"
-            ) =>
-        {
-            Some(format!("Number.{name}("))
-        }
-        "number" => Some(format!(".{name}(")),
-        // Object static methods (Object.keys(m)) are unambiguous — no
-        // instance shares the `Object.<m>(` form. keys/values/entries are
-        // mapped; the rest have no fixture and stay untested.
-        "object" => Some(format!("Object.{name}(")),
-        // String/Array instance methods: `.method(` is receiver-ambiguous in
-        // principle, but bcd's String and Array method sets don't share a name
-        // the translator maps on only one side — the shared names
-        // (at/concat/includes/indexOf/lastIndexOf/slice) are mapped on both —
-        // so associating by method name is safe. `toString` is left out: it's
-        // shared with Object/number and only supported on the scalar receivers.
-        "string" | "array" if !const_like && name != "toString" => Some(format!(".{name}(")),
-        _ => None,
-    }
 }
 
 fn outcome(

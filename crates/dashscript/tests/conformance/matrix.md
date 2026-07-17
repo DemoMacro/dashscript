@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 481 features: **355** supported, **54** partial, **18** unsupported, **54** untested
+- 278 features: **207** supported, **54** partial, **17** unsupported, **0** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -47,48 +47,6 @@
 | arrays.translates_array_splice                               | 🟢 supported |               |
 | arrays.translates_array_to_string_join                       | 🟢 supported |               |
 | arrays.translates_array_copy_within                          | 🟢 supported |               |
-| array.at                                                     | 🟢 supported |               |
-| array.concat                                                 | 🟢 supported |               |
-| array.copyWithin                                             | 🟢 supported |               |
-| array.entries                                                | 🟢 supported |               |
-| array.every                                                  | 🟢 supported |               |
-| array.fill                                                   | 🟢 supported |               |
-| array.filter                                                 | 🟢 supported |               |
-| array.find                                                   | 🟢 supported |               |
-| array.findIndex                                              | 🟢 supported |               |
-| array.findLast                                               | 🟢 supported |               |
-| array.findLastIndex                                          | 🟢 supported |               |
-| array.flat                                                   | 🟢 supported |               |
-| array.flatMap                                                | 🟢 supported |               |
-| array.forEach                                                | 🟢 supported |               |
-| array.from                                                   | 🟢 supported |               |
-| array.fromAsync                                              | ⚪ untested  |               |
-| array.includes                                               | 🟢 supported |               |
-| array.indexOf                                                | 🟢 supported |               |
-| array.isArray                                                | 🟢 supported |               |
-| array.join                                                   | 🟢 supported |               |
-| array.keys                                                   | 🟢 supported |               |
-| array.lastIndexOf                                            | 🟢 supported |               |
-| array.map                                                    | 🟢 supported |               |
-| array.of                                                     | 🟢 supported |               |
-| array.pop                                                    | 🟢 supported |               |
-| array.push                                                   | 🟢 supported |               |
-| array.reduce                                                 | 🟢 supported |               |
-| array.reduceRight                                            | 🟢 supported |               |
-| array.reverse                                                | 🟢 supported |               |
-| array.shift                                                  | 🟢 supported |               |
-| array.slice                                                  | 🟢 supported |               |
-| array.some                                                   | 🟢 supported |               |
-| array.sort                                                   | 🟢 supported |               |
-| array.splice                                                 | 🟢 supported |               |
-| array.toLocaleString                                         | ⚪ untested  |               |
-| array.toReversed                                             | 🟢 supported |               |
-| array.toSorted                                               | 🟢 supported |               |
-| array.toSpliced                                              | 🟢 supported |               |
-| array.toString                                               | ⚪ untested  |               |
-| array.unshift                                                | 🟢 supported |               |
-| array.values                                                 | 🟢 supported |               |
-| array.with                                                   | 🟢 supported |               |
 
 ## clone_move
 
@@ -172,70 +130,6 @@
 | globals.translates_number_value_of                           | 🟢 supported |               |
 | globals.translates_global_is_nan                             | 🟢 supported |               |
 | globals.translates_global_is_finite                          | 🟢 supported |               |
-| number.EPSILON                                               | 🟢 supported |               |
-| number.MAX_SAFE_INTEGER                                      | 🟢 supported |               |
-| number.MAX_VALUE                                             | 🟢 supported |               |
-| number.MIN_SAFE_INTEGER                                      | 🟢 supported |               |
-| number.MIN_VALUE                                             | 🟢 supported |               |
-| number.NEGATIVE_INFINITY                                     | 🟢 supported |               |
-| number.NaN                                                   | 🟢 supported |               |
-| number.POSITIVE_INFINITY                                     | 🟢 supported |               |
-| number.isFinite                                              | 🟢 supported |               |
-| number.isInteger                                             | 🟢 supported |               |
-| number.isNaN                                                 | 🟢 supported |               |
-| number.isSafeInteger                                         | 🟢 supported |               |
-| number.parseFloat                                            | 🟢 supported |               |
-| number.parseInt                                              | 🟢 supported |               |
-| number.toExponential                                         | 🟢 supported |               |
-| number.toFixed                                               | 🟢 supported |               |
-| number.toLocaleString                                        | ⚪ untested  |               |
-| number.toPrecision                                           | ⚪ untested  |               |
-| number.toString                                              | 🟢 supported |               |
-| number.valueOf                                               | 🟢 supported |               |
-| object.assign                                                | 🟢 supported |               |
-| object.constructor                                           | ⚪ untested  |               |
-| object.create                                                | ⚪ untested  |               |
-| object.defineGetter                                          | ⚪ untested  |               |
-| object.defineProperties                                      | ⚪ untested  |               |
-| object.defineProperty                                        | ⚪ untested  |               |
-| object.defineSetter                                          | ⚪ untested  |               |
-| object.entries                                               | 🟢 supported |               |
-| object.freeze                                                | 🟢 supported |               |
-| object.fromEntries                                           | 🟢 supported |               |
-| object.getOwnPropertyDescriptor                              | ⚪ untested  |               |
-| object.getOwnPropertyDescriptors                             | ⚪ untested  |               |
-| object.getOwnPropertyNames                                   | 🟢 supported |               |
-| object.getOwnPropertySymbols                                 | ⚪ untested  |               |
-| object.getPrototypeOf                                        | ⚪ untested  |               |
-| object.groupBy                                               | ⚪ untested  |               |
-| object.hasOwn                                                | 🟢 supported |               |
-| object.hasOwnProperty                                        | ⚪ untested  |               |
-| object.is                                                    | 🟢 supported |               |
-| object.isExtensible                                          | 🟢 supported |               |
-| object.isFrozen                                              | 🟢 supported |               |
-| object.isPrototypeOf                                         | ⚪ untested  |               |
-| object.isSealed                                              | 🟢 supported |               |
-| object.keys                                                  | 🟢 supported |               |
-| object.lookupGetter                                          | ⚪ untested  |               |
-| object.lookupSetter                                          | ⚪ untested  |               |
-| object.preventExtensions                                     | 🟢 supported |               |
-| object.propertyIsEnumerable                                  | ⚪ untested  |               |
-| object.proto                                                 | ⚪ untested  |               |
-| object.seal                                                  | 🟢 supported |               |
-| object.setPrototypeOf                                        | ⚪ untested  |               |
-| object.toLocaleString                                        | ⚪ untested  |               |
-| object.toString                                              | ⚪ untested  |               |
-| object.valueOf                                               | ⚪ untested  |               |
-| object.values                                                | 🟢 supported |               |
-| global.parseInt                                              | 🟢 supported |               |
-| global.parseFloat                                            | 🟢 supported |               |
-| global.isNaN                                                 | 🟢 supported |               |
-| global.isFinite                                              | 🟢 supported |               |
-| global.encodeURI                                             | ⚪ untested  |               |
-| global.decodeURI                                             | ⚪ untested  |               |
-| global.Number                                                | 🟢 supported |               |
-| global.String                                                | 🟢 supported |               |
-| global.Boolean                                               | 🟢 supported |               |
 
 ## math
 
@@ -340,51 +234,6 @@
 | test262.test.built-ins.math.floor.s15.8.2.9_a5         | 🟡 partial     | src\main.rs:2:14: error[E0425]: cannot find value `infinity` in this scope: not found in this scope error: could not compile `probe` (bin "probe") due to 1 previous error                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | test262.test.built-ins.math.floor.s15.8.2.9_a6         | 🟢 supported   | _oracle: matched_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | test262.test.built-ins.math.floor.s15.8.2.9_a7         | 🟡 partial     | src\main.rs:6:43: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}` error: could not compile `probe` (bin "probe") due to 1 previous error                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| math.E                                                 | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.LN10                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.LN2                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.LOG10E                                            | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.LOG2E                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.PI                                                | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.SQRT1_2                                           | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.SQRT2                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.abs                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.acos                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.acosh                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.asin                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.asinh                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.atan                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.atan2                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.atanh                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.cbrt                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.ceil                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.clz32                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.cos                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.cosh                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.exp                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.expm1                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.f16round                                          | 🔴 unsupported |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.floor                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.fround                                            | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.hypot                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.imul                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.log                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.log10                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.log1p                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.log2                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.max                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.min                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.pow                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.random                                            | ⚪ untested    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.round                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.sign                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.sin                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.sinh                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.sqrt                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.sumPrecise                                        | ⚪ untested    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.tan                                               | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.tanh                                              | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| math.trunc                                             | 🟢 supported   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ## narrowing
 
@@ -465,58 +314,6 @@
 | strings.translates_string_value_of                   | 🟢 supported |               |
 | strings.translates_string_is_well_formed             | 🟢 supported |               |
 | strings.translates_string_to_well_formed             | 🟢 supported |               |
-| string.anchor                                        | ⚪ untested  |               |
-| string.at                                            | 🟢 supported |               |
-| string.big                                           | ⚪ untested  |               |
-| string.blink                                         | ⚪ untested  |               |
-| string.bold                                          | ⚪ untested  |               |
-| string.charAt                                        | 🟢 supported |               |
-| string.charCodeAt                                    | 🟢 supported |               |
-| string.codePointAt                                   | 🟢 supported |               |
-| string.concat                                        | 🟢 supported |               |
-| string.endsWith                                      | 🟢 supported |               |
-| string.fixed                                         | ⚪ untested  |               |
-| string.fontcolor                                     | ⚪ untested  |               |
-| string.fontsize                                      | ⚪ untested  |               |
-| string.fromCharCode                                  | 🟢 supported |               |
-| string.fromCodePoint                                 | 🟢 supported |               |
-| string.includes                                      | 🟢 supported |               |
-| string.indexOf                                       | 🟢 supported |               |
-| string.isWellFormed                                  | 🟢 supported |               |
-| string.italics                                       | ⚪ untested  |               |
-| string.lastIndexOf                                   | 🟢 supported |               |
-| string.link                                          | ⚪ untested  |               |
-| string.localeCompare                                 | ⚪ untested  |               |
-| string.match                                         | ⚪ untested  |               |
-| string.matchAll                                      | ⚪ untested  |               |
-| string.normalize                                     | ⚪ untested  |               |
-| string.padEnd                                        | 🟢 supported |               |
-| string.padStart                                      | 🟢 supported |               |
-| string.raw                                           | ⚪ untested  |               |
-| string.repeat                                        | 🟢 supported |               |
-| string.replace                                       | 🟢 supported |               |
-| string.replaceAll                                    | 🟢 supported |               |
-| string.search                                        | ⚪ untested  |               |
-| string.slice                                         | 🟢 supported |               |
-| string.small                                         | ⚪ untested  |               |
-| string.split                                         | 🟢 supported |               |
-| string.startsWith                                    | 🟢 supported |               |
-| string.strike                                        | ⚪ untested  |               |
-| string.sub                                           | ⚪ untested  |               |
-| string.substr                                        | ⚪ untested  |               |
-| string.substring                                     | 🟢 supported |               |
-| string.sup                                           | ⚪ untested  |               |
-| string.toLocaleLowerCase                             | ⚪ untested  |               |
-| string.toLocaleUpperCase                             | ⚪ untested  |               |
-| string.toLowerCase                                   | 🟢 supported |               |
-| string.toString                                      | ⚪ untested  |               |
-| string.toUpperCase                                   | 🟢 supported |               |
-| string.toWellFormed                                  | 🟢 supported |               |
-| string.trim                                          | 🟢 supported |               |
-| string.trimEnd                                       | 🟢 supported |               |
-| string.trimStart                                     | 🟢 supported |               |
-| string.unicode_code_point_escapes                    | ⚪ untested  |               |
-| string.valueOf                                       | 🟢 supported |               |
 
 ## types
 

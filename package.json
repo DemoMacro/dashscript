@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "@funish/basis": "0.3.0",
-    "@mdn/browser-compat-data": "^7.1.2",
     "@types/node": "26.1.1",
     "acorn": "^8.17.0",
     "typescript": "^6.0.3",

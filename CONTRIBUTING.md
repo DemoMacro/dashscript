@@ -96,7 +96,6 @@ Feature data lives in `crates/dashscript/tests/conformance/data/`:
 
 - `tests-fixtures.json` — **auto-extracted** from `translator/tests/*.rs` by `scripts/extract-tests.mjs`. Every `let src = "..."` in a `translates_*` `#[test]` becomes a fixture (**zero hand-written**). These are recorded informationally — no `expect`, so the run reports the current state and surfaces its partials without asserting them.
 - `test262.json` — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. Each test is rewritten to a `main()` that logs its assertions; the differential layer (in progress) diffs `ds` output against Node's — the oracle, so there are no hand-written expectations (mechanism detailed in `CLAUDE.md`). Whitelists `test/built-ins/{Math,String,Array,Object,Number}/`; descriptor/Symbol/async tests are `unsupported`.
-- `bcd-catalog.json` — _(being phased out)_ the ES built-in API **catalog** from MDN `browser-compat-data`. bcd lists which APIs _exist_, never how to _call_ them — coverage data only, recorded `untested` and never run. test262 (semantics) supersedes this; it is removed once the test262 differential layer lands.
 - `correctness.json` — the **only** hand-written fixtures. Each carries `expect` + `expect_output`; the runner `cargo run`s the emitted program and compares stdout. These are asserted (regression guard).
 
 Regenerate the auto-derived lists (from the repo root, after `pnpm install`):
@@ -104,7 +103,6 @@ Regenerate the auto-derived lists (from the repo root, after `pnpm install`):
 ```bash
 node scripts/extract-tests.mjs     # translator/tests → tests-fixtures.json
 node scripts/extract-test262.mjs   # tc39 test262 → test262.json (after `git clone https://github.com/tc39/test262 .temp/test262`)
-node scripts/sync-bcd.mjs          # @mdn/browser-compat-data → bcd-catalog.json (phasing out)
 ```
 
 Run the harness:
