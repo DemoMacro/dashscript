@@ -131,12 +131,12 @@ Each run rewrites `tests/conformance/matrix.md` (human-readable) and `matrix.jso
 
 Most changes fall into one of three shapes:
 
-| Change                     | Where                   | Pattern                                                                                                                                                                     |
-| -------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **New AST → Rust mapping** | `translator/`           | Add one rule for the AST node kind; add a `.ds` fixture; run `ds build --emit rust` and `cargo check` the emitted Rust. Unmapped nodes must error, not silently miscompile. |
-| **New manifest field**     | `manifest/`             | Extend the `manifest.json` reader and the `Cargo.toml` emitter together; keep target-prefixed dependency keys and normalize versions.                                       |
-| **New bindgen target**     | `bindgen/`              | Map a Rust construct (e.g. `struct`, `enum`, `trait`) to its `.ds` declaration so editor types stay correct.                                                                |
-| **New `ds` subcommand**    | `apps/ds` + npm package | Wire a thin command to an existing core module; no logic in the CLI layer.                                                                                                  |
+| Change                     | Where                   | Pattern                                                                                                                                                                       |
+| -------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **New AST → Rust mapping** | `translator/`           | Add one rule for the AST node kind; add a `.ds` fixture; run `ds build --target rust` and `cargo check` the emitted Rust. Unmapped nodes must error, not silently miscompile. |
+| **New manifest field**     | `manifest/`             | Extend the `manifest.json` reader and the `Cargo.toml` emitter together; keep target-prefixed dependency keys and normalize versions.                                         |
+| **New bindgen target**     | `bindgen/`              | Map a Rust construct (e.g. `struct`, `enum`, `trait`) to its `.ds` declaration so editor types stay correct.                                                                  |
+| **New `ds` subcommand**    | `apps/ds` + npm package | Wire a thin command to an existing core module; no logic in the CLI layer.                                                                                                    |
 
 Rule of thumb: **a new front-end construct must be mappable end-to-end** — a `.ds` feature that the translator cannot yet lower should fail loudly with a diagnostic, not produce Rust that won't compile.
 
@@ -145,7 +145,7 @@ Rule of thumb: **a new front-end construct must be mappable end-to-end** — a `
 - [ ] `vp check` passes
 - [ ] `pnpm build` succeeds for the changed package
 - [ ] `cargo test` + `cargo clippy` pass for the core crate
-- [ ] Any new AST mapping has a `.ds` fixture whose emitted Rust (`ds build --emit rust`) passes `cargo check`
+- [ ] Any new AST mapping has a `.ds` fixture whose emitted Rust (`ds build --target rust`) passes `cargo check`
 - [ ] Naming & patterns follow the standards above
 - [ ] Changes are minimal and focused — match existing style
 - [ ] No translation logic added to `apps/` or the npm package (it belongs in `crates/`)

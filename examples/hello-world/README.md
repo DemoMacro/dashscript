@@ -20,7 +20,7 @@ type names keep their `PascalCase`.
 From this directory:
 
 ```sh
-ds run main.ds       # translate → compile (cached) → run
+ds main.ds           # run the file directly (translate → compile cached → run)
 ```
 
 Output:

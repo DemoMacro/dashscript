@@ -47,12 +47,12 @@ You are a senior developer working on **DashScript** — a TypeScript-frontend l
   → translator (DashScript)      oxc AST → Rust source
   → manifest (DashScript)        manifest.json → Cargo.toml
   → cached cargo project         .cache/build/<name>/ in-project, or ~/.cache/dash/<hash>/ for a lone file
-  → output                       dist/<name> (native binary, default) or dist/<name>/ (Rust crate, --emit rust)
+  → output                       dist/<name> (native binary, default) or dist/<name>/ (Rust crate, --target rust)
 
-.ds check / ds fmt               built in-process on the oxc_parser AST (oxc_linter/oxc_formatter are publish=false)
+.ds lint / ds check / ds fmt     built in-process on the oxc_parser AST (oxc_linter/oxc_formatter are publish=false)
 ```
 
-Correctness is a three-layer chain: (1) **structure** — `oxc_parser` parses `.ds` and reports syntax errors; (2) **translatability** — DashScript's own `check` walks the AST and flags any construct the translator cannot lower to valid Rust (the translator is the single source of truth for "what maps"); (3) **target** — `cargo check` / `cargo clippy` on the emitted project is the final arbiter. There is no cross-target IR: oxc gives structure, the translator is the mapping table, `cargo` gives Rust correctness.
+Correctness is a three-layer chain: (1) **structure** — `oxc_parser` parses `.ds` and reports syntax errors; (2) **translatability** — DashScript's own `lint` walks the AST and flags any construct the translator cannot lower to valid Rust (the translator is the single source of truth for "what maps"); (3) **target** — `cargo check` / `cargo clippy` on the emitted project is the final arbiter. There is no cross-target IR: oxc gives structure, the translator is the mapping table, `cargo` gives Rust correctness.
 
 ## Architecture: Translation Model
 
@@ -108,17 +108,21 @@ One core crate, three modules, three responsibilities. Split into more crates on
 Unified entry `ds`, subcommand style:
 
 ```
-ds build <file.ds>            # parse → translate → compile to a native binary in dist/<name>
-ds build --emit rust <file>   # …emit a Rust crate (Cargo.toml + src) in dist/<name>/ instead
-ds check                      # verify .ds is translatable to valid Rust (parser + translatability rules)
-ds fmt                        # format .ds in place (built-in formatter)
+ds <file.ds>                  # run a file directly (like `node a.js`)
+ds run <script>               # run a manifest.json script (like `pnpm run`)
+ds build [<file>] [--target]  # parse → translate → compile a native binary in dist/<name>
+                              #   --target rust → emit the Rust crate in dist/<name>/ instead
+ds lint <file>                # translatability check (parser + translator rules)
+ds check <file>               # lint + format check, like `vp check`
+ds fmt <file>                 # format .ds in place (built-in formatter)
+ds install                    # fetch manifest deps via cargo + write Cargo.lock (like `pnpm install`)
 ds add rust:<crate>           # fetch crate via cargo + record rust:<crate> in manifest.json
 ds add <file>.rs              # bindgen a local Rust file → <stem>.ds type declaration
-ds run <file.ds>              # translate → compile (cached) → run
+ds cache clean                # remove the in-project .cache/
 ds test                       # run .ds tests (planned)
 ```
 
-`ds build` defaults to a **native binary** — the way `vp pack` ships a runnable artifact, not an intermediate project. Translate → a cached Cargo project (`.cache/build/<name>/` in-project, or `~/.cache/dash/<hash>/` for a lone file — looked up by walking up from the `.ds` for a `manifest.json`) → `cargo build --release` → copy the binary to `dist/<name>`. `--emit rust` stops at the translated Rust crate (`dist/<name>/`, no `target/`). `ds run` reuses the same cache with a debug build. `<name>` is the `manifest.json` `name` (fallback: parent dir, then file stem), never the bare stem — so two entry files don't clobber each other. `target/` never lands in `dist/`.
+`ds <file.ds>` runs a file directly (like `node a.js`); `ds run <script>` runs a `manifest.json` script (like `pnpm run` — `run` is always explicit so it never collides with `ds <file.ds>`). `ds build` defaults to a **native binary** — the way `vp pack` ships a runnable artifact, not an intermediate project. Translate → a cached Cargo project (`.cache/build/<name>/` in-project — **one per project**, keyed by the manifest name so a project's entries share a cache and two `main.ds` files in different projects don't collide; or `~/.cache/dash/<hash>/` for a lone file, looked up by walking up from the `.ds` for a `manifest.json`) → `cargo build --release` → copy the binary to `dist/<name>`. `--target rust` stops at the translated Rust crate (`dist/<name>/`, no `target/`); `--target` overrides the manifest `target` (default `bin`). `<name>` is the `manifest.json` `name` (fallback: parent dir, then file stem). `target/` never lands in `dist/`.
 
 `ds add` has two modes: `rust:<crate>` records a crate in `manifest.json` (no `.ds` stub — types come from the crate's source via the language server); `<file>.rs` runs bindgen to emit `<stem>.ds`. There is **no separate `ds gen` step**.
 
@@ -127,7 +131,7 @@ ds test                       # run .ds tests (planned)
 Each decision states its trade-off so contributors know what _not_ to "fix".
 
 **Reuse oxc for parsing, check, and format (vs depending on `oxc_linter`/`oxc_formatter`).**
-DashScript's surface is TypeScript-flavored, so it reuses `oxc_parser`/`oxc_ast`/`oxc_allocator` (the _published_ part of oxc) rather than re-deriving TS grammar. `oxc_linter` and `oxc_formatter`, however, are `publish = false` in oxc's workspace — not on crates.io. So: `ds check` reuses `oxc_parser` + `oxc_diagnostics` to report _translatability_ (does this `.ds` lower to valid Rust? — something eslint-style rules cannot express); `ds fmt` reuses `oxc_codegen` (published, pretty-print by default, not minified). ✅ no giant git dependency, keeps the "fast" promise · ❌ coupled to oxc's published API surface.
+DashScript's surface is TypeScript-flavored, so it reuses `oxc_parser`/`oxc_ast`/`oxc_allocator` (the _published_ part of oxc) rather than re-deriving TS grammar. `oxc_linter` and `oxc_formatter`, however, are `publish = false` in oxc's workspace — not on crates.io. So: `ds lint` reuses `oxc_parser` + `oxc_diagnostics` to report _translatability_ (does this `.ds` lower to valid Rust? — something eslint-style rules cannot express); `ds fmt` reuses `oxc_codegen` (published, pretty-print by default, not minified). `ds check` is the composite — lint plus a format check — matching `vp check`. ✅ no giant git dependency, keeps the "fast" promise · ❌ coupled to oxc's published API surface.
 
 **Transpiler, not a full language (vs own type-checker / IR).**
 A TS-front → Rust mapping table plus `cargo check` on the output covers the goal with a fraction of the surface area. oxc gives structure; `cargo` gives correctness. ✅ small scope, fast to ship · ❌ no cross-target IR — the `wasm`/`napi` outputs are Rust target variants (same mapping table, a different `cargo --target`), not separate backends.
@@ -136,13 +140,13 @@ A TS-front → Rust mapping table plus `cargo check` on the output covers the go
 `.ds` is written in a TypeScript-flavored syntax developers already know, but its semantics are Rust's — the goal is to express the full Rust type/memory-safety model (ownership, borrowing, lifetimes, traits), with TypeScript as the _presentation_ only. Today the translator covers a safe TS→Rust subset (auto clone/borrow/narrowing bridge the gaps); Rust-only constructs (explicit lifetimes, trait bounds, `unsafe`) are reached incrementally as real demand drives each, never speculatively. ✅ familiar to write, sound underneath · ❌ "covers full Rust" is a direction, not a present-tense claim.
 
 **`manifest.json` (vs `package.json`).**
-A `package.json` at the project root is claimed by npm/pnpm and would mislead JS tooling. A dedicated `manifest.json` avoids the collision and carries DashScript-specific fields (`target`, prefixed dependencies). ✅ no ecosystem clash · ❌ one more file format to document.
+A `package.json` at the project root is claimed by npm/pnpm and would mislead JS tooling. A dedicated `manifest.json` avoids the collision and blends `Cargo.toml` `[package]` (metadata: `name`/`version`/`description`/`license`/`repository`/`homepage`/`keywords`/`authors`) with `package.json` (`entry`/`scripts`), plus DashScript-specific `target` (output shape: `bin` default / `rust` / `wasm` / `napi`) and `workspace` member globs. ✅ no ecosystem clash, one file for project + metadata · ❌ one more file format to document.
 
 **Target-prefixed dependencies (`rust:serde`) (vs bare names).**
 Today DashScript targets Rust, so dependencies carry a `rust:` prefix that mirrors `ds add rust:<crate>` verbatim. The prefix is kept (not a bare name) so the schema stays forward-compatible if a genuinely different backend is ever added; `wasm`/`napi` are Rust target variants and reuse `rust:` deps, not new prefixes. ✅ forward-compatible schema · ❌ slightly more to type for the single-backend case.
 
 **`ds build` ships a native binary by default (vs a Rust project).**
-Like `vp pack` ships a runnable artifact in `dist/`, `ds build` translates → compiles (`cargo build --release`) → copies the binary to `dist/<name>`, so `dist/` holds a usable product, not an intermediate project. `--emit rust` keeps the transpiler's first-class Rust output (`dist/<name>/`, a clean crate with no `target/`) for inspection or as the `wasm`/`napi` target starting point. ✅ `dist/` is a product; transpiler output still one `--emit rust` away · ❌ a release compile is slower than emit-only — use `--emit rust` when you only want the Rust.
+Like `vp pack` ships a runnable artifact in `dist/`, `ds build` translates → compiles (`cargo build --release`) → copies the binary to `dist/<name>`, so `dist/` holds a usable product, not an intermediate project. `--target rust` keeps the transpiler's first-class Rust output (`dist/<name>/`, a clean crate with no `target/`) for inspection or as the `wasm`/`napi` target starting point. ✅ `dist/` is a product; transpiler output still one `--target rust` away · ❌ a release compile is slower than emit-only — use `--target rust` when you only want the Rust.
 
 **Cached build, Deno-style lookup (vs a fresh temp dir per run).**
 `ds build`/`ds run` resolve the cache by walking up from the `.ds` file for a `manifest.json`: found → in-project `.cache/build/<name>/` (dependencies live with the manifest); not found (a lone file) → global `~/.cache/dash/<hash>/`. cargo's own `target/` lives there, so repeat builds are incremental. This mirrors Deno (project → local `node_modules`, lone file → global cache) and reuses cargo's two-layer dependency model (`~/.cargo/registry` source + project `target/`) rather than adding a DashScript-owned store. ✅ fast repeats, deps follow the manifest, lone files still work · ❌ `.cache/` must be gitignored; first build still compiles std.
@@ -161,7 +165,7 @@ The three responsibilities are small and share the translation table; a single `
 
 ## Roadmap
 
-- **Initial scope** — `translator` (a core subset of oxc AST → Rust), `manifest` (`manifest.json` → `Cargo.toml`), a DashScript-managed Rust toolchain (pinned, downloaded on demand), `ds build` (native binary) / `ds run` / `ds check` / `ds fmt`, `bindgen` + `ds add`. One `.ds` file compiles to a native binary (or a Rust crate with `--emit rust`), checked by `cargo`.
+- **Initial scope** — `translator` (a core subset of oxc AST → Rust), `manifest` (`manifest.json` → `Cargo.toml`), a DashScript-managed Rust toolchain (pinned, downloaded on demand), `ds build` (native binary) / `ds run` / `ds check` / `ds fmt`, `bindgen` + `ds add`. One `.ds` file compiles to a native binary (or a Rust crate with `--target rust`), checked by `cargo`.
 - **More outputs** — `wasm` and `napi` targets (Rust compiled to WebAssembly / napi-rs), so `.ds` ships to the web and Node ecosystems.
 - **Developer experience** — `ds test`, editor/LSP integration, conformance fixtures. (`ds run` already builds and runs a Cargo project.)
 - **Self-hosting (north star)** — rewrite the toolchain in `.ds` itself: the Rust bootstrap compiler compiles a `.ds` compiler, which then compiles itself. Viable because `.ds` reaches `oxc` (and any Rust crate) through bindgen — no need to reimplement oxc.
