@@ -2364,28 +2364,26 @@
     "id": "test262.test.built-ins.math.round.s15.8.2.15_a6",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:14:15: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:15:16: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:16:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:18:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:18:21: error[E0425]: cannot find value `i` in this scope: not found in this scope\nsrc\\main.rs:21:36: error[E0425]: cannot find value `x` in this scope: not found in this scope",
+    "detail": "src\\main.rs:16:15: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:17:16: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:18:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:20:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:20:21: error[E0425]: cannot find value `i` in this scope: not found in this scope\nsrc\\main.rs:23:36: error[E0425]: cannot find value `x` in this scope: not found in this scope",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.round.s15.8.2.15_a7",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line 4: ds=\"1\" node=\"Infinity\"; line 5: ds=\"-9007199254740990\" node=\"-9007199254740991\"; line 6: ds=\"-6755399441055742\" node=\"-6755399441055743\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 4: ds=\"1\" node=\"Infinity\"; line 5: ds=\"-9007199254740990\" node=\"-9007199254740991\"; line 6: ds=\"-6755399441055742\" node=\"-6755399441055743\""
+      "status": "matched"
     },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sign.sign-specialvals",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"-1\" node=\"-0\"; line 3: ds=\"1\" node=\"0\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"-1\" node=\"-0\"; line 3: ds=\"1\" node=\"0\""
+      "status": "matched"
     },
     "note": ""
   },

@@ -151,9 +151,11 @@ fn translates_math_rounding_and_root_methods() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".abs()"), "got:\n{rust}");
     assert!(rust.contains(".ceil()"), "got:\n{rust}");
-    // Math.round → (x + 0.5).floor(): JS rounds half toward +∞, not Rust's
-    // away-from-zero (Math.round(-0.5) = 0, not -1).
-    assert!(rust.contains("0.5).floor()"), "got:\n{rust}");
+    // Math.round rounds half toward +∞, but avoids `(x + 0.5).floor()` (which
+    // reproduces V8's 0.49999999999999994 bug): the half check is
+    // `x - floor(x) >= 0.5`, with a 2^52 guard for huge integral doubles.
+    assert!(rust.contains(">= 0.5"), "round-half check: {rust}");
+    assert!(rust.contains("4503599627370496.0"), "2^52 guard: {rust}");
     assert!(rust.contains(".sqrt()"), "got:\n{rust}");
     assert!(rust.contains(".trunc()"), "got:\n{rust}");
 }
@@ -203,4 +205,26 @@ fn translates_math_max_min_hypot_variadic() {
         rust.contains(".powi(2)") && rust.contains(".sqrt()"),
         "hypot(a): {rust}"
     );
+}
+
+#[test]
+fn translates_math_round_avoids_add_half_bug() {
+    // `(x + 0.5).floor()` reproduces V8's old bug at 0.49999999999999994
+    // (x + 0.5 rounds to 1.0 in double → 1, not 0) and breaks huge doubles;
+    // the spec-faithful form uses `x - floor(x) >= 0.5` plus a 2^52 guard.
+    let src = "function f(x: number): number { return Math.round(x); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(">= 0.5"), "half check: {rust}");
+    assert!(rust.contains("4503599627370496.0"), "2^52 guard: {rust}");
+    assert!(!rust.contains("+ 0.5).floor"), "no add-half form: {rust}");
+}
+
+#[test]
+fn translates_math_sign_keeps_signed_zero() {
+    // JS `Math.sign(-0) = -0`, `Math.sign(0) = +0`; Rust's `signum` gives
+    // -1/+1, so ±0 is special-cased (return the input, preserving its sign).
+    let src = "function f(x: number): number { return Math.sign(x); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("== 0.0"), "zero special-case: {rust}");
+    assert!(rust.contains(".signum()"), "non-zero signum: {rust}");
 }

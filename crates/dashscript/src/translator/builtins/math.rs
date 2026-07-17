@@ -32,14 +32,33 @@ pub(in crate::translator) fn math_method(
             let recv = math_receiver(args.first()?, ctx);
             Some(parse_quote!({
                 let __x = (#recv) as f64;
-                let __r = (__x + 0.5).floor();
-                if __r == 0.0 && __x.is_sign_negative() { -0.0f64 } else { __r }
+                // JS Math.round (per MDN/ECMAScript): NaN/±∞ pass through; ±0
+                // stay signed; |x| ≥ 2^52 is already integral (no fraction
+                // bits); round half toward +∞. Avoid `(x + 0.5).floor()` — it
+                // reproduces V8's old bug at 0.49999999999999994 (x + 0.5
+                // rounds to 1.0 in double → 1, not 0) and loses precision for
+                // huge x. `x - floor(x) >= 0.5` avoids the x+0.5 rounding step.
+                if !__x.is_finite() || __x == 0.0 || __x.abs() >= 4503599627370496.0 {
+                    __x
+                } else {
+                    let __f = __x.floor();
+                    let __r = if __x - __f >= 0.5 { __f + 1.0 } else { __f };
+                    // JS returns -0 for -0.5 ≤ x < 0; round-half-up yields 0
+                    // but loses the sign.
+                    if __r == 0.0 && __x.is_sign_negative() { -0.0f64 } else { __r }
+                }
             }))
         }
         // `Math.sign(x)` → `x.signum()` (Rust spells it `signum`, not `sign`).
         "sign" => {
             let recv = math_receiver(args.first()?, ctx);
-            Some(method_call(recv, "signum", Vec::new()))
+            Some(parse_quote!({
+                let __x = (#recv) as f64;
+                // JS Math.sign keeps ±0 (Math.sign(-0) = -0, Math.sign(0) = +0);
+                // Rust's signum maps -0→-1 and +0→+1, so special-case zero.
+                // NaN/±∞ already behave the same under signum.
+                if __x == 0.0 { __x } else { __x.signum() }
+            }))
         }
         // `Math.log(x)` (TS natural log) → `x.ln()` (Rust spells it `ln`).
         "log" => {
