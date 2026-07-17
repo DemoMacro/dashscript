@@ -138,11 +138,33 @@ fn method_call(recv: Expr, method: &str, args: Vec<Expr>) -> Expr {
 /// literal like `3` isn't an ambiguous `{float}` (`3.0.max(7.0)` won't infer);
 /// any other receiver translates normally (its context already pins `f64`).
 fn math_receiver(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
-    if let Argument::NumericLiteral(n) = arg {
-        let s = format!("{}_f64", n.value);
+    if let Some(v) = math_numeric_literal(arg) {
+        let s = format!("{}_f64", v);
         return parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN));
     }
     translate_argument(arg, ctx)
+}
+
+/// The literal spelling of a `Math.` receiver, sign included: `3` → `3`,
+/// `-0`/`-1.5` → `-0`/`-1.5`. oxc parses a negative literal as
+/// `UnaryExpression(-, NumericLiteral)` rather than a `NumericLiteral`, so the
+/// plain-literal branch in `math_receiver` misses it and it would land as an
+/// un-anchored `-0` → E0689 (`can't call method 'abs' on ambiguous {float}`).
+/// Non-literals (variables, `NaN`, …) → `None` so they translate normally and
+/// keep whatever type anchor their context already provides.
+fn math_numeric_literal(arg: &Argument) -> Option<String> {
+    use oxc_ast::ast::Expression;
+    use oxc_syntax::operator::UnaryOperator;
+    match arg {
+        Argument::NumericLiteral(n) => Some(format!("{}", n.value)),
+        Argument::UnaryExpression(un) if matches!(un.operator, UnaryOperator::UnaryNegation) => {
+            match &un.argument {
+                Expression::NumericLiteral(n) => Some(format!("-{}", n.value)),
+                _ => None,
+            }
+        }
+        _ => None,
+    }
 }
 
 /// `Math.PI` → `std::f64::consts::PI`, `Math.E` → `…::E`, and the rest of the

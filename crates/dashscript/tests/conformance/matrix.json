@@ -1374,8 +1374,11 @@
   {
     "id": "test262.test.built-ins.math.abs.absolute-value",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:36: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:40: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:51: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:50: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1391,8 +1394,11 @@
   {
     "id": "test262.test.built-ins.math.abs.s15.8.2.1_a2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1428,8 +1434,11 @@
   {
     "id": "test262.test.built-ins.math.acos.s15.8.2.2_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1462,8 +1471,11 @@
   {
     "id": "test262.test.built-ins.math.acosh.nan-returns",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:5:35: error[E0689]: can't call method `acosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1489,8 +1501,11 @@
   {
     "id": "test262.test.built-ins.math.asin.s15.8.2.3_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1506,15 +1521,21 @@
   {
     "id": "test262.test.built-ins.math.asin.s15.8.2.3_a5",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.asinh.asinh-specialvals",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `asinh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1540,8 +1561,11 @@
   {
     "id": "test262.test.built-ins.math.atan.s15.8.2.4_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `atan` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1557,22 +1581,28 @@
   {
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a9",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.atanh.atanh-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:36: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:9:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:10:31: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:11:41: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:10:31: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.cbrt.cbrt-specialvalues",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `cbrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1598,8 +1628,11 @@
   {
     "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1625,8 +1658,11 @@
   {
     "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a6",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:49: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1743,8 +1779,11 @@
   {
     "id": "test262.test.built-ins.math.cosh.cosh-specialvals",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:35: error[E0689]: can't call method `cosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1805,8 +1844,11 @@
   {
     "id": "test262.test.built-ins.math.expm1.expm1-specialvals",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `exp_m1` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1832,8 +1874,11 @@
   {
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `floor` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1986,7 +2031,7 @@
     "id": "test262.test.built-ins.math.hypot.math.hypot_zero_2",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:50: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:34: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:34: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:50: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -2034,8 +2079,11 @@
   {
     "id": "test262.test.built-ins.math.log.s15.8.2.10_a2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2069,7 +2117,7 @@
     "id": "test262.test.built-ins.math.log10.log10-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:31: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:36: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
+    "detail": "src\\main.rs:3:31: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -2086,15 +2134,18 @@
   {
     "id": "test262.test.built-ins.math.log1p.specific-results",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:40: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:35: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:35: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.log2.log2-basictests",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:31: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:36: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:9:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
+    "detail": "src\\main.rs:3:31: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:9:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -2143,8 +2194,11 @@
   {
     "id": "test262.test.built-ins.math.max.zeros",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `max` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:35: error[E0689]: can't call method `max` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2182,8 +2236,11 @@
   {
     "id": "test262.test.built-ins.math.min.zeros",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `min` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:35: error[E0689]: can't call method `min` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2282,7 +2339,11 @@
     "id": "test262.test.built-ins.math.sign.sign-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `signum` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:40: error[E0689]: can't call method `signum` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:35: error[E0689]: can't call method `signum` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "oracle diff: line 2: ds=\"-1\" node=\"-0\"; line 3: ds=\"1\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"-1\" node=\"-0\"; line 3: ds=\"1\" node=\"0\""
+    },
     "note": ""
   },
   {
@@ -2318,15 +2379,21 @@
   {
     "id": "test262.test.built-ins.math.sin.zero",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `sin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sinh.sinh-specialvals",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `sinh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2349,8 +2416,11 @@
   {
     "id": "test262.test.built-ins.math.sqrt.s15.8.2.17_a2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2366,8 +2436,11 @@
   {
     "id": "test262.test.built-ins.math.sqrt.s15.8.2.17_a4",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
