@@ -44,7 +44,8 @@ const OUT = resolve(
 // tests live elsewhere and are naturally filtered by `Translator::check`.
 const SCOPE = [
   { dir: "test/built-ins/Math", category: "math" },
-  // Phase 2 extends to String/prototype, Array/prototype, Object, Number.
+  { dir: "test/built-ins/String/prototype", category: "string" },
+  { dir: "test/built-ins/Array/prototype", category: "array" },
 ];
 
 // `--probe` restricts to Math/round for the stage-1 smoke test.
