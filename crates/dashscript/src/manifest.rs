@@ -1,9 +1,9 @@
 //! `manifest.json` → `Cargo.toml`.
 //!
 //! A DashScript project manifest. Dependencies use a **target prefix**
-//! (`rust:serde`; `go:` / `zig:` reserved for future backends) so multiple
-//! targets can coexist. On build, the manifest is translated into a
-//! `Cargo.toml` with Cargo-normalized version requirements.
+//! (`rust:serde`) so the schema stays forward-compatible. On build, the
+//! manifest is translated into a `Cargo.toml` with Cargo-normalized version
+//! requirements.
 
 use std::collections::BTreeMap;
 
@@ -17,7 +17,7 @@ const DEFAULT_TARGET: &str = "rust";
 pub struct Manifest {
     /// Project name → `Cargo.toml` `[package].name`.
     pub name: String,
-    /// Primary transpilation target (`rust`, `go`, `zig`).
+    /// Primary output target (`rust` today; `bin` / `wasm` / `napi` planned).
     #[serde(default = "default_target")]
     pub target: String,
     /// Target-prefixed dependencies, e.g. `{ "rust:serde": "1.0" }`.

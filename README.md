@@ -5,7 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/DemoMacro/dashscript)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
 
-> A TypeScript-frontend language (`.ds`) that transpiles to idiomatic **Rust** and compiles to **native binaries** (with **Go** and **Zig** backends planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, with `ds check` / `ds fmt` built on its AST in-process, `ds build` / `ds run` caching builds in-project, dependencies declared in a `manifest.json` that lowers to `Cargo.toml`, and type hints for any Rust crate drawn straight from its source.
+> A TypeScript-frontend language (`.ds`) that transpiles to idiomatic **Rust** and compiles to **native binaries** (`wasm` / `napi` outputs planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, with `ds check` / `ds fmt` built on its AST in-process, `ds build` / `ds run` caching builds in-project, dependencies declared in a `manifest.json` that lowers to `Cargo.toml`, and type hints for any Rust crate drawn straight from its source.
 
 ## Packages
 
@@ -66,7 +66,7 @@ $ ds run main.ds    # translate → compile (cached) → run, in one step
 
 ### Declare dependencies — `manifest.json` → `Cargo.toml`
 
-DashScript projects use a **`manifest.json`** — a dedicated file, so it never clashes with npm's `package.json`. Dependencies carry a **target prefix** (`rust:`, with `go:` / `zig:` reserved for future backends). On `ds build`, the manifest is translated into a `Cargo.toml`:
+DashScript projects use a **`manifest.json`** — a dedicated file, so it never clashes with npm's `package.json`. Dependencies carry a **target prefix** (`rust:`, the backend DashScript targets). On `ds build`, the manifest is translated into a `Cargo.toml`:
 
 ```json
 {

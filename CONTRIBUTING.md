@@ -78,7 +78,7 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 
 ### DashScript manifest (`manifest.json`)
 
-- Use **target-prefixed** dependency keys (`rust:serde`, reserved `go:` / `zig:`) — they mirror `ds add <target>:<crate>` exactly.
+- Use **target-prefixed** dependency keys (`rust:serde`) — they mirror `ds add <target>:<crate>` exactly.
 - Prefer a `target` field for the project's primary backend so future `--target` outputs (`wasm`, `napi`) have a default; `ds build` today compiles a native binary regardless.
 - `manifest` must round-trip cleanly: every target-prefixed dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
 
