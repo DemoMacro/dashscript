@@ -95,7 +95,7 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 Feature data lives in `crates/dashscript/tests/conformance/data/`:
 
 - `tests-fixtures.json` — **auto-extracted** from `translator/tests/*.rs` by `scripts/extract-tests.mjs`. Every `let src = "..."` in a `translates_*` `#[test]` becomes a fixture (**zero hand-written**). These are recorded informationally — no `expect`, so the run reports the current state and surfaces its partials without asserting them.
-- `test262.json` — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. Each test is rewritten to a `main()` that logs its assertions; the differential layer (in progress) diffs `ds` output against Node's — the oracle, so there are no hand-written expectations (mechanism detailed in `CLAUDE.md`). Whitelists `test/built-ins/{Math,String,Array,Object,Number}/`; descriptor/Symbol/async tests are `unsupported`.
+- `test262.json` — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. Each test is rewritten to a `main()` that logs its assertions; the differential harness diffs `ds` output against Node's — the ground-truth oracle, so there are no hand-written expectations (mechanism detailed in `CLAUDE.md`). Whitelists `test/built-ins/{Math,String,Array,Object,Number}/`; descriptor/Symbol/async tests are `unsupported`.
 - `correctness.json` — the **only** hand-written fixtures. Each carries `expect` + `expect_output`; the runner `cargo run`s the emitted program and compares stdout. These are asserted (regression guard).
 
 Regenerate the auto-derived lists (from the repo root, after `pnpm install`):
