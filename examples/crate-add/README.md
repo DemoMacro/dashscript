@@ -58,7 +58,7 @@ native binary in `dist/` — reusing the source `ds add` already fetched.
 ## Build reuses cargo's cache (no re-download)
 
 `ds build` turns `manifest.json` into a `Cargo.toml` and compiles in
-`.cache/build/<name>/`. cargo reuses the `~/.cargo` source that `ds add`
+`.cache/dash/<name>/`. cargo reuses the `~/.cargo` source that `ds add`
 already fetched — nothing is downloaded twice, and repeat builds are
 incremental. (Running `ds add` and `ds build` separately is the intended
 flow, mirroring `npm install` then `vp pack`.)

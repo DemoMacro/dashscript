@@ -1,0 +1,10 @@
+// counter — another workspace member, sharing the workspace's `target/`.
+
+function main(): void {
+  let sum: number = 0;
+  const xs: number[] = [1, 2, 3, 4, 5];
+  for (const v of xs) {
+    sum += v;
+  }
+  console.log(`sum: ${sum}`);
+}

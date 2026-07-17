@@ -48,7 +48,7 @@ $ ds build main.ds --target rust  # → dist/<name>/ — the translated Rust cra
 $ ds run <script>                 # run a manifest.json script (like `pnpm run`)
 ```
 
-`ds main.ds` runs a file directly (translate → compile cached → run). `ds build` parses with oxc, translates the AST to idiomatic Rust, and compiles a **native binary** into `dist/<name>` (the way `vp pack` ships a runnable artifact); `--target rust` stops at the Rust crate. Both reuse the in-project cache (`.cache/build/<name>/`, or `~/.cache/dash/` for a lone file). `ds run <script>` runs a shell command from `manifest.json` `scripts` (like `pnpm run`).
+`ds main.ds` runs a file directly (translate → compile cached → run). `ds build` parses with oxc, translates the AST to idiomatic Rust, and compiles a **native binary** into `dist/<name>` (the way `vp pack` ships a runnable artifact); `--target rust` stops at the Rust crate. Both reuse the in-project cache (`.cache/dash/<name>/`, or `~/.cache/dash/` for a lone file). `ds run <script>` runs a shell command from `manifest.json` `scripts` (like `pnpm run`).
 
 ### Declare dependencies — `manifest.json` → `Cargo.toml`
 

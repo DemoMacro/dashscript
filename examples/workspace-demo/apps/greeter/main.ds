@@ -1,0 +1,10 @@
+// greeter — a workspace member. `ds build` at the workspace root compiles every
+// member under one shared cargo workspace (one `target/`, one `Cargo.lock`).
+
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+
+function main(): void {
+  console.log(greet("from greeter"));
+}

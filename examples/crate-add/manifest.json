@@ -1,5 +1,6 @@
 {
   "name": "crate-add",
+  "version": "0.0.0",
   "target": "bin",
   "dependencies": {
     "rust:adler": "1.0.2"
