@@ -104,3 +104,21 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("m.is_some()"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_number_static_type_checks() {
+        let src = "function f(n: number): boolean { return Number.isInteger(n) && Number.isFinite(n) && Number.isNaN(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".fract() == 0.0"), "got:\n{rust}");
+        assert!(rust.contains(".is_finite()"), "got:\n{rust}");
+        assert!(rust.contains(".is_nan()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_number_is_safe_integer() {
+        let src = "function f(n: number): boolean { return Number.isSafeInteger(n); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("9_007_199_254_740_991.0"), "got:\n{rust}");
+    }

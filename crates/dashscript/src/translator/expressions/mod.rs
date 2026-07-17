@@ -1086,6 +1086,12 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `Number.isNaN(x)` / `Number.isFinite(x)` / `Number.isInteger(x)`.
+        if methods::is_ident(&sm.object, "Number") {
+            if let Some(expr) = methods::number_static(&sm.property.name, call.arguments.as_slice(), ctx) {
+                return expr;
+            }
+        }
     }
     // Global conversion functions: `String(x)`, `parseInt(s)`, `parseFloat(s)`.
     if let Expression::Identifier(id) = &call.callee {

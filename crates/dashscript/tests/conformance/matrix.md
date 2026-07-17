@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 349 features: **161** supported, **8** partial, **0** unsupported, **180** untested
+- 351 features: **169** supported, **8** partial, **0** unsupported, **174** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -149,6 +149,8 @@
 | globals.translates_boolean_global_vec_to_is_empty            | 🟢 supported |               |
 | globals.translates_boolean_global_number_var_to_ne_zero      | 🟢 supported |               |
 | globals.translates_boolean_global_option_to_is_some          | 🟢 supported |               |
+| globals.translates_number_static_type_checks                 | 🟢 supported |               |
+| globals.translates_number_is_safe_integer                    | 🟢 supported |               |
 | number.EPSILON                                               | ⚪ untested  |               |
 | number.MAX_SAFE_INTEGER                                      | ⚪ untested  |               |
 | number.MAX_VALUE                                             | ⚪ untested  |               |
@@ -157,17 +159,17 @@
 | number.NEGATIVE_INFINITY                                     | ⚪ untested  |               |
 | number.NaN                                                   | ⚪ untested  |               |
 | number.POSITIVE_INFINITY                                     | ⚪ untested  |               |
-| number.isFinite                                              | ⚪ untested  |               |
-| number.isInteger                                             | ⚪ untested  |               |
-| number.isNaN                                                 | ⚪ untested  |               |
-| number.isSafeInteger                                         | ⚪ untested  |               |
+| number.isFinite                                              | 🟢 supported |               |
+| number.isInteger                                             | 🟢 supported |               |
+| number.isNaN                                                 | 🟢 supported |               |
+| number.isSafeInteger                                         | 🟢 supported |               |
 | number.parseFloat                                            | ⚪ untested  |               |
 | number.parseInt                                              | ⚪ untested  |               |
 | number.toExponential                                         | ⚪ untested  |               |
-| number.toFixed                                               | ⚪ untested  |               |
+| number.toFixed                                               | 🟢 supported |               |
 | number.toLocaleString                                        | ⚪ untested  |               |
 | number.toPrecision                                           | ⚪ untested  |               |
-| number.toString                                              | ⚪ untested  |               |
+| number.toString                                              | 🟢 supported |               |
 | number.valueOf                                               | ⚪ untested  |               |
 | object.assign                                                | ⚪ untested  |               |
 | object.constructor                                           | ⚪ untested  |               |

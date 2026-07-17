@@ -184,12 +184,21 @@ fn conformance_matrix() {
 /// methods are ambiguous (`.includes(` could be either receiver) → `None`.
 fn probe_token(id: &str) -> Option<String> {
     let (cat, name) = id.split_once('.')?;
+    let const_like = name.bytes().all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_');
     match cat {
-        "math" if name.bytes().all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_') => {
-            Some(format!("Math.{name}"))
-        }
+        "math" if const_like => Some(format!("Math.{name}")),
         "math" => Some(format!("Math.{name}(")),
+        // `isNaN`/`isFinite` as bare globals aren't supported (DashScript uses
+        // `Number.isNaN`), and `isNaN(` would accidentally match `Number.isNaN(`
+        // in a fixture — so leave them untested rather than mis-associate.
+        "global" if matches!(name, "isNaN" | "isFinite") => None,
         "global" => Some(format!("{name}(")),
+        // `number` method names (toFixed, isNaN, …) are unique to `number` — not
+        // shared with string/array — so `.method(` is unambiguous. Number
+        // *constants* (EPSILON, MAX_VALUE) are not calls → None. String/array
+        // method names overlap receivers (`.includes(`) and stay untested.
+        "number" if const_like => None,
+        "number" => Some(format!(".{name}(")),
         _ => None,
     }
 }

@@ -476,6 +476,20 @@
     "note": ""
   },
   {
+    "id": "globals.translates_number_static_type_checks",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_is_safe_integer",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "math.translates_math_constants",
     "category": "math",
     "status": "supported",
@@ -2057,28 +2071,28 @@
   {
     "id": "number.isFinite",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "number.isInteger",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "number.isNaN",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "number.isSafeInteger",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2106,7 +2120,7 @@
   {
     "id": "number.toFixed",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2127,7 +2141,7 @@
   {
     "id": "number.toString",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

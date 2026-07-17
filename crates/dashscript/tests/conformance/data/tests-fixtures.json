@@ -410,6 +410,18 @@
       "fixture": "function f(m: number | null): boolean { return Boolean(m); }"
     },
     {
+      "id": "globals.translates_number_static_type_checks",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): boolean { return Number.isInteger(n) && Number.isFinite(n) && Number.isNaN(n); }"
+    },
+    {
+      "id": "globals.translates_number_is_safe_integer",
+      "category": "globals",
+      "source": "translator-tests",
+      "fixture": "function f(n: number): boolean { return Number.isSafeInteger(n); }"
+    },
+    {
       "id": "math.translates_math_constants",
       "category": "math",
       "source": "translator-tests",

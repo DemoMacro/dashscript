@@ -95,6 +95,22 @@ pub(super) fn string_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Opt
     })
 }
 
+/// `Number.<m>(x)`: static type checks on an `f64`. `isNaN` → `is_nan`,
+/// `isFinite` → `is_finite`, `isInteger` → a finite value with no fractional
+/// part, `isSafeInteger` adds the ±(2^53 − 1) bound. Returns `None` otherwise.
+pub(super) fn number_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let x = translate_argument(args.first()?, ctx);
+    Some(match name {
+        "isNaN" => parse_quote!(#x.is_nan()),
+        "isFinite" => parse_quote!(#x.is_finite()),
+        "isInteger" => parse_quote!(#x.is_finite() && #x.fract() == 0.0),
+        "isSafeInteger" => {
+            parse_quote!(#x.is_finite() && #x.fract() == 0.0 && #x.abs() <= 9_007_199_254_740_991.0)
+        }
+        _ => return None,
+    })
+}
+
 /// Global conversion functions called as plain identifiers: `String(x)` →
 /// `format!("{}", x)`; `parseInt(s)`/`parseFloat(s)` → `s.trim().parse::<f64>()`
 /// (`.ds` `number` is `f64`, so both share one parse path). Returns `None` for
@@ -228,6 +244,16 @@ pub(super) fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
 pub(super) fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     match expr {
         Expression::BooleanLiteral(_) => true,
+        // `a && b` / `a || b` of bool operands is itself bool — a predicate
+        // chain like `isInteger(n) && isFinite(n)` short-circuits as Rust `&&`.
+        Expression::LogicalExpression(log)
+            if matches!(
+                log.operator,
+                oxc_ast::ast::LogicalOperator::And | oxc_ast::ast::LogicalOperator::Or
+            ) =>
+        {
+            expr_is_bool(&log.left, ctx) && expr_is_bool(&log.right, ctx)
+        }
         // A predicate method *call* (`s.includes(...)`, `xs.some(...)`) returns
         // bool — the outer node is a `CallExpression` whose callee is the member.
         Expression::CallExpression(call) => match &call.callee {
