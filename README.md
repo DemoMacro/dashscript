@@ -102,6 +102,16 @@ $ ds fmt            # format every .ds in place
 
 The emitted Rust is finally verified with `cargo check` / `cargo clippy` on the generated project.
 
+## Roadmap
+
+DashScript maps a TypeScript-flavored surface to Rust semantics, growing incrementally as real demand drives each mapping — never speculatively.
+
+- **Language coverage** — the full Rust type/memory-safety model (ownership, borrowing, lifetimes, traits), with TypeScript as the _presentation_ only. Today: a safe TS→Rust subset (auto clone/borrow/narrowing bridge the gaps).
+- **Standard libraries** — ES built-ins (`Math`/`String`/`Array`/`Object`/`Number`, …), then the `node:` stdlib (`node:crypto`, `node:zlib`, `node:fs`, …) and Web APIs (`fetch`, DOM, …).
+- **More outputs** — `wasm` and `napi` targets (Rust compiled to WebAssembly / napi-rs), so `.ds` ships to the web and Node ecosystems.
+- **Developer experience** — `ds test`, editor/LSP integration, conformance fixtures.
+- **Self-hosting (north star)** — rewrite the toolchain in `.ds` itself, reaching `oxc` (and any Rust crate) through bindgen.
+
 ## Development
 
 ### Prerequisites

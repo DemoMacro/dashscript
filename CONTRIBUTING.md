@@ -47,7 +47,14 @@ A hybrid cargo + pnpm workspace. Core logic lives only in `crates/`; everything 
 ```
 crates/
   dashscript/        the only crate — library + the `ds` binary
-                     library (src/): translator/ (oxc AST → Rust), manifest/ (manifest.json → Cargo.toml), bindgen/ (Rust → .ds)
+                     library (src/): translator/, manifest.rs, bindgen.rs
+                       translator/
+                         expressions/   one file per AST node family (literals, binary, …, call);
+                                        mod.rs is the dispatch table + shared helpers only
+                         builtins/      ES built-ins, one file per built-in, mirroring tc39
+                                        test262 test/built-ins/ (math, array, string, number,
+                                        object, global, console)
+                         functions/     statement translation, one file per kind
                      binary (bin/): the `ds` CLI + language server
 packages/
   dashscript/        the single npm package: bin `ds` + editor types
@@ -59,7 +66,7 @@ packages/
 
 - **Functions / variables**: `snake_case`. **Types / traits / enums**: `PascalCase`. **Constants**: `SCREAMING_SNAKE_CASE`. **Modules / files**: `snake_case`.
 - **Reuse oxc for parsing, build lint/fmt on the AST** — consume `oxc_parser` / `oxc_ast` / `oxc_allocator` as given. `oxc_linter` / `oxc_formatter` are `publish = false` (not on crates.io), so `ds lint` and `ds fmt` are built in-process on the parsed AST; do not shell out to external oxlint/oxfmt.
-- **One mapping rule per AST node kind** in `translator/`. Unmapped nodes must raise a diagnostic — never silently emit broken Rust.
+- **One mapping rule per AST node kind** in `translator/`, slotted by what it maps: a new expression kind → `expressions/<family>.rs` (or a new family file); a new ES built-in → `builtins/<name>.rs` mirroring its tc39 test262 directory; a new statement kind → `functions/`. Unmapped nodes must raise a diagnostic — never silently emit broken Rust.
 - **Diagnostics over panics** — collect errors, recover, and report as many as possible. Reserve `unwrap`/`panic!` for true invariants in tests.
 - **No logic in bindings** — the `ds` binary (`bin/` on the `dashscript` crate) and the npm package are thin. If you are writing translation logic there, it belongs in the library (`src/`).
 - Run `cargo fmt` and `cargo clippy -- -D warnings` before committing.
@@ -88,14 +95,16 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 Feature data lives in `crates/dashscript/tests/conformance/data/`:
 
 - `tests-fixtures.json` — **auto-extracted** from `translator/tests/*.rs` by `scripts/extract-tests.mjs`. Every `let src = "..."` in a `translates_*` `#[test]` becomes a fixture (**zero hand-written**). These are recorded informationally — no `expect`, so the run reports the current state and surfaces its partials without asserting them.
-- `bcd-catalog.json` — the ES built-in API **catalog**, auto-derived from MDN `browser-compat-data` by `scripts/sync-bcd.mjs`. Coverage-gap data only: bcd lists which APIs _exist_, never how to _call_ them, so these are recorded `untested` and never run. They show which ES APIs the extracted fixtures do not yet exercise.
+- `test262.json` — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. Each test is rewritten to a `main()` that logs its assertions; the differential layer (in progress) diffs `ds` output against Node's — the oracle, so there are no hand-written expectations (mechanism detailed in `CLAUDE.md`). Whitelists `test/built-ins/{Math,String,Array,Object,Number}/`; descriptor/Symbol/async tests are `unsupported`.
+- `bcd-catalog.json` — _(being phased out)_ the ES built-in API **catalog** from MDN `browser-compat-data`. bcd lists which APIs _exist_, never how to _call_ them — coverage data only, recorded `untested` and never run. test262 (semantics) supersedes this; it is removed once the test262 differential layer lands.
 - `correctness.json` — the **only** hand-written fixtures. Each carries `expect` + `expect_output`; the runner `cargo run`s the emitted program and compares stdout. These are asserted (regression guard).
 
 Regenerate the auto-derived lists (from the repo root, after `pnpm install`):
 
 ```bash
-node scripts/extract-tests.mjs   # translator/tests → tests-fixtures.json
-node scripts/sync-bcd.mjs        # @mdn/browser-compat-data → bcd-catalog.json
+node scripts/extract-tests.mjs     # translator/tests → tests-fixtures.json
+node scripts/extract-test262.mjs   # tc39 test262 → test262.json (after `git clone https://github.com/tc39/test262 .temp/test262`)
+node scripts/sync-bcd.mjs          # @mdn/browser-compat-data → bcd-catalog.json (phasing out)
 ```
 
 Run the harness:

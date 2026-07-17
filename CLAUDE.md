@@ -70,7 +70,7 @@ The central mental model — a **mapping table**, not a multi-stage compiler:
 
 Three sub-systems share this table:
 
-- **translator** — walks the oxc AST and emits Rust. Each AST node kind has one mapping rule; unmapped nodes raise a clear diagnostic rather than silently producing broken Rust.
+- **translator** — walks the oxc AST and emits Rust. Mappings are organized to mirror their source of truth: `expressions/` is one file per AST node family (`mod.rs` is dispatch + shared helpers only); `builtins/` is one file per ES built-in mirroring tc39 test262's `test/built-ins/`, so a differential failure points straight at the file to fix. Each AST node kind has one mapping rule; unmapped nodes raise a clear diagnostic rather than silently producing broken Rust.
 - **manifest** — reads the project's `manifest.json` and emits a `Cargo.toml`. Dependencies are keyed by **target prefix** (`rust:serde`) so multiple backends can coexist; version reqs pass through to Cargo today (npm-style normalization is planned).
 - **bindgen** — reads a local Rust source file's public surface and emits a `.ds` declaration beside it, so importing it in `.ds` yields editor completion and types. This is what `ds add <file>.rs` runs. A crate added via `ds add rust:<crate>` needs no `.ds` stub — its types come from the crate's own source in `~/.cargo`, read directly by the language server (the way rust-analyzer reads its deps).
 
@@ -89,7 +89,15 @@ Hybrid cargo + pnpm workspace. One product name, two reach paths. **Core logic l
 crates/
   dashscript/            the only crate — library + the `ds` binary
     src/                 the library: translator + manifest + bindgen
-      translator/        oxc AST → Rust source (a directory: one file per node category)
+      translator/        oxc AST → Rust source
+        expressions/     one file per AST node family (literals, binary, …, call);
+                         mod.rs is the dispatch table + shared helpers only
+        builtins/        ES built-in libraries — one file per built-in, mirroring
+                         tc39 test262's test/built-ins/ (math, array, string,
+                         number, object, global, console); node/ and web/ reserved
+                         for future Node stdlib (node:crypto…) and Web APIs (fetch)
+        functions/       statement-level translation, one file per kind
+        …                declarations, types, bindings, context, check, registry
       manifest.rs        manifest.json → Cargo.toml
       bindgen.rs         Rust crate → .ds type declaration
     bin/                 the `ds` binary — thin, no translation logic
@@ -167,6 +175,9 @@ The three responsibilities are small and share the translation table; a single `
 
 **Workspace via manifest globs (vs a separate workspace file).**
 A root `manifest.json` with a `workspaces` glob list (`["apps/*", "packages/*"]`) declares members — the same file already carries project metadata, so there is no separate `pnpm-workspace.yaml`. The plural `workspaces` mirrors npm/yarn/bun's `package.json` field (pnpm alone uses a separate file). `ds build` at the root emits **one cargo workspace** — members at `.cache/dash/<name>/` under a root `[workspace]` `Cargo.toml` — and compiles it once: members share `target/` and `Cargo.lock`, so a dependency two members use compiles once (cargo's hoisted-`node_modules`); `--filter <name>` picks one. ✅ one manifest format, monorepo from day one, shared compilation · ❌ no inter-member path dependencies or task caching (turbo/nx) yet — those land as real demand drives them.
+
+**test262 as the conformance oracle (vs hand-written expectations).**
+The conformance harness diffs `ds` output against tc39 test262 — the official ECMAScript suite Node/Bun/Deno/V8 all run — using Node as the ground-truth oracle: each test262 file's `assert.sameValue(a, b)` is rewritten to `console.log(a)`, the same source runs through Node (oracle) and `ds` (actual), and stdout is diffed line by line. This replaces hand-written `expect_output` (which can be wrong) with the ECMAScript reference, surfacing every semantic gap (`Math.round` half-value direction, `-0`/`NaN`) as a concrete failing fixture. The extractor (`scripts/extract-test262.mjs`) whitelists `test/built-ins/{Math,String,Array,Object,Number}/`; descriptor/Symbol/async tests are filtered by `Translator::check` — they are translator TODOs, not differential targets. ✅ no hand-written oracle, the same suite every JS engine uses · ❌ the TS→Rust subset means most of test262 is `unsupported` today — that backlog is the output, surfaced honestly. (`bcd`/`runtime-compat` were considered and dropped: they test API _existence_, not _semantics_.)
 
 ## Roadmap
 
