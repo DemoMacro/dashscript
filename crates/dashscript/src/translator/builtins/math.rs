@@ -56,10 +56,25 @@ pub(in crate::translator) fn math_method(
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, "exp_m1", Vec::new()))
         }
+        // `Math.max`/`min` are variadic in JS: `max()` = -∞ / `min()` = +∞
+        // (the identity element), one arg is the value itself, and
+        // `max(a, b, c, …)` folds binary `f64::max`/`min` left to right. Every
+        // arg goes through `math_receiver` so a bare/negative literal anchors
+        // to f64; a variable keeps whatever type its context pins.
         "max" | "min" => {
-            let a = math_receiver(args.first()?, ctx);
-            let b = translate_argument(args.get(1)?, ctx);
-            Some(method_call(a, name, vec![b]))
+            if args.is_empty() {
+                return Some(if name == "max" {
+                    parse_quote!(::core::f64::NEG_INFINITY)
+                } else {
+                    parse_quote!(::core::f64::INFINITY)
+                });
+            }
+            let mut recv = math_receiver(args.first()?, ctx);
+            for arg in args.iter().skip(1) {
+                let b = math_receiver(arg, ctx);
+                recv = method_call(recv, name, vec![b]);
+            }
+            Some(recv)
         }
         "pow" => {
             let a = math_receiver(args.first()?, ctx);
@@ -72,14 +87,47 @@ pub(in crate::translator) fn math_method(
             let x = translate_argument(args.get(1)?, ctx);
             Some(method_call(y, "atan2", vec![x]))
         }
-        // `Math.hypot(a, b)` → `(a.powi(2) + b.powi(2)).sqrt()` (std has no
-        // `f64::hypot`; the Pythagorean form is exact for finite inputs). Both
-        // args go through `math_receiver` so a bare literal like `4` gets an
-        // `_f64` suffix — otherwise `4.powi(2)` is an ambiguous `{float}`.
+        // `Math.hypot` is variadic: `hypot()` = 0, `hypot(a)` = |a|, and the
+        // general case is √(Σ aᵢ²) (std has no `f64::hypot`; the Pythagorean
+        // form is exact for finite inputs). Fold the sum of squares from the
+        // first arg so the 2-arg form stays `(a² + b²).sqrt()`. Each arg goes
+        // through `math_receiver` so a bare/negative literal anchors to f64.
         "hypot" => {
-            let a = math_receiver(args.first()?, ctx);
-            let b = math_receiver(args.get(1)?, ctx);
-            Some(parse_quote!((#a.powi(2) + #b.powi(2)).sqrt()))
+            if args.is_empty() {
+                return Some(parse_quote!(0.0f64));
+            }
+            // JS Math.hypot returns +∞ if any arg is ±∞ (hypot(∞, NaN) = ∞,
+            // not the NaN Rust's (Inf² + NaN²).sqrt() yields), so bind each arg
+            // once and guard; the finite path is √(Σ aᵢ²). Binding also avoids
+            // re-evaluating a side-effecting argument.
+            let recvs: Vec<Expr> = args.iter().map(|a| math_receiver(a, ctx)).collect();
+            let lets = recvs
+                .iter()
+                .enumerate()
+                .map(|(i, r)| {
+                    let id = format_ident!("__h{i}");
+                    parse_quote!(let #id = #r;)
+                })
+                .collect::<Vec<syn::Stmt>>();
+            let idents = (0..recvs.len())
+                .map(|i| format_ident!("__h{i}"))
+                .collect::<Vec<_>>();
+            let infs = idents
+                .iter()
+                .map(|id| quote!(#id.is_infinite()))
+                .collect::<Vec<_>>();
+            let sqs = idents
+                .iter()
+                .map(|id| quote!(#id.powi(2)))
+                .collect::<Vec<_>>();
+            Some(parse_quote!({
+                #(#lets)*
+                if #(#infs)||* {
+                    ::core::f64::INFINITY
+                } else {
+                    (#(#sqs)+*).sqrt()
+                }
+            }))
         }
         // `Math.clz32(x)` → leading zero bits of ToUint32(x) (see
         // `to_uint32_expr`). JS applies ToUint32 (mod 2³²), not Rust's

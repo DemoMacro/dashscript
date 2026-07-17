@@ -1981,11 +1981,10 @@
   {
     "id": "test262.test.built-ins.math.hypot.math.hypot_infinitynan",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"Infinity\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"Infinity\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -2002,19 +2001,21 @@
   {
     "id": "test262.test.built-ins.math.hypot.math.hypot_neginfinity",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"Infinity\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"Infinity\""
+      "status": "matched"
     },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.hypot.math.hypot_noargs",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2030,8 +2031,11 @@
   {
     "id": "test262.test.built-ins.math.hypot.math.hypot_zero_2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2163,7 +2167,11 @@
     "id": "test262.test.built-ins.math.max.15.8.2.11-1",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:32: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
     "note": ""
   },
   {
@@ -2180,8 +2188,11 @@
   {
     "id": "test262.test.built-ins.math.max.s15.8.2.11_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2205,7 +2216,11 @@
     "id": "test262.test.built-ins.math.min.15.8.2.12-1",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:32: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
     "note": ""
   },
   {
@@ -2222,8 +2237,11 @@
   {
     "id": "test262.test.built-ins.math.min.s15.8.2.12_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {

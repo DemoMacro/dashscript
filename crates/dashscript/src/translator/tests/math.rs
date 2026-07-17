@@ -6,7 +6,9 @@ fn translates_math_methods() {
         "function f(x: number): number { return Math.floor(x) + Math.max(x, 0) + Math.pow(x, 2); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("x.floor()"), "got:\n{rust}");
-    assert!(rust.contains("x.max(0.0)"), "got:\n{rust}");
+    // Math.max(x, 0) — the 0 now goes through math_receiver (literal → 0_f64)
+    // since max folds every arg through it.
+    assert!(rust.contains("x.max(0_f64)"), "got:\n{rust}");
     assert!(rust.contains("x.powf(2.0)"), "got:\n{rust}");
 }
 
@@ -46,10 +48,12 @@ fn translates_math_atan2_to_atan2() {
 fn translates_math_hypot_to_pythagoras() {
     let src = "function f(a: number, b: number): number { return Math.hypot(a, b); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(
-        rust.contains("a.powi(2) + b.powi(2)).sqrt()"),
-        "got:\n{rust}"
-    );
+    // hypot now binds args and guards ±∞ (JS hypot(∞, NaN) = ∞): the finite
+    // path is still √(Σ aᵢ²), so powi(2) + sqrt() appear, plus the is_infinite
+    // guard and the +∞ short-circuit.
+    assert!(rust.contains(".powi(2)"), "got:\n{rust}");
+    assert!(rust.contains(".sqrt()"), "got:\n{rust}");
+    assert!(rust.contains("is_infinite()"), "got:\n{rust}");
 }
 
 #[test]
@@ -170,4 +174,33 @@ fn translates_math_min_and_e_constant() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".min("), "got:\n{rust}");
     assert!(rust.contains("f64::consts::E"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_math_max_min_hypot_variadic() {
+    // Math.max()/min() with no args: -∞/+∞ (the JS identity element).
+    let none = "function f(): number { return Math.max() + Math.min(); }";
+    let rust = Translator::new().translate(none).expect("should translate");
+    assert!(rust.contains("NEG_INFINITY"), "max(): {rust}");
+    assert!(rust.contains("INFINITY"), "min(): {rust}");
+    // Math.hypot() = 0.
+    let rust = Translator::new()
+        .translate("function f(): number { return Math.hypot(); }")
+        .expect("should translate");
+    assert!(rust.contains("0.0"), "hypot(): {rust}");
+    // Math.max(a, b, c) folds binary f64::max left to right.
+    let rust = Translator::new()
+        .translate(
+            "function f(a: number, b: number, c: number): number { return Math.max(a, b, c); }",
+        )
+        .expect("should translate");
+    assert!(rust.contains("a.max(b)"), "fold: {rust}");
+    // Math.hypot(a) = |a| = a.powi(2).sqrt().
+    let rust = Translator::new()
+        .translate("function f(a: number): number { return Math.hypot(a); }")
+        .expect("should translate");
+    assert!(
+        rust.contains(".powi(2)") && rust.contains(".sqrt()"),
+        "hypot(a): {rust}"
+    );
 }
