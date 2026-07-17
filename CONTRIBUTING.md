@@ -2,7 +2,7 @@
 
 Thanks for contributing! This guide covers the **workflow** for contributing and the **coding standards** that keep DashScript consistent.
 
-> DashScript is a TS → Rust transpiler: a Rust core (reusing oxc for parse/lint/format) plus a thin TypeScript CLI/npm surface.
+> DashScript compiles a TypeScript-flavored language (`.ds`) to native binaries via Rust: a Rust core (reusing oxc for parse/lint/format) plus a thin TypeScript CLI/npm surface.
 
 ## Development Setup
 

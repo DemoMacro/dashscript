@@ -5,13 +5,13 @@
 ![GitHub](https://img.shields.io/github/license/DemoMacro/dashscript)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
 
-> A TypeScript-frontend language (`.ds`) that transpiles to idiomatic **Rust** and compiles to **native binaries** (`wasm` / `napi` outputs planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, with `ds check` / `ds fmt` built on its AST in-process, `ds build` / `ds run` caching builds in-project, dependencies declared in a `manifest.json` that lowers to `Cargo.toml`, and type hints for any Rust crate drawn straight from its source.
+> **TypeScript ergonomics, Rust performance, compiled to native.** A typed, TypeScript-flavored language (`.ds`) that compiles to **native binaries** via idiomatic **Rust** (`wasm` / `napi` outputs planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, with `ds check` / `ds fmt` built on its AST in-process, `ds build` / `ds run` caching builds in-project, dependencies declared in a `manifest.json` that lowers to `Cargo.toml`, and type hints for any Rust crate drawn straight from its source.
 
 ## Packages
 
-| Package                                       | Version                                         | Description                                                                                                                       |
-| --------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [dashscript](./packages/dashscript/README.md) | ![npm](https://img.shields.io/npm/v/dashscript) | The `ds` toolchain in one package — transpiler core (oxc AST → Rust), `manifest.json` → `Cargo.toml`, bindgen, CLI, editor types. |
+| Package                                       | Version                                         | Description                                                                                                                |
+| --------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [dashscript](./packages/dashscript/README.md) | ![npm](https://img.shields.io/npm/v/dashscript) | The `ds` toolchain in one package — translates oxc AST → Rust, `manifest.json` → `Cargo.toml`, bindgen, CLI, editor types. |
 
 ## Quick Start
 

@@ -1,6 +1,6 @@
 # DashScript
 
-Language support for [DashScript](https://github.com/DemoMacro/dashscript) (`.ds`) — a TypeScript-flavored syntax that transpiles to idiomatic Rust.
+Language support for [DashScript](https://github.com/DemoMacro/dashscript) (`.ds`) — TypeScript ergonomics, Rust performance, compiled to native.
 
 ## Features
 

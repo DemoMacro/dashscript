@@ -4,7 +4,7 @@
 ![npm downloads](https://img.shields.io/npm/dw/dashscript)
 ![npm license](https://img.shields.io/npm/l/dashscript)
 
-> A TypeScript-frontend language (`.ds`) that transpiles to idiomatic Rust — one package providing the `ds` CLI, the transpiler core, and editor types.
+> **TypeScript ergonomics, Rust performance, compiled to native.** A typed, TypeScript-flavored language (`.ds`) that compiles to native binaries via idiomatic Rust — one package providing the `ds` CLI, the translation core, and editor types.
 
 ## Features
 
