@@ -162,13 +162,13 @@ fn usage_exit(msg: &str) -> ExitCode {
     ExitCode::FAILURE
 }
 
-/// Translate a `.ds` file into a buildable Cargo project at `project_dir`.
-///
-/// Each local module the file imports (`import { x } from "./other"`) is
-/// translated to `src/<module>.rs` and declared with a leading `mod <module>;`
-/// so the main file's `use <module>::x;` resolves. v1: a single layer — an
+/// Translate `src` and write `src/main.rs` (plus each imported local module as
+/// `src/<module>.rs`, declared with a leading `mod <module>;`) into
+/// `project_dir/src/`. The caller writes `Cargo.toml`. Shared by a single-
+/// package build ([`emit_cargo_project`]) and by workspace members (whose
+/// Cargo.toml the workspace root owns). v1: a single layer of imports — an
 /// imported module that itself imports is not followed.
-pub(crate) fn emit_cargo_project(
+fn translate_sources(
     src: &str,
     src_path: &Path,
     project_dir: &Path,
@@ -176,9 +176,6 @@ pub(crate) fn emit_cargo_project(
     let rust = Translator::new()
         .translate(src)
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;
-    let cargo_toml = resolve_manifest(src_path);
-    fs::create_dir_all(project_dir.join("src"))?;
-    fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
 
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
@@ -206,6 +203,20 @@ pub(crate) fn emit_cargo_project(
         format!("{mod_decls}\n{rust}")
     };
     fs::write(project_dir.join("src").join("main.rs"), main)?;
+    Ok(())
+}
+
+/// Translate a `.ds` file into a buildable Cargo project at `project_dir`: the
+/// resolved manifest as `Cargo.toml` + the translated source as `src/main.rs`.
+pub(crate) fn emit_cargo_project(
+    src: &str,
+    src_path: &Path,
+    project_dir: &Path,
+) -> Result<(), Box<dyn Error>> {
+    let cargo_toml = resolve_manifest(src_path);
+    fs::create_dir_all(project_dir.join("src"))?;
+    fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
+    translate_sources(src, src_path, project_dir)?;
     Ok(())
 }
 
@@ -246,19 +257,21 @@ fn resolve_manifest(src_path: &Path) -> String {
 }
 
 /// The cache directory for a `.ds` entry file, Deno-style: walk up from the
-/// file for a `manifest.json`; found → in-project `.cache/build/<project>/` —
+/// file for a `manifest.json`; found → in-project `.cache/dash/<project>/` —
 /// **one per project** (keyed by project name, not the entry stem, so two
 /// `main.ds` files in different projects don't collide and one project's
 /// entries share a cache); not found (a lone file) → global
-/// `~/.cache/dash/<hash>/`. Both `run` and `build` share this cache, so repeat
-/// invocations reuse cargo's incremental `target/` instead of recompiling std
-/// and every dependency from scratch. Falls back to a temp dir if no platform
-/// cache dir is resolvable, so a lone file always runs.
+/// `~/.cache/dash/<hash>/`. The `dash` segment mirrors the global cache root,
+/// so DashScript owns one namespace under `.cache/`. `run`, `build`, and
+/// `install` all share this directory, so repeat invocations reuse cargo's
+/// incremental `target/` instead of recompiling std and every dependency from
+/// scratch. Falls back to a temp dir if no platform cache dir is resolvable,
+/// so a lone file always runs.
 fn cache_project_dir(src_path: &Path) -> PathBuf {
     if let Some(root) = find_manifest_root(src_path) {
         return root
             .join(".cache")
-            .join("build")
+            .join("dash")
             .join(project_name(src_path));
     }
     global_cache_dir(src_path)
@@ -360,7 +373,7 @@ fn resolve_target(src_path: &Path, override_target: Option<&str>) -> String {
 /// (`ds <file.ds>`).
 ///
 /// The cache is resolved Deno-style (`cache_project_dir`): in-project
-/// `.cache/build/<project>/` when a `manifest.json` is found walking up, else a
+/// `.cache/dash/<project>/` when a `manifest.json` is found walking up, else a
 /// global `~/.cache/dash/<hash>/`. Execution is delegated to the system `cargo`
 /// for now — a DashScript-managed toolchain (downloaded on demand, no `rustup`)
 /// will replace this later.
@@ -409,17 +422,19 @@ fn build(file: Option<&str>, target_override: Option<&str>) -> Result<ExitCode, 
         Some(f) => f.to_string(),
         None => resolve_entry()?,
     };
-    build_at(&file, None, target_override)
+    build_at(&file, target_override, Path::new("dist"))
 }
 
-/// Core build: translate `entry`, then emit a native binary (`bin`) or Rust
-/// crate (`rust`) to `dist/<name>`. `cache_override` pins the cache root — a
-/// workspace passes the workspace root so every member caches under one
-/// `.cache/`; `None` resolves it Deno-style from the entry.
+/// Core build (single package): translate `entry`, then emit a native binary
+/// (`bin`) or Rust crate (`rust`) to `<dest_root>/<name>`. A single package
+/// passes `dist`; a workspace member passes its own `<member>/dist` so each
+/// package's artifact stays independent (publishable on its own, like a pnpm
+/// workspace package). Workspace bin builds go through [`workspace_build`]
+/// instead (one cargo workspace, shared `target/`).
 fn build_at(
     entry: &str,
-    cache_override: Option<&Path>,
     target_override: Option<&str>,
+    dest_root: &Path,
 ) -> Result<ExitCode, Box<dyn Error>> {
     let path = Path::new(entry);
     let src = fs::read_to_string(path)
@@ -427,10 +442,11 @@ fn build_at(
     let name = project_name(path);
     let target = resolve_target(path, target_override);
 
-    // Clear any prior output at `dist/<name>` so switching targets (bin ↔ rust)
-    // does not collide: a `bin` build leaves a file, a `rust` build a dir.
-    fs::create_dir_all("dist")?;
-    let dest_base = PathBuf::from("dist").join(&name);
+    // Clear any prior output at <dest_root>/<name> so switching targets
+    // (bin ↔ rust) does not collide: a `bin` build leaves a file, a `rust` build
+    // a dir.
+    fs::create_dir_all(dest_root)?;
+    let dest_base = dest_root.join(&name);
     let _ = fs::remove_dir_all(&dest_base);
     let _ = fs::remove_file(&dest_base);
     if cfg!(windows) {
@@ -446,10 +462,7 @@ fn build_at(
             Ok(ExitCode::SUCCESS)
         }
         "bin" => {
-            let cache = match cache_override {
-                Some(root) => root.join(".cache").join("build").join(&name),
-                None => cache_project_dir(path),
-            };
+            let cache = cache_project_dir(path);
             emit_cargo_project(&src, path, &cache)?;
             let status = invoke_cargo(&cache, ["build", "--release", "--quiet"])?;
             if !status.success() {
@@ -495,7 +508,9 @@ fn add(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
     manifest.add_dependency("rust", crate_name, &version);
     fs::write(manifest_path, format!("{}\n", manifest.to_json()?))?;
     println!("ds: added rust:{crate_name} = {version}");
-    Ok(ExitCode::SUCCESS)
+    // Like `pnpm add`: record the dep, then refresh the lockfile (install) so
+    // the new dependency is fetched and pinned in one step.
+    install()
 }
 
 /// Remove a crate dependency from `manifest.json`.
@@ -626,11 +641,15 @@ fn fmt(file: &str) -> Result<ExitCode, Box<dyn Error>> {
 /// compiles without re-downloading.
 fn install() -> Result<ExitCode, Box<dyn Error>> {
     let manifest = read_manifest(Path::new("manifest.json")).unwrap_or_else(|_| default_manifest());
-    let dir = PathBuf::from(".cache").join("install");
+    // Reuse the build cache (`.cache/dash/<name>/`) — not a separate dir — so
+    // the `Cargo.lock` `cargo fetch` writes here is the same one `build`/`run`
+    // use. No duplicate cargo project, no throwaway lockfile.
+    let dir = PathBuf::from(".cache").join("dash").join(&manifest.name);
     fs::create_dir_all(dir.join("src"))?;
     fs::write(dir.join("Cargo.toml"), manifest.to_cargo_toml())?;
-    // A minimal target so cargo accepts the package; `cargo fetch` does not
-    // compile it.
+    // `cargo fetch` requires a target to exist; a placeholder main.rs is never
+    // compiled (fetch only resolves + downloads deps) and `ds build` overwrites
+    // it with the real translated source.
     fs::write(dir.join("src").join("main.rs"), "fn main() {}\n")?;
     println!("ds: fetching dependencies...");
     let status = invoke_cargo(&dir, ["fetch", "--quiet"])?;
@@ -657,9 +676,13 @@ fn is_workspace_root(dir: &Path) -> bool {
     !discover_members(dir).is_empty()
 }
 
-/// Build every member of the workspace at `root`, or just the one named by
-/// `filter`. Each member builds from its own entry but caches under the
-/// workspace root, so one `ds cache clean` clears them all.
+/// Build the workspace at `root` — every member, or just the one named by
+/// `--filter` (manifest name or member directory). For `bin`, members are
+/// emitted under `.cache/dash/members/<name>/` of one cargo workspace, so they
+/// share a single `target/` and `Cargo.lock`: a dependency two members use
+/// compiles once (cargo's native hoisted-`node_modules`). For `rust`, each
+/// member's crate is emitted independently to `dist/<name>/` (no compilation,
+/// nothing to share).
 fn workspace_build(
     root: &Path,
     filter: Option<&str>,
@@ -668,41 +691,103 @@ fn workspace_build(
     let members = discover_members(root);
     if members.is_empty() {
         return Err(
-            "ds build: no workspace members matched (check `workspace` globs in manifest.json)"
+            "ds build: no workspace members matched (check `workspaces` globs in manifest.json)"
                 .into(),
         );
     }
-    let mut built = 0;
+
+    // Select members, applying --filter (manifest name or member directory).
+    let mut selected: Vec<(String, PathBuf, String)> = Vec::new();
     for member in &members {
         let dir_name = member_name_fallback(member);
         let name = manifest_name_of(member).unwrap_or_else(|| dir_name.clone());
-        // `--filter` matches either the manifest name or the member directory.
         if let Some(want) = filter {
             if name != want && dir_name != want {
                 continue;
             }
         }
         let entry = resolve_member_entry(member)?;
-        println!("ds: {name} (workspace member)");
-        let code = build_at(&entry, Some(root), target_override)?;
-        built += 1;
-        if !matches!(code, ExitCode::SUCCESS) {
-            return Ok(code);
-        }
+        selected.push((name, member.to_path_buf(), entry));
     }
-    if filter.is_some() && built == 0 {
+    if selected.is_empty() {
         return Err(format!(
             "ds build: --filter '{}' matched no workspace member",
             filter.unwrap_or("?")
         )
         .into());
     }
+
+    let target =
+        target_override.map(|t| t.to_string()).unwrap_or_else(|| "bin".to_string());
+    if target == "rust" {
+        // Rust crates are emitted, not compiled — no shared `target/` to gain.
+        // Each member's crate lands in its own `<member>/dist/<name>/` so the
+        // package stays independently publishable.
+        for (name, member_dir, entry) in &selected {
+            println!("ds: {name} (workspace member, rust crate)");
+            build_at(entry, Some("rust"), &member_dir.join("dist"))?;
+        }
+        return Ok(ExitCode::SUCCESS);
+    }
+    if target != "bin" {
+        return Err(format!(
+            "ds build: target '{target}' not yet supported (use --target <bin|rust>)"
+        )
+        .into());
+    }
+
+    // bin: emit one cargo workspace — members share `target/` + `Cargo.lock`.
+    // Member dirs sit directly under the cache root (`<cache>/<name>/`), mirroring
+    // the single-package `.cache/dash/<name>/`; a stale member from a prior run
+    // (renamed/removed) is simply absent from `members` and ignored by cargo —
+    // `ds cache clean` reclaims the space.
+    let cache = root.join(".cache").join("dash");
+    fs::create_dir_all(&cache)?;
+    let names: Vec<String> = selected.iter().map(|(n, _, _)| n.clone()).collect();
+    fs::write(cache.join("Cargo.toml"), Manifest::workspace_root_toml(&names))?;
+
+    for (name, member_dir, entry) in &selected {
+        let path = Path::new(entry);
+        let src = fs::read_to_string(path)
+            .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+        let member_manifest =
+            read_manifest(&member_dir.join("manifest.json")).unwrap_or_else(|_| default_manifest());
+        let member_cache = cache.join(name);
+        fs::create_dir_all(member_cache.join("src"))?;
+        fs::write(member_cache.join("Cargo.toml"), member_manifest.to_member_toml())?;
+        translate_sources(&src, path, &member_cache)?;
+        println!("ds: {name} (workspace member)");
+    }
+
+    println!("ds: building workspace (shared target)...");
+    let status = invoke_cargo(&cache, ["build", "--release", "--quiet"])?;
+    if !status.success() {
+        return Ok(status_to_code(status));
+    }
+
+    // Copy each member binary to its own `<member>/dist/<name>` — not the
+    // workspace root — so each package's artifact is independent and
+    // publishable (like a pnpm workspace package's own dist).
+    for (name, member_dir, _) in &selected {
+        let bin_name = if cfg!(windows) {
+            format!("{name}.exe")
+        } else {
+            name.clone()
+        };
+        let bin = cache.join("target").join("release").join(&bin_name);
+        let dest_dir = member_dir.join("dist");
+        let _ = fs::remove_dir_all(&dest_dir);
+        fs::create_dir_all(&dest_dir)?;
+        let dest = dest_dir.join(&bin_name);
+        fs::copy(&bin, &dest)?;
+        println!("ds: built {}", dest.display());
+    }
     Ok(ExitCode::SUCCESS)
 }
 
-/// Resolve a root manifest's `workspace` globs (e.g. `["apps/*", "packages/*"]`)
+/// Resolve a root manifest's `workspaces` globs (e.g. `["apps/*", "packages/*"]`)
 /// into member directories — each a subdirectory holding its own `manifest.json`.
-/// Empty if `root` has no `workspace` field or no members match.
+/// Empty if `root` has no `workspaces` field or no members match.
 fn discover_members(root: &Path) -> Vec<PathBuf> {
     let Ok(json) = fs::read_to_string(root.join("manifest.json")) else {
         return Vec::new();
@@ -710,11 +795,11 @@ fn discover_members(root: &Path) -> Vec<PathBuf> {
     let Ok(manifest) = Manifest::from_json(&json) else {
         return Vec::new();
     };
-    if manifest.workspace.is_empty() {
+    if manifest.workspaces.is_empty() {
         return Vec::new();
     }
     let mut members = Vec::new();
-    for glob in &manifest.workspace {
+    for glob in &manifest.workspaces {
         for member in expand_member_glob(root, glob) {
             if !members.contains(&member) {
                 members.push(member);

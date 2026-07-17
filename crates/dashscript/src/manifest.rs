@@ -69,8 +69,11 @@ pub struct Manifest {
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub scripts: BTreeMap<String, String>,
     /// Workspace member globs (`["apps/*", "packages/*"]`) on a monorepo root.
+    /// Plural `workspaces` mirrors npm/yarn/bun's package.json field (pnpm
+    /// instead uses a separate `pnpm-workspace.yaml`, but DashScript keeps
+    /// membership in `manifest.json`, so it follows the npm/bun convention).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub workspace: Vec<String>,
+    pub workspaces: Vec<String>,
     /// Backend-prefixed dependencies, e.g. `{ "rust:serde": "1.0" }`. The
     /// prefix is [`BACKEND`] (`rust:`) today.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
@@ -95,7 +98,7 @@ impl Default for Manifest {
             target: default_target(),
             entry: None,
             scripts: BTreeMap::new(),
-            workspace: Vec::new(),
+            workspaces: Vec::new(),
             dependencies: BTreeMap::new(),
         }
     }
@@ -113,14 +116,18 @@ impl Manifest {
 
     /// Emit a `Cargo.toml` string for this manifest.
     ///
-    /// Only dependencies whose prefix matches the backend ([`BACKEND`] = `rust:`)
-    /// map to the output (e.g. `rust:serde` → `serde`); the manifest `target`
-    /// field is an output shape and does not filter dependencies. Metadata
-    /// (version/description/license/repository/homepage/keywords/authors) passes
-    /// straight through to `[package]`.
+    /// The `[package]` + `[dependencies]` body — the shared core emitted for a
+    /// single-package project ([`to_cargo_toml`]), a workspace member
+    /// ([`to_member_toml`]), or a lone-file throwaway. No `[profile]` and no
+    /// `[workspace]`: those belong to the single-package root or the workspace
+    /// root. Only dependencies whose prefix matches the backend ([`BACKEND`] =
+    /// `rust:`) map to the output (e.g. `rust:serde` → `serde`); the manifest
+    /// `target` field is an output shape and does not filter dependencies.
+    /// Metadata (version/description/license/repository/homepage/keywords/authors)
+    /// passes straight through to `[package]`.
     // NOTE: version requirements are passed through verbatim today — npm-style
     // ranges (`^1.0`) are not yet normalized to Cargo's.
-    pub fn to_cargo_toml(&self) -> String {
+    fn package_body(&self) -> String {
         // Dependencies are filtered by the backend prefix (`rust:`), not by
         // `target`: `target` is an _output_ shape (bin/rust/wasm/napi), all
         // built on the same Rust backend, so the dependency prefix is fixed.
@@ -162,6 +169,15 @@ impl Manifest {
             out.push_str(&deps.join("\n"));
             out.push('\n');
         }
+        out
+    }
+
+    /// A single-package `Cargo.toml`: [`package_body`] + `[profile.release]` +
+    /// an empty `[workspace]` so the emitted project is its own workspace root
+    /// (never absorbed by a parent workspace, e.g. DashScript's own repo when
+    /// `ds build` emits under `dist/`).
+    pub fn to_cargo_toml(&self) -> String {
+        let mut out = self.package_body();
         // `panic = "unwind"` is pinned on release (dev already defaults to
         // unwind) so a `.ds` `try/catch` — which lowers to `catch_unwind` —
         // reliably catches a `throw` (→ `panic!`). DashScript owns this
@@ -169,10 +185,35 @@ impl Manifest {
         // `catch_unwind` sound, where on an arbitrary user `Cargo.toml` it
         // would not be (a `panic = "abort"` build silently drops the catch).
         out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
-        // An empty `[workspace]` table makes the emitted project its own
-        // workspace root, so it is never absorbed by a parent workspace (e.g.
-        // DashScript's own repo when `ds build` emits under `dist/`).
         out.push_str("\n[workspace]\n");
+        out
+    }
+
+    /// A workspace member's `Cargo.toml`: [`package_body`] only. The workspace
+    /// root owns `[profile]` and `[workspace]`; a member that repeats them is
+    /// rejected by cargo, so this omits both. Each member resolves its own
+    /// declared dependencies, but the shared workspace `target/` dedupes any
+    /// dependency several members have in common (serde compiles once).
+    pub fn to_member_toml(&self) -> String {
+        self.package_body()
+    }
+
+    /// A workspace root `Cargo.toml`: `[workspace] members` (each expected at
+    /// `<name>/`, directly under the workspace root — no extra `members/` layer,
+    /// since cargo does not require one and it would diverge from the
+    /// single-package `.cache/dash/<name>/` layout) + `[profile.release]`. One
+    /// root means one shared `target/` and one `Cargo.lock`, so a dependency
+    /// used by several members compiles once — cargo's native equivalent of a
+    /// hoisted `node_modules`.
+    pub fn workspace_root_toml(member_names: &[String]) -> String {
+        let members: Vec<String> = member_names
+            .iter()
+            .map(|n| format!("\"{n}\""))
+            .collect();
+        let mut out = String::from("[workspace]\n");
+        out.push_str(&format!("members = [{}]\n", members.join(", ")));
+        out.push_str("resolver = \"2\"\n");
+        out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
         out
     }
 
@@ -317,9 +358,39 @@ mod tests {
         // Optional metadata + empty collections are skipped for a tidy file.
         assert!(!json.contains("description"), "got:\n{json}");
         assert!(!json.contains("scripts"), "got:\n{json}");
-        assert!(!json.contains("workspace"), "got:\n{json}");
+        assert!(!json.contains("workspaces"), "got:\n{json}");
         assert!(!json.contains("dependencies"), "got:\n{json}");
         assert!(json.contains("\"version\": \"0.0.0\""), "got:\n{json}");
         assert!(json.contains("\"target\": \"bin\""), "got:\n{json}");
+    }
+
+    #[test]
+    fn to_member_toml_is_package_body_without_profile_or_workspace() {
+        let mut m = Manifest {
+            name: "demo".to_string(),
+            ..Manifest::default()
+        };
+        m.add_dependency("rust", "serde", "1.0");
+        let toml = m.to_member_toml();
+        assert!(toml.contains("[package]"), "got:\n{toml}");
+        assert!(toml.contains("serde = \"1.0\""), "got:\n{toml}");
+        // A member must not repeat [profile] or [workspace] — the workspace
+        // root owns them, and cargo rejects a member that redeclares either.
+        assert!(!toml.contains("[profile"), "member must not pin profile, got:\n{toml}");
+        assert!(!toml.contains("[workspace]"), "member must not declare workspace, got:\n{toml}");
+    }
+
+    #[test]
+    fn workspace_root_toml_lists_members_directly_under_root() {
+        let toml = Manifest::workspace_root_toml(&["app-a".to_string(), "app-b".to_string()]);
+        // Members sit directly under the root (<name>), mirroring the
+        // single-package `.cache/dash/<name>/` — no `members/` layer.
+        assert!(toml.contains("members = [\"app-a\", \"app-b\"]"), "got:\n{toml}");
+        assert!(toml.contains("resolver = \"2\""), "got:\n{toml}");
+        assert!(
+            toml.contains("[profile.release]\npanic = \"unwind\""),
+            "workspace pins release panic=unwind, got:\n{toml}"
+        );
+        assert!(!toml.contains("[package]"), "workspace root has no [package], got:\n{toml}");
     }
 }
