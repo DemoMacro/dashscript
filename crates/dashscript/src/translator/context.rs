@@ -10,7 +10,7 @@
 
 use std::collections::{HashMap, HashSet};
 
-use syn::Path;
+use syn::{parse_quote, Expr, Ident, Path};
 
 use super::registry::{TypeRegistry, VariantShape};
 
@@ -60,6 +60,11 @@ pub struct Narrow {
     scrut: Option<String>,
     fields: HashSet<String>,
     option_some: HashSet<String>,
+    /// The receiver a `this` expression maps to inside a class method body
+    /// (`self` for a method, `__ds_self` for a constructor); `None` outside a
+    /// method. Threaded through `Narrow` because it already reaches every
+    /// expression in a body, so `this` needs no new parameter plumbing.
+    self_recv: Option<Ident>,
 }
 
 impl Narrow {
@@ -71,6 +76,19 @@ impl Narrow {
             scrut: Some(scrut),
             fields,
             option_some: HashSet::new(),
+            self_recv: None,
+        }
+    }
+
+    /// A method-body scope: `this` maps to `self_name` (`self` for a method,
+    /// `__ds_self` for a constructor). No discriminated-union narrowing.
+    #[must_use]
+    pub fn in_method(self_name: Ident) -> Self {
+        Self {
+            scrut: None,
+            fields: HashSet::new(),
+            option_some: HashSet::new(),
+            self_recv: Some(self_name),
         }
     }
 
@@ -177,6 +195,24 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn is_narrowed_some(&self, name: &str) -> bool {
         self.narrow.is_option_some(name)
+    }
+
+    /// The identifier a `this` expression maps to inside a class method (`self`
+    /// for a method, `__ds_self` for a constructor); `None` at module scope or
+    /// in a free function, where `this` is not valid.
+    #[must_use]
+    pub fn this_receiver(&self) -> Option<Ident> {
+        self.narrow.self_recv.clone()
+    }
+}
+
+/// `this` → the bound method receiver (`self` / `__ds_self`); outside a method
+/// it lowers to a `compile_error!` so the generated Rust still parses but fails
+/// loudly if reached.
+pub fn this_expr(ctx: &Ctx<'_>) -> Expr {
+    match ctx.this_receiver() {
+        Some(id) => parse_quote!(#id),
+        None => parse_quote!(compile_error!("`this` is only valid inside a class method")),
     }
 }
 

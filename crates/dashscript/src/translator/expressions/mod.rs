@@ -68,6 +68,9 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         // for precedence (e.g. `(a + b) * c` round-trips correctly).
         Expression::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         Expression::ChainExpression(c) => member::chain_expr(&c.expression, ctx),
+        // `this` inside a class method → the receiver (`self`/`__ds_self`);
+        // outside a method → a `compile_error!`.
+        Expression::ThisExpression(_) => super::context::this_expr(ctx),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -94,6 +97,7 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::TSTypeAssertion(t) => translate_expr(&t.expression, ctx),
         Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
+        Argument::ThisExpression(_) => super::context::this_expr(ctx),
         _ => parse_quote!(::core::todo!()),
     }
 }
