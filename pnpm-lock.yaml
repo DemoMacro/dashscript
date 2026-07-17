@@ -17,6 +17,9 @@ importers:
       '@types/node':
         specifier: 26.1.1
         version: 26.1.1
+      acorn:
+        specifier: ^8.17.0
+        version: 8.17.0
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

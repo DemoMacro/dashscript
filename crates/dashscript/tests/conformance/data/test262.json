@@ -1,0 +1,77 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs. Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.math.round.not-a-constructor",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(isConstructor(Math.round));\n\ntry { () => {\n  new Math.round();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Math/round/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.math.round.s15.8.2.15_a1",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Math.round(NaN));\n}\n",
+      "origin": "test/built-ins/Math/round/S15.8.2.15_A1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.math.round.s15.8.2.15_a2",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Math.round(0));\n}\n",
+      "origin": "test/built-ins/Math/round/S15.8.2.15_A2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.math.round.s15.8.2.15_a3",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Math.round(-0));\n}\n",
+      "origin": "test/built-ins/Math/round/S15.8.2.15_A3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.math.round.s15.8.2.15_a4",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\n// CHECK#1\nvar x = +Infinity;\nconsole.log(Math.round(x));\n}\n",
+      "origin": "test/built-ins/Math/round/S15.8.2.15_A4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.math.round.s15.8.2.15_a5",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\n// CHECK#1\nvar x = -Infinity;\nconsole.log(Math.round(x));\n}\n",
+      "origin": "test/built-ins/Math/round/S15.8.2.15_A5.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.math.round.s15.8.2.15_a6",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\n// CHECK#1\nfor (var i = 0; i <= 1000; i++)\n{\n  var x = i / 10.0;\n\n  console.log(Math.round(x));\n}\n\nfor (i = -5; i >= -1000; i--)\n{\n  if (i === -5)\n  {\n    x = -0.500000000000001;\n  } else\n  {\n    x = i / 10.0;\n  }\n\n  console.log(Math.round(x));\n}\n}\n",
+      "origin": "test/built-ins/Math/round/S15.8.2.15_A6.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.math.round.s15.8.2.15_a7",
+      "category": "math",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(1 / Math.round(-0.5));\n\nconsole.log(1 / Math.round(-0.25));\n\nconsole.log(1 / Math.round(-0));\n\nvar x = 0;\n\n// CHECK#4\nx = 0.5 - Number.EPSILON / 4;\nconsole.log(1 / Math.round(x));\n\n// CHECK#5\nx = -(2 / Number.EPSILON - 1);\nconsole.log(Math.round(x));\n\n// CHECK#6\nx = -(1.5 / Number.EPSILON - 1);\nconsole.log(Math.round(x));\n\n// CHECK#7\nx = -(1 / Number.EPSILON + 1);\nconsole.log(Math.round(x));\n\n// CHECK#8\nx = 1 / Number.EPSILON + 1;\nconsole.log(Math.round(x));\n\n// CHECK#9\nx = 1.5 / Number.EPSILON - 1;\nconsole.log(Math.round(x));\n\n// CHECK#10\nx = 2 / Number.EPSILON - 1;\nconsole.log(Math.round(x));\n}\n",
+      "origin": "test/built-ins/Math/round/S15.8.2.15_A7.js",
+      "n_asserts": 10,
+      "flags": []
+    }
+  ]
+}
