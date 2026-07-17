@@ -21,7 +21,7 @@ Prerequisites: **Node.js 18+**, **pnpm 9+**, **Rust stable** (to build DashScrip
 
 Syntax highlight, live diagnostics, and go-to-definition ship as a VS Code extension (`packages/vscode`) backed by the `ds lsp` server. After `pnpm install`:
 
-1. Put `ds` on your PATH: `cargo install --path apps/ds`.
+1. Put `ds` on your PATH: `cargo install --path crates/dashscript`.
 2. (Optional, for crate go-to-definition) Put `rust-analyzer` on your PATH: `rustup component add rust-analyzer`.
 3. Build and install the extension:
    ```bash
@@ -46,10 +46,9 @@ A hybrid cargo + pnpm workspace. Core logic lives only in `crates/`; everything 
 
 ```
 crates/
-  dashscript/        the only core crate, three modules:
-                     translator/ (oxc AST → Rust), manifest/ (manifest.json → Cargo.toml), bindgen/ (Rust → .ds)
-apps/
-  ds/                standalone `ds` binary
+  dashscript/        the only crate — library + the `ds` binary
+                     library (src/): translator/ (oxc AST → Rust), manifest/ (manifest.json → Cargo.toml), bindgen/ (Rust → .ds)
+                     binary (bin/): the `ds` CLI + language server
 packages/
   dashscript/        the single npm package: bin `ds` + editor types
 ```
@@ -62,7 +61,7 @@ packages/
 - **Reuse oxc for parsing, build lint/fmt on the AST** — consume `oxc_parser` / `oxc_ast` / `oxc_allocator` as given. `oxc_linter` / `oxc_formatter` are `publish = false` (not on crates.io), so `ds lint` and `ds fmt` are built in-process on the parsed AST; do not shell out to external oxlint/oxfmt.
 - **One mapping rule per AST node kind** in `translator/`. Unmapped nodes must raise a diagnostic — never silently emit broken Rust.
 - **Diagnostics over panics** — collect errors, recover, and report as many as possible. Reserve `unwrap`/`panic!` for true invariants in tests.
-- **No logic in bindings** — `apps/ds` and the npm package are thin. If you are writing translation logic there, it belongs in the core crate.
+- **No logic in bindings** — the `ds` binary (`bin/` on the `dashscript` crate) and the npm package are thin. If you are writing translation logic there, it belongs in the library (`src/`).
 - Run `cargo fmt` and `cargo clippy -- -D warnings` before committing.
 
 ### TypeScript — CLI / npm surface (`packages/dashscript`)
@@ -131,12 +130,12 @@ Each run rewrites `tests/conformance/matrix.md` (human-readable) and `matrix.jso
 
 Most changes fall into one of three shapes:
 
-| Change                     | Where                   | Pattern                                                                                                                                                                       |
-| -------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **New AST → Rust mapping** | `translator/`           | Add one rule for the AST node kind; add a `.ds` fixture; run `ds build --target rust` and `cargo check` the emitted Rust. Unmapped nodes must error, not silently miscompile. |
-| **New manifest field**     | `manifest/`             | Extend the `manifest.json` reader and the `Cargo.toml` emitter together; keep target-prefixed dependency keys and normalize versions.                                         |
-| **New bindgen target**     | `bindgen/`              | Map a Rust construct (e.g. `struct`, `enum`, `trait`) to its `.ds` declaration so editor types stay correct.                                                                  |
-| **New `ds` subcommand**    | `apps/ds` + npm package | Wire a thin command to an existing core module; no logic in the CLI layer.                                                                                                    |
+| Change                     | Where                                    | Pattern                                                                                                                                                                       |
+| -------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **New AST → Rust mapping** | `translator/`                            | Add one rule for the AST node kind; add a `.ds` fixture; run `ds build --target rust` and `cargo check` the emitted Rust. Unmapped nodes must error, not silently miscompile. |
+| **New manifest field**     | `manifest/`                              | Extend the `manifest.json` reader and the `Cargo.toml` emitter together; keep target-prefixed dependency keys and normalize versions.                                         |
+| **New bindgen target**     | `bindgen/`                               | Map a Rust construct (e.g. `struct`, `enum`, `trait`) to its `.ds` declaration so editor types stay correct.                                                                  |
+| **New `ds` subcommand**    | `crates/dashscript` `bin/` + npm package | Wire a thin command to an existing core module; no logic in the CLI layer.                                                                                                    |
 
 Rule of thumb: **a new front-end construct must be mappable end-to-end** — a `.ds` feature that the translator cannot yet lower should fail loudly with a diagnostic, not produce Rust that won't compile.
 
@@ -148,4 +147,4 @@ Rule of thumb: **a new front-end construct must be mappable end-to-end** — a `
 - [ ] Any new AST mapping has a `.ds` fixture whose emitted Rust (`ds build --target rust`) passes `cargo check`
 - [ ] Naming & patterns follow the standards above
 - [ ] Changes are minimal and focused — match existing style
-- [ ] No translation logic added to `apps/` or the npm package (it belongs in `crates/`)
+- [ ] No translation logic added to `bin/` or the npm package (it belongs in the library, `src/`)

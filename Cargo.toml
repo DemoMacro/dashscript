@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/*", "apps/*"]
+members = ["crates/*"]
 
 [workspace.package]
 version = "0.0.0"
@@ -9,7 +9,7 @@ authors = ["Demo Macro <abc@imst.xyz>"]
 license = "MIT"
 repository = "https://github.com/DemoMacro/dashscript"
 homepage = "https://github.com/DemoMacro/dashscript"
-description = "A TypeScript-frontend language that transpiles to idiomatic Rust"
+description = "TypeScript ergonomics, Rust performance, compiled to native."
 keywords = ["typescript", "rust", "transpiler", "compiler"]
 categories = ["compilers", "development-tools"]
 
@@ -41,8 +41,13 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 url = "2"
 # Platform-standard cache dir (`~/.cache`, `~/Library/Caches`, `%LocalAppData%`)
-# for `ds run`'s fixed build cache — see `apps/ds::cache_project_dir`.
+# for `ds run`'s fixed build cache — see `dashscript::commands::project::cache_project_dir`.
 dirs = "5"
+
+# ds CLI (the `bin/` target on the `dashscript` crate) — LSP server + channels.
+crossbeam-channel = "0.5"
+lsp-server = "0.10.0"
+lsp-types = "0.97.0"
 
 # dev-only — the conformance test harness (`tests/conformance.rs`).
 tempfile = "3"

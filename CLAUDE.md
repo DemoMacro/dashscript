@@ -76,26 +76,26 @@ Three sub-systems share this table:
 
 ## Architecture: Distribution
 
-Hybrid cargo + pnpm workspace. One product name, two reach paths. **Core logic lives only in `crates/`.** The CLI and npm package are thin wrappers; never put translation logic there — it would then exist in only one distribution path.
+Hybrid cargo + pnpm workspace. One product name, two reach paths. **Core logic lives only in `crates/dashscript/` (the library).** The `ds` binary is a thin target on that same crate (`bin/`); the npm package is a thin wrapper. Never put translation logic in `bin/` or the npm package — it would then exist in only one distribution path.
 
-| Path                   | Contains                                             | Consumed by                             |
-| ---------------------- | ---------------------------------------------------- | --------------------------------------- |
-| `crates/dashscript/`   | Pure Rust core (translator + manifest + bindgen)     | Rust via cargo                          |
-| `apps/ds/`             | Standalone `ds` binary                               | `cargo install dashscript`, brew, scoop |
-| `packages/dashscript/` | Single npm package — `ds` CLI wrapper + editor types | `pnpm add dashscript`, `npx ds`         |
+| Path                   | Contains                                                                      | Consumed by                                                                                  |
+| ---------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `crates/dashscript/`   | Rust library (translator + manifest + bindgen) **+ the `ds` binary** (`bin/`) | `cargo install dashscript` (the `ds` CLI), `cargo add dashscript` (the library), brew, scoop |
+| `packages/dashscript/` | Single npm package — `ds` CLI wrapper + editor types                          | `pnpm add dashscript`, `npx ds`                                                              |
 
 ## Package Layout
 
 ```
 crates/
-  dashscript/            the only core crate (modular)
-    src/
+  dashscript/            the only crate — library + the `ds` binary
+    src/                 the library: translator + manifest + bindgen
       translator/        oxc AST → Rust source (a directory: one file per node category)
       manifest.rs        manifest.json → Cargo.toml
       bindgen.rs         Rust crate → .ds type declaration
-
-apps/
-  ds/                    standalone `ds` binary
+    bin/                 the `ds` binary — thin, no translation logic
+      main.rs            dispatch + help
+      commands/          one module per command group
+      lsp.rs             the language server
 
 packages/
   dashscript/            the single npm package: bin `ds` + editor types

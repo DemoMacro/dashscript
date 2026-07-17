@@ -24,6 +24,20 @@ quote = { workspace = true }
 proc-macro2 = { workspace = true }
 prettyplease = { workspace = true }
 
+# ds CLI (the `bin/` target) — LSP server, channels, cache dir, URL parsing.
+# These are pulled in by the binary, not the library, but live here so the
+# `dashscript` crate ships both `cargo install dashscript` (the `ds` bin) and
+# `cargo add dashscript` (the translator library) from one package.
+crossbeam-channel = { workspace = true }
+dirs = { workspace = true }
+lsp-server = { workspace = true }
+lsp-types = { workspace = true }
+url = { workspace = true }
+
+[[bin]]
+name = "ds"
+path = "bin/main.rs"
+
 # Test-only — the conformance harness parses the feature manifests and emits
 # throwaway Cargo projects to tempdirs. `serde`/`serde_json` come from
 # `[dependencies]` above (available to integration tests too).

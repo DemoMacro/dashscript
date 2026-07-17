@@ -90,6 +90,10 @@ checksum = "61803da095bee82a81bb1a452ecc25d3b2f1416d1897eb86430c6159ef717c17"
 name = "dashscript"
 version = "0.0.0"
 dependencies = [
+ "crossbeam-channel",
+ "dirs",
+ "lsp-server",
+ "lsp-types",
  "oxc_allocator",
  "oxc_ast",
  "oxc_codegen",
@@ -104,6 +108,7 @@ dependencies = [
  "serde_json",
  "syn",
  "tempfile",
+ "url",
 ]
 
 [[package]]
@@ -143,21 +148,6 @@ name = "dragonbox_ecma"
 version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fd8e701084c37e7ef62d3f9e453b618130cbc0ef3573847785952a3ac3f746bf"
-
-[[package]]
-name = "ds"
-version = "0.0.0"
-dependencies = [
- "crossbeam-channel",
- "dashscript",
- "dirs",
- "lsp-server",
- "lsp-types",
- "oxc_diagnostics",
- "serde",
- "serde_json",
- "url",
-]
 
 [[package]]
 name = "either"

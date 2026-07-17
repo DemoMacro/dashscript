@@ -10,5 +10,5 @@ Language support for [DashScript](https://github.com/DemoMacro/dashscript) (`.ds
 
 ## Requirements
 
-- `ds` on your PATH — build it with `cargo install --path apps/ds`.
+- `ds` on your PATH — build it with `cargo install --path crates/dashscript`.
 - `rust-analyzer` on your PATH (for crate go-to-definition).
