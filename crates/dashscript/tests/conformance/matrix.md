@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 367 features: **265** supported, **1** partial, **0** unsupported, **101** untested
+- 371 features: **275** supported, **1** partial, **0** unsupported, **95** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -341,6 +341,7 @@
 | strings.translates_to_string_to_display              | 🟢 supported |               |
 | strings.translates_string_concatenation_to_format    | 🟢 supported |               |
 | strings.translates_string_predicate_methods          | 🟢 supported |               |
+| strings.translates_string_repeat_and_replace         | 🟢 supported |               |
 | strings.translates_string_replace_all_to_replace     | 🟢 supported |               |
 | strings.translates_string_compound_append            | 🟢 supported |               |
 | strings.translates_string_split_to_vec_string        | 🟢 supported |               |
@@ -358,6 +359,9 @@
 | strings.translates_string_concat_to_format           | 🟢 supported |               |
 | strings.translates_string_at_to_chars_nth            | 🟢 supported |               |
 | strings.translates_string_last_index_of_to_rfind     | 🟢 supported |               |
+| strings.translates_string_lower_trim_methods         | 🟢 supported |               |
+| strings.translates_string_ends_with_to_ends_with     | 🟢 supported |               |
+| strings.translates_string_replace_substring_methods  | 🟢 supported |               |
 | string.anchor                                        | ⚪ untested  |               |
 | string.at                                            | 🟢 supported |               |
 | string.big                                           | ⚪ untested  |               |
@@ -367,7 +371,7 @@
 | string.charCodeAt                                    | 🟢 supported |               |
 | string.codePointAt                                   | 🟢 supported |               |
 | string.concat                                        | 🟢 supported |               |
-| string.endsWith                                      | ⚪ untested  |               |
+| string.endsWith                                      | 🟢 supported |               |
 | string.fixed                                         | ⚪ untested  |               |
 | string.fontcolor                                     | ⚪ untested  |               |
 | string.fontsize                                      | ⚪ untested  |               |
@@ -386,8 +390,8 @@
 | string.padEnd                                        | 🟢 supported |               |
 | string.padStart                                      | 🟢 supported |               |
 | string.raw                                           | ⚪ untested  |               |
-| string.repeat                                        | ⚪ untested  |               |
-| string.replace                                       | ⚪ untested  |               |
+| string.repeat                                        | 🟢 supported |               |
+| string.replace                                       | 🟢 supported |               |
 | string.replaceAll                                    | 🟢 supported |               |
 | string.search                                        | ⚪ untested  |               |
 | string.slice                                         | 🟢 supported |               |
@@ -397,15 +401,15 @@
 | string.strike                                        | ⚪ untested  |               |
 | string.sub                                           | ⚪ untested  |               |
 | string.substr                                        | ⚪ untested  |               |
-| string.substring                                     | ⚪ untested  |               |
+| string.substring                                     | 🟢 supported |               |
 | string.sup                                           | ⚪ untested  |               |
 | string.toLocaleLowerCase                             | ⚪ untested  |               |
 | string.toLocaleUpperCase                             | ⚪ untested  |               |
-| string.toLowerCase                                   | ⚪ untested  |               |
+| string.toLowerCase                                   | 🟢 supported |               |
 | string.toString                                      | ⚪ untested  |               |
 | string.toUpperCase                                   | 🟢 supported |               |
 | string.toWellFormed                                  | ⚪ untested  |               |
-| string.trim                                          | ⚪ untested  |               |
+| string.trim                                          | 🟢 supported |               |
 | string.trimEnd                                       | 🟢 supported |               |
 | string.trimStart                                     | 🟢 supported |               |
 | string.unicode_code_point_escapes                    | ⚪ untested  |               |

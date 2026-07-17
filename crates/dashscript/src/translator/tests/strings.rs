@@ -37,12 +37,12 @@ use super::super::Translator;
 
     #[test]
     fn translates_string_repeat_and_replace() {
-        let repeat = "function f(s: string): string { return s.repeat(3); }";
-        let rust = Translator::new().translate(repeat).expect("should translate");
+        let src = "function f(s: string): string { return s.repeat(3); }";
+        let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".repeat(3.0 as usize)"), "got:\n{rust}");
-        let replace = "function g(s: string): string { return s.replace(\"a\", \"b\"); }";
-        let rust = Translator::new().translate(replace).expect("should translate");
-        assert!(rust.contains(".replacen(\"a\", \"b\", 1)"), "got:\n{rust}");
+        let src2 = "function g(s: string): string { return s.replace(\"a\", \"b\"); }";
+        let rust2 = Translator::new().translate(src2).expect("should translate");
+        assert!(rust2.contains(".replacen(\"a\", \"b\", 1)"), "got:\n{rust2}");
     }
 
 
@@ -188,4 +188,30 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".rfind("), "got:\n{rust}");
         assert!(rust.contains("unwrap_or(-1.0)"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_lower_trim_methods() {
+        let src = "function f(s: string): string { return s.trim().toLowerCase(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".trim()"), "got:\n{rust}");
+        assert!(rust.contains(".to_lowercase()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_ends_with_to_ends_with() {
+        let src = "function f(s: string): boolean { return s.endsWith(\"x\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".ends_with("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_replace_substring_methods() {
+        let src = "function f(s: string): string { return s.replace(\"a\", \"b\").substring(1); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".replacen("), "got:\n{rust}");
+        assert!(rust.contains("[1.0 as usize..]"), "got:\n{rust}");
     }
