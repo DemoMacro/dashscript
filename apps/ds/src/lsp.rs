@@ -137,7 +137,7 @@ impl Server {
     fn refresh(&mut self, uri: &Uri, text: &str) {
         let Some(src_path) = uri_to_path(uri) else { return };
         let Some(cache) = self.cache_dir(uri) else { return };
-        if crate::emit_cargo_project(text, &src_path, &cache).is_err() {
+        if crate::commands::project::emit_cargo_project(text, &src_path, &cache).is_err() {
             return;
         }
         let main_rs = cache.join("src").join("main.rs");
