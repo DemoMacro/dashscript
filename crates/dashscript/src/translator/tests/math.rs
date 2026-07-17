@@ -77,7 +77,9 @@ use super::super::Translator;
     fn translates_math_clz32_to_leading_zeros() {
         let src = "function f(x: number): number { return Math.clz32(x); }";
         let rust = Translator::new().translate(src).expect("should translate");
-        assert!(rust.contains("as u32).leading_zeros()"), "got:\n{rust}");
+        assert!(rust.contains(".leading_zeros()"), "got:\n{rust}");
+        // ToUint32 (mod 2³²), not Rust's saturating `as u32` — clz32(2³²) = 32.
+        assert!(rust.contains("4294967296.0"), "got:\n{rust}");
     }
 
 
@@ -93,7 +95,9 @@ use super::super::Translator;
     fn translates_math_imul_to_wrapping_mul() {
         let src = "function f(a: number, b: number): number { return Math.imul(a, b); }";
         let rust = Translator::new().translate(src).expect("should translate");
-        assert!(rust.contains("as i32).wrapping_mul("), "got:\n{rust}");
+        assert!(rust.contains(".wrapping_mul("), "got:\n{rust}");
+        // ToInt32 (ToUint32 mod 2³², reinterpreted signed) — imul wraps like JS.
+        assert!(rust.contains("4294967296.0"), "got:\n{rust}");
     }
 
 
@@ -158,7 +162,9 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".abs()"), "got:\n{rust}");
         assert!(rust.contains(".ceil()"), "got:\n{rust}");
-        assert!(rust.contains(".round()"), "got:\n{rust}");
+        // Math.round → (x + 0.5).floor(): JS rounds half toward +∞, not Rust's
+        // away-from-zero (Math.round(-0.5) = 0, not -1).
+        assert!(rust.contains("0.5).floor()"), "got:\n{rust}");
         assert!(rust.contains(".sqrt()"), "got:\n{rust}");
         assert!(rust.contains(".trunc()"), "got:\n{rust}");
     }

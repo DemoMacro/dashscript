@@ -13,11 +13,19 @@ use super::super::expressions::translate_argument;
 /// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
 pub(in crate::translator) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     match name {
-        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "exp"
+        "floor" | "ceil" | "abs" | "sqrt" | "trunc" | "exp"
         | "log10" | "log2" | "sin" | "cos" | "tan" | "asin" | "acos" | "atan" | "cbrt"
         | "sinh" | "cosh" | "tanh" | "asinh" | "acosh" | "atanh" => {
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, name, Vec::new()))
+        }
+        // `Math.round(x)` → `(x + 0.5).floor()`. JS rounds half toward +∞
+        // (`Math.round(-0.5)` = 0, `Math.round(2.5)` = 3); Rust's `f64::round`
+        // rounds half away from zero (`(-0.5).round()` = -1) — the floor form
+        // matches JS, including `Math.round(-0.5)` → -0 → prints "0".
+        "round" => {
+            let recv = math_receiver(args.first()?, ctx);
+            Some(parse_quote!(((#recv) as f64 + 0.5).floor()))
         }
         // `Math.sign(x)` → `x.signum()` (Rust spells it `signum`, not `sign`).
         "sign" => {
@@ -64,24 +72,42 @@ pub(in crate::translator) fn math_method(name: &str, args: &[Argument], ctx: &Ct
             let b = math_receiver(args.get(1)?, ctx);
             Some(parse_quote!((#a.powi(2) + #b.powi(2)).sqrt()))
         }
-        // `Math.clz32(x)` → count of leading zero bits of `x as u32`.
+        // `Math.clz32(x)` → leading zero bits of ToUint32(x) (see
+        // `to_uint32_expr`). JS applies ToUint32 (mod 2³²), not Rust's
+        // saturating `as u32`: `clz32(2³²)` = 32, `clz32(-1)` = 0.
         "clz32" => {
-            let recv = math_receiver(args.first()?, ctx);
-            Some(parse_quote!((#recv as u32).leading_zeros() as f64))
+            let n = to_uint32_expr(math_receiver(args.first()?, ctx));
+            Some(parse_quote!((#n).leading_zeros() as f64))
         }
         // `Math.fround(x)` → round-trip through `f32`: `x as f32 as f64`.
         "fround" => {
             let recv = math_receiver(args.first()?, ctx);
             Some(parse_quote!((#recv as f32) as f64))
         }
-        // `Math.imul(a, b)` → 32-bit wrapping multiply of `a as i32`, `b as i32`.
+        // `Math.imul(a, b)` → 32-bit wrapping multiply of ToInt32(a), ToInt32(b).
+        // JS applies ToInt32 (ToUint32 bit-reinterpreted as signed), not Rust's
+        // saturating `as i32` — so large/negative args wrap like JS.
         "imul" => {
-            let a = math_receiver(args.first()?, ctx);
-            let b = math_receiver(args.get(1)?, ctx);
-            Some(parse_quote!((#a as i32).wrapping_mul(#b as i32) as f64))
+            let a = to_uint32_expr(math_receiver(args.first()?, ctx));
+            let b = to_uint32_expr(math_receiver(args.get(1)?, ctx));
+            Some(parse_quote!(((#a) as i32).wrapping_mul((#b) as i32) as f64))
         }
         _ => None,
     }
+}
+
+/// `ToUint32(x)` as a Rust `u32` expression — trunc toward zero, then mod 2³²
+/// (JS semantics), unlike Rust's saturating `as u32`. Non-finite → 0. Shared by
+/// `Math.clz32` (then `.leading_zeros()`) and `Math.imul` (as `i32`).
+fn to_uint32_expr(recv: Expr) -> Expr {
+    parse_quote!({
+        let n = ((#recv) as f64).trunc();
+        (if !n.is_finite() {
+            0.0f64
+        } else {
+            ((n % 4294967296.0) + 4294967296.0) % 4294967296.0
+        }) as u32
+    })
 }
 
 /// Build `recv.method(args)` as an `ExprMethodCall` so `prettyplease`

@@ -155,8 +155,17 @@ fn is_option(ty: &Type) -> bool {
 
 fn ident_expr(id: &IdentifierReference) -> Expr {
     let name: &str = &id.name;
-    let ident = bindings::snake(name);
-    parse_quote!(#ident)
+    // ES global constants are bare identifiers (`NaN`, `Infinity`), not members
+    // — map them to the matching `f64` constant instead of a renamed, undefined
+    // local. `-Infinity` lowers via unary `-` on `Infinity`.
+    match name {
+        "NaN" => parse_quote!(::std::f64::NAN),
+        "Infinity" => parse_quote!(::std::f64::INFINITY),
+        _ => {
+            let ident = bindings::snake(name);
+            parse_quote!(#ident)
+        }
+    }
 }
 
 /// `undefined` (a global identifier in TS) maps to `None`; any other

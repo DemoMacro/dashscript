@@ -1388,8 +1388,11 @@
   {
     "id": "test262.test.built-ins.math.abs.s15.8.2.1_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1403,7 +1406,11 @@
     "id": "test262.test.built-ins.math.abs.s15.8.2.1_a3",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -1416,22 +1423,28 @@
   {
     "id": "test262.test.built-ins.math.acos.s15.8.2.2_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.acos.s15.8.2.2_a2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.acos.s15.8.2.2_a3",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:4:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:2:49: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1448,7 +1461,11 @@
     "id": "test262.test.built-ins.math.acosh.arg-is-infinity",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -1462,7 +1479,7 @@
     "id": "test262.test.built-ins.math.acosh.nan-returns",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:5:35: error[E0689]: can't call method `acosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:5:35: error[E0689]: can't call method `acosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1482,22 +1499,28 @@
   {
     "id": "test262.test.built-ins.math.asin.s15.8.2.3_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.asin.s15.8.2.3_a2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.asin.s15.8.2.3_a3",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:4:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:2:49: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1521,7 +1544,7 @@
     "id": "test262.test.built-ins.math.asinh.asinh-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:41: error[E0689]: can't call method `asinh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `asinh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1541,8 +1564,11 @@
   {
     "id": "test262.test.built-ins.math.atan.s15.8.2.4_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1573,28 +1599,28 @@
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a1",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:8:26: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:9:26: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:15:32: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nsrc\\main.rs:19:30: error[E0277]: cannot subtract `usize` from `{float}`: no implementation for `{float} - usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a14",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a16",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a4",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:5:23: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:11:37: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:11:37: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1611,7 +1637,7 @@
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a8",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:5:23: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:11:37: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:11:37: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1625,7 +1651,7 @@
     "id": "test262.test.built-ins.math.atanh.atanh-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:2:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:36: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:9:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:10:31: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:36: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:9:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:10:31: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:11:41: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -1639,7 +1665,7 @@
     "id": "test262.test.built-ins.math.cbrt.cbrt-specialvalues",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:41: error[E0689]: can't call method `cbrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `cbrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1659,8 +1685,11 @@
   {
     "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1684,14 +1713,22 @@
     "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a4",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a5",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"-inf\" node=\"-Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"-inf\" node=\"-Infinity\""
+    },
     "note": ""
   },
   {
@@ -1711,18 +1748,20 @@
   {
     "id": "test262.test.built-ins.math.clz32.infinity",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:28: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:3:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.clz32.int32bit",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"0\" node=\"32\"; line 3: ds=\"0\" node=\"31\"; line 10: ds=\"32\" node=\"31\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"0\" node=\"32\"; line 3: ds=\"0\" node=\"31\"; line 10: ds=\"32\" node=\"31\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1759,8 +1798,11 @@
   {
     "id": "test262.test.built-ins.math.clz32.nan",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:28: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1780,8 +1822,11 @@
   {
     "id": "test262.test.built-ins.math.cos.s15.8.2.7_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1801,22 +1846,28 @@
   {
     "id": "test262.test.built-ins.math.cos.s15.8.2.7_a4",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.cos.s15.8.2.7_a5",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.cosh.cosh-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:4:35: error[E0689]: can't call method `cosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:35: error[E0689]: can't call method `cosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1847,8 +1898,11 @@
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1869,21 +1923,28 @@
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a4",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a5",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.expm1.expm1-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:41: error[E0689]: can't call method `exp_m1` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `exp_m1` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1917,8 +1978,11 @@
   {
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a1",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1942,14 +2006,22 @@
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a4",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a5",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"-inf\" node=\"-Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"-inf\" node=\"-Infinity\""
+    },
     "note": ""
   },
   {
@@ -1967,6 +2039,2531 @@
     "category": "math",
     "status": "partial",
     "detail": "src\\main.rs:6:43: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.fround.math.fround_infinity",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.fround.math.fround_nan",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.fround.math.fround_zero",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.fround.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.fround.ties",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.fround.value-convertion",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_infinity",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_infinitynan",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_nan",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_neginfinity",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_noargs",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_success_2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_tonumbererr",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_zero_2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:50: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:34: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:34: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:50: error[E0689]: can't call method `powi` on ambiguous numeric type `{float}`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.imul.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.imul.results",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ln10.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ln2.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log.s15.8.2.10_a1",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log.s15.8.2.10_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log.s15.8.2.10_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:29: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log.s15.8.2.10_a4",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log.s15.8.2.10_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log10.log10-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:31: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:36: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log10.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log10e.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log1p.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log1p.specific-results",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:40: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:35: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:35: error[E0689]: can't call method `ln_1p` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log2.log2-basictests",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:31: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:36: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:9:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log2.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log2e.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.15.8.2.11-1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:32: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.math.max_each-element-coerced",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.s15.8.2.11_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.s15.8.2.11_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:30: error[E0277]: cannot subtract `usize` from `{float}`: no implementation for `{float} - usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.s15.8.2.11_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.zeros",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `max` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:35: error[E0689]: can't call method `max` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.15.8.2.12-1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:32: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.math.min_each-element-coerced",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.s15.8.2.12_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.s15.8.2.12_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:30: error[E0277]: cannot subtract `usize` from `{float}`: no implementation for `{float} - usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.s15.8.2.12_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.zeros",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `min` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:35: error[E0689]: can't call method `min` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pi.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a12",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a15",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a16",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a17",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:12:40: error[E0689]: can't call method `powf` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a19",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:11:40: error[E0689]: can't call method `powf` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a20",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:13:40: error[E0689]: can't call method `powf` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a23",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a6",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a7",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a8",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a9",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.int32_min-exponent",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.prop-desc",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.proto",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:41: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.random.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.random.s15.8.2.14_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:5:23: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:6:13: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:17: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.s15.8.2.15_a1",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.s15.8.2.15_a2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.s15.8.2.15_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"0\" node=\"-0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"0\" node=\"-0\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.s15.8.2.15_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.s15.8.2.15_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"-inf\" node=\"-Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"-inf\" node=\"-Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.s15.8.2.15_a6",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:11:15: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:12:16: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:13:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:15:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:15:21: error[E0425]: cannot find value `i` in this scope: not found in this scope\nsrc\\main.rs:17:37: error[E0425]: cannot find value `x` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.s15.8.2.15_a7",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:6:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:8:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:10:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:12:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:14:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable\nsrc\\main.rs:16:5: error[E0384]: cannot assign twice to immutable variable `x`: cannot assign twice to immutable variable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sign.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sign.sign-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `signum` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:40: error[E0689]: can't call method `signum` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:35: error[E0689]: can't call method `signum` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sin.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sin.s15.8.2.16_a1",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sin.s15.8.2.16_a4",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sin.s15.8.2.16_a5",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sin.zero",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:35: error[E0689]: can't call method `sin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sinh.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sinh.sinh-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `sinh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.results",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:1867:57: error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.s15.8.2.17_a1",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.s15.8.2.17_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.s15.8.2.17_a3",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.s15.8.2.17_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.s15.8.2.17_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt1_2.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt2.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.sum-is-infinite",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:8:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.sum-is-minus-zero",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.sum-is-nan",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:7:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.sum",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:4:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:8:15: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:15:27: error[E0425]: cannot find value `math` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.takes-iterable",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.throws-on-non-number",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.symbol.tostringtag",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:32: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:21: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tan.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tan.s15.8.2.18_a1",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tan.s15.8.2.18_a2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tan.s15.8.2.18_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `tan` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tan.s15.8.2.18_a4",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tan.s15.8.2.18_a5",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tanh.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tanh.tanh-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:5:41: error[E0689]: can't call method `tanh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.math.trunc_infinity",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"inf\" node=\"Infinity\"; line 2: ds=\"-inf\" node=\"-Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"inf\" node=\"Infinity\"; line 2: ds=\"-inf\" node=\"-Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.math.trunc_nan",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.math.trunc_negdecimal",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.math.trunc_posdecimal",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.math.trunc_success",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.math.trunc_zero",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.trunc-sampletests",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:7:57: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:57: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`\nsrc\\main.rs:9:56: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`\nsrc\\main.rs:17:36: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`\nsrc\\main.rs:18:35: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`\nsrc\\main.rs:19:35: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.trunc-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:41: error[E0689]: can't call method `trunc` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.index-argument-tointeger",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:40: error[E0605]: non-primitive cast: `()` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.index-non-numeric-argument-tointeger-invalid",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.index-non-numeric-argument-tointeger",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:25:66: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:40: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:15:40: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:20:40: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:30:40: error[E0605]: non-primitive cast: `Vec<_>` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.length",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.name",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:4:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.prop-desc",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 3 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.return-abrupt-from-this",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.returns-code-unit",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=6",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=6"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.returns-item-relative-index",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=5",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=5"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.returns-item",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=6",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=6"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.returns-undefined-for-out-of-range-index",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=4",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=4"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charat.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charat.pos-coerce-err",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charat.pos-coerce-string",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:34: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charat.pos-rounding",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charat.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charcodeat.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charcodeat.pos-coerce-err",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charcodeat.pos-coerce-string",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:34: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charcodeat.pos-rounding",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charcodeat.s15.5.4.5_a2",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `___f_a_c_t_o_r_y` in this scope: not found in this scope\nsrc\\main.rs:2:47: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charcodeat.s15.5.4.5_a3",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.charcodeat.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.codepointat",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-object-pos-to-integer",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-symbol-pos-to-integer",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-this-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-this",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-code-unit-coerced-position",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:31: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:7:31: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:19:31: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:23:31: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:27:31: error[E0605]: non-primitive cast: `Vec<_>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:31:31: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-first-code-unit",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"65533\" node=\"55296\"; line 2: ds=\"65533\" node=\"55296\"; line 3: ds=\"65533\" node=\"55978\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"65533\" node=\"55296\"; line 2: ds=\"65533\" node=\"55296\"; line 3: ds=\"65533\" node=\"55978\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-single-code-unit",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 6: ds=\"65533\" node=\"56320\"; line 8: ds=\"65533\" node=\"55296\"; line 9: ds=\"65533\" node=\"55978\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 6: ds=\"65533\" node=\"56320\"; line 8: ds=\"65533\" node=\"55296\"; line 9: ds=\"65533\" node=\"55978\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.return-utf16-decode",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.returns-undefined-on-position-equal-or-more-than-size",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"undefined\"; line 2: ds=\"NaN\" node=\"undefined\"; line 3: ds=\"NaN\" node=\"undefined\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"undefined\"; line 2: ds=\"NaN\" node=\"undefined\"; line 3: ds=\"NaN\" node=\"undefined\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.returns-undefined-on-position-less-than-zero",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"97\" node=\"undefined\"; line 2: ds=\"97\" node=\"undefined\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"97\" node=\"undefined\"; line 2: ds=\"97\" node=\"undefined\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.this-is-null-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.codepointat.this-is-undefined-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.concat.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.concat.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.endswith",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-position-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-position",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-searchstring-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-searchstring-regexp-test",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-searchstring",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-this-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-this",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.return-false-if-search-start-is-less-than-zero",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.searchstring-is-regexp-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.searchstring-not-found-with-position",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.searchstring-not-found-without-position",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.string.prototype.endswith_fail",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.string.prototype.endswith_fail_2",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.string.prototype.endswith_success",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.string.prototype.endswith_success_2",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.string.prototype.endswith_success_3",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.string.prototype.endswith_success_4",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"false\" node=\"true\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"false\" node=\"true\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.this-is-null-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.endswith.this-is-undefined-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.coerced-values-of-position",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: error[E0423]: expected function, found macro `assert`: not a function\nsrc\\main.rs:4:5: error[E0423]: expected function, found macro `assert`: not a function\nsrc\\main.rs:5:5: error[E0423]: expected function, found macro `assert`: not a function\nsrc\\main.rs:6:5: error[E0423]: expected function, found macro `assert`: not a function\nsrc\\main.rs:7:5: error[E0423]: expected function, found macro `assert`: not a function\nsrc\\main.rs:8:5: error[E0423]: expected function, found macro `assert`: not a function",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.includes",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-position-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-position",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-searchstring-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-searchstring-regexp-test",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-searchstring",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-this-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-this",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.return-false-with-out-of-bounds-position",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\"; line 3: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\"; line 3: ds=\"true\" node=\"false\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.searchstring-is-regexp-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.searchstring-not-found-with-position",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.searchstring-not-found-without-position",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.string.prototype.includes_failbadlocation",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.string.prototype.includes_faillocation",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.string.prototype.includes_failmissingletter",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.string.prototype.includes_lengthprop",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:47: error[E0609]: no field `includes` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.string.prototype.includes_success",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.string.prototype.includes_successnolocation",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.this-is-null-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.includes.this-is-undefined-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-bigint",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-errors",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-toprimitive",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-wrapped-values",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 15: ds=\"0\" node=\"1\"; line 16: ds=\"0\" node=\"1\"; line 17: ds=\"0\" node=\"1\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 15: ds=\"0\" node=\"1\"; line 16: ds=\"0\" node=\"1\"; line 17: ds=\"0\" node=\"1\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"0\" node=\"1\"; line 5: ds=\"0\" node=\"1\"; line 7: ds=\"0\" node=\"-1\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"0\" node=\"1\"; line 5: ds=\"0\" node=\"1\"; line 7: ds=\"0\" node=\"-1\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring-bigint",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:45: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:3:45: warning: unreachable call: unreachable call\nsrc\\main.rs:7:28: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:7:28: warning: unreachable call: unreachable call\nsrc\\main.rs:11:45: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:11:45: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring-errors",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring-toprimitive",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring-wrapped-values",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:30: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:7:47: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:7:47: warning: unreachable call: unreachable call\nsrc\\main.rs:11:47: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:11:47: warning: unreachable call: unreachable call\nsrc\\main.rs:15:47: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:5:41: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:36: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:11:36: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:14:38: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:17:32: error[E0689]: can't call method `as_str` on ambiguous numeric type `{float}`\nsrc\\main.rs:20:34: error[E0689]: can't call method `as_str` on ambiguous numeric type `{float}`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.indexof.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.iswellformed.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.iswellformed.prop-desc",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.iswellformed.return-abrupt-from-this",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.iswellformed.returns-boolean",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=11",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=11"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.iswellformed.to-string-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:20: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:3:50: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:9: error[E0425]: cannot find value `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:9: error[E0425]: cannot find value `proto` in this scope: not found in this scope\nsrc\\main.rs:8:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:8:59: error[E0425]: cannot find value `v` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.iswellformed.to-string",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.lastindexof.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.lastindexof.not-a-substring",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.lastindexof.s15.5.4.8_a7",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.lastindexof.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.localecompare.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.localecompare.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-get-err",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-invocation",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:7:9: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:42: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-is-null",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:45: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nsrc\\main.rs:7:46: error[E0599]: no method named `r#match` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-bigint-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `big_int` in this scope: not found in this scope\nsrc\\main.rs:2:47: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nsrc\\main.rs:4:39: error[E0599]: no method named `r#match` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-boolean-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:2:47: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nsrc\\main.rs:4:45: error[E0599]: no method named `r#match` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-number-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:2:46: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nsrc\\main.rs:4:39: error[E0599]: no method named `r#match` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-string-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:46: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nsrc\\main.rs:4:39: error[E0599]: no method named `r#match` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.duplicate-named-groups-properties",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:7:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:18:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:48: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nsrc\\main.rs:14:45: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nsrc\\main.rs:26:62: error[E0599]: no method named `r#match` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.duplicate-named-indices-groups-properties",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:10:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:16:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:22:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:35:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:42:5: error[E0423]: expected value, found macro `assert`: not a value",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.invoke-builtin-match",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:26: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:2:44: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:23:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:23:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.regexp-prototype-match-v-u-flag",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:9:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:15:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:21:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:27:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:33:5: error[E0423]: expected value, found macro `assert`: not a value",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.match.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-bigint-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `big_int` in this scope: not found in this scope\nsrc\\main.rs:2:47: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:8:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:11:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-boolean-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:2:47: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:8:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:11:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-number-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:2:46: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:8:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:11:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-string-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:46: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:8:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:11:5: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.flags-nonglobal-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.flags-undefined-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.prop-desc",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-get-matchall-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-is-undefined-or-null-invokes-matchall",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:43: error[E0599]: no method named `match_all` found for struct `String` in the current scope\nsrc\\main.rs:7:42: error[E0599]: no method named `match_all` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-invocation",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:7:9: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:31: error[E0599]: no method named `match_all` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-is-undefined-or-null",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:7:5: error[E0425]: cannot find value `reg_exp` in this scope\nsrc\\main.rs:7:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:8:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:12:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-not-callable",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-get-matchall-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-has-no-matchall",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-matchall-invocation",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:7:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:31: error[E0599]: no method named `match_all` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-matchall-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-matchall-v-u-flag",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:15: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:8:15: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:12:15: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:16:15: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:20:15: error[E0423]: expected value, found macro `assert`: not a value\nsrc\\main.rs:24:15: error[E0423]: expected value, found macro `assert`: not a value",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.this-val-non-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.matchall.tostring-this-val",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:8:5: error[E0425]: cannot find value `reg_exp` in this scope\nsrc\\main.rs:8:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:9:5: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:12:5: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:5: warning: unreachable expression: unreachable expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.form-is-not-valid-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.normalize",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-form-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-form",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-this-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-this",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string-from-coerced-form",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:7:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:8:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:10:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string-using-default-parameter",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:5:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:4:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:5:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:6:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:7:53: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:8:53: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.this-is-null-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.normalize.this-is-undefined-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.exception-fill-string-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.exception-not-object-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.exception-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.fill-string-empty",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.fill-string-non-strings",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:47: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:9:46: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:14:46: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:19:45: error[E0689]: can't call method `as_str` on ambiguous numeric type `{float}`\nsrc\\main.rs:24:47: error[E0689]: can't call method `as_str` on ambiguous numeric type `{float}`\nsrc\\main.rs:29:57: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.fill-string-omitted",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:5:46: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.max-length-not-greater-than-string",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:8:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.normal-operation",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"abc💩💩💩\" node=\"abc💩�\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"abc💩💩💩\" node=\"abc💩�\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padend.observable-operations",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:18:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:20: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:11:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:23: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:13:22: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.exception-fill-string-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.exception-not-object-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.exception-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.fill-string-empty",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.fill-string-non-strings",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:42: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:9:41: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:14:41: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:19:40: error[E0689]: can't call method `as_str` on ambiguous numeric type `{float}`\nsrc\\main.rs:24:42: error[E0689]: can't call method `as_str` on ambiguous numeric type `{float}`\nsrc\\main.rs:29:52: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.fill-string-omitted",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:5:41: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.max-length-not-greater-than-string",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:8:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.normal-operation",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"💩💩💩abc\" node=\"💩�abc\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"💩💩💩abc\" node=\"💩�abc\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.padstart.observable-operations",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:18:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:20: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:11:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:23: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:13:22: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.count-coerced-to-zero-returns-empty-string",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:38: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:5:38: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:7:38: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.count-is-infinity-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.count-is-zero-returns-empty-string",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.count-less-than-zero-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.empty-string-returns-empty",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.repeat-string-n-times",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:5:5: error[E0384]: cannot assign twice to immutable variable `str`: cannot assign twice to immutable variable\nsrc\\main.rs:9:9: error[E0596]: cannot borrow `str` as mutable, as it is not declared as mutable: cannot borrow as mutable\nsrc\\main.rs:10:9: error[E0384]: cannot assign twice to immutable variable `i`: cannot assign twice to immutable variable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.repeat",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-count-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-count",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-this-as-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-this",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.this-is-null-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.repeat.this-is-undefined-throws",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.15.5.4.11-1",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:48: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:3:48: warning: unreachable call: unreachable call\nsrc\\main.rs:3:74: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:3:74: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 3 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-get-err",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-invocation",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:7:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-is-null",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 3 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-bigint-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `big_int` in this scope: not found in this scope\nsrc\\main.rs:2:47: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-boolean-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:2:47: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nsrc\\main.rs:4:56: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-number-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:2:46: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nsrc\\main.rs:4:50: error[E0689]: can't call method `as_str` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-string-primitive",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:28: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:46: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:2:12: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.not-a-constructor",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.regexp-capture-by-index",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.regexp-prototype-replace-v-u-flag",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:55: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:27: error[E0425]: cannot find function `do_replace` in this scope: not found in this scope\nsrc\\main.rs:4:55: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:27: error[E0425]: cannot find function `do_replace` in this scope: not found in this scope\nsrc\\main.rs:5:55: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:27: error[E0425]: cannot find function `do_replace` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.replacevalue-evaluation-order-regexp-object",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:9:72: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:9:72: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.replacevalue-evaluation-order",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.this-value-not-obj-coercible",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.tostring-this-throws-symbol",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.tostring-this-throws-toprimitive",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
     "note": ""
   },
   {
