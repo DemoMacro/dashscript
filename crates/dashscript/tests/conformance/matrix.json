@@ -1372,6 +1372,604 @@
     "note": ""
   },
   {
+    "id": "test262.test.built-ins.math.abs.absolute-value",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:36: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:40: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nsrc\\main.rs:6:51: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:50: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.abs.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.abs.s15.8.2.1_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.abs.s15.8.2.1_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `abs` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.abs.s15.8.2.1_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acos.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acos.s15.8.2.2_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acos.s15.8.2.2_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acos.s15.8.2.2_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:2:49: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `acos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acos.s15.8.2.2_a4",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acosh.arg-is-infinity",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acosh.arg-is-one",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:31: error[E0689]: can't call method `acosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acosh.nan-returns",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:5:35: error[E0689]: can't call method `acosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acosh.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asin.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asin.s15.8.2.3_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asin.s15.8.2.3_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asin.s15.8.2.3_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:2:49: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:35: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asin.s15.8.2.3_a4",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asin.s15.8.2.3_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `asin` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asinh.asinh-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:41: error[E0689]: can't call method `asinh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asinh.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan.s15.8.2.4_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan.s15.8.2.4_a2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan.s15.8.2.4_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `atan` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:8:26: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:9:26: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:15:32: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a14",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a16",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:5:23: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:11:37: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a5",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a8",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:5:23: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:11:37: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a9",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `atan2` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atanh.atanh-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:2:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:36: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:9:35: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nsrc\\main.rs:10:31: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atanh.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cbrt.cbrt-specialvalues",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:41: error[E0689]: can't call method `cbrt` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cbrt.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a6",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:49: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nsrc\\main.rs:3:49: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nsrc\\main.rs:4:35: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a7",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:6:37: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.infinity",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:28: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nsrc\\main.rs:3:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.int32bit",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"0\" node=\"32\"; line 3: ds=\"0\" node=\"31\"; line 10: ds=\"32\" node=\"31\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"0\" node=\"32\"; line 3: ds=\"0\" node=\"31\"; line 10: ds=\"32\" node=\"31\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.math.clz32",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.math.clz32_1",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.math.clz32_2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.nan",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:28: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cos.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cos.s15.8.2.7_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cos.s15.8.2.7_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `cos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cos.s15.8.2.7_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `cos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cos.s15.8.2.7_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cos.s15.8.2.7_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cosh.cosh-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:4:35: error[E0689]: can't call method `cosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cosh.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.e.value",
+    "category": "math",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.exp.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.exp.s15.8.2.8_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.exp.s15.8.2.8_a2",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `exp` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.exp.s15.8.2.8_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `exp` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.exp.s15.8.2.8_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.exp.s15.8.2.8_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:30: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.expm1.expm1-specialvals",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nsrc\\main.rs:5:41: error[E0689]: can't call method `exp_m1` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.expm1.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.f16round.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected function name | Empty parenthesized expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.f16round.value-conversion",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `byte_conversion_values` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `byte_conversion_values` in this scope: not found in this scope\nsrc\\main.rs:4:12: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.not-a-constructor",
+    "category": "math",
+    "status": "unsupported",
+    "detail": "Expected a semicolon or an implicit semicolon after a statement, but found none",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.s15.8.2.9_a1",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.s15.8.2.9_a2",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.s15.8.2.9_a3",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0689]: can't call method `floor` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.s15.8.2.9_a4",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.s15.8.2.9_a5",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `infinity` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.s15.8.2.9_a6",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.s15.8.2.9_a7",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:6:43: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
     "id": "correctness.parse_int_radix",
     "category": "correctness",
     "status": "supported",
@@ -2211,7 +2809,7 @@
   {
     "id": "math.f16round",
     "category": "math",
-    "status": "untested",
+    "status": "unsupported",
     "detail": "",
     "note": ""
   },
