@@ -16,6 +16,7 @@ mod fmt_merge;
 mod literals;
 mod logical;
 mod member;
+mod new;
 mod object;
 mod unary;
 
@@ -71,6 +72,7 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         // `this` inside a class method → the receiver (`self`/`__ds_self`);
         // outside a method → a `compile_error!`.
         Expression::ThisExpression(_) => super::context::this_expr(ctx),
+        Expression::NewExpression(n) => new::new_expr(n, ctx),
         _ => parse_quote!(::core::todo!()),
     }
 }
@@ -98,6 +100,7 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         Argument::ThisExpression(_) => super::context::this_expr(ctx),
+        Argument::NewExpression(n) => new::new_expr(n, ctx),
         _ => parse_quote!(::core::todo!()),
     }
 }

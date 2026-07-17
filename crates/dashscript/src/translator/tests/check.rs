@@ -8,10 +8,10 @@ fn check_passes_a_translatable_file() {
 }
 
 #[test]
-fn check_flags_unsupported_class() {
+fn check_passes_a_basic_class() {
+    // A field-only class is translatable (struct + fn new).
     let diags = Translator::new().check("class C { x: number; }");
-    assert_eq!(diags.len(), 1);
-    assert!(diags[0].message.contains("classes"));
+    assert!(diags.is_empty());
 }
 
 #[test]

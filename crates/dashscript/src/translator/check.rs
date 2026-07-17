@@ -31,7 +31,7 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
     // `None` means "not mapped"); the match only adds a human message + span.
     let registry = registry::build_registry(&ret.program.body);
     for stmt in &ret.program.body {
-        if functions::translate_statement(stmt, &registry).is_none() {
+        if functions::translate_statement(stmt, &registry).is_empty() {
             diagnostics.push(unmapped_top_level(stmt));
         }
     }
@@ -47,7 +47,6 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
             err("module `export default` is not supported yet", s.span)
         }
         Statement::ExportAllDeclaration(s) => err("module `export *` is not supported yet", s.span),
-        Statement::ClassDeclaration(s) => err("classes are not supported yet", s.span),
         Statement::TSEnumDeclaration(s) => err(
             "TypeScript `enum` is not supported (use a union type instead)",
             s.span,

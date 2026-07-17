@@ -11,6 +11,7 @@ mod analysis;
 pub mod bindings;
 mod builtins;
 mod check;
+mod class;
 pub mod context;
 pub mod declarations;
 pub mod expressions;
@@ -58,7 +59,7 @@ impl Translator {
             .program
             .body
             .iter()
-            .filter_map(|s| functions::translate_statement(s, &registry))
+            .flat_map(|s| functions::translate_statement(s, &registry))
             .collect();
         let file = syn::File {
             shebang: None,

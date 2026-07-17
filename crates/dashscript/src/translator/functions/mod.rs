@@ -32,60 +32,70 @@ use super::{bindings, declarations, expressions, types};
 /// `interface` / `type` / `function` become top-level items; other statements
 /// (variable bindings, expression statements) belong inside a function body
 /// and are not mapped at module scope.
-pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Option<syn::Item> {
+pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Vec<syn::Item> {
     match stmt {
         Statement::FunctionDeclaration(func) => {
-            Some(syn::Item::Fn(translate_function(func, registry)))
+            vec![syn::Item::Fn(translate_function(func, registry))]
         }
+        Statement::ClassDeclaration(class) => super::class::translate_class(class, registry),
         Statement::TSInterfaceDeclaration(iface) => {
-            Some(syn::Item::Struct(declarations::translate_interface(iface)))
+            vec![syn::Item::Struct(declarations::translate_interface(iface))]
         }
-        Statement::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
-        // `export function/interface/type` lowers the declaration and marks it
-        // `pub` so another `.ds` module can `import` it. Re-export lists
-        // (`export { x } from "…"`) have no declaration and fall to `_`.
+        Statement::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias)
+            .into_iter()
+            .collect(),
+        // `export function/interface/type/class` lowers the declaration(s) and
+        // marks each `pub` so another `.ds` module can `import` it. Re-export
+        // lists (`export { x } from "…"`) have no declaration and yield `[]`.
         Statement::ExportNamedDeclaration(exp) => {
-            let decl = exp.declaration.as_ref()?;
-            let mut item = translate_exported_declaration(decl, registry)?;
-            make_pub(&mut item);
-            Some(item)
+            let Some(decl) = exp.declaration.as_ref() else {
+                return Vec::new();
+            };
+            let mut items = translate_exported_declaration(decl, registry);
+            for item in &mut items {
+                make_pub(item);
+            }
+            items
         }
         // `import { foo, bar } from "./other"` → `use other::{foo, bar};`. A
         // bare specifier (`"serde"`) lowers the same way (`use serde::{…}`).
-        // A default/namespace import has no named specifier and yields `None`.
+        // A default/namespace import has no named specifier and yields `[]`.
         Statement::ImportDeclaration(imp) => {
-            let mod_ident = super::imports::module_ident(&imp.source.value)?;
-            let names: Vec<Ident> = imp
-                .specifiers
-                .as_ref()?
+            let Some(mod_ident) = super::imports::module_ident(&imp.source.value) else {
+                return Vec::new();
+            };
+            let Some(specifiers) = imp.specifiers.as_ref() else {
+                return Vec::new();
+            };
+            let names: Vec<Ident> = specifiers
                 .iter()
                 .filter_map(super::imports::named_local)
                 .collect();
             if names.is_empty() {
-                return None;
+                return Vec::new();
             }
-            Some(syn::Item::Use(parse_quote!(use #mod_ident::{#(#names),*};)))
+            vec![syn::Item::Use(parse_quote!(use #mod_ident::{#(#names),*};))]
         }
-        _ => None,
+        _ => Vec::new(),
     }
 }
 
 /// Translate the inner declaration of an `export` (`export function` /
-/// `export interface` / `export type`). Re-exports and unsupported kinds
-/// (class, enum) yield `None`.
-fn translate_exported_declaration(
-    decl: &Declaration,
-    registry: &TypeRegistry,
-) -> Option<syn::Item> {
+/// `export class` / `export interface` / `export type`). Re-exports and
+/// unsupported kinds (enum) yield `[]`. A class yields its `struct` plus `impl`.
+fn translate_exported_declaration(decl: &Declaration, registry: &TypeRegistry) -> Vec<syn::Item> {
     match decl {
         Declaration::FunctionDeclaration(func) => {
-            Some(syn::Item::Fn(translate_function(func, registry)))
+            vec![syn::Item::Fn(translate_function(func, registry))]
         }
+        Declaration::ClassDeclaration(class) => super::class::translate_class(class, registry),
         Declaration::TSInterfaceDeclaration(iface) => {
-            Some(syn::Item::Struct(declarations::translate_interface(iface)))
+            vec![syn::Item::Struct(declarations::translate_interface(iface))]
         }
-        Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
-        _ => None,
+        Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias)
+            .into_iter()
+            .collect(),
+        _ => Vec::new(),
     }
 }
 
@@ -96,6 +106,9 @@ fn make_pub(item: &mut syn::Item) {
         syn::Item::Struct(s) => s.vis = parse_quote!(pub),
         syn::Item::Enum(e) => e.vis = parse_quote!(pub),
         syn::Item::Type(t) => t.vis = parse_quote!(pub),
+        // An `impl` block has no visibility of its own; its methods are `pub`
+        // individually, and the struct is marked `pub` by the arm above.
+        syn::Item::Impl(_) => {}
         _ => {}
     }
 }
