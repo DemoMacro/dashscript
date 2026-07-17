@@ -2638,7 +2638,7 @@
   {
     "id": "object.isExtensible",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2659,7 +2659,7 @@
   {
     "id": "object.isSealed",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2687,7 +2687,7 @@
   {
     "id": "object.preventExtensions",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2708,7 +2708,7 @@
   {
     "id": "object.seal",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

@@ -287,17 +287,20 @@ use super::super::Translator;
 
     #[test]
     fn translates_object_freeze_to_passthrough() {
-        let src = "function f(m: Record<string, number>): Record<string, number> { return Object.freeze(m); }";
+        let src = "function f(m: Record<string, number>): Record<string, number> { Object.freeze(m); Object.seal(m); return Object.preventExtensions(m); }";
         let rust = Translator::new().translate(src).expect("should translate");
         // freeze/seal/preventExtensions are no-ops returning the value unchanged.
-        assert!(!rust.contains("freeze"), "got:\n{rust}");
+        assert!(
+            !rust.contains("freeze") && !rust.contains("seal") && !rust.contains("preventExtensions"),
+            "got:\n{rust}"
+        );
     }
 
 
     #[test]
     fn translates_object_is_frozen_to_false() {
-        let src = "function f(m: Record<string, number>): boolean { return Object.isFrozen(m); }";
+        let src = "function f(m: Record<string, number>): boolean { return Object.isFrozen(m) && Object.isSealed(m) && Object.isExtensible(m); }";
         let rust = Translator::new().translate(src).expect("should translate");
-        // A Record is never frozen in DashScript → always false.
-        assert!(rust.contains("false"), "got:\n{rust}");
+        // A Record is never frozen/sealed (false), always extensible (true).
+        assert!(rust.contains("false") && rust.contains("true"), "got:\n{rust}");
     }

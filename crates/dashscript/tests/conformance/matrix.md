@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 401 features: **343** supported, **1** partial, **0** unsupported, **57** untested
+- 401 features: **347** supported, **1** partial, **0** unsupported, **53** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -211,17 +211,17 @@
 | object.hasOwn                                                | 🟢 supported |               |
 | object.hasOwnProperty                                        | ⚪ untested  |               |
 | object.is                                                    | 🟢 supported |               |
-| object.isExtensible                                          | ⚪ untested  |               |
+| object.isExtensible                                          | 🟢 supported |               |
 | object.isFrozen                                              | 🟢 supported |               |
 | object.isPrototypeOf                                         | ⚪ untested  |               |
-| object.isSealed                                              | ⚪ untested  |               |
+| object.isSealed                                              | 🟢 supported |               |
 | object.keys                                                  | 🟢 supported |               |
 | object.lookupGetter                                          | ⚪ untested  |               |
 | object.lookupSetter                                          | ⚪ untested  |               |
-| object.preventExtensions                                     | ⚪ untested  |               |
+| object.preventExtensions                                     | 🟢 supported |               |
 | object.propertyIsEnumerable                                  | ⚪ untested  |               |
 | object.proto                                                 | ⚪ untested  |               |
-| object.seal                                                  | ⚪ untested  |               |
+| object.seal                                                  | 🟢 supported |               |
 | object.setPrototypeOf                                        | ⚪ untested  |               |
 | object.toLocaleString                                        | ⚪ untested  |               |
 | object.toString                                              | ⚪ untested  |               |

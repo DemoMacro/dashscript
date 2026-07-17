@@ -1169,13 +1169,13 @@
       "id": "types.translates_object_freeze_to_passthrough",
       "category": "types",
       "source": "translator-tests",
-      "fixture": "function f(m: Record<string, number>): Record<string, number> { return Object.freeze(m); }"
+      "fixture": "function f(m: Record<string, number>): Record<string, number> { Object.freeze(m); Object.seal(m); return Object.preventExtensions(m); }"
     },
     {
       "id": "types.translates_object_is_frozen_to_false",
       "category": "types",
       "source": "translator-tests",
-      "fixture": "function f(m: Record<string, number>): boolean { return Object.isFrozen(m); }"
+      "fixture": "function f(m: Record<string, number>): boolean { return Object.isFrozen(m) && Object.isSealed(m) && Object.isExtensible(m); }"
     }
   ]
 }

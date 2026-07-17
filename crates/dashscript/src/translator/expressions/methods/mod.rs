@@ -28,6 +28,7 @@ const BOOL_METHODS: &[&str] = &[
     "isArray",                             // Array
     "isNaN", "isFinite", "isInteger", "isSafeInteger", // Number
     "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", // Object
+    "isFrozen", "isSealed", "isExtensible", // Object (no-op introspection)
 ];
 
 /// A `.ds` `number` argument cast to `usize` (e.g. for `repeat`).
@@ -116,7 +117,9 @@ pub(super) fn object_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Opt
         // `Object.freeze`/`seal`/`preventExtensions` are no-ops returning the
         // value unchanged — Rust has no runtime immutability to enforce, and a
         // DashScript `Record` is already as strict as it gets at compile time.
-        "freeze" | "seal" | "preventExtensions" => parse_quote!(#r),
+        // `.clone()` because the value is owned (`Record` is not `Copy`): a
+        // bare `#r` would move it, breaking `Object.freeze(m); …m…`.
+        "freeze" | "seal" | "preventExtensions" => parse_quote!(#r.clone()),
         // `Object.isFrozen`/`isSealed` → `false`: DashScript never freezes a
         // Record, so it is always mutable. `isExtensible` → `true` (likewise).
         "isFrozen" | "isSealed" => parse_quote!(false),
