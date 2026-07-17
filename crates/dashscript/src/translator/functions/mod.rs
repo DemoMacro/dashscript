@@ -502,14 +502,9 @@ fn translate_variable_declaration(
                     let ty = d
                         .type_annotation
                         .as_ref()
-                        .map(|ta| types::translate_type(&ta.type_annotation));
-                    if let Some(ty) = &ty {
-                        if let Some(path) = path_of(ty) {
-                            locals.insert(name.to_string(), path);
-                        }
-                    } else if let Some(path) = d.init.as_ref().and_then(infer_literal_type) {
-                        // No annotation: infer a scalar type from a literal init
-                        // so type-sensitive mappings (||, ??, truthiness) work.
+                        .map(|ta| types::translate_type(&ta.type_annotation))
+                        .or_else(|| d.init.as_ref().and_then(infer_literal_type));
+                    if let Some(path) = ty.as_ref().and_then(path_of) {
                         locals.insert(name.to_string(), path);
                     }
                     let init = d.init.as_ref().map(|e| {
@@ -555,13 +550,34 @@ fn build_local(name: &Ident, mutable: bool, ty: Option<&Type>, init: Option<&Exp
 }
 
 /// The scalar type inferred from a literal initializer, when a `let` has no
-/// type annotation: `true` → `bool`, `1` → `f64`, `"x"` → `String`. Lets
-/// type-sensitive mappings (truthiness, `??`) work on unannotated locals.
-fn infer_literal_type(expr: &Expression) -> Option<Path> {
+/// type annotation: `true` → `bool`, `1`/`0.5` → `f64`, `"x"` → `String`.
+/// Anchors the binding's type (a bare float literal is otherwise an ambiguous
+/// `{float}` — E0689 on `.acosh()` etc.) and lets type-sensitive mappings
+/// (truthiness, `??`) work on unannotated locals.
+fn infer_literal_type(expr: &Expression) -> Option<Type> {
+    use oxc_syntax::operator::UnaryOperator;
     match expr {
         Expression::BooleanLiteral(_) => Some(parse_quote!(bool)),
         Expression::NumericLiteral(_) => Some(parse_quote!(f64)),
         Expression::StringLiteral(_) => Some(parse_quote!(String)),
+        // oxc parses a signed literal (`-1000`, `+0`) as
+        // `UnaryExpression(-/+, …)` rather than a `NumericLiteral`, so a binding
+        // `var i = -1000` / `var x = +0` would otherwise lose its f64 anchor
+        // (→ E0689 on `i < …` or `x.cos()`). `unary_expr` strips `+` and keeps
+        // `-`, so the inner literal's scalar type is the binding's type.
+        Expression::UnaryExpression(un)
+            if matches!(
+                un.operator,
+                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus
+            ) =>
+        {
+            match &un.argument {
+                Expression::NumericLiteral(_) => Some(parse_quote!(f64)),
+                Expression::BooleanLiteral(_) => Some(parse_quote!(bool)),
+                Expression::StringLiteral(_) => Some(parse_quote!(String)),
+                _ => None,
+            }
+        }
         _ => None,
     }
 }

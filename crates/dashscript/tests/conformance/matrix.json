@@ -1464,8 +1464,11 @@
   {
     "id": "test262.test.built-ins.math.acosh.arg-is-one",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:2:31: error[E0689]: can't call method `acosh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1591,8 +1594,11 @@
   {
     "id": "test262.test.built-ins.math.atanh.atanh-specialvals",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:10:31: error[E0689]: can't call method `atanh` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1669,7 +1675,7 @@
     "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a7",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:6:37: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:7:13: error[E0384]: cannot assign twice to immutable variable `i`: cannot assign twice to immutable variable\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1745,15 +1751,21 @@
   {
     "id": "test262.test.built-ins.math.cos.s15.8.2.7_a2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `cos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.cos.s15.8.2.7_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `cos` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1810,15 +1822,21 @@
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a2",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `exp` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `exp` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1915,7 +1933,7 @@
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a7",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:6:43: error[E0689]: can't call method `ceil` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:7:13: error[E0384]: cannot assign twice to immutable variable `i`: cannot assign twice to immutable variable\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2093,8 +2111,11 @@
   {
     "id": "test262.test.built-ins.math.log.s15.8.2.10_a3",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nsrc\\main.rs:5:29: error[E0689]: can't call method `ln` on ambiguous numeric type `{float}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2121,7 +2142,7 @@
     "id": "test262.test.built-ins.math.log10.log10-specialvals",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:3:31: error[E0689]: can't call method `log10` on ambiguous numeric type `{float}`\nsrc\\main.rs:7:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:7:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:32: error[E0599]: no method named `log10` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -2149,7 +2170,7 @@
     "id": "test262.test.built-ins.math.log2.log2-basictests",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:3:31: error[E0689]: can't call method `log2` on ambiguous numeric type `{float}`\nsrc\\main.rs:8:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:9:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:8:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:9:32: error[E0599]: no method named `log2` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {

@@ -201,7 +201,10 @@ fn translates_record_computed_key_to_hashmap_entry() {
 fn escapes_rust_keyword_variable_to_raw_ident() {
     let src = "function f(): number { const type = 5; return type; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("let r#type = 5.0"), "got:\n{rust}");
+    // `const type = 5` now infers f64 and annotates the binding (a bare `5`
+    // would leave the local as an ambiguous {float}); `type` still escapes to
+    // `r#type`.
+    assert!(rust.contains("let r#type: f64 = 5.0"), "got:\n{rust}");
     assert!(
         !rust.contains("return"),
         "trailing r#type, no return, got:\n{rust}"

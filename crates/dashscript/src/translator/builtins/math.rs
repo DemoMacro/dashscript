@@ -205,9 +205,22 @@ fn math_numeric_literal(arg: &Argument) -> Option<String> {
     use oxc_syntax::operator::UnaryOperator;
     match arg {
         Argument::NumericLiteral(n) => Some(format!("{}", n.value)),
-        Argument::UnaryExpression(un) if matches!(un.operator, UnaryOperator::UnaryNegation) => {
+        // oxc parses a signed literal as `UnaryExpression(-/+, NumericLiteral)`.
+        // `+` matters too: test262 spells `Math.acosh(+1)` (unary plus), which
+        // would otherwise land as an un-anchored integer → E0689.
+        Argument::UnaryExpression(un)
+            if matches!(
+                un.operator,
+                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus
+            ) =>
+        {
+            let sign = if matches!(un.operator, UnaryOperator::UnaryNegation) {
+                "-"
+            } else {
+                ""
+            };
             match &un.argument {
-                Expression::NumericLiteral(n) => Some(format!("-{}", n.value)),
+                Expression::NumericLiteral(n) => Some(format!("{sign}{}", n.value)),
                 _ => None,
             }
         }
