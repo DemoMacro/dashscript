@@ -19,6 +19,17 @@ use super::super::bindings;
 use super::super::context::Ctx;
 use super::{bool_expr, string_expr, translate_argument};
 
+/// Method names whose result is a `bool` — `&&`/`||` short-circuit on these
+/// directly instead of routing through a truthiness block. The translator has no
+/// type info for call results, so this is a curated list of common predicates.
+const BOOL_METHODS: &[&str] = &[
+    "includes", "startsWith", "endsWith", // string / array
+    "some", "every",                       // array
+    "isArray",                             // Array
+    "isNaN", "isFinite", "isInteger", "isSafeInteger", // Number
+    "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", // Object
+];
+
 /// A `.ds` `number` argument cast to `usize` (e.g. for `repeat`).
 fn usize_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     let e = translate_argument(arg, ctx);
@@ -200,6 +211,12 @@ pub(super) fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
                 _ => parse_quote!(#l != 0.0),
             }
         }
+        Expression::CallExpression(call)
+            if matches!(&call.callee, Expression::StaticMemberExpression(sm)
+                if BOOL_METHODS.contains(&sm.property.name.as_str())) =>
+        {
+            parse_quote!(#l)
+        }
         Expression::NumericLiteral(n) => bool_expr(n.value != 0.0 && !n.value.is_nan()),
         Expression::BooleanLiteral(b) => bool_expr(b.value),
         _ => parse_quote!(#l != 0.0),
@@ -211,6 +228,12 @@ pub(super) fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
 pub(super) fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     match expr {
         Expression::BooleanLiteral(_) => true,
+        // A predicate method *call* (`s.includes(...)`, `xs.some(...)`) returns
+        // bool — the outer node is a `CallExpression` whose callee is the member.
+        Expression::CallExpression(call) => match &call.callee {
+            Expression::StaticMemberExpression(sm) => BOOL_METHODS.contains(&sm.property.name.as_str()),
+            _ => false,
+        },
         Expression::Identifier(id) => {
             let name = bindings::snake(&id.name).to_string();
             ctx.local_type(&name)

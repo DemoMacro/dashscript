@@ -406,8 +406,10 @@ fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     }
     let obj = translate_expr(&sm.object, ctx);
     // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a field).
+    // TS `.length` is always a `number` → `f64`; `len()` returns `usize`, so cast.
+    // Index/repeat sites that need `usize` cast the whole expression again.
     if field_name == "length" {
-        return parse_quote!(#obj.len());
+        return parse_quote!((#obj.len() as f64));
     }
     let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)
@@ -564,7 +566,7 @@ fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     if let Some(expr) = null_equality(bin, ctx) {
         return expr;
     }
-    if matches!(bin.operator, BinaryOperator::Addition) && concat_is_string(bin) {
+    if matches!(bin.operator, BinaryOperator::Addition) && concat_is_string(bin, ctx) {
         return string_concat(bin, ctx);
     }
     // `a ** b` → `a.powf(b)`; a numeric-literal base gets an `_f64` suffix so
@@ -718,15 +720,23 @@ fn is_nullish(expr: &Expression) -> bool {
 /// literal. TS makes the entire chain a string concat as soon as one operand is
 /// a string, so this syntactic check is sound — and the only unhandled case
 /// (`stringVar + stringVar`, no literal) fails loudly under `cargo check`.
-fn concat_is_string(bin: &BinaryExpression) -> bool {
-    operand_is_string(&bin.left) || operand_is_string(&bin.right)
+fn concat_is_string(bin: &BinaryExpression, ctx: &Ctx<'_>) -> bool {
+    operand_is_string(&bin.left, ctx) || operand_is_string(&bin.right, ctx)
 }
 
-fn operand_is_string(expr: &Expression) -> bool {
+fn operand_is_string(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     match expr {
         Expression::StringLiteral(_) => true,
+        // A `string`-typed identifier (param/local) is string concatenation
+        // too — `greeting + name` where `name: string`, not just `"lit" +`.
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name)
+                .and_then(|p| p.segments.last())
+                .is_some_and(|s| s.ident == "String")
+        }
         Expression::BinaryExpression(inner) if matches!(inner.operator, BinaryOperator::Addition) => {
-            concat_is_string(inner)
+            concat_is_string(inner, ctx)
         }
         _ => false,
     }

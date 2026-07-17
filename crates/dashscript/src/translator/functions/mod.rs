@@ -98,7 +98,19 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         .id
         .as_ref()
         .map_or_else(|| format_ident!("main"), bindings::ident_of);
-    let inputs = translate_params(&func.params);
+    let mut locals = Locals::new();
+    for fp in &func.params.items {
+        register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
+    }
+    // Mutations analysis runs before parameter emission so a reassigned parameter
+    // — including via `??=`/`||=`/`&&=` — is declared `mut`. TS params reassign;
+    // Rust params are immutable by default.
+    if let Some(body) = func.body.as_deref() {
+        let analysis = super::analysis::analyze(&body.statements);
+        locals.mutated = analysis.mutated;
+        locals.use_counts = analysis.use_counts;
+    }
+    let inputs = translate_params(&func.params, &locals);
     // `void` / `undefined` map to an omitted return type (Rust infers `()`).
     let output = func
         .return_type
@@ -111,10 +123,6 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
     // The return-type path threads down to `return {…}` so the object literal
     // can borrow its struct name.
     let return_path = func.return_type.as_deref().and_then(return_path_of);
-    let mut locals = Locals::new();
-    for fp in &func.params.items {
-        register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
-    }
     // Default parameters unwrap their `Option` at the top of the body, so the
     // rest of the function sees the plain value.
     let defaults: Vec<Stmt> = func
@@ -131,11 +139,6 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
             Some(parse_quote!(let #name = #name.unwrap_or(#default);))
         })
         .collect();
-    if let Some(body) = func.body.as_deref() {
-        let analysis = super::analysis::analyze(&body.statements);
-        locals.mutated = analysis.mutated;
-        locals.use_counts = analysis.use_counts;
-    }
     let mut block = translate_body(
         func.body.as_deref(),
         &mut locals,
@@ -176,7 +179,7 @@ fn return_path_of(ta: &oxc_ast::ast::TSTypeAnnotation) -> Option<Path> {
     }
 }
 
-fn translate_params(params: &FormalParameters) -> Vec<FnArg> {
+fn translate_params(params: &FormalParameters, locals: &Locals) -> Vec<FnArg> {
     params
         .items
         .iter()
@@ -193,7 +196,12 @@ fn translate_params(params: &FormalParameters) -> Vec<FnArg> {
             } else {
                 ty
             };
-            parse_quote!(#pat : #ty)
+            // A reassigned parameter (incl. `??=`/`||=`/`&&=`) needs `mut`.
+            if locals.mutated.contains(&pat.to_string()) {
+                parse_quote!(mut #pat : #ty)
+            } else {
+                parse_quote!(#pat : #ty)
+            }
         })
         .collect()
 }
