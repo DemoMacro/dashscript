@@ -64,18 +64,22 @@ function walk(dir, out) {
 // Returns its flags + the offset where the body begins.
 function frontmatter(src) {
   const m = src.match(/\/\*---([\s\S]*?)---\*\//);
-  if (!m) return { flags: [], bodyStart: 0 };
+  if (!m) return { flags: [], includes: [], bodyStart: 0 };
   const flags = [];
-  const fm = m[1].match(/flags:\s*\[([^\]]*)\]/);
-  if (fm) {
-    for (const f of fm[1]
+  const includes = [];
+  const list = (block, key, out) => {
+    const mm = block.match(new RegExp(`${key}:\\s*\\[([^\\]]*)\\]`));
+    if (!mm) return;
+    for (const f of mm[1]
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean)) {
-      flags.push(f.replace(/['"]/g, ""));
+      out.push(f.replace(/['"]/g, ""));
     }
-  }
-  return { flags, bodyStart: m.index + m[0].length };
+  };
+  list(m[1], "flags", flags);
+  list(m[1], "includes", includes);
+  return { flags, includes, bodyStart: m.index + m[0].length };
 }
 
 const ASSERTS = new Set(["sameValue", "notSameValue", "throws"]);
@@ -96,8 +100,20 @@ function rewrite(body) {
   }
   const edits = [];
   let n = 0;
+  // DashScript has Rust semantics — no `[[Construct]]`, no `Reflect`, no
+  // prototype chain. `new X(...)` / `new.target` / `Reflect.*` are JS
+  // object-model reflection that never maps to Rust; flag them so extract()
+  // skips the fixture instead of recording a fake "unsupported translator TODO".
+  let inapplicable = false;
   const visit = (node) => {
     if (!node || typeof node.type !== "string") return;
+    if (
+      node.type === "NewExpression" ||
+      node.type === "MetaProperty" ||
+      (node.type === "Identifier" && node.name === "Reflect")
+    ) {
+      inapplicable = true;
+    }
     if (
       node.type === "CallExpression" &&
       node.callee?.type === "MemberExpression" &&
@@ -133,7 +149,7 @@ function rewrite(body) {
   edits.sort((a, b) => b.start - a.start);
   let out = body;
   for (const e of edits) out = out.slice(0, e.start) + e.repl + out.slice(e.end);
-  return { ok: true, body: out, n };
+  return { ok: true, body: out, n, inapplicable };
 }
 
 function extract() {
@@ -144,7 +160,15 @@ function extract() {
   }
   const features = [];
   const seen = new Set();
-  let skipped = 0;
+  let skipParse = 0;
+  let skipNoAssert = 0;
+  // frontmatter `includes:` lists $INCLUDE harness files the extractor does
+  // not inline (isConstructor.js, byteConversionValues.js, …); their
+  // identifiers are undefined in the fixture, so skip rather than translate.
+  let skipHarness = 0;
+  // `new` / `Reflect` / `new.target` — JS object-model reflection; DashScript
+  // has Rust semantics, so these never apply (see rewrite()'s `inapplicable`).
+  let skipReflect = 0;
   for (const { dir, category } of SCOPE) {
     const root = resolve(TEST262, dir);
     if (!existsSync(root)) continue;
@@ -154,10 +178,19 @@ function extract() {
       const rel = relative(TEST262, f).replace(/\\/g, "/");
       if (!FILTER(rel)) continue;
       const src = readFileSync(f, "utf8");
-      const { flags, bodyStart } = frontmatter(src);
+      const { flags, includes, bodyStart } = frontmatter(src);
       const r = rewrite(src.slice(bodyStart));
       if (!r.ok) {
-        skipped++;
+        if (r.reason === "parse error") skipParse++;
+        else skipNoAssert++;
+        continue;
+      }
+      if (includes.length > 0) {
+        skipHarness++;
+        continue;
+      }
+      if (r.inapplicable) {
+        skipReflect++;
         continue;
       }
       const fixture = `function main(): void {\n${r.body.trim()}\n}\n`;
@@ -181,7 +214,10 @@ function extract() {
     features,
   };
   writeFileSync(OUT, `${JSON.stringify(doc, null, 2)}\n`);
-  console.log(`extract-test262: wrote ${features.length} fixtures (${skipped} skipped) to ${OUT}`);
+  console.log(
+    `extract-test262: wrote ${features.length} fixtures to ${OUT}\n` +
+      `  skipped: parse=${skipParse} noassert=${skipNoAssert} harness($INCLUDE)=${skipHarness} reflect(new/Reflect)=${skipReflect}`,
+  );
 }
 
 extract();
