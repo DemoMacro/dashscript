@@ -882,6 +882,20 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_code_point_at",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_concat_to_format",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "types.translates_a_typed_function_returning_a_string",
     "category": "types",
     "status": "supported",

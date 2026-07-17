@@ -155,3 +155,20 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("char::from_u32("), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_string_code_point_at() {
+        let src = "function f(s: string): number { return s.codePointAt(0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("as u32 as f64"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_concat_to_format() {
+        let src = "function f(s: string): string { return s.concat(\"a\", \"b\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("format!("), "got:\n{rust}");
+        assert!(rust.contains("\"{}{}{}\""), "got:\n{rust}");
+    }

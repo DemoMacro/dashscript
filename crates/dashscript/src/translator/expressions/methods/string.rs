@@ -86,9 +86,11 @@ pub(in crate::translator::expressions) fn string_method(
             let i = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.chars().nth(#i).map(|c| c.to_string()).unwrap_or_default())
         }
-        // `.charCodeAt(i)` → the `i`-th char's code point as `f64` (TS returns
-        // `NaN` out of range; UTF-16 vs Rust's `char` differ for non-BMP).
-        "charCodeAt" => {
+        // `.charCodeAt(i)` / `.codePointAt(i)` → the `i`-th char's code point as
+        // `f64` (TS returns `NaN` out of range; UTF-16 vs Rust's `char` differ
+        // for non-BMP — Rust's `char` is already a Unicode scalar, so the two TS
+        // methods lower to the same `chars().nth().as u32`).
+        "charCodeAt" | "codePointAt" => {
             let i = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.chars().nth(#i).map(|c| c as u32 as f64).unwrap_or(f64::NAN))
         }
@@ -125,6 +127,17 @@ pub(in crate::translator::expressions) fn string_method(
                 let __need = (#n).saturating_sub(__s.chars().count());
                 format!("{}{}", __s, #ch.chars().cycle().take(__need).collect::<String>())
             })
+        }
+        // `.concat(a, b, …)` → `format!("{s}{a}{b}…")` (Rust `+` needs `&str`).
+        "concat" => {
+            let mut fmt = String::from("{}");
+            let mut parts: Vec<Expr> = Vec::new();
+            for arg in args {
+                fmt.push_str("{}");
+                parts.push(str_method_arg(arg, ctx));
+            }
+            let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
+            parse_quote!(format!(#fmt_lit, #obj, #(#parts),*))
         }
         _ => return None,
     })

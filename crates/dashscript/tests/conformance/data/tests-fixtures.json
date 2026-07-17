@@ -758,6 +758,18 @@
       "fixture": "function f(): string { return String.fromCharCode(65); }"
     },
     {
+      "id": "strings.translates_string_code_point_at",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): number { return s.codePointAt(0); }"
+    },
+    {
+      "id": "strings.translates_string_concat_to_format",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.concat(\"a\", \"b\"); }"
+    },
+    {
       "id": "types.translates_a_typed_function_returning_a_string",
       "category": "types",
       "source": "translator-tests",

@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 347 features: **159** supported, **8** partial, **0** unsupported, **180** untested
+- 349 features: **161** supported, **8** partial, **0** unsupported, **180** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -341,6 +341,8 @@
 | strings.translates_string_pad_end_with_fill_char     | 🟢 supported |               |
 | strings.translates_string_char_code_at_to_code_point | 🟢 supported |               |
 | strings.translates_string_from_char_code_to_char     | 🟢 supported |               |
+| strings.translates_string_code_point_at              | 🟢 supported |               |
+| strings.translates_string_concat_to_format           | 🟢 supported |               |
 | string.anchor                                        | ⚪ untested  |               |
 | string.at                                            | ⚪ untested  |               |
 | string.big                                           | ⚪ untested  |               |
