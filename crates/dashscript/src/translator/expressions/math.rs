@@ -12,10 +12,16 @@ use super::translate_argument;
 /// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
 pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     match name {
-        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "sign" | "exp"
-        | "log10" | "log2" | "sin" | "cos" | "tan" | "asin" | "acos" | "atan" | "cbrt" => {
+        "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "exp"
+        | "log10" | "log2" | "sin" | "cos" | "tan" | "asin" | "acos" | "atan" | "cbrt"
+        | "sinh" | "cosh" | "tanh" | "asinh" | "acosh" | "atanh" => {
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, name, Vec::new()))
+        }
+        // `Math.sign(x)` → `x.signum()` (Rust spells it `signum`, not `sign`).
+        "sign" => {
+            let recv = math_receiver(args.first()?, ctx);
+            Some(method_call(recv, "signum", Vec::new()))
         }
         // `Math.log(x)` (TS natural log) → `x.ln()` (Rust spells it `ln`).
         "log" => {
@@ -103,11 +109,19 @@ fn math_receiver(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     translate_argument(arg, ctx)
 }
 
-/// `Math.PI` → `std::f64::consts::PI`, `Math.E` → `…::E`.
+/// `Math.PI` → `std::f64::consts::PI`, `Math.E` → `…::E`, and the rest of the
+/// JS `Math` constants map to the matching `f64::consts` (Rust spells them with
+/// underscores: `LN10`→`LN_10`, `LOG10E`→`LOG10_E`, `SQRT1_2`→`FRAC_1_SQRT_2`).
 pub(super) fn math_constant(name: &str) -> Option<Expr> {
     let path = match name {
         "PI" => quote!(::std::f64::consts::PI),
         "E" => quote!(::std::f64::consts::E),
+        "LN10" => quote!(::std::f64::consts::LN_10),
+        "LN2" => quote!(::std::f64::consts::LN_2),
+        "LOG10E" => quote!(::std::f64::consts::LOG10_E),
+        "LOG2E" => quote!(::std::f64::consts::LOG2_E),
+        "SQRT2" => quote!(::std::f64::consts::SQRT_2),
+        "SQRT1_2" => quote!(::std::f64::consts::FRAC_1_SQRT_2),
         _ => return None,
     };
     syn::parse2(path).ok()

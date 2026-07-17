@@ -95,3 +95,58 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains("as i32).wrapping_mul("), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_math_sign_to_signum() {
+        let src = "function f(x: number): number { return Math.sign(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".signum("), "got:\n{rust}");
+        assert!(!rust.contains(".sign("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_math_hyperbolic_methods() {
+        let src =
+            "function f(x: number): number { return Math.sinh(x) + Math.cosh(x) + Math.tanh(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".sinh("), "got:\n{rust}");
+        assert!(rust.contains(".cosh("), "got:\n{rust}");
+        assert!(rust.contains(".tanh("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_math_inverse_hyperbolic_methods() {
+        let src =
+            "function f(x: number): number { return Math.asinh(x) + Math.acosh(x) + Math.atanh(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".asinh("), "got:\n{rust}");
+        assert!(rust.contains(".acosh("), "got:\n{rust}");
+        assert!(rust.contains(".atanh("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_math_inverse_trig_methods() {
+        let src =
+            "function f(x: number): number { return Math.asin(x) + Math.acos(x) + Math.atan(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".asin("), "got:\n{rust}");
+        assert!(rust.contains(".acos("), "got:\n{rust}");
+        assert!(rust.contains(".atan("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_math_extra_constants() {
+        let src = "function f(): number { return Math.LN10 + Math.LN2 + Math.LOG10E + Math.LOG2E + Math.SQRT2 + Math.SQRT1_2; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains("f64::consts::LN_10"), "got:\n{rust}");
+        assert!(rust.contains("f64::consts::LN_2"), "got:\n{rust}");
+        assert!(rust.contains("f64::consts::LOG10_E"), "got:\n{rust}");
+        assert!(rust.contains("f64::consts::LOG2_E"), "got:\n{rust}");
+        assert!(rust.contains("f64::consts::SQRT_2"), "got:\n{rust}");
+        assert!(rust.contains("f64::consts::FRAC_1_SQRT_2"), "got:\n{rust}");
+    }

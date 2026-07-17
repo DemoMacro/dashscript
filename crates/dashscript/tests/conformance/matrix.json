@@ -546,6 +546,20 @@
     "note": ""
   },
   {
+    "id": "math.translates_math_sign_to_signum",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_extra_constants",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "narrowing.translates_optional_chain_to_as_ref_map",
     "category": "narrowing",
     "status": "supported",

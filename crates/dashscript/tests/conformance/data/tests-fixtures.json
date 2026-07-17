@@ -470,6 +470,18 @@
       "fixture": "function f(a: number, b: number): number { return Math.imul(a, b); }"
     },
     {
+      "id": "math.translates_math_sign_to_signum",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.sign(x); }"
+    },
+    {
+      "id": "math.translates_math_extra_constants",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(): number { return Math.LN10 + Math.LN2 + Math.LOG10E + Math.LOG2E + Math.SQRT2 + Math.SQRT1_2; }"
+    },
+    {
       "id": "narrowing.translates_optional_chain_to_as_ref_map",
       "category": "narrowing",
       "source": "translator-tests",

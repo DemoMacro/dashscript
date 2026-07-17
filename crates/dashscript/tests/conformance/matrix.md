@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 345 features: **134** supported, **8** partial, **0** unsupported, **203** untested
+- 347 features: **136** supported, **8** partial, **0** unsupported, **203** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -228,6 +228,8 @@
 | math.translates_math_clz32_to_leading_zeros   | 🟢 supported |               |
 | math.translates_math_fround_to_f32_round_trip | 🟢 supported |               |
 | math.translates_math_imul_to_wrapping_mul     | 🟢 supported |               |
+| math.translates_math_sign_to_signum           | 🟢 supported |               |
+| math.translates_math_extra_constants          | 🟢 supported |               |
 | math.E                                        | ⚪ untested  |               |
 | math.LN10                                     | ⚪ untested  |               |
 | math.LN2                                      | ⚪ untested  |               |
