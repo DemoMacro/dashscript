@@ -1,16 +1,17 @@
 //! `Math.<method>` and `Math.<constant>` → idiomatic Rust float operations.
+//! Mirrors `test/built-ins/Math/`.
 
 use oxc_ast::ast::Argument;
 use quote::{format_ident, quote};
 use syn::{parse_quote, parse_str, Expr};
 
 use super::super::context::Ctx;
-use super::translate_argument;
+use super::super::expressions::translate_argument;
 
 /// `Math.<m>(args)` → the idiomatic Rust float operation. Single-arg methods
 /// (`floor`, `ceil`, `abs`, …) become a method on the argument; `max`/`min`
 /// become `a.max(b)`; `pow` becomes `a.powf(b)`. Returns `None` when unmapped.
-pub(super) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+pub(in crate::translator) fn math_method(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     match name {
         "floor" | "ceil" | "round" | "abs" | "sqrt" | "trunc" | "exp"
         | "log10" | "log2" | "sin" | "cos" | "tan" | "asin" | "acos" | "atan" | "cbrt"
@@ -112,7 +113,7 @@ fn math_receiver(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
 /// `Math.PI` → `std::f64::consts::PI`, `Math.E` → `…::E`, and the rest of the
 /// JS `Math` constants map to the matching `f64::consts` (Rust spells them with
 /// underscores: `LN10`→`LN_10`, `LOG10E`→`LOG10_E`, `SQRT1_2`→`FRAC_1_SQRT_2`).
-pub(super) fn math_constant(name: &str) -> Option<Expr> {
+pub(in crate::translator) fn math_constant(name: &str) -> Option<Expr> {
     let path = match name {
         "PI" => quote!(::std::f64::consts::PI),
         "E" => quote!(::std::f64::consts::E),

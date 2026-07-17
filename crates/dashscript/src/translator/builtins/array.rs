@@ -1,11 +1,12 @@
-//! Array methods on a `Vec` of Copy elements.
+//! Array methods on a `Vec` of Copy elements. Mirrors
+//! `test/built-ins/Array/prototype/`.
 
 use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
 use syn::{parse_quote, Expr};
 
-use super::super::super::bindings;
-use super::super::super::context::Ctx;
-use super::super::{arrow_expr, translate_argument};
+use super::super::bindings;
+use super::super::context::Ctx;
+use super::super::expressions::{arrow_expr, translate_argument};
 use super::{str_method_arg, usize_arg};
 
 /// Array methods on a `Vec` of Copy elements. The callback methods share a
@@ -16,7 +17,7 @@ use super::{str_method_arg, usize_arg};
 /// `|n|`. `.slice(a, b)` → `xs[a as usize..b as usize].to_vec()`; `.join(sep)`
 /// stringifies each element first; `.indexOf`/`.includes` test membership.
 /// Returns `None` for an unmapped name.
-pub(in crate::translator::expressions) fn array_method(
+pub(in crate::translator) fn array_method(
     sm: &StaticMemberExpression,
     args: &[Argument],
     ctx: &Ctx<'_>,
@@ -345,7 +346,7 @@ pub(in crate::translator::expressions) fn array_method(
 /// non-Vec local never is, and an unclassified receiver is unsupported);
 /// `from(src[, mapFn])` clones a `Vec` source (mapping each element when a
 /// callback is given). Returns `None` for any other name.
-pub(in crate::translator::expressions) fn array_static(
+pub(in crate::translator) fn array_static(
     sm: &StaticMemberExpression,
     args: &[Argument],
     ctx: &Ctx<'_>,

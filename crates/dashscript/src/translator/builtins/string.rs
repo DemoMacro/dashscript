@@ -1,11 +1,12 @@
-//! String methods on a `.ds` string.
+//! String methods on a `.ds` string. Mirrors
+//! `test/built-ins/String/prototype/` plus `String.<static>`.
 
 use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
-use super::super::super::context::Ctx;
-use super::super::{translate_argument, translate_expr};
+use super::super::context::Ctx;
+use super::super::expressions::{translate_argument, translate_expr};
 use super::{str_method_arg, usize_arg};
 
 /// A string method's receiver. A string literal stays a bare `&str` — every
@@ -25,7 +26,7 @@ fn str_receiver(obj: &Expression, ctx: &Ctx<'_>) -> Expr {
 /// `includes`/`startsWith`/`endsWith` → `contains`/`starts_with`/`ends_with`;
 /// `replace` → `replacen(.., 1)` (TS replaces the first match only); `repeat`
 /// → `repeat(n as usize)`. Returns `None` for unmapped names.
-pub(in crate::translator::expressions) fn string_method(
+pub(in crate::translator) fn string_method(
     sm: &StaticMemberExpression,
     args: &[Argument],
     ctx: &Ctx<'_>,
@@ -172,6 +173,21 @@ pub(in crate::translator::expressions) fn string_method(
         // separators, Turkish İ) and Rust has no locale, so any default would
         // silently change a program's output. They fall through to a plain
         // call, which `cargo check` rejects, surfacing the gap honestly.
+        _ => return None,
+    })
+}
+
+/// `String.<m>(…)`: `fromCharCode(n)`/`fromCodePoint(n)` → a one-char
+/// `String` from the code point (or `""` if `n` isn't a valid `char`). Rust's
+/// `char` is a Unicode scalar value, so the two TS methods lower identically
+/// (`fromCharCode`'s UTF-16 surrogate distinction doesn't arise). Returns
+/// `None` otherwise.
+pub(in crate::translator) fn string_static(name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let n = translate_argument(args.first()?, ctx);
+    Some(match name {
+        "fromCharCode" | "fromCodePoint" => {
+            parse_quote!(char::from_u32(#n as u32).map(|c| c.to_string()).unwrap_or_default())
+        }
         _ => return None,
     })
 }

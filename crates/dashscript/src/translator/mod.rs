@@ -8,6 +8,7 @@
 //! directions. Parsing reuses `oxc_parser`; DashScript never parses itself.
 
 mod analysis;
+mod builtins;
 mod check;
 pub mod bindings;
 pub mod context;

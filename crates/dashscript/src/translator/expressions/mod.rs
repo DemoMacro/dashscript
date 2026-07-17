@@ -14,15 +14,14 @@ use oxc_syntax::operator::{
     AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator, UpdateOperator,
 };
 use proc_macro2::Span;
-use quote::quote;
+use quote::{format_ident, quote};
 use syn::{parse_quote, parse_str, BinOp, Expr, Ident, Pat, Path, Type, UnOp};
 
+use super::builtins;
 use super::context::Ctx;
 use super::{bindings, types};
 
 mod fmt_merge;
-mod math;
-mod methods;
 
 /// Translate an expression to its `syn::Expr` form.
 ///
@@ -390,15 +389,15 @@ fn array_element(elem: &ArrayExpressionElement, ctx: &Ctx<'_>) -> Option<Expr> {
 fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     let field_name: &str = &sm.property.name;
     // `Math.PI` / `Math.E` → the corresponding Rust constant.
-    if methods::is_ident(&sm.object, "Math") {
-        if let Some(p) = math::math_constant(field_name) {
+    if builtins::is_ident(&sm.object, "Math") {
+        if let Some(p) = builtins::math_constant(field_name) {
             return p;
         }
     }
     // `Number.EPSILON` / `Number.MAX_VALUE` / `Number.NaN` / … → the matching
     // `f64` constant.
-    if methods::is_ident(&sm.object, "Number") {
-        if let Some(p) = methods::number_constant(field_name) {
+    if builtins::is_ident(&sm.object, "Number") {
+        if let Some(p) = builtins::number_constant(field_name) {
             return p;
         }
     }
@@ -508,7 +507,7 @@ fn nonnull_expr(nn: &TSNonNullExpression, ctx: &Ctx<'_>) -> Expr {
 /// Translate an arrow to a Rust closure. `borrow_params` wraps each parameter
 /// in a `&` pattern (`|&n|`) so the closure body reads owned values — used for
 /// `.filter` callbacks, whose closure receives `&Item` even after `.copied()`.
-fn arrow_expr(arrow: &ArrowFunctionExpression, ctx: &Ctx<'_>, borrow_params: bool) -> Expr {
+pub(super) fn arrow_expr(arrow: &ArrowFunctionExpression, ctx: &Ctx<'_>, borrow_params: bool) -> Expr {
     let params: Vec<Pat> = arrow
         .params
         .items
@@ -810,7 +809,7 @@ fn logical_expr(log: &LogicalExpression, ctx: &Ctx<'_>) -> Expr {
     // A `bool` left operand short-circuits as Rust `&&`/`||` (TS `bool || bool`
     // is itself a bool). A value operand uses a truthiness block: TS `a || b`
     // returns `a` when truthy else `b`, so bind `a` once and branch.
-    if methods::expr_is_bool(&log.left, ctx) {
+    if expr_is_bool(&log.left, ctx) {
         let left = translate_expr(&log.left, ctx);
         let right = translate_expr(&log.right, ctx);
         let op = match log.operator {
@@ -827,7 +826,7 @@ fn logical_expr(log: &LogicalExpression, ctx: &Ctx<'_>) -> Expr {
     }
     let left = translate_expr(&log.left, ctx);
     let right = translate_expr(&log.right, ctx);
-    let cond = methods::truthy_cond(&log.left, ctx);
+    let cond = truthy_cond(&log.left, ctx);
     match log.operator {
         // `a || b`: a truthy → a, else b
         LogicalOperator::Or => parse_quote!({ let __l = #left; if #cond { __l } else { #right } }),
@@ -1035,7 +1034,7 @@ fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
 fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
-    if let Some(macro_name) = methods::console_method(&call.callee) {
+    if let Some(macro_name) = builtins::console_method(&call.callee) {
         // String-literal args fold into the format string as literal text
         // (labels); every other arg is a `{}` placeholder. This emits
         // `println!("a {}", v)` instead of `println!("{}", "a".to_string(), v)`
@@ -1076,54 +1075,54 @@ fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     }
     // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
-        if methods::is_ident(&sm.object, "Math") {
-            if let Some(expr) = math::math_method(&sm.property.name, call.arguments.as_slice(), ctx) {
+        if builtins::is_ident(&sm.object, "Math") {
+            if let Some(expr) = builtins::math_method(&sm.property.name, call.arguments.as_slice(), ctx) {
                 return expr;
             }
         }
         // `Object.keys(m)` / `Object.values(m)` on a `Record` (a `HashMap`).
-        if methods::is_ident(&sm.object, "Object") {
-            if let Some(expr) = methods::object_method(&sm.property.name, call.arguments.as_slice(), ctx) {
+        if builtins::is_ident(&sm.object, "Object") {
+            if let Some(expr) = builtins::object_method(&sm.property.name, call.arguments.as_slice(), ctx) {
                 return expr;
             }
         }
         // `Array.of(…)` / `Array.isArray(x)` / `Array.from(…)`.
-        if methods::is_ident(&sm.object, "Array") {
-            if let Some(expr) = methods::array_static(sm, call.arguments.as_slice(), ctx) {
+        if builtins::is_ident(&sm.object, "Array") {
+            if let Some(expr) = builtins::array_static(sm, call.arguments.as_slice(), ctx) {
                 return expr;
             }
         }
         // `String.fromCharCode(n)` → a one-char `String`.
-        if methods::is_ident(&sm.object, "String") {
-            if let Some(expr) = methods::string_static(&sm.property.name, call.arguments.as_slice(), ctx) {
+        if builtins::is_ident(&sm.object, "String") {
+            if let Some(expr) = builtins::string_static(&sm.property.name, call.arguments.as_slice(), ctx) {
                 return expr;
             }
         }
         // `Number.isNaN(x)` / `Number.isFinite(x)` / `Number.isInteger(x)`.
-        if methods::is_ident(&sm.object, "Number") {
-            if let Some(expr) = methods::number_static(&sm.property.name, call.arguments.as_slice(), ctx) {
+        if builtins::is_ident(&sm.object, "Number") {
+            if let Some(expr) = builtins::number_static(&sm.property.name, call.arguments.as_slice(), ctx) {
                 return expr;
             }
         }
     }
     // Global conversion functions: `String(x)`, `parseInt(s)`, `parseFloat(s)`.
     if let Expression::Identifier(id) = &call.callee {
-        if let Some(expr) = methods::global_function(id, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = builtins::global_function(id, call.arguments.as_slice(), ctx) {
             return expr;
         }
     }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
-        if let Some(expr) = methods::array_method(sm, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = builtins::array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
-        if let Some(expr) = methods::string_method(sm, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = builtins::string_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
-        if let Some(expr) = methods::number_method(sm, call.arguments.as_slice(), ctx) {
+        if let Some(expr) = builtins::number_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
-        if let Some(method) = methods::map_method(&sm.property.name) {
+        if let Some(method) = builtins::map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object, ctx);
             let args: Vec<Expr> = call.arguments.iter().map(|a| translate_argument(a, ctx)).collect();
             return parse_quote!(#obj.#method(#(#args),*));
@@ -1192,12 +1191,12 @@ fn clone_owned_local(arg: &Argument, val: Expr, ctx: &Ctx<'_>) -> Expr {
 }
 
 /// `.ds` string literal → Rust `String` (`"…".to_string()`).
-fn string_expr(s: &StringLiteral) -> Expr {
+pub(super) fn string_expr(s: &StringLiteral) -> Expr {
     let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
     parse_quote!(#lit.to_string())
 }
 
-fn bool_expr(value: bool) -> Expr {
+pub(super) fn bool_expr(value: bool) -> Expr {
     parse_quote!(#value)
 }
 
@@ -1212,4 +1211,102 @@ fn numeric_expr(value: f64) -> Expr {
         if s.contains('.') || s.contains('e') || s.contains('E') { s } else { format!("{s}.0") }
     };
     parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN))
+}
+
+/// Method names whose result is a `bool` — `&&`/`||` short-circuit on these
+/// directly instead of routing through a truthiness block. The translator has no
+/// type info for call results, so this is a curated list of common predicates.
+const BOOL_METHODS: &[&str] = &[
+    "includes", "startsWith", "endsWith", // string / array
+    "some", "every",                       // array
+    "isArray",                             // Array
+    "isNaN", "isFinite", "isInteger", "isSafeInteger", // Number
+    "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", // Object
+    "isFrozen", "isSealed", "isExtensible", // Object (no-op introspection)
+];
+
+/// A truthiness test for the block-local `__l`, picking the check by the
+/// original left operand's type — used by `||`/`&&` value semantics. Mirrors
+/// `builtins::global`'s `bool_cast` but references `__l` rather than
+/// re-evaluating the operand.
+fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
+    let l: Ident = format_ident!("__l");
+    match left {
+        Expression::StringLiteral(_) => parse_quote!(!#l.is_empty()),
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            let last = ctx
+                .local_type(&name)
+                .and_then(|p| p.segments.last())
+                .map(|s| s.ident.to_string());
+            match last.as_deref() {
+                Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#l.is_empty()),
+                Some("Option") => parse_quote!(#l.is_some()),
+                Some("bool") => parse_quote!(#l),
+                _ => parse_quote!(#l != 0.0),
+            }
+        }
+        Expression::CallExpression(call)
+            if matches!(&call.callee, Expression::StaticMemberExpression(sm)
+                if BOOL_METHODS.contains(&sm.property.name.as_str())) =>
+        {
+            parse_quote!(#l)
+        }
+        Expression::NumericLiteral(n) => bool_expr(n.value != 0.0 && !n.value.is_nan()),
+        Expression::BooleanLiteral(b) => bool_expr(b.value),
+        _ => parse_quote!(#l != 0.0),
+    }
+}
+
+/// True when `expr` is a `bool` operand (a `BooleanLiteral`, a comparison, a
+/// logical not, a predicate method call, or a local annotated `boolean`) —
+/// those short-circuit as Rust `&&`/`||` instead of routing through a
+/// truthiness block (which would produce `bool != 0.0` and fail to compile).
+fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    match expr {
+        Expression::BooleanLiteral(_) => true,
+        // `a && b` / `a || b` of bool operands is itself bool — a predicate
+        // chain like `isInteger(n) && isFinite(n)` short-circuits as Rust `&&`.
+        Expression::LogicalExpression(log)
+            if matches!(
+                log.operator,
+                oxc_ast::ast::LogicalOperator::And | oxc_ast::ast::LogicalOperator::Or
+            ) =>
+        {
+            expr_is_bool(&log.left, ctx) && expr_is_bool(&log.right, ctx)
+        }
+        // A comparison (`<`, `>`, `==`, `!=`, `<=`, `>=`, strict or not) yields
+        // bool — `v > 5 && v < 25` short-circuits as Rust `&&`.
+        Expression::BinaryExpression(b)
+            if matches!(
+                b.operator,
+                oxc_ast::ast::BinaryOperator::LessThan
+                    | oxc_ast::ast::BinaryOperator::GreaterThan
+                    | oxc_ast::ast::BinaryOperator::LessEqualThan
+                    | oxc_ast::ast::BinaryOperator::GreaterEqualThan
+                    | oxc_ast::ast::BinaryOperator::Equality
+                    | oxc_ast::ast::BinaryOperator::Inequality
+                    | oxc_ast::ast::BinaryOperator::StrictEquality
+                    | oxc_ast::ast::BinaryOperator::StrictInequality
+            ) =>
+        {
+            true
+        }
+        // `!x` (logical not) yields bool.
+        Expression::UnaryExpression(u)
+            if matches!(u.operator, oxc_ast::ast::UnaryOperator::LogicalNot) => true,
+        // A predicate method *call* (`s.includes(...)`, `xs.some(...)`) returns
+        // bool — the outer node is a `CallExpression` whose callee is the member.
+        Expression::CallExpression(call) => match &call.callee {
+            Expression::StaticMemberExpression(sm) => BOOL_METHODS.contains(&sm.property.name.as_str()),
+            _ => false,
+        },
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name)
+                .and_then(|p| p.segments.last())
+                .is_some_and(|s| s.ident == "bool")
+        }
+        _ => false,
+    }
 }
