@@ -490,6 +490,13 @@
     "note": ""
   },
   {
+    "id": "math.translates_math_methods",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "math.translates_math_constants",
     "category": "math",
     "status": "supported",
@@ -561,6 +568,27 @@
   },
   {
     "id": "math.translates_math_sign_to_signum",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_hyperbolic_methods",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_inverse_hyperbolic_methods",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_inverse_trig_methods",
     "category": "math",
     "status": "supported",
     "detail": "",
@@ -917,6 +945,20 @@
     "note": ""
   },
   {
+    "id": "types.translates_optional_field_to_option_and_fills_none",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_optional_field_supplied_wraps_some",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "types.translates_generic_function_params",
     "category": "types",
     "status": "supported",
@@ -932,6 +974,13 @@
   },
   {
     "id": "types.translates_default_param_supplied_wraps_some",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_locals_object_literal_and_field_access",
     "category": "types",
     "status": "supported",
     "detail": "",
@@ -1763,35 +1812,35 @@
   {
     "id": "math.acos",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.acosh",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.asin",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.asinh",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.atan",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1805,7 +1854,7 @@
   {
     "id": "math.atanh",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1840,7 +1889,7 @@
   {
     "id": "math.cosh",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1868,7 +1917,7 @@
   {
     "id": "math.floor",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1924,7 +1973,7 @@
   {
     "id": "math.max",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1938,7 +1987,7 @@
   {
     "id": "math.pow",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1973,7 +2022,7 @@
   {
     "id": "math.sinh",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2001,7 +2050,7 @@
   {
     "id": "math.tanh",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

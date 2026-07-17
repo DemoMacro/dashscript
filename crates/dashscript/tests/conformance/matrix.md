@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 351 features: **176** supported, **1** partial, **0** unsupported, **174** untested
+- 358 features: **195** supported, **1** partial, **0** unsupported, **162** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -218,65 +218,69 @@
 
 ## math
 
-| feature                                       | status       | detail / note |
-| --------------------------------------------- | ------------ | ------------- |
-| math.translates_math_constants                | 🟢 supported |               |
-| math.translates_math_trig_and_log_methods     | 🟢 supported |               |
-| math.translates_math_log_to_ln                | 🟢 supported |               |
-| math.translates_math_atan2_to_atan2           | 🟢 supported |               |
-| math.translates_math_hypot_to_pythagoras      | 🟢 supported |               |
-| math.translates_math_log1p_to_ln_1p           | 🟢 supported |               |
-| math.translates_math_expm1_to_exp_m1          | 🟢 supported |               |
-| math.translates_math_clz32_to_leading_zeros   | 🟢 supported |               |
-| math.translates_math_fround_to_f32_round_trip | 🟢 supported |               |
-| math.translates_math_imul_to_wrapping_mul     | 🟢 supported |               |
-| math.translates_math_sign_to_signum           | 🟢 supported |               |
-| math.translates_math_extra_constants          | 🟢 supported |               |
-| math.E                                        | ⚪ untested  |               |
-| math.LN10                                     | 🟢 supported |               |
-| math.LN2                                      | 🟢 supported |               |
-| math.LOG10E                                   | 🟢 supported |               |
-| math.LOG2E                                    | 🟢 supported |               |
-| math.PI                                       | 🟢 supported |               |
-| math.SQRT1_2                                  | 🟢 supported |               |
-| math.SQRT2                                    | 🟢 supported |               |
-| math.abs                                      | ⚪ untested  |               |
-| math.acos                                     | ⚪ untested  |               |
-| math.acosh                                    | ⚪ untested  |               |
-| math.asin                                     | ⚪ untested  |               |
-| math.asinh                                    | ⚪ untested  |               |
-| math.atan                                     | ⚪ untested  |               |
-| math.atan2                                    | 🟢 supported |               |
-| math.atanh                                    | ⚪ untested  |               |
-| math.cbrt                                     | 🟢 supported |               |
-| math.ceil                                     | ⚪ untested  |               |
-| math.clz32                                    | 🟢 supported |               |
-| math.cos                                      | ⚪ untested  |               |
-| math.cosh                                     | ⚪ untested  |               |
-| math.exp                                      | ⚪ untested  |               |
-| math.expm1                                    | 🟢 supported |               |
-| math.f16round                                 | ⚪ untested  |               |
-| math.floor                                    | ⚪ untested  |               |
-| math.fround                                   | 🟢 supported |               |
-| math.hypot                                    | 🟢 supported |               |
-| math.imul                                     | 🟢 supported |               |
-| math.log                                      | 🟢 supported |               |
-| math.log10                                    | 🟢 supported |               |
-| math.log1p                                    | 🟢 supported |               |
-| math.log2                                     | ⚪ untested  |               |
-| math.max                                      | ⚪ untested  |               |
-| math.min                                      | ⚪ untested  |               |
-| math.pow                                      | ⚪ untested  |               |
-| math.random                                   | ⚪ untested  |               |
-| math.round                                    | ⚪ untested  |               |
-| math.sign                                     | 🟢 supported |               |
-| math.sin                                      | 🟢 supported |               |
-| math.sinh                                     | ⚪ untested  |               |
-| math.sqrt                                     | ⚪ untested  |               |
-| math.sumPrecise                               | ⚪ untested  |               |
-| math.tan                                      | ⚪ untested  |               |
-| math.tanh                                     | ⚪ untested  |               |
-| math.trunc                                    | ⚪ untested  |               |
+| feature                                         | status       | detail / note |
+| ----------------------------------------------- | ------------ | ------------- |
+| math.translates_math_methods                    | 🟢 supported |               |
+| math.translates_math_constants                  | 🟢 supported |               |
+| math.translates_math_trig_and_log_methods       | 🟢 supported |               |
+| math.translates_math_log_to_ln                  | 🟢 supported |               |
+| math.translates_math_atan2_to_atan2             | 🟢 supported |               |
+| math.translates_math_hypot_to_pythagoras        | 🟢 supported |               |
+| math.translates_math_log1p_to_ln_1p             | 🟢 supported |               |
+| math.translates_math_expm1_to_exp_m1            | 🟢 supported |               |
+| math.translates_math_clz32_to_leading_zeros     | 🟢 supported |               |
+| math.translates_math_fround_to_f32_round_trip   | 🟢 supported |               |
+| math.translates_math_imul_to_wrapping_mul       | 🟢 supported |               |
+| math.translates_math_sign_to_signum             | 🟢 supported |               |
+| math.translates_math_hyperbolic_methods         | 🟢 supported |               |
+| math.translates_math_inverse_hyperbolic_methods | 🟢 supported |               |
+| math.translates_math_inverse_trig_methods       | 🟢 supported |               |
+| math.translates_math_extra_constants            | 🟢 supported |               |
+| math.E                                          | ⚪ untested  |               |
+| math.LN10                                       | 🟢 supported |               |
+| math.LN2                                        | 🟢 supported |               |
+| math.LOG10E                                     | 🟢 supported |               |
+| math.LOG2E                                      | 🟢 supported |               |
+| math.PI                                         | 🟢 supported |               |
+| math.SQRT1_2                                    | 🟢 supported |               |
+| math.SQRT2                                      | 🟢 supported |               |
+| math.abs                                        | ⚪ untested  |               |
+| math.acos                                       | 🟢 supported |               |
+| math.acosh                                      | 🟢 supported |               |
+| math.asin                                       | 🟢 supported |               |
+| math.asinh                                      | 🟢 supported |               |
+| math.atan                                       | 🟢 supported |               |
+| math.atan2                                      | 🟢 supported |               |
+| math.atanh                                      | 🟢 supported |               |
+| math.cbrt                                       | 🟢 supported |               |
+| math.ceil                                       | ⚪ untested  |               |
+| math.clz32                                      | 🟢 supported |               |
+| math.cos                                        | ⚪ untested  |               |
+| math.cosh                                       | 🟢 supported |               |
+| math.exp                                        | ⚪ untested  |               |
+| math.expm1                                      | 🟢 supported |               |
+| math.f16round                                   | ⚪ untested  |               |
+| math.floor                                      | 🟢 supported |               |
+| math.fround                                     | 🟢 supported |               |
+| math.hypot                                      | 🟢 supported |               |
+| math.imul                                       | 🟢 supported |               |
+| math.log                                        | 🟢 supported |               |
+| math.log10                                      | 🟢 supported |               |
+| math.log1p                                      | 🟢 supported |               |
+| math.log2                                       | ⚪ untested  |               |
+| math.max                                        | 🟢 supported |               |
+| math.min                                        | ⚪ untested  |               |
+| math.pow                                        | 🟢 supported |               |
+| math.random                                     | ⚪ untested  |               |
+| math.round                                      | ⚪ untested  |               |
+| math.sign                                       | 🟢 supported |               |
+| math.sin                                        | 🟢 supported |               |
+| math.sinh                                       | 🟢 supported |               |
+| math.sqrt                                       | ⚪ untested  |               |
+| math.sumPrecise                                 | ⚪ untested  |               |
+| math.tan                                        | ⚪ untested  |               |
+| math.tanh                                       | 🟢 supported |               |
+| math.trunc                                      | ⚪ untested  |               |
 
 ## narrowing
 
@@ -403,9 +407,12 @@
 | feature                                                          | status       | detail / note |
 | ---------------------------------------------------------------- | ------------ | ------------- |
 | types.translates_a_typed_function_returning_a_string             | 🟢 supported |               |
+| types.translates_optional_field_to_option_and_fills_none         | 🟢 supported |               |
+| types.translates_optional_field_supplied_wraps_some              | 🟢 supported |               |
 | types.translates_generic_function_params                         | 🟢 supported |               |
 | types.translates_default_param_to_option_unwrap_or_and_call_none | 🟢 supported |               |
 | types.translates_default_param_supplied_wraps_some               | 🟢 supported |               |
+| types.translates_locals_object_literal_and_field_access          | 🟢 supported |               |
 | types.translates_nullable_to_option                              | 🟢 supported |               |
 | types.translates_nullable_return_type                            | 🟢 supported |               |
 | types.translates_enum_variant_construction                       | 🟢 supported |               |

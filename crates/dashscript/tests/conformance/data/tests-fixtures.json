@@ -422,6 +422,12 @@
       "fixture": "function f(n: number): boolean { return Number.isSafeInteger(n); }"
     },
     {
+      "id": "math.translates_math_methods",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.floor(x) + Math.max(x, 0) + Math.pow(x, 2); }"
+    },
+    {
       "id": "math.translates_math_constants",
       "category": "math",
       "source": "translator-tests",
@@ -486,6 +492,24 @@
       "category": "math",
       "source": "translator-tests",
       "fixture": "function f(x: number): number { return Math.sign(x); }"
+    },
+    {
+      "id": "math.translates_math_hyperbolic_methods",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.sinh(x) + Math.cosh(x) + Math.tanh(x); }"
+    },
+    {
+      "id": "math.translates_math_inverse_hyperbolic_methods",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.asinh(x) + Math.acosh(x) + Math.atanh(x); }"
+    },
+    {
+      "id": "math.translates_math_inverse_trig_methods",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.asin(x) + Math.acos(x) + Math.atan(x); }"
     },
     {
       "id": "math.translates_math_extra_constants",
@@ -788,6 +812,18 @@
       "fixture": "function greet(name: string): string { return \"Hello\"; }"
     },
     {
+      "id": "types.translates_optional_field_to_option_and_fills_none",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "interface V { x: number; y?: number; } function f(): void { const v: V = { x: 1 }; console.log(v.x); }"
+    },
+    {
+      "id": "types.translates_optional_field_supplied_wraps_some",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "interface V { x: number; y?: number; } function f(): void { const v: V = { x: 1, y: 2 }; console.log(v.x); }"
+    },
+    {
       "id": "types.translates_generic_function_params",
       "category": "types",
       "source": "translator-tests",
@@ -804,6 +840,12 @@
       "category": "types",
       "source": "translator-tests",
       "fixture": "function greet(name: string, greeting: string = \"hi\"): string { return greeting + name; } function f(): string { return greet(\"world\", \"hey\"); }"
+    },
+    {
+      "id": "types.translates_locals_object_literal_and_field_access",
+      "category": "types",
+      "source": "translator-tests",
+      "fixture": "interface Point { x: number } function main(): void { const p: Point = { x: 1 }; console.log(p.x); }"
     },
     {
       "id": "types.translates_nullable_to_option",

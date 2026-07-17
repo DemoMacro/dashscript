@@ -34,21 +34,41 @@ for (const f of files) {
   const category = f.replace(/\.rs$/, "");
   const src = readFileSync(resolve(dir, f), "utf8");
   let curFn = null;
+  let pendingSrc = false; // `let src =` on its own line — the string follows
+  const emit = (raw) => {
+    if (!curFn) return;
+    const ds = raw.replace(/\\"/g, '"').replace(/\\n/g, " ");
+    if (ds.includes("function")) {
+      const id = `${category}.${curFn}`;
+      if (!seen.has(id)) {
+        seen.add(id);
+        fixtures.push({ id, category, source: "translator-tests", fixture: ds });
+      }
+    }
+    curFn = null; // one fixture per test (the first `let src`)
+    pendingSrc = false;
+  };
   for (const line of src.split("\n")) {
     const fnM = line.match(/fn\s+(translates_\w+)\s*\(/);
-    if (fnM) curFn = fnM[1];
-    const srcM = line.match(/let\s+src\s*=\s*"((?:[^"\\]|\\.)*)"/);
-    if (srcM && curFn) {
-      const ds = srcM[1].replace(/\\"/g, '"').replace(/\\n/g, " ");
-      if (ds.includes("function")) {
-        const id = `${category}.${curFn}`;
-        if (!seen.has(id)) {
-          seen.add(id);
-          fixtures.push({ id, category, source: "translator-tests", fixture: ds });
-        }
-      }
-      curFn = null; // one fixture per test (the first `let src`)
+    if (fnM) {
+      curFn = fnM[1];
+      pendingSrc = false;
+      continue;
     }
+    const srcM = line.match(/let\s+src\s*=\s*"((?:[^"\\]|\\.)*)"/);
+    if (srcM) {
+      emit(srcM[1]);
+      continue;
+    }
+    // `let src =` on its own line: the string literal is on the next line.
+    if (pendingSrc) {
+      const contM = line.match(/^\s*"((?:[^"\\]|\\.)*)"/);
+      if (contM) {
+        emit(contM[1]);
+        continue;
+      }
+    }
+    if (/let\s+src\s*=\s*$/.test(line)) pendingSrc = true;
   }
 }
 
