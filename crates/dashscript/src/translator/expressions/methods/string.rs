@@ -162,16 +162,16 @@ pub(in crate::translator::expressions) fn string_method(
         }
         // `.valueOf()` → the string itself (a String identity).
         "valueOf" if args.is_empty() => parse_quote!(#obj),
-        // `.toLocaleLowerCase()` / `.toLocaleUpperCase()` → the non-locale
-        // case fold (Rust has no locale-aware Unicode case mapping; the default
-        // fold matches the common root-locale case).
-        "toLocaleLowerCase" if args.is_empty() => parse_quote!(#obj.to_lowercase()),
-        "toLocaleUpperCase" if args.is_empty() => parse_quote!(#obj.to_uppercase()),
         // `.isWellFormed()` → `true` (a Rust `&str`/`String` is always valid
         // UTF-8, so it is always well-formed — lone surrogates can't occur).
         "isWellFormed" if args.is_empty() => parse_quote!(true),
         // `.toWellFormed()` → the string unchanged (already well-formed).
         "toWellFormed" if args.is_empty() => parse_quote!(#obj.to_string()),
+        // NOTE: `toLocaleLowerCase`/`toLocaleUpperCase`/`toLocaleString` are
+        // intentionally NOT mapped — they are locale-dependent (thousands
+        // separators, Turkish İ) and Rust has no locale, so any default would
+        // silently change a program's output. They fall through to a plain
+        // call, which `cargo check` rejects, surfacing the gap honestly.
         _ => return None,
     })
 }

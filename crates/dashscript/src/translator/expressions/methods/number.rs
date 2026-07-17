@@ -49,6 +49,8 @@ pub(in crate::translator::expressions) fn number_method(
             parse_quote!(format!("{:.*e}", #prec, #recv))
         }
         // `(n).valueOf()` → the number itself (an `f64` identity).
+        // `toLocaleString` is locale-dependent (thousands separators) and
+        // intentionally not mapped — see `string_method`.
         "valueOf" if args.is_empty() => parse_quote!(#recv),
         _ => return None,
     })

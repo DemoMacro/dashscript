@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 401 features: **347** supported, **1** partial, **0** unsupported, **53** untested
+- 399 features: **343** supported, **1** partial, **0** unsupported, **55** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -381,8 +381,6 @@
 | strings.translates_string_replace_substring_methods  | 🟢 supported |               |
 | strings.translates_string_from_code_point            | 🟢 supported |               |
 | strings.translates_string_value_of                   | 🟢 supported |               |
-| strings.translates_string_to_locale_lower            | 🟢 supported |               |
-| strings.translates_string_to_locale_upper            | 🟢 supported |               |
 | strings.translates_string_is_well_formed             | 🟢 supported |               |
 | strings.translates_string_to_well_formed             | 🟢 supported |               |
 | string.anchor                                        | ⚪ untested  |               |
@@ -426,8 +424,8 @@
 | string.substr                                        | ⚪ untested  |               |
 | string.substring                                     | 🟢 supported |               |
 | string.sup                                           | ⚪ untested  |               |
-| string.toLocaleLowerCase                             | 🟢 supported |               |
-| string.toLocaleUpperCase                             | 🟢 supported |               |
+| string.toLocaleLowerCase                             | ⚪ untested  |               |
+| string.toLocaleUpperCase                             | ⚪ untested  |               |
 | string.toLowerCase                                   | 🟢 supported |               |
 | string.toString                                      | ⚪ untested  |               |
 | string.toUpperCase                                   | 🟢 supported |               |

@@ -998,18 +998,6 @@
       "fixture": "function f(s: string): string { return s.valueOf(); }"
     },
     {
-      "id": "strings.translates_string_to_locale_lower",
-      "category": "strings",
-      "source": "translator-tests",
-      "fixture": "function f(s: string): string { return s.toLocaleLowerCase(); }"
-    },
-    {
-      "id": "strings.translates_string_to_locale_upper",
-      "category": "strings",
-      "source": "translator-tests",
-      "fixture": "function f(s: string): string { return s.toLocaleUpperCase(); }"
-    },
-    {
       "id": "strings.translates_string_is_well_formed",
       "category": "strings",
       "source": "translator-tests",

@@ -309,7 +309,8 @@ pub(in crate::translator::expressions) fn array_method(
             })
         }
         // `.toString()` → a comma-joined string of the elements (TS's default
-        // `Array.prototype.toString` joins with `,`).
+        // `Array.prototype.toString` joins with `,`). `toLocaleString` is
+        // locale-dependent and intentionally not mapped (see `string_method`).
         "toString" if args.is_empty() => {
             parse_quote!(#recv.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(","))
         }

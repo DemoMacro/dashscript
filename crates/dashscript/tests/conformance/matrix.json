@@ -1162,20 +1162,6 @@
     "note": ""
   },
   {
-    "id": "strings.translates_string_to_locale_lower",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_to_locale_upper",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
     "id": "strings.translates_string_is_well_formed",
     "category": "strings",
     "status": "supported",
@@ -1973,14 +1959,14 @@
   {
     "id": "string.toLocaleLowerCase",
     "category": "strings",
-    "status": "supported",
+    "status": "untested",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.toLocaleUpperCase",
     "category": "strings",
-    "status": "supported",
+    "status": "untested",
     "detail": "",
     "note": ""
   },
