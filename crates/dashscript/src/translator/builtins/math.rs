@@ -23,13 +23,18 @@ pub(in crate::translator) fn math_method(
             let recv = math_receiver(args.first()?, ctx);
             Some(method_call(recv, name, Vec::new()))
         }
-        // `Math.round(x)` → `(x + 0.5).floor()`. JS rounds half toward +∞
-        // (`Math.round(-0.5)` = 0, `Math.round(2.5)` = 3); Rust's `f64::round`
-        // rounds half away from zero (`(-0.5).round()` = -1) — the floor form
-        // matches JS, including `Math.round(-0.5)` → -0 → prints "0".
+        // `Math.round(x)` → JS rounds half toward +∞ (`Math.round(2.5)` = 3),
+        // not Rust's away-from-zero (`(-0.5).round()` = -1). The `(x + 0.5).floor()`
+        // form matches JS; and when the result is 0 with a negative input JS
+        // returns -0 (`Math.round(-0.5)` = -0), so mirror that — Rust's `-0.0`
+        // already prints "-0".
         "round" => {
             let recv = math_receiver(args.first()?, ctx);
-            Some(parse_quote!(((#recv) as f64 + 0.5).floor()))
+            Some(parse_quote!({
+                let __x = (#recv) as f64;
+                let __r = (__x + 0.5).floor();
+                if __r == 0.0 && __x.is_sign_negative() { -0.0f64 } else { __r }
+            }))
         }
         // `Math.sign(x)` → `x.signum()` (Rust spells it `signum`, not `sign`).
         "sign" => {
