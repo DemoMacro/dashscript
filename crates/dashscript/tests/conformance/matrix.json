@@ -196,6 +196,34 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_to_sorted_to_clone_sort",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_to_reversed_to_rev_collect",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_to_spliced_to_clone_splice",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_with_to_clone_index_assign",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "clone_move.translates_unmutated_let_is_plain_let",
     "category": "clone_move",
     "status": "supported",
@@ -959,6 +987,20 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_at_to_chars_nth",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_last_index_of_to_rfind",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "types.translates_a_typed_function_returning_a_string",
     "category": "types",
     "status": "supported",
@@ -1112,14 +1154,14 @@
   {
     "id": "array.at",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.concat",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1140,70 +1182,70 @@
   {
     "id": "array.every",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.fill",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.filter",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.find",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.findIndex",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.findLast",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.findLastIndex",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.flat",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.flatMap",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.forEach",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1224,14 +1266,14 @@
   {
     "id": "array.includes",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.indexOf",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1245,28 +1287,28 @@
   {
     "id": "array.join",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.keys",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.lastIndexOf",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.map",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1287,28 +1329,28 @@
   {
     "id": "array.push",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.reduce",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.reduceRight",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.reverse",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1322,21 +1364,21 @@
   {
     "id": "array.slice",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.some",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.sort",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1357,21 +1399,21 @@
   {
     "id": "array.toReversed",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.toSorted",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.toSpliced",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1392,14 +1434,14 @@
   {
     "id": "array.values",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "array.with",
     "category": "arrays",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1413,7 +1455,7 @@
   {
     "id": "string.at",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1441,28 +1483,28 @@
   {
     "id": "string.charAt",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.charCodeAt",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.codePointAt",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.concat",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1497,7 +1539,7 @@
   {
     "id": "string.fromCharCode",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1511,14 +1553,14 @@
   {
     "id": "string.includes",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.indexOf",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1539,7 +1581,7 @@
   {
     "id": "string.lastIndexOf",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1581,14 +1623,14 @@
   {
     "id": "string.padEnd",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.padStart",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1616,7 +1658,7 @@
   {
     "id": "string.replaceAll",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1630,7 +1672,7 @@
   {
     "id": "string.slice",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1644,14 +1686,14 @@
   {
     "id": "string.split",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.startsWith",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1721,7 +1763,7 @@
   {
     "id": "string.toUpperCase",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1742,14 +1784,14 @@
   {
     "id": "string.trimEnd",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "string.trimStart",
     "category": "strings",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },

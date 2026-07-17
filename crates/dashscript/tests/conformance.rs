@@ -204,6 +204,17 @@ fn probe_token(id: &str) -> Option<String> {
         // instance shares the `Object.<m>(` form. keys/values/entries are
         // mapped; the rest have no fixture and stay untested.
         "object" => Some(format!("Object.{name}(")),
+        // String/Array instance methods: `.method(` is receiver-ambiguous in
+        // principle, but bcd's String and Array method sets don't share a name
+        // the translator maps on only one side — the shared names
+        // (at/concat/includes/indexOf/lastIndexOf/slice) are mapped on both —
+        // so associating by method name is safe. `toString` is left out: it's
+        // shared with Object/number and only supported on the scalar receivers.
+        "string" | "array"
+            if !const_like && name != "toString" =>
+        {
+            Some(format!(".{name}("))
+        }
         _ => None,
     }
 }

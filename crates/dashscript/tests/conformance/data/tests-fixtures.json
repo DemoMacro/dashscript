@@ -170,6 +170,30 @@
       "fixture": "function f(xs: number[]): number { return xs.reduceRight((a, b) => a + b, 0); }"
     },
     {
+      "id": "arrays.translates_array_to_sorted_to_clone_sort",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number[] { return xs.toSorted(); }"
+    },
+    {
+      "id": "arrays.translates_array_to_reversed_to_rev_collect",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number[] { return xs.toReversed(); }"
+    },
+    {
+      "id": "arrays.translates_array_to_spliced_to_clone_splice",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number[] { return xs.toSpliced(1, 2); }"
+    },
+    {
+      "id": "arrays.translates_array_with_to_clone_index_assign",
+      "category": "arrays",
+      "source": "translator-tests",
+      "fixture": "function f(xs: number[]): number[] { return xs.with(0, 9); }"
+    },
+    {
       "id": "clone_move.translates_unmutated_let_is_plain_let",
       "category": "clone_move",
       "source": "translator-tests",
@@ -822,6 +846,18 @@
       "category": "strings",
       "source": "translator-tests",
       "fixture": "function f(s: string): string { return s.concat(\"a\", \"b\"); }"
+    },
+    {
+      "id": "strings.translates_string_at_to_chars_nth",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): string { return s.at(0); }"
+    },
+    {
+      "id": "strings.translates_string_last_index_of_to_rfind",
+      "category": "strings",
+      "source": "translator-tests",
+      "fixture": "function f(s: string): number { return s.lastIndexOf(\"l\"); }"
     },
     {
       "id": "types.translates_a_typed_function_returning_a_string",

@@ -241,6 +241,46 @@ pub(in crate::translator::expressions) fn array_method(
             // element never panics (TS sort never throws on NaN).
             parse_quote!(#recv.sort_by(|a, b| a.partial_cmp(b).unwrap_or(::core::cmp::Ordering::Equal)))
         }
+        // `.toSorted()` → copy + numeric sort (ES2023 immutable sort; no
+        // comparator arg — like `sort`, a comparator would return Ordering).
+        "toSorted" if args.is_empty() => parse_quote!({
+            let mut __v = #recv.clone();
+            __v.sort_by(|a, b| a.partial_cmp(b).unwrap_or(::core::cmp::Ordering::Equal));
+            __v
+        }),
+        // `.toReversed()` → reversed copy (ES2023 immutable reverse).
+        "toReversed" if args.is_empty() => {
+            parse_quote!(#recv.iter().copied().rev().collect::<Vec<_>>())
+        }
+        // `.toSpliced(start, deleteCount, …items)` → copy + splice (ES2023).
+        // `Vec::splice` replaces the range with the item iterator; the bounds
+        // are bound once so a side-effecting index arg evaluates only once.
+        "toSpliced" if args.len() >= 2 => {
+            let start = usize_arg(args.first()?, ctx);
+            let del = usize_arg(args.get(1)?, ctx);
+            let items: Vec<Expr> = args
+                .iter()
+                .skip(2)
+                .map(|a| translate_argument(a, ctx))
+                .collect();
+            parse_quote!({
+                let mut __v = #recv.clone();
+                let __start = #start;
+                let __del = #del;
+                __v.splice(__start..(__start + __del), [#(#items),*]);
+                __v
+            })
+        }
+        // `.with(i, v)` → copy with element `i` replaced (ES2023).
+        "with" if args.len() == 2 => {
+            let i = usize_arg(args.first()?, ctx);
+            let v = translate_argument(args.get(1)?, ctx);
+            parse_quote!({
+                let mut __v = #recv.clone();
+                __v[#i] = #v;
+                __v
+            })
+        }
         _ => return None,
     })
 }

@@ -172,3 +172,20 @@ use super::super::Translator;
         assert!(rust.contains("format!("), "got:\n{rust}");
         assert!(rust.contains("\"{}{}{}\""), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_string_at_to_chars_nth() {
+        let src = "function f(s: string): string { return s.at(0); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".chars().nth("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_string_last_index_of_to_rfind() {
+        let src = "function f(s: string): number { return s.lastIndexOf(\"l\"); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".rfind("), "got:\n{rust}");
+        assert!(rust.contains("unwrap_or(-1.0)"), "got:\n{rust}");
+    }

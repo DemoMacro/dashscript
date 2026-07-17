@@ -245,3 +245,38 @@ use super::super::Translator;
         let rust = Translator::new().translate(src).expect("should translate");
         assert!(rust.contains(".rev().fold("), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_array_to_sorted_to_clone_sort() {
+        let src = "function f(xs: number[]): number[] { return xs.toSorted(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".clone()"), "got:\n{rust}");
+        assert!(rust.contains(".sort_by(|a, b| a.partial_cmp(b)"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_to_reversed_to_rev_collect() {
+        let src = "function f(xs: number[]): number[] { return xs.toReversed(); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".iter().copied().rev().collect::<Vec<_>>()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_to_spliced_to_clone_splice() {
+        let src = "function f(xs: number[]): number[] { return xs.toSpliced(1, 2); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".clone()"), "got:\n{rust}");
+        assert!(rust.contains(".splice("), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_array_with_to_clone_index_assign() {
+        let src = "function f(xs: number[]): number[] { return xs.with(0, 9); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".clone()"), "got:\n{rust}");
+        assert!(rust.contains("__v[0.0 as usize] = 9.0"), "got:\n{rust}");
+    }

@@ -5,7 +5,7 @@ use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
 use super::super::super::context::Ctx;
-use super::super::translate_expr;
+use super::super::{translate_argument, translate_expr};
 use super::{str_method_arg, usize_arg};
 
 /// A string method's receiver. A string literal stays a bare `&str` — every
@@ -138,6 +138,27 @@ pub(in crate::translator::expressions) fn string_method(
             }
             let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
             parse_quote!(format!(#fmt_lit, #obj, #(#parts),*))
+        }
+        // `.at(i)` → the i-th char as a String ("" if out of range). TS allows
+        // a negative `i` to count from the end; `obj` is bound once so it isn't
+        // re-evaluated for the length lookup.
+        "at" => {
+            let i = translate_argument(args.first()?, ctx);
+            parse_quote!({
+                let __s = #obj;
+                let __n = (#i) as i64;
+                let __idx = if __n >= 0 {
+                    __n as usize
+                } else {
+                    (__s.chars().count() as i64 + __n) as usize
+                };
+                __s.chars().nth(__idx).map(|c| c.to_string()).unwrap_or_default()
+            })
+        }
+        // `.lastIndexOf(s)` → last byte offset of `s`, or -1 (`rfind`).
+        "lastIndexOf" => {
+            let needle = str_method_arg(args.first()?, ctx);
+            parse_quote!(#obj.rfind(#needle).map(|b| b as f64).unwrap_or(-1.0))
         }
         _ => return None,
     })
