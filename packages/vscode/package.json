@@ -3,7 +3,7 @@
   "displayName": "DashScript",
   "version": "0.0.0",
   "private": true,
-  "description": "Language support for DashScript (.ds) — a TypeScript-flavored syntax that transpiles to Rust.",
+  "description": "Language support for DashScript (.ds) — TypeScript ergonomics, Rust performance, compiled to native.",
   "categories": [
     "Programming Languages"
   ],

@@ -1,4 +1,4 @@
-//! dashscript — a TypeScript-frontend language that transpiles to idiomatic Rust.
+//! dashscript — TypeScript ergonomics, Rust performance, compiled to native.
 //!
 //! Three responsibilities, no more:
 //! - [`translator`] — oxc AST → Rust source

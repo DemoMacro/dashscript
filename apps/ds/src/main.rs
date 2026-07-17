@@ -17,13 +17,24 @@ mod lsp;
 fn main() -> ExitCode {
     let mut args = std::env::args().skip(1);
     match args.next().as_deref() {
+        // Standard flags at the top level: `ds --help` / `ds -h` / `ds help`
+        // print usage; `ds --version` / `ds -v` print the version.
+        Some("-h") | Some("--help") | Some("help") => {
+            print_help();
+            ExitCode::SUCCESS
+        }
+        Some("-v") | Some("--version") => {
+            print_version();
+            ExitCode::SUCCESS
+        }
         // `ds <file.ds>` — run a file directly (like `node a.js` / `vp node`).
         Some(arg) if is_ds_file(arg) => report(run_file(arg)),
         // `ds run <script>` — run a `manifest.json` script (like `pnpm run`).
         // `run` is always explicit: `ds <script>` would collide with `ds <file.ds>`.
         Some("run") => match args.next() {
             Some(script) => report(run_script(&script)),
-            None => usage_exit("usage: ds run <script>"),
+            // `ds run` with no script lists available scripts (like `pnpm run`).
+            None => report(list_scripts()),
         },
         Some("build") => {
             let rest: Vec<String> = args.collect();
@@ -81,21 +92,72 @@ fn main() -> ExitCode {
             }
         },
         Some(other) => {
-            eprintln!("ds: unknown subcommand '{other}'");
-            eprintln!(
-                "available: <file.ds>, run <script>, build [<file>] [--target], add, remove, lint, check, fmt, install, cache clean"
-            );
+            eprintln!("ds: unknown command '{other}'");
+            eprintln!("run `ds --help` for the list of commands");
             ExitCode::FAILURE
         }
         None => {
-            eprintln!("ds: DashScript toolchain");
-            eprintln!("usage: ds <command> [args]   (or: ds <file.ds>)");
-            eprintln!(
-                "commands: <file.ds>, run <script>, build, add, remove, lint, check, fmt, install, cache clean"
-            );
+            // No command: print the full help, but exit non-zero so shells and
+            // scripts can tell "nothing was run".
+            print_help();
             ExitCode::FAILURE
         }
     }
+}
+
+/// Print the grouped command reference (like `vp --help` / `pnpm --help`):
+/// commands grouped by purpose, each with a one-line description, plus the
+/// `Usage:` and `-h/-v` lines.
+fn print_help() {
+    println!("DashScript — TypeScript ergonomics, Rust performance, compiled to native.");
+    println!();
+    println!("Usage: ds <command> [args]");
+    println!("       ds <file.ds>              run a file directly (like `node a.js`)");
+    println!("       ds [ -h | --help | -v | --version ]");
+    println!();
+    println!("Run:");
+    println!("  <file.ds>            Run a file (translate → compile → run)");
+    println!("  run [<script>]       Run a manifest.json script (no arg lists scripts)");
+    println!();
+    println!("Build:");
+    println!("  build [<file>]       Compile a native binary to dist/<name> (default)");
+    println!("    --target rust        emit the translated Rust crate instead");
+    println!("    --filter <name>      build one workspace member");
+    println!();
+    println!("Check & format:");
+    println!("  lint <file>          Translatability check (in-process)");
+    println!("  check <file>         Lint + format check (in-process)");
+    println!("  fmt <file>           Format .ds in place (in-process)");
+    println!();
+    println!("Dependencies:");
+    println!("  add <crate|file.rs>  Add a crate (rust:<name>) or bindgen a local .rs");
+    println!("  remove <crate>       Remove a crate dependency");
+    println!("  install              Fetch manifest deps + write Cargo.lock");
+    println!();
+    println!("Cache & editor:");
+    println!("  cache clean          Remove the in-project .cache/");
+    println!("  lsp                  Run the language server (for editor extensions)");
+}
+
+/// Print the version (`ds --version` / `ds -v`), from the crate version.
+fn print_version() {
+    println!("ds {} (DashScript)", env!("CARGO_PKG_VERSION"));
+}
+
+/// List the scripts in `manifest.json` (`ds run` with no argument) — like
+/// `pnpm run` with no script name.
+fn list_scripts() -> Result<ExitCode, Box<dyn Error>> {
+    let manifest = read_manifest(&manifest_root().join("manifest.json")).unwrap_or_else(|_| default_manifest());
+    if manifest.scripts.is_empty() {
+        eprintln!("ds: no scripts in manifest.json");
+        return Ok(ExitCode::SUCCESS);
+    }
+    println!("available scripts:");
+    for (name, cmd) in &manifest.scripts {
+        println!("  {name}");
+        println!("    {cmd}");
+    }
+    Ok(ExitCode::SUCCESS)
 }
 
 /// Whether an argument is a direct `.ds` file run (`ds main.ds`). We only look
@@ -289,6 +351,24 @@ fn find_manifest_root(src_path: &Path) -> Option<PathBuf> {
     None
 }
 
+/// Find the nearest `manifest.json` walking up from the **cwd** (whereas
+/// [`find_manifest_root`] starts from a `.ds` file's directory). Used by
+/// cwd-based commands (`install`, `add`, `remove`, `run`) so they work from a
+/// subdirectory — mirroring pnpm/cargo, which find the workspace root from any
+/// nested dir. Falls back to the cwd when no manifest is found, so callers
+/// report "no manifest.json here" instead of panicking.
+fn manifest_root() -> PathBuf {
+    let Ok(cwd) = std::env::current_dir() else {
+        return PathBuf::from(".");
+    };
+    for ancestor in cwd.ancestors() {
+        if ancestor.join("manifest.json").exists() {
+            return ancestor.to_path_buf();
+        }
+    }
+    PathBuf::from(".")
+}
+
 /// The global fallback cache for a lone `.ds` file (no `manifest.json` found
 /// walking up): `~/.cache/dash/<hash(canonical_path)>/`, keyed by the file's
 /// canonical path so the same file reuses it across runs.
@@ -391,8 +471,8 @@ fn run_file(file: &str) -> Result<ExitCode, Box<dyn Error>> {
 /// value through the system shell — so a script may be any shell command
 /// (`"ds main.ds"`, `"cargo test"`, …), like a `package.json` script.
 fn run_script(script: &str) -> Result<ExitCode, Box<dyn Error>> {
-    let manifest_path = Path::new("manifest.json");
-    let manifest = read_manifest(manifest_path)?;
+    let manifest_path = manifest_root().join("manifest.json");
+    let manifest = read_manifest(&manifest_path)?;
     let command = manifest
         .scripts
         .get(script)
@@ -503,10 +583,10 @@ fn add(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
     let crate_name = spec.strip_prefix("rust:").unwrap_or(spec);
     let version = fetch::add_via_cargo(crate_name, cargo_bin())
         .map_err(|e| format!("ds add {crate_name}: {e}"))?;
-    let manifest_path = Path::new("manifest.json");
-    let mut manifest = read_manifest(manifest_path).unwrap_or_else(|_| default_manifest());
+    let manifest_path = manifest_root().join("manifest.json");
+    let mut manifest = read_manifest(&manifest_path).unwrap_or_else(|_| default_manifest());
     manifest.add_dependency("rust", crate_name, &version);
-    fs::write(manifest_path, format!("{}\n", manifest.to_json()?))?;
+    fs::write(&manifest_path, format!("{}\n", manifest.to_json()?))?;
     println!("ds: added rust:{crate_name} = {version}");
     // Like `pnpm add`: record the dep, then refresh the lockfile (install) so
     // the new dependency is fetched and pinned in one step.
@@ -516,12 +596,12 @@ fn add(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
 /// Remove a crate dependency from `manifest.json`.
 fn remove(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
     let name = spec.strip_prefix("rust:").unwrap_or(spec);
-    let manifest_path = Path::new("manifest.json");
-    let mut manifest = read_manifest(manifest_path)?;
+    let manifest_path = manifest_root().join("manifest.json");
+    let mut manifest = read_manifest(&manifest_path)?;
     if !manifest.remove_dependency("rust", name) {
         return Err(format!("rust:{name} is not in {}", manifest_path.display()).into());
     }
-    fs::write(manifest_path, format!("{}\n", manifest.to_json()?))?;
+    fs::write(&manifest_path, format!("{}\n", manifest.to_json()?))?;
     println!("ds: removed rust:{name}");
     Ok(ExitCode::SUCCESS)
 }
@@ -640,11 +720,12 @@ fn fmt(file: &str) -> Result<ExitCode, Box<dyn Error>> {
 /// the dependency store, no `node_modules` equivalent — so a later `build`/run
 /// compiles without re-downloading.
 fn install() -> Result<ExitCode, Box<dyn Error>> {
-    let manifest = read_manifest(Path::new("manifest.json")).unwrap_or_else(|_| default_manifest());
-    // Reuse the build cache (`.cache/dash/<name>/`) — not a separate dir — so
+    let root = manifest_root();
+    let manifest = read_manifest(&root.join("manifest.json")).unwrap_or_else(|_| default_manifest());
+    // Reuse the build cache (`<root>/.cache/dash/<name>/`) — not a separate dir — so
     // the `Cargo.lock` `cargo fetch` writes here is the same one `build`/`run`
     // use. No duplicate cargo project, no throwaway lockfile.
-    let dir = PathBuf::from(".cache").join("dash").join(&manifest.name);
+    let dir = root.join(".cache").join("dash").join(&manifest.name);
     fs::create_dir_all(dir.join("src"))?;
     fs::write(dir.join("Cargo.toml"), manifest.to_cargo_toml())?;
     // `cargo fetch` requires a target to exist; a placeholder main.rs is never

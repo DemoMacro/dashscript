@@ -1,7 +1,7 @@
 {
   "name": "dashscript",
   "version": "0.0.0",
-  "description": "A TypeScript-frontend language that transpiles to idiomatic Rust.",
+  "description": "TypeScript ergonomics, Rust performance, compiled to native.",
   "keywords": [
     "compiler",
     "oxc",
