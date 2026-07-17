@@ -518,6 +518,24 @@
       "fixture": "function f(): number { return Math.LN10 + Math.LN2 + Math.LOG10E + Math.LOG2E + Math.SQRT2 + Math.SQRT1_2; }"
     },
     {
+      "id": "math.translates_math_rounding_and_root_methods",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.abs(x) + Math.ceil(x) + Math.round(x) + Math.sqrt(x) + Math.trunc(x); }"
+    },
+    {
+      "id": "math.translates_math_exp_log_trig_methods",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.exp(x) + Math.log2(x) + Math.cos(x) + Math.tan(x); }"
+    },
+    {
+      "id": "math.translates_math_min_and_e_constant",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(a: number, b: number): number { return Math.min(a, b) + Math.E; }"
+    },
+    {
       "id": "narrowing.translates_optional_chain_to_as_ref_map",
       "category": "narrowing",
       "source": "translator-tests",

@@ -150,3 +150,35 @@ use super::super::Translator;
         assert!(rust.contains("f64::consts::SQRT_2"), "got:\n{rust}");
         assert!(rust.contains("f64::consts::FRAC_1_SQRT_2"), "got:\n{rust}");
     }
+
+
+    #[test]
+    fn translates_math_rounding_and_root_methods() {
+        let src = "function f(x: number): number { return Math.abs(x) + Math.ceil(x) + Math.round(x) + Math.sqrt(x) + Math.trunc(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".abs()"), "got:\n{rust}");
+        assert!(rust.contains(".ceil()"), "got:\n{rust}");
+        assert!(rust.contains(".round()"), "got:\n{rust}");
+        assert!(rust.contains(".sqrt()"), "got:\n{rust}");
+        assert!(rust.contains(".trunc()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_math_exp_log_trig_methods() {
+        let src = "function f(x: number): number { return Math.exp(x) + Math.log2(x) + Math.cos(x) + Math.tan(x); }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".exp()"), "got:\n{rust}");
+        assert!(rust.contains(".log2()"), "got:\n{rust}");
+        assert!(rust.contains(".cos()"), "got:\n{rust}");
+        assert!(rust.contains(".tan()"), "got:\n{rust}");
+    }
+
+
+    #[test]
+    fn translates_math_min_and_e_constant() {
+        let src = "function f(a: number, b: number): number { return Math.min(a, b) + Math.E; }";
+        let rust = Translator::new().translate(src).expect("should translate");
+        assert!(rust.contains(".min("), "got:\n{rust}");
+        assert!(rust.contains("f64::consts::E"), "got:\n{rust}");
+    }

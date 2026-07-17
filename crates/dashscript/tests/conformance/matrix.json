@@ -602,6 +602,27 @@
     "note": ""
   },
   {
+    "id": "math.translates_math_rounding_and_root_methods",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_exp_log_trig_methods",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_min_and_e_constant",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "narrowing.translates_optional_chain_to_as_ref_map",
     "category": "narrowing",
     "status": "supported",
@@ -1749,7 +1770,7 @@
   {
     "id": "math.E",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1805,7 +1826,7 @@
   {
     "id": "math.abs",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1868,7 +1889,7 @@
   {
     "id": "math.ceil",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1882,7 +1903,7 @@
   {
     "id": "math.cos",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1896,7 +1917,7 @@
   {
     "id": "math.exp",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1966,7 +1987,7 @@
   {
     "id": "math.log2",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1980,7 +2001,7 @@
   {
     "id": "math.min",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2001,7 +2022,7 @@
   {
     "id": "math.round",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2029,7 +2050,7 @@
   {
     "id": "math.sqrt",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2043,7 +2064,7 @@
   {
     "id": "math.tan",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2057,7 +2078,7 @@
   {
     "id": "math.trunc",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
