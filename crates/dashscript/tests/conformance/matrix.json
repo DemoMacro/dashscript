@@ -994,6 +994,24 @@
     "note": ""
   },
   {
+    "id": "correctness.parse_int_radix",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "parseInt('ff', 16) prints 255"
+  },
+  {
+    "id": "correctness.array_join",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
+  },
+  {
     "id": "array.at",
     "category": "arrays",
     "status": "untested",
@@ -1661,49 +1679,49 @@
   {
     "id": "math.LN10",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.LN2",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.LOG10E",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.LOG2E",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.PI",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.SQRT1_2",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.SQRT2",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1752,7 +1770,7 @@
   {
     "id": "math.atan2",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1766,7 +1784,7 @@
   {
     "id": "math.cbrt",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1780,7 +1798,7 @@
   {
     "id": "math.clz32",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1808,7 +1826,7 @@
   {
     "id": "math.expm1",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1829,42 +1847,42 @@
   {
     "id": "math.fround",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.hypot",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.imul",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.log",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.log10",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.log1p",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -1913,14 +1931,14 @@
   {
     "id": "math.sign",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.sin",
     "category": "math",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2354,7 +2372,7 @@
   {
     "id": "global.parseInt",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
@@ -2396,40 +2414,22 @@
   {
     "id": "global.Number",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "global.String",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "global.Boolean",
     "category": "globals",
-    "status": "untested",
+    "status": "supported",
     "detail": "",
     "note": ""
-  },
-  {
-    "id": "correctness.parse_int_radix",
-    "category": "correctness",
-    "status": "supported",
-    "detail": "",
-    "expect": "supported",
-    "correct": true,
-    "note": "parseInt('ff', 16) prints 255"
-  },
-  {
-    "id": "correctness.array_join",
-    "category": "correctness",
-    "status": "supported",
-    "detail": "",
-    "expect": "supported",
-    "correct": true,
-    "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
   }
 ]

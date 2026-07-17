@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 347 features: **136** supported, **8** partial, **0** unsupported, **203** untested
+- 347 features: **159** supported, **8** partial, **0** unsupported, **180** untested
 - correctness cases passing: 2
 
 ## arrays
@@ -204,15 +204,15 @@
 | object.toString                                              | ⚪ untested  |               |
 | object.valueOf                                               | ⚪ untested  |               |
 | object.values                                                | ⚪ untested  |               |
-| global.parseInt                                              | ⚪ untested  |               |
+| global.parseInt                                              | 🟢 supported |               |
 | global.parseFloat                                            | ⚪ untested  |               |
 | global.isNaN                                                 | ⚪ untested  |               |
 | global.isFinite                                              | ⚪ untested  |               |
 | global.encodeURI                                             | ⚪ untested  |               |
 | global.decodeURI                                             | ⚪ untested  |               |
-| global.Number                                                | ⚪ untested  |               |
-| global.String                                                | ⚪ untested  |               |
-| global.Boolean                                               | ⚪ untested  |               |
+| global.Number                                                | 🟢 supported |               |
+| global.String                                                | 🟢 supported |               |
+| global.Boolean                                               | 🟢 supported |               |
 
 ## math
 
@@ -231,44 +231,44 @@
 | math.translates_math_sign_to_signum           | 🟢 supported |               |
 | math.translates_math_extra_constants          | 🟢 supported |               |
 | math.E                                        | ⚪ untested  |               |
-| math.LN10                                     | ⚪ untested  |               |
-| math.LN2                                      | ⚪ untested  |               |
-| math.LOG10E                                   | ⚪ untested  |               |
-| math.LOG2E                                    | ⚪ untested  |               |
-| math.PI                                       | ⚪ untested  |               |
-| math.SQRT1_2                                  | ⚪ untested  |               |
-| math.SQRT2                                    | ⚪ untested  |               |
+| math.LN10                                     | 🟢 supported |               |
+| math.LN2                                      | 🟢 supported |               |
+| math.LOG10E                                   | 🟢 supported |               |
+| math.LOG2E                                    | 🟢 supported |               |
+| math.PI                                       | 🟢 supported |               |
+| math.SQRT1_2                                  | 🟢 supported |               |
+| math.SQRT2                                    | 🟢 supported |               |
 | math.abs                                      | ⚪ untested  |               |
 | math.acos                                     | ⚪ untested  |               |
 | math.acosh                                    | ⚪ untested  |               |
 | math.asin                                     | ⚪ untested  |               |
 | math.asinh                                    | ⚪ untested  |               |
 | math.atan                                     | ⚪ untested  |               |
-| math.atan2                                    | ⚪ untested  |               |
+| math.atan2                                    | 🟢 supported |               |
 | math.atanh                                    | ⚪ untested  |               |
-| math.cbrt                                     | ⚪ untested  |               |
+| math.cbrt                                     | 🟢 supported |               |
 | math.ceil                                     | ⚪ untested  |               |
-| math.clz32                                    | ⚪ untested  |               |
+| math.clz32                                    | 🟢 supported |               |
 | math.cos                                      | ⚪ untested  |               |
 | math.cosh                                     | ⚪ untested  |               |
 | math.exp                                      | ⚪ untested  |               |
-| math.expm1                                    | ⚪ untested  |               |
+| math.expm1                                    | 🟢 supported |               |
 | math.f16round                                 | ⚪ untested  |               |
 | math.floor                                    | ⚪ untested  |               |
-| math.fround                                   | ⚪ untested  |               |
-| math.hypot                                    | ⚪ untested  |               |
-| math.imul                                     | ⚪ untested  |               |
-| math.log                                      | ⚪ untested  |               |
-| math.log10                                    | ⚪ untested  |               |
-| math.log1p                                    | ⚪ untested  |               |
+| math.fround                                   | 🟢 supported |               |
+| math.hypot                                    | 🟢 supported |               |
+| math.imul                                     | 🟢 supported |               |
+| math.log                                      | 🟢 supported |               |
+| math.log10                                    | 🟢 supported |               |
+| math.log1p                                    | 🟢 supported |               |
 | math.log2                                     | ⚪ untested  |               |
 | math.max                                      | ⚪ untested  |               |
 | math.min                                      | ⚪ untested  |               |
 | math.pow                                      | ⚪ untested  |               |
 | math.random                                   | ⚪ untested  |               |
 | math.round                                    | ⚪ untested  |               |
-| math.sign                                     | ⚪ untested  |               |
-| math.sin                                      | ⚪ untested  |               |
+| math.sign                                     | 🟢 supported |               |
+| math.sin                                      | 🟢 supported |               |
 | math.sinh                                     | ⚪ untested  |               |
 | math.sqrt                                     | ⚪ untested  |               |
 | math.sumPrecise                               | ⚪ untested  |               |

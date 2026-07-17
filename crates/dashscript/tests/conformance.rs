@@ -93,14 +93,15 @@ fn conformance_matrix() {
     fs::create_dir_all(project.join("src")).expect("create probe src");
 
     let mut outcomes: Vec<Outcome> = Vec::with_capacity(raws.len());
+    // (fixture text, observed status) of run features, for bcd association.
+    let mut tested: Vec<(String, &'static str)> = Vec::new();
+
+    // Phase 1 — run translator-tests + correctness fixtures (the slow cargo
+    // part). bcd catalog entries carry no fixture and are deferred to phase 2.
     for raw in &raws {
-        // bcd catalog = coverage gap (no call site). Record untested, skip cargo.
         if raw.source == "bcd" {
-            outcomes.push(outcome(raw, "untested", String::new(), None));
             continue;
         }
-        // translator-tests (informational) + manual/correctness (asserted): the
-        // slow part is `cargo check`, so the bcd short-circuit above matters.
         let diags = Translator::new().check(&raw.fixture);
         let (status, detail) = if !diags.is_empty() {
             let msg = diags.iter().map(|d| format!("{d}")).collect::<Vec<_>>().join(" | ");
@@ -135,7 +136,25 @@ fn conformance_matrix() {
             None
         };
 
+        tested.push((raw.fixture.clone(), status));
         outcomes.push(outcome(raw, status, detail, correct));
+    }
+
+    // Phase 2 — associate bcd catalog entries with a run fixture. math/global
+    // have an unambiguous call form (`Math.abs(`, `parseInt(`); a fixture
+    // containing it proves the API is exercised and inherits that status.
+    // String/array/number methods are ambiguous (`.includes(`) → stay untested.
+    for raw in &raws {
+        if raw.source != "bcd" {
+            continue;
+        }
+        if let Some(token) = probe_token(&raw.id) {
+            if let Some(&(_, st)) = tested.iter().find(|(f, _)| f.contains(token.as_str())) {
+                outcomes.push(outcome(raw, st, String::new(), None));
+                continue;
+            }
+        }
+        outcomes.push(outcome(raw, "untested", String::new(), None));
     }
 
     write_matrix(&outcomes);
@@ -156,6 +175,23 @@ fn conformance_matrix() {
         .collect::<Vec<_>>()
         .join("\n");
     panic!("{} conformance expectation(s) not met:\n{}", mismatches.len(), report);
+}
+
+/// For a bcd catalog id with an unambiguous call form, the substring a
+/// translator-tests fixture would contain if it exercised that API — used to
+/// associate bcd entries with already-run fixtures. `math.abs` → `Math.abs(`,
+/// `math.PI` → `Math.PI`, `global.parseInt` → `parseInt(`. String/array/number
+/// methods are ambiguous (`.includes(` could be either receiver) → `None`.
+fn probe_token(id: &str) -> Option<String> {
+    let (cat, name) = id.split_once('.')?;
+    match cat {
+        "math" if name.bytes().all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_') => {
+            Some(format!("Math.{name}"))
+        }
+        "math" => Some(format!("Math.{name}(")),
+        "global" => Some(format!("{name}(")),
+        _ => None,
+    }
 }
 
 fn outcome(raw: &RawFeature, status: &'static str, detail: String, correct: Option<bool>) -> Outcome {
