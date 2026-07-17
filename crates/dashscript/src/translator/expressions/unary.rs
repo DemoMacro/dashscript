@@ -3,9 +3,11 @@
 
 use oxc_ast::ast::{ConditionalExpression, Expression, TSNonNullExpression, UnaryExpression};
 use oxc_syntax::operator::UnaryOperator;
-use syn::{parse_quote, Expr, UnOp};
+use proc_macro2::Span;
+use syn::{parse_quote, Expr, LitStr, UnOp};
 
 use super::super::bindings;
+use super::super::builtins;
 use super::super::context::Ctx;
 use super::translate_expr;
 
@@ -26,8 +28,40 @@ pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
         }),
         // `~a` → `!(a as i32) as f64` (TS `~` is 32-bit bitwise NOT).
         UnaryOperator::BitwiseNot => parse_quote!((!(#arg as i32)) as f64),
+        // `typeof x` is a compile-time type query (DashScript is statically
+        // typed), so the JS type string is known from the operand's spelling.
+        UnaryOperator::Typeof => type_of_expr(&un.argument),
         _ => parse_quote!(::core::todo!()),
     }
+}
+
+/// `typeof x` — the JS type string, known at translate time from the
+/// operand's spelling (DashScript is statically typed, so this is a compile-
+/// time query, not a runtime check). `typeof <number>` → `"number"`,
+/// `<string>` → `"string"`, `<boolean>` → `"boolean"`, `typeof null` →
+/// `"object"` (the JS quirk), `typeof Math.<const>` → `"number"`, `typeof
+/// Math.<method>` → `"function"` (a function reference). Anything else falls
+/// back to `"object"`. Returned as a Rust `String`.
+fn type_of_expr(arg: &Expression) -> Expr {
+    let s: &str = match arg {
+        Expression::NumericLiteral(_) => "number",
+        Expression::StringLiteral(_) => "string",
+        Expression::BooleanLiteral(_) => "boolean",
+        // JS `typeof null === "object"` — the famous bug, kept for conformance.
+        Expression::NullLiteral(_) => "object",
+        Expression::StaticMemberExpression(sm) if builtins::is_ident(&sm.object, "Math") => {
+            // `Math.<constant>` is a number; `Math.<method>` is a function ref.
+            if builtins::math_constant(&sm.property.name).is_some() {
+                "number"
+            } else {
+                "function"
+            }
+        }
+        Expression::FunctionExpression(_) | Expression::ArrowFunctionExpression(_) => "function",
+        _ => "object",
+    };
+    let lit = LitStr::new(s, Span::call_site());
+    parse_quote!(#lit.to_string())
 }
 
 /// `cond ? a : b` → `if cond { a } else { b }` — Rust's `if` is an expression.

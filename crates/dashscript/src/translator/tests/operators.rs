@@ -20,6 +20,30 @@ fn translates_logical_and_unary() {
 }
 
 #[test]
+fn translates_typeof_to_js_type_string() {
+    let src = "function f(): void {\n\
+        \x20   console.log(typeof Math.PI);\n\
+        \x20   console.log(typeof Math.max);\n\
+        \x20   console.log(typeof 1);\n\
+        \x20   console.log(typeof \"x\");\n\
+        \x20   console.log(typeof true);\n\
+        \x20   console.log(typeof null);\n\
+        }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    // `typeof` is a compile-time query; each operand spells its JS type.
+    assert!(rust.contains("\"function\""), "Math.max: {rust}");
+    // `typeof Math.PI` and `typeof 1` both spell "number".
+    assert!(
+        rust.matches("\"number\"").count() >= 2,
+        "number spelling: {rust}"
+    );
+    assert!(rust.contains("\"string\""), "\"x\": {rust}");
+    assert!(rust.contains("\"boolean\""), "true: {rust}");
+    // JS `typeof null === "object"` (the famous quirk).
+    assert!(rust.contains("\"object\""), "null: {rust}");
+}
+
+#[test]
 fn translates_compound_assignment() {
     let src = "function f(): void { let n = 0; n += 5; n = n * 2; }";
     let rust = Translator::new().translate(src).expect("should translate");

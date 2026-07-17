@@ -1804,11 +1804,10 @@
   {
     "id": "test262.test.built-ins.math.e.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
@@ -2075,22 +2074,20 @@
   {
     "id": "test262.test.built-ins.math.ln10.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.ln2.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
@@ -2154,11 +2151,10 @@
   {
     "id": "test262.test.built-ins.math.log10e.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
@@ -2182,11 +2178,10 @@
   {
     "id": "test262.test.built-ins.math.log2e.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
@@ -2226,7 +2221,7 @@
     "id": "test262.test.built-ins.math.max.s15.8.2.11_a4",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2275,7 +2270,7 @@
     "id": "test262.test.built-ins.math.min.s15.8.2.12_a4",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:2:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2291,11 +2286,10 @@
   {
     "id": "test262.test.built-ins.math.pi.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
@@ -2505,22 +2499,20 @@
   {
     "id": "test262.test.built-ins.math.sqrt1_2.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sqrt2.value",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
+      "status": "matched"
     },
     "note": ""
   },
