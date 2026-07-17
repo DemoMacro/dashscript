@@ -81,18 +81,18 @@ $ ds fmt <file>    # format .ds in place (in-process)
 
 ## CLI
 
-| Command                        | Description                                                                                         |
-| ------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `ds <file.ds>`                 | Run a file directly — translate → compile (cached) → run (like `node a.js`)                         |
-| `ds run <script>`              | Run a `manifest.json` script (like `pnpm run`)                                                      |
-| `ds build [<file>] [--target]` | Parse → translate → compile a native binary in `dist/<name>` (`--target rust` emits the Rust crate) |
-| `ds lint <file>`               | Translatability check (in-process, on the oxc AST)                                                  |
-| `ds check <file>`              | Lint + format check, like `vp check` (in-process)                                                   |
-| `ds fmt <file>`                | Format `.ds` in place (in-process)                                                                  |
-| `ds install`                   | Fetch manifest deps via cargo + write `Cargo.lock` (like `pnpm install`)                            |
-| `ds add rust:<crate>`          | Fetch crate via cargo + record `rust:<crate>` in `manifest.json`                                    |
-| `ds add <file>.rs`             | Bindgen a local Rust file → `<stem>.ds` declaration                                                 |
-| `ds cache clean`               | Remove the in-project `.cache/`                                                                     |
+| Command                                   | Description                                                                                                                                      |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ds <file.ds>`                            | Run a file directly — translate → compile (cached) → run (like `node a.js`)                                                                      |
+| `ds run <script>`                         | Run a `manifest.json` script (like `pnpm run`)                                                                                                   |
+| `ds build [<file>] [--target] [--filter]` | Compile a native binary in `dist/<name>` (at a workspace root, builds all members; `--filter <name>` picks one; `--target rust` emits the crate) |
+| `ds lint <file>`                          | Translatability check (in-process, on the oxc AST)                                                                                               |
+| `ds check <file>`                         | Lint + format check, like `vp check` (in-process)                                                                                                |
+| `ds fmt <file>`                           | Format `.ds` in place (in-process)                                                                                                               |
+| `ds install`                              | Fetch manifest deps via cargo + write `Cargo.lock` (like `pnpm install`)                                                                         |
+| `ds add rust:<crate>`                     | Fetch crate via cargo + record `rust:<crate>` in `manifest.json`                                                                                 |
+| `ds add <file>.rs`                        | Bindgen a local Rust file → `<stem>.ds` declaration                                                                                              |
+| `ds cache clean`                          | Remove the in-project `.cache/`                                                                                                                  |
 
 ## Under the Hood
 

@@ -28,7 +28,17 @@ fn main() -> ExitCode {
         Some("build") => {
             let rest: Vec<String> = args.collect();
             match parse_build_args(&rest) {
-                Ok((file, target)) => report(build(file.as_deref(), target.as_deref())),
+                Ok((file, target, filter)) => {
+                    // No file at a workspace root → build every member (--filter
+                    // picks one). `--filter` is workspace-only.
+                    if file.is_none() && is_workspace_root(Path::new(".")) {
+                        report(workspace_build(Path::new("."), filter.as_deref(), target.as_deref()))
+                    } else if filter.is_some() {
+                        usage_exit("ds build: --filter <name> only applies at a workspace root")
+                    } else {
+                        report(build(file.as_deref(), target.as_deref()))
+                    }
+                }
                 Err(msg) => usage_exit(&msg),
             }
         }
@@ -94,12 +104,19 @@ fn is_ds_file(arg: &str) -> bool {
     arg.ends_with(".ds")
 }
 
-/// Parse `ds build` arguments: an optional `.ds` file and an optional
-/// `--target <bin|rust>` override. Returns an error message on misuse (shown
-/// as usage). No file means build the project entry (`manifest.entry`/`main.ds`).
-fn parse_build_args(args: &[String]) -> Result<(Option<String>, Option<String>), String> {
+/// Parsed `ds build` flags: optional entry file, optional `--target`, optional
+/// `--filter` (workspace member).
+type BuildArgs = (Option<String>, Option<String>, Option<String>);
+
+/// Parse `ds build` arguments: an optional `.ds` file, an optional
+/// `--target <bin|rust>` override, and an optional `--filter <name>` (workspace
+/// member). Returns an error message on misuse (shown as usage). No file means
+/// build the project entry (`manifest.entry`/`main.ds`) — or, at a workspace
+/// root, every member.
+fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
     let mut file = None;
     let mut target = None;
+    let mut filter = None;
     let mut i = 0;
     while i < args.len() {
         match args[i].as_str() {
@@ -108,7 +125,15 @@ fn parse_build_args(args: &[String]) -> Result<(Option<String>, Option<String>),
                     target = Some(args[i + 1].clone());
                     i += 2;
                 } else {
-                    return Err("usage: ds build [<file.ds>] [--target <bin|rust>]".into());
+                    return Err("usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]".into());
+                }
+            }
+            "--filter" => {
+                if i + 1 < args.len() {
+                    filter = Some(args[i + 1].clone());
+                    i += 2;
+                } else {
+                    return Err("usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]".into());
                 }
             }
             f if !f.starts_with('-') => {
@@ -118,7 +143,7 @@ fn parse_build_args(args: &[String]) -> Result<(Option<String>, Option<String>),
             other => return Err(format!("ds build: unknown option '{other}'")),
         }
     }
-    Ok((file, target))
+    Ok((file, target, filter))
 }
 
 /// Report a command result, printing any error to stderr.
@@ -384,7 +409,19 @@ fn build(file: Option<&str>, target_override: Option<&str>) -> Result<ExitCode, 
         Some(f) => f.to_string(),
         None => resolve_entry()?,
     };
-    let path = Path::new(&file);
+    build_at(&file, None, target_override)
+}
+
+/// Core build: translate `entry`, then emit a native binary (`bin`) or Rust
+/// crate (`rust`) to `dist/<name>`. `cache_override` pins the cache root — a
+/// workspace passes the workspace root so every member caches under one
+/// `.cache/`; `None` resolves it Deno-style from the entry.
+fn build_at(
+    entry: &str,
+    cache_override: Option<&Path>,
+    target_override: Option<&str>,
+) -> Result<ExitCode, Box<dyn Error>> {
+    let path = Path::new(entry);
     let src = fs::read_to_string(path)
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     let name = project_name(path);
@@ -409,7 +446,10 @@ fn build(file: Option<&str>, target_override: Option<&str>) -> Result<ExitCode, 
             Ok(ExitCode::SUCCESS)
         }
         "bin" => {
-            let cache = cache_project_dir(path);
+            let cache = match cache_override {
+                Some(root) => root.join(".cache").join("build").join(&name),
+                None => cache_project_dir(path),
+            };
             emit_cargo_project(&src, path, &cache)?;
             let status = invoke_cargo(&cache, ["build", "--release", "--quiet"])?;
             if !status.success() {
@@ -609,6 +649,137 @@ fn cache_clean() -> Result<ExitCode, Box<dyn Error>> {
     fs::remove_dir_all(&cache)?;
     println!("ds: cleaned {}", cache.display());
     Ok(ExitCode::SUCCESS)
+}
+
+/// Whether `dir` is a workspace root: its `manifest.json` has a non-empty
+/// `workspace` member-glob list that resolves to at least one member.
+fn is_workspace_root(dir: &Path) -> bool {
+    !discover_members(dir).is_empty()
+}
+
+/// Build every member of the workspace at `root`, or just the one named by
+/// `filter`. Each member builds from its own entry but caches under the
+/// workspace root, so one `ds cache clean` clears them all.
+fn workspace_build(
+    root: &Path,
+    filter: Option<&str>,
+    target_override: Option<&str>,
+) -> Result<ExitCode, Box<dyn Error>> {
+    let members = discover_members(root);
+    if members.is_empty() {
+        return Err(
+            "ds build: no workspace members matched (check `workspace` globs in manifest.json)"
+                .into(),
+        );
+    }
+    let mut built = 0;
+    for member in &members {
+        let dir_name = member_name_fallback(member);
+        let name = manifest_name_of(member).unwrap_or_else(|| dir_name.clone());
+        // `--filter` matches either the manifest name or the member directory.
+        if let Some(want) = filter {
+            if name != want && dir_name != want {
+                continue;
+            }
+        }
+        let entry = resolve_member_entry(member)?;
+        println!("ds: {name} (workspace member)");
+        let code = build_at(&entry, Some(root), target_override)?;
+        built += 1;
+        if !matches!(code, ExitCode::SUCCESS) {
+            return Ok(code);
+        }
+    }
+    if filter.is_some() && built == 0 {
+        return Err(format!(
+            "ds build: --filter '{}' matched no workspace member",
+            filter.unwrap_or("?")
+        )
+        .into());
+    }
+    Ok(ExitCode::SUCCESS)
+}
+
+/// Resolve a root manifest's `workspace` globs (e.g. `["apps/*", "packages/*"]`)
+/// into member directories — each a subdirectory holding its own `manifest.json`.
+/// Empty if `root` has no `workspace` field or no members match.
+fn discover_members(root: &Path) -> Vec<PathBuf> {
+    let Ok(json) = fs::read_to_string(root.join("manifest.json")) else {
+        return Vec::new();
+    };
+    let Ok(manifest) = Manifest::from_json(&json) else {
+        return Vec::new();
+    };
+    if manifest.workspace.is_empty() {
+        return Vec::new();
+    }
+    let mut members = Vec::new();
+    for glob in &manifest.workspace {
+        for member in expand_member_glob(root, glob) {
+            if !members.contains(&member) {
+                members.push(member);
+            }
+        }
+    }
+    members
+}
+
+/// Expand one workspace glob (`<dir>/*`) relative to `root` into the
+/// subdirectories of `<dir>` that hold a `manifest.json`. Only the trailing
+/// `/*` form is supported (the common pnpm-workspace / cargo-members case).
+fn expand_member_glob(root: &Path, glob: &str) -> Vec<PathBuf> {
+    let Some(dir_name) = glob.strip_suffix("/*") else {
+        return Vec::new();
+    };
+    let dir = root.join(dir_name);
+    let Ok(entries) = fs::read_dir(&dir) else {
+        return Vec::new();
+    };
+    let mut out: Vec<PathBuf> = entries
+        .flatten()
+        .map(|e| e.path())
+        .filter(|p| p.is_dir() && p.join("manifest.json").exists())
+        .collect();
+    out.sort();
+    out
+}
+
+/// A member's entry: its manifest `entry`, else `main.ds` inside the member.
+fn resolve_member_entry(member: &Path) -> Result<String, Box<dyn Error>> {
+    let manifest_path = member.join("manifest.json");
+    if let Ok(manifest) = read_manifest(&manifest_path) {
+        if let Some(entry) = &manifest.entry {
+            let p = member.join(entry);
+            if p.exists() {
+                return Ok(p.to_string_lossy().into_owned());
+            }
+        }
+    }
+    let main = member.join("main.ds");
+    if main.exists() {
+        return Ok(main.to_string_lossy().into_owned());
+    }
+    Err(format!(
+        "ds build: member {} has no entry (set manifest entry or add main.ds)",
+        member.display()
+    )
+    .into())
+}
+
+/// Read a member's manifest `name` (for `--filter` matching and display).
+fn manifest_name_of(member: &Path) -> Option<String> {
+    read_manifest(&member.join("manifest.json"))
+        .ok()
+        .map(|m| m.name)
+}
+
+/// Fallback member name: the directory's own name.
+fn member_name_fallback(member: &Path) -> String {
+    member
+        .file_name()
+        .and_then(|s| s.to_str())
+        .unwrap_or("member")
+        .to_string()
 }
 
 fn invoke_cargo<const N: usize>(project: &Path, args: [&str; N]) -> Result<ExitStatus, Box<dyn Error>> {

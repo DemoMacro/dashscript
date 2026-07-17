@@ -124,6 +124,8 @@ ds test                       # run .ds tests (planned)
 
 `ds <file.ds>` runs a file directly (like `node a.js`); `ds run <script>` runs a `manifest.json` script (like `pnpm run` — `run` is always explicit so it never collides with `ds <file.ds>`). `ds build` defaults to a **native binary** — the way `vp pack` ships a runnable artifact, not an intermediate project. Translate → a cached Cargo project (`.cache/build/<name>/` in-project — **one per project**, keyed by the manifest name so a project's entries share a cache and two `main.ds` files in different projects don't collide; or `~/.cache/dash/<hash>/` for a lone file, looked up by walking up from the `.ds` for a `manifest.json`) → `cargo build --release` → copy the binary to `dist/<name>`. `--target rust` stops at the translated Rust crate (`dist/<name>/`, no `target/`); `--target` overrides the manifest `target` (default `bin`). `<name>` is the `manifest.json` `name` (fallback: parent dir, then file stem). `target/` never lands in `dist/`.
 
+`ds build` at a **workspace root** (a `manifest.json` with a `workspace` glob list, e.g. `["apps/*", "packages/*"]`) builds every member — each compiles from its own `manifest.json` entry, but all cache under the one workspace `.cache/`, so a single `ds cache clean` clears them. `--filter <name>` (member manifest name or directory) builds one member. This mirrors `pnpm-workspace.yaml` / cargo `[workspace]`; task caching (turbo/nx hash-skipping) is not yet done.
+
 `ds add` has two modes: `rust:<crate>` records a crate in `manifest.json` (no `.ds` stub — types come from the crate's source via the language server); `<file>.rs` runs bindgen to emit `<stem>.ds`. There is **no separate `ds gen` step**.
 
 ## Design Decisions
@@ -162,6 +164,9 @@ DashScript pins a specific Rust version and downloads its standalone build on de
 
 **One core crate, modular (vs many crates).**
 The three responsibilities are small and share the translation table; a single `dashscript` crate with `translator` / `manifest` / `bindgen` modules is enough until a module needs independent versioning. ✅ low overhead · ❌ coarser release granularity.
+
+**Workspace via manifest globs (vs a separate workspace file).**
+A root `manifest.json` with a `workspace` glob list (`["apps/*", "packages/*"]`) declares members — the same file already carries project metadata, so there is no separate `pnpm-workspace.yaml`. `ds build` at the root builds every member, each caching under the shared workspace `.cache/`; `--filter <name>` picks one. ✅ one manifest format, monorepo from day one · ❌ members are independent builds today (no shared cargo `target/`, no inter-member dependencies, no task caching — those land as real demand drives them).
 
 ## Roadmap
 
