@@ -1,0 +1,5 @@
+{
+  "name": "int-add",
+  "target": "bin",
+  "dependencies": {}
+}

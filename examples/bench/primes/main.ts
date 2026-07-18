@@ -1,0 +1,31 @@
+// primes — Sieve of Eratosthenes up to 1e6. Array writes + indexed reads +
+// nested loops over a boolean sieve: exercises Vec indexing, indexed
+// assignment, and tight inner loops. Numeric + memory-access bound. The
+// sieve is sized with push (a bare `sieve[i] = v` lowers to a Vec index
+// assignment, which would panic on an empty Vec rather than auto-grow like
+// a JS array), then indexed assignments stay in range.
+function main(): void {
+  const N = 1e6;
+  let sieve: boolean[] = [];
+  for (let i = 0; i <= N; i = i + 1) {
+    sieve.push(true);
+  }
+  sieve[0] = false;
+  sieve[1] = false;
+  for (let i = 2; i * i <= N; i = i + 1) {
+    if (sieve[i]) {
+      for (let j = i * i; j <= N; j = j + i) {
+        sieve[j] = false;
+      }
+    }
+  }
+  let count = 0;
+  for (let i = 0; i <= N; i = i + 1) {
+    if (sieve[i]) {
+      count = count + 1;
+    }
+  }
+  console.log(count);
+}
+main();
+export {};

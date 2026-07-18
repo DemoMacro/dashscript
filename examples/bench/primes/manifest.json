@@ -1,0 +1,5 @@
+{
+  "name": "primes",
+  "target": "bin",
+  "dependencies": {}
+}

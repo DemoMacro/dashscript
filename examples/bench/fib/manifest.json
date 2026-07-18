@@ -1,0 +1,5 @@
+{
+  "name": "fib",
+  "target": "bin",
+  "dependencies": {}
+}

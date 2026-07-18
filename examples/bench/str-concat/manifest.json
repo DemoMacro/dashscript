@@ -1,0 +1,5 @@
+{
+  "name": "str-concat",
+  "target": "bin",
+  "dependencies": {}
+}

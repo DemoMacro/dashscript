@@ -1,0 +1,15 @@
+// fib — recursive Fibonacci. Numeric-heavy and allocation-free (no GC
+// pressure): the classic microbenchmark where a transpiler's zero-overhead
+// native code is expected to lead JIT runtimes (no warmup, no boxing). The
+// `main` function is DashScript's entry point (it lowers to Rust `fn main`);
+// the identical source runs under node/bun as TypeScript with a trailing
+// `main()` call, so the algorithm under test is the same across all three.
+function fib(n: number): number {
+  if (n < 2) return n;
+  return fib(n - 1) + fib(n - 2);
+}
+function main(): void {
+  console.log(fib(35));
+}
+main();
+export {};

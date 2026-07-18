@@ -1,0 +1,15 @@
+// str-concat — repeated string concatenation, 1e5 appends. String growth
+// exercises heap allocation and copy-on-grow. V8/JSC ship heavily tuned
+// cons-string / rope builders; a transpiler lowering `s = s + "x"` to a
+// naive reallocation pays O(n^2) here, so this is the honest counter-example
+// to the numeric wins — a known translator optimization target, reported as
+// such rather than hidden. N kept at 1e5 so the O(n^2) reallocation stays
+// runnable.
+function main(): void {
+  const N = 1e5;
+  let s = "";
+  for (let i = 0; i < N; i = i + 1) {
+    s = s + "x";
+  }
+  console.log(s.length);
+}
