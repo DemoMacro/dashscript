@@ -16,4 +16,4 @@ pub mod translator;
 
 pub use bindgen::Bindgen;
 pub use manifest::Manifest;
-pub use translator::Translator;
+pub use translator::{RuntimeDeps, Translator};

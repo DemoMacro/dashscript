@@ -10,7 +10,7 @@ use std::{
     process::{Command, ExitCode, ExitStatus},
 };
 
-use dashscript::{Manifest, Translator};
+use dashscript::{Manifest, RuntimeDeps, Translator};
 
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
@@ -22,24 +22,26 @@ pub(crate) fn translate_sources(
     src: &str,
     src_path: &Path,
     project_dir: &Path,
-) -> Result<(), Box<dyn Error>> {
-    let rust = Translator::new()
-        .translate(src)
+) -> Result<RuntimeDeps, Box<dyn Error>> {
+    let translator = Translator::new();
+    let (rust, mut deps) = translator
+        .translate_with_deps(src)
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;
 
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
-    for imp in Translator::new().imports(src) {
+    for imp in translator.imports(src) {
         if !seen.insert(imp.module.clone()) {
             continue; // dedupe repeated imports of the same module
         }
         let dep_path = resolve_local_module(base, &imp.source)?;
         let dep_src = fs::read_to_string(&dep_path)
             .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
-        let dep_rust = Translator::new()
-            .translate(&dep_src)
+        let (dep_rust, dep_deps) = translator
+            .translate_with_deps(&dep_src)
             .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
+        deps.merge(&dep_deps);
         fs::write(
             project_dir.join("src").join(format!("{}.rs", imp.module)),
             dep_rust,
@@ -53,21 +55,22 @@ pub(crate) fn translate_sources(
         format!("{mod_decls}\n{rust}")
     };
     fs::write(project_dir.join("src").join("main.rs"), main)?;
-    Ok(())
+    Ok(deps)
 }
 
 /// Translate one `.ds` file to `src/<stem>.rs`, prefixing `mod <module>;` for
 /// each of its local imports (deduped). The imported files are translated
 /// separately by [`translate_project`]'s directory walk — this emits only the
 /// current file and the modules it declares.
-fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<(), Box<dyn Error>> {
+fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<RuntimeDeps, Box<dyn Error>> {
+    let translator = Translator::new();
     let src = fs::read_to_string(ds).map_err(|e| format!("cannot read {}: {e}", ds.display()))?;
-    let rust = Translator::new()
-        .translate(&src)
+    let (rust, deps) = translator
+        .translate_with_deps(&src)
         .map_err(|e| format!("translate {}: {e}", ds.display()))?;
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
-    for imp in Translator::new().imports(&src) {
+    for imp in translator.imports(&src) {
         if seen.insert(imp.module.clone()) {
             mod_decls.push_str(&format!("mod {};\n", imp.module));
         }
@@ -81,7 +84,7 @@ fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<(), Box<dyn 
         project_dir.join("src").join(format!("{}.rs", stem_of(ds))),
         body,
     )?;
-    Ok(())
+    Ok(deps)
 }
 
 /// A project's resolved targets for `Cargo.toml`: the `(bin_name, ds_path)`
@@ -102,7 +105,7 @@ pub(crate) fn translate_project(
     root: &Path,
     manifest: &Manifest,
     project_dir: &Path,
-) -> Result<ProjectTargets, Box<dyn Error>> {
+) -> Result<(ProjectTargets, RuntimeDeps), Box<dyn Error>> {
     let src_dir = project_dir.join("src");
     fs::create_dir_all(&src_dir)?;
     // Clear stale translations from a prior run (a renamed bin, or a switch
@@ -115,6 +118,7 @@ pub(crate) fn translate_project(
 
     let mut seen_stems: std::collections::HashMap<String, PathBuf> =
         std::collections::HashMap::new();
+    let mut deps = RuntimeDeps::default();
     for ds in &files {
         let stem = stem_of(ds);
         if let Some(prev) = seen_stems.insert(stem.clone(), ds.clone()) {
@@ -126,13 +130,14 @@ pub(crate) fn translate_project(
             )
             .into());
         }
-        translate_one_with_mods(ds, project_dir)?;
+        let file_deps = translate_one_with_mods(ds, project_dir)?;
+        deps.merge(&file_deps);
     }
 
     let bins = manifest.bin_entries();
     let lib = manifest.lib.clone();
     detect_bin_imports_bin(root, &bins)?;
-    Ok((bins, lib))
+    Ok(((bins, lib), deps))
 }
 
 /// Guard: no bin may import another bin. cargo forbids one `[[bin]]` from
@@ -205,18 +210,105 @@ pub(crate) fn emit_cargo_project(
     if let Some(root) = find_manifest_root(src_path) {
         if let Ok(manifest) = read_manifest(&root.join("manifest.json")) {
             if manifest.bin.is_some() || manifest.lib.is_some() {
-                let (bins, lib) = translate_project(&root, &manifest, project_dir)?;
-                let cargo_toml = manifest.to_cargo_toml_with_bins(&bins, lib.as_deref());
+                let ((bins, lib), deps) = translate_project(&root, &manifest, project_dir)?;
+                let mut cargo_toml = manifest.to_cargo_toml_with_bins(&bins, lib.as_deref());
+                if deps.needs_ryu_js {
+                    append_ryu_js_dep(&mut cargo_toml);
+                }
                 fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
+                apply_runtime_deps(project_dir, &deps, &bin_lib_stems(&bins, lib.as_deref()))?;
                 return Ok(());
             }
         }
     }
-    let cargo_toml = resolve_manifest(src_path);
+    let mut cargo_toml = resolve_manifest(src_path);
     fs::create_dir_all(project_dir.join("src"))?;
+    let deps = translate_sources(src, src_path, project_dir)?;
+    if deps.needs_ryu_js {
+        append_ryu_js_dep(&mut cargo_toml);
+    }
     fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
-    translate_sources(src, src_path, project_dir)?;
+    apply_runtime_deps(project_dir, &deps, &["main".to_string()])?;
     Ok(())
+}
+
+/// The DashScript runtime helper module written beside the translated sources
+/// when a file routes an `f64` through ES `Number::toString`. `ryu_js`'s
+/// `Buffer::format` already matches ECMAScript for NaN and ±Infinity; the only
+/// special case it leaves is signed zero — ES prints both `+0` and `-0` as
+/// `"0"`, so the wrapper normalizes zero first.
+const DS_HELPER_MODULE: &str = "\
+//! DashScript runtime helper: ES-correct `Number::toString` via `ryu_js`.
+use ryu_js::Buffer;
+
+/// Format an `f64` as ECMAScript `Number::toString` would. `ryu_js` covers NaN
+/// and ±Infinity; signed zero is normalized to `\"0\"` (ES prints both `+0`
+/// and `-0` that way).
+pub fn number_to_string(x: f64) -> String {
+    if x == 0.0 {
+        return \"0\".to_string();
+    }
+    Buffer::new().format(x).to_string()
+}
+";
+
+/// The crate-root file stems (`src/<stem>.rs`) that declare modules — each bin
+/// entry's stem plus the lib stem, if any. The `__ds` helper is declared
+/// (`mod __ds;`) at each crate root so every translated file reaches it as
+/// `crate::__ds::…`.
+pub(crate) fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec<String> {
+    let mut stems: Vec<String> = bins
+        .iter()
+        .map(|(_, ds_path)| stem_of(Path::new(ds_path)))
+        .collect();
+    if let Some(lib_path) = lib {
+        stems.push(stem_of(Path::new(lib_path)));
+    }
+    stems
+}
+
+/// Write the `__ds` helper module and declare it (`mod __ds;`) at each crate
+/// root, when the translated sources reference it. A no-op when no runtime dep
+/// is set.
+pub(crate) fn apply_runtime_deps(
+    project_dir: &Path,
+    deps: &RuntimeDeps,
+    root_stems: &[String],
+) -> Result<(), Box<dyn Error>> {
+    if !deps.needs_ryu_js {
+        return Ok(());
+    }
+    fs::write(project_dir.join("src").join("__ds.rs"), DS_HELPER_MODULE)?;
+    for stem in root_stems {
+        let path = project_dir.join("src").join(format!("{stem}.rs"));
+        let Ok(body) = fs::read_to_string(&path) else {
+            continue;
+        };
+        if body.contains("mod __ds;") {
+            continue;
+        }
+        fs::write(&path, format!("mod __ds;\n{body}"))?;
+    }
+    Ok(())
+}
+
+/// Append `ryu_js = "1.0"` to a generated `Cargo.toml`, creating the
+/// `[dependencies]` section if absent. A string-level post-process keeps the
+/// dep out of the user's `manifest.json` — it is a DashScript-internal runtime
+/// need, not a declared project dependency. Skipped if `ryu_js` is already
+/// present (e.g. the project declared `rust:ryu_js` itself).
+pub(crate) fn append_ryu_js_dep(cargo_toml: &mut String) {
+    // The crates.io package is `ryu-js` (hyphen); Rust exposes it as `ryu_js`
+    // (underscore) in `use`, so the Cargo.toml key uses the package name.
+    const RYU_JS_LINE: &str = "ryu-js = \"1.0\"";
+    if cargo_toml.contains("ryu-js") {
+        return;
+    }
+    if let Some(pos) = cargo_toml.find("[dependencies]\n") {
+        cargo_toml.insert_str(pos + "[dependencies]\n".len(), &format!("{RYU_JS_LINE}\n"));
+    } else {
+        cargo_toml.push_str(&format!("\n[dependencies]\n{RYU_JS_LINE}\n"));
+    }
 }
 
 /// Resolve a relative `.ds` import (`"./other"` or `"./other.ds"`) against the
@@ -499,7 +591,7 @@ mod tests {
         write(root, "b.ds", "function main() { console.log(2); }");
 
         let out = tmp.path().join("out");
-        let (bins, lib) = translate_project(root, &manifest_at(root), &out).unwrap();
+        let ((bins, lib), _deps) = translate_project(root, &manifest_at(root), &out).unwrap();
         let names: Vec<&str> = bins.iter().map(|(n, _)| n.as_str()).collect();
         assert!(names.contains(&"a"), "bins: {bins:?}");
         assert!(names.contains(&"b"), "bins: {bins:?}");
@@ -553,5 +645,25 @@ mod tests {
         let err = translate_project(root, &manifest_at(root), &out).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("bin 'a' imports bin 'b'"), "got: {msg}");
+    }
+
+    #[test]
+    fn append_ryu_js_dep_inserts_into_dependencies_section() {
+        let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
+        append_ryu_js_dep(&mut toml);
+        assert!(toml.contains("ryu-js = \"1.0\""), "got:\n{toml}");
+        // Idempotent: a second pass must not duplicate the line.
+        append_ryu_js_dep(&mut toml);
+        assert_eq!(toml.matches("ryu-js").count(), 1, "got:\n{toml}");
+    }
+
+    #[test]
+    fn append_ryu_js_dep_creates_section_when_absent() {
+        let mut toml = String::from("[package]\nname = \"x\"\n");
+        append_ryu_js_dep(&mut toml);
+        assert!(
+            toml.contains("[dependencies]\nryu-js = \"1.0\""),
+            "got:\n{toml}"
+        );
     }
 }

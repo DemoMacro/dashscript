@@ -40,6 +40,14 @@ pub struct RuntimeDeps {
     pub needs_ryu_js: bool,
 }
 
+impl RuntimeDeps {
+    /// Union another dep set into this one — a project links a runtime dep if
+    /// any of its translated files does.
+    pub fn merge(&mut self, other: &RuntimeDeps) {
+        self.needs_ryu_js |= other.needs_ryu_js;
+    }
+}
+
 /// Translates a TypeScript-flavored `.ds` program into Rust source.
 #[derive(Default)]
 pub struct Translator;
@@ -109,11 +117,19 @@ impl Translator {
             attrs: Vec::new(),
             items,
         };
-        // No emit point records a dep yet; the wiring lands when number→string
-        // formatting routes through `__ds::number_to_string` (and a
-        // `RefCell<RuntimeDeps>` reaches the expression layer).
-        let deps = RuntimeDeps::default();
-        Ok((prettyplease::unparse(&file), deps))
+        // An emit point that routes an `f64` through the ES NumberToString
+        // helper writes a `crate::__ds::number_to_string` call into the Rust
+        // text; its presence means the generated crate needs the `ryu_js` crate
+        // and the `__ds` helper module. Scanning the emitted text (rather than
+        // threading a `RefCell<RuntimeDeps>` through every expression) keeps the
+        // dep report a pure function of the output — the `__ds::` prefix is a
+        // DashScript-reserved namespace a `.ds` source cannot produce any other
+        // way.
+        let rust = prettyplease::unparse(&file);
+        let deps = RuntimeDeps {
+            needs_ryu_js: rust.contains("__ds::number_to_string"),
+        };
+        Ok((rust, deps))
     }
 
     /// Check `.ds` source for translatability without emitting Rust.

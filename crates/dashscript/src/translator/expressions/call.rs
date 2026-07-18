@@ -36,6 +36,17 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                         }
                     }
                 }
+                Argument::NumericLiteral(_) => {
+                    // An ES `Number::toString`: Rust's `f64` `Display` differs
+                    // from ECMAScript (`1e21` → `1e+21`, `1e-7`, `-0` → `0`), so
+                    // route the literal through the `__ds` helper (ryu_js). The
+                    // helper call in the output flags the file as needing
+                    // `ryu_js`; see `Translator::translate_with_deps`.
+                    let e = translate_argument(a, ctx);
+                    let wrapped: Expr = parse_quote!(crate::__ds::number_to_string(#e));
+                    fmt.push_str("{}");
+                    vals.push(wrapped);
+                }
                 _ => {
                     let e = translate_argument(a, ctx);
                     match fmt_merge::inline_arg(e) {
