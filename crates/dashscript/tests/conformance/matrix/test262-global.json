@@ -1,0 +1,34 @@
+[
+  {
+    "id": "test262.test.built-ins.global.10.2.1.1.3-4-16-s",
+    "layer": "test262",
+    "category": "global",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.global.10.2.1.1.3-4-18-s",
+    "layer": "test262",
+    "category": "global",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.global.global-object",
+    "layer": "test262",
+    "category": "global",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error: `this` is only valid inside a class method\nsrc\\main.rs:3:27: error[E0425]: cannot find value `global_this` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `array` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:6:27: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `error` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.global.s15.1_a2_t1",
+    "layer": "test262",
+    "category": "global",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  }
+]

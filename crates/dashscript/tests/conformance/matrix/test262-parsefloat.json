@@ -1,0 +1,241 @@
+[
+  {
+    "id": "test262.test.built-ins.parsefloat.15.1.2.3-2-1",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t1",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t3",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:18:10: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:35:10: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t10_u180e",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a3_t1",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a3_t2",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a3_t3",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dd-nsl-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dds-nsl-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dd-nsl-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dds-nsl-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-nsl-dd-one-of",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dds-dot-dd-nsl-dd-ep-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dds-nsl-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dd-nsl-dd-ep",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dd-nsl-dds-ep",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dds-nsl-dd-ep",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dds-nsl-dds-ep",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-nzd-nsl-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-nzd-nsl-dd-one-of",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-nzd-nsl-dds",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-sign-plus-dds-nsl-dd",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  }
+]

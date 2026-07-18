@@ -1,0 +1,66 @@
+[
+  {
+    "id": "test262.test.built-ins.isnan.return-abrupt-from-tonumber-number-symbol",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.isnan.return-false-not-nan-numbers",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:5:27: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:7:27: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:9:27: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:11:27: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:13:27: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.isnan.s15.1.2.4_a2.6",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `is_na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.isnan.tonumber-operations",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "partial",
+    "detail": "src\\main.rs:2:43: error[E0599]: no method named `is_nan` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:3:42: error[E0599]: no method named `is_nan` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:4:50: error[E0599]: no method named `is_nan` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:5:62: error[E0599]: no method named `is_nan` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:6:32: error[E0599]: no method named `is_nan` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:7:33: error[E0599]: no method named `is_nan` found for type `bool` in the current scope: method not found in `bool`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.isnan.toprimitive-not-callable-throws",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.isnan.toprimitive-result-is-object-throws",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.isnan.toprimitive-result-is-symbol-throws",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.isnan.toprimitive-valid-result",
+    "layer": "test262",
+    "category": "isnan",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported",
+    "note": ""
+  }
+]

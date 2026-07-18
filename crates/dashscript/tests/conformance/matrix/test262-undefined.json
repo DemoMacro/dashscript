@@ -1,0 +1,34 @@
+[
+  {
+    "id": "test262.test.built-ins.undefined.15.1.1.3-0",
+    "layer": "test262",
+    "category": "undefined",
+    "status": "unsupported",
+    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.undefined.15.1.1.3-1",
+    "layer": "test262",
+    "category": "undefined",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error[E0425]: cannot find value `undefined` in this scope\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.undefined.15.1.1.3-2",
+    "layer": "test262",
+    "category": "undefined",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.undefined.15.1.1.3-3",
+    "layer": "test262",
+    "category": "undefined",
+    "status": "partial",
+    "detail": "src\\main.rs:2:24: error[E0425]: cannot find value `undefined` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  }
+]

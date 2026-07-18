@@ -1,0 +1,46 @@
+[
+  {
+    "id": "test262.test.built-ins.infinity.15.1.1.2-0",
+    "layer": "test262",
+    "category": "infinity",
+    "status": "unsupported",
+    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.infinity.s15.1.1.2_a1",
+    "layer": "test262",
+    "category": "infinity",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"number\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"number\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.infinity.s15.1.1.2_a2_t2",
+    "layer": "test262",
+    "category": "infinity",
+    "status": "partial",
+    "detail": "src\\main.rs:2:26: error[E0070]: invalid left-hand side of assignment\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.infinity.s15.1.1.2_a3_t2",
+    "layer": "test262",
+    "category": "infinity",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.infinity.s15.1.1.2_a4",
+    "layer": "test262",
+    "category": "infinity",
+    "status": "partial",
+    "detail": "src\\main.rs:2:17: error: `this` is only valid inside a class method\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  }
+]

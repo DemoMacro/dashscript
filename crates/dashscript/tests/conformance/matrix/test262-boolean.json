@@ -1,0 +1,198 @@
+[
+  {
+    "id": "test262.test.built-ins.boolean.prototype.constructor.s15.6.4.1_a1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a4",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.prototype.s15.6.4_a2",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t5",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t5",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t2",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "partial",
+    "detail": "src\\main.rs:9:27: error[E0425]: cannot find value `na_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t3",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"boolean\"; line 3: ds=\"object\" node=\"boolean\"; line 5: ds=\"object\" node=\"boolean\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"boolean\"; line 3: ds=\"object\" node=\"boolean\"; line 5: ds=\"object\" node=\"boolean\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t4",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `undefined` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:5:46: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:27: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:27: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:9:35: error[E0308]: mismatched types: expected `Option<_>`, found `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t5",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:46: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:46: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:46: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:46: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:46: warning: unreachable expression: unreachable expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.1.1_a2",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find function `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.3_a1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.3_a2",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s15.6.3_a3",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s9.2_a1_t1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`eval` is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s9.2_a2_t1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "partial",
+    "detail": "src\\main.rs:2:35: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s9.2_a3_t1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s9.2_a4_t1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"true\" node=\"false\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s9.2_a4_t3",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s9.2_a5_t1",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.s9.2_a5_t3",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.boolean.symbol-coercion",
+    "layer": "test262",
+    "category": "boolean",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
+    "note": ""
+  }
+]
