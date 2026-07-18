@@ -18,7 +18,7 @@ use std::{collections::HashMap, error::Error, path::Path};
 use lsp_server::{Connection, Message, Request, Response};
 use lsp_types::{
     CompletionOptions, HoverProviderCapability, InitializeParams, OneOf, ServerCapabilities,
-    TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
+    SignatureHelpOptions, TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
 };
 use serde_json::Value;
 
@@ -29,6 +29,7 @@ mod definition;
 mod diagnostics;
 mod document_symbols;
 mod hover;
+mod signatures;
 mod text;
 
 use backend::RaClient;
@@ -68,6 +69,11 @@ fn server_capabilities() -> ServerCapabilities {
         definition_provider: Some(OneOf::Left(true)),
         hover_provider: Some(HoverProviderCapability::Simple(true)),
         document_symbol_provider: Some(OneOf::Left(true)),
+        signature_help_provider: Some(SignatureHelpOptions {
+            trigger_characters: Some(vec!["(".to_string()]),
+            retrigger_characters: Some(vec![",".to_string()]),
+            ..Default::default()
+        }),
         completion_provider: Some(CompletionOptions {
             // `.` triggers member completion (`console.`, `Math.`).
             trigger_characters: Some(vec![".".to_string()]),
@@ -137,6 +143,14 @@ impl Server {
                     .extract::<lsp_types::DocumentSymbolParams>("textDocument/documentSymbol")
                     .ok()
                     .and_then(|(_, params)| self.on_document_symbol(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            "textDocument/signatureHelp" => {
+                let result = req
+                    .extract::<lsp_types::SignatureHelpParams>("textDocument/signatureHelp")
+                    .ok()
+                    .and_then(|(_, params)| self.on_signature_help(&params))
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }
