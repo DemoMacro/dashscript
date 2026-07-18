@@ -17,16 +17,18 @@ use std::{collections::HashMap, error::Error, path::Path};
 
 use lsp_server::{Connection, Message, Request, Response};
 use lsp_types::{
-    CompletionOptions, InitializeParams, OneOf, ServerCapabilities, TextDocumentSyncCapability,
-    TextDocumentSyncKind, Uri,
+    CompletionOptions, HoverProviderCapability, InitializeParams, OneOf, ServerCapabilities,
+    TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
 };
 use serde_json::Value;
 
 mod backend;
+mod builtins;
 mod completion;
 mod definition;
 mod diagnostics;
 mod document_symbols;
+mod hover;
 mod text;
 
 use backend::RaClient;
@@ -64,6 +66,7 @@ fn server_capabilities() -> ServerCapabilities {
     ServerCapabilities {
         text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)),
         definition_provider: Some(OneOf::Left(true)),
+        hover_provider: Some(HoverProviderCapability::Simple(true)),
         document_symbol_provider: Some(OneOf::Left(true)),
         completion_provider: Some(CompletionOptions {
             // `.` triggers member completion (`console.`, `Math.`).
@@ -110,6 +113,14 @@ impl Server {
                     .extract::<lsp_types::GotoDefinitionParams>("textDocument/definition")
                     .ok()
                     .and_then(|(_, params)| self.on_definition(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            "textDocument/hover" => {
+                let result = req
+                    .extract::<lsp_types::HoverParams>("textDocument/hover")
+                    .ok()
+                    .and_then(|(_, params)| self.on_hover(&params))
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }

@@ -3,7 +3,6 @@
 //! `DocumentSymbol`. DashScript symbols are file-top-level today, so the
 //! outline is flat (no nested children).
 
-use dashscript::translator::imports::{ParamInfo, Signature};
 use dashscript::translator::semantic::SymbolKind as DsSymbolKind;
 use dashscript::Translator;
 use lsp_types::{DocumentSymbol, DocumentSymbolParams, DocumentSymbolResponse, SymbolKind};
@@ -20,10 +19,9 @@ impl super::Server {
             .map(|s| {
                 let range = text::byte_range(text, s.span.start, s.span.end - s.span.start);
                 #[allow(deprecated)]
-                // `deprecated` field is the LSP 3.x way to flag it; we never set it.
                 DocumentSymbol {
                     name: s.name,
-                    detail: s.signature.as_ref().map(format_signature),
+                    detail: s.signature.as_ref().map(|sig| sig.label()),
                     kind: doc_kind(s.kind),
                     tags: None,
                     range,
@@ -51,72 +49,9 @@ fn doc_kind(kind: DsSymbolKind) -> SymbolKind {
     }
 }
 
-/// `(name: type, opt?: type): return` — the one-line signature shown in the
-/// outline detail. Reused by hover and signature-help (the same label).
-fn format_signature(sig: &Signature) -> String {
-    let params: Vec<String> = sig.params.iter().map(format_param).collect();
-    let ret = sig
-        .return_type
-        .clone()
-        .unwrap_or_else(|| "void".to_string());
-    format!("({}): {}", params.join(", "), ret)
-}
-
-/// One parameter rendered as `name: type` (or `name?: type`, `name: any`).
-fn format_param(p: &ParamInfo) -> String {
-    let ty = p.type_text.clone().unwrap_or_else(|| "any".to_string());
-    if p.optional {
-        format!("{}?: {}", p.name, ty)
-    } else {
-        format!("{}: {}", p.name, ty)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn format_signature_renders_params_and_return() {
-        let sig = Signature {
-            params: vec![
-                ParamInfo {
-                    name: "name".into(),
-                    type_text: Some("string".into()),
-                    optional: false,
-                },
-                ParamInfo {
-                    name: "times".into(),
-                    type_text: Some("number".into()),
-                    optional: true,
-                },
-            ],
-            return_type: Some("string".into()),
-        };
-        assert_eq!(
-            format_signature(&sig),
-            "(name: string, times?: number): string"
-        );
-    }
-
-    #[test]
-    fn format_signature_void_when_no_return() {
-        let sig = Signature {
-            params: vec![],
-            return_type: None,
-        };
-        assert_eq!(format_signature(&sig), "(): void");
-    }
-
-    #[test]
-    fn format_param_untyped_is_any() {
-        let p = ParamInfo {
-            name: "x".into(),
-            type_text: None,
-            optional: false,
-        };
-        assert_eq!(format_param(&p), "x: any");
-    }
 
     #[test]
     fn doc_kind_maps_each_variant() {
@@ -125,5 +60,20 @@ mod tests {
         assert_eq!(doc_kind(DsSymbolKind::TypeAlias), SymbolKind::CLASS);
         assert_eq!(doc_kind(DsSymbolKind::Variable), SymbolKind::VARIABLE);
         assert_eq!(doc_kind(DsSymbolKind::Other), SymbolKind::VARIABLE);
+    }
+
+    #[test]
+    fn function_detail_is_its_one_line_signature() {
+        // The outline detail of a function is its signature label.
+        let text = "function greet(name: string, times?: number): string { return name; }";
+        let greet = Translator::new()
+            .declarations(text)
+            .into_iter()
+            .find(|d| d.name == "greet")
+            .expect("greet");
+        assert_eq!(
+            greet.signature.as_ref().expect("sig").label(),
+            "(name: string, times?: number): string"
+        );
     }
 }

@@ -71,7 +71,7 @@ impl Server {
 /// If the cursor sits on a bare-crate import specifier (`import { X } from
 /// "crate"`), return the crate module ident and the symbol name as written in
 /// the emitted `use crate::X`.
-fn locate_import(text: &str, pos: Position) -> Option<(String, Option<String>)> {
+pub(super) fn locate_import(text: &str, pos: Position) -> Option<(String, Option<String>)> {
     let byte = text::position_to_byte(text, pos)?;
     for imp in Translator::new().crate_imports(text) {
         // A specifier under the cursor → resolve that symbol.
@@ -90,7 +90,7 @@ fn locate_import(text: &str, pos: Position) -> Option<(String, Option<String>)> 
 
 /// Find the position of `symbol` within the `use <module>::…` line of the
 /// emitted Rust source — the position forwarded to rust-analyzer.
-fn map_symbol_pos(main_rs: &str, module: &str, symbol: &str) -> Option<Position> {
+pub(super) fn map_symbol_pos(main_rs: &str, module: &str, symbol: &str) -> Option<Position> {
     let needle = format!("{module}::");
     for (line_idx, line) in main_rs.lines().enumerate() {
         if !line.trim_start().starts_with("use ") || !line.contains(&needle) {
@@ -109,7 +109,7 @@ fn map_symbol_pos(main_rs: &str, module: &str, symbol: &str) -> Option<Position>
 /// Find the position of the crate (module) name within the emitted
 /// `use <module>::…` line — forwarded to rust-analyzer to resolve the crate
 /// root (its `lib.rs`), for a go-to-definition on the import source string.
-fn map_module_pos(main_rs: &str, module: &str) -> Option<Position> {
+pub(super) fn map_module_pos(main_rs: &str, module: &str) -> Option<Position> {
     let needle = format!("{module}::");
     for (line_idx, line) in main_rs.lines().enumerate() {
         if line.trim_start().starts_with("use ") && line.contains(&needle) {

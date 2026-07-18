@@ -195,6 +195,30 @@ pub struct ParamInfo {
     pub optional: bool,
 }
 
+impl Signature {
+    /// `(name: type, opt?: type): return` — the one-line signature used by
+    /// document-symbol detail, hover, and signature-help labels. An untyped
+    /// parameter renders as `any`; a missing return type renders as `void`.
+    pub fn label(&self) -> String {
+        let params: Vec<String> = self.params.iter().map(render_param).collect();
+        let ret = self
+            .return_type
+            .clone()
+            .unwrap_or_else(|| "void".to_string());
+        format!("({}): {}", params.join(", "), ret)
+    }
+}
+
+/// One parameter rendered as `name: type` (or `name?: type`, `name: any`).
+fn render_param(p: &ParamInfo) -> String {
+    let ty = p.type_text.clone().unwrap_or_else(|| "any".to_string());
+    if p.optional {
+        format!("{}?: {}", p.name, ty)
+    } else {
+        format!("{}: {}", p.name, ty)
+    }
+}
+
 /// Whether the `.ds` source declares a top-level `function main()` — the
 /// entry point a `[[bin]]` target compiles. Used by `ds build`/`ds run` (a bin
 /// must have `main`) and the conformance harness. AST-level, so a `main_loop`
@@ -395,5 +419,22 @@ mod tests {
         let sig = f.signature.as_ref().expect("sig");
         assert!(sig.return_type.is_none());
         assert_eq!(sig.params[0].type_text.as_deref(), Some("number"));
+    }
+
+    #[test]
+    fn signature_label_renders_params_and_return() {
+        let src = "function greet(name: string, times?: number): string { return name; }";
+        let decls = collect_declarations(src);
+        let greet = decls.iter().find(|d| d.name == "greet").expect("greet");
+        let sig = greet.signature.as_ref().expect("sig");
+        assert_eq!(sig.label(), "(name: string, times?: number): string");
+    }
+
+    #[test]
+    fn signature_label_void_when_no_return() {
+        let src = "function f() {}";
+        let decls = collect_declarations(src);
+        let f = decls.iter().find(|d| d.name == "f").expect("f");
+        assert_eq!(f.signature.as_ref().expect("sig").label(), "(): void");
     }
 }
