@@ -27,7 +27,11 @@
 //!
 //! Run: `cargo test -p dashscript --test conformance`.
 
-use std::{fs, path::Path, process::Command};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 use dashscript::{RuntimeDeps, Translator};
 use serde::{Deserialize, Serialize};
@@ -171,77 +175,64 @@ fn conformance_matrix() {
         .chain(correct.features.into_iter().map(|r| (r, "correctness")))
         .collect();
 
-    // One shared temp project + target dir so every `cargo check` reuses the
-    // incremental build (std compiles once; each case only recompiles a tiny
-    // main.rs). This is what keeps a 140+ feature matrix tractable.
+    // N independent probe projects, each with its own `target/` + `work/`,
+    // run in parallel. cargo's incremental build is keyed per-target-dir, so a
+    // single shared `target/` forces the whole matrix to serialize on one
+    // linker lock — every tiny `main.rs` revision re-links under it. Splitting
+    // the fixtures across workers gives cargo N independent `target/`s to
+    // compile into concurrently; each worker pays a one-time std compile,
+    // amortized across its share. `node_oracle` writes a fixed `oracle.ts`
+    // into `work/`, so each worker needs its own `work/` too (a shared one
+    // would clobber the file mid-run).
+    let n_workers = std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(1)
+        .clamp(1, 8);
     let tmp = TempDir::new().expect("tempdir");
-    let project = tmp.path().join("probe");
-    let target_dir = tmp.path().join("target");
-    fs::create_dir_all(project.join("src")).expect("create probe src");
-
-    let mut outcomes: Vec<Outcome> = Vec::with_capacity(raws.len());
+    let workers: Vec<(PathBuf, PathBuf, PathBuf)> = (0..n_workers)
+        .map(|i| {
+            let root = tmp.path().join(format!("w{i}"));
+            let project = root.join("probe");
+            let target_dir = root.join("target");
+            let work = root.join("work");
+            fs::create_dir_all(project.join("src")).expect("create probe src");
+            fs::create_dir_all(&work).expect("create work");
+            (project, target_dir, work)
+        })
+        .collect();
 
     // Node is the test262 ground-truth oracle. Probe once; if absent, the
     // differential layer degrades to compile-only (oracle → node-missing).
     let node_ok = node_available();
 
-    // Phase 1 — run translator-tests + correctness fixtures (the slow cargo
-    // part) and test262 differential cases.
-    for (raw, layer) in &raws {
-        if *layer == "test262" {
-            let (status, detail, oracle) =
-                run_test262(raw, &project, &target_dir, tmp.path(), node_ok);
-            outcomes.push(outcome(raw, layer, status, detail, None, oracle));
-            continue;
-        }
-        let diags = Translator::new().check(&raw.fixture);
-        let (status, detail) = if !diags.is_empty() {
-            let msg = diags
-                .iter()
-                .map(|d| format!("{d}"))
-                .collect::<Vec<_>>()
-                .join(" | ");
-            ("unsupported", msg)
-        } else {
-            let (rust, deps) = match translate_catch(&raw.fixture) {
-                Ok(r) => r,
-                Err(e) => {
-                    outcomes.push(outcome(raw, layer, "partial", e, None, None));
-                    continue;
-                }
-            };
-            write_project(&project, &rust, &raw.fixture, &deps);
-            let (ok, err) = cargo(
-                &project,
-                &target_dir,
-                &["check", "--quiet", "--message-format=short"],
-            );
-            if ok {
-                ("supported", String::new())
-            } else {
-                ("partial", err)
-            }
-        };
-
-        // Correctness layer — only when the feature compiles AND declares an
-        // expected stdout. `console.log(x)` lowers to `println!("{}", x)`
-        // (Display, not Debug): fixtures must log primitives or joined strings,
-        // never bare Vec/struct (no Display => won't compile).
-        let correct = if status == "supported" {
-            raw.expect_output.as_ref().map(|expected| {
-                let (rust, deps) = translate_catch(&raw.fixture).unwrap_or_default();
-                write_project(&project, &rust, &raw.fixture, &deps);
-                match cargo(&project, &target_dir, &["run", "--quiet"]) {
-                    (true, stdout) => stdout.trim() == expected.trim(),
-                    _ => false,
-                }
+    // Split the fixtures into `n_workers` contiguous chunks — one per worker
+    // thread. Each thread runs its chunk sequentially against its own
+    // project/target/work triple, so the parallelism is across workers (N
+    // simultaneous cargo invocations), not within one.
+    let chunk_size = raws.len().div_ceil(n_workers).max(1);
+    let handles: Vec<_> = raws
+        .chunks(chunk_size)
+        .enumerate()
+        .map(|(i, chunk)| {
+            let (project, target_dir, work) = workers[i].clone();
+            let chunk: Vec<(RawFeature, &'static str)> = chunk.to_vec();
+            std::thread::spawn(move || {
+                chunk
+                    .into_iter()
+                    .map(|(raw, layer)| {
+                        run_fixture(&raw, layer, &project, &target_dir, &work, node_ok)
+                    })
+                    .collect::<Vec<Outcome>>()
             })
-        } else {
-            None
-        };
-
-        outcomes.push(outcome(raw, layer, status, detail, correct, None));
+        })
+        .collect();
+    let mut outcomes: Vec<Outcome> = Vec::new();
+    for h in handles {
+        outcomes.extend(h.join().expect("worker thread"));
     }
+    // Stable order regardless of which worker handled which fixture, so the
+    // per-slice matrix tables are deterministic.
+    outcomes.sort_by(|a, b| a.id.cmp(&b.id));
 
     write_matrix_split(&outcomes);
 
@@ -527,6 +518,69 @@ fn run_test262(
     }
 }
 
+/// One fixture, run against a worker-owned `project`/`target_dir`/`work`
+/// triple. Unifies the test262 differential path (Node oracle) with the
+/// translator-tests/correctness path (cargo check + optional expected-stdout
+/// run). Pure over its arguments — no shared mutable state across calls — so
+/// it is safe to invoke from many threads in parallel, each on its own project.
+fn run_fixture(
+    raw: &RawFeature,
+    layer: &str,
+    project: &Path,
+    target_dir: &Path,
+    work: &Path,
+    node_ok: bool,
+) -> Outcome {
+    if layer == "test262" {
+        let (status, detail, oracle) = run_test262(raw, project, target_dir, work, node_ok);
+        return outcome(raw, layer, status, detail, None, oracle);
+    }
+    let diags = Translator::new().check(&raw.fixture);
+    let (status, detail) = if !diags.is_empty() {
+        let msg = diags
+            .iter()
+            .map(|d| format!("{d}"))
+            .collect::<Vec<_>>()
+            .join(" | ");
+        ("unsupported", msg)
+    } else {
+        let (rust, deps) = match translate_catch(&raw.fixture) {
+            Ok(r) => r,
+            Err(e) => return outcome(raw, layer, "partial", e, None, None),
+        };
+        write_project(project, &rust, &raw.fixture, &deps);
+        let (ok, err) = cargo(
+            project,
+            target_dir,
+            &["check", "--quiet", "--message-format=short"],
+        );
+        if ok {
+            ("supported", String::new())
+        } else {
+            ("partial", err)
+        }
+    };
+
+    // Correctness layer — only when the feature compiles AND declares an
+    // expected stdout. `console.log(x)` lowers to `println!("{}", x)`
+    // (Display, not Debug): fixtures must log primitives or joined strings,
+    // never bare Vec/struct (no Display => won't compile).
+    let correct = if status == "supported" {
+        raw.expect_output.as_ref().map(|expected| {
+            let (rust, deps) = translate_catch(&raw.fixture).unwrap_or_default();
+            write_project(project, &rust, &raw.fixture, &deps);
+            match cargo(project, target_dir, &["run", "--quiet"]) {
+                (true, stdout) => stdout.trim() == expected.trim(),
+                _ => false,
+            }
+        })
+    } else {
+        None
+    };
+
+    outcome(raw, layer, status, detail, correct, None)
+}
+
 /// `tests/conformance/` — the dir this file lives in (data + matrix outputs).
 fn conformance_dir() -> std::path::PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -567,7 +621,7 @@ fn write_matrix_split(outcomes: &[Outcome]) {
         }
         write_section(&dir.join(layer), &rows);
     }
-    let _ = fs::write(dir.join("README.md"), render_overview(outcomes));
+    let _ = fs::write(dir.join("README.md"), render_overview_from_disk(&dir));
 }
 
 /// Write `<stem>.json` (pretty) + `<stem>.md` (rendered) for one group of rows.
@@ -646,23 +700,52 @@ fn render_section(outcomes: &[Outcome]) -> String {
 /// The matrix index: one row per (layer, category) with supported/partial/
 /// unsupported counts and a link to that slice's `.md`. This is the project's
 /// ECMAScript-conformance scorecard.
-fn render_overview(outcomes: &[Outcome]) -> String {
+///
+/// Aggregated from **every** matrix JSON on disk, not just this run's outcomes,
+/// so a single-category run (`DASH_TEST262_CATEGORIES=number`) still lists all
+/// categories — the un-run ones keep their last-run slice. Each per-slice
+/// `write_section` updates that category's JSON before this is called, so the
+/// overview always reflects the fresh data plus the rest of the matrix.
+fn render_overview_from_disk(dir: &Path) -> String {
     use std::collections::BTreeMap;
+    // A projection of `Outcome` carrying only the fields the overview counts.
+    // `Outcome.status` is `&'static str` (built from literals at run time), which
+    // does not deserialize from JSON; this owned subset does.
+    #[derive(Deserialize)]
+    struct Row {
+        layer: String,
+        category: String,
+        status: String,
+    }
     // test262: one row per category; translator-tests / correctness: a single
     // merged row (their `category` is a translator-internal path, not a builtin).
     let mut by_key: BTreeMap<(String, String), [usize; 4]> = BTreeMap::new();
-    for o in outcomes {
-        let key = if o.layer == "test262" {
-            (o.layer.clone(), o.category.clone())
-        } else {
-            (o.layer.clone(), String::new())
-        };
-        let e = by_key.entry(key).or_insert([0, 0, 0, 0]);
-        match o.status {
-            "supported" => e[0] += 1,
-            "partial" => e[1] += 1,
-            "unsupported" => e[2] += 1,
-            _ => e[3] += 1,
+    if let Ok(entries) = fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.extension().is_none_or(|e| e != "json") {
+                continue;
+            }
+            let Ok(json) = fs::read_to_string(&path) else {
+                continue;
+            };
+            let Ok(rows) = serde_json::from_str::<Vec<Row>>(&json) else {
+                continue;
+            };
+            for r in rows {
+                let key = if r.layer == "test262" {
+                    (r.layer, r.category)
+                } else {
+                    (r.layer, String::new())
+                };
+                let e = by_key.entry(key).or_insert([0, 0, 0, 0]);
+                match r.status.as_str() {
+                    "supported" => e[0] += 1,
+                    "partial" => e[1] += 1,
+                    "unsupported" => e[2] += 1,
+                    _ => e[3] += 1,
+                }
+            }
         }
     }
     let mut s = String::new();
@@ -673,8 +756,9 @@ fn render_overview(outcomes: &[Outcome]) -> String {
     );
     s.push_str(
         "Generated by `cargo test -p dashscript --test conformance` — set \
-         `DASH_TEST262_CATEGORIES=math,number,…` to scope the test262 layer. \
-         Do not edit by hand.\n\n",
+         `DASH_TEST262_CATEGORIES=math,number,…` to scope the test262 layer. The \
+         overview aggregates every category's last-run matrix JSON, so a \
+         single-category run still shows all categories. Do not edit by hand.\n\n",
     );
     s.push_str("| layer | category | supported | partial | unsupported | other |\n");
     s.push_str("| --- | --- | ---: | ---: | ---: | ---: |\n");
