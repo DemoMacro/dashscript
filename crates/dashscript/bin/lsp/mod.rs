@@ -17,8 +17,9 @@ use std::{collections::HashMap, error::Error, path::Path};
 
 use lsp_server::{Connection, Message, Request, Response};
 use lsp_types::{
-    CompletionOptions, HoverProviderCapability, InitializeParams, OneOf, ServerCapabilities,
-    SignatureHelpOptions, TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
+    CompletionOptions, HoverProviderCapability, InitializeParams, OneOf, RenameOptions,
+    ServerCapabilities, SignatureHelpOptions, TextDocumentSyncCapability, TextDocumentSyncKind,
+    Uri,
 };
 use serde_json::Value;
 
@@ -30,6 +31,7 @@ mod diagnostics;
 mod document_symbols;
 mod hover;
 mod references;
+mod rename;
 mod signatures;
 mod text;
 
@@ -71,6 +73,10 @@ fn server_capabilities() -> ServerCapabilities {
         hover_provider: Some(HoverProviderCapability::Simple(true)),
         document_symbol_provider: Some(OneOf::Left(true)),
         references_provider: Some(OneOf::Left(true)),
+        rename_provider: Some(OneOf::Right(RenameOptions {
+            work_done_progress_options: Default::default(),
+            prepare_provider: Some(true),
+        })),
         signature_help_provider: Some(SignatureHelpOptions {
             trigger_characters: Some(vec!["(".to_string()]),
             retrigger_characters: Some(vec![",".to_string()]),
@@ -161,6 +167,22 @@ impl Server {
                     .extract::<lsp_types::ReferenceParams>("textDocument/references")
                     .ok()
                     .and_then(|(_, params)| self.on_references(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            "textDocument/prepareRename" => {
+                let result = req
+                    .extract::<lsp_types::TextDocumentPositionParams>("textDocument/prepareRename")
+                    .ok()
+                    .and_then(|(_, params)| self.on_prepare_rename(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            "textDocument/rename" => {
+                let result = req
+                    .extract::<lsp_types::RenameParams>("textDocument/rename")
+                    .ok()
+                    .and_then(|(_, params)| self.on_rename(&params))
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }

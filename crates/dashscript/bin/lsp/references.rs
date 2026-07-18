@@ -37,7 +37,7 @@ impl Server {
 /// `None` when the cursor sits on no symbol. Declarations are checked first,
 /// so a cursor on the declaration site resolves even when the symbol has no
 /// references.
-fn find_symbol(table: &SymbolTable, byte: usize) -> Option<SymbolEntry> {
+pub(super) fn find_symbol(table: &SymbolTable, byte: usize) -> Option<SymbolEntry> {
     table
         .symbols
         .iter()
@@ -52,7 +52,7 @@ fn find_symbol(table: &SymbolTable, byte: usize) -> Option<SymbolEntry> {
 }
 
 /// Whether `byte` falls inside `span` (half-open `[start, end)`).
-fn covers(span: &Span, byte: usize) -> bool {
+pub(super) fn covers(span: &Span, byte: usize) -> bool {
     byte >= span.start as usize && byte < span.end as usize
 }
 
