@@ -19,9 +19,27 @@ pub fn snake(name: &str) -> Ident {
                 out.push('_');
             }
             out.push(c.to_ascii_lowercase());
-        } else {
+        } else if c.is_ascii_alphanumeric() || c == '_' {
             out.push(c);
+        } else {
+            // JS identifiers may contain `$` (e.g. test262's `$262` harness
+            // global); Rust idents may not. Map every sigil to `_` so the name
+            // stays a valid ident — a translator panic here would abort the
+            // whole conformance run. The sanitised name refers to a symbol
+            // DashScript cannot lower, so the emitted Rust simply fails to
+            // compile (a `partial`), rather than crashing translation.
+            out.push('_');
         }
+    }
+    // An ident cannot start with a digit; prefix `_`. A `.ds` name cannot
+    // start with one either, but the sigil→`_` mapping above can leave a
+    // leading digit (e.g. `$2` → `_2` is fine; a hypothetical `$`-less digit
+    // leader is guarded here too).
+    if out.starts_with(|c: char| c.is_ascii_digit()) {
+        out.insert(0, '_');
+    }
+    if out.is_empty() {
+        out.push('_');
     }
     // A `.ds` name that lands on a Rust keyword (`dyn`, `match`, `type`, …) is
     // emitted as a valid identifier so the generated code still parses.

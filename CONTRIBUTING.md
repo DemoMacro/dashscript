@@ -96,23 +96,24 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 Feature data lives in `crates/dashscript/tests/conformance/data/`:
 
 - `tests-fixtures.json` — **auto-extracted** from `translator/tests/*.rs` by `scripts/extract-tests.mjs`. Every `let src = "..."` in a `translates_*` `#[test]` becomes a fixture (**zero hand-written**). These are recorded informationally — no `expect`, so the run reports the current state and surfaces its partials without asserting them.
-- `test262.json` — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. Each test is rewritten to a `main()` that logs its assertions; the differential harness diffs `ds` output against Node's — the ground-truth oracle, so there are no hand-written expectations (mechanism detailed in `CLAUDE.md`). Whitelists `test/built-ins/{Math,String,Array,Object,Number}/`; descriptor/Symbol/async tests are `unsupported`.
+- `test262/<cat>.json` (one file per builtin) — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. Each test is rewritten to a `main()` that logs its assertions; the differential harness diffs `ds` output against Node's — the ground-truth oracle, so there are no hand-written expectations (mechanism detailed in `CLAUDE.md`). No whitelist: every `test/built-ins/` dir is one category; `new`/`Reflect`/`$INCLUDE`/descriptor/Symbol/async fixtures are filtered or marked `unsupported`. The test262 layer is **opt-in** via `DASH_TEST262_CATEGORIES` (unset → skipped, so a bare `cargo test` stays fast).
 - `correctness.json` — the **only** hand-written fixtures. Each carries `expect` + `expect_output`; the runner `cargo run`s the emitted program and compares stdout. These are asserted (regression guard).
 
 Regenerate the auto-derived lists (from the repo root, after `pnpm install`):
 
 ```bash
-node scripts/extract-tests.mjs     # translator/tests → tests-fixtures.json
-node scripts/extract-test262.mjs   # tc39 test262 → test262.json (after `git clone https://github.com/tc39/test262 .temp/test262`)
+node scripts/extract-tests.mjs                       # translator/tests → tests-fixtures.json
+node scripts/extract-test262.mjs --category math,number   # tc39 → data/test262/<cat>.json (after `git clone https://github.com/tc39/test262 .temp/test262`)
 ```
 
-Run the harness:
+Run the harness (the test262 layer is opt-in — unset `DASH_TEST262_CATEGORIES` runs only correctness + translator-tests):
 
 ```bash
-cargo test -p dashscript --test conformance
+DASH_TEST262_CATEGORIES=math cargo test -p dashscript --test conformance                                          # one builtin
+DASH_TEST262_CATEGORIES=math,number,string,array,object,json cargo test -p dashscript --test conformance          # the activated set
 ```
 
-Each run rewrites `tests/conformance/matrix.md` (human-readable) and `matrix.json` (machine-readable) beside the source. Only `correctness.json` entries are asserted; `tests-fixtures.json` entries are recorded informationally — the partials they surface are the actionable output.
+Each run rewrites `tests/conformance/matrix/` — one `test262-<cat>.{md,json}` per run category, plus `translator-tests.{md,json}`, `correctness.{md,json}`, and a `README.md` index (the project's ECMAScript-conformance scorecard). Only `correctness.json` entries are asserted; the others are recorded informationally — the partials they surface are the actionable output.
 
 **Adding a correctness case** — append to `data/correctness.json` (the fixture must declare `function main()`):
 

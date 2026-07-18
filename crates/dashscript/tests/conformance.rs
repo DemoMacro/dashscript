@@ -35,7 +35,8 @@ use tempfile::TempDir;
 
 const TESTS_JSON: &str = include_str!("conformance/data/tests-fixtures.json");
 const CORRECTNESS_JSON: &str = include_str!("conformance/data/correctness.json");
-const TEST262_JSON: &str = include_str!("conformance/data/test262.json");
+// test262 data is per-category under `data/test262/<cat>.json`, discovered at
+// runtime (see `conformance_matrix`) — not a single compiled-in blob.
 
 /// A minimal binary manifest — conformance fixtures exercise built-in APIs only
 /// (no crate dependencies), and `cargo check` does not require `main`, so a bare
@@ -53,8 +54,6 @@ struct FeatureFile {
 struct RawFeature {
     id: String,
     category: String,
-    #[serde(default)]
-    source: String,
     #[serde(default)]
     fixture: String,
     expect: Option<String>,
@@ -101,6 +100,10 @@ impl Oracle {
 #[derive(Debug, Clone, Serialize)]
 struct Outcome {
     id: String,
+    /// Which data source this outcome came from — drives the per-file matrix
+    /// output (`test262` → one file per category; `translator-tests` /
+    /// `correctness` → one file each).
+    layer: String,
     category: String,
     status: &'static str,
     detail: String,
@@ -118,21 +121,54 @@ fn conformance_matrix() {
     let tests: FeatureFile = serde_json::from_str(TESTS_JSON).expect("parse tests-fixtures.json");
     let correct: FeatureFile =
         serde_json::from_str(CORRECTNESS_JSON).expect("parse correctness.json");
-    let test262: FeatureFile = serde_json::from_str(TEST262_JSON).expect("parse test262.json");
-    // test262 has thousands of fixtures; bound the sample so a local `cargo
-    // test` stays fast. The default 120 covers all of `Math/` — where the
-    // translator gaps cluster (E0689 `{float}` on variable args, round -0,
-    // hypot∞); `DASH_TEST262=all` (or `0`) runs the full set.
-    let test262_limit = match std::env::var("DASH_TEST262") {
+    // test262 lives per-category under `data/test262/<cat>.json`, discovered at
+    // runtime so a new category file is picked up with no Rust edit. The layer
+    // is opt-in: `DASH_TEST262_CATEGORIES=math,number` runs only those builtins;
+    // unset → test262 skipped (correctness + translator-tests always run, so a
+    // bare `cargo test` stays fast). A category can be large (Object is ~1.5k
+    // fixtures) — `DASH_TEST262=<n>` caps each category at n fixtures.
+    let cats: Vec<String> = std::env::var("DASH_TEST262_CATEGORIES")
+        .map(|s| {
+            s.split(',')
+                .map(|c| c.trim().to_lowercase())
+                .filter(|c| !c.is_empty())
+                .collect()
+        })
+        .unwrap_or_default();
+    let limit = match std::env::var("DASH_TEST262") {
         Ok(v) if v == "all" || v == "0" => usize::MAX,
-        Ok(v) => v.parse().unwrap_or(120),
-        Err(_) => 120,
+        Ok(v) => v.parse().unwrap_or(usize::MAX),
+        Err(_) => usize::MAX,
     };
-    let raws: Vec<RawFeature> = tests
+    let test262_dir = conformance_dir().join("data").join("test262");
+    let mut test262_features: Vec<RawFeature> = Vec::new();
+    for cat in &cats {
+        let path = test262_dir.join(format!("{cat}.json"));
+        let json = match fs::read_to_string(&path) {
+            Ok(s) => s,
+            Err(_) => {
+                eprintln!(
+                    "conformance: {} not found — run \
+                     `node scripts/extract-test262.mjs --category {cat}`",
+                    path.display()
+                );
+                continue;
+            }
+        };
+        let file: FeatureFile = match serde_json::from_str(&json) {
+            Ok(f) => f,
+            Err(e) => panic!("parse {}: {e}", path.display()),
+        };
+        test262_features.extend(file.features.into_iter().take(limit));
+    }
+    // Each raw paired with its layer — drives the per-file matrix output
+    // (`test262` → one file per category; the other two → one file each).
+    let raws: Vec<(RawFeature, &'static str)> = tests
         .features
         .into_iter()
-        .chain(test262.features.into_iter().take(test262_limit))
-        .chain(correct.features)
+        .map(|r| (r, "translator-tests"))
+        .chain(test262_features.into_iter().map(|r| (r, "test262")))
+        .chain(correct.features.into_iter().map(|r| (r, "correctness")))
         .collect();
 
     // One shared temp project + target dir so every `cargo check` reuses the
@@ -151,11 +187,11 @@ fn conformance_matrix() {
 
     // Phase 1 — run translator-tests + correctness fixtures (the slow cargo
     // part) and test262 differential cases.
-    for raw in &raws {
-        if raw.source == "test262" {
+    for (raw, layer) in &raws {
+        if *layer == "test262" {
             let (status, detail, oracle) =
                 run_test262(raw, &project, &target_dir, tmp.path(), node_ok);
-            outcomes.push(outcome(raw, status, detail, None, oracle));
+            outcomes.push(outcome(raw, layer, status, detail, None, oracle));
             continue;
         }
         let diags = Translator::new().check(&raw.fixture);
@@ -167,16 +203,10 @@ fn conformance_matrix() {
                 .join(" | ");
             ("unsupported", msg)
         } else {
-            let rust = match Translator::new().translate(&raw.fixture) {
+            let rust = match translate_catch(&raw.fixture) {
                 Ok(r) => r,
                 Err(e) => {
-                    outcomes.push(outcome(
-                        raw,
-                        "partial",
-                        format!("translate error: {e}"),
-                        None,
-                        None,
-                    ));
+                    outcomes.push(outcome(raw, layer, "partial", e, None, None));
                     continue;
                 }
             };
@@ -199,9 +229,7 @@ fn conformance_matrix() {
         // never bare Vec/struct (no Display => won't compile).
         let correct = if status == "supported" {
             raw.expect_output.as_ref().map(|expected| {
-                let rust = Translator::new()
-                    .translate(&raw.fixture)
-                    .unwrap_or_default();
+                let rust = translate_catch(&raw.fixture).unwrap_or_default();
                 write_project(&project, &rust, &raw.fixture);
                 match cargo(&project, &target_dir, &["run", "--quiet"]) {
                     (true, stdout) => stdout.trim() == expected.trim(),
@@ -212,10 +240,10 @@ fn conformance_matrix() {
             None
         };
 
-        outcomes.push(outcome(raw, status, detail, correct, None));
+        outcomes.push(outcome(raw, layer, status, detail, correct, None));
     }
 
-    write_matrix(&outcomes);
+    write_matrix_split(&outcomes);
 
     // Regression guard: every declared `expect` must match the observed status.
     // Today only `correctness.json` declares `expect`; translator-tests are
@@ -246,6 +274,7 @@ fn conformance_matrix() {
 
 fn outcome(
     raw: &RawFeature,
+    layer: &str,
     status: &'static str,
     detail: String,
     correct: Option<bool>,
@@ -253,6 +282,7 @@ fn outcome(
 ) -> Outcome {
     Outcome {
         id: raw.id.clone(),
+        layer: layer.to_string(),
         category: raw.category.clone(),
         status,
         detail,
@@ -299,6 +329,23 @@ fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
         .collect::<Vec<_>>()
         .join("\n");
     (out.status.success(), trimmed)
+}
+
+/// Translate a fixture, catching any panic — a `quote`/`Ident::new` on an
+/// unsanitisable name, an unwinding translator bug, … — so one bad fixture is
+/// reported as `partial` instead of aborting the whole matrix run. `translate`
+/// itself returns `Result`; this wraps its panicking paths behind the same
+/// error channel (`translate error: …` / `translate panic: …`).
+fn translate_catch(source: &str) -> Result<String, String> {
+    use std::panic::AssertUnwindSafe;
+    std::panic::catch_unwind(AssertUnwindSafe(|| Translator::new().translate(source)))
+        .map_err(|p| {
+            p.downcast_ref::<String>()
+                .cloned()
+                .or_else(|| p.downcast_ref::<&'static str>().map(|s| s.to_string()))
+                .unwrap_or_else(|| "translator panic".to_string())
+        })
+        .and_then(|r| r.map_err(|e| format!("translate error: {e}")))
 }
 
 /// Whether `node` is on PATH (the test262 oracle). Probed once per run.
@@ -435,9 +482,9 @@ fn run_test262(
             .join(" | ");
         return ("unsupported", msg, None);
     }
-    let rust = match Translator::new().translate(&raw.fixture) {
+    let rust = match translate_catch(&raw.fixture) {
         Ok(r) => r,
-        Err(e) => return ("partial", format!("translate error: {e}"), None),
+        Err(e) => return ("partial", e, None),
     };
     write_project(project, &rust, &raw.fixture);
     let (ok, err) = cargo(
@@ -466,16 +513,64 @@ fn run_test262(
     }
 }
 
-fn write_matrix(outcomes: &[Outcome]) {
-    let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+/// `tests/conformance/` — the dir this file lives in (data + matrix outputs).
+fn conformance_dir() -> std::path::PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("tests")
-        .join("conformance");
-    let json = serde_json::to_string_pretty(outcomes).unwrap_or_default();
-    let _ = fs::write(dir.join("matrix.json"), format!("{json}\n"));
-    let _ = fs::write(dir.join("matrix.md"), render_md(outcomes));
+        .join("conformance")
 }
 
-fn render_md(outcomes: &[Outcome]) -> String {
+/// Write one matrix file per test262 category + one each for translator-tests
+/// and correctness, plus a README overview. Per-category files (not one giant
+/// matrix) match the per-category data and let a single-builtin run update only
+/// its own slice.
+fn write_matrix_split(outcomes: &[Outcome]) {
+    use std::collections::HashSet;
+    let dir = conformance_dir().join("matrix");
+    let _ = fs::create_dir_all(&dir);
+
+    // test262: one file per category (sorted).
+    let mut cats: Vec<String> = outcomes
+        .iter()
+        .filter(|o| o.layer == "test262")
+        .map(|o| o.category.clone())
+        .collect::<HashSet<_>>()
+        .into_iter()
+        .collect();
+    cats.sort();
+    for cat in &cats {
+        let rows: Vec<&Outcome> = outcomes
+            .iter()
+            .filter(|o| o.layer == "test262" && o.category == *cat)
+            .collect();
+        write_section(&dir.join(format!("test262-{cat}")), &rows);
+    }
+    // translator-tests + correctness: one file each (all categories merged).
+    for layer in ["translator-tests", "correctness"] {
+        let rows: Vec<&Outcome> = outcomes.iter().filter(|o| o.layer == layer).collect();
+        if rows.is_empty() {
+            continue;
+        }
+        write_section(&dir.join(layer), &rows);
+    }
+    let _ = fs::write(dir.join("README.md"), render_overview(outcomes));
+}
+
+/// Write `<stem>.json` (pretty) + `<stem>.md` (rendered) for one group of rows.
+fn write_section(stem: &Path, rows: &[&Outcome]) {
+    let owned: Vec<Outcome> = rows.iter().map(|o| (*o).clone()).collect();
+    let json = serde_json::to_string_pretty(&owned).unwrap_or_default();
+    let _ = fs::write(
+        format!("{}.json", stem.to_string_lossy()),
+        format!("{json}\n"),
+    );
+    let _ = fs::write(
+        format!("{}.md", stem.to_string_lossy()),
+        render_section(&owned),
+    );
+}
+
+fn render_section(outcomes: &[Outcome]) -> String {
     let total = outcomes.len();
     let supported = outcomes.iter().filter(|o| o.status == "supported").count();
     let partial = outcomes.iter().filter(|o| o.status == "partial").count();
@@ -531,6 +626,55 @@ fn render_md(outcomes: &[Outcome]) -> String {
         s.push('\n');
     }
     s.push_str("\n<!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->\n");
+    s
+}
+
+/// The matrix index: one row per (layer, category) with supported/partial/
+/// unsupported counts and a link to that slice's `.md`. This is the project's
+/// ECMAScript-conformance scorecard.
+fn render_overview(outcomes: &[Outcome]) -> String {
+    use std::collections::BTreeMap;
+    // test262: one row per category; translator-tests / correctness: a single
+    // merged row (their `category` is a translator-internal path, not a builtin).
+    let mut by_key: BTreeMap<(String, String), [usize; 4]> = BTreeMap::new();
+    for o in outcomes {
+        let key = if o.layer == "test262" {
+            (o.layer.clone(), o.category.clone())
+        } else {
+            (o.layer.clone(), String::new())
+        };
+        let e = by_key.entry(key).or_insert([0, 0, 0, 0]);
+        match o.status {
+            "supported" => e[0] += 1,
+            "partial" => e[1] += 1,
+            "unsupported" => e[2] += 1,
+            _ => e[3] += 1,
+        }
+    }
+    let mut s = String::new();
+    s.push_str("# DashScript ECMAScript Conformance\n\n");
+    s.push_str(
+        "Per-category conformance vs tc39 test262 (Node oracle differential), plus the \
+         translator's own unit-test fixtures and hand-written correctness cases.\n\n",
+    );
+    s.push_str(
+        "Generated by `cargo test -p dashscript --test conformance` — set \
+         `DASH_TEST262_CATEGORIES=math,number,…` to scope the test262 layer. \
+         Do not edit by hand.\n\n",
+    );
+    s.push_str("| layer | category | supported | partial | unsupported | other |\n");
+    s.push_str("| --- | --- | ---: | ---: | ---: | ---: |\n");
+    for ((layer, cat), c) in &by_key {
+        let link = if layer == "test262" {
+            format!("[{cat}](test262-{cat}.md)")
+        } else {
+            format!("[{layer}]({layer}.md)")
+        };
+        s.push_str(&format!(
+            "| {} | {} | {} | {} | {} | {} |\n",
+            layer, link, c[0], c[1], c[2], c[3]
+        ));
+    }
     s
 }
 
