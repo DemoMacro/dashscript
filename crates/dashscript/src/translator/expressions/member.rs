@@ -88,6 +88,13 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
         as_token: syn::Token![as](Span::call_site()),
         ty: Box::new(parse_quote!(usize)),
     });
+    // `s[i]` on a string → the i-th char. Rust's `str` has no `Index<usize>`,
+    // so a string index lowers to `chars().nth(i)` (the char as a `String`, or
+    // "" if out of range — TS returns undefined). ASCII matches; non-BMP
+    // UTF-16 vs Rust `char` diverge (a lone surrogate can't occur in UTF-8).
+    if is_string_receiver(&cm.object, ctx) {
+        return parse_quote!(#obj.chars().nth(#idx).map(|c| c.to_string()).unwrap_or_default());
+    }
     let indexed = parse_quote!(#obj[#idx]);
     // `let x = arr[i]` moves the element out of `arr`; if `arr` is read again
     // later (use count > 1) and the element is not `Copy`, clone it so those
@@ -97,6 +104,24 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
     } else {
         indexed
     }
+}
+
+/// Whether `expr` is a string receiver for `s[i]` indexing: a string literal
+/// or a local whose type is `String`/`str`. Rust's `str` cannot be indexed by
+/// `usize`, so such an index lowers to `chars().nth(i)`.
+fn is_string_receiver(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    if matches!(expr, Expression::StringLiteral(_)) {
+        return true;
+    }
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|ty| {
+        ty.segments
+            .last()
+            .is_some_and(|s| s.ident == "String" || s.ident == "str")
+    })
 }
 
 /// Whether indexing `expr` (a `Vec` local) into a binding needs `.clone()`:

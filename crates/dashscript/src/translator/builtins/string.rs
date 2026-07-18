@@ -34,17 +34,57 @@ pub(in crate::translator) fn string_method(
     let obj = str_receiver(&sm.object, ctx);
     let name: &str = &sm.property.name;
     Some(match name {
+        // `.includes(s)` / `.includes(s, pos)` — search from byte offset `pos`
+        // (a negative `pos` is clamped to 0, an over-length one to `len`;
+        // ASCII matches TS char index). `pos` is taken as `f64` then routed
+        // through `i64` so a negative value survives (a direct `as usize`
+        // would wrap it to a huge offset).
         "includes" => {
             let a = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.contains(#a))
+            match args.get(1) {
+                Some(pos) => {
+                    let p = translate_argument(pos, ctx);
+                    parse_quote!({
+                        let __s = #obj;
+                        let __p = ((#p) as i64).max(0) as usize;
+                        let __p = __p.min(__s.len());
+                        __s[__p..].contains(#a)
+                    })
+                }
+                None => parse_quote!(#obj.contains(#a)),
+            }
         }
+        // `.startsWith(s)` / `.startsWith(s, pos)` — match begins at `pos`.
         "startsWith" => {
             let a = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.starts_with(#a))
+            match args.get(1) {
+                Some(pos) => {
+                    let p = translate_argument(pos, ctx);
+                    parse_quote!({
+                        let __s = #obj;
+                        let __p = ((#p) as i64).max(0) as usize;
+                        __s.get(__p..).is_some_and(|t| t.starts_with(#a))
+                    })
+                }
+                None => parse_quote!(#obj.starts_with(#a)),
+            }
         }
+        // `.endsWith(s)` / `.endsWith(s, endPos)` — only the first `endPos`
+        // bytes are considered (clamped to `[0, len]`).
         "endsWith" => {
             let a = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.ends_with(#a))
+            match args.get(1) {
+                Some(pos) => {
+                    let p = translate_argument(pos, ctx);
+                    parse_quote!({
+                        let __s = #obj;
+                        let __p = ((#p) as i64).max(0) as usize;
+                        let __p = __p.min(__s.len());
+                        __s[..__p].ends_with(#a)
+                    })
+                }
+                None => parse_quote!(#obj.ends_with(#a)),
+            }
         }
         "replace" => {
             let a = str_method_arg(args.first()?, ctx);
@@ -67,9 +107,23 @@ pub(in crate::translator) fn string_method(
             parse_quote!(#obj.split(#delim).map(|part| part.to_string()).collect::<Vec<String>>())
         }
         // `.indexOf(s)` → byte offset (ASCII == char index), or -1.
+        // `.indexOf(s, from)` starts searching at byte offset `from` (a negative
+        // `from` is clamped to 0, as in TS). `from` routes through `i64` first
+        // so a negative value is preserved (a direct `as usize` would wrap it).
         "indexOf" => {
             let needle = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1_f64))
+            match args.get(1) {
+                Some(from) => {
+                    let f = translate_argument(from, ctx);
+                    parse_quote!({
+                        let __s = #obj;
+                        let __from = ((#f) as i64).max(0) as usize;
+                        let __from = __from.min(__s.len());
+                        __s[__from..].find(#needle).map(|b| (b + __from) as f64).unwrap_or(-1_f64)
+                    })
+                }
+                None => parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1_f64)),
+            }
         }
         // `.slice(a, b)` / `.substring` → byte slice `s[a..b]` (ASCII), owned.
         "slice" | "substring" => {
@@ -96,8 +150,12 @@ pub(in crate::translator) fn string_method(
             parse_quote!(#obj.chars().nth(#i).map(|c| c as u32 as f64).unwrap_or(f64::NAN))
         }
         // `.padStart(n)` → right-align to width `n` (fills on the left with
-        // spaces, TS's default pad).
-        "padStart" if args.len() <= 1 => {
+        // spaces, TS's default pad). `.padStart(n, undefined)` is the same — an
+        // undefined fill falls back to the space default.
+        "padStart"
+            if args.len() <= 1
+                || matches!(args.get(1), Some(Argument::Identifier(id)) if id.name.as_str() == "undefined") =>
+        {
             let n = usize_arg(args.first()?, ctx);
             parse_quote!(format!("{:>1$}", #obj, #n))
         }
@@ -114,8 +172,12 @@ pub(in crate::translator) fn string_method(
                 format!("{}{}", #ch.chars().cycle().take(__need).collect::<String>(), __s)
             })
         }
-        // `.padEnd(n)` → left-align to width `n` (fills on the right).
-        "padEnd" if args.len() <= 1 => {
+        // `.padEnd(n)` → left-align to width `n` (fills on the right). An
+        // undefined fill (`padEnd(n, undefined)`) uses the space default too.
+        "padEnd"
+            if args.len() <= 1
+                || matches!(args.get(1), Some(Argument::Identifier(id)) if id.name.as_str() == "undefined") =>
+        {
             let n = usize_arg(args.first()?, ctx);
             parse_quote!(format!("{:<1$}", #obj, #n))
         }

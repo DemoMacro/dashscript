@@ -68,7 +68,7 @@
       "id": "test262.test.built-ins.string.fromcharcode.touint16-tonumber-throws-bigint",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n  String.fromCharCode(0n);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n  String.fromCharCode(0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/fromCharCode/touint16-tonumber-throws-bigint.js",
       "n_asserts": 1,
       "flags": []
@@ -77,7 +77,7 @@
       "id": "test262.test.built-ins.string.fromcodepoint.argument-is-not-integer",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.fromCodePoint(3.14);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint(42, 3.14);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint('3.14');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// ToNumber(undefined) returns NaN.\ntry { function() {\n  String.fromCodePoint(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint('_1');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint('1a');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.fromCodePoint(3.14);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint(42, 3.14);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint('3.14');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// ToNumber(undefined) returns NaN.\ntry { (function() {\n  String.fromCodePoint(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint('_1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint('1a');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/fromCodePoint/argument-is-not-integer.js",
       "n_asserts": 6,
       "flags": []
@@ -86,7 +86,7 @@
       "id": "test262.test.built-ins.string.fromcodepoint.argument-is-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.fromCodePoint(Symbol());\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint(42, Symbol());\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.fromCodePoint(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint(42, Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/fromCodePoint/argument-is-Symbol.js",
       "n_asserts": 2,
       "flags": []
@@ -104,7 +104,7 @@
       "id": "test262.test.built-ins.string.fromcodepoint.number-is-out-of-range",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.fromCodePoint(-1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint(1, -1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint(1114112);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.fromCodePoint(Infinity);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.fromCodePoint(-1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint(1, -1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint(1114112);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.fromCodePoint(Infinity);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/fromCodePoint/number-is-out-of-range.js",
       "n_asserts": 4,
       "flags": []
@@ -140,7 +140,7 @@
       "id": "test262.test.built-ins.string.prototype.at.index-non-numeric-argument-tointeger-invalid",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.at);\n\nlet s = \"01\";\n\ntry { () => {\n  s.at(Symbol());\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.at);\n\nlet s = \"01\";\n\ntry { (() => {\n  s.at(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/at/index-non-numeric-argument-tointeger-invalid.js",
       "n_asserts": 2,
       "flags": []
@@ -158,7 +158,7 @@
       "id": "test262.test.built-ins.string.prototype.at.return-abrupt-from-this",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.at);\n\ntry { () => {\n  String.prototype.at.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { () => {\n  String.prototype.at.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.at);\n\ntry { (() => {\n  String.prototype.at.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  String.prototype.at.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/at/return-abrupt-from-this.js",
       "n_asserts": 3,
       "flags": []
@@ -203,7 +203,7 @@
       "id": "test262.test.built-ins.string.prototype.charat.pos-coerce-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar noCoerce = Object.create(null);\n\ntry { function() {\n  ''.charAt(noCoerce);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar noCoerce = Object.create(null);\n\ntry { (function() {\n  ''.charAt(noCoerce);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/charAt/pos-coerce-err.js",
       "n_asserts": 1,
       "flags": []
@@ -230,7 +230,7 @@
       "id": "test262.test.built-ins.string.prototype.charat.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar charAt = String.prototype.charAt;\n\nconsole.log(typeof charAt);\n\ntry { function() {\n  charAt.call(undefined, 0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  charAt.call(null, 0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar charAt = String.prototype.charAt;\n\nconsole.log(typeof charAt);\n\ntry { (function() {\n  charAt.call(undefined, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  charAt.call(null, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/charAt/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -239,7 +239,7 @@
       "id": "test262.test.built-ins.string.prototype.charcodeat.pos-coerce-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar noCoerce = Object.create(null);\n\ntry { function() {\n  ''.charCodeAt(noCoerce);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar noCoerce = Object.create(null);\n\ntry { (function() {\n  ''.charCodeAt(noCoerce);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/charCodeAt/pos-coerce-err.js",
       "n_asserts": 1,
       "flags": []
@@ -266,7 +266,7 @@
       "id": "test262.test.built-ins.string.prototype.charcodeat.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar charCodeAt = String.prototype.charCodeAt;\n\nconsole.log(typeof charCodeAt);\n\ntry { function() {\n  charCodeAt.call(undefined, 0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  charCodeAt.call(null, 0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar charCodeAt = String.prototype.charCodeAt;\n\nconsole.log(typeof charCodeAt);\n\ntry { (function() {\n  charCodeAt.call(undefined, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  charCodeAt.call(null, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/charCodeAt/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -275,7 +275,7 @@
       "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-symbol-pos-to-integer",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol(1);\n\ntry { function() {\n  'abc'.codePointAt(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol(1);\n\ntry { (function() {\n  'abc'.codePointAt(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/codePointAt/return-abrupt-from-symbol-pos-to-integer.js",
       "n_asserts": 1,
       "flags": []
@@ -284,7 +284,7 @@
       "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-this-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { function() {\n  String.prototype.codePointAt.call(s, 1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { (function() {\n  String.prototype.codePointAt.call(s, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/codePointAt/return-abrupt-from-this-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -347,7 +347,7 @@
       "id": "test262.test.built-ins.string.prototype.codepointat.this-is-null-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.codePointAt.call(null, 1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.codePointAt.call(null, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/codePointAt/this-is-null-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -356,7 +356,7 @@
       "id": "test262.test.built-ins.string.prototype.codepointat.this-is-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.codePointAt.call(undefined, 1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.codePointAt.call(undefined, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/codePointAt/this-is-undefined-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -365,16 +365,25 @@
       "id": "test262.test.built-ins.string.prototype.concat.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar concat = String.prototype.concat;\n\nconsole.log(typeof concat);\n\ntry { function() {\n  concat.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  concat.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar concat = String.prototype.concat;\n\nconsole.log(typeof concat);\n\ntry { (function() {\n  concat.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  concat.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/concat/this-value-not-obj-coercible.js",
       "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.endswith.coerced-values-of-position",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.endsWith('', NaN));\nconsole.log(str.endsWith('', null));\nconsole.log(str.endsWith('', false));\nconsole.log(str.endsWith('', ''));\nconsole.log(str.endsWith('', '0'));\nconsole.log(str.endsWith('', undefined));\n\nconsole.log(str.endsWith('The future', 10.4));\nconsole.log(str.endsWith('T', true));\n\nconsole.log(str.endsWith('The future', '10'));\n}\n",
+      "origin": "test/built-ins/String/prototype/endsWith/coerced-values-of-position.js",
+      "n_asserts": 9,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-position-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar position = Symbol();\n\ntry { function() {\n  ''.endsWith('', position);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar position = Symbol();\n\ntry { (function() {\n  ''.endsWith('', position);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/endsWith/return-abrupt-from-position-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -383,7 +392,7 @@
       "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-searchstring-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { function() {\n  ''.endsWith(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { (function() {\n  ''.endsWith(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/endsWith/return-abrupt-from-searchstring-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -392,7 +401,7 @@
       "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-this-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { function() {\n  String.prototype.endsWith.call(s, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { (function() {\n  String.prototype.endsWith.call(s, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/endsWith/return-abrupt-from-this-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -407,10 +416,37 @@
       "flags": []
     },
     {
+      "id": "test262.test.built-ins.string.prototype.endswith.return-true-if-searchstring-is-empty",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.endsWith(''));\n\nconsole.log(str.endsWith('', str.length));\n\nconsole.log(str.endsWith('', Infinity));\n\nconsole.log(str.endsWith('', -1));\n\nconsole.log(str.endsWith('', -Infinity));\n}\n",
+      "origin": "test/built-ins/String/prototype/endsWith/return-true-if-searchstring-is-empty.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.endswith.searchstring-found-with-position",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.endsWith('The future', 10));\nconsole.log(str.endsWith('future', 10));\nconsole.log(str.endsWith(' is cool!', str.length));\n}\n",
+      "origin": "test/built-ins/String/prototype/endsWith/searchstring-found-with-position.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.endswith.searchstring-found-without-position",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.endsWith('cool!'));\nconsole.log(str.endsWith('!'));\nconsole.log(str.endsWith(str));\n}\n",
+      "origin": "test/built-ins/String/prototype/endsWith/searchstring-found-without-position.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
       "id": "test262.test.built-ins.string.prototype.endswith.searchstring-is-regexp-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar searchString = /./;\n\ntry { function() {\n  ''.endsWith(searchString);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar searchString = /./;\n\ntry { (function() {\n  ''.endsWith(searchString);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/endsWith/searchstring-is-regexp-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -491,7 +527,7 @@
       "id": "test262.test.built-ins.string.prototype.endswith.this-is-null-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.endsWith.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.endsWith.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/endsWith/this-is-null-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -500,7 +536,7 @@
       "id": "test262.test.built-ins.string.prototype.endswith.this-is-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.endsWith.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.endsWith.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/endsWith/this-is-undefined-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -509,16 +545,16 @@
       "id": "test262.test.built-ins.string.prototype.includes.coerced-values-of-position",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nassert(str.includes('The future', NaN), 'NaN coerced to 0');\nassert(str.includes('The future', null), 'null coerced to 0');\nassert(str.includes('The future', false), 'false coerced to 0');\nassert(str.includes('The future', ''), '\"\" coerced to 0');\nassert(str.includes('The future', '0'), '\"0\" coerced to 0');\nassert(str.includes('The future', undefined), 'undefined coerced to 0');\nassert(str.includes('The future', 0.4), '0.4 coerced to 0');\n\nassert(str.includes('The future', -1));\n\nconsole.log(str.includes('The future', true));\nconsole.log(str.includes('The future', '1'));\nconsole.log(str.includes('The future', 1.4));\n}\n",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.includes('The future', NaN));\nconsole.log(str.includes('The future', null));\nconsole.log(str.includes('The future', false));\nconsole.log(str.includes('The future', ''));\nconsole.log(str.includes('The future', '0'));\nconsole.log(str.includes('The future', undefined));\nconsole.log(str.includes('The future', 0.4));\n\nconsole.log(str.includes('The future', -1));\n\nconsole.log(str.includes('The future', true));\nconsole.log(str.includes('The future', '1'));\nconsole.log(str.includes('The future', 1.4));\n}\n",
       "origin": "test/built-ins/String/prototype/includes/coerced-values-of-position.js",
-      "n_asserts": 3,
+      "n_asserts": 11,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-position-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar position = Symbol();\n\ntry { function() {\n  ''.includes('', position);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar position = Symbol();\n\ntry { (function() {\n  ''.includes('', position);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/includes/return-abrupt-from-position-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -527,7 +563,7 @@
       "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-searchstring-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { function() {\n  ''.includes(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { (function() {\n  ''.includes(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/includes/return-abrupt-from-searchstring-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -536,7 +572,7 @@
       "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-this-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { function() {\n  String.prototype.includes.call(s, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { (function() {\n  String.prototype.includes.call(s, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/includes/return-abrupt-from-this-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -551,10 +587,37 @@
       "flags": []
     },
     {
+      "id": "test262.test.built-ins.string.prototype.includes.return-true-if-searchstring-is-empty",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.includes('', str.length));\n\nconsole.log(str.includes(''));\n\nconsole.log(str.includes('', Infinity));\n}\n",
+      "origin": "test/built-ins/String/prototype/includes/return-true-if-searchstring-is-empty.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.includes.searchstring-found-with-position",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.includes('The future', 0));\nconsole.log(str.includes(' is ', 1));\nconsole.log(str.includes('cool!', 10));\n}\n",
+      "origin": "test/built-ins/String/prototype/includes/searchstring-found-with-position.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.includes.searchstring-found-without-position",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.includes('The future'));\nconsole.log(str.includes('is cool!'));\nconsole.log(str.includes(str));\n}\n",
+      "origin": "test/built-ins/String/prototype/includes/searchstring-found-without-position.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
       "id": "test262.test.built-ins.string.prototype.includes.searchstring-is-regexp-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar searchString = /./;\n\ntry { function() {\n  ''.includes(searchString);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar searchString = /./;\n\ntry { (function() {\n  ''.includes(searchString);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/includes/searchstring-is-regexp-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -635,7 +698,7 @@
       "id": "test262.test.built-ins.string.prototype.includes.this-is-null-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.includes.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.includes.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/includes/this-is-null-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -644,7 +707,7 @@
       "id": "test262.test.built-ins.string.prototype.includes.this-is-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.includes.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.includes.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/includes/this-is-undefined-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -653,7 +716,7 @@
       "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-bigint",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  \"\".indexOf(\"\", 0n);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", Object(0n));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", {\n    [Symbol.toPrimitive]: function() {\n      return 0n;\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", {\n    valueOf: function() {\n      return 0n;\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", {\n    toString: function() {\n      return 0n;\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  \"\".indexOf(\"\", 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", Object(0n));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", {\n    [Symbol.toPrimitive]: function() {\n      return 0n;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", {\n    valueOf: function() {\n      return 0n;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", {\n    toString: function() {\n      return 0n;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/indexOf/position-tointeger-bigint.js",
       "n_asserts": 5,
       "flags": []
@@ -662,7 +725,7 @@
       "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-errors",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  \"\".indexOf(\"\", Symbol(\"1\"));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", Object(Symbol(\"1\")));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", {\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", {\n    valueOf: function() {\n      return Symbol(\"1\");\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(\"\", {\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  \"\".indexOf(\"\", Symbol(\"1\"));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", Object(Symbol(\"1\")));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", {\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", {\n    valueOf: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(\"\", {\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/indexOf/position-tointeger-errors.js",
       "n_asserts": 5,
       "flags": []
@@ -698,7 +761,7 @@
       "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring-errors",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  \"\".indexOf(Symbol(\"1\"));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf(Object(Symbol(\"1\")));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf({\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf({\n    valueOf: function() {\n      return Symbol(\"1\");\n    },\n    toString: null\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function() {\n  \"\".indexOf({\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  \"\".indexOf(Symbol(\"1\"));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf(Object(Symbol(\"1\")));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf({\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf({\n    valueOf: function() {\n      return Symbol(\"1\");\n    },\n    toString: null\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  \"\".indexOf({\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/indexOf/searchstring-tostring-errors.js",
       "n_asserts": 5,
       "flags": []
@@ -725,7 +788,7 @@
       "id": "test262.test.built-ins.string.prototype.indexof.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar indexOf = String.prototype.indexOf;\n\nconsole.log(typeof indexOf);\n\ntry { function() {\n  indexOf.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  indexOf.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar indexOf = String.prototype.indexOf;\n\nconsole.log(typeof indexOf);\n\ntry { (function() {\n  indexOf.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  indexOf.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/indexOf/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -734,7 +797,7 @@
       "id": "test262.test.built-ins.string.prototype.iswellformed.return-abrupt-from-this",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.isWellFormed);\n\ntry { function () {\n  String.prototype.isWellFormed.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function () {\n  String.prototype.isWellFormed.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.isWellFormed);\n\ntry { (function () {\n  String.prototype.isWellFormed.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  String.prototype.isWellFormed.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/isWellFormed/return-abrupt-from-this.js",
       "n_asserts": 3,
       "flags": []
@@ -761,7 +824,7 @@
       "id": "test262.test.built-ins.string.prototype.lastindexof.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar lastIndexOf = String.prototype.lastIndexOf;\n\nconsole.log(typeof lastIndexOf);\n\ntry { function() {\n  lastIndexOf.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  lastIndexOf.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar lastIndexOf = String.prototype.lastIndexOf;\n\nconsole.log(typeof lastIndexOf);\n\ntry { (function() {\n  lastIndexOf.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  lastIndexOf.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/lastIndexOf/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -770,7 +833,7 @@
       "id": "test262.test.built-ins.string.prototype.localecompare.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar localeCompare = String.prototype.localeCompare;\n\nconsole.log(typeof localeCompare);\n\ntry { function() {\n  localeCompare.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  localeCompare.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar localeCompare = String.prototype.localeCompare;\n\nconsole.log(typeof localeCompare);\n\ntry { (function() {\n  localeCompare.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  localeCompare.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/localeCompare/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -788,16 +851,16 @@
       "id": "test262.test.built-ins.string.prototype.match.invoke-builtin-match",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar originalMatch = RegExp.prototype[Symbol.match];\nvar returnVal = {};\nvar result, thisVal, args;\n\nRegExp.prototype[Symbol.match] = function() {\n  thisVal = this;\n  args = arguments;\n  return returnVal;\n};\n\ntry {\n  result = 'target'.match('string source');\n\n  assert(thisVal instanceof RegExp);\n  console.log(thisVal.source);\n  console.log(thisVal.flags);\n  console.log(thisVal.lastIndex);\n  console.log(args.length);\n  console.log(args[0]);\n  console.log(result);\n} finally {\n  RegExp.prototype[Symbol.match] = originalMatch;\n}\n}\n",
+      "fixture": "function main(): void {\nvar originalMatch = RegExp.prototype[Symbol.match];\nvar returnVal = {};\nvar result, thisVal, args;\n\nRegExp.prototype[Symbol.match] = function() {\n  thisVal = this;\n  args = arguments;\n  return returnVal;\n};\n\ntry {\n  result = 'target'.match('string source');\n\n  console.log(thisVal instanceof RegExp);\n  console.log(thisVal.source);\n  console.log(thisVal.flags);\n  console.log(thisVal.lastIndex);\n  console.log(args.length);\n  console.log(args[0]);\n  console.log(result);\n} finally {\n  RegExp.prototype[Symbol.match] = originalMatch;\n}\n}\n",
       "origin": "test/built-ins/String/prototype/match/invoke-builtin-match.js",
-      "n_asserts": 6,
+      "n_asserts": 7,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.match.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar match = String.prototype.match;\n\nconsole.log(typeof match);\n\ntry { function() {\n  match.call(undefined, /./);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  match.call(null, /./);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar match = String.prototype.match;\n\nconsole.log(typeof match);\n\ntry { (function() {\n  match.call(undefined, /./);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  match.call(null, /./);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/match/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -806,7 +869,7 @@
       "id": "test262.test.built-ins.string.prototype.matchall.flags-nonglobal-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n  ''.matchAll(/a/);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function () {\n  ''.matchAll(/a/i);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function () {\n  ''.matchAll(/a/m);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function () {\n  ''.matchAll(/a/u);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { function () {\n  ''.matchAll(/a/y);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar regex = /a/;\nObject.defineProperty(regex, 'flags', {\n  value: 'muyi'\n});\n\ntry { function () {\n  ''.matchAll(regex);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n  ''.matchAll(/a/);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function () {\n  ''.matchAll(/a/i);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function () {\n  ''.matchAll(/a/m);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function () {\n  ''.matchAll(/a/u);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function () {\n  ''.matchAll(/a/y);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar regex = /a/;\nObject.defineProperty(regex, 'flags', {\n  value: 'muyi'\n});\n\ntry { (function () {\n  ''.matchAll(regex);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/matchAll/flags-nonglobal-throws.js",
       "n_asserts": 6,
       "flags": []
@@ -815,7 +878,7 @@
       "id": "test262.test.built-ins.string.prototype.matchall.flags-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar regex = /a/g;\nObject.defineProperty(regex, 'flags', { value: undefined });\n\ntry { function () {\n  ''.matchAll(regex);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nObject.defineProperty(RegExp.prototype, 'flags', {\n  get: function () {\n    return undefined;\n  }\n});\n\ntry { function () {\n  ''.matchAll(/a/g);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar regex = /a/g;\nObject.defineProperty(regex, 'flags', { value: undefined });\n\ntry { (function () {\n  ''.matchAll(regex);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nObject.defineProperty(RegExp.prototype, 'flags', {\n  get: function () {\n    return undefined;\n  }\n});\n\ntry { (function () {\n  ''.matchAll(/a/g);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/matchAll/flags-undefined-throws.js",
       "n_asserts": 2,
       "flags": []
@@ -851,7 +914,7 @@
       "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-not-callable",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.matchAll);\n\nvar regexp = /./;\n\nregexp[Symbol.matchAll] = true;\ntry { function() {\n  ''.matchAll(regexp);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nregexp[Symbol.matchAll] = 5;\ntry { function() {\n  ''.matchAll(regexp);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nregexp[Symbol.matchAll] = '';\ntry { function() {\n  ''.matchAll(regexp);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nregexp[Symbol.matchAll] = Symbol();\ntry { function() {\n  ''.matchAll(regexp);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.matchAll);\n\nvar regexp = /./;\n\nregexp[Symbol.matchAll] = true;\ntry { (function() {\n  ''.matchAll(regexp);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nregexp[Symbol.matchAll] = 5;\ntry { (function() {\n  ''.matchAll(regexp);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nregexp[Symbol.matchAll] = '';\ntry { (function() {\n  ''.matchAll(regexp);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nregexp[Symbol.matchAll] = Symbol();\ntry { (function() {\n  ''.matchAll(regexp);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/matchAll/regexp-matchAll-not-callable.js",
       "n_asserts": 5,
       "flags": []
@@ -860,7 +923,7 @@
       "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-has-no-matchall",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.matchAll);\n\ndelete RegExp.prototype[Symbol.matchAll];\nvar str = '/a/g*/b/g';\n\ntry { function() {\n  str.matchAll(/\\w/g);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.matchAll);\n\ndelete RegExp.prototype[Symbol.matchAll];\nvar str = '/a/g*/b/g';\n\ntry { (function() {\n  str.matchAll(/\\w/g);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/matchAll/regexp-prototype-has-no-matchAll.js",
       "n_asserts": 2,
       "flags": []
@@ -878,7 +941,7 @@
       "id": "test262.test.built-ins.string.prototype.matchall.this-val-non-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar matchAll = String.prototype.matchAll;\n\nconsole.log(typeof matchAll);\n\ntry { function() {\n  matchAll.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  matchAll.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar matchAll = String.prototype.matchAll;\n\nconsole.log(typeof matchAll);\n\ntry { (function() {\n  matchAll.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  matchAll.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/matchAll/this-val-non-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -896,7 +959,7 @@
       "id": "test262.test.built-ins.string.prototype.normalize.form-is-not-valid-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  'foo'.normalize('bar');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  'foo'.normalize('NFC1');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  'foo'.normalize(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  'foo'.normalize('bar');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  'foo'.normalize('NFC1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  'foo'.normalize(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/normalize/form-is-not-valid-throws.js",
       "n_asserts": 3,
       "flags": []
@@ -905,7 +968,7 @@
       "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-form-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('foo');\n\ntry { function() {\n  'foo'.normalize(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('foo');\n\ntry { (function() {\n  'foo'.normalize(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/normalize/return-abrupt-from-form-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -914,7 +977,7 @@
       "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-this-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('foo');\n\ntry { function() {\n  String.prototype.normalize.call(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('foo');\n\ntry { (function() {\n  String.prototype.normalize.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/normalize/return-abrupt-from-this-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -950,7 +1013,7 @@
       "id": "test262.test.built-ins.string.prototype.normalize.this-is-null-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.normalize.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.normalize.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/normalize/this-is-null-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -959,7 +1022,7 @@
       "id": "test262.test.built-ins.string.prototype.normalize.this-is-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.normalize.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.normalize.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/normalize/this-is-undefined-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -968,7 +1031,7 @@
       "id": "test262.test.built-ins.string.prototype.padend.exception-fill-string-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  'abc'.padEnd(10, Symbol());\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  'abc'.padEnd(10, Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/padEnd/exception-fill-string-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -977,7 +1040,7 @@
       "id": "test262.test.built-ins.string.prototype.padend.exception-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.padEnd.call(Symbol());\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.padEnd.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/padEnd/exception-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1040,7 +1103,7 @@
       "id": "test262.test.built-ins.string.prototype.padstart.exception-fill-string-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  'abc'.padStart(10, Symbol());\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  'abc'.padStart(10, Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/padStart/exception-fill-string-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1049,7 +1112,7 @@
       "id": "test262.test.built-ins.string.prototype.padstart.exception-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.padStart.call(Symbol());\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.padStart.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/padStart/exception-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1121,7 +1184,7 @@
       "id": "test262.test.built-ins.string.prototype.repeat.count-is-infinity-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  ''.repeat(Infinity);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  ''.repeat(Infinity);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/repeat/count-is-infinity-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -1139,7 +1202,7 @@
       "id": "test262.test.built-ins.string.prototype.repeat.count-less-than-zero-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  ''.repeat(-1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  ''.repeat(-Infinity);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  ''.repeat(-1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ''.repeat(-Infinity);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/repeat/count-less-than-zero-throws.js",
       "n_asserts": 2,
       "flags": []
@@ -1166,7 +1229,7 @@
       "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-count-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { function() {\n  ''.repeat(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { (function() {\n  ''.repeat(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/repeat/return-abrupt-from-count-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1175,7 +1238,7 @@
       "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-this-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { function() {\n  String.prototype.repeat.call(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { (function() {\n  String.prototype.repeat.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/repeat/return-abrupt-from-this-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1184,7 +1247,7 @@
       "id": "test262.test.built-ins.string.prototype.repeat.this-is-null-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.repeat.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.repeat.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/repeat/this-is-null-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -1193,7 +1256,7 @@
       "id": "test262.test.built-ins.string.prototype.repeat.this-is-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.repeat.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.repeat.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/repeat/this-is-undefined-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -1256,7 +1319,7 @@
       "id": "test262.test.built-ins.string.prototype.replace.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar replace = String.prototype.replace;\n\nconsole.log(typeof replace);\n\ntry { function() {\n  replace.call(undefined, '', '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  replace.call(null, '', '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar replace = String.prototype.replace;\n\nconsole.log(typeof replace);\n\ntry { (function() {\n  replace.call(undefined, '', '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  replace.call(null, '', '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/replace/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -1265,7 +1328,7 @@
       "id": "test262.test.built-ins.string.prototype.replace.tostring-this-throws-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.replace.call(Symbol())\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.replace.call(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/replace/tostring-this-throws-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1274,7 +1337,7 @@
       "id": "test262.test.built-ins.string.prototype.replace.tostring-this-throws-toprimitive",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.replace.call({toString: undefined, valueOf: undefined})\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.replace.call({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/replace/tostring-this-throws-toprimitive.js",
       "n_asserts": 1,
       "flags": []
@@ -1400,7 +1463,7 @@
       "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-flags-no-g-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\nvar poisoned = 0;\nvar poison = {\n  toString() {\n    poisoned += 1;\n    throw 'Should not call toString on this/replaceValue';\n  },\n};\n\nvar searchValue = /./;\n\ntry { function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nObject.defineProperty(searchValue, 'flags', {\n  value: 'G',\n  writable: true,\n  configurable: true,\n});\n\ntry { function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nObject.defineProperty(searchValue, 'flags', {\n  value: 'i',\n  writable: true,\n  configurable: true,\n});\n\ntry { function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(poisoned);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\nvar poisoned = 0;\nvar poison = {\n  toString() {\n    poisoned += 1;\n    throw 'Should not call toString on this/replaceValue';\n  },\n};\n\nvar searchValue = /./;\n\ntry { (function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nObject.defineProperty(searchValue, 'flags', {\n  value: 'G',\n  writable: true,\n  configurable: true,\n});\n\ntry { (function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nObject.defineProperty(searchValue, 'flags', {\n  value: 'i',\n  writable: true,\n  configurable: true,\n});\n\ntry { (function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(poisoned);\n}\n",
       "origin": "test/built-ins/String/prototype/replaceAll/searchValue-flags-no-g-throws.js",
       "n_asserts": 5,
       "flags": []
@@ -1409,7 +1472,7 @@
       "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-flags-null-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\nvar poisoned = 0;\nvar poison = {\n  toString() {\n    poisoned += 1;\n    throw 'Should not call toString on this/replaceValue';\n  },\n};\n\nvar called = 0;\nvar value = undefined;\nvar searchValue = {\n  [Symbol.match]: true,\n  get flags() {\n    called += 1;\n    return value;\n  }\n};\n\ntry { function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(called);\n\ncalled = 0;\nvalue = null;\ntry { function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(called);\n\nconsole.log(poisoned);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\nvar poisoned = 0;\nvar poison = {\n  toString() {\n    poisoned += 1;\n    throw 'Should not call toString on this/replaceValue';\n  },\n};\n\nvar called = 0;\nvar value = undefined;\nvar searchValue = {\n  [Symbol.match]: true,\n  get flags() {\n    called += 1;\n    return value;\n  }\n};\n\ntry { (function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(called);\n\ncalled = 0;\nvalue = null;\ntry { (function() {\n  ''.replaceAll.call(poison, searchValue, poison);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(called);\n\nconsole.log(poisoned);\n}\n",
       "origin": "test/built-ins/String/prototype/replaceAll/searchValue-flags-null-undefined-throws.js",
       "n_asserts": 6,
       "flags": []
@@ -1436,7 +1499,7 @@
       "id": "test262.test.built-ins.string.prototype.replaceall.this-is-null-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\ntry { function() {\n  String.prototype.replaceAll.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\ntry { (function() {\n  String.prototype.replaceAll.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/replaceAll/this-is-null-throws.js",
       "n_asserts": 2,
       "flags": []
@@ -1445,7 +1508,7 @@
       "id": "test262.test.built-ins.string.prototype.replaceall.this-is-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\ntry { function() {\n  String.prototype.replaceAll.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.replaceAll);\n\ntry { (function() {\n  String.prototype.replaceAll.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/replaceAll/this-is-undefined-throws.js",
       "n_asserts": 2,
       "flags": []
@@ -1472,9 +1535,9 @@
       "id": "test262.test.built-ins.string.prototype.search.invoke-builtin-search",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar originalSearch = RegExp.prototype[Symbol.search];\nvar returnVal = {};\nvar result, thisVal, args;\n\n// Fail early if the method is undefined. This test's cleanup logic would\n// otherwise install the value `undefined` to the `Symbol.search` property of\n// the built-in prototype.\nconsole.log(originalSearch);\n\nRegExp.prototype[Symbol.search] = function() {\n  thisVal = this;\n  args = arguments;\n  return returnVal;\n};\n\ntry {\n  result = 'target'.search('string source');\n\n  assert(thisVal instanceof RegExp);\n  console.log(thisVal.source);\n  console.log(thisVal.flags);\n  console.log(args.length);\n  console.log(args[0]);\n  console.log(result);\n} finally {\n  RegExp.prototype[Symbol.search] = originalSearch;\n}\n}\n",
+      "fixture": "function main(): void {\nvar originalSearch = RegExp.prototype[Symbol.search];\nvar returnVal = {};\nvar result, thisVal, args;\n\n// Fail early if the method is undefined. This test's cleanup logic would\n// otherwise install the value `undefined` to the `Symbol.search` property of\n// the built-in prototype.\nconsole.log(originalSearch);\n\nRegExp.prototype[Symbol.search] = function() {\n  thisVal = this;\n  args = arguments;\n  return returnVal;\n};\n\ntry {\n  result = 'target'.search('string source');\n\n  console.log(thisVal instanceof RegExp);\n  console.log(thisVal.source);\n  console.log(thisVal.flags);\n  console.log(args.length);\n  console.log(args[0]);\n  console.log(result);\n} finally {\n  RegExp.prototype[Symbol.search] = originalSearch;\n}\n}\n",
       "origin": "test/built-ins/String/prototype/search/invoke-builtin-search.js",
-      "n_asserts": 6,
+      "n_asserts": 7,
       "flags": []
     },
     {
@@ -1499,7 +1562,7 @@
       "id": "test262.test.built-ins.string.prototype.search.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar search = String.prototype.search;\n\nconsole.log(typeof search);\n\ntry { function() {\n  search.call(undefined, /./);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  search.call(null, /./);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar search = String.prototype.search;\n\nconsole.log(typeof search);\n\ntry { (function() {\n  search.call(undefined, /./);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  search.call(null, /./);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/search/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -1508,7 +1571,7 @@
       "id": "test262.test.built-ins.string.prototype.slice.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar slice = String.prototype.slice;\n\nconsole.log(typeof slice);\n\ntry { function() {\n  slice.call(undefined, 0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  slice.call(null, 0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar slice = String.prototype.slice;\n\nconsole.log(typeof slice);\n\ntry { (function() {\n  slice.call(undefined, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  slice.call(null, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/slice/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -1517,7 +1580,7 @@
       "id": "test262.test.built-ins.string.prototype.slice.this-value-tostring-throws-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.slice.call(Symbol())\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.slice.call(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/slice/this-value-tostring-throws-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1526,7 +1589,7 @@
       "id": "test262.test.built-ins.string.prototype.slice.this-value-tostring-throws-toprimitive",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.slice.call({toString: undefined, valueOf: undefined})\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.slice.call({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/slice/this-value-tostring-throws-toprimitive.js",
       "n_asserts": 1,
       "flags": []
@@ -1631,21 +1694,30 @@
       "flags": []
     },
     {
+      "id": "test262.test.built-ins.string.prototype.split.checking-if-deleting-the-string-prototype-split-length-property-fails",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(String.prototype.split.hasOwnProperty('length'));\n\nconsole.log(delete String.prototype.split.length);\n\nconsole.log(!String.prototype.split.hasOwnProperty('length'));\n}\n",
+      "origin": "test/built-ins/String/prototype/split/checking-if-deleting-the-string-prototype-split-length-property-fails.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
       "id": "test262.test.built-ins.string.prototype.split.checking-if-enumerating-the-string-prototype-split-length-property-fails",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nassert(\n  String.prototype.split.hasOwnProperty('length'),\n  'String.prototype.split.hasOwnProperty(\\'length\\') must return true'\n);\n\nassert(\n  !String.prototype.split.propertyIsEnumerable('length'),\n  'The value of `!String.prototype.split.propertyIsEnumerable(\\'length\\')` is true'\n);\n\n//\n//////////////////////////////////////////////////////////////////////////////\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#2\nvar count = 0;\n\nfor (var p in String.prototype.split) {\n  if (p === \"length\") {\n    count++;\n  }\n}\n\nconsole.log(count);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(String.prototype.split.hasOwnProperty('length'));\n\nconsole.log(!String.prototype.split.propertyIsEnumerable('length'));\n\n//\n//////////////////////////////////////////////////////////////////////////////\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#2\nvar count = 0;\n\nfor (var p in String.prototype.split) {\n  if (p === \"length\") {\n    count++;\n  }\n}\n\nconsole.log(count);\n}\n",
       "origin": "test/built-ins/String/prototype/split/checking-if-enumerating-the-string-prototype-split-length-property-fails.js",
-      "n_asserts": 1,
+      "n_asserts": 3,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.split.checking-string-prototype-split-length",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nassert(\n  String.prototype.split.hasOwnProperty(\"length\"),\n  'String.prototype.split.hasOwnProperty(\"length\") must return true'\n);\n\nconsole.log(String.prototype.split.length);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(String.prototype.split.hasOwnProperty(\"length\"));\n\nconsole.log(String.prototype.split.length);\n}\n",
       "origin": "test/built-ins/String/prototype/split/checking-string-prototype-split-length.js",
-      "n_asserts": 1,
+      "n_asserts": 2,
       "flags": []
     },
     {
@@ -1742,34 +1814,43 @@
       "id": "test262.test.built-ins.string.prototype.split.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar split = String.prototype.split;\n\nconsole.log(typeof split);\n\ntry { function() {\n  split.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  split.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar split = String.prototype.split;\n\nconsole.log(typeof split);\n\ntry { (function() {\n  split.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  split.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/split/this-value-not-obj-coercible.js",
       "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.split.transferred-to-number-separator-override-tostring-returns-regexp",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar __obj = {\n  toString: function() {\n    return /\\u0037\\u0037/g;\n  }\n};\n\nNumber.prototype.split = String.prototype.split;\n\ntry {\n  var __split = (6776767677.006771122677555).split(__obj);\n  Test262Error.thrower('#1: \"__split = 6776767677.006771122677555.split(__obj)\" lead to throwing exception');\n} catch (e) {\n  console.log(e instanceof TypeError);\n}\n}\n",
+      "origin": "test/built-ins/String/prototype/split/transferred-to-number-separator-override-tostring-returns-regexp.js",
+      "n_asserts": 1,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.startswith.coerced-values-of-position",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nassert(str.startsWith('The future', NaN), 'NaN coerced to 0');\nassert(str.startsWith('The future', null), 'null coerced to 0');\nassert(str.startsWith('The future', false), 'false coerced to 0');\nassert(str.startsWith('The future', ''), '\"\" coerced to 0');\nassert(str.startsWith('The future', '0'), '\"0\" coerced to 0');\nassert(str.startsWith('The future', undefined), 'undefined coerced to 0');\nassert(str.startsWith('The future', 0.4), '0.4 coerced to 0');\n\nconsole.log(str.startsWith('The future', true));\nconsole.log(str.startsWith('The future', '1'));\nconsole.log(str.startsWith('The future', 1.4));\n}\n",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.startsWith('The future', NaN));\nconsole.log(str.startsWith('The future', null));\nconsole.log(str.startsWith('The future', false));\nconsole.log(str.startsWith('The future', ''));\nconsole.log(str.startsWith('The future', '0'));\nconsole.log(str.startsWith('The future', undefined));\nconsole.log(str.startsWith('The future', 0.4));\n\nconsole.log(str.startsWith('The future', true));\nconsole.log(str.startsWith('The future', '1'));\nconsole.log(str.startsWith('The future', 1.4));\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/coerced-values-of-position.js",
-      "n_asserts": 3,
+      "n_asserts": 10,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.startswith.out-of-bounds-position",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.startsWith('!', str.length));\n\nconsole.log(str.startsWith('!', 100));\n\nconsole.log(str.startsWith('!', Infinity));\n\nassert(\n  str.startsWith('The future', -1),\n  'position argument < 0 will search from the start of the string (-1)'\n);\n\nassert(\n  str.startsWith('The future', -Infinity),\n  'position argument < 0 will search from the start of the string (-Infinity)'\n);\n}\n",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.startsWith('!', str.length));\n\nconsole.log(str.startsWith('!', 100));\n\nconsole.log(str.startsWith('!', Infinity));\n\nconsole.log(str.startsWith('The future', -1));\n\nconsole.log(str.startsWith('The future', -Infinity));\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/out-of-bounds-position.js",
-      "n_asserts": 3,
+      "n_asserts": 5,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.startswith.return-abrupt-from-position-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar position = Symbol();\n\ntry { function() {\n  ''.startsWith('', position);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar position = Symbol();\n\ntry { (function() {\n  ''.startsWith('', position);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/return-abrupt-from-position-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1778,7 +1859,7 @@
       "id": "test262.test.built-ins.string.prototype.startswith.return-abrupt-from-searchstring-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { function() {\n  ''.startsWith(s);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol();\n\ntry { (function() {\n  ''.startsWith(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/return-abrupt-from-searchstring-as-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1787,16 +1868,43 @@
       "id": "test262.test.built-ins.string.prototype.startswith.return-abrupt-from-this-as-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { function() {\n  String.prototype.startsWith.call(s, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('');\n\ntry { (function() {\n  String.prototype.startsWith.call(s, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/return-abrupt-from-this-as-symbol.js",
       "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.startswith.return-true-if-searchstring-is-empty",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.startsWith(''));\n\nconsole.log(str.startsWith('', str.length));\n\nconsole.log(str.startsWith(''));\n\nconsole.log(str.startsWith('', Infinity));\n}\n",
+      "origin": "test/built-ins/String/prototype/startsWith/return-true-if-searchstring-is-empty.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.startswith.searchstring-found-with-position",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.startsWith('The future', 0));\nconsole.log(str.startsWith('future', 4));\nconsole.log(str.startsWith(' is cool!', 10));\n}\n",
+      "origin": "test/built-ins/String/prototype/startsWith/searchstring-found-with-position.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.string.prototype.startswith.searchstring-found-without-position",
+      "category": "string",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = 'The future is cool!';\n\nconsole.log(str.startsWith('The '));\nconsole.log(str.startsWith('The future'));\nconsole.log(str.startsWith(str));\n}\n",
+      "origin": "test/built-ins/String/prototype/startsWith/searchstring-found-without-position.js",
+      "n_asserts": 3,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.startswith.searchstring-is-regexp-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar searchString = /./;\n\ntry { function() {\n  ''.startsWith(searchString);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar searchString = /./;\n\ntry { (function() {\n  ''.startsWith(searchString);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/searchstring-is-regexp-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -1823,7 +1931,7 @@
       "id": "test262.test.built-ins.string.prototype.startswith.this-is-null-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.startsWith.call(null, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.startsWith.call(null, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/this-is-null-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -1832,7 +1940,7 @@
       "id": "test262.test.built-ins.string.prototype.startswith.this-is-undefined-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.startsWith.call(undefined, '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.startsWith.call(undefined, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/startsWith/this-is-undefined-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -1841,7 +1949,7 @@
       "id": "test262.test.built-ins.string.prototype.substring.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar substring = String.prototype.substring;\n\nconsole.log(typeof substring);\n\ntry { function() {\n  substring.call(undefined, 0, 1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  substring.call(null, 0, 1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar substring = String.prototype.substring;\n\nconsole.log(typeof substring);\n\ntry { (function() {\n  substring.call(undefined, 0, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  substring.call(null, 0, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/substring/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -1850,7 +1958,7 @@
       "id": "test262.test.built-ins.string.prototype.substring.this-value-tostring-throws-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.substring.call(Symbol())\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.substring.call(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/substring/this-value-tostring-throws-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -1859,7 +1967,7 @@
       "id": "test262.test.built-ins.string.prototype.substring.this-value-tostring-throws-toprimitive",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.substring.call({toString: undefined, valueOf: undefined})\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.substring.call({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/substring/this-value-tostring-throws-toprimitive.js",
       "n_asserts": 1,
       "flags": []
@@ -1868,7 +1976,7 @@
       "id": "test262.test.built-ins.string.prototype.symbol.iterator.this-val-non-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype[Symbol.iterator].call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.prototype[Symbol.iterator].call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype[Symbol.iterator].call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.prototype[Symbol.iterator].call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/Symbol.iterator/this-val-non-obj-coercible.js",
       "n_asserts": 2,
       "flags": []
@@ -1913,7 +2021,7 @@
       "id": "test262.test.built-ins.string.prototype.tolocalelowercase.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toLocaleLowerCase = String.prototype.toLocaleLowerCase;\n\nconsole.log(typeof toLocaleLowerCase);\n\ntry { function() {\n  toLocaleLowerCase.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toLocaleLowerCase.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toLocaleLowerCase = String.prototype.toLocaleLowerCase;\n\nconsole.log(typeof toLocaleLowerCase);\n\ntry { (function() {\n  toLocaleLowerCase.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toLocaleLowerCase.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/toLocaleLowerCase/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -1940,7 +2048,7 @@
       "id": "test262.test.built-ins.string.prototype.tolocaleuppercase.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toLocaleUpperCase = String.prototype.toLocaleUpperCase;\n\nconsole.log(typeof toLocaleUpperCase);\n\ntry { function() {\n  toLocaleUpperCase.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toLocaleUpperCase.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toLocaleUpperCase = String.prototype.toLocaleUpperCase;\n\nconsole.log(typeof toLocaleUpperCase);\n\ntry { (function() {\n  toLocaleUpperCase.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toLocaleUpperCase.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/toLocaleUpperCase/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -1985,7 +2093,7 @@
       "id": "test262.test.built-ins.string.prototype.tolowercase.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toLowerCase = String.prototype.toLowerCase;\n\nconsole.log(typeof toLowerCase);\n\ntry { function() {\n  toLowerCase.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toLowerCase.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toLowerCase = String.prototype.toLowerCase;\n\nconsole.log(typeof toLowerCase);\n\ntry { (function() {\n  toLowerCase.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toLowerCase.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/toLowerCase/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -1994,7 +2102,7 @@
       "id": "test262.test.built-ins.string.prototype.tolowercase.this-value-tostring-throws-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.toLowerCase.call(Symbol())\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.toLowerCase.call(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/toLowerCase/this-value-tostring-throws-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -2003,7 +2111,7 @@
       "id": "test262.test.built-ins.string.prototype.tolowercase.this-value-tostring-throws-toprimitive",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function () {\n    String.prototype.toLowerCase.call({toString: undefined, valueOf: undefined})\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function () {\n    String.prototype.toLowerCase.call({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
       "origin": "test/built-ins/String/prototype/toLowerCase/this-value-tostring-throws-toprimitive.js",
       "n_asserts": 1,
       "flags": []
@@ -2012,7 +2120,7 @@
       "id": "test262.test.built-ins.string.prototype.tostring.non-generic-realm",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar otherToString = other.String.prototype.toString;\n\ntry { function() {\n  otherToString.call(true);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherToString.call(0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherToString.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherToString.call();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherToString.call(Symbol('desc'));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherToString.call({\n    valueOf: function() {\n      return 'str';\n    },\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherToString.call([1]);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  'str'.concat({toString: otherToString});\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar otherToString = other.String.prototype.toString;\n\ntry { (function() {\n  otherToString.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherToString.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherToString.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherToString.call();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherToString.call(Symbol('desc'));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherToString.call({\n    valueOf: function() {\n      return 'str';\n    },\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherToString.call([1]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  'str'.concat({toString: otherToString});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/toString/non-generic-realm.js",
       "n_asserts": 8,
       "flags": []
@@ -2021,7 +2129,7 @@
       "id": "test262.test.built-ins.string.prototype.tostring.non-generic",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toString = String.prototype.toString;\n\ntry { function() {\n  toString.call(false);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toString.call(1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toString.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toString.call();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toString.call(Symbol('desc'));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toString.call({\n    toString: function() {\n      return 'str';\n    },\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toString.call(['s', 't', 'r']);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  ''.concat({toString: toString});\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toString = String.prototype.toString;\n\ntry { (function() {\n  toString.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toString.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toString.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toString.call();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toString.call(Symbol('desc'));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toString.call({\n    toString: function() {\n      return 'str';\n    },\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toString.call(['s', 't', 'r']);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ''.concat({toString: toString});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/toString/non-generic.js",
       "n_asserts": 8,
       "flags": []
@@ -2057,7 +2165,7 @@
       "id": "test262.test.built-ins.string.prototype.touppercase.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toUpperCase = String.prototype.toUpperCase;\n\nconsole.log(typeof toUpperCase);\n\ntry { function() {\n  toUpperCase.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  toUpperCase.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toUpperCase = String.prototype.toUpperCase;\n\nconsole.log(typeof toUpperCase);\n\ntry { (function() {\n  toUpperCase.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toUpperCase.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/toUpperCase/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -2066,7 +2174,7 @@
       "id": "test262.test.built-ins.string.prototype.towellformed.return-abrupt-from-this",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.toWellFormed);\n\ntry { function () {\n  String.prototype.toWellFormed.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function () {\n  String.prototype.toWellFormed.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.toWellFormed);\n\ntry { (function () {\n  String.prototype.toWellFormed.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  String.prototype.toWellFormed.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/toWellFormed/return-abrupt-from-this.js",
       "n_asserts": 3,
       "flags": []
@@ -2102,7 +2210,7 @@
       "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-1",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.trim.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.trim.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trim/15.5.4.20-1-1.js",
       "n_asserts": 1,
       "flags": []
@@ -2111,7 +2219,7 @@
       "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-2",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.prototype.trim.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.prototype.trim.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trim/15.5.4.20-1-2.js",
       "n_asserts": 1,
       "flags": []
@@ -2444,27 +2552,27 @@
       "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-40",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toStringAccessed = false;\nvar valueOfAccessed = false;\nvar obj = {\n  toString: function() {\n    toStringAccessed = true;\n    return {};\n  },\n  valueOf: function() {\n    valueOfAccessed = true;\n    return \"abc\";\n  }\n};\n\nconsole.log(String.prototype.trim.call(obj));\nassert(valueOfAccessed, 'valueOfAccessed !== true');\nassert(toStringAccessed, 'toStringAccessed !== true');\n}\n",
+      "fixture": "function main(): void {\nvar toStringAccessed = false;\nvar valueOfAccessed = false;\nvar obj = {\n  toString: function() {\n    toStringAccessed = true;\n    return {};\n  },\n  valueOf: function() {\n    valueOfAccessed = true;\n    return \"abc\";\n  }\n};\n\nconsole.log(String.prototype.trim.call(obj));\nconsole.log(valueOfAccessed);\nconsole.log(toStringAccessed);\n}\n",
       "origin": "test/built-ins/String/prototype/trim/15.5.4.20-2-40.js",
-      "n_asserts": 1,
+      "n_asserts": 3,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-41",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toStringAccessed = false;\nvar valueOfAccessed = false;\nvar obj = {\n  toString: function() {\n    toStringAccessed = true;\n    return \"abc\";\n  },\n  valueOf: function() {\n    valueOfAccessed = true;\n    return \"cef\";\n  }\n};\n\nconsole.log(String.prototype.trim.call(obj));\nconsole.log(valueOfAccessed);\nassert(toStringAccessed, 'toStringAccessed !== true');\n}\n",
+      "fixture": "function main(): void {\nvar toStringAccessed = false;\nvar valueOfAccessed = false;\nvar obj = {\n  toString: function() {\n    toStringAccessed = true;\n    return \"abc\";\n  },\n  valueOf: function() {\n    valueOfAccessed = true;\n    return \"cef\";\n  }\n};\n\nconsole.log(String.prototype.trim.call(obj));\nconsole.log(valueOfAccessed);\nconsole.log(toStringAccessed);\n}\n",
       "origin": "test/built-ins/String/prototype/trim/15.5.4.20-2-41.js",
-      "n_asserts": 2,
+      "n_asserts": 3,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-42",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toStringAccessed = false;\nvar valueOfAccessed = false;\nvar obj = {\n  toString: function() {\n    toStringAccessed = true;\n    return {};\n  },\n  valueOf: function() {\n    valueOfAccessed = true;\n    return {};\n  }\n};\ntry { function() {\n  String.prototype.trim.call(obj);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nassert(valueOfAccessed, 'valueOfAccessed !== true');\nassert(toStringAccessed, 'toStringAccessed !== true');\n}\n",
+      "fixture": "function main(): void {\nvar toStringAccessed = false;\nvar valueOfAccessed = false;\nvar obj = {\n  toString: function() {\n    toStringAccessed = true;\n    return {};\n  },\n  valueOf: function() {\n    valueOfAccessed = true;\n    return {};\n  }\n};\ntry { (function() {\n  String.prototype.trim.call(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(valueOfAccessed);\nconsole.log(toStringAccessed);\n}\n",
       "origin": "test/built-ins/String/prototype/trim/15.5.4.20-2-42.js",
-      "n_asserts": 1,
+      "n_asserts": 3,
       "flags": []
     },
     {
@@ -3173,7 +3281,7 @@
       "id": "test262.test.built-ins.string.prototype.trimend.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar trimEnd = String.prototype.trimEnd;\n\nconsole.log(typeof trimEnd);\n\ntry { function() {\n  trimEnd.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  trimEnd.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar trimEnd = String.prototype.trimEnd;\n\nconsole.log(typeof trimEnd);\n\ntry { (function() {\n  trimEnd.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  trimEnd.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimEnd/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -3191,7 +3299,7 @@
       "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-cannot-convert-to-primitive-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimEnd);\n\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: undefined,\n};\n\n// If trimEnd is called on an object with neither Symbol.toPrimitive, toString\n// nor valueOf defined, then a TypeError exception should be thrown.\ntry { function() {\n    String.prototype.trimEnd.call(thisVal);\n  }(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimEnd);\n\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: undefined,\n};\n\n// If trimEnd is called on an object with neither Symbol.toPrimitive, toString\n// nor valueOf defined, then a TypeError exception should be thrown.\ntry { (function() {\n    String.prototype.trimEnd.call(thisVal);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimEnd/this-value-object-cannot-convert-to-primitive-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3209,7 +3317,7 @@
       "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-toprimitive-returns-object-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimEnd);\ntry { function() {\n  String.prototype.trimEnd.call(thisVal);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimEnd);\ntry { (function() {\n  String.prototype.trimEnd.call(thisVal);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimEnd/this-value-object-toprimitive-returns-object-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3227,7 +3335,7 @@
       "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-tostring-returns-object-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimEnd);\ntry { function() {\n  String.prototype.trimEnd.call(thisVal);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimEnd);\ntry { (function() {\n  String.prototype.trimEnd.call(thisVal);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimEnd/this-value-object-tostring-returns-object-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3245,7 +3353,7 @@
       "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-valueof-returns-object-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimEnd);\ntry { function() {\n  String.prototype.trimEnd.call(thisVal);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimEnd);\ntry { (function() {\n  String.prototype.trimEnd.call(thisVal);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimEnd/this-value-object-valueof-returns-object-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3254,7 +3362,7 @@
       "id": "test262.test.built-ins.string.prototype.trimend.this-value-symbol-typeerror",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimEnd);\n\nvar trimEnd = String.prototype.trimEnd;\nvar symbol = Symbol();\n\ntry { function() {\n    trimEnd.call(symbol);\n  }(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimEnd);\n\nvar trimEnd = String.prototype.trimEnd;\nvar symbol = Symbol();\n\ntry { (function() {\n    trimEnd.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimEnd/this-value-symbol-typeerror.js",
       "n_asserts": 2,
       "flags": []
@@ -3290,7 +3398,7 @@
       "id": "test262.test.built-ins.string.prototype.trimstart.this-value-not-obj-coercible",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar trimStart = String.prototype.trimStart;\n\nconsole.log(typeof trimStart);\n\ntry { function() {\n  trimStart.call(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  trimStart.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar trimStart = String.prototype.trimStart;\n\nconsole.log(typeof trimStart);\n\ntry { (function() {\n  trimStart.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  trimStart.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimStart/this-value-not-obj-coercible.js",
       "n_asserts": 3,
       "flags": []
@@ -3308,7 +3416,7 @@
       "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-cannot-convert-to-primitive-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimStart);\n\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: undefined,\n};\n\n// If trimStart is called on an object with neither Symbol.toPrimitive, toString\n// nor valueOf defined, then a TypeError exception should be thrown.\ntry { function() {\n    String.prototype.trimStart.call(thisVal);\n  }(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimStart);\n\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: undefined,\n};\n\n// If trimStart is called on an object with neither Symbol.toPrimitive, toString\n// nor valueOf defined, then a TypeError exception should be thrown.\ntry { (function() {\n    String.prototype.trimStart.call(thisVal);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimStart/this-value-object-cannot-convert-to-primitive-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3326,7 +3434,7 @@
       "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-toprimitive-returns-object-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimStart);\ntry { function() {\n  String.prototype.trimStart.call(thisVal);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimStart);\ntry { (function() {\n  String.prototype.trimStart.call(thisVal);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimStart/this-value-object-toprimitive-returns-object-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3344,7 +3452,7 @@
       "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-tostring-returns-object-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimStart);\ntry { function() {\n  String.prototype.trimStart.call(thisVal);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimStart);\ntry { (function() {\n  String.prototype.trimStart.call(thisVal);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimStart/this-value-object-tostring-returns-object-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3362,7 +3470,7 @@
       "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-valueof-returns-object-err",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimStart);\ntry { function() {\n  String.prototype.trimStart.call(thisVal);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar thisVal = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf: function() {\n    return {};\n  },\n};\n\nconsole.log(typeof String.prototype.trimStart);\ntry { (function() {\n  String.prototype.trimStart.call(thisVal);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimStart/this-value-object-valueof-returns-object-err.js",
       "n_asserts": 2,
       "flags": []
@@ -3371,7 +3479,7 @@
       "id": "test262.test.built-ins.string.prototype.trimstart.this-value-symbol-typeerror",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimStart);\n\nvar trimStart = String.prototype.trimStart;\nvar symbol = Symbol();\n\ntry { function() {\n    trimStart.call(symbol);\n  }(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof String.prototype.trimStart);\n\nvar trimStart = String.prototype.trimStart;\nvar symbol = Symbol();\n\ntry { (function() {\n    trimStart.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/trimStart/this-value-symbol-typeerror.js",
       "n_asserts": 2,
       "flags": []
@@ -3389,7 +3497,7 @@
       "id": "test262.test.built-ins.string.prototype.valueof.non-generic-realm",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar otherValueOf = other.String.prototype.valueOf;\n\ntry { function() {\n  otherValueOf.call(false);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherValueOf.call(-1);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherValueOf.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherValueOf.call();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherValueOf.call(Symbol('desc'));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherValueOf.call({\n    valueOf: function() {\n      return '';\n    },\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  otherValueOf.call([3]);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  '' + {valueOf: otherValueOf};\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar otherValueOf = other.String.prototype.valueOf;\n\ntry { (function() {\n  otherValueOf.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherValueOf.call(-1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherValueOf.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherValueOf.call();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherValueOf.call(Symbol('desc'));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherValueOf.call({\n    valueOf: function() {\n      return '';\n    },\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherValueOf.call([3]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  '' + {valueOf: otherValueOf};\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/valueOf/non-generic-realm.js",
       "n_asserts": 8,
       "flags": []
@@ -3398,7 +3506,7 @@
       "id": "test262.test.built-ins.string.prototype.valueof.non-generic",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = String.prototype.valueOf;\n\ntry { function() {\n  valueOf.call(true);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  valueOf.call(-0);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  valueOf.call(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  valueOf.call();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  valueOf.call(Symbol('desc'));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  valueOf.call({\n    toString: function() {\n      return 'str';\n    },\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  valueOf.call(['s', 't', 'r']);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  'str' + {valueOf: valueOf};\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar valueOf = String.prototype.valueOf;\n\ntry { (function() {\n  valueOf.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(-0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(Symbol('desc'));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call({\n    toString: function() {\n      return 'str';\n    },\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(['s', 't', 'r']);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  'str' + {valueOf: valueOf};\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/prototype/valueOf/non-generic.js",
       "n_asserts": 8,
       "flags": []
@@ -3416,7 +3524,7 @@
       "id": "test262.test.built-ins.string.raw.nextkey-is-symbol-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  raw: {\n    length: 1,\n    '0': Symbol('')\n  }\n};\n\ntry { function() {\n  String.raw(obj);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar obj = {\n  raw: {\n    length: 1,\n    '0': Symbol('')\n  }\n};\n\ntry { (function() {\n  String.raw(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/raw/nextkey-is-symbol-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -3524,7 +3632,7 @@
       "id": "test262.test.built-ins.string.raw.returns-abrupt-from-substitution-symbol",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\nvar template = {\n  raw: ['a', 'b', 'c']\n};\n\ntry { function() {\n  String.raw(template, '', Symbol(''));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.raw(template, Symbol(''), '');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar template = {\n  raw: ['a', 'b', 'c']\n};\n\ntry { (function() {\n  String.raw(template, '', Symbol(''));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.raw(template, Symbol(''), '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/raw/returns-abrupt-from-substitution-symbol.js",
       "n_asserts": 2,
       "flags": []
@@ -3551,7 +3659,7 @@
       "id": "test262.test.built-ins.string.raw.template-length-is-symbol-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.raw({\n    raw: {\n      length: Symbol(1)\n    }\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.raw({\n    raw: {\n      length: Symbol(1)\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/raw/template-length-is-symbol-throws.js",
       "n_asserts": 1,
       "flags": []
@@ -3560,7 +3668,7 @@
       "id": "test262.test.built-ins.string.raw.template-not-object-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.raw(null);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.raw(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.raw(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.raw(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/raw/template-not-object-throws.js",
       "n_asserts": 2,
       "flags": []
@@ -3569,7 +3677,7 @@
       "id": "test262.test.built-ins.string.raw.template-raw-not-object-throws",
       "category": "string",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  String.raw({\n    raw: undefined\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  String.raw({\n    raw: null\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  String.raw({\n    raw: undefined\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  String.raw({\n    raw: null\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/String/raw/template-raw-not-object-throws.js",
       "n_asserts": 2,
       "flags": []
