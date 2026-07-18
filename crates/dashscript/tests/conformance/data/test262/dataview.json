@@ -1,0 +1,302 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.dataview.constructor",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof DataView);\n}\n",
+      "origin": "test/built-ins/DataView/constructor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.extensibility",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(DataView));\n}\n",
+      "origin": "test/built-ins/DataView/extensibility.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.proto",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(DataView));\n}\n",
+      "origin": "test/built-ins/DataView/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.buffer.invoked-as-accessor",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  DataView.prototype.buffer;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/buffer/invoked-as-accessor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.buffer.invoked-as-func",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  DataView.prototype, 'buffer'\n).get;\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/buffer/invoked-as-func.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.buffer.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  DataView.prototype, \"buffer\"\n).get;\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/buffer/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.bytelength.invoked-as-accessor",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  DataView.prototype.byteLength;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/byteLength/invoked-as-accessor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.bytelength.invoked-as-func",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  DataView.prototype, 'byteLength'\n).get;\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/byteLength/invoked-as-func.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.bytelength.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  DataView.prototype, \"byteLength\"\n).get;\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/byteLength/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.byteoffset.invoked-as-accessor",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  DataView.prototype.byteOffset;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/byteOffset/invoked-as-accessor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.byteoffset.invoked-as-func",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  DataView.prototype, 'byteOffset'\n).get;\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/byteOffset/invoked-as-func.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.byteoffset.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  DataView.prototype, \"byteOffset\"\n).get;\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/byteOffset/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getbigint64.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getBigInt64 = DataView.prototype.getBigInt64;\n\ntry { (() => getBigInt64.call(undefined))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigInt64.call(null))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigInt64.call(1))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigInt64.call(\"string\"))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigInt64.call(true))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigInt64.call(false))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (() => getBigInt64.call(s))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getBigInt64/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getbiguint64.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getBigUint64 = DataView.prototype.getBigUint64;\n\ntry { (() => getBigUint64.call(undefined))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigUint64.call(null))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigUint64.call(1))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigUint64.call(\"string\"))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigUint64.call(true))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => getBigUint64.call(false))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (() => getBigUint64.call(s))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getBigUint64/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getfloat16.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getFloat16 = DataView.prototype.getFloat16;\n\ntry { (function() {\n  getFloat16.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat16.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat16.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat16.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat16.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat16.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getFloat16.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getFloat16/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getfloat32.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getFloat32 = DataView.prototype.getFloat32;\n\ntry { (function() {\n  getFloat32.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat32.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat32.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat32.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat32.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat32.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getFloat32.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getFloat32/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getfloat64.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getFloat64 = DataView.prototype.getFloat64;\n\ntry { (function() {\n  getFloat64.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat64.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat64.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat64.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat64.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFloat64.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getFloat64.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getFloat64/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getint16.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getInt16 = DataView.prototype.getInt16;\n\ntry { (function() {\n  getInt16.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt16.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt16.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt16.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt16.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt16.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getInt16.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getInt16/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getint32.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getInt32 = DataView.prototype.getInt32;\n\ntry { (function() {\n  getInt32.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt32.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt32.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt32.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt32.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt32.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getInt32.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getInt32/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getint8.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getInt8 = DataView.prototype.getInt8;\n\ntry { (function() {\n  getInt8.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt8.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt8.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt8.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt8.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getInt8.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getInt8.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getInt8/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getuint16.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUint16 = DataView.prototype.getUint16;\n\ntry { (function() {\n  getUint16.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint16.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint16.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint16.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint16.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint16.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getUint16.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getUint16/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getuint32.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUint32 = DataView.prototype.getUint32;\n\ntry { (function() {\n  getUint32.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint32.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint32.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint32.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint32.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint32.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getUint32.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getUint32/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.getuint8.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUint8 = DataView.prototype.getUint8;\n\ntry { (function() {\n  getUint8.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint8.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint8.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint8.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint8.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUint8.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  getUint8.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/getUint8/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setbigint64.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setBigInt64 = DataView.prototype.setBigInt64;\n\ntry { (function() {\n  setBigInt64.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setBigInt64.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setBigInt64.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setBigInt64.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setBigInt64.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setBigInt64.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setBigInt64.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setBigInt64/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setfloat16.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setFloat16 = DataView.prototype.setFloat16;\n\ntry { (function() {\n  setFloat16.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat16.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat16.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat16.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat16.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat16.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setFloat16.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setFloat16/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setfloat32.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setFloat32 = DataView.prototype.setFloat32;\n\ntry { (function() {\n  setFloat32.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat32.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat32.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat32.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat32.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat32.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setFloat32.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setFloat32/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setfloat64.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setFloat64 = DataView.prototype.setFloat64;\n\ntry { (function() {\n  setFloat64.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat64.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat64.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat64.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat64.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFloat64.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setFloat64.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setFloat64/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setint16.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setInt16 = DataView.prototype.setInt16;\n\ntry { (function() {\n  setInt16.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt16.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt16.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt16.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt16.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt16.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setInt16.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setInt16/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setint32.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setInt32 = DataView.prototype.setInt32;\n\ntry { (function() {\n  setInt32.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt32.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt32.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt32.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt32.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt32.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setInt32.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setInt32/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setint8.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setInt8 = DataView.prototype.setInt8;\n\ntry { (function() {\n  setInt8.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt8.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt8.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt8.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt8.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setInt8.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setInt8.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setInt8/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setuint16.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setUint16 = DataView.prototype.setUint16;\n\ntry { (function() {\n  setUint16.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint16.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint16.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint16.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint16.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint16.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setUint16.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setUint16/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setuint32.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setUint32 = DataView.prototype.setUint32;\n\ntry { (function() {\n  setUint32.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint32.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint32.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint32.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint32.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint32.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setUint32.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setUint32/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.dataview.prototype.setuint8.this-is-not-object",
+      "category": "dataview",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setUint8 = DataView.prototype.setUint8;\n\ntry { (function() {\n  setUint8.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint8.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint8.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint8.call(\"string\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint8.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setUint8.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"1\");\ntry { (function() {\n  setUint8.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DataView/prototype/setUint8/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    }
+  ]
+}

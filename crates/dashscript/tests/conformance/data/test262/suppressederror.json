@@ -1,0 +1,41 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.suppressederror.newtarget-is-undefined",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = SuppressedError();\n\nconsole.log(Object.getPrototypeOf(obj));\nconsole.log(obj instanceof SuppressedError);\n}\n",
+      "origin": "test/built-ins/SuppressedError/newtarget-is-undefined.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.proto",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError);\n\nconsole.log(proto);\n}\n",
+      "origin": "test/built-ins/SuppressedError/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.prototype.errors-absent-on-prototype",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"error\"));\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"suppressed\"));\n}\n",
+      "origin": "test/built-ins/SuppressedError/prototype/errors-absent-on-prototype.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.prototype.proto",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError.prototype);\n\nconsole.log(proto);\n}\n",
+      "origin": "test/built-ins/SuppressedError/prototype/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    }
+  ]
+}

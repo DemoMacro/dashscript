@@ -1,0 +1,2039 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.function.15.3.2.1-11-1-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function('a', 'a', '\"use strict\";');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.2.1-11-1-s.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.2.1-11-3-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function('eval', '\"use strict\";');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.2.1-11-3-s.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.2.1-11-5-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function('a,a', '\"use strict\";');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.2.1-11-5-s.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5-1gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fn() {}\n\ntry { (function() {\n  fn.caller;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.5-1gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5-2gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction _15_3_5_1_gs() {}\n\ntry { (function() {\n  _15_3_5_1_gs.caller;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.5-2gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-11gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  eval(\"gNonStrict();\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-11gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-13gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar my_eval = eval;\n\ntry { (function() {\n  my_eval(\"gNonStrict();\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-13gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-1gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  gNonStrict();\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-1gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-21gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  function f() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-21gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-22gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  var f = function() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-22gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-23gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  (function() {\n    gNonStrict();\n  })();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-23gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-24gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  function f() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-24gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-25gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  var f = function() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-25gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-26gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  (function() {\n    gNonStrict();\n  })();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-26gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-27gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    function f() {\n      gNonStrict();\n    }\n    f();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-27gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-28gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    var f = function() {\n      gNonStrict();\n    }\n    f();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-28gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-29gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    (function() {\n      gNonStrict();\n    })();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-29gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-2gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-2gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-30gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  \"use strict\";\n\n  function f() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-30gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-31gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  \"use strict\";\n  var f = function() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-31gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-32gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  \"use strict\";\n  (function() {\n    gNonStrict();\n  })();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-32gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-33gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  \"use strict\";\n\n  function f() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-33gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-34gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  \"use strict\";\n  var f = function() {\n    gNonStrict();\n  }\n  f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-34gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-35gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  \"use strict\";\n  (function() {\n    gNonStrict();\n  })();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-35gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-36gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    \"use strict\";\n\n    function f() {\n      gNonStrict();\n    }\n    f();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-36gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-37gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    \"use strict\";\n    var f = function() {\n      gNonStrict();\n    }\n    f();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-37gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-38gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    \"use strict\";\n    (function() {\n      gNonStrict();\n    })();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-38gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-39gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  function f() {\n    \"use strict\";\n    gNonStrict();\n  }\n  return f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-39gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-3gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = function() {\n  gNonStrict();\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-3gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-40gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  var f = function() {\n    \"use strict\";\n    gNonStrict();\n  }\n  return f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-40gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-41gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f1() {\n  return (function() {\n    \"use strict\";\n    gNonStrict();\n  })();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-41gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-42gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  function f() {\n    \"use strict\";\n    gNonStrict();\n  }\n  return f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-42gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-43gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  var f = function() {\n    \"use strict\";\n    gNonStrict();\n  }\n  return f();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-43gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-44gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f1 = function() {\n  return (function() {\n    \"use strict\";\n    gNonStrict();\n  })();\n}\n\ntry { (function() {\n  f1();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-44gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-45gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    function f() {\n      \"use strict\";\n      gNonStrict();\n    }\n    return f();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-45gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-46gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    var f = function() {\n      \"use strict\";\n      gNonStrict();\n    }\n    return f();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-46gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-47gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    return (function() {\n      \"use strict\";\n      gNonStrict();\n    })();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-47gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-48gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {\n  get foo() {\n    gNonStrict();\n  }\n}\n\ntry { (function() {\n  o.foo;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-48gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-49gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {\n  get foo() {\n    \"use strict\";\n    gNonStrict();\n  }\n}\n\ntry { (function() {\n  o.foo;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-49gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-4gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = function() {\n  \"use strict\";\n  gNonStrict();\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-4gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-50gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {\n  set foo(stuff) {\n    gNonStrict();\n  }\n}\n\ntry { (function() {\n  o.foo = 7;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-50gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-51gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {\n  set foo(stuff) {\n    \"use strict\";\n    gNonStrict();\n  }\n}\n\ntry { (function() {\n  o.foo = 8;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-51gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-52gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nObject.defineProperty(o, \"foo\", {\n  get: function() {\n    gNonStrict();\n  }\n});\n\ntry { (function() {\n  o.foo;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-52gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-53gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nObject.defineProperty(o, \"foo\", {\n  get: function() {\n    \"use strict\";\n    gNonStrict();\n  }\n});\n\ntry { (function() {\n  o.foo;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-53gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-54gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nObject.defineProperty(o, \"foo\", {\n  set: function(stuff) {\n    gNonStrict();\n  }\n});\n\ntry { (function() {\n  o.foo = 9;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-54gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-55gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nObject.defineProperty(o, \"foo\", {\n  set: function(stuff) {\n    \"use strict\";\n    gNonStrict();\n  }\n});\n\ntry { (function() {\n  o.foo = 10;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-55gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-56gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\nfunction foo() {\n  return f();\n}\n\ntry { (function() {\n  foo();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-56gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-57gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  eval(\"f();\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-57gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-58gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  Function(\"return f();\")();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-58gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-5gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    gNonStrict();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-5gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-60gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.apply();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-60gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-61gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.apply(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-61gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-62gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.apply(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-62gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-63gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\nvar o = {};\n\ntry { (function() {\n  f.apply(o);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-63gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-64gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar global = this;\n\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.apply(global);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-64gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-65gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.call();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-65gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-66gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-66gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-67gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-67gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-68gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\nvar o = {};\n\ntry { (function() {\n  f.call(o);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-68gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-69gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar global = this;\n\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.call(this);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-69gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-6gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  (function() {\n    \"use strict\";\n    gNonStrict();\n  })();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-6gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-70gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.bind()();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-70gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-71gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.bind(null)();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-71gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-72gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.bind(undefined)();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-72gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-73gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\nvar o = {};\n\ntry { (function() {\n  f.bind(o)();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-73gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-74gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar global = this;\n\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n};\n\ntry { (function() {\n  f.bind(global)();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-74gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-7gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function(\"return gNonStrict();\");\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-7gs.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-8gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function(\"\\\"use strict\\\";\\ngNonStrict();\");\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrict() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-8gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-94gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar gNonStrict = function() {\n  return gNonStrict.caller || gNonStrict.caller.throwTypeError;\n}\n\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-94gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-95gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar gNonStrict = Function(\"return gNonStrict.caller || gNonStrict.caller.throwTypeError;\");\n\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-95gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-96gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {\n  get gNonStrict() {\n    var tmp = Object.getOwnPropertyDescriptor(o, \"gNonStrict\").get;\n    return tmp.caller || tmp.caller.throwTypeError;\n  }\n};\n\n\nfunction f() {\n  \"use strict\";\n  return o.gNonStrict;\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-96gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.15.3.5.4_2-97gs",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar gNonStrict = gNonStrictBindee.bind(null);\n\nfunction f() {\n  \"use strict\";\n  gNonStrict();\n}\n\ntry { (function() {\n  f();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nfunction gNonStrictBindee() {\n  return gNonStrictBindee.caller || gNonStrictBindee.caller.throwTypeError;\n}\n}\n",
+      "origin": "test/built-ins/Function/15.3.5.4_2-97gs.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.internals.call.class-ctor-realm",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst realm = $262.createRealm();\nconst C = realm.global.eval('(class {})');\nconst TE = realm.global.TypeError;\n\ntry { (function() {\n  C();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/internals/Call/class-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.internals.call.class-ctor",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass C {}\n\ntry { (function() {\n  C();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/internals/Call/class-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.length.15.3.3.2-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(Function, \"length\");\n\nconsole.log(desc.value);\nconsole.log(desc.writable);\nconsole.log(desc.enumerable);\nconsole.log(desc.configurable);\n}\n",
+      "origin": "test/built-ins/Function/length/15.3.3.2-1.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.length.s15.3.5.1_a1_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function(\"arg1,arg2,arg3\", \"arg4,arg5\", null);\n\nconsole.log(f.hasOwnProperty('length'));\nconsole.log(f.length);\n}\n",
+      "origin": "test/built-ins/Function/length/S15.3.5.1_A1_T2.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.length.s15.3.5.1_a2_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function(\"arg1,arg2,arg3\", \"arg4,arg5\", null);\n\nconsole.log(f.hasOwnProperty('length'));\n\ndelete f.length;\n\nconsole.log(!f.hasOwnProperty('length'));\nconsole.log(f.length);\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Function/length/S15.3.5.1_A2_T2.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.length.s15.3.5.1_a4_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function(\"arg1,arg2,arg3\", \"arg5,arg4\", null);\n\nconsole.log(f.hasOwnProperty('length'));\n\nfor (var key in f) {\n  if (key == \"length\") {\n    var lengthenumed = true;\n  }\n}\n\nconsole.log(!lengthenumed);\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Function/length/S15.3.5.1_A4_T2.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.property-order",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar propNames = Object.getOwnPropertyNames(Function);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Function/property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.15.3.4.3-1-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fun() {\n  return (this instanceof String);\n}\n\nconsole.log(fun.apply(\"\", Array));\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/15.3.4.3-1-s.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.15.3.4.3-2-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fun() {\n  return (this instanceof Number);\n}\n\nconsole.log(fun.apply(-12, Array));\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/15.3.4.3-2-s.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.15.3.4.3-3-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fun() {\n  return (this instanceof Boolean);\n}\n\nconsole.log(fun.apply(false, Array));\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/15.3.4.3-3-s.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.argarray-not-object",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fn() {}\n\ntry { (function() {\n  fn.apply(null, true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  fn.apply(null, NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  fn.apply(null, '1,2,3');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  fn.apply(null, Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/argarray-not-object.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a12",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.apply.prototype);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A12.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"strawberry\\\"\").apply();\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t10",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\neval(\" (function(){this.feat=1}).apply()\");\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T10.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"green\\\"\").apply(null);\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"battle\\\"\").apply(void 0);\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"oil\\\"\").apply(undefined);\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t7",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function FACTORY() {\n  Function(\"this.feat=\\\"in da haus\\\"\").apply(void 0);\n})();\n\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function FACTORY() {\n  (function() {\n    this.feat = \"kamon beyba\"\n  }).apply(undefined);\n})();\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T8.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a3_t9",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\neval(\" Function(\\\"this.feat=1\\\").apply(void 0) \");\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A3_T9.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a5_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = 1;\n\nvar retobj = Function(\"this.touched= true; return this;\").apply(obj);\n\nconsole.log(typeof obj.touched);\nconsole.log(retobj[\"touched\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A5_T1.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a5_t3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = \"soap\";\n\nvar retobj = (function() {\n  this.touched = true;\n  return this;\n}).apply(obj);\n\nconsole.log(typeof obj.touched);\nconsole.log(retobj[\"touched\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A5_T3.js",
+      "n_asserts": 2,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a5_t4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nf = function() {\n  this.touched = true;\n  return this;\n};\n\nretobj = f.apply(obj);\n\nconsole.log(typeof obj);\nconsole.log(retobj[\"touched\"]);\n\nvar obj;\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A5_T4.js",
+      "n_asserts": 2,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a5_t5",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = function() {\n  this.touched = true;\n};\n\nvar obj = {};\n\nf.apply(obj);\n\nconsole.log(obj.touched);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A5_T5.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a7_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"a1,a2,a3\", \"this.shifted=a1;\").apply(null, [1]);\n\nconsole.log(this[\"shifted\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A7_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a7_t10",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\n\n(function() {\n  Function(\"a1,a2,a3\", \"this.shifted=a1+a2+a3;\").apply(obj, arguments);\n})(\"\", 4, 2);\n\nconsole.log(obj[\"shifted\"]);\n\nconsole.log(typeof this[\"shifted\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A7_T10.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a7_t7",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function() {\n  Function(\"a1,a2,a3\", \"this.shifted=a1+a2+a3;\").apply(null, arguments);\n})(\"\", 1, 2);\n\nconsole.log(this[\"shifted\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A7_T7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.s15.3.4.3_a7_t8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function() {\n  Function(\"a1,a2,a3\", \"this.shifted=a1+a2+a3;\").apply(this, arguments);\n})(\"\", 4, 2);\n\nconsole.log(this[\"shifted\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/S15.3.4.3_A7_T8.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.this-not-callable-realm",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar otherApply = other.Function.prototype.apply;\n\ntry { (function() {\n  otherApply.call(undefined, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherApply.call(null, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherApply.call({}, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  otherApply.call(/re/, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/this-not-callable-realm.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.apply.this-not-callable",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.apply.call(undefined, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Function.prototype.apply.call(null, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Function.prototype.apply.call({}, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Function.prototype.apply.call(/re/, {}, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/apply/this-not-callable.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-0-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function.prototype.bind;\n\nconsole.log(typeof(f));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-0-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-10-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nconsole.log(Object.prototype.toString.call(obj));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-10-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-11-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nFunction.prototype.property = 12;\nvar obj = foo.bind({});\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-11-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-16-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar o = {};\n\nvar bf = foo.bind(o);\nvar ex = Object.isExtensible(bf);\n\nconsole.log(ex);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-16-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-16-2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar obj = foo.bind({});\nobj.property = 12;\n\nconsole.log(obj.hasOwnProperty(\"property\"));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-16-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-10",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-10.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-11",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-11.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-12",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-12.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-13",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call(5);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-13.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-14",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call(\"abc\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-14.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-15",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-15.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bnc = Number.bind(null);\nvar n = bnc(42);\n\nconsole.log(n);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bsc = String.bind(null);\nvar s = bsc(\"hello world\");\n\nconsole.log(s);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-5",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bbc = Boolean.bind(null);\nvar b = bbc(true);\n\nconsole.log(b);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-5.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-6",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar boc = Object.bind(null);\nvar o = boc(42);\n\nconsole.log(o == 42);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-6.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-7",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.bind();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bac = Array.bind(null);\nvar a = bac(42);\na.prop = \"verifyPropertyExist\";\na[41] = 41;\n\nconsole.log(a.prop);\nconsole.log(a[41]);\nconsole.log(a.length);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-8.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-2-9",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bdc = Date.bind(null);\nvar s = bdc(0, 0, 0);\n\nconsole.log(typeof(s));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-2-9.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-20-2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar obj = foo.bind({});\n\ntry { (function() {\n  obj.caller;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-20-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-20-3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar obj = foo.bind({});\ntry { (function() {\n  obj.caller = 12;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-20-3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-21-2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar obj = foo.bind({});\n\ntry { (function() {\n  obj.arguments;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-21-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-21-3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar obj = foo.bind({});\ntry { (function() {\n  obj.arguments = 12;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-21-3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\nobj.property = 12;\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-10",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nObject.defineProperty(Function.prototype, \"property\", {\n  get: function() {\n    return 3;\n  },\n  configurable: true\n});\n\nObject.defineProperty(obj, \"property\", {\n  set: function() {}\n});\n\nconsole.log(typeof(obj.property));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-10.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-11",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nObject.defineProperty(Function.prototype, \"property\", {\n  set: function() {},\n  configurable: true\n});\n\nconsole.log(typeof(obj.property));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-11.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-12",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nconsole.log(typeof(obj.property));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-12.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nFunction.prototype.property = 12;\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nFunction.prototype.property = 3;\nobj.property = 12;\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nObject.defineProperty(Function.prototype, \"property\", {\n  get: function() {\n    return 3;\n  },\n  configurable: true\n});\n\nObject.defineProperty(obj, \"property\", {\n  value: 12\n});\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-5",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\nObject.defineProperty(obj, \"property\", {\n  get: function() {\n    return 12;\n  }\n});\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-5.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-6",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nObject.defineProperty(Function.prototype, \"property\", {\n  get: function() {\n    return 12;\n  },\n  configurable: true\n});\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-6.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-7",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nFunction.prototype.property = 3;\nObject.defineProperty(obj, \"property\", {\n  get: function() {\n    return 12;\n  }\n});\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\n\nObject.defineProperty(Function.prototype, \"property\", {\n  get: function() {\n    return 3;\n  },\n  configurable: true\n});\n\nObject.defineProperty(obj, \"property\", {\n  get: function() {\n    return 12;\n  }\n});\n\nconsole.log(obj.property);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-8.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-6-9",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = function() {};\n\nvar obj = foo.bind({});\nObject.defineProperty(obj, \"property\", {\n  set: function() {}\n});\n\nconsole.log(obj.hasOwnProperty(\"property\"));\nconsole.log(typeof(obj.property));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-6-9.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-8-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar o = {};\n\nvar bf = foo.bind(o);\n\nconsole.log(typeof(bf));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-8-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-8-2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar o = {};\n\nvar bf = foo.bind(o);\nvar s = Object.prototype.toString.call(bf);\n\nconsole.log(s);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-8-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-9-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar o = {};\n\nvar bf = foo.bind(o);\n\nconsole.log(Function.prototype.isPrototypeOf(bf));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-9-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5-9-2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\nvar o = {};\n\nvar bf = foo.bind(o);\n\nconsole.log(Object.getPrototypeOf(bf));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5-9-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar func = function(x, y, z) {\n  return x + y + z;\n};\n\nvar newFunc = Function.prototype.bind.call(func, {}, \"a\", \"b\", \"c\");\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-10",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function(x) {\n  return this === obj && typeof x === \"undefined\";\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj);\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-10.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-11",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function(x) {\n  return this === obj && x === 1 && arguments[0] === 1 && arguments.length === 1 && this.prop === \"abc\";\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj);\n\nconsole.log(newFunc(1));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-11.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-12",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function(x) {\n  return this === obj && x === 1 && arguments[1] === 2 &&\n    arguments[0] === 1 && arguments.length === 2 && this.prop === \"abc\";\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj);\n\nconsole.log(newFunc(1, 2));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-12.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-13",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function(x) {\n  return this === obj && x === 1 &&\n    arguments[0] === 1 && arguments.length === 1 && this.prop === \"abc\";\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj, 1);\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-13.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-14",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function(x) {\n  return this === obj && x === 1 && arguments[1] === 2 &&\n    arguments[0] === 1 && arguments.length === 2 && this.prop === \"abc\";\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj, 1);\n\nconsole.log(newFunc(2));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-14.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-15",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function(x) {\n  return this === obj && x === 1 && arguments[1] === 2 &&\n    arguments[0] === 1 && arguments.length === 2 && this.prop === \"abc\";\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj, 1, 2);\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-15.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  \"prop\": \"a\"\n};\n\nvar func = function() {\n  return this;\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj);\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar func = function(x, y, z) {\n  return z;\n};\n\nvar newFunc = Function.prototype.bind.call(func, {}, \"a\", \"b\");\n\nconsole.log(newFunc(\"c\"));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar func = function() {\n  return arguments.length === 0;\n};\n\nvar newFunc = Function.prototype.bind.call(func);\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-5",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar func = function() {\n  return arguments[0] === 1;\n};\n\nvar newFunc = Function.prototype.bind.call(func);\n\nconsole.log(newFunc(1));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-5.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-6",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function() {\n  return this === obj && arguments.length === 0;\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj);\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-6.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-7",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function() {\n  return this === obj && arguments[0] === 1;\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj, 1);\n\nconsole.log(newFunc());\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function() {\n  return this === obj && arguments[0] === 1;\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj);\n\nconsole.log(newFunc(1));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-8.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.15.3.4.5.1-4-9",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  prop: \"abc\"\n};\n\nvar func = function() {\n  return this === obj && arguments[0] === 1 && arguments[1] === 2;\n};\n\nvar newFunc = Function.prototype.bind.call(func, obj, 1);\n\nconsole.log(newFunc(2));\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/15.3.4.5.1-4-9.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.boundfunction_restricted-properties",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction target() {}\nvar bound = target.bind(null);\n\nconsole.log(bound.hasOwnProperty('caller'));\nconsole.log(bound.hasOwnProperty('arguments'));\n\ntry { (function() {\n  return bound.caller;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  bound.caller = {};\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  return bound.arguments;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  bound.arguments = {};\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/BoundFunction_restricted-properties.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.instance-length-exceeds-int32",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction f(){}\nObject.defineProperty(f, \"length\", {value: 2147483648});\n\nconsole.log(f.bind().length);\n\nObject.defineProperty(f, \"length\", {value: Number.MAX_SAFE_INTEGER});\nconsole.log(f.bind().length);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/instance-length-exceeds-int32.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.instance-length-remaining-args",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\n\nconsole.log(foo.bind(null).length);\nconsole.log(foo.bind(null, 1).length);\n\nfunction bar(x, y) {}\n\nconsole.log(bar.bind(null).length);\nconsole.log(bar.bind(null, 1).length);\nconsole.log(bar.bind(null, 1, 2).length);\nconsole.log(bar.bind(null, 1, 2, 3).length);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/instance-length-remaining-args.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.instance-length-tointeger",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fn() {}\n\nObject.defineProperty(fn, \"length\", {value: NaN});\nconsole.log(fn.bind().length);\n\nObject.defineProperty(fn, \"length\", {value: -0});\nconsole.log(fn.bind().length);\n\nObject.defineProperty(fn, \"length\", {value: Infinity});\nconsole.log(fn.bind().length);\nconsole.log(fn.bind(0, 0).length);\n\nObject.defineProperty(fn, \"length\", {value: -Infinity});\nconsole.log(fn.bind().length);\nconsole.log(fn.bind(0, 0).length);\n\nObject.defineProperty(fn, \"length\", {value: 3.66});\nconsole.log(fn.bind().length);\n\nObject.defineProperty(fn, \"length\", {value: -0.77});\nconsole.log(fn.bind().length);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/instance-length-tointeger.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.s15.3.4.5_a1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {\n  return bar.caller;\n}\nvar bar = foo.bind({});\n\nfunction baz() {\n  return bar();\n}\n\ntry { (function() {\n  baz();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/S15.3.4.5_A1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.s15.3.4.5_a13",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call(undefined, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/S15.3.4.5_A13.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.s15.3.4.5_a14",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call(null, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/S15.3.4.5_A14.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.s15.3.4.5_a15",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.bind.call({}, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/S15.3.4.5_A15.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.s15.3.4.5_a2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {\n  return bar.arguments;\n}\nvar bar = foo.bind({});\n\nfunction baz() {\n  return bar();\n}\n\ntry { (function() {\n  baz();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/S15.3.4.5_A2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.bind.s15.3.4.5_a3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log('bind' in Function.prototype);\n}\n",
+      "origin": "test/built-ins/Function/prototype/bind/S15.3.4.5_A3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.15.3.4.4-1-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fun() {\n  return (this instanceof String);\n}\n\nconsole.log(fun.call(\"\"));\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/15.3.4.4-1-s.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.15.3.4.4-2-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fun() {\n  return (this instanceof Number);\n}\n\nconsole.log(fun.call(-12));\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/15.3.4.4-2-s.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.15.3.4.4-3-s",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fun() {\n  return (this instanceof Boolean);\n}\n\nconsole.log(fun.call(false));\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/15.3.4.4-3-s.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a11",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.call.hasOwnProperty('length'));\n\nconsole.log(!Function.prototype.call.propertyIsEnumerable('length'));\n\n// CHECK#2\nfor (var p in Function.prototype.call) {\n  console.log(p);\n}\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A11.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a12",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.call.prototype);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A12.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a13",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.call.call(undefined, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A13.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a14",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.call.call(null, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A14.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a15",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.call.call({}, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A15.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a2_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Function.prototype.call);\n\nconsole.log(typeof Function.prototype.call.length);\n\nconsole.log(Function.prototype.call.length);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A2_T1.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"strawberry\\\"\").call();\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t10",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\neval(\" (function(){this.feat=1}).call()\");\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T10.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"green\\\"\").call(null);\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"battle\\\"\").call(void 0);\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"this.field=\\\"oil\\\"\").call(undefined);\n\nconsole.log(this[\"field\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t7",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function FACTORY() {\n  Function(\"this.feat=\\\"in da haus\\\"\").call(void 0);\n})();\n\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function FACTORY() {\n  (function() {\n    this.feat = \"kamon beyba\"\n  }).call(undefined);\n})();\n\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T8.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a3_t9",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\neval(\" Function(\\\"this.feat=1\\\").call(void 0) \");\n\n\nconsole.log(this[\"feat\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A3_T9.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a5_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = 1;\n\nvar retobj = Function(\"this.touched= true; return this;\").call(obj);\n\nconsole.log(typeof obj.touched);\nconsole.log(retobj[\"touched\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A5_T1.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a5_t3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = \"soap\";\n\nvar retobj = (function() {\n  this.touched = true;\n  return this;\n}).call(obj);\n\nconsole.log(typeof obj.touched);\nconsole.log(retobj[\"touched\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A5_T3.js",
+      "n_asserts": 2,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a5_t4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = function() {\n  this.touched = true;\n  return this;\n};\n\nvar retobj = f.call(obj);\n\nconsole.log(typeof obj);\nconsole.log(retobj[\"touched\"]);\n\nvar obj;\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A5_T4.js",
+      "n_asserts": 2,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a5_t5",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = function() {\n  this.touched = true;\n};\n\nvar obj = {};\n\nf.call(obj);\n\nconsole.log(obj.touched);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A5_T5.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a6_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction(\"a1,a2,a3\", \"this.shifted=a1;\").call(null, [1]);\n\nconsole.log(this[\"shifted\"].constructor);\n\nconsole.log(this[\"shifted\"].length);\nconsole.log(this[\"shifted\"][0]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A6_T1.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a6_t10",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\n\n(function() {\n  Function(\"a1,a2,a3\", \"this.shifted=a1.length+a2+a3;\").call(obj, arguments, \"\", \"2\");\n})(\"\", 4, 2, \"a\");\n\nconsole.log(obj[\"shifted\"]);\n\nconsole.log(typeof this[\"shifted\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A6_T10.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a6_t7",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function() {\n  Function(\"a1,a2,a3\", \"this.shifted=a1.length+a2+a3;\").call(null, arguments, \"\", 2);\n})(\"\", 1, 2, true);\n\nconsole.log(this[\"shifted\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A6_T7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a6_t8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\n(function() {\n  Function(\"a1,a2,a3\", \"this.shifted=a1.length+a2+a3;\").call(this, arguments, \"\", 2);\n})(\"\", 4, 2, null);\n\nconsole.log(this[\"shifted\"]);\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A6_T8.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.call.s15.3.4.4_a9",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.call.hasOwnProperty('length'));\n\nconsole.log(delete Function.prototype.call.length);\n\nconsole.log(!Function.prototype.call.hasOwnProperty('length'));\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Function/prototype/call/S15.3.4.4_A9.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.caller-arguments.accessor-properties",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst callerDesc = Object.getOwnPropertyDescriptor(Function.prototype, \"caller\");\nconst argumentsDesc = Object.getOwnPropertyDescriptor(Function.prototype, \"arguments\");\n\n// Other tests at ../{arguments,caller}/prop-desc.js already assert that each\n// getter/setter pair use a single function (and when possible, that the\n// function is %ThrowTypeError%), so this test only needs to assert equality\n// *across* the pairs.\nconsole.log(callerDesc.get);\n}\n",
+      "origin": "test/built-ins/Function/prototype/caller-arguments/accessor-properties.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.constructor.s15.3.4.1_a1_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.constructor);\n}\n",
+      "origin": "test/built-ins/Function/prototype/constructor/S15.3.4.1_A1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.property-order",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar propNames = Object.getOwnPropertyNames(Function.prototype);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Function/prototype/property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.s15.3.3.1_a2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(!Function.propertyIsEnumerable('prototype'));\n\n// CHECK#2\nvar count = 0;\n\nfor (var p in Function) {\n  if (p === \"prototype\") {\n    count++;\n  }\n}\n\nconsole.log(count);\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Function/prototype/S15.3.3.1_A2.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.s15.3.3.1_a4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction foo() {}\n\nObject.defineProperty(foo, 'prototype', {\n  value: {}\n});\n\nconsole.log(foo.prototype);\n}\n",
+      "origin": "test/built-ins/Function/prototype/S15.3.3.1_A4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.s15.3.4_a1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.prototype.toString.call(Function.prototype));\n}\n",
+      "origin": "test/built-ins/Function/prototype/S15.3.4_A1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.s15.3.4_a2_t3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar x;\nconsole.log(Function.prototype(x));\n}\n",
+      "origin": "test/built-ins/Function/prototype/S15.3.4_A2_T3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.s15.3.4_a3_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Function.prototype));\n}\n",
+      "origin": "test/built-ins/Function/prototype/S15.3.4_A3_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.s15.3.4_a3_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nObject.prototype.indicator = 1;\n\nconsole.log(Function.prototype.indicator);\n}\n",
+      "origin": "test/built-ins/Function/prototype/S15.3.4_A3_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.s15.3.4_a4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.hasOwnProperty(\"valueOf\"));\n\nconsole.log(typeof Function.prototype.valueOf);\n\nconsole.log(Function.prototype.valueOf);\n}\n",
+      "origin": "test/built-ins/Function/prototype/S15.3.4_A4.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.symbol.hasinstance.this-val-not-callable",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype[Symbol.hasInstance].call());\nconsole.log(Function.prototype[Symbol.hasInstance].call({}));\n}\n",
+      "origin": "test/built-ins/Function/prototype/Symbol.hasInstance/this-val-not-callable.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.symbol.hasinstance.this-val-prototype-non-obj",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = function() {};\n\nf.prototype = undefined;\ntry { (function() {\n  f[Symbol.hasInstance]({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nf.prototype = null;\ntry { (function() {\n  f[Symbol.hasInstance]({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nf.prototype = true;\ntry { (function() {\n  f[Symbol.hasInstance]({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nf.prototype = 'string';\ntry { (function() {\n  f[Symbol.hasInstance]({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nf.prototype = Symbol();\ntry { (function() {\n  f[Symbol.hasInstance]({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nf.prototype = 86;\ntry { (function() {\n  f[Symbol.hasInstance]({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/Symbol.hasInstance/this-val-prototype-non-obj.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.symbol.hasinstance.value-negative",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = function() {};\nvar o = Object.create(null);\nvar o2 = Object.create(o);\n\nconsole.log(f[Symbol.hasInstance](o));\nconsole.log(f[Symbol.hasInstance](o2));\n}\n",
+      "origin": "test/built-ins/Function/prototype/Symbol.hasInstance/value-negative.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.symbol.hasinstance.value-non-obj",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(function() {}[Symbol.hasInstance]());\nconsole.log(function() {}[Symbol.hasInstance](undefined));\nconsole.log(function() {}[Symbol.hasInstance](null));\nconsole.log(function() {}[Symbol.hasInstance](true));\nconsole.log(function() {}[Symbol.hasInstance]('string'));\nconsole.log(function() {}[Symbol.hasInstance](Symbol()));\nconsole.log(function() {}[Symbol.hasInstance](86));\n}\n",
+      "origin": "test/built-ins/Function/prototype/Symbol.hasInstance/value-non-obj.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a11",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.toString.hasOwnProperty(\"length\"));\n\nconsole.log(Function.prototype.toString.length);\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A11.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a12",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.toString.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A12.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a13",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.toString.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A13.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a14",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Function.prototype.toString.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A14.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a16",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {toString: Function.prototype.toString};\n\ntry { (function() {\n  String(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A16.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a6",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.toString.prototype);\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A6.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a8",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.toString.hasOwnProperty('length'));\n\nconsole.log(!Function.prototype.toString.propertyIsEnumerable('length'));\n\n// CHECK#2\nfor (var p in Function.prototype.toString){\n  console.log(p);\n}\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A8.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.prototype.tostring.s15.3.4.2_a9",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.toString.hasOwnProperty('length'));\n\nconsole.log(delete Function.prototype.toString.length);\n\nconsole.log(!Function.prototype.toString.hasOwnProperty('length'));\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Function/prototype/toString/S15.3.4.2_A9.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3.3_a1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.hasOwnProperty(\"prototype\"));\n}\n",
+      "origin": "test/built-ins/Function/S15.3.3_A1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3.3_a2_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Function));\n}\n",
+      "origin": "test/built-ins/Function/S15.3.3_A2_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3.3_a2_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nFunction.prototype.indicator = 1;\n\nconsole.log(Function.indicator);\n}\n",
+      "origin": "test/built-ins/Function/S15.3.3_A2_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3.3_a3",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.hasOwnProperty(\"length\"));\nconsole.log(Function.length);\n}\n",
+      "origin": "test/built-ins/Function/S15.3.3_A3.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3.5_a1_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function();\n\nconsole.log(Object.prototype.toString.call(f));\n}\n",
+      "origin": "test/built-ins/Function/S15.3.5_A1_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3.5_a2_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function(\"var x =1; this.y=2;return \\\"OK\\\";\")());\n\nconsole.log(typeof x);\nconsole.log(y);\n}\n",
+      "origin": "test/built-ins/Function/S15.3.5_A2_T1.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3_a1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = Function;\n\nvar thisobj = this.Function;\n\nconsole.log(obj);\n}\n",
+      "origin": "test/built-ins/Function/S15.3_A1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3_a2_t1",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Function.call(this, \"var x / = 1;\");\n} catch (e) {\n  console.log(e instanceof SyntaxError);\n}\n}\n",
+      "origin": "test/built-ins/Function/S15.3_A2_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3_a2_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Function.call(this, \"var #x  = 1;\");\n} catch (e) {\n  console.log(e instanceof SyntaxError);\n}\n}\n",
+      "origin": "test/built-ins/Function/S15.3_A2_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3_a3_t2",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nthis.color = \"red\";\nvar planet = \"mars\";\n\nvar f = Function.call(\"blablastring\", \"return this.color;\");\n\nconsole.log(f());\n\nvar g = Function.call(null, \"return this.planet;\");\n\nconsole.log(g());\n}\n",
+      "origin": "test/built-ins/Function/S15.3_A3_T2.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3_a3_t4",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function.call(this, \"return planet;\");\n\nconsole.log(f());\n\nvar planet = \"mars\";\n\nconsole.log(f());\n}\n",
+      "origin": "test/built-ins/Function/S15.3_A3_T4.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3_a3_t5",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function.call(this, \"return this.planet;\");\nvar g = Function.call(this, \"return this.color;\");\n\nconsole.log(f());\n\nvar planet = \"mars\";\n\nconsole.log(f());\nconsole.log(g());\n\nthis.color = \"red\";\n\nconsole.log(g());\n}\n",
+      "origin": "test/built-ins/Function/S15.3_A3_T5.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.function.s15.3_a3_t6",
+      "category": "function",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = Function.call(this, \"return this.planet;\");\n\nconsole.log(f());\n\nvar planet = \"mars\";\n\nconsole.log(f());\n}\n",
+      "origin": "test/built-ins/Function/S15.3_A3_T6.js",
+      "n_asserts": 2,
+      "flags": []
+    }
+  ]
+}

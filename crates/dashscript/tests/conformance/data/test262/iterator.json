@@ -1,0 +1,1490 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.iterator.concat.fresh-iterator-result",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet oldIterResult = {\n  done: false,\n  value: 123,\n};\n\nlet testIterator = {\n  next() {\n    return oldIterResult;\n  }\n};\n\nlet iterable = {\n  [Symbol.iterator]() {\n    return testIterator;\n  }\n};\n\nlet iterator = Iterator.concat(iterable);\n\nlet iterResult = iterator.next();\n\nconsole.log(iterResult.done);\nconsole.log(iterResult.value);\n\nconsole.log(iterResult);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/fresh-iterator-result.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.get-value-after-done",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet valueAccesses = 0;\nlet iter = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {\n          get value() {\n            ++valueAccesses;\n          },\n          done: true,\n        };\n      },\n    };\n  }\n};\n\nArray.from(Iterator.concat(iter, iter, iter));\n\nconsole.log(valueAccesses);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/get-value-after-done.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.concat);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.many-arguments",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterables = [\n  [/* empty */],\n  [1],\n  [2, 3],\n  [4, 5, 6],\n  [7, 8, 9, 10],\n];\n\nlet iterator = Iterator.concat(...iterables);\n\nlet array = [].concat(...iterables);\n\nfor (let i = 0; i < array.length; i++) {\n  let iterResult = iterator.next();\n\n  console.log(iterResult.done);\n  console.log(iterResult.value);\n}\n\nlet iterResult = iterator.next();\n\nconsole.log(iterResult.done);\nconsole.log(iterResult.value);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/many-arguments.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.next-method-called-with-zero-arguments",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nextCalled = 0;\n\nlet testIterator = {\n  next() {\n    nextCalled++;\n    console.log(arguments.length);\n\n    return {\n      done: false,\n      value: 0,\n    };\n  }\n};\n\nlet iterable = {\n  [Symbol.iterator]() {\n    return testIterator;\n  }\n};\n\nlet iterator = Iterator.concat(iterable);\nconsole.log(nextCalled);\n\niterator.next();\nconsole.log(nextCalled);\n\niterator.next(1);\nconsole.log(nextCalled);\n\niterator.next(1, 2);\nconsole.log(nextCalled);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/next-method-called-with-zero-arguments.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.next-method-returns-non-object",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonObjectIterator = {\n  next() {\n    return null;\n  }\n};\n\nlet iterable = {\n  [Symbol.iterator]() {\n    return nonObjectIterator;\n  }\n};\n\nlet iterator = Iterator.concat(iterable);\n\ntry { (function() {\n  iterator.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/concat/next-method-returns-non-object.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.concat));\n}\n",
+      "origin": "test/built-ins/Iterator/concat/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.result-is-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iter = Iterator.concat();\nconsole.log(iter instanceof Iterator);\n\nvar customIter = { next() { return { done: true, value: undefined }; } };\niter = Iterator.concat({ [Symbol.iterator]() { return customIter; } });\nconsole.log(iter instanceof Iterator);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/result-is-iterator.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.return-is-forwarded",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet returnCount = 0;\n\nlet testIterator = {\n  next() {\n    return {\n      done: false,\n      value: 1,\n    };\n  },\n  return() {\n    ++returnCount;\n    return {};\n  }\n};\n\nlet iterable = {\n  [Symbol.iterator]() {\n    return testIterator;\n  }\n};\n\nlet iterator = Iterator.concat(iterable);\nconsole.log(returnCount);\n\nlet iterResult = iterator.next();\nconsole.log(returnCount);\nconsole.log(iterResult.done);\nconsole.log(iterResult.value);\n\niterator.return();\nconsole.log(returnCount);\n\niterator.return();\nconsole.log(returnCount);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/return-is-forwarded.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.return-method-called-with-zero-arguments",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet returnCalled = 0;\n\nlet testIterator = {\n  next() {\n    return {done: false};\n  },\n  return() {\n    returnCalled++;\n    console.log(arguments.length);\n    return {done: true};\n  }\n};\n\nlet iterable = {\n  [Symbol.iterator]() {\n    return testIterator;\n  }\n};\n\nlet iterator;\n\n// Call with zero arguments.\niterator = Iterator.concat(iterable);\niterator.next();\nconsole.log(returnCalled);\n\niterator.return();\nconsole.log(returnCalled);\n\n// Call with one argument.\niterator = Iterator.concat(iterable);\niterator.next();\nconsole.log(returnCalled);\n\niterator.return(1);\nconsole.log(returnCalled);\n\n// Call with two arguments.\niterator = Iterator.concat(iterable);\niterator.next();\nconsole.log(returnCalled);\n\niterator.return(1, 2);\nconsole.log(returnCalled);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/return-method-called-with-zero-arguments.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.single-argument",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet array = [1, 2, 3];\n\nlet iterator = Iterator.concat(array);\n\nfor (let i = 0; i < array.length; i++) {\n  let iterResult = iterator.next();\n\n  console.log(iterResult.done);\n  console.log(iterResult.value);\n}\n\nlet iterResult = iterator.next();\n\nconsole.log(iterResult.done);\nconsole.log(iterResult.value);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/single-argument.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-generator-is-running-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet enterCount = 0;\n\nlet testIterator = {\n  next() {\n    enterCount++;\n    iterator.next();\n    return {done: false};\n  }\n}\n\nlet iterable = {\n  [Symbol.iterator]() {\n    return testIterator;\n  }\n};\n\nlet iterator = Iterator.concat(iterable);\n\nconsole.log(enterCount);\n\ntry { (function() {\n  iterator.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(enterCount);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/throws-typeerror-when-generator-is-running-next.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-generator-is-running-return",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet enterCount = 0;\n\nlet testIterator = {\n  next() {\n    return {done: false};\n  },\n  return() {\n    enterCount++;\n    iterator.return();\n    return {done: false};\n  }\n}\n\nlet iterable = {\n  [Symbol.iterator]() {\n    return testIterator;\n  }\n};\n\nlet iterator = Iterator.concat(iterable);\n\niterator.next();\n\nconsole.log(enterCount);\n\ntry { (function() {\n  iterator.return();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(enterCount);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/throws-typeerror-when-generator-is-running-return.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-iterable-not-an-object",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Iterator.concat(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat(123);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat(123n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat(\"test\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/concat/throws-typeerror-when-iterable-not-an-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-iterator-method-not-callable",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Iterator.concat({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat({[Symbol.iterator]: undefined});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat({[Symbol.iterator]: null});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat({[Symbol.iterator]: true});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat({[Symbol.iterator]: 123});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat({[Symbol.iterator]: 123n});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat({[Symbol.iterator]: \"abc\"});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Iterator.concat({[Symbol.iterator]: Symbol()});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/concat/throws-typeerror-when-iterator-method-not-callable.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-iterator-not-an-object",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction MakeIterable(iterator) {\n  return {\n    [Symbol.iterator]() {\n      return iterator;\n    }\n  };\n}\n\nvar iterator;\n\niterator = Iterator.concat(MakeIterable(undefined));\ntry { (function() { iterator.next(); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\niterator = Iterator.concat(MakeIterable(null));\ntry { (function() { iterator.next(); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\niterator = Iterator.concat(MakeIterable(true));\ntry { (function() { iterator.next(); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\niterator = Iterator.concat(MakeIterable(123));\ntry { (function() { iterator.next(); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\niterator = Iterator.concat(MakeIterable(123n));\ntry { (function() { iterator.next(); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\niterator = Iterator.concat(MakeIterable(\"abc\"));\ntry { (function() { iterator.next(); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\niterator = Iterator.concat(MakeIterable(Symbol()));\ntry { (function() { iterator.next(); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/concat/throws-typeerror-when-iterator-not-an-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.concat.zero-arguments",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = Iterator.concat();\n\nlet iterResult = iterator.next();\n\nconsole.log(iterResult.done);\nconsole.log(iterResult.value);\n}\n",
+      "origin": "test/built-ins/Iterator/concat/zero-arguments.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.constructor",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator);\n}\n",
+      "origin": "test/built-ins/Iterator/constructor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.from.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.from);\n}\n",
+      "origin": "test/built-ins/Iterator/from/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.from.primitives",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Iterator.from(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Iterator.from(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Iterator.from(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Iterator.from(0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Iterator.from(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Iterator.from(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nIterator.from('string');\n}\n",
+      "origin": "test/built-ins/Iterator/from/primitives.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.from.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.from));\n}\n",
+      "origin": "test/built-ins/Iterator/from/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.from.result-proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  next() {\n    return {\n      done: true,\n      value: undefined,\n    };\n  },\n};\n\nconst WrapForValidIteratorPrototype = Object.getPrototypeOf(Iterator.from(iter));\n\nconsole.log(Object.getPrototypeOf(WrapForValidIteratorPrototype));\n\nclass SubIterator extends Iterator {}\nconsole.log(Object.getPrototypeOf(SubIterator.from(iter)));\n\nfunction* g() {}\nconst GeneratorPrototype = Object.getPrototypeOf(g());\n\nconsole.log(Object.getPrototypeOf(Iterator.from(g())));\n}\n",
+      "origin": "test/built-ins/Iterator/from/result-proto.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.from.return-method-returns-iterator-result",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst iter = {};\nconst wrapper = Iterator.from(iter);\n\nconst result = wrapper.return();\nconsole.log(result.hasOwnProperty(\"value\"));\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/Iterator/from/return-method-returns-iterator-result.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator));\n}\n",
+      "origin": "test/built-ins/Iterator/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.constructor.prop-desc",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet desc = Object.getOwnPropertyDescriptor(Iterator.prototype, 'constructor');\nconsole.log(typeof desc.get);\nconsole.log(typeof desc.set);\nconsole.log(desc.configurable);\nconsole.log(desc.enumerable);\nconsole.log(desc.value);\nconsole.log(desc.writable);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/constructor/prop-desc.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.constructor.weird-setter",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet IteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf([][Symbol.iterator]()))\n\nlet sentinel = {};\n\nlet { get, set } = Object.getOwnPropertyDescriptor(Iterator.prototype, 'constructor');\n\nconsole.log(Iterator.prototype.constructor);\nconsole.log(get.call());\n\n// 1. If _this_ is not an Object, then\n//   1. Throw a *TypeError* exception.\ntry { (() => set.call(undefined, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => set.call(null, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => set.call(true, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// 1. If _this_ is _home_, then\n//   1. NOTE: Throwing here emulates assignment to a non-writable data property on the _home_ object in strict mode code.\n//   1. Throw a *TypeError* exception.\ntry { (() => set.call(IteratorPrototype, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => IteratorPrototype.constructor = '')(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(Iterator.prototype.constructor);\nconsole.log(get.call());\n\n// 1. If _desc_ is *undefined*, then\n//   1. Perform ? CreateDataPropertyOrThrow(_this_, _p_, _v_).\nlet FakeGeneratorPrototype = Object.create(IteratorPrototype);\nObject.freeze(IteratorPrototype);\nFakeGeneratorPrototype.constructor = sentinel;\nconsole.log(FakeGeneratorPrototype.constructor);\n\nconsole.log(Iterator.prototype.constructor);\nconsole.log(get.call());\n\n// 1. Else,\n//   1. Perform ? Set(_this_, _p_, _v_, *true*).\nlet o = { constructor: sentinel + 'a' };\nset.call(o, sentinel);\nconsole.log(o.constructor);\n\nconsole.log(Iterator.prototype.constructor);\nconsole.log(get.call());\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/constructor/weird-setter.js",
+      "n_asserts": 15,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.drop);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.limit-equals-total",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 2;\n}\n\nlet iterator = g().drop(2);\nlet { value, done } = iterator.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/limit-equals-total.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.limit-greater-than-total",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 2;\n}\n\n{\n  let iterator = g().drop(3);\n  let { value, done } = iterator.next();\n  console.log(value);\n  console.log(done);\n}\n\n{\n  let iterator = g().drop(Number.MAX_SAFE_INTEGER);\n  let { value, done } = iterator.next();\n  console.log(value);\n  console.log(done);\n}\n\n{\n  let iterator = g().drop(Infinity);\n  let { value, done } = iterator.next();\n  console.log(value);\n  console.log(done);\n}\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/limit-greater-than-total.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.limit-less-than-total",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 2;\n}\n\nlet iterator = g().drop(1);\n\n{\n  let { value, done } = iterator.next();\n  console.log(value);\n  console.log(done);\n}\n\n{\n  let { value, done } = iterator.next();\n  console.log(value);\n  console.log(done);\n}\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/limit-less-than-total.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.limit-rangeerror",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\niterator.drop(0);\niterator.drop(-0.5);\niterator.drop(null);\n\ntry { (() => {\n  iterator.drop(-1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  iterator.drop();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  iterator.drop(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  iterator.drop(NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/limit-rangeerror.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.limit-tonumber",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 2;\n}\n\n{\n  let iterator = g();\n  let { value, done } = iterator\n    .drop({\n      valueOf: function () {\n        return 1;\n      },\n    })\n    .next();\n  console.log(value);\n  console.log(done);\n}\n\n{\n  let iterator = g();\n  let { value, done } = iterator.drop([]).drop([1]).next();\n  console.log(value);\n  console.log(done);\n}\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/limit-tonumber.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.drop));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.result-is-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log((function* () {})().drop(0) instanceof Iterator);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/result-is-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = Iterator.prototype.drop.call({ next: 0 }, 1);\n\ntry { (function () {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet dropIter = Iterator.prototype.drop.call(iter, 1);\n\nlet { done, value } = dropIter.next();\n\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/this-plain-iterator.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-advanced-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet dropped = iterator.drop(2);\n\nlet { value, done } = iterator.next();\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = dropped.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = dropped.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = dropped.next());\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/underlying-iterator-advanced-in-parallel.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-closed-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet dropped = iterator.drop(2);\n\niterator.return();\n\nlet { value, done } = dropped.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/underlying-iterator-closed-in-parallel.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-closed",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\niterator.return();\n\nlet dropped = iterator.drop(2);\n\nlet { value, done } = dropped.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/drop/underlying-iterator-closed.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.every);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.iterator-already-exhausted",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\nlet result = iterator.every(() => true);\nconsole.log(result);\n\nresult = iterator.every(() => false);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/iterator-already-exhausted.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.iterator-has-no-return",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = [1, 2, 3, 4, 5][Symbol.iterator]();\n\nconsole.log(iterator.return);\n\nlet ret = iterator.every(v => v < 4);\n\nconsole.log(ret);\n\nlet { done, value } = iterator.next();\nconsole.log(done);\nconsole.log(value);\n\n({ done, value } = iterator.next());\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/iterator-has-no-return.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.non-callable-predicate",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nlet iterator = (function* () {\n  yield 1;\n})();\n\ntry { (function () {\n  iterator.every(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/non-callable-predicate.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-falsey",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 1;\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.every(v => {\n  ++predicateCalls;\n  return false;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n\nlet { done, value } = iter.next();\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/predicate-returns-falsey.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-non-boolean",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  for (let i = 4; i >= 0; --i) {\n    yield i;\n  }\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.every(v => {\n  ++predicateCalls;\n  return v;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/predicate-returns-non-boolean.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-truthy-then-falsey",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.every(v => {\n  ++predicateCalls;\n  return v < 3;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n\nlet { done, value } = iter.next();\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/predicate-returns-truthy-then-falsey.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-truthy",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 1;\n  yield 2;\n  yield 3;\n  yield 4;\n}\n\nlet result = g().every(() => true);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/predicate-returns-truthy.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.predicate-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\nlet result = iter.every(function (v, count) {\n  console.log(this);\n  ++assertionCount;\n  return true;\n});\n\nconsole.log(result);\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/predicate-this.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.every));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.result-is-boolean",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nlet iter = g();\nconsole.log(typeof iter.every(() => {}));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/result-is-boolean.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Iterator.prototype.every.call({ next: 0 }, () => true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.every.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet predicateCalls = 0;\nlet result = Iterator.prototype.every.call(iter, function (v) {\n  ++predicateCalls;\n  return v;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/every/this-plain-iterator.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.filter);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.iterator-already-exhausted",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\niterator = iterator.filter(() => true);\n({ value, done } = iterator.next());\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/iterator-already-exhausted.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.non-callable-predicate",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nlet iterator = (function* () {})();\n\ntry { (function () {\n  iterator.filter(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/non-callable-predicate.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.predicate-filters",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 0;\n  yield 2;\n  yield 0;\n  yield 3;\n  yield 0;\n  yield 4;\n}\n\nlet iterator = g();\n\nlet predicateCalls = 0;\niterator = iterator.filter(value => {\n  ++predicateCalls;\n  return value !== 0;\n});\n\nlet resultCount = 0;\nfor (let value of iterator) {\n  ++resultCount;\n  console.log(value);\n}\nconsole.log(resultCount);\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/predicate-filters.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.predicate-returns-non-boolean",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 0;\n  yield 0;\n  yield 1;\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\niter = iter.filter(v => {\n  ++predicateCalls;\n  return v;\n});\n\nconsole.log(predicateCalls);\n\niter.next();\n\nconsole.log(predicateCalls);\n\niter.next();\n\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/predicate-returns-non-boolean.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.predicate-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\niter = iter.filter(function (v, count) {\n  console.log(this);\n  ++assertionCount;\n  return true;\n});\n\niter.next();\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/predicate-this.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.filter));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.result-is-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log((function* () {})().filter(() => true) instanceof Iterator);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/result-is-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = Iterator.prototype.filter.call({ next: 0 }, () => true);\n\ntry { (function () {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet predicateCalls = 0;\niter = Iterator.prototype.filter.call(iter, function (v) {\n  ++predicateCalls;\n  return v;\n});\n\nfor (let e of iter);\n\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/this-plain-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.throws-typeerror-when-generator-is-running",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar loopCount = 0;\n\nfunction* g() {\n  while (true) {\n    loopCount++;\n    yield;\n  }\n}\n\nvar enterCount = 0;\n\nfunction predicate() {\n  enterCount++;\n  iter.next();\n}\n\nvar iter = g().filter(predicate);\n\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(loopCount);\nconsole.log(enterCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/throws-typeerror-when-generator-is-running.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-advanced-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet filtered = iterator.filter(() => true);\n\nlet { value, done } = iterator.next();\n\nconsole.log(value);\nconsole.log(done);\n\niterator.next();\niterator.next();\n\n({ value, done } = filtered.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = filtered.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = filtered.next());\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/underlying-iterator-advanced-in-parallel.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-closed-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet filtered = iterator.filter(() => true);\n\niterator.return();\n\nlet { value, done } = filtered.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/underlying-iterator-closed-in-parallel.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-closed",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\niterator.return();\n\nlet filtered = iterator.filter(() => true);\n\nlet { value, done } = filtered.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/filter/underlying-iterator-closed.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.find);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.iterator-already-exhausted",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\nlet result = iterator.find(() => true);\nconsole.log(result);\n\nresult = iterator.find(() => false);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/iterator-already-exhausted.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.iterator-has-no-return",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = [1, 2, 3, 4, 5][Symbol.iterator]();\n\nconsole.log(iterator.return);\n\nlet ret = iterator.find(v => v > 3);\n\nconsole.log(ret);\n\nlet { done, value } = iterator.next();\nconsole.log(done);\nconsole.log(value);\n\n({ done, value } = iterator.next());\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/iterator-has-no-return.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.non-callable-predicate",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nlet iterator = (function* () {\n  yield 1;\n})();\n\ntry { (function () {\n  iterator.find(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/non-callable-predicate.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-falsey-then-truthy",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.find(v => {\n  ++predicateCalls;\n  return v > 2;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n\nlet { done, value } = iter.next();\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/predicate-returns-falsey-then-truthy.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-falsey",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 1;\n  yield 2;\n  yield 3;\n}\n\nlet result = g().find(() => false);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/predicate-returns-falsey.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-non-boolean",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield '';\n  yield null;\n  yield undefined;\n  yield 0;\n  yield 1;\n  yield 2;\n  yield 3;\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.find(v => {\n  ++predicateCalls;\n  return v;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/predicate-returns-non-boolean.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-truthy",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 1;\n  yield 2;\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.find(v => {\n  ++predicateCalls;\n  return true;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n\nlet { done, value } = iter.next();\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/predicate-returns-truthy.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.predicate-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\nlet result = iter.find(function (v, count) {\n  console.log(this);\n  ++assertionCount;\n  return true;\n});\n\nconsole.log(result);\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/predicate-this.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.find));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Iterator.prototype.find.call({ next: 0 }, () => true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.find.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet predicateCalls = 0;\nlet result = Iterator.prototype.find.call(iter, function (v) {\n  ++predicateCalls;\n  return v === 0;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/find/this-plain-iterator.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.flatMap);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.iterator-already-exhausted",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\niterator = iterator.flatMap(x => [x]);\n({ value, done } = iterator.next());\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/iterator-already-exhausted.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-returns-non-object",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 0;\n  yield 0;\n  yield 1;\n}\n\nlet iter = g();\n\nlet mapperCalls = 0;\niter = iter.flatMap(v => {\n  ++mapperCalls;\n  return null;\n});\n\nconsole.log(mapperCalls);\n\ntry { (function () {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(mapperCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/mapper-returns-non-object.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\niter = iter.flatMap(function (v, count) {\n  console.log(this);\n  ++assertionCount;\n  return [v];\n});\n\niter.next();\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/mapper-this.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.non-callable-mapper",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nlet iterator = (function* () {})();\n\ntry { (function () {\n  iterator.flatMap(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/non-callable-mapper.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.flatMap));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.result-is-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log((function* () {})().flatMap(() => []) instanceof Iterator);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/result-is-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.return-is-forwarded-to-mapper-result",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet returnCount = 0;\n\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g().flatMap(v => ({\n  next() {\n    return {\n      done: false,\n      value: 1,\n    };\n  },\n  return() {\n    ++returnCount;\n    return {};\n  },\n}));\n\nconsole.log(returnCount);\n\nlet { done, value } = iter.next();\n\nconsole.log(done);\nconsole.log(value);\n\nconsole.log(returnCount);\n\niter.return();\nconsole.log(returnCount);\n\niter.return();\nconsole.log(returnCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/return-is-forwarded-to-mapper-result.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = Iterator.prototype.flatMap.call({ next: 0 }, () => []);\n\ntry { (function () {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet mapperCalls = 0;\niter = Iterator.prototype.flatMap.call(iter, function (v) {\n  ++mapperCalls;\n  return [v];\n});\n\nfor (let e of iter);\n\nconsole.log(mapperCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/this-plain-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.throws-typeerror-when-generator-is-running",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar loopCount = 0;\n\nfunction* g() {\n  while (true) {\n    loopCount++;\n    yield;\n  }\n}\n\nvar enterCount = 0;\n\nfunction mapper() {\n  enterCount++;\n  iter.next();\n}\n\nvar iter = g().flatMap(mapper);\n\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(loopCount);\nconsole.log(enterCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/throws-typeerror-when-generator-is-running.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-advanced-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet mapped = iterator.flatMap(x => [x]);\n\nlet { value, done } = iterator.next();\n\nconsole.log(value);\nconsole.log(done);\n\niterator.next();\niterator.next();\n\n({ value, done } = mapped.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = mapped.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = mapped.next());\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/underlying-iterator-advanced-in-parallel.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-closed-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet mapped = iterator.flatMap(x => [x]);\n\niterator.return();\n\nlet { value, done } = mapped.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/underlying-iterator-closed-in-parallel.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-closed",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\niterator.return();\n\nlet mapped = iterator.flatMap(() => []);\n\nlet { value, done } = mapped.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/flatMap/underlying-iterator-closed.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.foreach.fn-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\nlet result = iter.forEach(function (v, count) {\n  console.log(this);\n  ++assertionCount;\n});\n\nconsole.log(result);\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/forEach/fn-this.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.foreach.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.forEach);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/forEach/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.foreach.non-callable-predicate",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nlet iterator = (function* () {\n  yield 1;\n})();\n\ntry { (function () {\n  iterator.forEach(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/forEach/non-callable-predicate.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.foreach.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.forEach));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/forEach/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.foreach.result-is-undefined",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nlet iter = g();\nconsole.log(iter.forEach(() => {}));\nconsole.log(iter.forEach(() => 0));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/forEach/result-is-undefined.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.foreach.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Iterator.prototype.forEach.call({ next: 0 }, () => true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/forEach/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.foreach.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet fnCalls = 0;\nlet result = Iterator.prototype.forEach.call(iter, function (v) {\n  ++fnCalls;\n});\n\nconsole.log(result);\nconsole.log(fnCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/forEach/this-plain-iterator.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.map);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.iterator-already-exhausted",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\niterator = iterator.map(() => 0);\n({ value, done } = iterator.next());\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/iterator-already-exhausted.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.mapper-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\niter = iter.map(function (v, count) {\n  console.log(this);\n  ++assertionCount;\n  return v;\n});\n\niter.next();\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/mapper-this.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.non-callable-mapper",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nlet iterator = (function* () {})();\n\ntry { (function () {\n  iterator.map(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/non-callable-mapper.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.map));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.result-is-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log((function* () {})().map(() => 0) instanceof Iterator);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/result-is-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = Iterator.prototype.map.call({ next: 0 }, () => 0);\n\ntry { (function () {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet mapperCalls = 0;\niter = Iterator.prototype.map.call(iter, function (v) {\n  ++mapperCalls;\n  return v;\n});\n\nfor (let e of iter);\n\nconsole.log(mapperCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/this-plain-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.throws-typeerror-when-generator-is-running",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar loopCount = 0;\n\nfunction* g() {\n  while (true) {\n    loopCount++;\n    yield;\n  }\n}\n\nvar enterCount = 0;\n\nfunction mapper() {\n  enterCount++;\n  iter.next();\n}\n\nvar iter = g().map(mapper);\n\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(loopCount);\nconsole.log(enterCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/throws-typeerror-when-generator-is-running.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-advanced-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet mapped = iterator.map(x => x);\n\nlet { value, done } = iterator.next();\n\nconsole.log(value);\nconsole.log(done);\n\niterator.next();\niterator.next();\n\n({ value, done } = mapped.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = mapped.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = mapped.next());\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/underlying-iterator-advanced-in-parallel.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-closed-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet mapped = iterator.map(() => 0);\n\niterator.return();\n\nlet { value, done } = mapped.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/underlying-iterator-closed-in-parallel.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-closed",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\niterator.return();\n\nlet mapped = iterator.map(() => 0);\n\nlet { value, done } = mapped.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/map/underlying-iterator-closed.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.reduce);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-already-exhausted-initial-value",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\nconst initialValue = {};\nlet result = iterator.reduce(() => {}, initialValue);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/iterator-already-exhausted-initial-value.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-already-exhausted-no-initial-value",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\ntry { (function() {\n  iterator.reduce(() => {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\niterator.reduce(() => {}, 0);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/iterator-already-exhausted-no-initial-value.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-yields-once-no-initial-value",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 'a';\n}\n\nlet iter = g();\n\nlet assertionCount = 0;\nlet result = iter.reduce((memo, v, count) => {\n  ++assertionCount;\n  return v;\n});\n\nconsole.log(result);\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/iterator-yields-once-no-initial-value.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.non-callable-reducer",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nfunction* gen() {\n  yield 1;\n}\n\ntry { (function () {\n  gen().reduce(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ngen().reduce(() => {});\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/non-callable-reducer.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.reduce));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-memo-can-be-any-type",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst values = [undefined, null, true, false, 0, -0, 1, NaN, Infinity, \"string\", Symbol(), 0n, {}, [], () => {}];\n\nlet iter = values[Symbol.iterator]();\n\nlet assertionCount = 0;\nlet initialValue = {};\nlet result = iter.reduce((memo, v, count) => {\n  if (count == 0) {\n    console.log(memo);\n  } else {\n    console.log(memo);\n  }\n  ++assertionCount;\n  return v;\n}, initialValue);\n\nconsole.log(result);\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/reducer-memo-can-be-any-type.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 1;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\nlet result = iter.reduce(function (memo, v, count) {\n  console.log(this);\n  ++assertionCount;\n  return memo;\n});\n\nconsole.log(result);\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/reducer-this.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.reduce.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Iterator.prototype.reduce.call({ next: 0 }, () => {}, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/reduce/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.some);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.iterator-already-exhausted",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\nlet { value, done } = iterator.next();\nconsole.log(value);\nconsole.log(done);\n\nlet result = iterator.some(() => true);\nconsole.log(result);\n\nresult = iterator.some(() => false);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/iterator-already-exhausted.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.iterator-has-no-return",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = [1, 2, 3, 4, 5][Symbol.iterator]();\n\nconsole.log(iterator.return);\n\nlet ret = iterator.some(v => v > 3);\n\nconsole.log(ret);\n\nlet { done, value } = iterator.next();\nconsole.log(done);\nconsole.log(value);\n\n({ done, value } = iterator.next());\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/iterator-has-no-return.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.non-callable-predicate",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet nonCallable = {};\nlet iterator = (function* () {\n  yield 1;\n})();\n\ntry { (function () {\n  iterator.some(nonCallable);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/non-callable-predicate.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-falsey-then-truthy",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.some(v => {\n  ++predicateCalls;\n  return v > 2;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n\nlet { done, value } = iter.next();\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/predicate-returns-falsey-then-truthy.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-falsey",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 1;\n  yield 2;\n  yield 3;\n}\n\nlet result = g().some(() => false);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/predicate-returns-falsey.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-non-boolean",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield '';\n  yield null;\n  yield undefined;\n  yield 0;\n  yield 1;\n  yield 2;\n  yield 3;\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.some(v => {\n  ++predicateCalls;\n  return v;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/predicate-returns-non-boolean.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-truthy",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n  yield 1;\n  yield 2;\n}\n\nlet iter = g();\n\nlet predicateCalls = 0;\nlet result = iter.some(v => {\n  ++predicateCalls;\n  return true;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n\nlet { done, value } = iter.next();\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/predicate-returns-truthy.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.predicate-this",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 0;\n}\n\nlet iter = g();\n\nlet expectedThis = function () {\n  return this;\n}.call(undefined);\n\nlet assertionCount = 0;\nlet result = iter.some(function (v, count) {\n  console.log(this);\n  ++assertionCount;\n  return true;\n});\n\nconsole.log(result);\nconsole.log(assertionCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/predicate-this.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.some));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.result-is-boolean",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nlet iter = g();\nconsole.log(typeof iter.some(() => {}));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/result-is-boolean.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Iterator.prototype.some.call({ next: 0 }, () => true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.some.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet predicateCalls = 0;\nlet result = Iterator.prototype.some.call(iter, function (v) {\n  ++predicateCalls;\n  return v === 0;\n});\n\nconsole.log(result);\nconsole.log(predicateCalls);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/some/this-plain-iterator.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.symbol.dispose.invokes-return",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst IteratorPrototype = Object.getPrototypeOf(\n  Object.getPrototypeOf([][Symbol.iterator]())\n);\n\nconst iter = Object.create(IteratorPrototype);\nvar returnCalled = false;\nvar argumentCount = 0;\niter.return = function () {\n  argumentCount = arguments.length;\n  returnCalled = true;\n  return { done: true };\n};\n\niter[Symbol.dispose]();\nconsole.log(returnCalled);\nconsole.log(argumentCount);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/Symbol.dispose/invokes-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.symbol.dispose.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst IteratorPrototype = Object.getPrototypeOf(\n  Object.getPrototypeOf([][Symbol.iterator]())\n);\n\nconsole.log(typeof IteratorPrototype[Symbol.dispose]);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/Symbol.dispose/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.symbol.dispose.return-val",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst IteratorPrototype = Object.getPrototypeOf(\n  Object.getPrototypeOf([][Symbol.iterator]())\n);\n\nconsole.log(IteratorPrototype[Symbol.dispose]());\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/Symbol.dispose/return-val.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.symbol.iterator.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst IteratorPrototype = Object.getPrototypeOf(\n  Object.getPrototypeOf([][Symbol.iterator]())\n);\n\nconsole.log(typeof IteratorPrototype[Symbol.iterator]);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/Symbol.iterator/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.symbol.iterator.return-val",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst IteratorPrototype = Object.getPrototypeOf(\n  Object.getPrototypeOf([][Symbol.iterator]())\n);\n\nconst getIterator = IteratorPrototype[Symbol.iterator];\n\nconst thisValues = [{}, Symbol(), 4, 4n, true, undefined, null];\n\nfor (const thisValue of thisValues) {\n  console.log(getIterator.call(thisValue));\n}\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/Symbol.iterator/return-val.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.symbol.tostringtag.prop-desc",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet desc = Object.getOwnPropertyDescriptor(Iterator.prototype, Symbol.toStringTag);\nconsole.log(typeof desc.get);\nconsole.log(typeof desc.set);\nconsole.log(desc.configurable);\nconsole.log(desc.enumerable);\nconsole.log(desc.value);\nconsole.log(desc.writable);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/Symbol.toStringTag/prop-desc.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.symbol.tostringtag.weird-setter",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet IteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf([][Symbol.iterator]()))\n\nlet sentinel = 'a';\n\nlet { get, set } = Object.getOwnPropertyDescriptor(Iterator.prototype, Symbol.toStringTag);\n\nconsole.log(Iterator.prototype[Symbol.toStringTag]);\nconsole.log(get.call());\n\n// 1. If _this_ is not an Object, then\n//   1. Throw a *TypeError* exception.\ntry { (() => set.call(undefined, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => set.call(null, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => set.call(true, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// 1. If _this_ is _home_, then\n//   1. NOTE: Throwing here emulates assignment to a non-writable data property on the _home_ object in strict mode code.\n//   1. Throw a *TypeError* exception.\ntry { (() => set.call(IteratorPrototype, ''))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => IteratorPrototype[Symbol.toStringTag] = '')(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(Iterator.prototype[Symbol.toStringTag]);\nconsole.log(get.call());\n\n// 1. If _desc_ is *undefined*, then\n//   1. Perform ? CreateDataPropertyOrThrow(_this_, _p_, _v_).\nlet FakeGeneratorPrototype = Object.create(IteratorPrototype);\nObject.freeze(IteratorPrototype);\nFakeGeneratorPrototype[Symbol.toStringTag] = sentinel;\nconsole.log(FakeGeneratorPrototype[Symbol.toStringTag]);\n\nconsole.log(Iterator.prototype[Symbol.toStringTag]);\nconsole.log(get.call());\n\n// 1. Else,\n//   1. Perform ? Set(_this_, _p_, _v_, *true*).\nlet o = { [Symbol.toStringTag]: sentinel + 'a' };\nset.call(o, sentinel);\nconsole.log(o[Symbol.toStringTag]);\n\nconsole.log(Iterator.prototype[Symbol.toStringTag]);\nconsole.log(get.call());\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/Symbol.toStringTag/weird-setter.js",
+      "n_asserts": 15,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.take);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.limit-rangeerror",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {})();\n\niterator.take(0);\niterator.take(-0.5);\niterator.take(null);\n\ntry { (() => {\n  iterator.take(-1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  iterator.take();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  iterator.take(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  iterator.take(NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/limit-rangeerror.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.take));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.result-is-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log((function* () {})().take(0) instanceof Iterator);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/result-is-iterator.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = Iterator.prototype.take.call({ next: 0 }, 1);\n\ntry { (function () {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.this-plain-iterator",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iter = {\n  get next() {\n    let count = 3;\n    return function () {\n      --count;\n      return count >= 0 ? { done: false, value: count } : { done: true, value: undefined };\n    };\n  },\n};\n\nlet takeIter = Iterator.prototype.take.call(iter, 1);\n\nlet { done, value } = takeIter.next();\n\nconsole.log(done);\nconsole.log(value);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/this-plain-iterator.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-advanced-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet taken = iterator.take(2);\n\nlet { value, done } = iterator.next();\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = taken.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = taken.next());\n\nconsole.log(value);\nconsole.log(done);\n\n({ value, done } = taken.next());\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/underlying-iterator-advanced-in-parallel.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-closed-in-parallel",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\nlet taken = iterator.take(2);\n\niterator.return();\n\nlet { value, done } = taken.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/underlying-iterator-closed-in-parallel.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-closed",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet iterator = (function* () {\n  for (let i = 0; i < 5; ++i) {\n    yield i;\n  }\n})();\n\niterator.return();\n\nlet taken = iterator.take(2);\n\nlet { value, done } = taken.next();\n\nconsole.log(value);\nconsole.log(done);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/take/underlying-iterator-closed.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.toarray.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.prototype.toArray);\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/toArray/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.toarray.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.prototype.toArray));\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/toArray/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.prototype.toarray.this-non-callable-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Iterator.prototype.toArray.call({ next: 0 });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Iterator/prototype/toArray/this-non-callable-next.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zip.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.zip);\n}\n",
+      "origin": "test/built-ins/Iterator/zip/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zip.iterator-non-iterable",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar invalidIterables = [\n  Object.create(null),\n  Object.create(null, {\n    next: { value: function(){} },\n    return: { value: function(){} },\n  }),\n];\n\n// Throws a TypeError for invalid iterables values.\nfor (var iterables of invalidIterables) {\n  try { (function() {\n    Iterator.zip(iterables);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n}\n",
+      "origin": "test/built-ins/Iterator/zip/iterator-non-iterable.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zip.options-padding",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar validPadding = [\n  undefined,\n  [],\n  Object(\"string\"),\n];\n\nvar invalidPadding = [\n  null,\n  false,\n  \"\",\n  Symbol(),\n  123,\n  123n,\n];\n\n// Absent \"padding\" option.\nIterator.zip([], {mode: \"longest\"});\n\n// All valid padding values are accepted.\nfor (var padding of validPadding) {\n  Iterator.zip([], {mode: \"longest\", padding});\n}\n\n// Throws a TypeError for invalid padding options.\nfor (var padding of invalidPadding) {\n  try { (function() {\n    Iterator.zip([], {mode: \"longest\", padding});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n\n// Invalid padding options are okay when mode is not \"longest\" because the padding option is not read.\nfor (var padding of invalidPadding) {\n  Iterator.zip([], {padding});\n  Iterator.zip([], {mode: undefined, padding});\n  Iterator.zip([], {mode: \"shortest\", padding});\n  Iterator.zip([], {mode: \"strict\", padding});\n}\n}\n",
+      "origin": "test/built-ins/Iterator/zip/options-padding.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zip.options",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar validOptions = [\n  undefined,\n  {},\n];\n\nvar invalidOptions = [\n  null,\n  true,\n  \"\",\n  Symbol(),\n  0,\n  0n,\n];\n\n// The \"options\" argument can also be absent.\nIterator.zip([]);\n\n// All valid option values are accepted.\nfor (var options of validOptions) {\n  Iterator.zip([], options);\n}\n\n// Throws a TypeError for invalid option values.\nfor (var options of invalidOptions) {\n  try { (function() {\n    Iterator.zip([], options);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n}\n",
+      "origin": "test/built-ins/Iterator/zip/options.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zip.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.zip));\n}\n",
+      "origin": "test/built-ins/Iterator/zip/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.is-function",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Iterator.zipKeyed);\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.options-padding",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar validPadding = [\n  undefined,\n  {},\n];\n\nvar invalidPadding = [\n  null,\n  false,\n  \"\",\n  Symbol(),\n  123,\n  123n,\n];\n\n// Absent \"padding\" option.\nIterator.zipKeyed({}, {mode: \"longest\"});\n\n// All valid padding values are accepted.\nfor (var padding of validPadding) {\n  Iterator.zipKeyed({}, {mode: \"longest\", padding});\n}\n\n// Throws a TypeError for invalid padding options.\nfor (var padding of invalidPadding) {\n  try { (function() {\n    Iterator.zipKeyed({}, {mode: \"longest\", padding});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n\n// Invalid padding options are okay when mode is not \"longest\" because the padding option is not read.\nfor (var padding of invalidPadding) {\n  Iterator.zipKeyed({}, {padding});\n  Iterator.zipKeyed({}, {mode: undefined, padding});\n  Iterator.zipKeyed({}, {mode: \"shortest\", padding});\n  Iterator.zipKeyed({}, {mode: \"strict\", padding});\n}\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/options-padding.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.options",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar validOptions = [\n  undefined,\n  {},\n];\n\nvar invalidOptions = [\n  null,\n  true,\n  \"\",\n  Symbol(),\n  0,\n  0n,\n];\n\n// The \"options\" argument can also be absent.\nIterator.zipKeyed({});\n\n// All valid option values are accepted.\nfor (var options of validOptions) {\n  Iterator.zipKeyed({}, options);\n}\n\n// Throws a TypeError for invalid option values.\nfor (var options of invalidOptions) {\n  try { (function() {\n    Iterator.zipKeyed({}, options);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/options.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.proto",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Iterator.zipKeyed));\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.result-objects-are-fresh",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar it = Iterator.zipKeyed({ a: [1, 2, 3], b: [4, 5, 6] });\n\nvar first = it.next();\nconsole.log(first.done);\n\nvar second = it.next();\nconsole.log(second.done);\n\nvar third = it.next();\nconsole.log(third.done);\n\nconsole.log(first.value);\nconsole.log(second.value);\nconsole.log(first.value);\n\nconsole.log(first.value.a);\nconsole.log(first.value.b);\nconsole.log(second.value.a);\nconsole.log(second.value.b);\nconsole.log(third.value.a);\nconsole.log(third.value.b);\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/result-objects-are-fresh.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.results-object-has-no-undefined-iterables-properties",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterables = {\n  a: [\"A\"],\n  b: undefined,\n  c: [\"C\"],\n};\n\nvar it = Iterator.zipKeyed(iterables);\n\nvar results = it.next().value;\n\nconsole.log(\"a\" in results);\nconsole.log(\"b\" in results);\nconsole.log(\"c\" in results);\n\nconsole.log(it.next().done);\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/results-object-has-no-undefined-iterables-properties.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.suspended-yield-iterator-close-calls-next",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCallCount = 0;\n\nvar underlying = {\n  next() {\n    return {value: 123, done: false};\n  },\n  return() {\n    returnCallCount += 1;\n\n    // The generator state is set to \"executing\", so this `next()` call throws\n    // a TypeError when `GeneratorResume` performs `GeneratorValidate`.\n    try { (function() {\n      it.next();\n    })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n    return {};\n  },\n};\n\nvar it = Iterator.zipKeyed({a: underlying});\n\n// Move generator into \"suspended-yield\" state.\nvar result = it.next();\nconsole.log(result.value.a);\nconsole.log(result.done);\n\nconsole.log(returnCallCount);\n\n// This `return()` call continues execution in the suspended generator.\nvar result = it.return();\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(returnCallCount);\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/suspended-yield-iterator-close-calls-next.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.iterator.zipkeyed.suspended-yield-iterator-close-calls-return",
+      "category": "iterator",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCallCount = 0;\n\nvar underlying = {\n  next() {\n    return {value: 123, done: false};\n  },\n  return() {\n    returnCallCount += 1;\n\n    // The generator state is set to \"executing\", so this `return()` call throws\n    // a TypeError when `GeneratorResumeAbrupt` performs `GeneratorValidate`.\n    try { (function() {\n      it.return();\n    })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n    return {};\n  },\n};\n\nvar it = Iterator.zipKeyed({a: underlying});\n\n// Move generator into \"suspended-yield\" state.\nvar result = it.next();\nconsole.log(result.value.a);\nconsole.log(result.done);\n\nconsole.log(returnCallCount);\n\n// This `return()` call continues execution in the suspended generator.\nvar result = it.return();\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(returnCallCount);\n}\n",
+      "origin": "test/built-ins/Iterator/zipKeyed/suspended-yield-iterator-close-calls-return.js",
+      "n_asserts": 7,
+      "flags": []
+    }
+  ]
+}

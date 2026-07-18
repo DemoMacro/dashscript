@@ -1,0 +1,302 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.proxy.apply.arguments-realm",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar f = $262.createRealm().global.eval(\n  'new Proxy(function() {}, { apply: function(_, __, args) { return args; } })'\n);\n\nconsole.log(f().constructor);\n}\n",
+      "origin": "test/built-ins/Proxy/apply/arguments-realm.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.apply.null-handler-realm",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar OProxy = $262.createRealm().global.Proxy;\nvar p = OProxy.revocable(function() {}, {});\n\np.revoke();\n\ntry { (function() {\n  p.proxy();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/apply/null-handler-realm.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.apply.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable(function() {}, {});\n\np.revoke();\n\ntry { (function() {\n  p.proxy();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/apply/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.constructor",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Proxy);\n}\n",
+      "origin": "test/built-ins/Proxy/constructor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.defineproperty.null-handler-realm",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar OProxy = $262.createRealm().global.Proxy;\nvar p = OProxy.revocable(Object.create(null), {});\n\np.revoke();\n\ntry { (function() {\n  p.proxy.prop = null;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/defineProperty/null-handler-realm.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.defineproperty.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  Object.defineProperty(p.proxy, \"foo\", {\n    configurable: true,\n    enumerable: true\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/defineProperty/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.deleteproperty.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({\n  attr: 1\n}, {});\n\np.revoke();\n\ntry { (function() {\n  delete p.proxy.attr;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/deleteProperty/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.function-prototype",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Proxy));\n}\n",
+      "origin": "test/built-ins/Proxy/function-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.get.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  p.proxy.attr;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  p.proxy['attr'];\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/get/null-handler.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.getownpropertydescriptor.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  Object.getOwnPropertyDescriptor(p.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/getOwnPropertyDescriptor/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.getprototypeof.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  Object.getPrototypeOf(p.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/getPrototypeOf/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.has.null-handler-using-with",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  with(p.proxy) {\n    (attr);\n  }\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/has/null-handler-using-with.js",
+      "n_asserts": 1,
+      "flags": ["noStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.proxy.has.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  \"attr\" in p.proxy;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/has/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.isextensible.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  Object.isExtensible(p.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/isExtensible/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.ownkeys.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  Object.keys(p.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/ownKeys/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.preventextensions.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  Object.preventExtensions(p.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/preventExtensions/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.property-order",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar propNames = Object.getOwnPropertyNames(Proxy);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Proxy/property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.proxy-no-prototype",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(!Object.prototype.hasOwnProperty.call(Proxy, 'prototype'));\n}\n",
+      "origin": "test/built-ins/Proxy/proxy-no-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.proxy-undefined-newtarget",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Proxy({}, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/proxy-undefined-newtarget.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.builtin",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(Proxy.revocable));\nconsole.log(typeof Proxy.revocable);\nconsole.log(Object.prototype.toString.call(Proxy.revocable));\nconsole.log(Object.getPrototypeOf(Proxy.revocable));\n\nconsole.log(Proxy.revocable.hasOwnProperty('prototype'));\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/builtin.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.handler-is-revoked-proxy",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar revocableHandler = Proxy.revocable({}, {});\nrevocableHandler.revoke();\n\nvar revocable = Proxy.revocable({}, revocableHandler.proxy);\nconsole.log(typeof revocable.proxy);\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/handler-is-revoked-proxy.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.proxy",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = {\n  attr: \"foo\"\n};\nvar r = Proxy.revocable(target, {\n  get: function(t, prop) {\n    return t[prop] + \"!\";\n  }\n});\n\nconsole.log(r.proxy.attr);\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/proxy.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.revocation-function-extensible",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar revocationFunction = Proxy.revocable({}, {}).revoke;\n\nconsole.log(Object.isExtensible(revocationFunction));\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/revocation-function-extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.revocation-function-property-order",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar revocationFunction = Proxy.revocable({}, {}).revoke;\n\nvar propNames = Object.getOwnPropertyNames(revocationFunction);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/revocation-function-property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.revocation-function-prototype",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar revocationFunction = Proxy.revocable({}, {}).revoke;\n\nconsole.log(Object.getPrototypeOf(revocationFunction));\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/revocation-function-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.revoke-consecutive-call-returns-undefined",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar r = Proxy.revocable({}, {});\n\nr.revoke();\n\nconsole.log(r.revoke());\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/revoke-consecutive-call-returns-undefined.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.revoke-returns-undefined",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar r = Proxy.revocable({}, {});\n\nconsole.log(r.revoke());\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/revoke-returns-undefined.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.revoke",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar r = Proxy.revocable({}, {});\n\nconsole.log(typeof r.revoke);\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/revoke.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.target-is-revoked-function-proxy",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar revocableTarget = Proxy.revocable(function() {}, {});\nrevocableTarget.revoke();\n\nvar revocable = Proxy.revocable(revocableTarget.proxy, {});\nconsole.log(typeof revocable.proxy);\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/target-is-revoked-function-proxy.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.target-is-revoked-proxy",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar revocableTarget = Proxy.revocable({}, {});\nrevocableTarget.revoke();\n\nvar revocable = Proxy.revocable(revocableTarget.proxy, {});\nconsole.log(typeof revocable.proxy);\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/target-is-revoked-proxy.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.revocable.tco-fn-realm",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm();\nvar F = other.evalScript(`\n  (function() {\n    var proxyObj = Proxy.revocable(function() {}, {});\n    var proxy = proxyObj.proxy;\n    var revoke = proxyObj.revoke;\n    revoke();\n    return proxy();\n  })\n`);\n\ntry { (function() {\n  F();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/revocable/tco-fn-realm.js",
+      "n_asserts": 1,
+      "flags": ["onlyStrict"]
+    },
+    {
+      "id": "test262.test.built-ins.proxy.set.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  p.proxy.attr = 1;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  p.proxy['attr'] = 1;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/set/null-handler.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.proxy.setprototypeof.null-handler",
+      "category": "proxy",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Proxy.revocable({}, {});\n\np.revoke();\n\ntry { (function() {\n  Object.setPrototypeOf(p.proxy, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Proxy/setPrototypeOf/null-handler.js",
+      "n_asserts": 1,
+      "flags": []
+    }
+  ]
+}

@@ -1,0 +1,419 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.parseint.15.1.2.2-2-1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\"));\n}\n",
+      "origin": "test/built-ins/parseInt/15.1.2.2-2-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(true));\nconsole.log(parseInt(false));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A1_T1.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(-1));\nconsole.log(String(parseInt(Infinity)));\nconsole.log(String(parseInt(NaN)));\nconsole.log(parseInt(-0));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A1_T2.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t3",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(undefined));\nconsole.log(parseInt(null));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A1_T3.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t7",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nvar object = {\n  valueOf: function() {\n    return 1\n  }\n};\nconsole.log(parseInt(object));\n\n//CHECK#2\nvar object = {\n  valueOf: function() {\n    return 1\n  },\n  toString: function() {\n    return 0\n  }\n};\n\nconsole.log(parseInt(object));\n\n//CHECK#3\nvar object = {\n  valueOf: function() {\n    return 1\n  },\n  toString: function() {\n    return {}\n  }\n};\n\nconsole.log(parseInt(object));\n\n//CHECK#4\ntry {\n  var object = {\n    valueOf: function() {\n      throw \"error\"\n    },\n    toString: function() {\n      return 1\n    }\n  };\n\n  console.log(parseInt(object));\n}\ncatch (e) {\n  console.log(e);\n}\n\n//CHECK#5\nvar object = {\n  toString: function() {\n    return 1\n  }\n};\nconsole.log(parseInt(object));\n\n//CHECK#6\nvar object = {\n  valueOf: function() {\n    return {}\n  },\n  toString: function() {\n    return 1\n  }\n}\n\nconsole.log(parseInt(object));\n\n//CHECK#7\ntry {\n  var object = {\n    valueOf: function() {\n      return 1\n    },\n    toString: function() {\n      throw \"error\"\n    }\n  };\n  parseInt(object);\n  Test262Error.thrower('#7.1: var object = {valueOf: function() {return 1}, toString: function() {throw \"error\"}}; parseInt(object) throw \"error\". Actual: ' + (parseInt(object)));\n}\ncatch (e) {\n  console.log(e);\n}\n\n//CHECK#8\ntry {\n  var object = {\n    valueOf: function() {\n      return {}\n    },\n    toString: function() {\n      return {}\n    }\n  };\n  parseInt(object);\n  Test262Error.thrower('#8.1: var object = {valueOf: function() {return {}}, toString: function() {return {}}}; parseInt(object) throw TypeError. Actual: ' + (parseInt(object)));\n}\ncatch (e) {\n  console.log(e instanceof TypeError);\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A1_T7.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u00091\"));\n\nconsole.log(parseInt(\"\\u0009\\u0009-1\"));\n\nconsole.log(parseInt(\"\t1\"));\n\nconsole.log(parseInt(\"\t\t\t1\"));\n\nconsole.log(parseInt(\"\t\t\t\\u0009\t\t\t\\u0009-1\"));\n\nconsole.log(parseInt(\"\\u0009\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T1.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t10",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar uspU = [\"\\u1680\", \"\\u2000\", \"\\u2001\", \"\\u2002\", \"\\u2003\", \"\\u2004\", \"\\u2005\", \"\\u2006\", \"\\u2007\", \"\\u2008\", \"\\u2009\", \"\\u200A\", \"\\u202F\", \"\\u205F\", \"\\u3000\"];\nvar uspS = [\"1680\", \"2000\", \"2001\", \"2002\", \"2003\", \"2004\", \"2005\", \"2006\", \"2007\", \"2008\", \"2009\", \"200A\", \"202F\", \"205F\", \"3000\"];\n\nfor (var index = 0; index < uspU.length; index++) {\n  console.log(parseInt(uspU[index] + \"1\"));\n\n  console.log(parseInt(uspU[index] + uspU[index] + uspU[index] + \"1\"));\n\n  let n = parseInt(uspU[index]);\n  console.log(n !== n);\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T10.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t10_u180e",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar mongolianVowelSeparator = \"\\u180E\";\n\nconsole.log(parseInt(mongolianVowelSeparator + \"1\"));\nconsole.log(parseInt(mongolianVowelSeparator + mongolianVowelSeparator + mongolianVowelSeparator + \"1\"));\nconsole.log(parseInt(mongolianVowelSeparator));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T10_U180E.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u00201\"));\nconsole.log(parseInt(\"\\u0020\\u0020-1\"));\nconsole.log(parseInt(\" 1\"));\nconsole.log(parseInt(\"       1\"));\n\nconsole.log(parseInt(\"       \\u0020       \\u0020-1\"));\n\n//CHECK#6\nconsole.log(parseInt(\"\\u0020\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T2.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t3",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u00A01\"));\nconsole.log(parseInt(\"\\u00A0\\u00A0-1\"));\n\n//CHECK#3\nconsole.log(parseInt(\"\\u00A0\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T3.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t4",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u000C1\"));\nconsole.log(parseInt(\"\\u000C\\u000C-1\"));\n\n//CHECK#3\nconsole.log(parseInt(\"\\u000C\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T4.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t5",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u000B1\"));\nconsole.log(parseInt(\"\\u000B\\u000B-1\"));\n\n//CHECK#3\nconsole.log(parseInt(\"\\u000B\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T5.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t6",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u000D1\"));\nconsole.log(parseInt(\"\\u000D\\u000D-1\"));\n\n//CHECK#3\nconsole.log(parseInt(\"\\u000D\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T6.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t7",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u000A1\"));\nconsole.log(parseInt(\"\\u000A\\u000A-1\"));\n\n//CHECK#3\nconsole.log(parseInt(\"\\u000A\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T7.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t8",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u20281\"));\nconsole.log(parseInt(\"\\u2028\\u2028-1\"));\n\n//CHECK#3\nconsole.log(parseInt(\"\\u2028\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T8.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t9",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"\\u20291\"));\n\nconsole.log(parseInt(\"\\u2029\\u2029-1\"));\n\n//CHECK#3\nconsole.log(parseInt(\"\\u2029\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A2_T9.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"11\", false));\n\n//CHECK#2\nconsole.log(parseInt(\"11\", true));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A3.1_T1.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"11\", \"2\"));\nconsole.log(parseInt(\"11\", \"0\"));\nconsole.log(parseInt(\"11\", \"\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A3.1_T2.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t3",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"11\", undefined));\nconsole.log(parseInt(\"11\", null));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A3.1_T3.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t7",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nvar object = {\n  valueOf: function() {\n    return 2\n  }\n};\n\nconsole.log(parseInt(\"11\", object));\n\n//CHECK#2\nvar object = {\n  valueOf: function() {\n    return 2\n  },\n  toString: function() {\n    return 1\n  }\n};\n\nconsole.log(parseInt(\"11\", object));\n\n//CHECK#3\nvar object = {\n  valueOf: function() {\n    return 2\n  },\n  toString: function() {\n    return {}\n  }\n};\n\nconsole.log(parseInt(\"11\", object));\n\n//CHECK#4\ntry {\n  var object = {\n    valueOf: function() {\n      return 2\n    },\n    toString: function() {\n      throw \"error\"\n    }\n  };\n\n  console.log(parseInt(\"11\", object));\n}\ncatch (e) {\n  console.log(e);\n}\n\n//CHECK#5\nvar object = {\n  toString: function() {\n    return 2\n  }\n};\n\nconsole.log(parseInt(\"11\", object));\n\n//CHECK#6\nvar object = {\n  valueOf: function() {\n    return {}\n  },\n  toString: function() {\n    return 2\n  }\n}\n\nconsole.log(parseInt(\"11\", object));\n\n//CHECK#7\ntry {\n  var object = {\n    valueOf: function() {\n      throw \"error\"\n    },\n    toString: function() {\n      return 2\n    }\n  };\n  parseInt(\"11\", object);\n  Test262Error.thrower('#7.1: var object = {valueOf: function() {throw \"error\"}, toString: function() {return 2}}; parseInt(\"11\", object) throw \"error\". Actual: ' + (parseInt(\"11\", object)));\n}\ncatch (e) {\n  console.log(e);\n}\n\n//CHECK#8\ntry {\n  var object = {\n    valueOf: function() {\n      return {}\n    },\n    toString: function() {\n      return {}\n    }\n  };\n  parseInt(\"11\", object);\n  Test262Error.thrower('#8.1: var object = {valueOf: function() {return {}}, toString: function() {return {}}}; parseInt(\"11\", object) throw TypeError. Actual: ' + (parseInt(\"11\", object)));\n}\ncatch (e) {\n  console.log(e instanceof TypeError);\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A3.1_T7.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"11\", NaN));\nconsole.log(parseInt(\"11\", +0));\nconsole.log(parseInt(\"11\", -0));\n\nconsole.log(parseInt(\"11\", Number.POSITIVE_INFINITY));\n\nconsole.log(parseInt(\"11\", Number.NEGATIVE_INFINITY));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A3.2_T1.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"11\", 2.1));\nconsole.log(parseInt(\"11\", 2.5));\nconsole.log(parseInt(\"11\", 2.9));\n\nconsole.log(parseInt(\"11\", 2.000000000001));\n\nconsole.log(parseInt(\"11\", 2.999999999999));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A3.2_T2.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t3",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"11\", 4294967298));\nconsole.log(parseInt(\"11\", 4294967296));\n\nconsole.log(parseInt(\"11\", -2147483650));\n\nconsole.log(parseInt(\"11\", -4294967294));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A3.2_T3.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.1_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0\", 0));\nconsole.log(parseInt(\"1\", 0));\nconsole.log(parseInt(\"2\", 0));\nconsole.log(parseInt(\"3\", 0));\nconsole.log(parseInt(\"4\", 0));\nconsole.log(parseInt(\"5\", 0));\nconsole.log(parseInt(\"6\", 0));\nconsole.log(parseInt(\"7\", 0));\nconsole.log(parseInt(\"8\", 0));\nconsole.log(parseInt(\"9\", 0));\nconsole.log(parseInt(\"10\", 0));\nconsole.log(parseInt(\"11\", 0));\nconsole.log(parseInt(\"9999\", 0));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A4.1_T1.js",
+      "n_asserts": 13,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.1_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0\"));\nconsole.log(parseInt(\"1\"));\nconsole.log(parseInt(\"2\"));\nconsole.log(parseInt(\"3\"));\nconsole.log(parseInt(\"4\"));\nconsole.log(parseInt(\"5\"));\nconsole.log(parseInt(\"6\"));\nconsole.log(parseInt(\"7\"));\nconsole.log(parseInt(\"8\"));\nconsole.log(parseInt(\"9\"));\nconsole.log(parseInt(\"10\"));\nconsole.log(parseInt(\"11\"));\nconsole.log(parseInt(\"9999\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A4.1_T2.js",
+      "n_asserts": 13,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.2_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0\", 1));\nconsole.log(parseInt(\"1\", 1));\nconsole.log(parseInt(\"2\", 1));\nconsole.log(parseInt(\"3\", 1));\nconsole.log(parseInt(\"4\", 1));\nconsole.log(parseInt(\"5\", 1));\nconsole.log(parseInt(\"6\", 1));\nconsole.log(parseInt(\"7\", 1));\nconsole.log(parseInt(\"8\", 1));\nconsole.log(parseInt(\"9\", 1));\nconsole.log(parseInt(\"10\", 1));\nconsole.log(parseInt(\"11\", 1));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A4.2_T1.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.2_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0\", 37));\nconsole.log(parseInt(\"1\", 37));\nconsole.log(parseInt(\"2\", 37));\nconsole.log(parseInt(\"3\", 37));\nconsole.log(parseInt(\"4\", 37));\nconsole.log(parseInt(\"5\", 37));\nconsole.log(parseInt(\"6\", 37));\nconsole.log(parseInt(\"7\", 37));\nconsole.log(parseInt(\"8\", 37));\nconsole.log(parseInt(\"9\", 37));\nconsole.log(parseInt(\"10\", 37));\nconsole.log(parseInt(\"11\", 37));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A4.2_T2.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a5.1_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt('010'));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A5.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a5.2_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0x0\", 0));\nconsole.log(parseInt(\"0x1\", 0));\nconsole.log(parseInt(\"0x2\", 0));\nconsole.log(parseInt(\"0x3\", 0));\nconsole.log(parseInt(\"0x4\", 0));\nconsole.log(parseInt(\"0x5\", 0));\nconsole.log(parseInt(\"0x6\", 0));\nconsole.log(parseInt(\"0x7\", 0));\nconsole.log(parseInt(\"0x8\", 0));\nconsole.log(parseInt(\"0x9\", 0));\nconsole.log(parseInt(\"0xA\", 0));\nconsole.log(parseInt(\"0xB\", 0));\nconsole.log(parseInt(\"0xC\", 0));\nconsole.log(parseInt(\"0xD\", 0));\nconsole.log(parseInt(\"0xE\", 0));\nconsole.log(parseInt(\"0xF\", 0));\nconsole.log(parseInt(\"0xE\", 0));\n\nconsole.log(parseInt(\"0xABCDEF\", 0));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A5.2_T1.js",
+      "n_asserts": 18,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a5.2_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0X0\", 0));\nconsole.log(parseInt(\"0X1\"));\nconsole.log(parseInt(\"0X2\"));\nconsole.log(parseInt(\"0X3\"));\nconsole.log(parseInt(\"0X4\"));\nconsole.log(parseInt(\"0X5\"));\nconsole.log(parseInt(\"0X6\"));\nconsole.log(parseInt(\"0X7\"));\nconsole.log(parseInt(\"0X8\"));\nconsole.log(parseInt(\"0X9\"));\nconsole.log(parseInt(\"0XA\"));\nconsole.log(parseInt(\"0XB\"));\nconsole.log(parseInt(\"0XC\"));\nconsole.log(parseInt(\"0XD\"));\nconsole.log(parseInt(\"0XE\"));\nconsole.log(parseInt(\"0XF\"));\nconsole.log(parseInt(\"0XE\"));\nconsole.log(parseInt(\"0XABCDEF\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A5.2_T2.js",
+      "n_asserts": 18,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nfor (var i = 2; i <= 36; i++) {\n  console.log(parseInt(\"10$1\", i));\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A6.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nvar R_digit = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\", \"K\", \"L\", \"M\", \"N\", \"O\", \"P\", \"Q\", \"R\", \"S\", \"T\", \"U\", \"V\", \"W\", \"X\", \"Y\", \"Z\"];\nfor (var i = 2; i <= 36; i++) {\n  console.log(parseInt(R_digit[i - 2] + \"$\", i));\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A6.1_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t3",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nvar R_digit = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\", \"j\", \"k\", \"l\", \"m\", \"n\", \"o\", \"p\", \"q\", \"r\", \"s\", \"t\", \"u\", \"v\", \"w\", \"x\", \"y\", \"z\"];\nfor (var i = 2; i <= 36; i++) {\n  console.log(parseInt(R_digit[i - 2] + \"$\", i));\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A6.1_T3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t4",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nvar R_digit = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\", \"K\", \"L\", \"M\", \"N\", \"O\", \"P\", \"Q\", \"R\", \"S\", \"T\", \"U\", \"V\", \"W\", \"X\", \"Y\", \"Z\"];\nfor (var i = 2; i <= 35; i++) {\n  console.log(parseInt(R_digit[i - 2] + R_digit[i - 1], i));\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A6.1_T4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t5",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nvar R_digit = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\", \"j\", \"k\", \"l\", \"m\", \"n\", \"o\", \"p\", \"q\", \"r\", \"s\", \"t\", \"u\", \"v\", \"w\", \"x\", \"y\", \"z\"];\nfor (var i = 2; i <= 35; i++) {\n  console.log(parseInt(R_digit[i - 2] + R_digit[i - 1], i));\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A6.1_T5.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t6",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0123456789\", 2));\nconsole.log(parseInt(\"01234567890\", 3));\nconsole.log(parseInt(\"01234567890\", 4));\nconsole.log(parseInt(\"01234567890\", 5));\nconsole.log(parseInt(\"01234567890\", 6));\nconsole.log(parseInt(\"01234567890\", 7));\nconsole.log(parseInt(\"01234567890\", 8));\nconsole.log(parseInt(\"01234567890\", 9));\n\nconsole.log(parseInt(\"01234567890\", 10));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A6.1_T6.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.1_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nfor (var i = 2; i <= 36; i++) {\n  console.log(parseInt(\"$string\", i));\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.1_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"$0x\"));\nconsole.log(parseInt(\"$0X\"));\nconsole.log(parseInt(\"$$$\"));\nconsole.log(parseInt(\"\"));\nconsole.log(parseInt(\" \"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.1_T2.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.2_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nvar R_digit1 = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\", \"K\", \"L\", \"M\", \"N\", \"O\", \"P\", \"Q\", \"R\", \"S\", \"T\", \"U\", \"V\", \"W\", \"X\", \"Y\", \"Z\"];\nvar R_digit2 = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\", \"j\", \"k\", \"l\", \"m\", \"n\", \"o\", \"p\", \"q\", \"r\", \"s\", \"t\", \"u\", \"v\", \"w\", \"x\", \"y\", \"z\"];\nfor (var i = 2; i <= 36; i++) {\n  for (var j = 0; j < 10; j++) {\n    var str = \"\";\n    var num = 0;\n    var pow = 1;\n    var k0 = Math.max(2, i - j);\n    for (var k = k0; k <= i; k++) {\n      if (k % 2 === 0) {\n        str = str + R_digit1[k - 2];\n      } else {\n        str = str + R_digit2[k - 2];\n      }\n      num = num + (i + (k0 - k) - 1) * pow;\n      pow = pow * i;\n    }\n    console.log(parseInt(str, i));\n  }\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.2_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.2_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"1\", 2));\nconsole.log(parseInt(\"11\", 2));\nconsole.log(parseInt(\"111\", 2));\nconsole.log(parseInt(\"1111\", 2));\nconsole.log(parseInt(\"11111\", 2));\nconsole.log(parseInt(\"111111\", 2));\nconsole.log(parseInt(\"1111111\", 2));\nconsole.log(parseInt(\"11111111\", 2));\nconsole.log(parseInt(\"111111111\", 2));\nconsole.log(parseInt(\"1111111111\", 2));\nconsole.log(parseInt(\"11111111111\", 2));\nconsole.log(parseInt(\"111111111111\", 2));\nconsole.log(parseInt(\"1111111111111\", 2));\nconsole.log(parseInt(\"11111111111111\", 2));\nconsole.log(parseInt(\"111111111111111\", 2));\nconsole.log(parseInt(\"1111111111111111\", 2));\nconsole.log(parseInt(\"11111111111111111\", 2));\nconsole.log(parseInt(\"111111111111111111\", 2));\nconsole.log(parseInt(\"1111111111111111111\", 2));\nconsole.log(parseInt(\"11111111111111111111\", 2));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.2_T2.js",
+      "n_asserts": 20,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.2_t3",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"0x1\", 16));\nconsole.log(parseInt(\"0X10\", 16));\nconsole.log(parseInt(\"0x100\", 16));\nconsole.log(parseInt(\"0X1000\", 16));\nconsole.log(parseInt(\"0x10000\", 16));\nconsole.log(parseInt(\"0X100000\", 16));\nconsole.log(parseInt(\"0x1000000\", 16));\nconsole.log(parseInt(\"0x10000000\", 16));\nconsole.log(parseInt(\"0x100000000\", 16));\nconsole.log(parseInt(\"0x1000000000\", 16));\nconsole.log(parseInt(\"0x10000000000\", 16));\n\nconsole.log(parseInt(\"0x100000000000\", 16));\n\nconsole.log(parseInt(\"0x1000000000000\", 16));\n\nconsole.log(parseInt(\"0x10000000000000\", 16));\n\nconsole.log(parseInt(\"0x100000000000000\", 16));\n\nconsole.log(parseInt(\"0x1000000000000000\", 16));\n\nconsole.log(parseInt(\"0x10000000000000000\", 16));\n\nconsole.log(parseInt(\"0x100000000000000000\", 16));\n\nconsole.log(parseInt(\"0x1000000000000000000\", 16));\n\nconsole.log(parseInt(\"0x10000000000000000000\", 16));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.2_T3.js",
+      "n_asserts": 20,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.3_t1",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#\nvar R_digit1 = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\", \"K\", \"L\", \"M\", \"N\", \"O\", \"P\", \"Q\", \"R\", \"S\", \"T\", \"U\", \"V\", \"W\", \"X\", \"Y\", \"Z\"];\nvar R_digit2 = [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\", \"j\", \"k\", \"l\", \"m\", \"n\", \"o\", \"p\", \"q\", \"r\", \"s\", \"t\", \"u\", \"v\", \"w\", \"x\", \"y\", \"z\"];\nfor (var i = 2; i <= 36; i++) {\n  for (var j = 0; j < 10; j++) {\n    var str = \"+\";\n    var sign = 1;\n    if (j % 2 !== 0) {\n      str = \"-\";\n      sign = -1;\n    }\n    var num = 0;\n    var pow = 1;\n    var k0 = Math.max(2, i - j);\n    for (var k = k0; k <= i; k++) {\n      if (k % 2 === 0) {\n        str = str + R_digit1[k - 2];\n      } else {\n        str = str + R_digit2[k - 2];\n      }\n      num = num + (i + (k0 - k) - 1) * pow;\n      pow = pow * i;\n    }\n    console.log(parseInt(str, i));\n  }\n}\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.3_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.3_t2",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"-1\", 2));\nconsole.log(parseInt(\"-11\", 2));\nconsole.log(parseInt(\"-111\", 2));\nconsole.log(parseInt(\"-1111\", 2));\nconsole.log(parseInt(\"-11111\", 2));\nconsole.log(parseInt(\"-111111\", 2));\nconsole.log(parseInt(\"-1111111\", 2));\nconsole.log(parseInt(\"-11111111\", 2));\nconsole.log(parseInt(\"-111111111\", 2));\nconsole.log(parseInt(\"-1111111111\", 2));\nconsole.log(parseInt(\"-11111111111\", 2));\nconsole.log(parseInt(\"-111111111111\", 2));\nconsole.log(parseInt(\"-1111111111111\", 2));\nconsole.log(parseInt(\"-11111111111111\", 2));\nconsole.log(parseInt(\"-111111111111111\", 2));\nconsole.log(parseInt(\"-1111111111111111\", 2));\nconsole.log(parseInt(\"-11111111111111111\", 2));\nconsole.log(parseInt(\"-111111111111111111\", 2));\nconsole.log(parseInt(\"-1111111111111111111\", 2));\n\nconsole.log(parseInt(\"-11111111111111111111\", 2));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.3_T2.js",
+      "n_asserts": 20,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.3_t3",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(parseInt(\"-1\", 10));\nconsole.log(parseInt(\"-10\", 10));\nconsole.log(parseInt(\"-100\", 10));\nconsole.log(parseInt(\"-1000\", 10));\nconsole.log(parseInt(\"-10000\", 10));\nconsole.log(parseInt(\"-100000\", 10));\nconsole.log(parseInt(\"-1000000\", 10));\nconsole.log(parseInt(\"-10000000\", 10));\nconsole.log(parseInt(\"-100000000\", 10));\nconsole.log(parseInt(\"-1000000000\", 10));\nconsole.log(parseInt(\"-10000000000\", 10));\nconsole.log(parseInt(\"-100000000000\", 10));\n\nconsole.log(parseInt(\"-1000000000000\", 10));\n\nconsole.log(parseInt(\"-10000000000000\", 10));\n\nconsole.log(parseInt(\"-100000000000000\", 10));\n\nconsole.log(parseInt(\"-1000000000000000\", 10));\n\nconsole.log(parseInt(\"-10000000000000000\", 10));\n\nconsole.log(parseInt(\"-100000000000000000\", 10));\n\nconsole.log(parseInt(\"-1000000000000000000\", 10));\n\nconsole.log(parseInt(\"-10000000000000000000\", 10));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A7.3_T3.js",
+      "n_asserts": 20,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a9.5",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(this.propertyIsEnumerable('parseInt'));\n\n//CHECK#2\nvar result = true;\nfor (var p in this) {\n  if (p === \"parseInt\") {\n    result = false;\n  }\n}\n\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A9.5.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.parseint.s15.1.2.2_a9.6",
+      "category": "parseint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.prototype.hasOwnProperty.call(parseInt, \"prototype\"));\n}\n",
+      "origin": "test/built-ins/parseInt/S15.1.2.2_A9.6.js",
+      "n_asserts": 1,
+      "flags": []
+    }
+  ]
+}

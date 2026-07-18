@@ -1,0 +1,86 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.isfinite.return-abrupt-from-tonumber-number-symbol",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = Symbol(1);\n\ntry { (function() {\n  isFinite(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/isFinite/return-abrupt-from-tonumber-number-symbol.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.return-false-on-nan-or-infinities",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(isFinite(NaN));\nconsole.log(isFinite(Infinity));\nconsole.log(isFinite(-Infinity));\n}\n",
+      "origin": "test/built-ins/isFinite/return-false-on-nan-or-infinities.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.return-true-for-valid-finite-numbers",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(isFinite(0));\nconsole.log(isFinite(-0));\nconsole.log(isFinite(Math.pow(2, 53)));\nconsole.log(isFinite(-Math.pow(2, 53)));\nconsole.log(isFinite(1));\nconsole.log(isFinite(-1));\nconsole.log(isFinite(0.000001));\nconsole.log(isFinite(-0.000001));\nconsole.log(isFinite(1e42));\nconsole.log(isFinite(-1e42));\n}\n",
+      "origin": "test/built-ins/isFinite/return-true-for-valid-finite-numbers.js",
+      "n_asserts": 10,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.s15.1.2.5_a2.6",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(isFinite.prototype);\n}\n",
+      "origin": "test/built-ins/isFinite/S15.1.2.5_A2.6.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.tonumber-operations",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(isFinite(\"0\"));\nconsole.log(isFinite(\"\"));\nconsole.log(isFinite(\"Infinity\"));\nconsole.log(isFinite(\"this is not a number\"));\nconsole.log(isFinite(true));\nconsole.log(isFinite(false));\nconsole.log(isFinite([1]));\nconsole.log(isFinite([Infinity]));\nconsole.log(isFinite([NaN]));\nconsole.log(isFinite(null));\nconsole.log(isFinite(undefined));\nconsole.log(isFinite());\n}\n",
+      "origin": "test/built-ins/isFinite/tonumber-operations.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.toprimitive-not-callable-throws",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\n\nobj[Symbol.toPrimitive] = 42;\ntry { (function() {\n  isFinite(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = \"\";\ntry { (function() {\n  isFinite(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = true;\ntry { (function() {\n  isFinite(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = Symbol.toPrimitive;\ntry { (function() {\n  isFinite(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = {};\ntry { (function() {\n  isFinite(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/isFinite/toprimitive-not-callable-throws.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.toprimitive-result-is-object-throws",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\nobj[Symbol.toPrimitive] = function() {\n  return [42];\n};\n\ntry { (function() {\n  isFinite(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/isFinite/toprimitive-result-is-object-throws.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.toprimitive-result-is-symbol-throws",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\nobj[Symbol.toPrimitive] = function() {\n  return Symbol.toPrimitive;\n};\n\ntry { (function() {\n  isFinite(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/isFinite/toprimitive-result-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.isfinite.toprimitive-valid-result",
+      "category": "isfinite",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar called = 0;\nvar obj = {\n  valueOf: function() {\n    called = NaN;\n    return Infinity;\n  },\n  toString: function() {\n    called = NaN;\n    return Infinity;\n  }\n};\n\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return 42;\n};\nconsole.log(isFinite(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return \"42\";\n};\nconsole.log(isFinite(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return true;\n};\nconsole.log(isFinite(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return false;\n};\nconsole.log(isFinite(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return Infinity;\n};\nconsole.log(isFinite(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return -Infinity;\n};\nconsole.log(isFinite(obj));\nconsole.log(called);\n}\n",
+      "origin": "test/built-ins/isFinite/toprimitive-valid-result.js",
+      "n_asserts": 12,
+      "flags": []
+    }
+  ]
+}

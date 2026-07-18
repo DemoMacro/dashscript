@@ -1,0 +1,284 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.arraybuffer.isview.arg-has-no-viewedarraybuffer",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(ArrayBuffer.isView({}));\nconsole.log(ArrayBuffer.isView([]));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/isView/arg-has-no-viewedarraybuffer.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.isview.arg-is-dataview-constructor",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(ArrayBuffer.isView(DataView));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/isView/arg-is-dataview-constructor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.isview.arg-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(ArrayBuffer.isView(null));\nconsole.log(ArrayBuffer.isView(undefined));\nconsole.log(ArrayBuffer.isView(1));\nconsole.log(ArrayBuffer.isView(\"\"));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/isView/arg-is-not-object.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.isview.no-arg",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(ArrayBuffer.isView());\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/isView/no-arg.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.bytelength.invoked-as-accessor",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  ArrayBuffer.prototype.byteLength;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/byteLength/invoked-as-accessor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.bytelength.invoked-as-func",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, \"byteLength\"\n).get;\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/byteLength/invoked-as-func.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.bytelength.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, \"byteLength\"\n).get;\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/byteLength/this-is-not-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.detached.invoked-as-accessor",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  ArrayBuffer.prototype.detached;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/detached/invoked-as-accessor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.detached.invoked-as-func",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, 'detached'\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/detached/invoked-as-func.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.detached.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, \"detached\"\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/detached/this-is-not-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.immutable.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, \"immutable\"\n).get;\n\nconsole.log(typeof getter);\n\nvar badReceivers = [\n  [\"undefined\", undefined],\n  [\"null\", null],\n  [\"number\", 42],\n  [\"string\", \"1\"],\n  [\"true\", true],\n  [\"false\", false],\n  typeof Symbol === \"undefined\" ? undefined : [\"unique symbol\", Symbol(\"s\")],\n  typeof Symbol === \"undefined\" || !Symbol.for ? undefined : [\"registered symbol\", Symbol.for(\"s\")],\n  typeof BigInt === \"undefined\" ? undefined : [\"bigint\", BigInt(1)]\n];\n\nfor (var i = 0; i < badReceivers.length; i++) {\n  if (!badReceivers[i]) continue;\n  var label = badReceivers[i][0];\n  var value = badReceivers[i][1];\n  try { (function() {\n    getter.call(value);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/immutable/this-is-not-object.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.maxbytelength.invoked-as-accessor",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  ArrayBuffer.prototype.maxByteLength;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/maxByteLength/invoked-as-accessor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.maxbytelength.invoked-as-func",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, 'maxByteLength'\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/maxByteLength/invoked-as-func.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.maxbytelength.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, \"maxByteLength\"\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/maxByteLength/this-is-not-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.resizable.invoked-as-accessor",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  ArrayBuffer.prototype.resizable;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/resizable/invoked-as-accessor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.resizable.invoked-as-func",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, 'resizable'\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/resizable/invoked-as-func.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.resizable.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  ArrayBuffer.prototype, \"resizable\"\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/resizable/this-is-not-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.resize.extensible",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(ArrayBuffer.prototype.resize));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/resize/extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.resize.this-is-not-arraybuffer-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof ArrayBuffer.prototype.resize);\n\ntry { (function() {\n  ArrayBuffer.prototype.resize();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/resize/this-is-not-arraybuffer-object.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.resize.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof ArrayBuffer.prototype.resize);\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar symbol = Symbol();\ntry { (function() {\n  ArrayBuffer.prototype.resize.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.resize.call(1n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/resize/this-is-not-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.slice.context-is-not-arraybuffer-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  ArrayBuffer.prototype.slice.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.slice.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/slice/context-is-not-arraybuffer-object.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.slice.context-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  ArrayBuffer.prototype.slice.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.slice.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.slice.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.slice.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.slice.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.slice.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/slice/context-is-not-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.slice.extensible",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(ArrayBuffer.prototype.slice));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/slice/extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.transfer.extensible",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(ArrayBuffer.prototype.transfer));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/transfer/extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.transfer.this-is-not-arraybuffer-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof ArrayBuffer.prototype.transfer);\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/transfer/this-is-not-arraybuffer-object.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.transfer.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof ArrayBuffer.prototype.transfer);\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar symbol = Symbol();\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transfer.call(1n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/transfer/this-is-not-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.transfertofixedlength.extensible",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(ArrayBuffer.prototype.transferToFixedLength));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/transferToFixedLength/extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.transfertofixedlength.this-is-not-arraybuffer-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof ArrayBuffer.prototype.transferToFixedLength);\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/transferToFixedLength/this-is-not-arraybuffer-object.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.prototype.transfertofixedlength.this-is-not-object",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof ArrayBuffer.prototype.transferToFixedLength);\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar symbol = Symbol();\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer.prototype.transferToFixedLength.call(1n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/prototype/transferToFixedLength/this-is-not-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.symbol.species.return-value",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thisVal = {};\nvar accessor = Object.getOwnPropertyDescriptor(ArrayBuffer, Symbol.species).get;\n\nconsole.log(accessor.call(thisVal));\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/Symbol.species/return-value.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.arraybuffer.undefined-newtarget-throws",
+      "category": "arraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  ArrayBuffer();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  ArrayBuffer(10);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/ArrayBuffer/undefined-newtarget-throws.js",
+      "n_asserts": 2,
+      "flags": []
+    }
+  ]
+}

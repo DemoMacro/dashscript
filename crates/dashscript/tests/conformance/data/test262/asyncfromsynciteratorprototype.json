@@ -1,0 +1,50 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-prototype",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nasyncg().next().then(function (result) {\n  console.log(Object.prototype.hasOwnProperty.call(result, 'value'));\n  console.log(Object.prototype.hasOwnProperty.call(result, 'done'));\n  console.log(Object.getPrototypeOf(result));\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-prototype.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-unwrap-promise",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield Promise.resolve(1);\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nasyncg().next().then(function (result) {\n  console.log(result.value)\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-unwrap-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.return-promise",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nvar result = asyncg().next();\nconsole.log(result instanceof Promise)\n}\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/return-promise.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.iterator-result-unwrap-promise",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      return() {\n        return {\n          value: Promise.resolve(42),\n          done: true\n        };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nlet iter = asyncg();\n\niter.next().then(function (result) {\n  iter.return().then(\n    function (result) {\n      console.log(result.value);\n\n      iter.next().then(({ done, value }) => {\n        console.log(done);\n        console.log(value);\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/iterator-result-unwrap-promise.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.return-undefined",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(function(result) {\n\n    console.log(result.done);\n    console.log(result.value);\n\n    iter.next().then(({ done, value }) => {\n      console.log(done);\n      console.log(value);\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/return-undefined.js",
+      "n_asserts": 4,
+      "flags": ["async"]
+    }
+  ]
+}

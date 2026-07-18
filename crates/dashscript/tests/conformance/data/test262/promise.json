@@ -1,0 +1,2282 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.promise.all.call-resolve-element-after-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar callCount = 0;\nvar valuesArray;\n\nfunction Constructor(executor) {\n  function resolve(values) {\n    callCount += 1;\n    valuesArray = values;\n    console.log(Array.isArray(values));\n    console.log(values.length);\n    console.log(values[0]);\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar p1OnFulfilled;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    p1OnFulfilled = onFulfilled;\n    onFulfilled(\"expectedValue\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.all.call(Constructor, [p1]);\n\nconsole.log(callCount);\nconsole.log(valuesArray[0]);\n\np1OnFulfilled(\"unexpectedValue\");\n\nconsole.log(callCount);\nconsole.log(valuesArray[0]);\n}\n",
+      "origin": "test/built-ins/Promise/all/call-resolve-element-after-return.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.call-resolve-element-items",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar callCount = 0;\n\nfunction Constructor(executor) {\n  function resolve(values) {\n    callCount += 1;\n    console.log(Array.isArray(values));\n    console.log(values.length);\n    console.log(values[0]);\n    console.log(values[1]);\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    onFulfilled(\"expectedValue-p1\");\n    onFulfilled(\"unexpectedValue-p1\");\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    onFulfilled(\"expectedValue-p2\");\n    onFulfilled(\"unexpectedValue-p2\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.all.call(Constructor, [p1, p2]);\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/call-resolve-element-items.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.call-resolve-element",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar callCount = 0;\n\nfunction Constructor(executor) {\n  function resolve(values) {\n    callCount += 1;\n    console.log(Array.isArray(values));\n    console.log(values.length);\n    console.log(values[0]);\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    onFulfilled(\"expectedValue\");\n    onFulfilled(\"unexpectedValue\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.all.call(Constructor, [p1]);\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/call-resolve-element.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executor = null;\nvar callCount = 0;\n\nclass SubPromise extends Promise {\n  constructor(a) {\n    super(a);\n    executor = a;\n    callCount += 1;\n  }\n}\n\nvar instance = Promise.all.call(SubPromise, []);\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof SubPromise);\n\nconsole.log(callCount);\nconsole.log(typeof executor);\n}\n",
+      "origin": "test/built-ins/Promise/all/ctx-ctor.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.all.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/all/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.all.call(undefined, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.all.call(null, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.all.call(86, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.all.call('string', []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.all.call(true, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.all.call(Symbol(), []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/all/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.invoke-resolve-get-once-multiple-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p1 = Promise.resolve(1);\nvar p2 = Promise.resolve(1);\nvar p3 = Promise.reject(1);\nvar p4 = Promise.resolve(1);\nvar resolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return resolve.apply(Promise, arguments);\n    };\n  }\n});\n\nPromise.all([p1, p2, p3, p4]);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/invoke-resolve-get-once-multiple-calls.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.invoke-resolve-get-once-no-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return resolve.apply(Promise, arguments);\n    };\n  }\n});\n\nPromise.all([]);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/invoke-resolve-get-once-no-calls.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.invoke-resolve-on-promises-every-iteration-of-custom",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass Custom extends Promise {}\n\nlet values = [1, 1, 1];\nlet cresolveCallCount = 0;\nlet presolveCallCount = 0;\nlet boundCustomResolve = Custom.resolve.bind(Custom);\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nCustom.resolve = function(...args) {\n  cresolveCallCount += 1;\n  return boundCustomResolve(...args);\n};\n\nPromise.resolve = function(...args) {\n  presolveCallCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.all.call(Custom, values)\n  .then(() => {\n      console.log(presolveCallCount);\n      console.log(cresolveCallCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/invoke-resolve-on-promises-every-iteration-of-custom.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.invoke-resolve-on-promises-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1,1,1];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.all(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/invoke-resolve-on-promises-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.invoke-resolve-on-values-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1, 2, 3];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.all(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/invoke-resolve-on-values-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.invoke-resolve-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar originalCallCount = 0;\nvar newCallCount = 0;\nvar P = function(executor) {\n  executor(function() {}, function() {});\n};\nP.resolve = function() {\n  return newThenable;\n};\n\nvar originalThenable = {\n  then: function() {\n    originalCallCount += 1;\n  }\n};\nvar newThenable = {\n  then: function() {\n    newCallCount += 1;\n  }\n};\n\nPromise.all.call(P, [originalThenable]);\n\nconsole.log(originalCallCount);\nconsole.log(newCallCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/invoke-resolve-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-arg-is-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all(false).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-arg-is-false-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-arg-is-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all(null).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-arg-is-null-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-arg-is-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all(1).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-arg-is-number-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-arg-is-string-resolve",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all(\"\").then(function(v) {\n    console.log(v.length);\n  }, function() {\n    $DONE('The promise should be resolved, but was rejected');\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be resolved, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-arg-is-string-resolve.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-arg-is-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all(Symbol()).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-arg-is-symbol-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-arg-is-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all(true).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-arg-is-true-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-arg-is-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all(undefined).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-arg-is-undefined-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-assigned-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]: false\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-assigned-false-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-assigned-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]: null\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-assigned-null-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-assigned-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]: 1\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-assigned-number-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-assigned-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]: \"\"\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-assigned-string-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-assigned-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]: Symbol()\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-assigned-symbol-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-assigned-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]: true\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-assigned-true-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-assigned-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]: undefined\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-assigned-undefined-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-returns-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]() {\n      return false;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-returns-false-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-returns-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]() {\n      return null;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-returns-null-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-returns-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]() {\n      return 1;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-returns-number-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-returns-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]() {\n      return \"\";\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-returns-string-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-returns-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]() {\n      return Symbol();\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-returns-symbol-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-returns-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]() {\n      return true;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-returns-true-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.iter-returns-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.all({\n    [Symbol.iterator]() {\n      return undefined;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/all/iter-returns-undefined-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.new-resolve-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction resolveFunction() {}\n\nfunction Constructor(executor) {\n  executor(resolveFunction, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar callCount1 = 0,\n  callCount2 = 0;\nvar p1OnFulfilled;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    callCount1 += 1;\n    p1OnFulfilled = onFulfilled;\n    console.log(onFulfilled);\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    callCount2 += 1;\n    console.log(onFulfilled);\n    console.log(onFulfilled);\n  }\n};\n\nPromise.all.call(Constructor, [p1, p2]);\n\nconsole.log(callCount1);\nconsole.log(callCount2);\n}\n",
+      "origin": "test/built-ins/Promise/all/new-resolve-function.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-before-loop-exit-from-same",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar callCount = 0;\n\nfunction Constructor(executor) {\n  function resolve(values) {\n    callCount += 1;\n    console.log(Array.isArray(values));\n    console.log(values.length);\n    console.log(values[0]);\n    console.log(values[1]);\n    console.log(values[2]);\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar p1OnFulfilled;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    p1OnFulfilled = onFulfilled;\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    onFulfilled(\"p2-fulfill\");\n    onFulfilled(\"p2-fulfill-unexpected\");\n  }\n};\nvar p3 = {\n  then: function(onFulfilled, onRejected) {\n    onFulfilled(\"p3-fulfill\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.all.call(Constructor, [p1, p2, p3]);\n\nconsole.log(callCount);\n\np1OnFulfilled(\"p1-fulfill\");\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-before-loop-exit-from-same.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-before-loop-exit",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar callCount = 0;\n\nfunction Constructor(executor) {\n  function resolve(values) {\n    callCount += 1;\n    console.log(Array.isArray(values));\n    console.log(values.length);\n    console.log(values[0]);\n    console.log(values[1]);\n    console.log(values[2]);\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar p1OnFulfilled;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    p1OnFulfilled = onFulfilled;\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    p1OnFulfilled(\"p1-fulfill\");\n    onFulfilled(\"p2-fulfill\");\n  }\n};\nvar p3 = {\n  then: function(onFulfilled, onRejected) {\n    onFulfilled(\"p3-fulfill\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.all.call(Constructor, [p1, p2, p3]);\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-before-loop-exit.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-element-function-extensible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolveElementFunction;\nvar thenable = {\n  then: function(fulfill) {\n    resolveElementFunction = fulfill;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.all.call(NotPromise, [thenable]);\n\nconsole.log(Object.isExtensible(resolveElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-element-function-extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-element-function-property-order",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolveElementFunction;\nvar thenable = {\n  then: function(fulfill) {\n    resolveElementFunction = fulfill;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.all.call(NotPromise, [thenable]);\n\nvar propNames = Object.getOwnPropertyNames(resolveElementFunction);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-element-function-property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-element-function-prototype",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolveElementFunction;\nvar thenable = {\n  then: function(fulfill) {\n    resolveElementFunction = fulfill;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.all.call(NotPromise, [thenable]);\n\nconsole.log(Object.getPrototypeOf(resolveElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-element-function-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-from-same-thenable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar callCount = 0;\n\nfunction Constructor(executor) {\n  function resolve(values) {\n    callCount += 1;\n    console.log(Array.isArray(values, \"values is array\"));\n    console.log(values.length);\n    console.log(values[0]);\n    console.log(values[1]);\n    console.log(values[2]);\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar p1OnFulfilled, p2OnFulfilled, p3OnFulfilled;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    p1OnFulfilled = onFulfilled;\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    p2OnFulfilled = onFulfilled;\n  }\n};\nvar p3 = {\n  then: function(onFulfilled, onRejected) {\n    p3OnFulfilled = onFulfilled;\n  }\n};\n\nconsole.log(callCount);\n\nPromise.all.call(Constructor, [p1, p2, p3]);\n\nconsole.log(callCount);\n\np1OnFulfilled(\"p1-fulfill\");\np1OnFulfilled(\"p1-fulfill-unexpected-1\");\np1OnFulfilled(\"p1-fulfill-unexpected-2\");\n\nconsole.log(callCount);\n\np2OnFulfilled(\"p2-fulfill\");\np3OnFulfilled(\"p3-fulfill\");\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-from-same-thenable.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-ignores-late-rejection",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolver = {\n  then(resolve) {\n    resolve(42);\n  }\n};\nvar lateRejector = {\n  then(resolve, reject) {\n    resolve(33);\n    reject();\n  }\n};\n\nPromise.all([resolver, lateRejector])\n  .then(resolution => {\n    console.log(resolution[0]);\n    console.log(resolution[1]);\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-ignores-late-rejection.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.resolve-not-callable-reject-with-typeerror",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nPromise.resolve = null;\n\nPromise.all([1])\n  .then(\n    () => $DONE('The promise should not be resolved.'),\n    error => {\n      console.log(error instanceof TypeError);\n    }\n  ).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/resolve-not-callable-reject-with-typeerror.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.s25.4.4.1_a1.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.all);\n}\n",
+      "origin": "test/built-ins/Promise/all/S25.4.4.1_A1.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.s25.4.4.1_a2.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Promise.all([]);\nconsole.log(!!(p instanceof Promise));\n}\n",
+      "origin": "test/built-ins/Promise/all/S25.4.4.1_A2.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.s25.4.4.1_a2.3_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arg = [];\n\nPromise.all(arg).then(function(result) {\n  console.log(!!(result instanceof Array));\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/S25.4.4.1_A2.3_T1.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.s25.4.4.1_a2.3_t2",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arg = [];\n\nPromise.all(arg).then(function(result) {\n  console.log(result.length);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/S25.4.4.1_A2.3_T2.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.s25.4.4.1_a2.3_t3",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arg = [];\n\nPromise.all(arg).then(function(result) {\n  console.log(result);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/S25.4.4.1_A2.3_T3.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.s25.4.4.1_a4.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction ZeroArgConstructor() {}\n\ntry { (function() {\n  Promise.all.call(ZeroArgConstructor, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/all/S25.4.4.1_A4.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.s25.4.4.1_a7.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p1 = Promise.resolve(3);\n\nvar pAll = Promise.all([p1]);\n\npAll.then(function(result) {\n  console.log(!!(pAll instanceof Promise));\n  console.log(!!(result instanceof Array));\n  console.log(result.length);\n  console.log(result[0]);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/all/S25.4.4.1_A7.1_T1.js",
+      "n_asserts": 4,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.all.same-reject-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction rejectFunction() {}\n\nfunction Constructor(executor) {\n  executor(Test262Error.thrower, rejectFunction);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar callCount1 = 0,\n  callCount2 = 0;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    callCount1 += 1;\n    console.log(onRejected);\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    callCount2 += 1;\n    console.log(onRejected);\n  }\n};\n\nPromise.all.call(Constructor, [p1, p2]);\n\nconsole.log(callCount1);\nconsole.log(callCount2);\n}\n",
+      "origin": "test/built-ins/Promise/all/same-reject-function.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allkeyed.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.allKeyed.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/allKeyed/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allkeyed.extensible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(Promise.allKeyed));\n}\n",
+      "origin": "test/built-ins/Promise/allKeyed/extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-custom",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resultStartCount = 0;\nvar resultEndCount = 0;\nvar resolveCallCount = 0;\nvar resolveValues = [];\n\nPromise.resolve = Test262Error.thrower;\n\nfunction Constructor(executor) {\n  function resolve(result) {\n    resultStartCount += 1;\n    console.log(Object.getPrototypeOf(result));\n    console.log(result.first);\n    console.log(result.second);\n    resultEndCount += 1;\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(value) {\n  console.log(this);\n  resolveCallCount += 1;\n  resolveValues.push(value);\n  return {\n    then: function(onFulfilled) {\n      onFulfilled(value);\n    }\n  };\n};\n\nPromise.allKeyed.call(Constructor, {\n  first: 1,\n  second: 2\n});\n\nconsole.log(resolveCallCount);\nconsole.log(resolveValues[0]);\nconsole.log(resolveValues[1]);\nconsole.log(resultStartCount);\nconsole.log(resultEndCount);\n}\n",
+      "origin": "test/built-ins/Promise/allKeyed/invoke-resolve-custom.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-get-once",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar originalResolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, \"resolve\", {\n  configurable: true,\n  get: function() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return originalResolve.apply(Promise, arguments);\n    };\n  }\n});\n\nvar input = {\n  first: 1,\n  second: 2\n};\nObject.defineProperty(input, \"hidden\", {\n  value: 3,\n  enumerable: false\n});\n\nPromise.allKeyed(input);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/allKeyed/invoke-resolve-get-once.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar originalCallCount = 0;\nvar returnedCallCount = 0;\n\nfunction Constructor(executor) {\n  executor(function() {}, function() {});\n}\nConstructor.resolve = function() {\n  return returnedThenable;\n};\n\nvar originalThenable = {\n  then: function() {\n    originalCallCount += 1;\n  }\n};\nvar returnedThenable = {\n  then: function() {\n    returnedCallCount += 1;\n  }\n};\n\nPromise.allKeyed.call(Constructor, { key: originalThenable });\n\nconsole.log(originalCallCount);\nconsole.log(returnedCallCount);\n}\n",
+      "origin": "test/built-ins/Promise/allKeyed/invoke-resolve-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allkeyed.proto",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Promise.allKeyed));\n}\n",
+      "origin": "test/built-ins/Promise/allKeyed/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allkeyed.resolve-from-same-thenable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resultStartCount = 0;\nvar resultEndCount = 0;\n\nfunction Constructor(executor) {\n  function resolve(result) {\n    resultStartCount += 1;\n    console.log(Object.getPrototypeOf(result));\n    console.log(result.key);\n    resultEndCount += 1;\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(value) {\n  return value;\n};\n\nvar input = {\n  key: {\n    then: function(onFulfilled) {\n      onFulfilled(\"first\");\n      console.log(onFulfilled(\"second\"));\n      onFulfilled(\"third\");\n    }\n  }\n};\n\nPromise.allKeyed.call(Constructor, input);\n\nconsole.log(resultStartCount);\nconsole.log(resultEndCount);\n}\n",
+      "origin": "test/built-ins/Promise/allKeyed/resolve-from-same-thenable.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executor = null;\nvar callCount = 0;\n\nclass SubPromise extends Promise {\n  constructor(a) {\n    super(a);\n    executor = a;\n    callCount += 1;\n  }\n}\n\nvar instance = Promise.allSettled.call(SubPromise, []);\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof SubPromise);\n\nconsole.log(callCount);\nconsole.log(typeof executor);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/ctx-ctor.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.allSettled.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.allSettled.call(undefined, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.allSettled.call(null, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.allSettled.call(86, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.allSettled.call('string', []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.allSettled.call(true, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.allSettled.call(Symbol(), []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.invoke-resolve-get-once-multiple-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p1 = Promise.resolve(1);\nvar p2 = Promise.resolve(1);\nvar p3 = Promise.reject(1);\nvar p4 = Promise.resolve(1);\nvar resolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return resolve.apply(Promise, arguments);\n    };\n  }\n});\n\nPromise.allSettled([p1, p2, p3, p4]);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/invoke-resolve-get-once-multiple-calls.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.invoke-resolve-get-once-no-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return resolve.apply(Promise, arguments);\n    };\n  }\n});\n\nPromise.allSettled([]);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/invoke-resolve-get-once-no-calls.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.invoke-resolve-on-promises-every-iteration-of-custom",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass Custom extends Promise {}\n\nlet values = [1, 1, 1];\nlet cresolveCallCount = 0;\nlet presolveCallCount = 0;\nlet boundCustomResolve = Custom.resolve.bind(Custom);\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nCustom.resolve = function(...args) {\n  cresolveCallCount += 1;\n  return boundCustomResolve(...args);\n};\n\nPromise.resolve = function(...args) {\n  presolveCallCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.allSettled.call(Custom, values)\n  .then(() => {\n      console.log(presolveCallCount);\n      console.log(cresolveCallCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/invoke-resolve-on-promises-every-iteration-of-custom.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.invoke-resolve-on-promises-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1,1,1];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.allSettled(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/invoke-resolve-on-promises-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.invoke-resolve-on-values-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1, 2, 3];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.allSettled(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/invoke-resolve-on-values-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.invoke-resolve-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar originalCallCount = 0;\nvar newCallCount = 0;\nvar P = function(executor) {\n  executor(function() {}, function() {});\n};\nP.resolve = function() {\n  return newThenable;\n};\n\nvar originalThenable = {\n  then() {\n    originalCallCount += 1;\n  }\n};\nvar newThenable = {\n  then() {\n    newCallCount += 1;\n  }\n};\n\nPromise.allSettled.call(P, [originalThenable]);\n\nconsole.log(originalCallCount);\nconsole.log(newCallCount);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/invoke-resolve-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.is-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.allSettled);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled(false).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-arg-is-false-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled(null).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-arg-is-null-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled(1).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-arg-is-number-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-string-resolve",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled('').then(function(v) {\n    console.log(v.length);\n  }, function() {\n    $DONE('The promise should be resolved, but was rejected');\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be resolved, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-arg-is-string-resolve.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled(Symbol()).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-arg-is-symbol-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled(true).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-arg-is-true-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled(undefined).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-arg-is-undefined-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-assigned-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]: false\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-assigned-false-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-assigned-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]: null\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-assigned-null-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-assigned-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]: 1\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-assigned-number-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-assigned-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]: ''\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-assigned-string-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-assigned-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]: Symbol()\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-assigned-symbol-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-assigned-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]: true\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-assigned-true-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-assigned-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]: undefined\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-assigned-undefined-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-returns-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]() {\n      return false;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-returns-false-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-returns-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]() {\n      return null;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-returns-null-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-returns-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]() {\n      return 1;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-returns-number-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-returns-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]() {\n      return '';\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-returns-string-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-returns-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]() {\n      return Symbol();\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-returns-symbol-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-returns-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]() {\n      return true;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-returns-true-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.iter-returns-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.allSettled({\n    [Symbol.iterator]() {\n      return undefined;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/iter-returns-undefined-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.new-reject-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction rejectFunction() {}\n\nfunction Constructor(executor) {\n  executor(rejectFunction, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar callCount1 = 0,\n  callCount2 = 0;\nvar p1OnRejected;\n\nvar p1 = {\n  then(_, onRejected) {\n    callCount1 += 1;\n    p1OnRejected = onRejected;\n    console.log(onRejected);\n  }\n};\nvar p2 = {\n  then(_, onRejected) {\n    callCount2 += 1;\n    console.log(onRejected);\n    console.log(onRejected);\n  }\n};\n\nPromise.allSettled.call(Constructor, [p1, p2]);\n\nconsole.log(callCount1);\nconsole.log(callCount2);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/new-reject-function.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.new-resolve-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction resolveFunction() {}\n\nfunction Constructor(executor) {\n  executor(resolveFunction, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar callCount1 = 0,\n  callCount2 = 0;\nvar p1OnFulfilled;\n\nvar p1 = {\n  then(onFulfilled, onRejected) {\n    callCount1 += 1;\n    p1OnFulfilled = onFulfilled;\n    console.log(onFulfilled);\n  }\n};\nvar p2 = {\n  then(onFulfilled, onRejected) {\n    callCount2 += 1;\n    console.log(onFulfilled);\n    console.log(onFulfilled);\n  }\n};\n\nPromise.allSettled.call(Constructor, [p1, p2]);\n\nconsole.log(callCount1);\nconsole.log(callCount2);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/new-resolve-function.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.reject-element-function-extensible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar rejectElementFunction;\nvar thenable = {\n  then(_, reject) {\n    rejectElementFunction = reject;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.allSettled.call(NotPromise, [thenable]);\n\nconsole.log(Object.isExtensible(rejectElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/reject-element-function-extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.reject-element-function-property-order",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar rejectElementFunction;\nvar thenable = {\n  then: function(_, reject) {\n    rejectElementFunction = reject;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.allSettled.call(NotPromise, [thenable]);\n\nvar propNames = Object.getOwnPropertyNames(rejectElementFunction);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/reject-element-function-property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.reject-element-function-prototype",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar rejectElementFunction;\nvar thenable = {\n  then(_, reject) {\n    rejectElementFunction = reject;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.allSettled.call(NotPromise, [thenable]);\n\nconsole.log(Object.getPrototypeOf(rejectElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/reject-element-function-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.reject-ignored-immed",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar simulation = {};\n\nvar fulfiller = {\n  then(resolve) {\n    resolve(42);\n  }\n};\n\nvar lateRejector = {\n  then(resolve, reject) {\n    resolve(simulation);\n    reject();\n  }\n};\n\nPromise.allSettled([fulfiller, lateRejector])\n  .then((settleds) => {\n    console.log(settleds.length);\n    console.log(settleds[0].status);\n    console.log(settleds[0].value);\n    console.log(settleds[1].status);\n    console.log(settleds[1].value);\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/reject-ignored-immed.js",
+      "n_asserts": 5,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.resolve-element-function-extensible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolveElementFunction;\nvar thenable = {\n  then(fulfill) {\n    resolveElementFunction = fulfill;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.allSettled.call(NotPromise, [thenable]);\n\nconsole.log(Object.isExtensible(resolveElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/resolve-element-function-extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.resolve-element-function-property-order",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolveElementFunction;\nvar thenable = {\n  then: function(fulfill) {\n    resolveElementFunction = fulfill;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.allSettled.call(NotPromise, [thenable]);\n\nvar propNames = Object.getOwnPropertyNames(resolveElementFunction);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/resolve-element-function-property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.resolve-element-function-prototype",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolveElementFunction;\nvar thenable = {\n  then(fulfill) {\n    resolveElementFunction = fulfill;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.allSettled.call(NotPromise, [thenable]);\n\nconsole.log(Object.getPrototypeOf(resolveElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/resolve-element-function-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.resolve-ignores-late-rejection",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolver = {\n  then(resolve) {\n    resolve(42);\n  }\n};\nvar lateRejector = {\n  then(resolve, reject) {\n    resolve(33);\n    reject();\n  }\n};\n\nPromise.allSettled([resolver, lateRejector])\n  .then(resolution => {\n    console.log(resolution[0].value);\n    console.log(resolution[0].status);\n    console.log(resolution[1].value);\n    console.log(resolution[1].status);\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/resolve-ignores-late-rejection.js",
+      "n_asserts": 4,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.resolve-not-callable-reject-with-typeerror",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nPromise.resolve = null;\n\nPromise.allSettled([1])\n  .then(\n    () => $DONE('The promise should not be resolved.'),\n    error => {\n      console.log(error instanceof TypeError);\n    }\n  ).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/resolve-not-callable-reject-with-typeerror.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.resolve-thenable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar value = {};\nvar promise;\n\ntry {\n  Array.prototype.then = function(resolve) {\n    resolve(value);\n  };\n\n  promise = Promise.allSettled([]);\n} finally {\n  delete Array.prototype.then;\n}\n\npromise.then(function(val) {\n  console.log(val);\n}, function() {\n  $DONE('The promise should not be rejected.');\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/resolve-thenable.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.resolves-to-array",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arg = [];\n\nPromise.allSettled([]).then(function(result) {\n  console.log(Array.isArray(result));\n  console.log(Object.getPrototypeOf(result));\n  console.log(result);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/resolves-to-array.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettled.returns-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Promise.allSettled([]);\n\nconsole.log(p instanceof Promise);\nconsole.log(Object.getPrototypeOf(p));\n}\n",
+      "origin": "test/built-ins/Promise/allSettled/returns-promise.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettledkeyed.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.allSettledKeyed.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/allSettledKeyed/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettledkeyed.extensible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(Promise.allSettledKeyed));\n}\n",
+      "origin": "test/built-ins/Promise/allSettledKeyed/extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-custom",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resultStartCount = 0;\nvar resultEndCount = 0;\nvar resolveCallCount = 0;\nvar resolveValues = [];\n\nPromise.resolve = Test262Error.thrower;\n\nfunction Constructor(executor) {\n  function resolve(result) {\n    resultStartCount += 1;\n    console.log(Object.getPrototypeOf(result));\n    console.log(result.first.status);\n    console.log(result.first.value);\n    console.log(result.second.status);\n    console.log(result.second.value);\n    resultEndCount += 1;\n  }\n  executor(resolve, Test262Error.thrower);\n}\nConstructor.resolve = function(value) {\n  console.log(this);\n  resolveCallCount += 1;\n  resolveValues.push(value);\n  return {\n    then: function(onFulfilled) {\n      onFulfilled(value);\n    }\n  };\n};\n\nPromise.allSettledKeyed.call(Constructor, {\n  first: 1,\n  second: 2\n});\n\nconsole.log(resolveCallCount);\nconsole.log(resolveValues[0]);\nconsole.log(resolveValues[1]);\nconsole.log(resultStartCount);\nconsole.log(resultEndCount);\n}\n",
+      "origin": "test/built-ins/Promise/allSettledKeyed/invoke-resolve-custom.js",
+      "n_asserts": 11,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-get-once",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar originalResolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, \"resolve\", {\n  configurable: true,\n  get: function() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return originalResolve.apply(Promise, arguments);\n    };\n  }\n});\n\nvar input = {\n  first: 1,\n  second: 2\n};\nObject.defineProperty(input, \"hidden\", {\n  value: 3,\n  enumerable: false\n});\n\nPromise.allSettledKeyed(input);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/allSettledKeyed/invoke-resolve-get-once.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar originalCallCount = 0;\nvar returnedCallCount = 0;\n\nfunction Constructor(executor) {\n  executor(function() {}, function() {});\n}\nConstructor.resolve = function() {\n  return returnedThenable;\n};\n\nvar originalThenable = {\n  then: function() {\n    originalCallCount += 1;\n  }\n};\nvar returnedThenable = {\n  then: function() {\n    returnedCallCount += 1;\n  }\n};\n\nPromise.allSettledKeyed.call(Constructor, { key: originalThenable });\n\nconsole.log(originalCallCount);\nconsole.log(returnedCallCount);\n}\n",
+      "origin": "test/built-ins/Promise/allSettledKeyed/invoke-resolve-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.allsettledkeyed.proto",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Promise.allSettledKeyed));\n}\n",
+      "origin": "test/built-ins/Promise/allSettledKeyed/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.call-reject-element-after-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nlet errorArray;\n\nfunction Constructor(executor) {\n  executor(Test262Error.thrower, (error) => {\n    callCount++;\n    errorArray = error.errors;\n  });\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nlet p1OnRejected;\n\nlet p1 = {\n  then(onFulfilled, onRejected) {\n    p1OnRejected = onRejected;\n    onRejected(\"onRejectedValue\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.any.call(Constructor, [p1]);\n\nconsole.log(callCount);\nconsole.log(errorArray[0]);\n\np1OnRejected(\"unexpectedonRejectedValue\");\n\nconsole.log(errorArray[0]);\n}\n",
+      "origin": "test/built-ins/Promise/any/call-reject-element-after-return.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.call-reject-element-items",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\n\nfunction Constructor(executor) {\n  function reject(error) {\n    callCount += 1;\n    console.log(Array.isArray(error.errors));\n    console.log(error.errors.length);\n    console.log(error.errors[0]);\n    console.log(error.errors[1]);\n  }\n  executor(Test262Error.thrower, reject);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nlet p1 = {\n  then(onFulfilled, onRejected) {\n    onRejected(\"expectedValue-p1\");\n    onRejected(\"unexpectedValue-p1\");\n  }\n};\nlet p2 = {\n  then(onFulfilled, onRejected) {\n    onRejected(\"expectedValue-p2\");\n    onRejected(\"unexpectedValue-p2\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.any.call(Constructor, [p1, p2]);\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/any/call-reject-element-items.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executor = null;\nvar callCount = 0;\n\nclass SubPromise extends Promise {\n  constructor(a) {\n    super(a);\n    executor = a;\n    callCount += 1;\n  }\n}\n\nvar instance = Promise.any.call(SubPromise, []);\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof SubPromise);\n\nconsole.log(callCount);\nconsole.log(typeof executor);\n}\n",
+      "origin": "test/built-ins/Promise/any/ctx-ctor.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.any);\n\ntry { (function() {\n  Promise.any.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/any/ctx-non-ctor.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.any.call(undefined, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.any.call(null, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.any.call(86, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.any.call('string', []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.any.call(true, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.any.call(Symbol(), []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/any/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve-get-once-multiple-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet promises = [\n  Promise.reject(1),\n  Promise.reject(1),\n  Promise.reject(1),\n];\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\nlet getCount = 0;\nlet callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function(...args) {\n      callCount += 1;\n      return boundPromiseResolve(...args);\n    };\n  }\n});\n\nPromise.any(promises).then(() => {\n    $DONE('The promise should be rejected, but was resolved');\n  }, ({errors}) => {\n    console.log(getCount);\n    console.log(callCount);\n    console.log(errors.length);\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve-get-once-multiple-calls.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve-get-once-no-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\nlet getCount = 0;\nlet callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function(...args) {\n      callCount += 1;\n      return boundPromiseResolve(...args);\n    };\n  }\n});\n\nPromise.any([]).then(() => {\n    $DONE('The promise should be rejected, but was resolved');\n  }, ({errors}) => {\n    console.log(getCount);\n    console.log(callCount);\n    console.log(errors.length);\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve-get-once-no-calls.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve-on-promises-every-iteration-of-custom",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass Custom extends Promise {}\n\nlet values = [1, 1, 1];\nlet cresolveCallCount = 0;\nlet presolveCallCount = 0;\nlet boundCustomResolve = Custom.resolve.bind(Custom);\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nCustom.resolve = function(...args) {\n  cresolveCallCount += 1;\n  return boundCustomResolve(...args);\n};\n\nPromise.resolve = function(...args) {\n  presolveCallCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.any.call(Custom, values)\n  .then(() => {\n      console.log(presolveCallCount);\n      console.log(cresolveCallCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve-on-promises-every-iteration-of-custom.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve-on-promises-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1,1,1];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.any(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve-on-promises-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve-on-values-every-iteration-of-custom",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass Custom extends Promise {}\n\nlet values = [1, 2, 3];\nlet cresolveCallCount = 0;\nlet presolveCallCount = 0;\nlet boundCustomResolve = Custom.resolve.bind(Custom);\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nCustom.resolve = function(...args) {\n  cresolveCallCount += 1;\n  return boundCustomResolve(...args);\n};\n\nPromise.resolve = function(...args) {\n  presolveCallCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.any.call(Custom, values)\n  .then(() => {\n      console.log(presolveCallCount);\n      console.log(cresolveCallCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve-on-values-every-iteration-of-custom.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve-on-values-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1, 2, 3];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.any(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve-on-values-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet originalCallCount = 0;\nlet newCallCount = 0;\nlet P = function(executor) {\n  executor(function() {}, function() {});\n};\nP.resolve = function() {\n  return newThenable;\n};\n\nlet originalThenable = {\n  then() {\n    originalCallCount += 1;\n  }\n};\nlet newThenable = {\n  then() {\n    newCallCount += 1;\n  }\n};\n\nPromise.any.call(P, [originalThenable]);\n\nconsole.log(originalCallCount);\nconsole.log(newCallCount);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-resolve",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  console.log(args.length);\n  console.log(this);\n  return boundPromiseResolve(...args);\n};\n\nPromise.any([1]).then(() => $DONE(), $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-resolve.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-then-on-promises-every-iteration",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet promises = [\n  Promise.resolve(),\n  Promise.resolve(),\n  Promise.resolve(),\n];\nlet callCount = 0;\n\npromises.forEach(promise => {\n  let boundThen = promise.then.bind(promise);\n  promise.then = function(...args) {\n    console.log(this);\n    callCount += 1;\n    return boundThen(...args);\n  };\n});\n\nPromise.any(promises)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-then-on-promises-every-iteration.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.invoke-then",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet promise = Promise.resolve();\nlet boundThen = promise.then.bind(promise);\nlet callCount = 0;\n\npromise.then = function(resolver, rejectElement) {\n  console.log(this);\n  console.log(typeof resolver);\n  console.log(resolver.length);\n  console.log(typeof rejectElement);\n  console.log(rejectElement.length);\n  callCount++;\n  return boundThen(resolver, rejectElement);\n};\n\nPromise.any([promise]).then(() => {\n  console.log(callCount);\n  $DONE();\n}, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/invoke-then.js",
+      "n_asserts": 6,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.is-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.any);\n}\n",
+      "origin": "test/built-ins/Promise/any/is-function.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-empty-iterable-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nPromise.any([])\n  .then(\n    () => $DONE('The promise should be rejected, but was resolved'),\n    error => {\n      console.log(Object.getPrototypeOf(error));\n      console.log(error instanceof AggregateError);\n      console.log(error.errors.length);\n    }\n  ).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-empty-iterable-reject.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-empty-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nPromise.any('')\n  .then(\n    () => $DONE('The promise should be rejected, but was resolved'),\n    error => {\n      console.log(Object.getPrototypeOf(error));\n      console.log(error instanceof AggregateError);\n      console.log(error.errors.length);\n    }\n  ).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-empty-string-reject.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any(false).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-false-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any(null).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-null-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any(1).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-number-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-string-resolve",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any('xyz').then(v => {\n    console.log(v);\n    console.log(v.length);\n  }, error => {\n    $DONE(`The promise should be resolved, but was rejected with error: ${error.message}`);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be resolved, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-string-resolve.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any(Symbol()).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-symbol-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any(true).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-true-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-arg-is-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any(undefined).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-arg-is-undefined-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-assigned-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any({\n    [Symbol.iterator]: false\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-assigned-false-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-assigned-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any({\n    [Symbol.iterator]: null\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-assigned-null-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-assigned-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any({\n    [Symbol.iterator]: 1\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-assigned-number-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-assigned-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any({\n    [Symbol.iterator]: ''\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-assigned-string-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-assigned-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any({\n    [Symbol.iterator]: Symbol()\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-assigned-symbol-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-assigned-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any({\n    [Symbol.iterator]: true\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-assigned-true-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-assigned-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.any({\n    [Symbol.iterator]: undefined\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(Object.getPrototypeOf(error));\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-assigned-undefined-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-returns-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nPromise.any({\n  [Symbol.iterator]() {\n    callCount++;\n    return false;\n  }\n}).then(() => {\n  $DONE('The promise should be rejected, but was resolved');\n}, (error) => {\n  console.log(callCount);\n  console.log(error instanceof TypeError);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-returns-false-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-returns-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nPromise.any({\n  [Symbol.iterator]() {\n    callCount++;\n    return null;\n  }\n}).then(() => {\n  $DONE('The promise should be rejected, but was resolved');\n}, (error) => {\n  console.log(callCount);\n  console.log(error instanceof TypeError);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-returns-null-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-returns-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nPromise.any({\n  [Symbol.iterator]() {\n    callCount++;\n    return 1;\n  }\n}).then(() => {\n  $DONE('The promise should be rejected, but was resolved');\n}, (error) => {\n  console.log(callCount);\n  console.log(error instanceof TypeError);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-returns-number-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-returns-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nPromise.any({\n  [Symbol.iterator]() {\n    callCount++;\n    return '';\n  }\n}).then(() => {\n  $DONE('The promise should be rejected, but was resolved');\n}, (error) => {\n  console.log(callCount);\n  console.log(error instanceof TypeError);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-returns-string-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-returns-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nPromise.any({\n  [Symbol.iterator]() {\n    callCount++;\n    return Symbol();\n  }\n}).then(() => {\n  $DONE('The promise should be rejected, but was resolved');\n}, (error) => {\n  console.log(callCount);\n  console.log(error instanceof TypeError);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-returns-symbol-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-returns-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nPromise.any({\n  [Symbol.iterator]() {\n    callCount++;\n    return true;\n  }\n}).then(() => {\n  $DONE('The promise should be rejected, but was resolved');\n}, (error) => {\n  console.log(callCount);\n  console.log(error instanceof TypeError);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-returns-true-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.iter-returns-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nPromise.any({\n  [Symbol.iterator]() {\n    callCount++;\n    return undefined;\n  }\n}).then(() => {\n  $DONE('The promise should be rejected, but was resolved');\n}, (error) => {\n  console.log(callCount);\n  console.log(error instanceof TypeError);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/iter-returns-undefined-reject.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.new-reject-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction rejectFunction() {}\n\nfunction Constructor(executor) {\n  executor(rejectFunction, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar callCount1 = 0;\nvar callCount2 = 0;\nvar p1OnRejected;\n\nvar p1 = {\n  then(_, onRejected) {\n    callCount1 += 1;\n    p1OnRejected = onRejected;\n    console.log(onRejected);\n  }\n};\nvar p2 = {\n  then(_, onRejected) {\n    callCount2 += 1;\n    console.log(onRejected);\n    console.log(onRejected);\n  }\n};\n\nPromise.any.call(Constructor, [p1, p2]);\nconsole.log(callCount1);\nconsole.log(callCount2);\n}\n",
+      "origin": "test/built-ins/Promise/any/new-reject-function.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.reject-element-function-extensible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar rejectElementFunction;\nvar thenable = {\n  then(_, reject) {\n    rejectElementFunction = reject;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.any.call(NotPromise, [thenable]);\n\nconsole.log(Object.isExtensible(rejectElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/any/reject-element-function-extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.reject-element-function-property-order",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar rejectElementFunction;\nvar thenable = {\n  then: function(_, reject) {\n    rejectElementFunction = reject;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.any.call(NotPromise, [thenable]);\n\nvar propNames = Object.getOwnPropertyNames(rejectElementFunction);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Promise/any/reject-element-function-property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.reject-element-function-prototype",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar rejectElementFunction;\nvar thenable = {\n  then(_, reject) {\n    rejectElementFunction = reject;\n  }\n};\n\nfunction NotPromise(executor) {\n  executor(function() {}, function() {});\n}\nNotPromise.resolve = function(v) {\n  return v;\n};\nPromise.any.call(NotPromise, [thenable]);\n\nconsole.log(Object.getPrototypeOf(rejectElementFunction));\n}\n",
+      "origin": "test/built-ins/Promise/any/reject-element-function-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.reject-immed",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nlet thenable = {\n  then(_, reject) {\n    callCount++;\n    reject('reason');\n  }\n};\n\nPromise.any([thenable])\n  .then(() => {\n    $DONE('The promise should not be fulfilled.');\n  }, (error) => {\n    console.log(callCount);\n    console.log(error instanceof AggregateError);\n    console.log(error.errors[0]);\n    $DONE();\n  });\n}\n",
+      "origin": "test/built-ins/Promise/any/reject-immed.js",
+      "n_asserts": 3,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.resolve-before-loop-exit-from-same",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nlet errorArray;\n\nfunction Constructor(executor) {\n  function reject(error) {\n    callCount += 1;\n    errorArray = error.errors;\n\n    console.log(Array.isArray(error.errors));\n    console.log(error.errors.length);\n    console.log(error.errors[0]);\n    console.log(error.errors[1]);\n    console.log(error.errors[2]);\n    console.log(error instanceof AggregateError);\n  }\n  executor(Test262Error.thrower, reject);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nlet p1OnRejected;\n\nlet p1 = {\n  then(onResolved, onRejected) {\n    p1OnRejected = onRejected;\n  }\n};\nlet p2 = {\n  then(onResolved, onRejected) {\n    onRejected(\"p2-rejection\");\n    onRejected(\"unexpectedonRejectedValue\");\n  }\n};\nlet p3 = {\n  then(onResolved, onRejected) {\n    onRejected(\"p3-rejection\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.any.call(Constructor, [p1, p2, p3]);\n\nconsole.log(callCount);\n\np1OnRejected(\"p1-rejection\");\n\nconsole.log(callCount);\nconsole.log(errorArray[0]);\nconsole.log(errorArray[1]);\nconsole.log(errorArray[2]);\n}\n",
+      "origin": "test/built-ins/Promise/any/resolve-before-loop-exit-from-same.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.resolve-before-loop-exit",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet callCount = 0;\nlet errorArray;\n\nfunction Constructor(executor) {\n  function reject(error) {\n    callCount += 1;\n    errorArray = error.errors;\n\n    console.log(Array.isArray(error.errors));\n    console.log(error.errors.length);\n    console.log(error.errors[0]);\n    console.log(error.errors[1]);\n    console.log(error.errors[2]);\n    console.log(error instanceof AggregateError);\n  }\n  executor(Test262Error.thrower, reject);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nlet p1OnRejected;\n\nlet p1 = {\n  then(onResolved, onRejected) {\n    p1OnRejected = onRejected;\n  }\n};\nlet p2 = {\n  then(onResolved, onRejected) {\n    p1OnRejected(\"p1-rejection\");\n    onRejected(\"p2-rejection\");\n  }\n};\nlet p3 = {\n  then(onResolved, onRejected) {\n    onRejected(\"p3-rejection\");\n  }\n};\n\nconsole.log(callCount);\n\nPromise.any.call(Constructor, [p1, p2, p3]);\n\nconsole.log(callCount);\nconsole.log(errorArray[0]);\nconsole.log(errorArray[1]);\nconsole.log(errorArray[2]);\n\np1OnRejected(\"unexpectedonRejectedValue\");\n\nconsole.log(callCount);\nconsole.log(errorArray[0]);\nconsole.log(errorArray[1]);\nconsole.log(errorArray[2]);\n}\n",
+      "origin": "test/built-ins/Promise/any/resolve-before-loop-exit.js",
+      "n_asserts": 15,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.resolve-ignores-late-rejection",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolver = {\n  then(resolve) {\n    resolve(42);\n  }\n};\nvar lateRejector = {\n  then(resolve, reject) {\n    resolve(33);\n    reject();\n  }\n};\n\nPromise.any([resolver, lateRejector])\n  .then(resolution => {\n    console.log(resolution);\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/resolve-ignores-late-rejection.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.resolve-non-thenable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst a = {};\nconst b = {};\nconst c = {};\n\nPromise.any([a, b, c])\n  .then((value) => {\n    console.log(value);\n  }, () => {\n    $DONE('The promise should not be rejected.');\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/resolve-non-thenable.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.resolve-not-callable-reject-with-typeerror",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nPromise.resolve = null;\n\nPromise.any([1])\n  .then(\n    () => $DONE('The promise should not be resolved.'),\n    error => {\n      console.log(error instanceof TypeError);\n    }\n  ).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/any/resolve-not-callable-reject-with-typeerror.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.any.returns-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Promise.any([]);\n\nconsole.log(p instanceof Promise);\nconsole.log(Object.getPrototypeOf(p));\n}\n",
+      "origin": "test/built-ins/Promise/any/returns-promise.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.constructor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise);\n}\n",
+      "origin": "test/built-ins/Promise/constructor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.executor-function-extensible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executorFunction;\n\nfunction NotPromise(executor) {\n  executorFunction = executor;\n  executor(function() {}, function() {});\n}\nPromise.resolve.call(NotPromise);\n\nconsole.log(Object.isExtensible(executorFunction));\n}\n",
+      "origin": "test/built-ins/Promise/executor-function-extensible.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.executor-function-property-order",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executorFunction;\n\nfunction NotPromise(executor) {\n  executorFunction = executor;\n  executor(function() {}, function() {});\n}\nPromise.resolve.call(NotPromise);\n\nvar propNames = Object.getOwnPropertyNames(executorFunction);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Promise/executor-function-property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.executor-function-prototype",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executorFunction;\n\nfunction NotPromise(executor) {\n  executorFunction = executor;\n  executor(function() {}, function() {});\n}\nPromise.resolve.call(NotPromise);\n\nconsole.log(Object.getPrototypeOf(executorFunction));\n}\n",
+      "origin": "test/built-ins/Promise/executor-function-prototype.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.property-order",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar propNames = Object.getOwnPropertyNames(Promise);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\n",
+      "origin": "test/built-ins/Promise/property-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.catch.invokes-then",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = {};\nvar returnValue = {};\nvar callCount = 0;\nvar thisValue = null;\nvar argCount = null;\nvar firstArg = null;\nvar secondArg = null;\nvar result = null;\n\ntarget.then = function(a, b) {\n  callCount += 1;\n\n  thisValue = this;\n  argCount = arguments.length;\n  firstArg = a;\n  secondArg = b;\n\n  return returnValue;\n};\n\nresult = Promise.prototype.catch.call(target, 1, 2, 3);\n\nconsole.log(callCount);\nconsole.log(thisValue);\nconsole.log(argCount);\nconsole.log(firstArg);\nconsole.log(secondArg);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/catch/invokes-then.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.catch.s25.4.5.1_a1.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(!!(Promise.prototype.catch instanceof Function));\n}\n",
+      "origin": "test/built-ins/Promise/prototype/catch/S25.4.5.1_A1.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.catch.s25.4.5.1_a2.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Promise.resolve(3);\n\nconsole.log(!!(p.catch instanceof Function));\n}\n",
+      "origin": "test/built-ins/Promise/prototype/catch/S25.4.5.1_A2.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.catch.this-value-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.prototype.catch.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.catch.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/prototype/catch/this-value-non-object.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.catch.this-value-obj-coercible",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar booleanCount = 0;\nBoolean.prototype.then = function() {\n  booleanCount += 1;\n};\nPromise.prototype.catch.call(true);\nconsole.log(booleanCount);\n\nvar numberCount = 0;\nNumber.prototype.then = function() {\n  numberCount += 1;\n};\nPromise.prototype.catch.call(34);\nconsole.log(numberCount);\n\nvar stringCount = 0;\nString.prototype.then = function() {\n  stringCount += 1;\n};\nPromise.prototype.catch.call('');\nconsole.log(stringCount);\n\nvar symbolCount = 0;\nSymbol.prototype.then = function() {\n  symbolCount += 1;\n};\nPromise.prototype.catch.call(Symbol());\nconsole.log(symbolCount);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/catch/this-value-obj-coercible.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.catch.this-value-then-not-callable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar symbol = Symbol();\n\ntry { (function() {\n  Promise.prototype.catch.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.catch.call({\n    then: null\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.catch.call({\n    then: 1\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.catch.call({\n    then: ''\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.catch.call({\n    then: true\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.catch.call({\n    then: symbol\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.catch.call({\n    then: {}\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/prototype/catch/this-value-then-not-callable.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.is-a-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Promise.prototype.finally instanceof Function);\n\nconsole.log(typeof Promise.prototype.finally);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/is-a-function.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.is-a-method",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Promise.resolve(3);\n\nconsole.log(p.finally);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/is-a-method.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.resolved-observable-then-calls-promiseresolve",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass MyPromise extends Promise {}\n\nvar mp1Value = {};\nvar mp1 = MyPromise.resolve(mp1Value);\nvar mp2 = MyPromise.resolve(42);\n\nvar thenCalls = [];\nvar then = Promise.prototype.then;\nPromise.prototype.then = function(resolve, reject) {\n  thenCalls.push({promise: this, resolve, reject});\n  return then.call(this, resolve, reject);\n};\n\nmp1.finally(() => mp2).then(() => {\n  console.log(thenCalls.length);\n\n  var mp2Calls = thenCalls.filter(c => c.promise === mp2);\n  console.log(mp2Calls.length);\n  console.log(mp2Calls[0].reject);\n  console.log(mp2Calls[0].resolve());\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/resolved-observable-then-calls-PromiseResolve.js",
+      "n_asserts": 4,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.species-constructor-throws",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n    Promise.prototype.finally.call({constructor : 0})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/species-constructor-throws.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.subclass-resolve-count",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nclass FooPromise extends Promise {\n  constructor(resolve, reject) {\n    count++;\n    return super(resolve, reject);\n  }\n}\n\nFooPromise.resolve().finally(() => {}).then(() => {\n  console.log(count);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/subclass-resolve-count.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.subclass-species-constructor-reject-count",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass FooPromise extends Promise {\n  static get[Symbol.species]() {\n    return Promise;\n  }\n}\n\nvar p = Promise.reject().finally(() => FooPromise.reject());\n\nconsole.log(p instanceof Promise);\nconsole.log(p instanceof FooPromise);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/subclass-species-constructor-reject-count.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.subclass-species-constructor-resolve-count",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass FooPromise extends Promise {\n  static get[Symbol.species]() {\n    return Promise;\n  }\n}\n\nvar p = Promise.resolve().finally(() => FooPromise.resolve());\n\nconsole.log(p instanceof Promise);\nconsole.log(p instanceof FooPromise);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/subclass-species-constructor-resolve-count.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.finally.this-value-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.prototype.finally);\n\ntry { (function() {\n  Promise.prototype.finally.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.prototype.finally.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/prototype/finally/this-value-non-object.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.no-promise-state",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.prototype.then.call(Promise.prototype, function() {}, function() {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/prototype/no-promise-state.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.proto",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Promise.prototype));\n}\n",
+      "origin": "test/built-ins/Promise/prototype/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.s25.4.4.2_a1.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Promise.prototype);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/S25.4.4.2_A1.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.s25.4.5_a3.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Promise.prototype.constructor);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/S25.4.5_A3.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.then.deferred-is-resolved-value",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar createBadPromise = false;\nvar object = {};\n\nclass P extends Promise {\n  constructor(executor) {\n    if (createBadPromise) {\n      executor(\n        function(v) {\n          console.log(v);\n          $DONE();\n        },\n        function(e) {\n          $DONE(e);\n        }\n      );\n      return object;\n    }\n    return super(executor);\n  }\n}\n\nvar p = P.resolve(object);\n\ncreateBadPromise = true;\nvar q = p.then();\ncreateBadPromise = false;\n\nconsole.log(q);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/then/deferred-is-resolved-value.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.then.s25.4.5.3_a1.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(!!(Promise.prototype.then instanceof Function));\n}\n",
+      "origin": "test/built-ins/Promise/prototype/then/S25.4.5.3_A1.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.then.s25.4.5.3_a4.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arg = {};\nvar p = Promise.resolve(arg);\n\np.then(undefined, undefined)\n  .then(function(result) {\n  console.log(result);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/then/S25.4.5.3_A4.1_T1.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.prototype.then.s25.4.5.3_a4.2_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arg = {};\nvar p = Promise.resolve(arg);\n\np.then(3, 5)\n  .then(function(result) {\n  console.log(result);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/prototype/then/S25.4.5.3_A4.2_T1.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.capability-executor-not-callable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.race.call(function(executor) {\n    checkPoint += \"a\";\n  }, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.race.call(function(executor) {\n    checkPoint += \"a\";\n    executor();\n    checkPoint += \"b\";\n  }, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.race.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, undefined);\n    checkPoint += \"b\";\n  }, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.race.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, function() {});\n    checkPoint += \"b\";\n  }, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.race.call(function(executor) {\n    checkPoint += \"a\";\n    executor(function() {}, undefined);\n    checkPoint += \"b\";\n  }, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.race.call(function(executor) {\n    checkPoint += \"a\";\n    executor(123, \"invalid value\");\n    checkPoint += \"b\";\n  }, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n}\n",
+      "origin": "test/built-ins/Promise/race/capability-executor-not-callable.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executor = null;\nvar callCount = 0;\n\nclass SubPromise extends Promise {\n  constructor(a) {\n    super(a);\n    executor = a;\n    callCount += 1;\n  }\n}\n\nvar instance = Promise.race.call(SubPromise, []);\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof SubPromise);\n\nconsole.log(callCount);\nconsole.log(typeof executor);\n}\n",
+      "origin": "test/built-ins/Promise/race/ctx-ctor.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.race.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/race/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.race.call(undefined, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.race.call(null, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.race.call(86, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.race.call('string', []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.race.call(true, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.race.call(Symbol(), []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/race/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.invoke-resolve-error-close",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterDoneSpy = {};\nvar returnCount = 0;\niterDoneSpy[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: null,\n        done: false\n      };\n    },\n    return: function() {\n      returnCount += 1;\n      return {};\n    }\n  };\n};\n\nPromise.resolve = function() {\n  throw err;\n};\n\nPromise.race(iterDoneSpy);\n\nconsole.log(returnCount);\n}\n",
+      "origin": "test/built-ins/Promise/race/invoke-resolve-error-close.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.invoke-resolve-get-once-multiple-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p1 = Promise.resolve(1);\nvar p2 = Promise.resolve(1);\nvar p3 = Promise.reject(1);\nvar p4 = Promise.resolve(1);\nvar resolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return resolve.apply(Promise, arguments);\n    };\n  }\n});\n\nPromise.race([p1, p2, p3, p4]);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/race/invoke-resolve-get-once-multiple-calls.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.invoke-resolve-get-once-no-calls",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resolve = Promise.resolve;\nvar getCount = 0;\nvar callCount = 0;\n\nObject.defineProperty(Promise, 'resolve', {\n  configurable: true,\n  get() {\n    getCount += 1;\n    return function() {\n      callCount += 1;\n      return resolve.apply(Promise, arguments);\n    };\n  }\n});\n\nPromise.race([]);\n\nconsole.log(getCount);\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Promise/race/invoke-resolve-get-once-no-calls.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.invoke-resolve-on-promises-every-iteration-of-custom",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass Custom extends Promise {}\n\nlet values = [1, 1, 1];\nlet cresolveCallCount = 0;\nlet presolveCallCount = 0;\nlet boundCustomResolve = Custom.resolve.bind(Custom);\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nCustom.resolve = function(...args) {\n  cresolveCallCount += 1;\n  return boundCustomResolve(...args);\n};\n\nPromise.resolve = function(...args) {\n  presolveCallCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.race.call(Custom, values)\n  .then(() => {\n      console.log(presolveCallCount);\n      console.log(cresolveCallCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/race/invoke-resolve-on-promises-every-iteration-of-custom.js",
+      "n_asserts": 2,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.invoke-resolve-on-promises-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1, 1, 1];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.race(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/race/invoke-resolve-on-promises-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.invoke-resolve-on-values-every-iteration-of-promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet values = [1, 2, 3];\nlet callCount = 0;\nlet boundPromiseResolve = Promise.resolve.bind(Promise);\n\nPromise.resolve = function(...args) {\n  callCount += 1;\n  return boundPromiseResolve(...args);\n};\n\nPromise.race(values)\n  .then(() => {\n      console.log(callCount);\n    }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/race/invoke-resolve-on-values-every-iteration-of-promise.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.invoke-resolve-return",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar originalCallCount = 0;\nvar newCallCount = 0;\nvar P = function(executor) {\n  executor(function() {}, function() {});\n};\nP.resolve = function() {\n  return newThenable;\n};\n\nvar originalThenable = {\n  then: function() {\n    originalCallCount += 1;\n  }\n};\nvar newThenable = {\n  then: function() {\n    newCallCount += 1;\n  }\n};\n\nPromise.race.call(P, [originalThenable]);\n\nconsole.log(originalCallCount);\nconsole.log(newCallCount);\n}\n",
+      "origin": "test/built-ins/Promise/race/invoke-resolve-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-arg-is-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race(false).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-arg-is-false-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-arg-is-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race(null).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-arg-is-null-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-arg-is-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race(1).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-arg-is-number-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-arg-is-string-resolve",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race(\"a\").then(function(v) {\n    console.log(v);\n  }, function() {\n    $DONE('The promise should be resolved, but was rejected');\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be resolved, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-arg-is-string-resolve.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-arg-is-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race(Symbol()).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-arg-is-symbol-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-arg-is-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race(true).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-arg-is-true-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-arg-is-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race(undefined).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-arg-is-undefined-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-assigned-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]: false\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-assigned-false-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-assigned-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]: null\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-assigned-null-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-assigned-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]: 1\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-assigned-number-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-assigned-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]: \"\"\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-assigned-string-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-assigned-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]: Symbol()\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-assigned-symbol-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-assigned-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]: true\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-assigned-true-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-assigned-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]: undefined\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-assigned-undefined-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-returns-false-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]() {\n      return false;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-returns-false-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-returns-null-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]() {\n      return null;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-returns-null-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-returns-number-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]() {\n      return 1;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-returns-number-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-returns-string-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]() {\n      return \"\";\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-returns-string-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-returns-symbol-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]() {\n      return Symbol();\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-returns-symbol-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-returns-true-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]() {\n      return true;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-returns-true-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.iter-returns-undefined-reject",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry {\n  Promise.race({\n    [Symbol.iterator]() {\n      return undefined;\n    }\n  }).then(function() {\n    $DONE('The promise should be rejected, but was resolved');\n  }, function(error) {\n    console.log(error instanceof TypeError);\n  }).then($DONE, $DONE);\n} catch (error) {\n  $DONE(`The promise should be rejected, but threw an exception: ${error.message}`);\n}\n}\n",
+      "origin": "test/built-ins/Promise/race/iter-returns-undefined-reject.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.resolve-ignores-late-rejection",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet resolver = {\n  then(resolve) {\n    resolve(42);\n  }\n};\nlet lateRejector = {\n  then(resolve, reject) {\n    resolve(33);\n    reject();\n  }\n};\n\nPromise.race([resolver, lateRejector])\n  .then(resolution => {\n    console.log(resolution);\n  }).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/race/resolve-ignores-late-rejection.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.resolved-then-catch-finally",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet a = Promise.reject('a').catch((v) => v);\nlet b = Promise.resolve('b').then((v) => { throw v });\nlet c = Promise.reject('c').then((v) => { throw v; });\nlet d = Promise.resolve('d').finally((v) => v);\nlet e = Promise.reject('e').finally((v) => v);\nlet f = Promise.resolve('f').finally((v) => { throw v; });\nlet g = Promise.reject('g').finally((v) => { throw v; });\nlet h = Promise.reject('h').then((v) => v, () => 'j');\nlet i = Promise.resolve('i').then(v => v);\n\nPromise.race([a, b, c, d, e, f, g, h, i]).then(winner => {\n  console.log(winner);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/race/resolved-then-catch-finally.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.s25.4.4.3_a1.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.race);\n}\n",
+      "origin": "test/built-ins/Promise/race/S25.4.4.3_A1.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.s25.4.4.3_a2.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = Promise.race([]);\n\nconsole.log(!!(p instanceof Promise));\n}\n",
+      "origin": "test/built-ins/Promise/race/S25.4.4.3_A2.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.s25.4.4.3_a3.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction ZeroArgConstructor() {}\n\ntry { (function() {\n  Promise.race.call(ZeroArgConstructor, [3]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/race/S25.4.4.3_A3.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.s25.4.4.3_a3.1_t2",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction BadPromiseConstructor(f) {\n  f(undefined, undefined);\n}\n\ntry { (function() {\n  Promise.race.call(BadPromiseConstructor, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/race/S25.4.4.3_A3.1_T2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.same-reject-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction rejectFunction() {}\n\nfunction Constructor(executor) {\n  executor(Test262Error.thrower, rejectFunction);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar callCount1 = 0,\n  callCount2 = 0;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    callCount1 += 1;\n    console.log(onRejected);\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    callCount2 += 1;\n    console.log(onRejected);\n  }\n};\n\nPromise.race.call(Constructor, [p1, p2]);\n\nconsole.log(callCount1);\nconsole.log(callCount2);\n}\n",
+      "origin": "test/built-ins/Promise/race/same-reject-function.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.race.same-resolve-function",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction resolveFunction() {}\n\nfunction Constructor(executor) {\n  executor(resolveFunction, Test262Error.thrower);\n}\nConstructor.resolve = function(v) {\n  return v;\n};\n\nvar callCount1 = 0,\n  callCount2 = 0;\n\nvar p1 = {\n  then: function(onFulfilled, onRejected) {\n    callCount1 += 1;\n    console.log(onFulfilled);\n  }\n};\nvar p2 = {\n  then: function(onFulfilled, onRejected) {\n    callCount2 += 1;\n    console.log(onFulfilled);\n  }\n};\n\nPromise.race.call(Constructor, [p1, p2]);\n\nconsole.log(callCount1);\nconsole.log(callCount2);\n}\n",
+      "origin": "test/built-ins/Promise/race/same-resolve-function.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.reject.capability-executor-called-twice",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar checkPoint = \"\";\nPromise.reject.call(function(executor) {\n  checkPoint += \"a\";\n  executor();\n  checkPoint += \"b\";\n  executor(function() {}, function() {});\n  checkPoint += \"c\";\n}, {});\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\nPromise.reject.call(function(executor) {\n  checkPoint += \"a\";\n  executor(undefined, undefined);\n  checkPoint += \"b\";\n  executor(function() {}, function() {});\n  checkPoint += \"c\";\n}, {});\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, function() {});\n    checkPoint += \"b\";\n    executor(function() {}, function() {});\n    checkPoint += \"c\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor(function() {}, undefined);\n    checkPoint += \"b\";\n    executor(function() {}, function() {});\n    checkPoint += \"c\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor(\"invalid value\", 123);\n    checkPoint += \"b\";\n    executor(function() {}, function() {});\n    checkPoint += \"c\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n}\n",
+      "origin": "test/built-ins/Promise/reject/capability-executor-called-twice.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.reject.capability-executor-not-callable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor();\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, undefined);\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, function() {});\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor(function() {}, undefined);\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.reject.call(function(executor) {\n    checkPoint += \"a\";\n    executor(123, \"invalid value\");\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n}\n",
+      "origin": "test/built-ins/Promise/reject/capability-executor-not-callable.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.reject.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executor = null;\nvar callCount = 0;\n\nclass SubPromise extends Promise {\n  constructor(a) {\n    super(a);\n    executor = a;\n    callCount += 1;\n  }\n}\n\nvar instance = Promise.reject.call(SubPromise);\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof SubPromise);\n\nconsole.log(callCount);\nconsole.log(typeof executor);\n}\n",
+      "origin": "test/built-ins/Promise/reject/ctx-ctor.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.reject.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.reject.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/reject/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.reject.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.reject.call(undefined, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.reject.call(null, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.reject.call(86, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.reject.call('string', []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.reject.call(true, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.reject.call(Symbol(), []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/reject/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.reject.s25.4.4.4_a1.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.reject);\n}\n",
+      "origin": "test/built-ins/Promise/reject/S25.4.4.4_A1.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.reject.s25.4.4.4_a3.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction ZeroArgConstructor() {}\n\ntry { (function() {\n  Promise.reject.call(ZeroArgConstructor, 4);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/reject/S25.4.4.4_A3.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.arg-non-thenable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nonThenable = {\n  then: null\n};\n\nPromise.resolve(nonThenable).then(function(value) {\n  console.log(value);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/arg-non-thenable.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.capability-executor-called-twice",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar checkPoint = \"\";\nPromise.resolve.call(function(executor) {\n  checkPoint += \"a\";\n  executor();\n  checkPoint += \"b\";\n  executor(function() {}, function() {});\n  checkPoint += \"c\";\n}, {});\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\nPromise.resolve.call(function(executor) {\n  checkPoint += \"a\";\n  executor(undefined, undefined);\n  checkPoint += \"b\";\n  executor(function() {}, function() {});\n  checkPoint += \"c\";\n}, {});\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, function() {});\n    checkPoint += \"b\";\n    executor(function() {}, function() {});\n    checkPoint += \"c\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor(function() {}, undefined);\n    checkPoint += \"b\";\n    executor(function() {}, function() {});\n    checkPoint += \"c\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor(\"invalid value\", 123);\n    checkPoint += \"b\";\n    executor(function() {}, function() {});\n    checkPoint += \"c\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/capability-executor-called-twice.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.capability-executor-not-callable",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor();\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, undefined);\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor(undefined, function() {});\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor(function() {}, undefined);\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n\nvar checkPoint = \"\";\ntry { (function() {\n  Promise.resolve.call(function(executor) {\n    checkPoint += \"a\";\n    executor(123, \"invalid value\");\n    checkPoint += \"b\";\n  }, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(checkPoint);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/capability-executor-not-callable.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executor = null;\nvar callCount = 0;\n\nclass SubPromise extends Promise {\n  constructor(a) {\n    super(a);\n    executor = a;\n    callCount += 1;\n  }\n}\n\nvar instance = Promise.resolve.call(SubPromise);\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof SubPromise);\n\nconsole.log(callCount);\nconsole.log(typeof executor);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/ctx-ctor.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.resolve.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/resolve/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.resolve.call(undefined, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.resolve.call(null, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.resolve.call(86, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.resolve.call('string', []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.resolve.call(true, []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.resolve.call(Symbol(), []);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/resolve/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.resolve-from-promise-capability",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar expectedThisValue = (function() {\n  return this;\n}());\nvar callCount = 0;\nvar object = {};\nvar thisValue, args;\n\nPromise.resolve.call(function(executor) {\n  function resolve(v) {\n    callCount += 1;\n    thisValue = this;\n    args = arguments;\n  }\n  executor(resolve, Test262Error.thrower);\n  console.log(callCount);\n}, object);\n\nconsole.log(callCount);\nconsole.log(typeof args);\nconsole.log(args.length);\nconsole.log(args[0]);\nconsole.log(thisValue);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/resolve-from-promise-capability.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.s25.4.4.5_a1.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Promise.resolve);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/S25.4.4.5_A1.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.s25.4.4.5_a2.1_t1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p1 = Promise.resolve(1),\n  p2 = Promise.resolve(p1);\n\nconsole.log(p1);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/S25.4.4.5_A2.1_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.resolve.s25.promise_resolve_foreign_thenable_1",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thenable = {\n  then: function(onResolve, onReject) {\n    return onResolve('resolved');\n  }\n};\n\nvar p = Promise.resolve(thenable);\n\np.then(function(r) {\n  console.log(r);\n}).then($DONE, $DONE);\n}\n",
+      "origin": "test/built-ins/Promise/resolve/S25.Promise_resolve_foreign_thenable_1.js",
+      "n_asserts": 1,
+      "flags": ["async"]
+    },
+    {
+      "id": "test262.test.built-ins.promise.symbol.species.return-value",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(Promise, Symbol.species);\nvar thisValue = {};\n\nconsole.log(desc.get.call(thisValue));\n}\n",
+      "origin": "test/built-ins/Promise/Symbol.species/return-value.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.symbol.species.symbol-species-name",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Promise, Symbol.species);\n\nconsole.log(descriptor.get.name);\n}\n",
+      "origin": "test/built-ins/Promise/Symbol.species/symbol-species-name.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.try.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar executor = null;\nvar callCount = 0;\n\nclass SubPromise extends Promise {\n  constructor(a) {\n    super(a);\n    executor = a;\n    callCount += 1;\n  }\n}\n\nvar instance = Promise.try.call(SubPromise, function () {});\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof SubPromise);\n\nconsole.log(callCount);\nconsole.log(typeof executor);\n}\n",
+      "origin": "test/built-ins/Promise/try/ctx-ctor.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.try.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Promise.try.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/try/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.try.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n  Promise.try.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Promise.try.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Promise.try.call(86);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Promise.try.call('string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Promise.try.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Promise.try.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/try/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.try.promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar instance = Promise.try(function () {});\n\nconsole.log(instance.constructor);\nconsole.log(instance instanceof Promise);\n}\n",
+      "origin": "test/built-ins/Promise/try/promise.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.withresolvers.ctx-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass SubPromise extends Promise {}\n\nvar instance = Promise.withResolvers.call(SubPromise);\n\nconsole.log(instance.promise.constructor);\nconsole.log(instance.promise instanceof SubPromise);\n}\n",
+      "origin": "test/built-ins/Promise/withResolvers/ctx-ctor.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.withresolvers.ctx-non-ctor",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.withResolvers.call(eval);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/withResolvers/ctx-non-ctor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.withresolvers.ctx-non-object",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Promise.withResolvers.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.withResolvers.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.withResolvers.call(86);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n  \ntry { (function() {\n  Promise.withResolvers.call('string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.withResolvers.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Promise.withResolvers.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Promise/withResolvers/ctx-non-object.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.withresolvers.promise",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar instance = Promise.withResolvers();\n\nconsole.log(instance.promise.constructor);\nconsole.log(instance.promise instanceof Promise);\n}\n",
+      "origin": "test/built-ins/Promise/withResolvers/promise.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.promise.withresolvers.resolvers",
+      "category": "promise",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar instance = Promise.withResolvers();\n\nconsole.log(typeof instance.resolve);\nconsole.log(instance.resolve.name);\nconsole.log(instance.resolve.length);\nconsole.log(typeof instance.reject);\nconsole.log(instance.reject.name);\nconsole.log(instance.reject.length);\n}\n",
+      "origin": "test/built-ins/Promise/withResolvers/resolvers.js",
+      "n_asserts": 6,
+      "flags": []
+    }
+  ]
+}

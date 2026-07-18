@@ -1,0 +1,212 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.error.error-message-tostring-symbol",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n    Error(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Error/error-message-tostring-symbol.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.error-message-tostring-toprimitive",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n    Error({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Error/error-message-tostring-toprimitive.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.internal-prototype",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Error().constructor));\n\nconsole.log(Function.prototype.isPrototypeOf(Error.constructor));\n}\n",
+      "origin": "test/built-ins/Error/internal-prototype.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.bigints",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.isError(0n));\nconsole.log(Error.isError(42n));\nconsole.log(Error.isError(BigInt(0)));\nconsole.log(Error.isError(BigInt(42)));\n}\n",
+      "origin": "test/built-ins/Error/isError/bigints.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.name",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.isError.name);\n}\n",
+      "origin": "test/built-ins/Error/isError/name.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.non-error-objects",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.isError({}));\nconsole.log(Error.isError([]));\nconsole.log(Error.isError(function () {}));\nconsole.log(Error.isError(/a/g));\n\nconsole.log(Error.isError(Error));\nconsole.log(Error.isError(EvalError));\nconsole.log(Error.isError(RangeError));\nconsole.log(Error.isError(ReferenceError));\nconsole.log(Error.isError(SyntaxError));\nconsole.log(Error.isError(TypeError));\nconsole.log(Error.isError(URIError));\n\nif (typeof AggregateError !== 'undefined') {\n  console.log(Error.isError(AggregateError));\n}\nif (typeof SuppressedError !== 'undefined') {\n  console.log(Error.isError(SuppressedError));\n}\n}\n",
+      "origin": "test/built-ins/Error/isError/non-error-objects.js",
+      "n_asserts": 13,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.primitives",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.isError());\nconsole.log(Error.isError(undefined));\nconsole.log(Error.isError(null));\nconsole.log(Error.isError(true));\nconsole.log(Error.isError(false));\nconsole.log(Error.isError(0));\nconsole.log(Error.isError(-0));\nconsole.log(Error.isError(NaN));\nconsole.log(Error.isError(Infinity));\nconsole.log(Error.isError(-Infinity));\nconsole.log(Error.isError(42));\nconsole.log(Error.isError(''));\nconsole.log(Error.isError('foo'));\n}\n",
+      "origin": "test/built-ins/Error/isError/primitives.js",
+      "n_asserts": 13,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.symbols",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.isError(Symbol()));\n}\n",
+      "origin": "test/built-ins/Error/isError/symbols.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.length",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar err1 = Error(\"err\");\nconsole.log(err1.constructor.length);\nconsole.log(Error.constructor.length);\n}\n",
+      "origin": "test/built-ins/Error/length.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.name",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.prototype.name);\n}\n",
+      "origin": "test/built-ins/Error/name.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.no-error-data",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\n// Although the spec doesn't define Error.prototype[@@toStringTag], set it\n// to non-string anyway because implementations are allowed to define it.\nObject.defineProperty(Error.prototype, Symbol.toStringTag, {\n  value: null,\n});\n\nconsole.log(Object.prototype.toString.call(Error.prototype));\n}\n",
+      "origin": "test/built-ins/Error/prototype/no-error-data.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.3.1_a2_t1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.hasOwnProperty('prototype'));\n\nconsole.log(!Error.propertyIsEnumerable('prototype'));\n\n//\n//////////////////////////////////////////////////////////////////////////////\n\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#2\nvar cout = 0;\n\nfor (var p in Error) {\n  if (p === \"prototype\") {\n    cout++;\n  }\n}\n\nconsole.log(cout);\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.3.1_A2_T1.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.3.1_a4_t1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.hasOwnProperty('prototype'));\n}\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.3.1_A4_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.4_a1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.prototype.isPrototypeOf(Error.prototype));\n}\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.4_A1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.4_a2",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nError.prototype.toString = Object.prototype.toString;\nvar __tostr = Error.prototype.toString();\n\nconsole.log(__tostr);\n}\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.4_A2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-this-not-object",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nconsole.log(typeof get);\n\nvar badReceivers = [\n  ['undefined', undefined],\n  ['null', null],\n  ['true', true],\n  ['false', false],\n  ['number', 1],\n  ['string', ''],\n  typeof Symbol === 'undefined' ? null : ['symbol', Symbol('s')],\n  typeof BigInt === 'undefined' ? null : ['bigint', BigInt(0)]\n];\n\nfor (var i = 0; i < badReceivers.length; ++i) {\n  if (!badReceivers[i]) continue;\n  var label = badReceivers[i][0];\n  var value = badReceivers[i][1];\n  try { (function () {\n    get.call(value);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n}\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-this-not-object.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-receiver-is-prototype",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\ntry { (function () {\n  set.call(Error.prototype, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// Property assignment also throws. The setter throws unconditionally via\n// SetterThatIgnoresPrototypeProperties; the throw originates inside the\n// accessor function and propagates regardless of the caller's strict-mode\n// flag. (test262 runs this file in both strict and sloppy modes by default.)\ntry { (function () {\n  Error.prototype.stack = '';\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// The accessor descriptor on Error.prototype is unchanged.\nvar desc = Object.getOwnPropertyDescriptor(Error.prototype, 'stack');\nconsole.log(desc);\nconsole.log(typeof desc.get);\nconsole.log(typeof desc.set);\nconsole.log(desc.value);\nconsole.log(desc.writable);\n}\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-receiver-is-prototype.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-this-not-object",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nconsole.log(typeof set);\n\nvar badReceivers = [\n  ['undefined', undefined],\n  ['null', null],\n  ['true', true],\n  ['false', false],\n  ['number', 1],\n  ['string', 's'],\n  typeof Symbol === 'undefined' ? null : ['symbol', Symbol('s')],\n  typeof BigInt === 'undefined' ? null : ['bigint', BigInt(0)]\n];\n\nfor (var i = 0; i < badReceivers.length; ++i) {\n  if (!badReceivers[i]) continue;\n  var label = badReceivers[i][0];\n  var value = badReceivers[i][1];\n  try { (function () {\n    set.call(value, '');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n\n// A non-Object this combined with a non-String v throws TypeError. The spec\n// runs step 2 (this not Object) before step 3 (v not String), but both steps\n// throw TypeError, so the failure is observably the same either way.\ntry { (function () {\n  set.call(undefined, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  set.call(null, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-this-not-object.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.invalid-receiver",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\n[undefined, null, 1, true, 'string', Symbol()].forEach((v) => {\n  try { (() => {\n    Error.prototype.toString.call(v);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\n",
+      "origin": "test/built-ins/Error/prototype/toString/invalid-receiver.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.tostring-message-throws-symbol",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function () {\n    Error.prototype.toString.call({message : Symbol()})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "origin": "test/built-ins/Error/prototype/toString/tostring-message-throws-symbol.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.tostring-message-throws-toprimitive",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n    Error.prototype.toString.call({message: {valueOf: undefined, toString: undefined}});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "origin": "test/built-ins/Error/prototype/toString/tostring-message-throws-toprimitive.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.undefined-props",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error.prototype.toString.call({}));\nconsole.log(Error.prototype.toString.call({ message: '42' }));\nconsole.log(Error.prototype.toString.call({ name: '24' }));\nconsole.log(Error.prototype.toString.call({ name: '24', message: '42' }));\n}\n",
+      "origin": "test/built-ins/Error/prototype/toString/undefined-props.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.error.tostring-2",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Error().toString());\n\nError.prototype.toString = Object.prototype.toString;\nconsole.log(Error().toString());\n}\n",
+      "origin": "test/built-ins/Error/tostring-2.js",
+      "n_asserts": 2,
+      "flags": []
+    }
+  ]
+}

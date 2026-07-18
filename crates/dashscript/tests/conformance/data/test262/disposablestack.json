@@ -1,0 +1,95 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.disposablestack.constructor",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof DisposableStack);\n}\n",
+      "origin": "test/built-ins/DisposableStack/constructor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.proto",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(DisposableStack));\n}\n",
+      "origin": "test/built-ins/DisposableStack/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.prototype.adopt.this-not-object-throws",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof DisposableStack.prototype.adopt);\n\nvar adopt = DisposableStack.prototype.adopt;\n\ntry { (function() {\n  adopt.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  adopt.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DisposableStack/prototype/adopt/this-not-object-throws.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.prototype.defer.this-not-object-throws",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof DisposableStack.prototype.defer);\n\nvar defer = DisposableStack.prototype.defer;\n\ntry { (function() {\n  defer.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  defer.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DisposableStack/prototype/defer/this-not-object-throws.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.prototype.dispose.this-not-object-throws",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof DisposableStack.prototype.dispose);\n\nvar dispose = DisposableStack.prototype.dispose;\n\ntry { (function() {\n  dispose.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  dispose.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  dispose.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  dispose.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  dispose.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  dispose.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  dispose.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DisposableStack/prototype/dispose/this-not-object-throws.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.prototype.disposed.this-not-object-throw",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(DisposableStack.prototype, 'disposed');\n\ntry { (function() {\n  descriptor.get.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DisposableStack/prototype/disposed/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.prototype.move.this-not-object-throws",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof DisposableStack.prototype.move);\n\nvar move = DisposableStack.prototype.move;\n\ntry { (function() {\n  move.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  move.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DisposableStack/prototype/move/this-not-object-throws.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.prototype.proto",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(DisposableStack.prototype);\nconsole.log(proto);\n}\n",
+      "origin": "test/built-ins/DisposableStack/prototype/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.prototype.use.this-not-object-throws",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof DisposableStack.prototype.use);\n\nvar use = DisposableStack.prototype.use;\n\ntry { (function() {\n  use.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  use.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DisposableStack/prototype/use/this-not-object-throws.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.disposablestack.undefined-newtarget-throws",
+      "category": "disposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  DisposableStack();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/DisposableStack/undefined-newtarget-throws.js",
+      "n_asserts": 1,
+      "flags": []
+    }
+  ]
+}

@@ -1,0 +1,392 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.bigint.asintn.arithmetic",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asIntN(0, -2n));\nconsole.log(BigInt.asIntN(0, -1n));\nconsole.log(BigInt.asIntN(0, 0n));\nconsole.log(BigInt.asIntN(0, 1n));\nconsole.log(BigInt.asIntN(0, 2n));\n\nconsole.log(BigInt.asIntN(1, -3n));\nconsole.log(BigInt.asIntN(1, -2n));\nconsole.log(BigInt.asIntN(1, -1n));\nconsole.log(BigInt.asIntN(1, 0n));\nconsole.log(BigInt.asIntN(1, 1n));\nconsole.log(BigInt.asIntN(1, 2n));\nconsole.log(BigInt.asIntN(1, 3n));\nconsole.log(BigInt.asIntN(1, -123456789012345678901n));\nconsole.log(BigInt.asIntN(1, -123456789012345678900n));\nconsole.log(BigInt.asIntN(1, 123456789012345678900n));\nconsole.log(BigInt.asIntN(1, 123456789012345678901n));\n\nconsole.log(BigInt.asIntN(2, -3n));\nconsole.log(BigInt.asIntN(2, -2n));\nconsole.log(BigInt.asIntN(2, -1n));\nconsole.log(BigInt.asIntN(2, 0n));\nconsole.log(BigInt.asIntN(2, 1n));\nconsole.log(BigInt.asIntN(2, 2n));\nconsole.log(BigInt.asIntN(2, 3n));\nconsole.log(BigInt.asIntN(2, -123456789012345678901n));\nconsole.log(BigInt.asIntN(2, -123456789012345678900n));\nconsole.log(BigInt.asIntN(2, 123456789012345678900n));\nconsole.log(BigInt.asIntN(2, 123456789012345678901n));\n\nconsole.log(BigInt.asIntN(8, 0xabn));\nconsole.log(BigInt.asIntN(8, 0xabcdn));\nconsole.log(BigInt.asIntN(8, 0xabcdef01n));\nconsole.log(BigInt.asIntN(8, 0xabcdef0123456789abcdef0123n));\nconsole.log(BigInt.asIntN(8, 0xabcdef0123456789abcdef0183n));\n\nconsole.log(BigInt.asIntN(64, 0xabcdef0123456789abcdefn));\nconsole.log(BigInt.asIntN(65, 0xabcdef0123456789abcdefn));\n\nconsole.log(BigInt.asIntN(200,\n  0xcffffffffffffffffffffffffffffffffffffffffffffffffffn));\nconsole.log(BigInt.asIntN(201,\n    0xcffffffffffffffffffffffffffffffffffffffffffffffffffn));\n\nconsole.log(BigInt.asIntN(200,\n  0xc89e081df68b65fedb32cffea660e55df9605650a603ad5fc54n));\nconsole.log(BigInt.asIntN(201,\n    0xc89e081df68b65fedb32cffea660e55df9605650a603ad5fc54n));\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/arithmetic.js",
+      "n_asserts": 38,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asintn.bigint-tobigint-errors",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof BigInt);\nconsole.log(typeof BigInt.asIntN);\n\ntry { (function () {\n  BigInt.asIntN();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function () {\n  BigInt.asIntN(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt.asIntN(0, undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    [Symbol.toPrimitive]: function() {\n      return undefined;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    valueOf: function() {\n      return undefined;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    toString: function() {\n      return undefined;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    [Symbol.toPrimitive]: function() {\n      return null;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    valueOf: function() {\n      return null;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    toString: function() {\n      return null;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, Object(0));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    [Symbol.toPrimitive]: function() {\n      return 0;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    valueOf: function() {\n      return 0;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    toString: function() {\n      return 0;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, Infinity);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, Symbol(\"1\"));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, Object(Symbol(\"1\")));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    valueOf: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, \"a\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, \"0b2\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, Object(\"0b2\"));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    [Symbol.toPrimitive]: function() {\n      return \"0b2\";\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    valueOf: function() {\n      return \"0b2\";\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, {\n    toString: function() {\n      return \"0b2\";\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, \"   0b2   \");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, \"0o8\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, \"0xg\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0, \"1n\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/bigint-tobigint-errors.js",
+      "n_asserts": 34,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asintn.bigint-tobigint-wrapped-values",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asIntN(2, Object(0n)));\nconsole.log(BigInt.asIntN(2, {\n  [Symbol.toPrimitive]: function() {\n    return 0n;\n  }\n}));\nconsole.log(BigInt.asIntN(2, {\n  valueOf: function() {\n    return 0n;\n  }\n}));\nconsole.log(BigInt.asIntN(2, {\n  toString: function() {\n    return 0n;\n  }\n}));\nconsole.log(BigInt.asIntN(2, Object(true)));\nconsole.log(BigInt.asIntN(2, {\n  [Symbol.toPrimitive]: function() {\n    return true;\n  }\n}));\nconsole.log(BigInt.asIntN(2, {\n  valueOf: function() {\n    return true;\n  }\n}));\nconsole.log(BigInt.asIntN(2, {\n  toString: function() {\n    return true;\n  }\n}));\nconsole.log(BigInt.asIntN(2, Object(\"1\")));\nconsole.log(BigInt.asIntN(2, {\n  [Symbol.toPrimitive]: function() {\n    return \"1\";\n  }\n}));\nconsole.log(BigInt.asIntN(2, {\n  valueOf: function() {\n    return \"1\";\n  }\n}));\nconsole.log(BigInt.asIntN(2, {\n  toString: function() {\n    return \"1\";\n  }\n}));\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/bigint-tobigint-wrapped-values.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asintn.bigint-tobigint",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asIntN(2, 0n));\nconsole.log(BigInt.asIntN(2, -0n));\nconsole.log(BigInt.asIntN(2, false));\nconsole.log(BigInt.asIntN(2, true));\nconsole.log(BigInt.asIntN(2, \"1\"));\nconsole.log(BigInt.asIntN(2, \"-0\"));\nconsole.log(BigInt.asIntN(2, \"\"));\nconsole.log(BigInt.asIntN(2, \"     \"));\nconsole.log(BigInt.asIntN(2, []));\nconsole.log(BigInt.asIntN(2, [1]));\nconsole.log(BigInt.asIntN(3, 10n));\nconsole.log(BigInt.asIntN(3, \"10\"));\nconsole.log(BigInt.asIntN(3, \"0b1010\"));\nconsole.log(BigInt.asIntN(3, \"0o12\"));\nconsole.log(BigInt.asIntN(3, \"0xa\"));\nconsole.log(BigInt.asIntN(3, \"    0xa    \"));\nconsole.log(BigInt.asIntN(3, \"     10     \"));\nconsole.log(BigInt.asIntN(3, [10n]));\nconsole.log(BigInt.asIntN(3, [\"10\"]));\nconsole.log(BigInt.asIntN(4, 12345678901234567890003n));\nconsole.log(BigInt.asIntN(4, \"12345678901234567890003\"));\nconsole.log(BigInt.asIntN(4,\n    \"0b10100111010100001010110110010011100111011001110001010000100100010001010011\"));\nconsole.log(BigInt.asIntN(4, \"0o2472412662347316120442123\"));\nconsole.log(BigInt.asIntN(4, \"0x29d42b64e7671424453\"));\nconsole.log(BigInt.asIntN(4, \"    0x29d42b64e7671424453    \"));\nconsole.log(BigInt.asIntN(4, \"     12345678901234567890003     \"));\nconsole.log(BigInt.asIntN(4, [12345678901234567890003n]));\nconsole.log(BigInt.asIntN(4, [\"12345678901234567890003\"]));\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/bigint-tobigint.js",
+      "n_asserts": 28,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asintn.bits-toindex-errors",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof BigInt);\nconsole.log(typeof BigInt.asIntN);\n\ntry { (function() {\n  BigInt.asIntN(-1, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(-2.5, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(\"-2.5\", 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(-Infinity, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(9007199254740992, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(Infinity, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(0n, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(Object(0n), 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN({\n    [Symbol.toPrimitive]: function() {\n      return 0n;\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN({\n    valueOf: function() {\n      return 0n;\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN({\n    toString: function() {\n      return 0n;\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(Symbol(\"1\"), 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN(Object(Symbol(\"1\")), 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN({\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN({\n    valueOf: function() {\n      return Symbol(\"1\");\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asIntN({\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/bits-toindex-errors.js",
+      "n_asserts": 18,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asintn.bits-toindex-wrapped-values",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asIntN(Object(0), 1n));\nconsole.log(BigInt.asIntN({\n  [Symbol.toPrimitive]: function() {\n    return 0;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  valueOf: function() {\n    return 0;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  toString: function() {\n    return 0;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN(Object(NaN), 1n));\nconsole.log(BigInt.asIntN({\n  [Symbol.toPrimitive]: function() {\n    return NaN;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  valueOf: function() {\n    return NaN;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  toString: function() {\n    return NaN;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  [Symbol.toPrimitive]: function() {\n    return undefined;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  valueOf: function() {\n    return undefined;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  toString: function() {\n    return undefined;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  [Symbol.toPrimitive]: function() {\n    return null;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  valueOf: function() {\n    return null;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  toString: function() {\n    return null;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN(Object(true), 1n));\nconsole.log(BigInt.asIntN({\n  [Symbol.toPrimitive]: function() {\n    return true;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  valueOf: function() {\n    return true;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  toString: function() {\n    return true;\n  }\n}, 1n));\nconsole.log(BigInt.asIntN(Object(\"1\"), 1n));\nconsole.log(BigInt.asIntN({\n  [Symbol.toPrimitive]: function() {\n    return \"1\";\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  valueOf: function() {\n    return \"1\";\n  }\n}, 1n));\nconsole.log(BigInt.asIntN({\n  toString: function() {\n    return \"1\";\n  }\n}, 1n));\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/bits-toindex-wrapped-values.js",
+      "n_asserts": 22,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asintn.bits-toindex",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asIntN(0, 1n));\nconsole.log(BigInt.asIntN(1, 1n));\nconsole.log(BigInt.asIntN(-0.9, 1n));\nconsole.log(BigInt.asIntN(0.9, 1n));\nconsole.log(BigInt.asIntN(NaN, 1n));\nconsole.log(BigInt.asIntN(undefined, 1n));\nconsole.log(BigInt.asIntN(null, 1n));\nconsole.log(BigInt.asIntN(false, 1n));\nconsole.log(BigInt.asIntN(true, 1n));\nconsole.log(BigInt.asIntN(\"0\", 1n));\nconsole.log(BigInt.asIntN(\"1\", 1n));\nconsole.log(BigInt.asIntN(\"\", 1n));\nconsole.log(BigInt.asIntN(\"foo\", 1n));\nconsole.log(BigInt.asIntN(\"true\", 1n));\nconsole.log(BigInt.asIntN(3, 10n));\nconsole.log(BigInt.asIntN(\"3\", 10n));\nconsole.log(BigInt.asIntN(3.9, 10n));\nconsole.log(BigInt.asIntN(\"3.9\", 10n));\nconsole.log(BigInt.asIntN([0], 1n));\nconsole.log(BigInt.asIntN([\"1\"], 1n));\nconsole.log(BigInt.asIntN({}, 1n));\nconsole.log(BigInt.asIntN([], 1n));\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/bits-toindex.js",
+      "n_asserts": 22,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asintn.order-of-steps",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar i = 0;\nvar bits = {\n  valueOf() {\n    console.log(i);\n    i++;\n    return 0;\n  }\n};\nvar bigint = {\n  valueOf() {\n    console.log(i);\n    i++;\n    return 0n;\n  }\n};\n\nBigInt.asIntN(bits, bigint);\nconsole.log(i);\n}\n",
+      "origin": "test/built-ins/BigInt/asIntN/order-of-steps.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.arithmetic",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asUintN(0, -2n));\nconsole.log(BigInt.asUintN(0, -1n));\nconsole.log(BigInt.asUintN(0, 0n));\nconsole.log(BigInt.asUintN(0, 1n));\nconsole.log(BigInt.asUintN(0, 2n));\n\nconsole.log(BigInt.asUintN(1, -3n));\nconsole.log(BigInt.asUintN(1, -2n));\nconsole.log(BigInt.asUintN(1, -1n));\nconsole.log(BigInt.asUintN(1, 0n));\nconsole.log(BigInt.asUintN(1, 1n));\nconsole.log(BigInt.asUintN(1, 2n));\nconsole.log(BigInt.asUintN(1, 3n));\nconsole.log(BigInt.asUintN(1, -123456789012345678901n));\nconsole.log(BigInt.asUintN(1, -123456789012345678900n));\nconsole.log(BigInt.asUintN(1, 123456789012345678900n));\nconsole.log(BigInt.asUintN(1, 123456789012345678901n));\n\nconsole.log(BigInt.asUintN(2, -3n));\nconsole.log(BigInt.asUintN(2, -2n));\nconsole.log(BigInt.asUintN(2, -1n));\nconsole.log(BigInt.asUintN(2, 0n));\nconsole.log(BigInt.asUintN(2, 1n));\nconsole.log(BigInt.asUintN(2, 2n));\nconsole.log(BigInt.asUintN(2, 3n));\nconsole.log(BigInt.asUintN(2, -123456789012345678901n));\nconsole.log(BigInt.asUintN(2, -123456789012345678900n));\nconsole.log(BigInt.asUintN(2, 123456789012345678900n));\nconsole.log(BigInt.asUintN(2, 123456789012345678901n));\n\nconsole.log(BigInt.asUintN(8, 0xabn));\nconsole.log(BigInt.asUintN(8, 0xabcdn));\nconsole.log(BigInt.asUintN(8, 0xabcdef01n));\nconsole.log(BigInt.asUintN(8, 0xabcdef0123456789abcdef0123n));\nconsole.log(BigInt.asUintN(8, 0xabcdef0123456789abcdef0183n));\n\nconsole.log(BigInt.asUintN(64, 0xabcdef0123456789abcdefn));\nconsole.log(BigInt.asUintN(65, 0xabcdef0123456789abcdefn));\n\nconsole.log(BigInt.asUintN(200,\n    0xbffffffffffffffffffffffffffffffffffffffffffffffffffn));\nconsole.log(BigInt.asUintN(201,\n    0xbffffffffffffffffffffffffffffffffffffffffffffffffffn));\n\nconsole.log(BigInt.asUintN(200,\n    0xb89e081df68b65fedb32cffea660e55df9605650a603ad5fc54n));\nconsole.log(BigInt.asUintN(201,\n    0xb89e081df68b65fedb32cffea660e55df9605650a603ad5fc54n));\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/arithmetic.js",
+      "n_asserts": 38,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.bigint-tobigint-errors",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof BigInt);\nconsole.log(typeof BigInt.asUintN);\n\ntry { (function () {\n  BigInt.asUintN();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function () {\n  BigInt.asUintN(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt.asUintN(0, undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    [Symbol.toPrimitive]: function() {\n      return undefined;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    valueOf: function() {\n      return undefined;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    toString: function() {\n      return undefined;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    [Symbol.toPrimitive]: function() {\n      return null;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    valueOf: function() {\n      return null;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    toString: function() {\n      return null;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, Object(0));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    [Symbol.toPrimitive]: function() {\n      return 0;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    valueOf: function() {\n      return 0;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    toString: function() {\n      return 0;\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, Infinity);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, Symbol(\"1\"));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, Object(Symbol(\"1\")));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    valueOf: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, \"a\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, \"0b2\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, Object(\"0b2\"));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    [Symbol.toPrimitive]: function() {\n      return \"0b2\";\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    valueOf: function() {\n      return \"0b2\";\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, {\n    toString: function() {\n      return \"0b2\";\n    }\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, \"   0b2   \");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, \"0o8\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, \"0xg\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0, \"1n\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/bigint-tobigint-errors.js",
+      "n_asserts": 34,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.bigint-tobigint-wrapped-values",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asUintN(2, Object(0n)));\nconsole.log(BigInt.asUintN(2, {\n  [Symbol.toPrimitive]: function() {\n    return 0n;\n  }\n}));\nconsole.log(BigInt.asUintN(2, {\n  valueOf: function() {\n    return 0n;\n  }\n}));\nconsole.log(BigInt.asUintN(2, {\n  toString: function() {\n    return 0n;\n  }\n}));\nconsole.log(BigInt.asUintN(2, Object(true)));\nconsole.log(BigInt.asUintN(2, {\n  [Symbol.toPrimitive]: function() {\n    return true;\n  }\n}));\nconsole.log(BigInt.asUintN(2, {\n  valueOf: function() {\n    return true;\n  }\n}));\nconsole.log(BigInt.asUintN(2, {\n  toString: function() {\n    return true;\n  }\n}));\nconsole.log(BigInt.asUintN(2, Object(\"1\")));\nconsole.log(BigInt.asUintN(2, {\n  [Symbol.toPrimitive]: function() {\n    return \"1\";\n  }\n}));\nconsole.log(BigInt.asUintN(2, {\n  valueOf: function() {\n    return \"1\";\n  }\n}));\nconsole.log(BigInt.asUintN(2, {\n  toString: function() {\n    return \"1\";\n  }\n}));\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/bigint-tobigint-wrapped-values.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.bigint-tobigint",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asUintN(2, 0n));\nconsole.log(BigInt.asUintN(2, -0n));\nconsole.log(BigInt.asUintN(2, false));\nconsole.log(BigInt.asUintN(2, true));\nconsole.log(BigInt.asUintN(2, \"1\"));\nconsole.log(BigInt.asUintN(2, \"-0\"));\nconsole.log(BigInt.asUintN(2, \"\"));\nconsole.log(BigInt.asUintN(2, \"     \"));\nconsole.log(BigInt.asUintN(2, []));\nconsole.log(BigInt.asUintN(2, [1]));\nconsole.log(BigInt.asUintN(3, 10n));\nconsole.log(BigInt.asUintN(3, \"10\"));\nconsole.log(BigInt.asUintN(3, \"0b1010\"));\nconsole.log(BigInt.asUintN(3, \"0o12\"));\nconsole.log(BigInt.asUintN(3, \"0xa\"));\nconsole.log(BigInt.asUintN(3, \"    0xa    \"));\nconsole.log(BigInt.asUintN(3, \"     10     \"));\nconsole.log(BigInt.asUintN(3, [10n]));\nconsole.log(BigInt.asUintN(3, [\"10\"]));\nconsole.log(BigInt.asUintN(4, 12345678901234567890003n));\nconsole.log(BigInt.asUintN(4, \"12345678901234567890003\"));\nconsole.log(BigInt.asUintN(4,\n    \"0b10100111010100001010110110010011100111011001110001010000100100010001010011\"));\nconsole.log(BigInt.asUintN(4, \"0o2472412662347316120442123\"));\nconsole.log(BigInt.asUintN(4, \"0x29d42b64e7671424453\"));\nconsole.log(BigInt.asUintN(4, \"    0x29d42b64e7671424453    \"));\nconsole.log(BigInt.asUintN(4, \"     12345678901234567890003     \"));\nconsole.log(BigInt.asUintN(4, [12345678901234567890003n]));\nconsole.log(BigInt.asUintN(4, [\"12345678901234567890003\"]));\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/bigint-tobigint.js",
+      "n_asserts": 28,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.bits-toindex-errors",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof BigInt);\nconsole.log(typeof BigInt.asUintN);\n\ntry { (function() {\n  BigInt.asUintN(-1, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(-2.5, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(\"-2.5\", 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(-Infinity, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(9007199254740992, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(Infinity, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(0n, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(Object(0n), 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN({\n    [Symbol.toPrimitive]: function() {\n      return 0n;\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN({\n    valueOf: function() {\n      return 0n;\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN({\n    toString: function() {\n      return 0n;\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(Symbol(\"1\"), 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN(Object(Symbol(\"1\")), 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN({\n    [Symbol.toPrimitive]: function() {\n      return Symbol(\"1\");\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN({\n    valueOf: function() {\n      return Symbol(\"1\");\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n  BigInt.asUintN({\n    toString: function() {\n      return Symbol(\"1\");\n    }\n  }, 0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/bits-toindex-errors.js",
+      "n_asserts": 18,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.bits-toindex-wrapped-values",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asUintN(Object(0), 1n));\nconsole.log(BigInt.asUintN({\n  [Symbol.toPrimitive]: function() {\n    return 0;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  valueOf: function() {\n    return 0;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  toString: function() {\n    return 0;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN(Object(NaN), 1n));\nconsole.log(BigInt.asUintN({\n  [Symbol.toPrimitive]: function() {\n    return NaN;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  valueOf: function() {\n    return NaN;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  toString: function() {\n    return NaN;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  [Symbol.toPrimitive]: function() {\n    return undefined;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  valueOf: function() {\n    return undefined;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  toString: function() {\n    return undefined;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  [Symbol.toPrimitive]: function() {\n    return null;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  valueOf: function() {\n    return null;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  toString: function() {\n    return null;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN(Object(true), 1n));\nconsole.log(BigInt.asUintN({\n  [Symbol.toPrimitive]: function() {\n    return true;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  valueOf: function() {\n    return true;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  toString: function() {\n    return true;\n  }\n}, 1n));\nconsole.log(BigInt.asUintN(Object(\"1\"), 1n));\nconsole.log(BigInt.asUintN({\n  [Symbol.toPrimitive]: function() {\n    return \"1\";\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  valueOf: function() {\n    return \"1\";\n  }\n}, 1n));\nconsole.log(BigInt.asUintN({\n  toString: function() {\n    return \"1\";\n  }\n}, 1n));\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/bits-toindex-wrapped-values.js",
+      "n_asserts": 22,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.bits-toindex",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt.asUintN(0, 1n));\nconsole.log(BigInt.asUintN(1, 1n));\nconsole.log(BigInt.asUintN(-0.9, 1n));\nconsole.log(BigInt.asUintN(0.9, 1n));\nconsole.log(BigInt.asUintN(NaN, 1n));\nconsole.log(BigInt.asUintN(undefined, 1n));\nconsole.log(BigInt.asUintN(null, 1n));\nconsole.log(BigInt.asUintN(false, 1n));\nconsole.log(BigInt.asUintN(true, 1n));\nconsole.log(BigInt.asUintN(\"0\", 1n));\nconsole.log(BigInt.asUintN(\"1\", 1n));\nconsole.log(BigInt.asUintN(\"\", 1n));\nconsole.log(BigInt.asUintN(\"foo\", 1n));\nconsole.log(BigInt.asUintN(\"true\", 1n));\nconsole.log(BigInt.asUintN(3, 10n));\nconsole.log(BigInt.asUintN(\"3\", 10n));\nconsole.log(BigInt.asUintN(3.9, 10n));\nconsole.log(BigInt.asUintN(\"3.9\", 10n));\nconsole.log(BigInt.asUintN([0], 1n));\nconsole.log(BigInt.asUintN([\"1\"], 1n));\nconsole.log(BigInt.asUintN({}, 1n));\nconsole.log(BigInt.asUintN([], 1n));\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/bits-toindex.js",
+      "n_asserts": 22,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.asuintn.order-of-steps",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar i = 0;\nvar bits = {\n  valueOf() {\n    console.log(i);\n    i++;\n    return 0;\n  }\n};\nvar bigint = {\n  valueOf() {\n    console.log(i);\n    i++;\n    return 0n;\n  }\n};\n\nBigInt.asUintN(bits, bigint);\nconsole.log(i);\n}\n",
+      "origin": "test/built-ins/BigInt/asUintN/order-of-steps.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-empty-string",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(\"\"));\nconsole.log(BigInt(\" \"));\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-empty-string.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-from-binary-string",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(\"0b1111\"));\nconsole.log(BigInt(\"0b10\"));\nconsole.log(BigInt(\"0b0\"));\nconsole.log(BigInt(\"0b1\"));\n\nlet binaryString = \"0b1\";\nfor (let i = 0; i < 128; i++)\n  binaryString += \"0\";\n\nconsole.log(BigInt(binaryString));\n\nconsole.log(BigInt(\"0B1111\"));\nconsole.log(BigInt(\"0B10\"));\nconsole.log(BigInt(\"0B0\"));\nconsole.log(BigInt(\"0B1\"));\n\nbinaryString = \"0B1\";\nfor (let i = 0; i < 128; i++)\n  binaryString += \"0\";\n\nconsole.log(BigInt(binaryString));\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-from-binary-string.js",
+      "n_asserts": 10,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-from-decimal-string",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(\"10\"));\nconsole.log(BigInt(\"18446744073709551616\"));\nconsole.log(BigInt(\"7\"));\nconsole.log(BigInt(\"88\"));\nconsole.log(BigInt(\"900\"));\n\nconsole.log(BigInt(\"-10\"));\nconsole.log(BigInt(\"-18446744073709551616\"));\nconsole.log(BigInt(\"-7\"));\nconsole.log(BigInt(\"-88\"));\nconsole.log(BigInt(\"-900\"));\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-from-decimal-string.js",
+      "n_asserts": 10,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-from-hex-string",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(\"0xa\"));\nconsole.log(BigInt(\"0xff\"));\nconsole.log(BigInt(\"0xfabc\"));\nconsole.log(BigInt(\"0xfffffffffffffffffff\"));\n\nconsole.log(BigInt(\"0Xa\"));\nconsole.log(BigInt(\"0Xff\"));\nconsole.log(BigInt(\"0Xfabc\"));\nconsole.log(BigInt(\"0Xfffffffffffffffffff\"));\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-from-hex-string.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-from-octal-string",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(\"0o7\"));\nconsole.log(BigInt(\"0o10\"));\nconsole.log(BigInt(\"0o20\"));\n\nconsole.log(BigInt(\"0O7\"));\nconsole.log(BigInt(\"0O10\"));\nconsole.log(BigInt(\"0O20\"));\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-from-octal-string.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-from-string-syntax-errors",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  BigInt(\"10n\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"10x\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"10b\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"10.5\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"0b\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"-0x1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"-0XFFab\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"0oa\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"000 12\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"0o\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"0x\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"00o\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"00b\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(\"00x\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-from-string-syntax-errors.js",
+      "n_asserts": 14,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-integer",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(Number.MAX_SAFE_INTEGER));\n\nconsole.log(BigInt(-Number.MAX_SAFE_INTEGER));\n\nconsole.log(BigInt(Number.MAX_SAFE_INTEGER + 1));\n\nconsole.log(BigInt(-Number.MAX_SAFE_INTEGER - 1));\n\nconsole.log(BigInt(Number.MAX_SAFE_INTEGER + 2));\n\nconsole.log(BigInt(-Number.MAX_SAFE_INTEGER - 2));\n\nconsole.log(BigInt(Number.MAX_SAFE_INTEGER + 3));\n\nconsole.log(BigInt(-Number.MAX_SAFE_INTEGER - 3));\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-integer.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.constructor-trailing-leading-spaces",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(\"   0b1111\"));\nconsole.log(BigInt(\"18446744073709551616   \"));\nconsole.log(BigInt(\"   7   \"));\nconsole.log(BigInt(\"   -197   \"));\nconsole.log(BigInt(\"     \"));\n}\n",
+      "origin": "test/built-ins/BigInt/constructor-trailing-leading-spaces.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.infinity-throws-rangeerror",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  BigInt(Infinity);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar calls = 0;\nvar obj = {\n  valueOf: function() {\n    calls++;\n    return Infinity;\n  }\n}\ntry { (function() {\n  BigInt(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n}\n",
+      "origin": "test/built-ins/BigInt/infinity-throws-rangeerror.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.nan-throws-rangeerror",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  BigInt(NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar calls = 0;\nvar obj = {\n  valueOf: function() {\n    calls++;\n    return NaN;\n  }\n}\ntry { (function() {\n  BigInt(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n}\n",
+      "origin": "test/built-ins/BigInt/nan-throws-rangeerror.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.negative-infinity-throws.rangeerror",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  BigInt(-Infinity);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar calls = 0;\nvar obj = {\n  valueOf: function() {\n    calls++;\n    return -Infinity;\n  }\n}\ntry { (function() {\n  BigInt(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n}\n",
+      "origin": "test/built-ins/BigInt/negative-infinity-throws.rangeerror.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.non-integer-rangeerror",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  BigInt(0.00005);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(-0.00005);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(.1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(-.1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(1.1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(-1.1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  BigInt(Number.MIN_VALUE);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/non-integer-rangeerror.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.parseint.nonexistent",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(!BigInt.hasOwnProperty(\"parseInt\"));\n}\n",
+      "origin": "test/built-ins/BigInt/parseInt/nonexistent.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.proto",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(BigInt);\n\nconsole.log(proto);\n}\n",
+      "origin": "test/built-ins/BigInt/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.proto",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(BigInt.prototype);\nconsole.log(proto);\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.a-z",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nfor (let radix = 11; radix <= 36; radix++) {\n  for (let i = 10n; i < radix; i++) {\n    console.log(i.toString(radix));\n  }\n}\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/a-z.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.default-radix",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log((-100n).toString());\nconsole.log((0n).toString());\nconsole.log((100n).toString());\n\nconsole.log((-100n).toString(undefined));\nconsole.log((0n).toString(undefined));\nconsole.log((100n).toString(undefined));\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/default-radix.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.prototype-call",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof BigInt);\n\ntry { (function() {\n  BigInt.prototype.toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/prototype-call.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.radix-2-to-36",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nfor (let r = 2; r <= 36; r++) {\n  console.log((0n).toString(r));\n  console.log((-1n).toString(r));\n  console.log((1n).toString(r));\n}\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/radix-2-to-36.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.radix-err",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nfor (let r of [0, 1, 37, null]) {\n  try { (function() {\n    (0n).toString(r);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n  try { (function() {\n    (-1n).toString(r);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n  try { (function() {\n    (1n).toString(r);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/radix-err.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.radix-tointegerorinfinity-throws-symbol",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n    (0n).toString(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/radix-tointegerorinfinity-throws-symbol.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.radix-tointegerorinfinity-throws-toprimitive-or-bigint",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\n//Check #1\ntry { (function() {\n    (0n).toString(0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #2\ntry { (function() {\n    BigInt.prototype.toString.call(10n, {valueOf: undefined, toString: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/radix-tointegerorinfinity-throws-toprimitive-or-bigint.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.tostring.string-is-code-units-of-decimal-digits-only",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(BigInt(0).toString());\nconsole.log(BigInt(0n).toString());\nconsole.log(0n.toString());\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/toString/string-is-code-units-of-decimal-digits-only.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.valueof.cross-realm",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar wrapped = other.Object(other.BigInt(0));\n\nconsole.log(BigInt.prototype.valueOf.call(wrapped));\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/valueOf/cross-realm.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.valueof.return",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar valueOf = BigInt.prototype.valueOf;\n\nconsole.log(valueOf.call(0n));\nconsole.log(valueOf.call(Object(0n)));\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/valueOf/return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.valueof.this-value-invalid-object-throws",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar valueOf = BigInt.prototype.valueOf;\nconsole.log(typeof valueOf);\n\ntry { (function() {\n  valueOf.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(Object(1));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/valueOf/this-value-invalid-object-throws.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.bigint.prototype.valueof.this-value-invalid-primitive-throws",
+      "category": "bigint",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar valueOf = BigInt.prototype.valueOf;\n\nconsole.log(typeof valueOf);\n\ntry { (function() {\n  valueOf.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(\"1n\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  valueOf.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/BigInt/prototype/valueOf/this-value-invalid-primitive-throws.js",
+      "n_asserts": 11,
+      "flags": []
+    }
+  ]
+}

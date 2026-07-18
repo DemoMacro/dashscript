@@ -1,0 +1,248 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.consecutive-yields",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 2;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/consecutive-yields.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.context-method-invocation",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar context;\n\nfunction* g() {\n  context = this;\n}\nvar obj = {\n  g: g\n};\nvar iter = obj.g();\n\niter.next();\n\nconsole.log(context);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/context-method-invocation.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.from-state-executing",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iter, result;\n\nfunction* withoutVal() {\n  iter.next();\n}\n\nfunction* withVal() {\n  iter.next(42);\n}\n\niter = withoutVal();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n\niter = withVal();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/from-state-executing.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.lone-return",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  return 23;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/lone-return.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.lone-yield",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/lone-yield.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.no-control-flow",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/no-control-flow.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.result-prototype",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar result = g().next();\n\nconsole.log(Object.prototype.hasOwnProperty.call(result, 'value'));\nconsole.log(Object.prototype.hasOwnProperty.call(result, 'done'));\nconsole.log(Object.getPrototypeOf(result));\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/result-prototype.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.return-yield-expr",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  return yield 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next(3);\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/return-yield-expr.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.this-val-not-generator",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\ntry { (function() {\n    GeneratorPrototype.next.call({});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call({}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(function() {});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(function() {}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(g);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(g, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(g.prototype);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(g.prototype, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/this-val-not-generator.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.this-val-not-object",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\ntry { (function() {\n    GeneratorPrototype.next.call(undefined);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(undefined, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(null);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(null, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(true);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(true, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call('s');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call('s', 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(1, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(symbol, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/this-val-not-object.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.from-state-completed",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* G() {}\nvar iter, result;\n\niter = G();\niter.next();\n\nresult = iter.return(33);\n\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\n\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/from-state-completed.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.from-state-executing",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iter, result;\nfunction* g() {\n  iter.return(42);\n}\n\niter = g();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/from-state-executing.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.from-state-suspended-start",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bodyCount = 0;\nfunction* G() {\n  bodyCount += 1;\n}\nvar iter = G();\nvar result;\n\nresult = iter.return(56);\n\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(bodyCount);\n\nresult = iter.next();\n\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(bodyCount);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/from-state-suspended-start.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.this-val-not-generator",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\ntry { (function() {\n    GeneratorPrototype.return.call({});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call({}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(function() {});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(function() {}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(g);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(g, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(g.prototype);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(g.prototype, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/this-val-not-generator.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.this-val-not-object",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\ntry { (function() {\n    GeneratorPrototype.return.call(undefined);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(undefined, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(null);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(null, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(true);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(true, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call('s');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call('s', 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(1, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(symbol, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/this-val-not-object.js",
+      "n_asserts": 12,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-catch-before-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\nfunction* g() {\n  yield;\n  try {\n    unreachable += 1;\n  } catch (e) {\n    throw e;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\nconsole.log(unreachable);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-catch-before-try.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-catch-within-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    unreachable += 1;\n  } catch (e) {\n    throw e;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\n\nconsole.log(inTry);\n\nresult = iter.return(44);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-catch-within-try.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-before-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield;\n  unreachable += 1;\n  try {} finally {}\n}\nvar iter = g();\nvar result;\n\niter.next();\nconsole.log(unreachable);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-before-try.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-following-finally",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar afterFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {} finally {}\n  afterFinally += 1;\n  yield;\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(afterFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-following-finally.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-inner-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    try {\n      inTry += 1;\n      yield;\n      unreachable += 1;\n    } catch (e) {\n      throw e;\n    }\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inTry);\nconsole.log(inFinally);\n\nresult = iter.return(45);\n\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(inFinally);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-nested-try-catch-within-inner-try.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-outer-try-before-nested",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    try {\n      unreachable += 1;\n    } catch (e) {\n      throw e;\n    }\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inTry);\nconsole.log(inFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(inFinally);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-nested-try-catch-within-outer-try-before-nested.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-set-property-within-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = { foo: 'not modified' };\nfunction* g() {\n  try {\n    obj.foo = yield;\n  } finally {\n    return 1;\n  }\n}\nvar iter = g();\nvar result;\n\niter.next();\nresult = iter.return(45).value;\nconsole.log(obj.foo);\nconsole.log(result);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-set-property-within-try.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-within-finally",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {} finally {\n    inFinally += 1;\n    yield;\n    unreachable += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-within-finally.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-within-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inTry);\nconsole.log(inFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(inFinally);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-within-try.js",
+      "n_asserts": 9,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.from-state-executing",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iter, result;\nfunction* g() {\n  iter.throw(42);\n}\n\niter = g();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/from-state-executing.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.this-val-not-generator",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\ntry { (function() {\n    GeneratorPrototype.throw.call({});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call({}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(function() {});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(function() {}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(g);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(g, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(g.prototype);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(g.prototype, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/this-val-not-generator.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.this-val-not-object",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\ntry { (function() {\n    GeneratorPrototype.throw.call(undefined);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(undefined, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(null);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(null, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(true);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(true, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call('s');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call('s', 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(1, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(symbol, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/this-val-not-object.js",
+      "n_asserts": 12,
+      "flags": []
+    }
+  ]
+}

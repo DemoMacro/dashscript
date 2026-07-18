@@ -1,0 +1,50 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.weakref.constructor",
+      "category": "weakref",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof WeakRef);\n}\n",
+      "origin": "test/built-ins/WeakRef/constructor.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.weakref.proto",
+      "category": "weakref",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakRef));\n}\n",
+      "origin": "test/built-ins/WeakRef/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.weakref.prototype.deref.this-not-object-throws",
+      "category": "weakref",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof WeakRef.prototype.deref);\n\nvar deref = WeakRef.prototype.deref;\n\ntry { (function() {\n  deref.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  deref.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  deref.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  deref.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  deref.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  deref.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  deref.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/WeakRef/prototype/deref/this-not-object-throws.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.weakref.prototype.proto",
+      "category": "weakref",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(WeakRef.prototype);\nconsole.log(proto);\n}\n",
+      "origin": "test/built-ins/WeakRef/prototype/proto.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.weakref.undefined-newtarget-throws",
+      "category": "weakref",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof WeakRef);\n\ntry { (function() {\n  WeakRef();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  WeakRef({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/WeakRef/undefined-newtarget-throws.js",
+      "n_asserts": 3,
+      "flags": []
+    }
+  ]
+}

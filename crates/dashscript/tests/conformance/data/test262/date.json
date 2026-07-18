@@ -1,0 +1,1283 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.date.now.15.9.4.4-0-1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Date.now);\n}\n",
+      "origin": "test/built-ins/Date/now/15.9.4.4-0-1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.now.15.9.4.4-0-2",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.now.length);\n}\n",
+      "origin": "test/built-ins/Date/now/15.9.4.4-0-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.now.15.9.4.4-0-3",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fun = Date.now;\n\nconsole.log(typeof(fun));\n}\n",
+      "origin": "test/built-ins/Date/now/15.9.4.4-0-3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.now.15.9.4.4-0-4",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Date.now());\n}\n",
+      "origin": "test/built-ins/Date/now/15.9.4.4-0-4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.parse.year-zero",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst invalidStrings = [\n  \"-000000-03-31T00:45Z\",\n  \"-000000-03-31T01:45\",\n  \"-000000-03-31T01:45:00+01:00\"\n];\n\nfor (const str of invalidStrings) {\n  console.log(Date.parse(str));\n}\n}\n",
+      "origin": "test/built-ins/Date/parse/year-zero.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getdate.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getDate = Date.prototype.getDate;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getDate);\n\ntry { (function() {\n  getDate.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDate.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDate.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getDate/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getdate.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getDate = Date.prototype.getDate;\nvar symbol = Symbol();\n\nconsole.log(typeof getDate);\n\ntry { (function() {\n  getDate.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDate.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDate.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDate.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDate.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDate.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getDate/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getday.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getDay = Date.prototype.getDay;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getDay);\n\ntry { (function() {\n  getDay.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDay.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDay.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getDay/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getday.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getDay = Date.prototype.getDay;\nvar symbol = Symbol();\n\nconsole.log(typeof getDay);\n\ntry { (function() {\n  getDay.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDay.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDay.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDay.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDay.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getDay.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getDay/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getfullyear.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getFullYear = Date.prototype.getFullYear;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getFullYear);\n\ntry { (function() {\n  getFullYear.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFullYear.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFullYear.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getFullYear/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getfullyear.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getFullYear = Date.prototype.getFullYear;\nvar symbol = Symbol();\n\nconsole.log(typeof getFullYear);\n\ntry { (function() {\n  getFullYear.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFullYear.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFullYear.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFullYear.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFullYear.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getFullYear.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getFullYear/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.gethours.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getHours = Date.prototype.getHours;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getHours);\n\ntry { (function() {\n  getHours.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getHours.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getHours.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getHours/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.gethours.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getHours = Date.prototype.getHours;\nvar symbol = Symbol();\n\nconsole.log(typeof getHours);\n\ntry { (function() {\n  getHours.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getHours.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getHours.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getHours.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getHours.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getHours.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getHours/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getmilliseconds.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getMilliseconds = Date.prototype.getMilliseconds;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getMilliseconds);\n\ntry { (function() {\n  getMilliseconds.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMilliseconds.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMilliseconds.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getMilliseconds/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getmilliseconds.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getMilliseconds = Date.prototype.getMilliseconds;\nvar symbol = Symbol();\n\nconsole.log(typeof getMilliseconds);\n\ntry { (function() {\n  getMilliseconds.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMilliseconds.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMilliseconds.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMilliseconds.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMilliseconds.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMilliseconds.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getMilliseconds/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getminutes.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getMinutes = Date.prototype.getMinutes;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getMinutes);\n\ntry { (function() {\n  getMinutes.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMinutes.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMinutes.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getMinutes/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getminutes.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getMinutes = Date.prototype.getMinutes;\nvar symbol = Symbol();\n\nconsole.log(typeof getMinutes);\n\ntry { (function() {\n  getMinutes.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMinutes.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMinutes.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMinutes.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMinutes.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMinutes.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getMinutes/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getmonth.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getMonth = Date.prototype.getMonth;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getMonth);\n\ntry { (function() {\n  getMonth.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMonth.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMonth.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getMonth/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getmonth.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getMonth = Date.prototype.getMonth;\nvar symbol = Symbol();\n\nconsole.log(typeof getMonth);\n\ntry { (function() {\n  getMonth.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMonth.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMonth.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMonth.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMonth.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getMonth.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getMonth/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getseconds.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getSeconds = Date.prototype.getSeconds;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getSeconds);\n\ntry { (function() {\n  getSeconds.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getSeconds.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getSeconds.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getSeconds/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getseconds.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getSeconds = Date.prototype.getSeconds;\nvar symbol = Symbol();\n\nconsole.log(typeof getSeconds);\n\ntry { (function() {\n  getSeconds.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getSeconds.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getSeconds.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getSeconds.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getSeconds.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getSeconds.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getSeconds/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.gettime.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getTime = Date.prototype.getTime;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getTime);\n\ntry { (function() {\n  getTime.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTime.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTime.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getTime/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.gettime.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getTime = Date.prototype.getTime;\nvar symbol = Symbol();\n\nconsole.log(typeof getTime);\n\ntry { (function() {\n  getTime.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTime.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTime.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTime.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTime.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTime.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getTime/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.gettimezoneoffset.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getTimezoneOffset = Date.prototype.getTimezoneOffset;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getTimezoneOffset);\n\ntry { (function() {\n  getTimezoneOffset.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTimezoneOffset.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTimezoneOffset.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getTimezoneOffset/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.gettimezoneoffset.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getTimezoneOffset = Date.prototype.getTimezoneOffset;\nvar symbol = Symbol();\n\nconsole.log(typeof getTimezoneOffset);\n\ntry { (function() {\n  getTimezoneOffset.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTimezoneOffset.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTimezoneOffset.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTimezoneOffset.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTimezoneOffset.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getTimezoneOffset.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getTimezoneOffset/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcdate.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCDate = Date.prototype.getUTCDate;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCDate);\n\ntry { (function() {\n  getUTCDate.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDate.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDate.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCDate/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcdate.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCDate = Date.prototype.getUTCDate;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCDate);\n\ntry { (function() {\n  getUTCDate.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDate.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDate.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDate.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDate.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDate.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCDate/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcday.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCDay = Date.prototype.getUTCDay;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCDay);\n\ntry { (function() {\n  getUTCDay.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDay.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDay.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCDay/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcday.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCDay = Date.prototype.getUTCDay;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCDay);\n\ntry { (function() {\n  getUTCDay.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDay.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDay.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDay.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDay.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCDay.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCDay/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcfullyear.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCFullYear = Date.prototype.getUTCFullYear;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCFullYear);\n\ntry { (function() {\n  getUTCFullYear.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCFullYear.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCFullYear.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCFullYear/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcfullyear.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCFullYear = Date.prototype.getUTCFullYear;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCFullYear);\n\ntry { (function() {\n  getUTCFullYear.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCFullYear.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCFullYear.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCFullYear.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCFullYear.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCFullYear.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCFullYear/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutchours.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCHours = Date.prototype.getUTCHours;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCHours);\n\ntry { (function() {\n  getUTCHours.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCHours.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCHours.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCHours/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutchours.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCHours = Date.prototype.getUTCHours;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCHours);\n\ntry { (function() {\n  getUTCHours.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCHours.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCHours.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCHours.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCHours.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCHours.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCHours/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcmilliseconds.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCMilliseconds = Date.prototype.getUTCMilliseconds;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCMilliseconds);\n\ntry { (function() {\n  getUTCMilliseconds.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMilliseconds.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMilliseconds.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCMilliseconds/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcmilliseconds.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCMilliseconds = Date.prototype.getUTCMilliseconds;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCMilliseconds);\n\ntry { (function() {\n  getUTCMilliseconds.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMilliseconds.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMilliseconds.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMilliseconds.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMilliseconds.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMilliseconds.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCMilliseconds/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcminutes.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCMinutes = Date.prototype.getUTCMinutes;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCMinutes);\n\ntry { (function() {\n  getUTCMinutes.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMinutes.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMinutes.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCMinutes/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcminutes.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCMinutes = Date.prototype.getUTCMinutes;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCMinutes);\n\ntry { (function() {\n  getUTCMinutes.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMinutes.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMinutes.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMinutes.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMinutes.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMinutes.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCMinutes/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcmonth.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCMonth = Date.prototype.getUTCMonth;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCMonth);\n\ntry { (function() {\n  getUTCMonth.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMonth.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMonth.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCMonth/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcmonth.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCMonth = Date.prototype.getUTCMonth;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCMonth);\n\ntry { (function() {\n  getUTCMonth.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMonth.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMonth.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMonth.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMonth.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCMonth.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCMonth/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcseconds.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCSeconds = Date.prototype.getUTCSeconds;\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof getUTCSeconds);\n\ntry { (function() {\n  getUTCSeconds.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCSeconds.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCSeconds.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCSeconds/this-value-non-date.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.getutcseconds.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getUTCSeconds = Date.prototype.getUTCSeconds;\nvar symbol = Symbol();\n\nconsole.log(typeof getUTCSeconds);\n\ntry { (function() {\n  getUTCSeconds.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCSeconds.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCSeconds.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCSeconds.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCSeconds.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getUTCSeconds.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/getUTCSeconds/this-value-non-object.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.no-date-value",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Date.prototype.getTime();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/no-date-value.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a01_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"constructor\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A01_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a02_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"toString\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A02_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a03_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"toDateString\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A03_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a04_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"toTimeString\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A04_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a05_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"toLocaleString\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A05_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a06_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"toLocaleDateString\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A06_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a07_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"toLocaleTimeString\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A07_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a08_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"valueOf\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A08_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a09_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getTime\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A09_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a10_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getFullYear\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A10_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a11_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCFullYear\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A11_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a12_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getMonth\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A12_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a13_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCMonth\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A13_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a14_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getDate\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A14_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a15_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCDate\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A15_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a16_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getDay\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A16_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a17_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCDay\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A17_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a18_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getHours\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A18_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a19_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCHours\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A19_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a20_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getMinutes\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A20_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a21_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCMinutes\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A21_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a22_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getSeconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A22_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a23_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCSeconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A23_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a24_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getMilliseconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A24_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a25_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getUTCMilliseconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A25_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a26_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"getTimezoneOffset\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A26_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a27_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setTime\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A27_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a28_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setMilliseconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A28_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a29_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setUTCMilliseconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A29_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a30_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setSeconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A30_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a31_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setUTCSeconds\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A31_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a32_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setMinutes\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A32_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a33_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setUTCMinutes\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A33_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a34_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setHours\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A34_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a35_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setUTCHours\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A35_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a36_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setDate\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A36_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a37_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setUTCDate\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A37_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a38_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setMonth\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A38_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a39_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setUTCMonth\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A39_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a40_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setFullYear\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A40_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a41_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"setUTCFullYear\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A41_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.s15.9.5_a42_t1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.hasOwnProperty(\"toUTCString\"));\n}\n",
+      "origin": "test/built-ins/Date/prototype/S15.9.5_A42_T1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setdate.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setDate = Date.prototype.setDate;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setDate);\n\ntry { (function() {\n  setDate.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setDate.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setDate.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setDate/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setdate.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setDate = Date.prototype.setDate;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setDate);\n\ntry { (function() {\n  setDate.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setDate.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setDate.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setDate.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setDate.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setDate.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setDate/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setfullyear.15.9.5.40_1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Date.prototype.setFullYear(2012);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/setFullYear/15.9.5.40_1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setfullyear.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setFullYear = Date.prototype.setFullYear;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setFullYear);\n\ntry { (function() {\n  setFullYear.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFullYear.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFullYear.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setFullYear/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setfullyear.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setFullYear = Date.prototype.setFullYear;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setFullYear);\n\ntry { (function() {\n  setFullYear.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFullYear.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFullYear.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFullYear.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFullYear.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setFullYear.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setFullYear/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.sethours.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setHours = Date.prototype.setHours;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setHours);\n\ntry { (function() {\n  setHours.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setHours.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setHours.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setHours/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.sethours.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setHours = Date.prototype.setHours;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setHours);\n\ntry { (function() {\n  setHours.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setHours.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setHours.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setHours.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setHours.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setHours.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setHours/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setmilliseconds.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setMilliseconds = Date.prototype.setMilliseconds;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setMilliseconds);\n\ntry { (function() {\n  setMilliseconds.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMilliseconds.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMilliseconds.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setMilliseconds/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setmilliseconds.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setMilliseconds = Date.prototype.setMilliseconds;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setMilliseconds);\n\ntry { (function() {\n  setMilliseconds.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMilliseconds.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMilliseconds.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMilliseconds.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMilliseconds.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMilliseconds.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setMilliseconds/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setminutes.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setMinutes = Date.prototype.setMinutes;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setMinutes);\n\ntry { (function() {\n  setMinutes.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMinutes.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMinutes.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setMinutes/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setminutes.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setMinutes = Date.prototype.setMinutes;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setMinutes);\n\ntry { (function() {\n  setMinutes.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMinutes.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMinutes.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMinutes.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMinutes.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMinutes.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setMinutes/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setmonth.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setMonth = Date.prototype.setMonth;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setMonth);\n\ntry { (function() {\n  setMonth.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMonth.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMonth.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setMonth/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setmonth.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setMonth = Date.prototype.setMonth;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setMonth);\n\ntry { (function() {\n  setMonth.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMonth.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMonth.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMonth.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMonth.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setMonth.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setMonth/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setseconds.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setSeconds = Date.prototype.setSeconds;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setSeconds);\n\ntry { (function() {\n  setSeconds.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setSeconds.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setSeconds.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setSeconds/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.setseconds.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setSeconds = Date.prototype.setSeconds;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setSeconds);\n\ntry { (function() {\n  setSeconds.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setSeconds.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setSeconds.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setSeconds.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setSeconds.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setSeconds.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setSeconds/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.settime.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setTime = Date.prototype.setTime;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof setTime);\n\ntry { (function() {\n  setTime.call({}, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setTime.call([], arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setTime.call(args, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setTime/this-value-non-date.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.settime.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setTime = Date.prototype.setTime;\nvar callCount = 0;\nvar arg = {\n  valueOf: function() {\n    callCount += 1;\n    return 1;\n  }\n};\nvar symbol = Symbol();\n\nconsole.log(typeof setTime);\n\ntry { (function() {\n  setTime.call(0, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setTime.call(true, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setTime.call(null, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setTime.call(undefined, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setTime.call('', arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  setTime.call(symbol, arg);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(callCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/setTime/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-default-first-invalid",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voCallCount = 0;\nvar tsCallCount = 0;\nvar obj = {\n  valueOf: function() {\n    voCallCount += 1;\n    return 'valueOf test262';\n  },\n  toString: function() {\n    tsCallCount += 1;\n    return {};\n  }\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'default'));\nconsole.log(voCallCount);\nconsole.log(tsCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-default-first-invalid.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-default-first-non-callable",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voCallCount = 0;\nvar obj = {\n  valueOf: function() {\n    voCallCount += 1;\n    return 'valueOf test262';\n  },\n  toString: null\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'default'));\nconsole.log(voCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-default-first-non-callable.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-default-first-valid",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voAccessCount = 0;\nvar tsCallCount = 0;;\nvar obj = {\n  get valueOf() {\n    voAccessCount += 1;\n  },\n  toString: function() {\n    tsCallCount += 1;\n    return 'toString test262';\n  }\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'default'));\nconsole.log(voAccessCount);\nconsole.log(tsCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-default-first-valid.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-default-no-callables",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  valueOf: null,\n  toString: null\n};\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call(obj, 'default');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-default-no-callables.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-number-first-invalid",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voCallCount = 0;\nvar tsCallCount = 0;\nvar obj = {\n  valueOf: function() {\n    voCallCount += 1;\n    return {};\n  },\n  toString: function() {\n    tsCallCount += 1;\n    return 'toString test262';\n  }\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'number'));\nconsole.log(voCallCount);\nconsole.log(tsCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-number-first-invalid.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-number-first-non-callable",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar tsCallCount = 0;\nvar obj = {\n  valueOf: null,\n  toString: function() {\n    tsCallCount += 1;\n    return 'toString test262';\n  }\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'number'));\nconsole.log(tsCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-number-first-non-callable.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-number-first-valid",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voCallCount = 0;\nvar tsAccessCount = 0;\nvar obj = {\n  valueOf: function() {\n    voCallCount += 1;\n    return 'valueOf test262';\n  },\n  get toString() {\n    tsAccessCount += 1;\n  }\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'number'));\nconsole.log(voCallCount);\nconsole.log(tsAccessCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-number-first-valid.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-number-no-callables",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  valueOf: null,\n  toString: null\n};\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call(obj, 'number');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-number-no-callables.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-string-first-invalid",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voCallCount = 0;\nvar tsCallCount = 0;\nvar obj = {\n  valueOf: function() {\n    voCallCount += 1;\n    return 'valueOf test262';\n  },\n  toString: function() {\n    tsCallCount += 1;\n    return {};\n  }\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'string'));\nconsole.log(voCallCount);\nconsole.log(tsCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-string-first-invalid.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-string-first-non-callable",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voCallCount = 0;\nvar obj = {\n  valueOf: function() {\n    voCallCount += 1;\n    return 'valueOf test262';\n  },\n  toString: null\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'string'));\nconsole.log(voCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-string-first-non-callable.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-string-first-valid",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar voAccessCount = 0;\nvar tsCallCount = 0;\nvar obj = {\n  get valueOf() {\n    voAccessCount += 1;\n  },\n  toString: function() {\n    tsCallCount += 1;\n    return 'toString test262';\n  }\n};\n\nconsole.log(Date.prototype[Symbol.toPrimitive].call(obj, 'string'));\nconsole.log(voAccessCount);\nconsole.log(tsCallCount);\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-string-first-valid.js",
+      "n_asserts": 3,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.hint-string-no-callables",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  valueOf: null,\n  toString: null\n};\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call(obj, 'string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/hint-string-no-callables.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.symbol.toprimitive.this-val-non-obj",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Date.prototype[Symbol.toPrimitive]);\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call(undefined, 'string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call(null, 'string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call(86, 'string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call('', 'string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Date.prototype[Symbol.toPrimitive].call(true, 'string');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/Symbol.toPrimitive/this-val-non-obj.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-2",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.prototype.toISOString.length);\n}\n",
+      "origin": "test/built-ins/Date/prototype/toISOString/15.9.5.43-0-2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-3",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof(Date.prototype.toISOString));\n}\n",
+      "origin": "test/built-ins/Date/prototype/toISOString/15.9.5.43-0-3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-6",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Date.prototype.toISOString.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/toISOString/15.9.5.43-0-6.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-7",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (function() {\n  Date.prototype.toISOString.call(15);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/toISOString/15.9.5.43-0-7.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.tojson.builtin",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(Date.prototype.toJSON));\nconsole.log(typeof Date.prototype.toJSON);\nconsole.log(Object.prototype.toString.call(Date.prototype.toJSON));\nconsole.log(Object.getPrototypeOf(Date.prototype.toJSON));\nconsole.log(Date.prototype.toJSON.hasOwnProperty('prototype'));\n}\n",
+      "origin": "test/built-ins/Date/prototype/toJSON/builtin.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.tojson.invoke-arguments",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getCount = 0, getContext;\nvar callCount = 0, callContext, callArguments;\nvar obj = {\n  get toISOString() {\n    getCount += 1;\n    getContext = this;\n\n    return function() {\n      callCount += 1;\n      callContext = this;\n      callArguments = arguments;\n    };\n  },\n};\n\nDate.prototype.toJSON.call(obj);\n\nconsole.log(getCount);\nconsole.log(getContext);\n\nconsole.log(callCount);\nconsole.log(callContext);\nconsole.log(callArguments.length);\n}\n",
+      "origin": "test/built-ins/Date/prototype/toJSON/invoke-arguments.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.tojson.to-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toJSON = Date.prototype.toJSON;\nthis.toISOString = function() { return 'global'; };\n\ntry { (function() {\n  toJSON.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toJSON.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nNumber.prototype.toISOString = function() { return 'str'; };\nconsole.log(toJSON.call(10));\n\nSymbol.prototype.toISOString = function() { return 10; };\nconsole.log(toJSON.call(Symbol()));\n}\n",
+      "origin": "test/built-ins/Date/prototype/toJSON/to-object.js",
+      "n_asserts": 4,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.tostring.non-date-receiver",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\ntry { (() => Date.prototype.toString())(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => Date.prototype.toString.call(undefined))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => Date.prototype.toString.call(0))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => Date.prototype.toString.call({}))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() =>\n  Date.prototype.toString.call(\"Tue Mar 21 2017 12:16:43 GMT-0400 (EDT)\"))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() =>\n  Date.prototype.toString.call(1490113011493))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/toString/non-date-receiver.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.totemporalinstant.this-value-non-date",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toTemporalInstant = Date.prototype.toTemporalInstant;\n\nvar args = (function() {\n  return arguments;\n}());\n\nconsole.log(typeof toTemporalInstant);\n\ntry { (function() {\n  toTemporalInstant.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(args);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(function(){});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(Date.prototype);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/toTemporalInstant/this-value-non-date.js",
+      "n_asserts": 6,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.prototype.totemporalinstant.this-value-non-object",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toTemporalInstant = Date.prototype.toTemporalInstant;\nvar symbol = Symbol();\n\nconsole.log(typeof toTemporalInstant);\n\ntry { (function() {\n  toTemporalInstant.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toTemporalInstant.call(0n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "origin": "test/built-ins/Date/prototype/toTemporalInstant/this-value-non-object.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.s15.9.2.1_a1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(typeof Date());\nconsole.log(typeof Date(1));\nconsole.log(typeof Date(1970, 1));\n\nconsole.log(typeof Date(1970, 1, 1));\n\nconsole.log(typeof Date(1970, 1, 1, 1));\n\nconsole.log(typeof Date(1970, 1, 1, 1));\n\nconsole.log(typeof Date(1970, 1, 1, 1, 0));\n\nconsole.log(typeof Date(1970, 1, 1, 1, 0, 0));\n\nconsole.log(typeof Date(1970, 1, 1, 1, 0, 0, 0));\n\nconsole.log(typeof Date(Number.NaN));\n\nconsole.log(typeof Date(Number.POSITIVE_INFINITY));\n\nconsole.log(typeof Date(Number.NEGATIVE_INFINITY));\n\nconsole.log(typeof Date(undefined));\nconsole.log(typeof Date(null));\n}\n",
+      "origin": "test/built-ins/Date/S15.9.2.1_A1.js",
+      "n_asserts": 14,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.s15.9.4_a1",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.hasOwnProperty(\"prototype\"));\n}\n",
+      "origin": "test/built-ins/Date/S15.9.4_A1.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.s15.9.4_a2",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.hasOwnProperty(\"parse\"));\n}\n",
+      "origin": "test/built-ins/Date/S15.9.4_A2.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.s15.9.4_a3",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.hasOwnProperty(\"UTC\"));\n}\n",
+      "origin": "test/built-ins/Date/S15.9.4_A3.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.s15.9.4_a4",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Date));\n}\n",
+      "origin": "test/built-ins/Date/S15.9.4_A4.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.s15.9.4_a5",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.hasOwnProperty(\"length\"));\nconsole.log(Date.length);\n}\n",
+      "origin": "test/built-ins/Date/S15.9.4_A5.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.coercion-order",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar log = '';\nvar year = { toString: function() { log += 'year'; return 0; } };\nvar month = { toString: function() { log += 'month'; return 0; } };\nvar date = { toString: function() { log += 'date'; return 1; } };\nvar hours = { toString: function() { log += 'hours'; return 0; } };\nvar minutes = { toString: function() { log += 'minutes'; return 0; } };\nvar seconds = { toString: function() { log += 'seconds'; return 0; } };\nvar ms = { toString: function() { log += 'ms'; return 0; } };\n\nDate.UTC(year, month, date, hours,minutes, seconds, ms);\n\nconsole.log(log);\n}\n",
+      "origin": "test/built-ins/Date/UTC/coercion-order.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.fp-evaluation-order",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(1970, 0, 1, 80063993375, 29, 1, -288230376151711740));\nconsole.log(Date.UTC(1970, 0, 213503982336, 0, 0, 0, -18446744073709552000));\n}\n",
+      "origin": "test/built-ins/Date/UTC/fp-evaluation-order.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.infinity-make-day",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(Infinity));\nconsole.log(Date.UTC(-Infinity));\n\nconsole.log(Date.UTC(Infinity, 0));\nconsole.log(Date.UTC(-Infinity, 0));\n\nconsole.log(Date.UTC(0, Infinity));\nconsole.log(Date.UTC(0, -Infinity));\n\nconsole.log(Date.UTC(0, 0, Infinity));\nconsole.log(Date.UTC(0, 0, -Infinity));\n}\n",
+      "origin": "test/built-ins/Date/UTC/infinity-make-day.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.infinity-make-time",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(0, 0, 1, Infinity));\nconsole.log(Date.UTC(0, 0, 1, -Infinity));\n\nconsole.log(Date.UTC(0, 0, 1, 0, Infinity));\nconsole.log(Date.UTC(0, 0, 1, 0, -Infinity));\n\nconsole.log(Date.UTC(0, 0, 1, 0, 0, Infinity));\nconsole.log(Date.UTC(0, 0, 1, 0, 0, -Infinity));\n\nconsole.log(Date.UTC(0, 0, 1, 0, 0, 0, Infinity));\nconsole.log(Date.UTC(0, 0, 1, 0, 0, 0, -Infinity));\n}\n",
+      "origin": "test/built-ins/Date/UTC/infinity-make-time.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.nans",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(NaN));\nconsole.log(Date.UTC(NaN, 0));\nconsole.log(Date.UTC(1970, NaN));\nconsole.log(Date.UTC(1970, 0, NaN));\nconsole.log(Date.UTC(1970, 0, 1, NaN));\nconsole.log(Date.UTC(1970, 0, 1, 0, NaN));\nconsole.log(Date.UTC(1970, 0, 1, 0, 0, NaN));\nconsole.log(Date.UTC(1970, 0, 1, 0, 0, 0, NaN));\n}\n",
+      "origin": "test/built-ins/Date/UTC/nans.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.no-arg",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC());\n}\n",
+      "origin": "test/built-ins/Date/UTC/no-arg.js",
+      "n_asserts": 1,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.non-integer-values",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(1970.9, 0.9, 1.9, 0.9, 0.9, 0.9, 0.9));\nconsole.log(Date.UTC(-1970.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9));\n}\n",
+      "origin": "test/built-ins/Date/UTC/non-integer-values.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.overflow-make-day",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(2016, 12));\nconsole.log(Date.UTC(2016, 13));\nconsole.log(Date.UTC(2016, 144));\n\nconsole.log(Date.UTC(2016, 0, 33));\nconsole.log(Date.UTC(2016, 2, -27));\n}\n",
+      "origin": "test/built-ins/Date/UTC/overflow-make-day.js",
+      "n_asserts": 5,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.overflow-make-time",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(2016, 6, 5, -1));\nconsole.log(Date.UTC(2016, 6, 5, 24));\nconsole.log(Date.UTC(2016, 6, 5, 0, -1));\nconsole.log(Date.UTC(2016, 6, 5, 0, 60));\nconsole.log(Date.UTC(2016, 6, 5, 0, 0, -1));\nconsole.log(Date.UTC(2016, 6, 5, 0, 0, 60));\nconsole.log(Date.UTC(2016, 6, 5, 0, 0, 0, -1));\nconsole.log(Date.UTC(2016, 6, 5, 0, 0, 0, 1000));\n}\n",
+      "origin": "test/built-ins/Date/UTC/overflow-make-time.js",
+      "n_asserts": 8,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.return-value",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(1970));\n\nconsole.log(Date.UTC(1970, 0));\nconsole.log(Date.UTC(2016, 0));\nconsole.log(Date.UTC(2016, 6));\n\nconsole.log(Date.UTC(2016, 6, 1));\nconsole.log(Date.UTC(2016, 6, 5));\n\nconsole.log(Date.UTC(2016, 6, 5, 0));\nconsole.log(Date.UTC(2016, 6, 5, 15));\n\nconsole.log(Date.UTC(2016, 6, 5, 15, 0));\nconsole.log(Date.UTC(2016, 6, 5, 15, 34));\n\nconsole.log(Date.UTC(2016, 6, 5, 15, 34, 0));\nconsole.log(Date.UTC(2016, 6, 5, 15, 34, 45));\n\n\nconsole.log(Date.UTC(2016, 6, 5, 15, 34, 45, 0));\nconsole.log(Date.UTC(2016, 6, 5, 15, 34, 45, 876));\n}\n",
+      "origin": "test/built-ins/Date/UTC/return-value.js",
+      "n_asserts": 14,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.time-clip",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(275760, 8, 13, 0, 0, 0, 0));\nconsole.log(Date.UTC(275760, 8, 13, 0, 0, 0, 1));\n}\n",
+      "origin": "test/built-ins/Date/UTC/time-clip.js",
+      "n_asserts": 2,
+      "flags": []
+    },
+    {
+      "id": "test262.test.built-ins.date.utc.year-offset",
+      "category": "date",
+      "source": "test262",
+      "fixture": "function main(): void {\nconsole.log(Date.UTC(-1, 0));\n\nconsole.log(Date.UTC(0, 0));\nconsole.log(Date.UTC(-0, 0));\nconsole.log(Date.UTC(-0.999999, 0));\n\nconsole.log(Date.UTC(70, 0));\nconsole.log(Date.UTC(70, 0));\n\nconsole.log(Date.UTC(99, 0));\nconsole.log(Date.UTC(99.999999, 0));\n\nconsole.log(Date.UTC(100, 0));\n}\n",
+      "origin": "test/built-ins/Date/UTC/year-offset.js",
+      "n_asserts": 9,
+      "flags": []
+    }
+  ]
+}
