@@ -291,3 +291,14 @@ fn translates_string_prototype_touppercase_call() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".to_uppercase()"), "got:\n{rust}");
 }
+
+#[test]
+fn translates_to_locale_lower_upper_case() {
+    // `toLocaleLowerCase`/`toLocaleUpperCase` map to the locale-independent Rust
+    // methods (DashScript has no ICU locale table — root casing only).
+    let src =
+        "function f(s: string): string { return s.toLocaleLowerCase() + s.toLocaleUpperCase(); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".to_lowercase()"), "got:\n{rust}");
+    assert!(rust.contains(".to_uppercase()"), "got:\n{rust}");
+}

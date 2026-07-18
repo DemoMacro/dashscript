@@ -366,6 +366,18 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
         return;
     };
     let prop = sm.property.name.as_str();
+    // `s.toLocaleUpperCase(locale)` / `toLocaleLowerCase(locale)` — locale-aware
+    // casing. DashScript has no ICU locale table, so an explicit locale cannot
+    // be honored; the locale-less form lowers to the default casing (see
+    // `map_method`), but a locale argument is reported honestly as unsupported
+    // rather than silently dropped (which would be wrong for tr/el/lt/…).
+    if matches!(prop, "toLocaleUpperCase" | "toLocaleLowerCase") && !c.arguments.is_empty() {
+        out.push(err(
+            "locale-aware `toLocale*` with a locale argument is unsupported",
+            sm.span,
+        ));
+        return;
+    }
     // Instance prototype reflection methods.
     if matches!(
         prop,

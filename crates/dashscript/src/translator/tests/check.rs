@@ -206,3 +206,25 @@ fn check_does_not_flag_plain_member_assignment() {
         .check("function f(): void { let xs: number[] = [1]; xs[0] = 5; console.log(xs[0]); }");
     assert!(diags.is_empty(), "{diags:?}");
 }
+
+#[test]
+fn check_flags_locale_aware_casing_with_locale() {
+    // `s.toLocaleUpperCase("tr")` carries an explicit locale DashScript has no
+    // ICU table for — reported as unsupported (the locale-less form lowers to
+    // the default casing, but a locale cannot be honored without ICU).
+    let diags = Translator::new()
+        .check("function f(s: string): string { return s.toLocaleUpperCase(\"tr\"); }");
+    assert!(
+        diags.iter().any(|d| d.message.contains("locale")),
+        "{diags:?}"
+    );
+}
+
+#[test]
+fn check_does_not_flag_localeless_tolocale() {
+    // `s.toLocaleUpperCase()` has no locale — per spec it is equivalent to
+    // `toUpperCase`, so it lowers to the default casing and stays supported.
+    let diags =
+        Translator::new().check("function f(s: string): string { return s.toLocaleUpperCase(); }");
+    assert!(diags.is_empty(), "{diags:?}");
+}

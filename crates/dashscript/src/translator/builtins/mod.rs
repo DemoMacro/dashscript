@@ -62,6 +62,15 @@ pub(in crate::translator) fn map_method(name: &str) -> Option<Ident> {
     let mapped = match name {
         "toUpperCase" => "to_uppercase",
         "toLowerCase" => "to_lowercase",
+        // `toLocaleUpperCase()`/`toLocaleLowerCase()` with NO locale argument
+        // lower to the locale-independent Rust methods — per ECMA-262 §22.1.3 a
+        // locale-less `toLocale*` is equivalent to `toUpperCase`/`toLowerCase`.
+        // The locale-bearing form is intercepted by `check` (no ICU locale
+        // table), so only the locale-less form reaches here. ASCII/most BMP
+        // chars match; SpecialCasing conditionals (final-sigma) diverge from a
+        // locale-aware Node — the same limit `toUpperCase` → `to_uppercase` has.
+        "toLocaleUpperCase" => "to_uppercase",
+        "toLocaleLowerCase" => "to_lowercase",
         "trim" => "trim",
         "trimStart" => "trim_start",
         "trimEnd" => "trim_end",
