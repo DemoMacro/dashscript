@@ -181,11 +181,10 @@
     "id": "test262.test.built-ins.number.max_value.value",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"number\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"number\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -202,10 +201,10 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"number\"; line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\"",
+    "detail": "oracle diff: line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"number\"; line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\""
+      "detail": "line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\""
     },
     "note": ""
   },
@@ -353,8 +352,8 @@
     "id": "test262.test.built-ins.number.prototype.toexponential.range",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:35:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -362,7 +361,7 @@
     "layer": "test262",
     "category": "number",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -400,8 +399,8 @@
     "id": "test262.test.built-ins.number.prototype.toexponential.this-type-not-number-or-number-object",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:26: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -435,8 +434,8 @@
     "id": "test262.test.built-ins.number.prototype.tofixed.range",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:35:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -463,40 +462,40 @@
     "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-bigint",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-symbol",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-toprimitive",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.precision-cannot-be-coerced-to-a-number-in-range",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:24: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.range",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:22: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:22: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:34:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:37:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -504,7 +503,7 @@
     "layer": "test262",
     "category": "number",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -535,8 +534,8 @@
     "id": "test262.test.built-ins.number.prototype.toprecision.this-type-not-number-or-number-object",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:24: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -573,8 +572,8 @@
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:4:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -929,8 +928,8 @@
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-37",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:4:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {

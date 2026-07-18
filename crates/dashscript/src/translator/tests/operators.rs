@@ -44,6 +44,24 @@ fn translates_typeof_to_js_type_string() {
 }
 
 #[test]
+fn translates_typeof_number_static_members() {
+    // `Number.<constant>` (MAX_VALUE/EPSILON/…) is a number value;
+    // `Number.<method>` (isInteger/parseInt/…) is a function reference — mirrors
+    // test262's `number.x4.4.number-properties` typeof assertions.
+    let src = "function f(): void {\n\
+        \x20   console.log(typeof Number.MAX_VALUE);\n\
+        \x20   console.log(typeof Number.EPSILON);\n\
+        \x20   console.log(typeof Number.isInteger);\n\
+        }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.matches("\"number\"").count() >= 2,
+        "MAX_VALUE/EPSILON: {rust}"
+    );
+    assert!(rust.contains("\"function\""), "isInteger: {rust}");
+}
+
+#[test]
 fn translates_compound_assignment() {
     let src = "function f(): void { let n = 0; n += 5; n = n * 2; }";
     let rust = Translator::new().translate(src).expect("should translate");

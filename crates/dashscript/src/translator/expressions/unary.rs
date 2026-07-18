@@ -39,10 +39,11 @@ pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
 /// operand's spelling (DashScript is statically typed, so this is a compile-
 /// time query, not a runtime check). `typeof <number>` → `"number"`,
 /// `<string>` → `"string"`, `<boolean>` → `"boolean"`, `typeof null` →
-/// `"object"` (the JS quirk), `typeof Math.<const>` → `"number"`, `typeof
-/// Math.<method>` → `"function"` (a function reference), `typeof Array`/
-/// `Object`/… → `"function"` (a global builtin constructor is callable).
-/// Anything else falls back to `"object"`. Returned as a Rust `String`.
+/// `"object"` (the JS quirk), `typeof Math.<const>`/`Number.<const>` →
+/// `"number"`, `typeof Math.<method>`/`Number.<method>` → `"function"` (a
+/// function reference), `typeof Array`/`Object`/… → `"function"` (a global
+/// builtin constructor is callable). Anything else falls back to `"object"`.
+/// Returned as a Rust `String`.
 fn type_of_expr(arg: &Expression) -> Expr {
     let s: &str = match arg {
         Expression::NumericLiteral(_) => "number",
@@ -53,6 +54,15 @@ fn type_of_expr(arg: &Expression) -> Expr {
         Expression::StaticMemberExpression(sm) if builtins::is_ident(&sm.object, "Math") => {
             // `Math.<constant>` is a number; `Math.<method>` is a function ref.
             if builtins::math_constant(&sm.property.name).is_some() {
+                "number"
+            } else {
+                "function"
+            }
+        }
+        Expression::StaticMemberExpression(sm) if builtins::is_ident(&sm.object, "Number") => {
+            // `Number.<constant>` (MAX_VALUE/EPSILON/…) is a number;
+            // `Number.<method>` (isInteger/parseInt/…) is a function ref.
+            if builtins::number_constant(&sm.property.name).is_some() {
                 "number"
             } else {
                 "function"
