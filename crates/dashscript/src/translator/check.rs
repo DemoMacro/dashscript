@@ -7,9 +7,23 @@
 //! surfaced. This answers "can this `.ds` become valid Rust?" — which
 //! eslint-style rules cannot express, and which `oxc_linter` (not on crates.io)
 //! is therefore not used for.
+//!
+//! A second pass walks the function body for **low-compatibility constructs**
+//! ([`collect_unsupported`]) — ECMAScript dynamic/reflection features
+//! (`instanceof`, `Symbol`/`Proxy`/`Reflect`, prototype reflection, `eval`,
+//! `delete`, `arguments`) that have no Rust mapping. The translator would
+//! otherwise lower them to broken Rust that fails `cargo check` (reported as
+//! `partial`); flagging them here reports them honestly as `unsupported`, so
+//! the conformance matrix reflects what DashScript can actually express rather
+//! than what merely parses.
+
+use std::borrow::Cow;
 
 use oxc_allocator::Allocator;
-use oxc_ast::ast::Statement;
+use oxc_ast::ast::{
+    BinaryOperator, CallExpression, Expression, ForStatementInit, ObjectPropertyKind, Statement,
+    UnaryOperator,
+};
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
 use oxc_span::{SourceType, Span};
@@ -17,9 +31,11 @@ use oxc_span::{SourceType, Span};
 use super::{functions, registry};
 
 /// Check `.ds` source for translatability. Returns syntax errors from
-/// `oxc_parser` plus one diagnostic per top-level statement the translator
-/// cannot map. An empty result means the file lowers to valid Rust (as far as
-/// DashScript can tell — `cargo check` is still the final arbiter).
+/// `oxc_parser` plus one diagnostic per construct the translator cannot map —
+/// both unmapped top-level statements and low-compatibility constructs buried
+/// inside a function body. An empty result means the file lowers to valid
+/// Rust (as far as DashScript can tell — `cargo check` is still the final
+/// arbiter).
 pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
@@ -34,6 +50,9 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
         if functions::translate_statement(stmt, &registry).is_empty() {
             diagnostics.push(unmapped_top_level(stmt));
         }
+        // Low-compatibility constructs inside the body — see
+        // [`collect_unsupported`].
+        collect_unsupported(stmt, &mut diagnostics);
     }
     diagnostics
 }
@@ -64,6 +83,267 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
     }
 }
 
-fn err(message: &'static str, span: Span) -> OxcDiagnostic {
+/// Walk a statement (and every expression nested inside it) collecting one
+/// diagnostic per low-compatibility construct — see [`unsupported_pattern`].
+/// Recurses through every statement/expression kind the translator itself
+/// walks (mirroring `analysis::walk_stmt`), so a construct buried in a loop,
+/// branch, or callback is still surfaced. Unfamiliar kinds fall through
+/// silently (a missed construct only means it stays `partial`, not a false
+/// `unsupported`).
+fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
+    match stmt {
+        Statement::FunctionDeclaration(f) => {
+            if let Some(body) = &f.body {
+                for s in &body.statements {
+                    collect_unsupported(s, out);
+                }
+            }
+        }
+        Statement::BlockStatement(b) => {
+            for s in &b.body {
+                collect_unsupported(s, out);
+            }
+        }
+        Statement::ExpressionStatement(es) => collect_expr(&es.expression, out),
+        Statement::VariableDeclaration(v) => {
+            for d in &v.declarations {
+                if let Some(init) = &d.init {
+                    collect_expr(init, out);
+                }
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            collect_expr(&if_stmt.test, out);
+            collect_unsupported(&if_stmt.consequent, out);
+            if let Some(alt) = &if_stmt.alternate {
+                collect_unsupported(alt, out);
+            }
+        }
+        Statement::WhileStatement(w) => {
+            collect_expr(&w.test, out);
+            collect_unsupported(&w.body, out);
+        }
+        Statement::DoWhileStatement(dw) => {
+            collect_unsupported(&dw.body, out);
+            collect_expr(&dw.test, out);
+        }
+        Statement::ForStatement(f) => {
+            if let Some(ForStatementInit::VariableDeclaration(v)) = &f.init {
+                for d in &v.declarations {
+                    if let Some(i) = &d.init {
+                        collect_expr(i, out);
+                    }
+                }
+            }
+            if let Some(test) = &f.test {
+                collect_expr(test, out);
+            }
+            if let Some(update) = &f.update {
+                collect_expr(update, out);
+            }
+            collect_unsupported(&f.body, out);
+        }
+        Statement::ForOfStatement(fo) => collect_unsupported(&fo.body, out),
+        Statement::ForInStatement(fi) => collect_unsupported(&fi.body, out),
+        Statement::ReturnStatement(r) => {
+            if let Some(arg) = &r.argument {
+                collect_expr(arg, out);
+            }
+        }
+        Statement::ThrowStatement(t) => collect_expr(&t.argument, out),
+        Statement::SwitchStatement(sw) => {
+            collect_expr(&sw.discriminant, out);
+            for c in &sw.cases {
+                for s in &c.consequent {
+                    collect_unsupported(s, out);
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Detect a low-compatibility pattern at `expr`, then recurse into its
+/// children. A `typeof` operand is **not** recursed: `typeof` has its own
+/// mapping (a global constructor → `"function"`), so `typeof Symbol`/
+/// `typeof Proxy` must stay supported rather than tripping the identifier
+/// rule.
+fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
+    unsupported_pattern(expr, out);
+    match expr {
+        Expression::UnaryExpression(u) => {
+            if !matches!(u.operator, UnaryOperator::Typeof) {
+                collect_expr(&u.argument, out);
+            }
+        }
+        Expression::BinaryExpression(b) => {
+            collect_expr(&b.left, out);
+            collect_expr(&b.right, out);
+        }
+        Expression::LogicalExpression(l) => {
+            collect_expr(&l.left, out);
+            collect_expr(&l.right, out);
+        }
+        Expression::ConditionalExpression(c) => {
+            collect_expr(&c.test, out);
+            collect_expr(&c.consequent, out);
+            collect_expr(&c.alternate, out);
+        }
+        Expression::CallExpression(c) => {
+            collect_expr(&c.callee, out);
+            for arg in &c.arguments {
+                if let Some(e) = arg.as_expression() {
+                    collect_expr(e, out);
+                }
+            }
+        }
+        // `new X(…)` — recurse the constructor and args so `new Proxy(…)` /
+        // `new Symbol(…)` trip the identifier rule.
+        Expression::NewExpression(n) => {
+            collect_expr(&n.callee, out);
+            for arg in &n.arguments {
+                if let Some(e) = arg.as_expression() {
+                    collect_expr(e, out);
+                }
+            }
+        }
+        // `(x) => { … }` / `(x) => e` — recurse the arrow body so a construct
+        // buried in a callback (`xs.forEach(x => x instanceof B)`) is surfaced.
+        // oxc wraps even a concise body as a FunctionBody whose single statement
+        // is an ExpressionStatement.
+        Expression::ArrowFunctionExpression(a) => {
+            for s in &a.body.statements {
+                collect_unsupported(s, out);
+            }
+        }
+        Expression::AssignmentExpression(a) => collect_expr(&a.right, out),
+        Expression::ArrayExpression(arr) => {
+            for el in &arr.elements {
+                if let Some(e) = el.as_expression() {
+                    collect_expr(e, out);
+                }
+            }
+        }
+        Expression::ObjectExpression(o) => {
+            for p in &o.properties {
+                if let ObjectPropertyKind::ObjectProperty(op) = p {
+                    collect_expr(&op.value, out);
+                }
+            }
+        }
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                collect_expr(e, out);
+            }
+        }
+        Expression::ParenthesizedExpression(p) => collect_expr(&p.expression, out),
+        Expression::TSNonNullExpression(nn) => collect_expr(&nn.expression, out),
+        Expression::StaticMemberExpression(sm) => collect_expr(&sm.object, out),
+        Expression::ComputedMemberExpression(cm) => {
+            collect_expr(&cm.object, out);
+            collect_expr(&cm.expression, out);
+        }
+        Expression::SequenceExpression(s) => {
+            for e in &s.expressions {
+                collect_expr(e, out);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// A single low-compatibility construct at `expr` → one diagnostic. These are
+/// ECMAScript dynamic/reflection features DashScript's static TS→Rust mapping
+/// cannot express; flagging them here (rather than letting the translator
+/// emit broken Rust) is what makes the conformance matrix honest about
+/// coverage. Reflection calls are delegated to [`unsupported_call`].
+fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
+    match expr {
+        // `x instanceof T` — a runtime type check with no static equivalent.
+        Expression::BinaryExpression(b) if matches!(b.operator, BinaryOperator::Instanceof) => {
+            out.push(err(
+                "`instanceof` has no DashScript mapping (static types; no runtime type check)",
+                b.span,
+            ));
+        }
+        // `delete x` — no Rust analogue.
+        Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Delete) => {
+            out.push(err("`delete` has no DashScript mapping", u.span));
+        }
+        // Reflection / metaprogramming globals, and `arguments`/`eval`.
+        Expression::Identifier(id) => match id.name.as_str() {
+            "Symbol" | "Proxy" | "WeakRef" | "FinalizationRegistry" => {
+                out.push(err(
+                    format!("`{}` (JS reflection) is unsupported", id.name),
+                    id.span,
+                ));
+            }
+            "arguments" => out.push(err("the `arguments` object is unsupported", id.span)),
+            "eval" => out.push(err("`eval` is unsupported", id.span)),
+            _ => {}
+        },
+        Expression::CallExpression(c) => unsupported_call(c, out),
+        // `.constructor` — prototype reflection.
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "constructor" => {
+            out.push(err("`.constructor` reflection is unsupported", sm.span));
+        }
+        // `123n` — BigInt literals (DashScript numbers are `f64`/`i64`).
+        Expression::BigIntLiteral(b) => {
+            out.push(err("`BigInt` literals are unsupported", b.span));
+        }
+        _ => {}
+    }
+}
+
+/// A reflection call — `Object.defineProperty`/`getOwnPropertyDescriptor`/…,
+/// `Reflect.*`, or an instance prototype reflection `x.hasOwnProperty`/
+/// `propertyIsEnumerable`/`isPrototypeOf`. `Object.keys`/`values`/`entries`/
+/// `is`/`freeze`/… are mapped and intentionally absent from the reflection
+/// list, so they must not trip this.
+fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
+    let Expression::StaticMemberExpression(sm) = &c.callee else {
+        return;
+    };
+    let prop = sm.property.name.as_str();
+    // Instance prototype reflection methods.
+    if matches!(
+        prop,
+        "hasOwnProperty" | "propertyIsEnumerable" | "isPrototypeOf"
+    ) {
+        out.push(err(
+            format!("`{prop}` (prototype reflection) is unsupported"),
+            sm.span,
+        ));
+        return;
+    }
+    if let Expression::Identifier(obj) = &sm.object {
+        // The `Object` static reflection surface — the names DashScript does
+        // NOT map. Everything else on `Object` that test262 probes (keys/
+        // values/entries/is/freeze/seal/assign/…) has a mapping.
+        let is_object_reflection = matches!(
+            prop,
+            "defineProperty"
+                | "getOwnPropertyDescriptor"
+                | "defineProperties"
+                | "create"
+                | "getPrototypeOf"
+                | "setPrototypeOf"
+                | "getOwnPropertyDescriptors"
+                | "getOwnPropertySymbols"
+        );
+        if obj.name.as_str() == "Object" && is_object_reflection {
+            out.push(err(
+                format!("`Object.{prop}` reflection is unsupported"),
+                sm.span,
+            ));
+        }
+        // The entire `Reflect` namespace is reflection.
+        if obj.name.as_str() == "Reflect" {
+            out.push(err("`Reflect` is unsupported", sm.span));
+        }
+    }
+}
+
+fn err(message: impl Into<Cow<'static, str>>, span: Span) -> OxcDiagnostic {
     OxcDiagnostic::error(message).with_label(span)
 }
