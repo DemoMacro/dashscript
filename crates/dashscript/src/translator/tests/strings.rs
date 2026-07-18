@@ -277,3 +277,20 @@ fn translates_string_pad_undefined_fill_uses_space_default() {
     assert!(rust.contains("format!(\"{:<1$}\""), "got:\n{rust}");
     assert!(!rust.contains("cycle"), "got:\n{rust}");
 }
+
+#[test]
+fn translates_string_prototype_trim_call_to_method() {
+    // `String.prototype.trim.call(x)` — the JS borrow-via-.call idiom — lowers
+    // to ToString(x).trim() (a scalar receiver is format!-coerced first).
+    let src = "function f(): void { console.log(String.prototype.trim.call(\"  x  \")); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".trim()"), "got:\n{rust}");
+    assert!(!rust.contains("prototype"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_string_prototype_touppercase_call() {
+    let src = "function f(): void { console.log(String.prototype.toUpperCase.call(\"ab\")); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".to_uppercase()"), "got:\n{rust}");
+}

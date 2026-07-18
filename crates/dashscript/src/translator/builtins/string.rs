@@ -32,7 +32,19 @@ pub(in crate::translator) fn string_method(
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
     let obj = str_receiver(&sm.object, ctx);
-    let name: &str = &sm.property.name;
+    string_method_on(obj, &sm.property.name, args, ctx)
+}
+
+/// A string method applied to a given receiver expression. Shared by
+/// `s.method(...)` and the `String.prototype.method.call(r)` idiom — the JS
+/// pattern of borrowing a prototype method via `.call` lowers to
+/// `String(r).method(...)` (the receiver is ToString-coerced first).
+pub(in crate::translator) fn string_method_on(
+    obj: Expr,
+    name: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
     Some(match name {
         // `.includes(s)` / `.includes(s, pos)` — search from byte offset `pos`
         // (a negative `pos` is clamped to 0, an over-length one to `len`;

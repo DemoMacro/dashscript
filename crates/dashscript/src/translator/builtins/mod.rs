@@ -27,7 +27,7 @@ pub(in crate::translator) use global::global_function;
 pub(in crate::translator) use math::{math_constant, math_method};
 pub(in crate::translator) use number::{number_constant, number_method, number_static};
 pub(in crate::translator) use object::object_method;
-pub(in crate::translator) use string::{string_method, string_static};
+pub(in crate::translator) use string::{string_method, string_method_on, string_static};
 
 use oxc_ast::ast::{Argument, Expression};
 use proc_macro2::Span;

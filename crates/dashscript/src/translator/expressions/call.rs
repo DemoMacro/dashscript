@@ -54,6 +54,30 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
         return parse_quote!(::std::#macro_name!(#fmt_lit, #(#vals),*));
     }
+    // `String.prototype.trim.call(x)` — the JS idiom of borrowing a prototype
+    // method via `.call`. Lower `String.prototype.<m>.call(r, ...)` to
+    // `String(r).<m>(...)` (ToString the receiver, then the mapped method).
+    // A plain prototype access without `.call` stays unmapped; `cargo check`
+    // rejects it honestly.
+    if let Some((builtin, method)) = prototype_method_call(&call.callee) {
+        if builtin == "String" && !call.arguments.is_empty() {
+            let obj = to_string_expr(&call.arguments[0], ctx);
+            // First the adapted methods (includes/indexOf/slice/pad/...), then
+            // the name-mapped passthroughs (trim/toUpperCase/toLowerCase/...).
+            if let Some(expr) =
+                builtins::string_method_on(obj.clone(), method, &call.arguments[1..], ctx)
+            {
+                return expr;
+            }
+            if let Some(m) = builtins::map_method(method) {
+                let args: Vec<Expr> = call.arguments[1..]
+                    .iter()
+                    .map(|a| translate_argument(a, ctx))
+                    .collect();
+                return parse_quote!(#obj.#m(#(#args),*));
+            }
+        }
+    }
     // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
         if builtins::is_ident(&sm.object, "Math") {
@@ -182,5 +206,56 @@ fn clone_owned_local(arg: &Argument, val: Expr, ctx: &Ctx<'_>) -> Expr {
         Some(ty) if types::is_copy_path(ty) => val,
         Some(_) => parse_quote!(#val.clone()),
         None => val,
+    }
+}
+
+/// Detect `Builtin.prototype.<method>.call(...)` — the JS idiom of borrowing a
+/// prototype method via `.call`. Returns `(builtin, method)`; the caller reads
+/// the receiver/args straight from the `CallExpression` (an `Argument` slice
+/// would drag in oxc's arena lifetime). Only builtins DashScript can lower are
+/// matched (`String` today); a bare prototype access without `.call` is left
+/// for the fallback path.
+fn prototype_method_call<'a>(callee: &'a Expression) -> Option<(&'static str, &'a str)> {
+    let Expression::StaticMemberExpression(call_me) = callee else {
+        return None;
+    };
+    if call_me.property.name.as_str() != "call" {
+        return None;
+    }
+    let Expression::StaticMemberExpression(method_me) = &call_me.object else {
+        return None;
+    };
+    let method = method_me.property.name.as_str();
+    let Expression::StaticMemberExpression(proto_me) = &method_me.object else {
+        return None;
+    };
+    if proto_me.property.name.as_str() != "prototype" {
+        return None;
+    }
+    let Expression::Identifier(builtin) = &proto_me.object else {
+        return None;
+    };
+    let builtin = match builtin.name.as_str() {
+        "String" => "String",
+        _ => return None,
+    };
+    Some((builtin, method))
+}
+
+/// ToString-coerce a `.call(receiver)` argument to a `String`, matching TS
+/// `String(x)`: a scalar via `format!`; `null`/`undefined` to the literal
+/// `"null"`/`"undefined"` (they lower to `None`, which has no `Display`).
+/// An array/object receiver uses `format!` too — approximate, since JS joins
+/// an array's items while DashScript prints Rust's `Vec` form (a known gap).
+fn to_string_expr(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    match arg {
+        Argument::NullLiteral(_) => parse_quote!("null".to_string()),
+        Argument::Identifier(id) if id.name.as_str() == "undefined" => {
+            parse_quote!("undefined".to_string())
+        }
+        _ => {
+            let e = translate_argument(arg, ctx);
+            parse_quote!(::std::format!("{}", #e))
+        }
     }
 }
