@@ -380,3 +380,15 @@ fn translates_typeof_global_constructor_to_function() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("\"function\""), "got:\n{rust}");
 }
+
+#[test]
+fn translates_array_includes_with_from_index() {
+    // `.includes(x, from)` searches from index `from`; `from >= len` → false
+    // (an empty slice contains nothing). `from` is `f64`, routed through `i64`
+    // so a negative value clamps to 0 instead of wrapping to a huge offset.
+    let src = "function f(xs: number[]): boolean { return xs.includes(2, 3); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__from"), "got:\n{rust}");
+    assert!(rust.contains(".contains(&2_f64)"), "got:\n{rust}");
+    assert!(rust.contains(".min("), "got:\n{rust}");
+}

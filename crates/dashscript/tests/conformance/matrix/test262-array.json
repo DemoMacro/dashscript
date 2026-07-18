@@ -4976,11 +4976,10 @@
     "id": "test262.test.built-ins.array.prototype.includes.fromindex-equal-or-greater-length-returns-false",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"true\" node=\"false\"; line 2: ds=\"true\" node=\"false\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -4988,11 +4987,10 @@
     "id": "test262.test.built-ins.array.prototype.includes.fromindex-infinity",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"true\" node=\"false\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -5076,7 +5074,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:2:49: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:5:44: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:43: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nsrc\\main.rs:9:43: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:2:49: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:5:44: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:43: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nsrc\\main.rs:11:29: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -5092,11 +5090,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=16",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=16"
-    },
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:9:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:37:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:41:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:45:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less",
     "note": ""
   },
   {
@@ -5112,10 +5106,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"true\" node=\"false\"; line 3: ds=\"true\" node=\"false\"; line 6: ds=\"true\" node=\"false\"",
+    "detail": "oracle diff: line 10: ds=\"true\" node=\"false\"; line 11: ds=\"true\" node=\"false\"; line 14: ds=\"true\" node=\"false\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 2: ds=\"true\" node=\"false\"; line 3: ds=\"true\" node=\"false\"; line 6: ds=\"true\" node=\"false\""
+      "detail": "line 10: ds=\"true\" node=\"false\"; line 11: ds=\"true\" node=\"false\"; line 14: ds=\"true\" node=\"false\""
     },
     "note": ""
   },

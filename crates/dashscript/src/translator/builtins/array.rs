@@ -138,10 +138,21 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
                     .unwrap_or(-1_f64)
             )
         }
-        // `.includes(x)` → Vec::contains (by reference).
+        // `.includes(x)` → Vec::contains. `.includes(x, from)` searches from
+        // index `from` (negative clamps to 0; `from >= len` → empty slice →
+        // false). `from` routes through `i64` so a negative value survives.
         "includes" => {
             let needle = translate_argument(args.first()?, ctx);
-            parse_quote!(#recv.contains(&#needle))
+            match args.get(1) {
+                Some(from) => {
+                    let f = translate_argument(from, ctx);
+                    parse_quote!({
+                        let __from = ((#f) as i64).max(0) as usize;
+                        #recv[__from.min(#recv.len())..].contains(&#needle)
+                    })
+                }
+                None => parse_quote!(#recv.contains(&#needle)),
+            }
         }
         // `.find(cb)` → first match as `Option<T>` (TS `T | undefined`); the
         // closure receives `&Item`, so its param destructures as `|&n|`.
