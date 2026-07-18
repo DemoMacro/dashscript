@@ -1,20 +1,37 @@
 //! `class` → `#[derive(Clone)] struct Name { ... } impl Name { ... }`.
 //!
-//! A class becomes a `struct` plus an `impl`. Instance fields map to `pub`
-//! struct fields; a `new` constructor fills them. Constructors with parameters
-//! and instance methods (`this` → `self`) land in the next phase.
-use oxc_ast::ast::{Class, ClassElement, PropertyDefinition};
+//! A class becomes a `struct` plus an `impl`: instance fields → `pub` struct
+//! fields; a `new` constructor fills them (from `this.f = …` assignments in the
+//! constructor body, then field default initializers); instance methods become
+//! `pub fn method(&self | &mut self)`. `this` → `self` (method) / `__ds_self`
+//! (constructor).
+use std::collections::HashSet;
+
+use oxc_ast::ast::{
+    AssignmentTarget, Class, ClassElement, Expression, Function, MethodDefinition,
+    MethodDefinitionKind, PropertyDefinition, Statement, TSType,
+};
+use oxc_syntax::operator::AssignmentOperator;
 use proc_macro2::TokenStream;
-use quote::quote;
-use syn::{parse_quote, Expr, Ident, Item, Type};
+use quote::{format_ident, quote};
+use syn::{parse_quote, Expr, FnArg, Ident, Item, Path, ReturnType, Stmt, Type};
 
 use super::bindings;
 use super::context::{Ctx, Locals, Narrow};
+use super::functions::{
+    register_local, return_path_of, translate_body, translate_params, translate_stmt,
+};
 use super::registry::TypeRegistry;
 use super::{expressions, types};
 
-/// Translate a `class` declaration into one or more items: the `struct` plus
-/// its `impl` (and any `compile_error!` items for unsupported features).
+/// A field: name, type, optional default initializer expression.
+struct Field {
+    name: Ident,
+    ty: Type,
+    default: Option<Expr>,
+}
+
+/// Translate a `class` declaration into its `struct` plus `impl` items.
 pub(in crate::translator) fn translate_class(class: &Class, registry: &TypeRegistry) -> Vec<Item> {
     let Some(id) = class.id.as_ref() else {
         return vec![compile_error_item(
@@ -23,50 +40,240 @@ pub(in crate::translator) fn translate_class(class: &Class, registry: &TypeRegis
     };
     let name = bindings::type_ident(&id.name);
 
-    // Collect instance fields (static/computed/private are unsupported yet).
-    let mut fields: Vec<(Ident, Type, Option<Expr>)> = Vec::new();
+    let mut fields: Vec<Field> = Vec::new();
+    let mut ctor: Option<&MethodDefinition> = None;
+    let mut methods: Vec<&MethodDefinition> = Vec::new();
     for elem in &class.body.body {
-        if let ClassElement::PropertyDefinition(pd) = elem {
-            if let Some(field) = instance_field(pd, registry) {
-                fields.push(field);
+        match elem {
+            ClassElement::PropertyDefinition(pd) => {
+                if let Some(f) = instance_field(pd, registry) {
+                    fields.push(f);
+                }
             }
+            ClassElement::MethodDefinition(md) => match md.kind {
+                MethodDefinitionKind::Constructor => ctor = Some(md),
+                MethodDefinitionKind::Method => methods.push(md),
+                // get/set accessors land in the diagnostics phase.
+                _ => {}
+            },
+            _ => {} // static blocks / index signatures / accessor props: later
         }
-        // MethodDefinition (constructor / methods) is handled in the next phase.
     }
 
-    let struct_fields: Vec<TokenStream> = fields
+    let struct_item = build_struct(&name, &fields);
+    let ctor_item = build_constructor(ctor, &fields, &name, registry);
+    let method_items: Vec<syn::ImplItem> = methods
         .iter()
-        .map(|(k, ty, _)| quote!(pub #k: #ty,))
-        .collect();
-    let struct_item: Item = parse_quote! {
-        #[derive(Clone)]
-        struct #name { #(#struct_fields)* }
-    };
-
-    // `fn new()` fills each field from its default initializer, or `todo!()`
-    // when the field has neither a default nor a constructor assignment.
-    let field_inits: Vec<TokenStream> = fields
-        .iter()
-        .map(|(k, _, default)| match default {
-            Some(d) => quote!(#k: #d),
-            None => quote!(#k: ::core::todo!()),
-        })
+        .map(|md| build_method(md, registry))
         .collect();
     let impl_item: Item = parse_quote! {
         impl #name {
-            pub fn new() -> #name { #name { #(#field_inits),* } }
+            #ctor_item
+            #(#method_items)*
         }
     };
 
     vec![struct_item, impl_item]
 }
 
-/// An instance field `x: T` / `x?: T` / `x = v` → (name, type, optional default).
-/// Static, computed, or private fields are unsupported (None).
-fn instance_field(
-    pd: &PropertyDefinition,
+/// `#[derive(Clone)] struct Name { pub field: ty, … }`.
+fn build_struct(name: &Ident, fields: &[Field]) -> Item {
+    let field_lines: Vec<TokenStream> = fields
+        .iter()
+        .map(|f| {
+            let n = &f.name;
+            let t = &f.ty;
+            quote!(pub #n: #t,)
+        })
+        .collect();
+    parse_quote! {
+        #[derive(Clone)]
+        struct #name { #(#field_lines)* }
+    }
+}
+
+/// `fn new(...) -> Name { let mut __ds_self = Name { … }; <body>; __ds_self }`.
+///
+/// Field values come from `this.field = …` assignments in the constructor
+/// (those statements are dropped from the body so they run once, at init),
+/// then field default initializers, else `todo!()`. A field initializer must
+/// not be `todo!()` left to run — Rust evaluates it before any override — so
+/// `this.field = expr` is folded into the struct literal instead.
+fn build_constructor(
+    ctor: Option<&MethodDefinition>,
+    fields: &[Field],
+    type_name: &Ident,
     registry: &TypeRegistry,
-) -> Option<(Ident, Type, Option<Expr>)> {
+) -> syn::ImplItem {
+    let mut locals = Locals::new();
+    let mut params: Vec<FnArg> = Vec::new();
+    let mut field_assigns: Vec<(String, &Expression)> = Vec::new();
+    let mut consumed: HashSet<usize> = HashSet::new();
+    let mut body_stmts: Vec<Stmt> = Vec::new();
+
+    let self_name = format_ident!("__ds_self");
+    let narrow = Narrow::in_method(self_name.clone());
+
+    if let Some(md) = ctor {
+        let func = &md.value;
+        for fp in &func.params.items {
+            register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
+        }
+        params = translate_params(&func.params, &locals);
+        if let Some(body) = func.body.as_deref() {
+            let analysis = super::analysis::analyze(&body.statements);
+            locals.mutated = analysis.mutated;
+            locals.use_counts = analysis.use_counts;
+            // Fold `this.field = expr` into the struct literal; drop those stmts.
+            for (i, stmt) in body.statements.iter().enumerate() {
+                if let Some((field, expr)) = ctor_field_assign(stmt) {
+                    field_assigns.push((field, expr));
+                    consumed.insert(i);
+                }
+            }
+            let return_path: Option<Path> = Some(parse_quote!(#type_name));
+            for (i, stmt) in body.statements.iter().enumerate() {
+                if !consumed.contains(&i) {
+                    body_stmts.extend(translate_stmt(
+                        stmt,
+                        &mut locals,
+                        registry,
+                        &narrow,
+                        return_path.as_ref(),
+                    ));
+                }
+            }
+        }
+    }
+
+    // Field initializers: a ctor `this.f = e` wins, then the field default,
+    // else `todo!()`.
+    let ctx = Ctx::new(&locals, registry, &narrow);
+    let field_inits: Vec<TokenStream> = fields
+        .iter()
+        .map(|f| {
+            let n = &f.name;
+            match field_assigns
+                .iter()
+                .find(|(name, _)| name == &n.to_string())
+            {
+                Some((_, expr)) => {
+                    let e = expressions::translate_expr(expr, &ctx);
+                    quote!(#n: #e)
+                }
+                None => match &f.default {
+                    Some(d) => quote!(#n: #d),
+                    None => quote!(#n: ::core::todo!()),
+                },
+            }
+        })
+        .collect();
+
+    let init: Stmt = parse_quote!(let mut #self_name = #type_name { #(#field_inits),* };);
+    // A bare trailing `__ds_self` (no semicolon) is the block's value — syn's
+    // Stmt parser demands a semicolon for a bare path, so build it directly.
+    let trailing = Stmt::Expr(parse_quote!(#self_name), None);
+    let mut all = Vec::with_capacity(body_stmts.len() + 2);
+    all.push(init);
+    all.extend(body_stmts);
+    all.push(trailing);
+
+    parse_quote! {
+        pub fn new(#(#params),*) -> #type_name { #(#all)* }
+    }
+}
+
+/// `pub fn method(&self | &mut self, args) -> ret { body }`. `&mut self` when
+/// the body assigns/updates a member of `this`.
+fn build_method(md: &MethodDefinition, registry: &TypeRegistry) -> syn::ImplItem {
+    let func = &md.value;
+    let name = bindings::property_key_name(&md.key).unwrap_or_else(|| format_ident!("__method"));
+
+    let mut locals = Locals::new();
+    for fp in &func.params.items {
+        register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
+    }
+    let mut is_mut = false;
+    if let Some(body) = func.body.as_deref() {
+        let analysis = super::analysis::analyze(&body.statements);
+        locals.mutated = analysis.mutated;
+        locals.use_counts = analysis.use_counts;
+        is_mut = analysis.mutates_this;
+    }
+    let params = translate_params(&func.params, &locals);
+
+    let narrow = Narrow::in_method(format_ident!("self"));
+    let return_path = func.return_type.as_deref().and_then(return_path_of);
+    let block = translate_body(
+        func.body.as_deref(),
+        &mut locals,
+        registry,
+        &narrow,
+        return_path.as_ref(),
+    );
+
+    let output = method_return_type(func);
+    let generics: Vec<Ident> = func.type_parameters.as_deref().map_or_else(Vec::new, |tp| {
+        tp.params
+            .iter()
+            .map(|p| bindings::type_ident(&p.name.name))
+            .collect()
+    });
+
+    let self_arg: FnArg = if is_mut {
+        parse_quote!(&mut self)
+    } else {
+        parse_quote!(&self)
+    };
+    let all_params: Vec<FnArg> = std::iter::once(self_arg).chain(params).collect();
+
+    if generics.is_empty() {
+        parse_quote! { pub fn #name(#(#all_params),*) #output #block }
+    } else {
+        parse_quote! { pub fn #name<#(#generics),*>(#(#all_params),*) #output #block }
+    }
+}
+
+/// A method's return type: `void`/`undefined` → inferred `()`, else the type.
+fn method_return_type(func: &Function) -> ReturnType {
+    func.return_type
+        .as_ref()
+        .and_then(|ta| match &ta.type_annotation {
+            TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
+            ty => Some(ReturnType::Type(
+                Default::default(),
+                Box::new(types::translate_type(ty)),
+            )),
+        })
+        .unwrap_or(ReturnType::Default)
+}
+
+/// `this.field = expr` → `(field_name, &expr)`, when the statement is exactly a
+/// plain `=` assignment of a static `this.<key>` member. Anything else returns
+/// `None` (left in the body to translate normally).
+fn ctor_field_assign<'a>(stmt: &'a Statement<'a>) -> Option<(String, &'a Expression<'a>)> {
+    let Statement::ExpressionStatement(es) = stmt else {
+        return None;
+    };
+    let Expression::AssignmentExpression(asg) = &es.expression else {
+        return None;
+    };
+    if asg.operator != AssignmentOperator::Assign {
+        return None;
+    }
+    let AssignmentTarget::StaticMemberExpression(sm) = &asg.left else {
+        return None;
+    };
+    if !matches!(&sm.object, Expression::ThisExpression(_)) {
+        return None;
+    }
+    let field = bindings::snake(sm.property.name.as_str()).to_string();
+    Some((field, &asg.right))
+}
+
+/// An instance field `x: T` / `x?: T` / `x = v` → a [`Field`]. Static,
+/// computed, or private fields are unsupported (None).
+fn instance_field(pd: &PropertyDefinition, registry: &TypeRegistry) -> Option<Field> {
     if pd.r#static || pd.computed {
         return None;
     }
@@ -89,7 +296,7 @@ fn instance_field(
         let ctx = Ctx::new(&locals, registry, &narrow);
         expressions::translate_expr(e, &ctx)
     });
-    Some((name, ty, default))
+    Some(Field { name, ty, default })
 }
 
 /// A `compile_error!` item carrying `message`, so unsupported features fail

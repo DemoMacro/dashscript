@@ -193,14 +193,17 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
 
 /// The `syn::Path` of a function's return type — used to translate `return {…}`
 /// object literals. `void`/`undefined` yield no path.
-fn return_path_of(ta: &oxc_ast::ast::TSTypeAnnotation) -> Option<Path> {
+pub(in crate::translator) fn return_path_of(ta: &oxc_ast::ast::TSTypeAnnotation) -> Option<Path> {
     match &ta.type_annotation {
         TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
         ty => path_of(&types::translate_type(ty)),
     }
 }
 
-fn translate_params(params: &FormalParameters, locals: &Locals) -> Vec<FnArg> {
+pub(in crate::translator) fn translate_params(
+    params: &FormalParameters,
+    locals: &Locals,
+) -> Vec<FnArg> {
     params
         .items
         .iter()
@@ -228,7 +231,7 @@ fn translate_params(params: &FormalParameters, locals: &Locals) -> Vec<FnArg> {
 }
 
 /// Record a binding's type path (if it has one) into the locals table.
-fn register_local(
+pub(in crate::translator) fn register_local(
     locals: &mut Locals,
     pattern: &oxc_ast::ast::BindingPattern,
     type_annotation: Option<&oxc_ast::ast::TSTypeAnnotation>,
@@ -240,7 +243,7 @@ fn register_local(
     locals.insert(name.to_string(), path);
 }
 
-fn translate_body(
+pub(in crate::translator) fn translate_body(
     body: Option<&FunctionBody>,
     locals: &mut Locals,
     registry: &TypeRegistry,
@@ -278,7 +281,7 @@ fn drop_trailing_return(stmts: &mut [Stmt]) {
 }
 
 /// Translate a function-body statement into zero or more `syn::Stmt`s.
-fn translate_stmt(
+pub(in crate::translator) fn translate_stmt(
     stmt: &Statement,
     locals: &mut Locals,
     registry: &TypeRegistry,

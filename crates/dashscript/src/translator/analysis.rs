@@ -41,6 +41,9 @@ const MUTATORS: &[&str] = &[
 pub(super) struct Analysis {
     pub mutated: HashSet<String>,
     pub use_counts: HashMap<String, u32>,
+    /// True when the body assigns/updates a member of `this` (e.g. `this.x = 1`
+    /// or `this.n++`) — the enclosing method needs `&mut self`.
+    pub mutates_this: bool,
 }
 
 /// Walk a function body once, recording mutations and read counts.
@@ -218,7 +221,12 @@ fn record_target(left: &AssignmentTarget, a: &mut Analysis) {
         AssignmentTarget::AssignmentTargetIdentifier(id) => {
             record_mutation(&id.name, a);
         }
-        AssignmentTarget::StaticMemberExpression(sm) => record_root(&sm.object, a),
+        AssignmentTarget::StaticMemberExpression(sm) => {
+            if root_is_this(&sm.object) {
+                a.mutates_this = true;
+            }
+            record_root(&sm.object, a)
+        }
         AssignmentTarget::ComputedMemberExpression(cm) => {
             record_root(&cm.object, a);
             walk_expr(&cm.expression, a);
@@ -229,6 +237,11 @@ fn record_target(left: &AssignmentTarget, a: &mut Analysis) {
 
 /// An update (`x++` / `x--`) takes `&mut x`: mutated *and* read.
 fn record_simple(target: &SimpleAssignmentTarget, a: &mut Analysis) {
+    if let SimpleAssignmentTarget::StaticMemberExpression(sm) = target {
+        if root_is_this(&sm.object) {
+            a.mutates_this = true;
+        }
+    }
     if let SimpleAssignmentTarget::AssignmentTargetIdentifier(id) = target {
         record_mutation(&id.name, a);
         count_name(&id.name, a);
@@ -270,5 +283,16 @@ fn root_ident(expr: &Expression) -> Option<String> {
         Expression::ComputedMemberExpression(cm) => root_ident(&cm.object),
         Expression::ParenthesizedExpression(p) => root_ident(&p.expression),
         _ => None,
+    }
+}
+
+/// Whether a member chain is rooted at `this` (`this.x.y` → true) — used to
+/// detect `this.field = …` / `this.field++` so the method takes `&mut self`.
+fn root_is_this(expr: &Expression) -> bool {
+    match expr {
+        Expression::ThisExpression(_) => true,
+        Expression::StaticMemberExpression(sm) => root_is_this(&sm.object),
+        Expression::ParenthesizedExpression(p) => root_is_this(&p.expression),
+        _ => false,
     }
 }
