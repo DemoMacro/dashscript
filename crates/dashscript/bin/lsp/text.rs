@@ -42,7 +42,7 @@ pub(super) fn word_at(text: &str, byte: usize) -> Option<String> {
     Some(text[start..end].to_string())
 }
 
-fn is_ident_byte(b: u8) -> bool {
+pub(super) fn is_ident_byte(b: u8) -> bool {
     b.is_ascii_alphanumeric() || b == b'_'
 }
 

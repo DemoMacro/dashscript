@@ -17,12 +17,13 @@ use std::{collections::HashMap, error::Error, path::Path};
 
 use lsp_server::{Connection, Message, Request, Response};
 use lsp_types::{
-    InitializeParams, OneOf, ServerCapabilities, TextDocumentSyncCapability, TextDocumentSyncKind,
-    Uri,
+    CompletionOptions, InitializeParams, OneOf, ServerCapabilities, TextDocumentSyncCapability,
+    TextDocumentSyncKind, Uri,
 };
 use serde_json::Value;
 
 mod backend;
+mod completion;
 mod definition;
 mod diagnostics;
 mod text;
@@ -62,6 +63,12 @@ fn server_capabilities() -> ServerCapabilities {
     ServerCapabilities {
         text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)),
         definition_provider: Some(OneOf::Left(true)),
+        completion_provider: Some(CompletionOptions {
+            // `.` triggers member completion (`console.`, `Math.`).
+            trigger_characters: Some(vec![".".to_string()]),
+            resolve_provider: Some(false),
+            ..Default::default()
+        }),
         ..Default::default()
     }
 }
@@ -104,7 +111,15 @@ impl Server {
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }
-            // Other requests (hover, completion, …) return null until wired.
+            "textDocument/completion" => {
+                let result = req
+                    .extract::<lsp_types::CompletionParams>("textDocument/completion")
+                    .ok()
+                    .and_then(|(_, params)| self.on_completion(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            // Other requests (hover, …) return null until wired.
             _ => Response::new_ok(id, Value::Null),
         };
         let _ = self.conn.sender.send(resp.into());
