@@ -25,12 +25,51 @@ fn default_version() -> String {
     "0.0.0".to_string()
 }
 
+/// The `bin` field of a manifest: a single executable (a string path, named
+/// after the package) or a map of bin names to paths — mirroring package.json's
+/// `bin` (string | object). A single-string `bin` borrows the package `name`
+/// for its one target; an object uses each key as a bin name.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum BinSpec {
+    /// `"bin": "main.ds"` — one executable, named after the package.
+    Single(String),
+    /// `"bin": { "numbers": "numbers.ds" }` — N executables, each key a bin name.
+    Multiple(BTreeMap<String, String>),
+}
+
+impl BinSpec {
+    /// Resolve to `(bin_name, ds_path)` pairs. A `Single` spec names its one
+    /// bin after the package (package.json's single-bin rule); a `Multiple`
+    /// spec uses each map key.
+    pub fn entries(&self, package_name: &str) -> Vec<(String, String)> {
+        match self {
+            BinSpec::Single(path) => vec![(package_name.to_string(), path.clone())],
+            BinSpec::Multiple(map) => map
+                .iter()
+                .map(|(name, path)| (name.clone(), path.clone()))
+                .collect(),
+        }
+    }
+}
+
+/// The `src/<stem>.rs` path for a `.ds` entry, flattening any directory prefix
+/// to a single `src/` level (MVP: a crate root, no sub-modules yet). The stem
+/// is the file name without extension — `numbers.ds`, `./numbers.ds`, and
+/// `src/numbers.ds` all map to `src/numbers.rs`.
+fn ds_to_rust_path(ds_path: &str) -> String {
+    let stem = ds_path.rsplit(['/', '\\']).next().unwrap_or(ds_path);
+    let stem = stem.trim_end_matches(".ds").trim_end_matches(".ts");
+    format!("src/{stem}.rs")
+}
+
 /// A DashScript project manifest (`manifest.json`) — a blend of
 /// `Cargo.toml` `[package]` (metadata) and `package.json` (entry/scripts).
 ///
 /// Field order is the JSON output order: metadata first, then DashScript-
 /// specific fields, then dependencies.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Manifest {
     /// Project name → `Cargo.toml` `[package].name` (required).
     pub name: String,
@@ -61,6 +100,17 @@ pub struct Manifest {
     /// [`BACKEND`], so it never filters dependencies.
     #[serde(default = "default_target")]
     pub target: String,
+    /// Executable entry points → Cargo `[[bin]]` targets. A single executable
+    /// is `"bin": "main.ds"` (named after the package, package.json's
+    /// single-bin rule); multiple are `"bin": { "<name>": "<file>" }` where
+    /// each key is a bin name. Omit for a library-only crate.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bin: Option<BinSpec>,
+    /// Library entry (`"lib": "lib.ds"`) → Cargo `[lib]`. A crate with a `lib`
+    /// exports its modules for bins to `use` — shared code lives here, never
+    /// in another bin (cargo forbids one bin from `mod`-ing another).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lib: Option<String>,
     /// Entry file (e.g. `"src/main.ds"`), like `package.json` `main`. The CLI
     /// defaults to `main.ds` when unset.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -74,6 +124,10 @@ pub struct Manifest {
     /// membership in `manifest.json`, so it follows the npm/bun convention).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub workspaces: Vec<String>,
+    /// Backend-prefixed *dev* dependencies, e.g. `{ "rust:tempfile": "3.0" }`
+    /// → Cargo `[dev-dependencies]`. Same `rust:` prefix as [`dependencies`].
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub dev_dependencies: BTreeMap<String, String>,
     /// Backend-prefixed dependencies, e.g. `{ "rust:serde": "1.0" }`. The
     /// prefix is [`BACKEND`] (`rust:`) today.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
@@ -96,9 +150,12 @@ impl Default for Manifest {
             keywords: Vec::new(),
             authors: Vec::new(),
             target: default_target(),
+            bin: None,
+            lib: None,
             entry: None,
             scripts: BTreeMap::new(),
             workspaces: Vec::new(),
+            dev_dependencies: BTreeMap::new(),
             dependencies: BTreeMap::new(),
         }
     }
@@ -170,6 +227,21 @@ impl Manifest {
             out.push_str(&deps.join("\n"));
             out.push('\n');
         }
+        // Dev-dependencies share the backend-prefix filter, emitted as a
+        // separate `[dev-dependencies]` section (mirroring Cargo.toml).
+        let dev_deps: Vec<String> = self
+            .dev_dependencies
+            .iter()
+            .filter_map(|(key, req)| {
+                key.strip_prefix(&prefix)
+                    .map(|name| format!("{name} = {req:?}"))
+            })
+            .collect();
+        if !dev_deps.is_empty() {
+            out.push_str("\n[dev-dependencies]\n");
+            out.push_str(&dev_deps.join("\n"));
+            out.push('\n');
+        }
         out
     }
 
@@ -185,6 +257,39 @@ impl Manifest {
         // manifest, so it owns the panic strategy: that is precisely what makes
         // `catch_unwind` sound, where on an arbitrary user `Cargo.toml` it
         // would not be (a `panic = "abort"` build silently drops the catch).
+        out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
+        out.push_str("\n[workspace]\n");
+        out
+    }
+
+    /// The `(bin_name, ds_path)` entries declared by `bin`, resolved against
+    /// the package name for a single-string `bin`. Empty when `bin` is unset.
+    /// `ds build`/`ds run` use this to emit one `[[bin]]` per declared entry.
+    pub fn bin_entries(&self) -> Vec<(String, String)> {
+        self.bin
+            .as_ref()
+            .map_or_else(Vec::new, |spec| spec.entries(&self.name))
+    }
+
+    /// A single-package `Cargo.toml` with explicit `[[bin]]` / `[lib]` targets
+    /// for the project-as-one-crate model (every `.ds` translates to
+    /// `src/<stem>.rs`). Emits [`package_body`] + one `[[bin]] name/path` per
+    /// declared bin + an optional `[lib]` + `[profile.release]` + an empty
+    /// `[workspace]`; the no-arg [`to_cargo_toml`] is for a lone file.
+    pub fn to_cargo_toml_with_bins(&self, bins: &[(String, String)], lib: Option<&str>) -> String {
+        let mut out = self.package_body();
+        for (name, ds_path) in bins {
+            out.push_str(&format!(
+                "\n[[bin]]\nname = {name:?}\npath = {:?}\n",
+                ds_to_rust_path(ds_path)
+            ));
+        }
+        if let Some(lib_path) = lib {
+            out.push_str(&format!(
+                "\n[lib]\npath = {:?}\n",
+                ds_to_rust_path(lib_path)
+            ));
+        }
         out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
         out.push_str("\n[workspace]\n");
         out
@@ -406,6 +511,79 @@ mod tests {
         assert!(
             !toml.contains("[package]"),
             "workspace root has no [package], got:\n{toml}"
+        );
+    }
+
+    #[test]
+    fn bin_single_named_after_package() {
+        let m =
+            Manifest::from_json(r#"{ "name": "app", "bin": "main.ds" }"#).expect("should parse");
+        assert_eq!(
+            m.bin_entries(),
+            vec![("app".to_string(), "main.ds".to_string())]
+        );
+    }
+
+    #[test]
+    fn bin_multiple_uses_keys_as_names() {
+        let m = Manifest::from_json(
+            r#"{ "name": "tour", "bin": { "numbers": "numbers.ds", "globals": "globals.ds" } }"#,
+        )
+        .expect("should parse");
+        let mut bins = m.bin_entries();
+        bins.sort();
+        assert_eq!(
+            bins,
+            vec![
+                ("globals".to_string(), "globals.ds".to_string()),
+                ("numbers".to_string(), "numbers.ds".to_string()),
+            ]
+        );
+    }
+
+    #[test]
+    fn bin_unset_yields_no_entries() {
+        let m = Manifest::from_json(r#"{ "name": "app" }"#).expect("should parse");
+        assert!(m.bin_entries().is_empty());
+    }
+
+    #[test]
+    fn to_cargo_toml_with_bins_emits_targets() {
+        let m = Manifest::from_json(
+            r#"{ "name": "tour", "bin": { "numbers": "numbers.ds" }, "lib": "lib.ds" }"#,
+        )
+        .expect("should parse");
+        let toml = m.to_cargo_toml_with_bins(&m.bin_entries(), m.lib.as_deref());
+        assert!(toml.contains("[[bin]]"), "missing [[bin]], got:\n{toml}");
+        assert!(
+            toml.contains("name = \"numbers\""),
+            "bin name missing, got:\n{toml}"
+        );
+        assert!(
+            toml.contains("path = \"src/numbers.rs\""),
+            "bin path not flattened to src/, got:\n{toml}"
+        );
+        assert!(toml.contains("[lib]"), "missing [lib], got:\n{toml}");
+        assert!(
+            toml.contains("path = \"src/lib.rs\""),
+            "lib path wrong, got:\n{toml}"
+        );
+    }
+
+    #[test]
+    fn dev_dependencies_emit_separate_section() {
+        let m = Manifest::from_json(
+            r#"{ "name": "app", "dependencies": { "rust:serde": "1.0" }, "devDependencies": { "rust:tempfile": "3.0" } }"#,
+        )
+        .expect("should parse");
+        let toml = m.to_cargo_toml();
+        assert!(
+            toml.contains("[dependencies]\nserde = \"1.0\""),
+            "deps section, got:\n{toml}"
+        );
+        assert!(
+            toml.contains("[dev-dependencies]\ntempfile = \"3.0\""),
+            "dev-deps missing, got:\n{toml}"
         );
     }
 }
