@@ -199,11 +199,34 @@ pub(in crate::translator) fn string_method_on(
             let i = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.chars().nth(#i).map(|c| c.to_string()).unwrap_or_default())
         }
-        // `.charCodeAt(i)` / `.codePointAt(i)` → the `i`-th char's code point as
-        // `f64` (TS returns `NaN` out of range; UTF-16 vs Rust's `char` differ
-        // for non-BMP — Rust's `char` is already a Unicode scalar, so the two TS
-        // methods lower to the same `chars().nth().as u32`).
-        "charCodeAt" | "codePointAt" => {
+        // `.charCodeAt(i)` → the `i`-th UTF-16 code unit as `f64` (`NaN` out of
+        // range). The ASCII fast path indexes raw bytes in O(1) — `is_ascii` is a
+        // SIMD scan, cheap enough to run per call — while non-ASCII falls back to
+        // the O(n) `chars().nth` walk. This is the hot loop of bit-vector string
+        // algorithms (Myers–Levenshtein), whose peq tables are pure ASCII.
+        "charCodeAt" => {
+            let i = usize_arg(args.first()?, ctx);
+            parse_quote!({
+                let __s = &#obj;
+                let __i = #i;
+                if __s.is_ascii() {
+                    __s.as_bytes()
+                        .get(__i)
+                        .map(|&b| b as f64)
+                        .unwrap_or(f64::NAN)
+                } else {
+                    __s.chars()
+                        .nth(__i)
+                        .map(|c| c as u32 as f64)
+                        .unwrap_or(f64::NAN)
+                }
+            })
+        }
+        // `.codePointAt(i)` → the `i`-th char's code point as `f64`. Kept on the
+        // `chars().nth` path: `codePointAt` is rare, and its surrogate-pair
+        // semantics for non-BMP already differ from `charCodeAt`, so the ASCII
+        // fast path buys little here.
+        "codePointAt" => {
             let i = usize_arg(args.first()?, ctx);
             parse_quote!(#obj.chars().nth(#i).map(|c| c as u32 as f64).unwrap_or(f64::NAN))
         }

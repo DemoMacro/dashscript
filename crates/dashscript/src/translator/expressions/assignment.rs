@@ -3,7 +3,7 @@
 use oxc_ast::ast::{
     AssignmentExpression, AssignmentTarget, Expression, SimpleAssignmentTarget, UpdateExpression,
 };
-use oxc_syntax::operator::{AssignmentOperator, UpdateOperator};
+use oxc_syntax::operator::{AssignmentOperator, BinaryOperator, UpdateOperator};
 use quote::quote;
 use syn::{parse_quote, Expr, Ident};
 
@@ -29,7 +29,20 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
     match assignment_target_kind(&a.left, ctx) {
         Some(AssignTarget::Plain(target)) => {
             let tokens = match a.operator {
-                AssignmentOperator::Assign => quote!(#target = #right),
+                // `s = s + "lit"` / `s = "lit" + s` → `s.push_str("lit")` (amortized
+                // O(1) append) instead of rebuilding the whole string via
+                // `format!`. Restricted to a `String`-typed local in the
+                // self-plus-one-literal shape; anything else keeps the general
+                // `target = right` lowering.
+                AssignmentOperator::Assign => {
+                    match self_plus_string_literal(&a.left, &a.right, ctx) {
+                        Some(lit) => {
+                            let lit_token = syn::LitStr::new(lit, proc_macro2::Span::call_site());
+                            quote!(#target.push_str(#lit_token))
+                        }
+                        None => quote!(#target = #right),
+                    }
+                }
                 // `s += "lit"` is string append (String has no AddAssign) → `push_str`.
                 AssignmentOperator::Addition => match &a.right {
                     Expression::StringLiteral(s) => {
@@ -142,6 +155,50 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
 fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
     match target {
         SimpleAssignmentTarget::AssignmentTargetIdentifier(id) => Some(ident_expr(id)),
+        _ => None,
+    }
+}
+
+/// `s = s + "lit"` / `s = "lit" + s` lowers to `s.push_str("lit")` — an
+/// amortized-O(1) in-place append — instead of rebuilding the string via
+/// `format!`. Only the self-plus-one-string-literal shape on a `String`-typed
+/// local qualifies; any other RHS (two variables, a chain, a non-literal) keeps
+/// the general `target = right` lowering.
+fn self_plus_string_literal<'a>(
+    left: &AssignmentTarget,
+    right: &'a Expression,
+    ctx: &Ctx<'_>,
+) -> Option<&'a str> {
+    let AssignmentTarget::AssignmentTargetIdentifier(id) = left else {
+        return None;
+    };
+    let name = id.name.as_str();
+    // `push_str` needs a mutable owned `String`; restrict to `String`-typed
+    // locals so a `&str` param keeps the familiar assignment error instead of a
+    // confusing `push_str not found` one.
+    let rust_name = bindings::snake(name).to_string();
+    let is_string = ctx
+        .local_type(&rust_name)
+        .and_then(|p| p.segments.last())
+        .is_some_and(|s| s.ident == "String");
+    if !is_string {
+        return None;
+    }
+    let bin = match right {
+        Expression::BinaryExpression(b) if matches!(b.operator, BinaryOperator::Addition) => b,
+        _ => return None,
+    };
+    let left_is_self = matches!(&bin.left, Expression::Identifier(i) if i.name.as_str() == name);
+    let right_is_self = matches!(&bin.right, Expression::Identifier(i) if i.name.as_str() == name);
+    match (left_is_self, right_is_self) {
+        (true, false) => match &bin.right {
+            Expression::StringLiteral(s) => Some(s.value.as_str()),
+            _ => None,
+        },
+        (false, true) => match &bin.left {
+            Expression::StringLiteral(s) => Some(s.value.as_str()),
+            _ => None,
+        },
         _ => None,
     }
 }
