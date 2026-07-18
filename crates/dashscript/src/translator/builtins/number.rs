@@ -139,22 +139,17 @@ pub(in crate::translator) fn number_static(
         "isSafeInteger" => {
             parse_quote!((#x).is_finite() && (#x).fract() == 0_f64 && (#x).abs() <= 9_007_199_254_740_991_f64)
         }
-        // `Number.parseFloat(s)` ≡ the global `parseFloat(s)` — base-10 f64
-        // parse, NaN on a malformed string (never a throw, as in TS).
-        "parseFloat" => parse_quote!(#x.trim().parse::<f64>().unwrap_or(f64::NAN)),
-        // `Number.parseInt(s)` / `Number.parseInt(s, radix)` ≡ the global
-        // `parseInt` — base-10 by default, `i64::from_str_radix` with a radix.
-        "parseInt" => match args.get(1) {
-            Some(radix) => {
-                let r = translate_argument(radix, ctx);
-                parse_quote!(
-                    i64::from_str_radix(#x.trim(), #r as u32)
-                        .map(|v| v as f64)
-                        .unwrap_or(f64::NAN)
-                )
-            }
-            None => parse_quote!(#x.trim().parse::<f64>().unwrap_or(f64::NAN)),
-        },
+        // `Number.parseFloat(s)` ≡ the global `parseFloat` — full ES
+        // truncation semantics (see `global::parse_float_expr`).
+        "parseFloat" => return Some(super::global::parse_float_expr(x)),
+        // `Number.parseInt(s[, radix])` ≡ the global `parseInt` — full ES
+        // trim/sign/`0x`/truncation semantics (see `global::parse_int_expr`).
+        "parseInt" => {
+            return Some(super::global::parse_int_expr(
+                x,
+                args.get(1).map(|r| translate_argument(r, ctx)),
+            ));
+        }
         _ => return None,
     })
 }

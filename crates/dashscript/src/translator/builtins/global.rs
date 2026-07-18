@@ -38,29 +38,16 @@ pub(in crate::translator) fn global_function(
                 }
             }
         }
-        // A malformed string yields NaN in TS, never a throw — `unwrap_or`
-        // matches that without a runtime panic.
-        "parseFloat" => {
-            let a = translate_argument(args.first()?, ctx);
-            parse_quote!(#a.trim().parse::<f64>().unwrap_or(f64::NAN))
-        }
-        // `parseInt(s)` → base-10 parse; `parseInt(s, radix)` →
-        // `i64::from_str_radix` (an out-of-range radix yields NaN, as in TS).
-        // This does not honor a `0x` prefix the way TS auto-detection does.
-        "parseInt" => {
-            let a = translate_argument(args.first()?, ctx);
-            match args.get(1) {
-                Some(radix) => {
-                    let r = translate_argument(radix, ctx);
-                    parse_quote!(
-                        i64::from_str_radix(#a.trim(), #r as u32)
-                            .map(|x| x as f64)
-                            .unwrap_or(f64::NAN)
-                    )
-                }
-                None => parse_quote!(#a.trim().parse::<f64>().unwrap_or(f64::NAN)),
-            }
-        }
+        // `parseFloat(s)` — full ES semantics: longest valid decimal-literal
+        // prefix (truncation), `±Infinity`, NaN if none. See `parse_float_expr`.
+        "parseFloat" => parse_float_expr(translate_argument(args.first()?, ctx)),
+        // `parseInt(s[, radix])` — full ES semantics: trim, sign, `0x`
+        // auto-detect (radix 0/16), truncate at the first non-digit. See
+        // `parse_int_expr`.
+        "parseInt" => parse_int_expr(
+            translate_argument(args.first()?, ctx),
+            args.get(1).map(|r| translate_argument(r, ctx)),
+        ),
         // `Number(s)` parses a string; `Number(n)` passes a number through.
         // ToNumber coercion: an empty or whitespace-only string is `0` (not
         // NaN — `Number("")` / `Number("  ")` are both `0`); anything else
@@ -144,4 +131,122 @@ fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
             parse_quote!(#e != 0_f64)
         }
     }
+}
+
+/// `parseInt(s[, radix])` — full ES semantics (ECMA-262 §19.2.5): trim leading
+/// whitespace, parse a sign, auto-detect a `0x`/`0X` prefix (radix 0 or 16),
+/// and truncate at the first character that is not a digit in the radix (NOT a
+/// whole-string parse — `parseInt("12ab")` is `12`, not `NaN`). A radix outside
+/// `[2, 36]` yields `NaN`. Inlined as a closure so each call site is
+/// self-contained (a top-level `fn` would clash when two `parseInt` calls share
+/// one translated scope).
+pub(in crate::translator) fn parse_int_expr(a: Expr, radix: Option<Expr>) -> Expr {
+    let radix_arg: Expr = match radix {
+        Some(r) => parse_quote!((#r) as i32),
+        None => parse_quote!(0_i32),
+    };
+    parse_quote!({
+        let __pi = |__s: &str, __radix: i32| -> f64 {
+            let __b = __s.as_bytes();
+            let mut __i = 0_usize;
+            while __i < __b.len() && (__b[__i] as char).is_whitespace() {
+                __i += 1;
+            }
+            let mut __sign = 1_f64;
+            if __i < __b.len() && (__b[__i] == b'+' || __b[__i] == b'-') {
+                if __b[__i] == b'-' {
+                    __sign = -1_f64;
+                }
+                __i += 1;
+            }
+            let mut __r = if __radix == 0 { 10 } else { __radix };
+            if __r == 16 && __i + 1 < __b.len() && __b[__i] == b'0' && matches!(__b[__i + 1], b'x' | b'X')
+            {
+                __i += 2;
+            } else if __r == 10
+                && __i + 1 < __b.len()
+                && __b[__i] == b'0'
+                && matches!(__b[__i + 1], b'x' | b'X')
+            {
+                __r = 16;
+                __i += 2;
+            }
+            if !(2..=36).contains(&__r) {
+                return f64::NAN;
+            }
+            let mut __acc: f64 = 0_f64;
+            let mut __any = false;
+            while __i < __b.len() {
+                match (__b[__i] as char).to_digit(__r as u32) {
+                    Some(__d) => {
+                        __acc = __acc * (__r as f64) + __d as f64;
+                        __any = true;
+                        __i += 1;
+                    }
+                    None => break,
+                }
+            }
+            if __any { __sign * __acc } else { f64::NAN }
+        };
+        let __arg = #a;
+        __pi(&__arg.to_string(), #radix_arg)
+    })
+}
+
+/// `parseFloat(s)` — full ES semantics (ECMA-262 §19.2.4): trim leading
+/// whitespace, then take the longest valid decimal-literal prefix
+/// (`[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?` or `±Infinity`), truncating at the
+/// first char that cannot extend it. `NaN` if no valid prefix (so `parseFloat`
+/// truncates: `"3.14abc"` → `3.14`, `"12ab"` → `12`). Inlined as a closure for
+/// the same reason as [`parse_int_expr`].
+pub(in crate::translator) fn parse_float_expr(a: Expr) -> Expr {
+    parse_quote!({
+        let __pf = |__s: &str| -> f64 {
+            let __t = __s.trim_start();
+            let __b = __t.as_bytes();
+            let mut __i = 0_usize;
+            if __i < __b.len() && (__b[__i] == b'+' || __b[__i] == b'-') {
+                __i += 1;
+            }
+            if __t[__i..].starts_with("Infinity") {
+                return __t[..__i + 8].parse::<f64>().unwrap_or(f64::NAN);
+            }
+            let __int0 = __i;
+            while __i < __b.len() && __b[__i].is_ascii_digit() {
+                __i += 1;
+            }
+            let __has_int = __i > __int0;
+            let __has_frac = if __i < __b.len() && __b[__i] == b'.' {
+                __i += 1;
+                let __f0 = __i;
+                while __i < __b.len() && __b[__i].is_ascii_digit() {
+                    __i += 1;
+                }
+                __i > __f0
+            } else {
+                false
+            };
+            if !__has_int && !__has_frac {
+                return f64::NAN;
+            }
+            if __i < __b.len() && (__b[__i] == b'e' || __b[__i] == b'E') {
+                let __e0 = __i;
+                let mut __j = __i + 1;
+                if __j < __b.len() && (__b[__j] == b'+' || __b[__j] == b'-') {
+                    __j += 1;
+                }
+                if __j < __b.len() && __b[__j].is_ascii_digit() {
+                    while __j < __b.len() && __b[__j].is_ascii_digit() {
+                        __j += 1;
+                    }
+                    __i = __j;
+                } else {
+                    __i = __e0;
+                }
+            }
+            __t[..__i].parse::<f64>().unwrap_or(f64::NAN)
+        };
+        let __arg = #a;
+        __pf(&__arg.to_string())
+    })
 }

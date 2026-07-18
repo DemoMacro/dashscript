@@ -8,21 +8,38 @@ fn translates_string_global_to_format() {
 }
 
 #[test]
-fn translates_parse_int_to_parse_f64() {
+fn translates_parse_int_to_truncating_closure() {
+    // parseInt truncates at the first non-digit (ES semantics), inlined as a
+    // closure — not a whole-string `parse` (which would turn "12ab" into NaN).
     let src = "function f(): number { return parseInt(\"100\"); }";
     let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__pi"), "inlined parse-int closure: {rust}");
     assert!(
-        rust.contains(".trim().parse::<f64>().unwrap_or(f64::NAN)"),
-        "got:\n{rust}"
+        rust.contains("to_digit"),
+        "per-digit truncating parse: {rust}"
     );
 }
 
 #[test]
-fn translates_parse_int_with_radix_to_from_str_radix() {
+fn translates_parse_int_with_radix_and_hex_prefix() {
     let src = "function f(s: string): number { return parseInt(s, 16); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("from_str_radix("), "got:\n{rust}");
-    assert!(rust.contains("as u32"), "got:\n{rust}");
+    assert!(rust.contains("__pi"), "got:\n{rust}");
+    // the 0x/0X auto-detection rides alongside the radix parse.
+    assert!(rust.contains("b'x'"), "hex prefix detection: {rust}");
+}
+
+#[test]
+fn translates_parse_float_to_truncating_closure() {
+    // parseFloat takes the longest valid decimal prefix (truncation) —
+    // "3.14abc" → 3.14, not NaN. Inlined as a closure.
+    let src = "function f(): number { return parseFloat(\"3.14\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__pf"), "inlined parse-float closure: {rust}");
+    assert!(
+        rust.contains("starts_with(\"Infinity\")"),
+        "Infinity handling: {rust}"
+    );
 }
 
 #[test]
@@ -146,19 +163,18 @@ fn translates_number_constants() {
 
 #[test]
 fn translates_number_parse_float() {
+    // Number.parseFloat ≡ the global parseFloat — full truncating semantics.
     let src = "function f(s: string): number { return Number.parseFloat(s); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(
-        rust.contains(".trim().parse::<f64>().unwrap_or(f64::NAN)"),
-        "got:\n{rust}"
-    );
+    assert!(rust.contains("__pf"), "inlined parse-float closure: {rust}");
 }
 
 #[test]
 fn translates_number_parse_int_radix() {
     let src = "function f(s: string): number { return Number.parseInt(s, 16); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("from_str_radix("), "got:\n{rust}");
+    assert!(rust.contains("__pi"), "got:\n{rust}");
+    assert!(rust.contains("b'x'"), "hex prefix detection: {rust}");
 }
 
 #[test]
