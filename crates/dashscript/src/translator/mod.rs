@@ -29,6 +29,17 @@ use oxc_parser::Parser;
 use oxc_semantic::SemanticBuilder;
 use oxc_span::SourceType;
 
+/// Runtime dependencies a translated file pulls in — extra crates or helper
+/// modules the generated Cargo project must include. Collected during
+/// translation so `ds build` only links what the source actually uses: a file
+/// that never formats a number to an ES string pulls in no `ryu_js`.
+#[derive(Default, Debug, Clone)]
+pub struct RuntimeDeps {
+    /// Some emit point routes an `f64` through `__ds::number_to_string`, so the
+    /// generated crate needs the `ryu_js` crate and the `__ds` helper module.
+    pub needs_ryu_js: bool,
+}
+
 /// Translates a TypeScript-flavored `.ds` program into Rust source.
 #[derive(Default)]
 pub struct Translator;
@@ -42,9 +53,28 @@ impl Translator {
 
     /// Parse `.ds` source with oxc and translate the AST to Rust source.
     ///
+    /// Convenience wrapper around [`Self::translate_with_deps`] that drops the
+    /// runtime-dependency report — for callers (tests, LSP) that only want the
+    /// Rust text. `ds build` uses [`Self::translate_with_deps`] so the project
+    /// links only what the source uses.
+    ///
     /// # Errors
     /// Returns an error string if oxc reports parse diagnostics.
     pub fn translate(&self, source: &str) -> Result<String, String> {
+        Ok(self.translate_with_deps(source)?.0)
+    }
+
+    /// Parse `.ds` source, translate the AST to Rust source, and report the
+    /// runtime dependencies the generated code needs.
+    ///
+    /// The Rust text matches [`Self::translate`]; the second return value is the
+    /// set of extra crates / helper modules the translated code references, so
+    /// the project emitter can add them to `Cargo.toml` and write the helper
+    /// module only when needed.
+    ///
+    /// # Errors
+    /// Returns an error string if oxc reports parse diagnostics.
+    pub fn translate_with_deps(&self, source: &str) -> Result<(String, RuntimeDeps), String> {
         let allocator = Allocator::default();
         let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
 
@@ -79,7 +109,11 @@ impl Translator {
             attrs: Vec::new(),
             items,
         };
-        Ok(prettyplease::unparse(&file))
+        // No emit point records a dep yet; the wiring lands when number→string
+        // formatting routes through `__ds::number_to_string` (and a
+        // `RefCell<RuntimeDeps>` reaches the expression layer).
+        let deps = RuntimeDeps::default();
+        Ok((prettyplease::unparse(&file), deps))
     }
 
     /// Check `.ds` source for translatability without emitting Rust.

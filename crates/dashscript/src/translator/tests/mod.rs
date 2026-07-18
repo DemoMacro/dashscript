@@ -14,5 +14,6 @@ mod modules;
 mod narrowing;
 mod number_methods;
 mod operators;
+mod runtime_deps;
 mod strings;
 mod types;
