@@ -29,28 +29,41 @@ pub(in crate::translator) fn number_method(
         // runtime conversion with digits `0-9a-z`, so `i.toString(radix)` in
         // a loop works — not just literal radices. A fractional receiver
         // loses its fraction, matching TS (`(3.5).toString(2)` first drops to
-        // the integer `3`).
+        // the integer `3`). `NaN`/`±Infinity` keep their names in any radix
+        // (TS does not convert them); `f64 as i64` would turn them into 0 /
+        // i64::MAX, so they are intercepted first.
         "toString" if !args.is_empty() => {
             let radix = translate_argument(args.first()?, ctx);
             parse_quote!({
-                let __n = (#recv) as i64;
+                let __x = #recv;
                 let __r = (#radix) as u32;
-                let __digits = b"0123456789abcdefghijklmnopqrstuvwxyz";
-                let mut __m = __n.unsigned_abs();
-                let mut __buf: Vec<u8> = Vec::new();
-                if __m == 0 {
-                    __buf.push(b'0');
+                if __x.is_nan() {
+                    "NaN".to_string()
+                } else if __x.is_infinite() {
+                    if __x < 0_f64 {
+                        "-Infinity".to_string()
+                    } else {
+                        "Infinity".to_string()
+                    }
+                } else {
+                    let __n = __x as i64;
+                    let __digits = b"0123456789abcdefghijklmnopqrstuvwxyz";
+                    let mut __m = __n.unsigned_abs();
+                    let mut __buf: Vec<u8> = Vec::new();
+                    if __m == 0 {
+                        __buf.push(b'0');
+                    }
+                    while __m > 0 {
+                        __buf.push(__digits[(__m % __r as u64) as usize]);
+                        __m /= __r as u64;
+                    }
+                    __buf.reverse();
+                    let mut __s = String::from_utf8(__buf).unwrap();
+                    if __n < 0 {
+                        __s.insert(0, '-');
+                    }
+                    __s
                 }
-                while __m > 0 {
-                    __buf.push(__digits[(__m % __r as u64) as usize]);
-                    __m /= __r as u64;
-                }
-                __buf.reverse();
-                let mut __s = String::from_utf8(__buf).unwrap();
-                if __n < 0 {
-                    __s.insert(0, '-');
-                }
-                __s
             })
         }
         // `(n).toExponential(fracDigits)` → scientific notation with that many

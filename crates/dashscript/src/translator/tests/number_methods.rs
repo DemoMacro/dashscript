@@ -56,3 +56,17 @@ fn translates_number_to_string_no_arg_is_display() {
     assert!(rust.contains(".to_string()"), "got:\n{rust}");
     assert!(!rust.contains("as u32"), "got:\n{rust}");
 }
+
+#[test]
+fn translates_number_to_string_radix_nan_infinity() {
+    // `NaN.toString(r)` → "NaN", `Infinity.toString(r)` → "Infinity" in any
+    // radix (TS keeps the names rather than converting). Mirrors test262's
+    // `number.prototype.toString.numeric-literal-tostring-radix-*`.
+    let src =
+        "function f(): void { console.log(NaN.toString(10)); console.log(Infinity.toString(10)); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("is_nan()"), "got:\n{rust}");
+    assert!(rust.contains("is_infinite()"), "got:\n{rust}");
+    assert!(rust.contains("\"NaN\""), "got:\n{rust}");
+    assert!(rust.contains("\"Infinity\""), "got:\n{rust}");
+}
