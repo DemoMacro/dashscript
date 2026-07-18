@@ -3,16 +3,16 @@
     "id": "test262.test.built-ins.number.15.7.3-1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:2:62: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.15.7.3-2",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:37: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported",
     "note": ""
   },
   {
@@ -173,8 +173,8 @@
     "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a4",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:29: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -193,8 +193,8 @@
     "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a4",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:29: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -257,8 +257,8 @@
     "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -281,72 +281,72 @@
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a2",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:60: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.2",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.3",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.4",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.5",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.6",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.7",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -361,8 +361,8 @@
     "id": "test262.test.built-ins.number.prototype.toexponential.return-abrupt-tointeger-fractiondigits-symbol",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:14: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -455,8 +455,8 @@
     "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a2_t01",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:28: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -503,8 +503,8 @@
     "id": "test262.test.built-ins.number.prototype.toprecision.return-abrupt-tointeger-precision-symbol",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -890,64 +890,64 @@
     "id": "test262.test.built-ins.number.s15.7.3_a1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a2",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a3",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a4",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a5",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a6",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a7",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:2:62: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a8",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:28: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {

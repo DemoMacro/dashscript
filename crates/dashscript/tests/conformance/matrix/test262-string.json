@@ -183,8 +183,8 @@
     "id": "test262.test.built-ins.string.prototype.charat.pos-coerce-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:21: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Object.create` reflection is unsupported",
     "note": ""
   },
   {
@@ -218,8 +218,8 @@
     "id": "test262.test.built-ins.string.prototype.charcodeat.pos-coerce-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:21: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Object.create` reflection is unsupported",
     "note": ""
   },
   {
@@ -253,16 +253,16 @@
     "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-symbol-pos-to-integer",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.codepointat.return-abrupt-from-this-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -368,24 +368,24 @@
     "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-position-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-searchstring-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.endswith.return-abrupt-from-this-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -556,24 +556,24 @@
     "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-position-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-searchstring-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.includes.return-abrupt-from-this-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -766,8 +766,8 @@
     "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring-bigint",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:45: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:3:45: warning: unreachable call: unreachable call\nsrc\\main.rs:7:28: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:7:28: warning: unreachable call: unreachable call\nsrc\\main.rs:11:45: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:11:45: warning: unreachable call: unreachable call",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -861,8 +861,8 @@
     "id": "test262.test.built-ins.string.prototype.match.invoke-builtin-match",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:26: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:2:44: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:23:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:23:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -877,16 +877,16 @@
     "id": "test262.test.built-ins.string.prototype.matchall.flags-nonglobal-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:88:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.flags-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:21:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:21:28: error[E0425]: cannot find value `reg_exp` in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:12: warning: unreachable call: unreachable call\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -917,16 +917,16 @@
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-not-callable",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:22:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:40:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:58:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-has-no-matchall",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:19:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -965,16 +965,16 @@
     "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-form-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.normalize.return-abrupt-from-this-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1226,16 +1226,16 @@
     "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-count-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.repeat.return-abrupt-from-this-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1282,8 +1282,8 @@
     "id": "test262.test.built-ins.string.prototype.replace.regexp-prototype-replace-v-u-flag",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:55: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:27: error[E0425]: cannot find function `do_replace` in this scope: not found in this scope\nsrc\\main.rs:4:55: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:27: error[E0425]: cannot find function `do_replace` in this scope: not found in this scope\nsrc\\main.rs:5:55: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:27: error[E0425]: cannot find function `do_replace` in this scope: not found in this scope",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1366,8 +1366,8 @@
     "id": "test262.test.built-ins.string.prototype.replaceall.getsubstitution-0x0024-0x003c",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:7:40: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:12: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1398,24 +1398,24 @@
     "id": "test262.test.built-ins.string.prototype.replaceall.getsubstitution-0x0024n",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:23:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:23:40: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:23:12: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.getsubstitution-0x0024nn",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:9:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:9:40: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:9:12: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.replacevalue-fn-skip-tostring",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:12: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -1464,8 +1464,8 @@
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-flags-no-g-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:23:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:41:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:8:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:20:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -1480,16 +1480,16 @@
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-replacer-before-tostring",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:42: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:12: warning: unreachable call: unreachable call\nsrc\\main.rs:5:12: warning: unreachable call: unreachable call",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-tostring-regexp",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:5:42: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:9:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:9:42: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:13:5: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:13:42: error[E0425]: cannot find value `symbol` in this scope: not found in this scope",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1528,24 +1528,24 @@
     "id": "test262.test.built-ins.string.prototype.search.invoke-builtin-search",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:2:45: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:8:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:8:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:23:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:23:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.regexp-prototype-search-v-flag",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0425]: cannot find function `do_search` in this scope: not found in this scope\nsrc\\main.rs:3:27: warning: unreachable call: unreachable call\nsrc\\main.rs:4:27: error[E0425]: cannot find function `do_search` in this scope: not found in this scope\nsrc\\main.rs:4:27: warning: unreachable call: unreachable call\nsrc\\main.rs:5:27: error[E0425]: cannot find function `do_search` in this scope: not found in this scope\nsrc\\main.rs:5:27: warning: unreachable call: unreachable call",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.regexp-prototype-search-v-u-flag",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find function `do_search` in this scope: not found in this scope\nsrc\\main.rs:4:27: warning: unreachable call: unreachable call\nsrc\\main.rs:5:27: error[E0425]: cannot find function `do_search` in this scope: not found in this scope\nsrc\\main.rs:5:27: warning: unreachable call: unreachable call\nsrc\\main.rs:6:27: error[E0425]: cannot find function `do_search` in this scope: not found in this scope\nsrc\\main.rs:6:27: warning: unreachable call: unreachable call",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1584,112 +1584,112 @@
     "id": "test262.test.built-ins.string.prototype.split.argument-is-null-and-instance-is-function-call-that-returned-string",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:19: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:19: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:3:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.argument-is-regexp-and-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:30: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:10: error[E0599]: no method named `split` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.argument-is-undefined-and-instance-is-string",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.argument-is-void-0-and-instance-is-string-object-object-have-overrided-to-string-function",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:32: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:4:32: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-123-instance-is-this123is123a123string123object",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:24: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-null-instance-is-thisnullisnullanullstringnullobject",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-true-instance-is-thistrueistrueatruestringtrueobject",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:21: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-void-0-instance-is-thisundefinedisundefinedaundefinedstringundefinedobject",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:6:32: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:6:32: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-without-arguments-and-instance-is-empty-string",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:34: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:4:35: error[E0609]: no field `constructor` on type `std::str::Split<'_, _>`: unknown field\nsrc\\main.rs:5:36: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:6:34: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-x-instance-is-empty-string",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:35: error[E0609]: no field `constructor` on type `Vec<String>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-by-using-eval",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:15: error: `this` is only valid inside a class method\nsrc\\main.rs:2:17: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:9:13: error[E0425]: cannot find value `to_string` in this scope\nsrc\\main.rs:9:25: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:22:8: error[E0425]: cannot find value `to_string` in this scope: not found in this scope\nsrc\\main.rs:22:21: error[E0425]: cannot find value `object` in this scope: not found in this scope",
+    "status": "unsupported",
+    "detail": "`eval` is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-if-deleting-the-string-prototype-split-length-property-fails",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:5:17: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-if-enumerating-the-string-prototype-split-length-property-fails",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:4:17: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:7:14: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `propertyIsEnumerable` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-string-prototype-split-length",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:28: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -1712,16 +1712,16 @@
     "id": "test262.test.built-ins.string.prototype.split.instance-is-function",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.instance-is-math",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:26: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:3:24: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1736,16 +1736,16 @@
     "id": "test262.test.built-ins.string.prototype.split.separator-override-tostring-limit-override-valueof-tostring",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-override-tostring-limit-override-valueof",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1811,24 +1811,24 @@
     "id": "test262.test.built-ins.string.prototype.startswith.return-abrupt-from-position-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.startswith.return-abrupt-from-searchstring-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.startswith.return-abrupt-from-this-as-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -3529,8 +3529,8 @@
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-symbol-typeerror",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:4:18: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:19:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -3633,8 +3633,8 @@
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-symbol-typeerror",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:4:18: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:19:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -3673,8 +3673,8 @@
     "id": "test262.test.built-ins.string.raw.nextkey-is-symbol-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -3848,8 +3848,8 @@
     "id": "test262.test.built-ins.string.symbol-string-coercion",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:28: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:28: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:28: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported",
     "note": ""
   }
 ]

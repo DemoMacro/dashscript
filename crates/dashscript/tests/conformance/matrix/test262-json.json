@@ -1,0 +1,730 @@
+[
+  {
+    "id": "test262.test.built-ins.json.15.12-0-1",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.15.12-0-3",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.15.12-0-4",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.israwjson.basic",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.israwjson.builtin",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-0-1",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-0-2",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-0-3",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-0-4",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-0-5",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-0-6",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-0-8",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-1",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-2",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-3",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-4",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-1",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-2",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-3",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-4",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-5",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-1",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-2",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-3",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-4",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-1",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-2",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-3",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-1",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-2",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-3",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-4",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-5",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-6",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-7",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.builtin",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.duplicate-proto",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.invalid-whitespace",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.revived-proxy-revoked",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Proxy` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.reviver-array-get-prop-from-prototype",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.reviver-array-non-configurable-prop-create",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:23: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.reviver-array-non-configurable-prop-delete",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.reviver-object-get-prop-from-prototype",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.reviver-object-non-configurable-prop-create",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:23: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.reviver-object-non-configurable-prop-delete",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.s15.12.2_a1",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.text-negative-zero",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.text-non-string-primitive",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.parse.text-object",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:2:24: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.rawjson.basic",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:2:45: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:45: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:45: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.rawjson.bigint-raw-json-can-be-stringified",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.rawjson.builtin",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.rawjson.illegal-empty-and-start-end-chars",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:8:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:8:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:20:41: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:25:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:25:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:37:41: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.rawjson.invalid-json-text",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.builtin",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.property-order",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-array-duplicates",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:5:15: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-array-empty",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:2:62: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:62: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:45: warning: unreachable expression: unreachable expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-array-number",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-array-order",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:62: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:62: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked-realm",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:19: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:3:26: warning: unreachable call: unreachable call\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:19:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Proxy` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-function-array-circular",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:20: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-function-object-circular",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:25:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:25:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-function-object-deleted-property",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-function-result-undefined",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.replacer-function-tojson",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:2:62: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:62: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.space-number",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.space-string-range",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:15: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.space-string",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-array-circular",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:17: error[E0275]: overflow assigning `Vec<_>` to `_`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-array-proxy-revoked",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Proxy` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-bigint-cross-realm",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:21: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:6:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:22:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-bigint-order",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:27:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:45: warning: unreachable expression: unreachable expression",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-bigint-replacer",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-bigint-tojson-receiver",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-bigint-tojson",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-bigint",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:21:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:38:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:24: warning: unreachable call: unreachable call\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:34: error[E0425]: cannot find function `object` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-function",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:2:35: warning: unreachable call: unreachable call\nsrc\\main.rs:3:45: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:35: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-number-negative-zero",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:68: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:4:35: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-number-non-finite",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:35: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-object-circular",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:24:13: error[E0618]: expected function, found `!`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-object-proxy-revoked",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Proxy` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-primitive-top-level",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-string-escape-ascii",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:25:16: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nsrc\\main.rs:25:24: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-string-escape-unicode",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-symbol",
+    "layer": "test262",
+    "category": "json",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-tojson-arguments",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:14:35: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-tojson-array-circular",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0609]: no field `to_j_s_o_n` on type `Vec<_>`: unknown field\nsrc\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:19:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-tojson-not-function",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `j_s_o_n` in this scope: not found in this scope\nsrc\\main.rs:2:35: warning: unreachable call: unreachable call\nsrc\\main.rs:3:35: warning: unreachable call: unreachable call",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.json.stringify.value-tojson-object-circular",
+    "layer": "test262",
+    "category": "json",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nsrc\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:19:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "note": ""
+  }
+]
