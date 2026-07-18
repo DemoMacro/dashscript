@@ -59,24 +59,24 @@
     "id": "test262.test.built-ins.string.fromcharcode.touint16-tonumber-throws-bigint",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.fromcodepoint.argument-is-not-integer",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.fromcodepoint.argument-is-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -91,8 +91,8 @@
     "id": "test262.test.built-ins.string.fromcodepoint.number-is-out-of-range",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -127,8 +127,8 @@
     "id": "test262.test.built-ins.string.prototype.at.index-non-numeric-argument-tointeger-invalid",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -143,8 +143,8 @@
     "id": "test262.test.built-ins.string.prototype.at.return-abrupt-from-this",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:34:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -184,7 +184,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Object.create` reflection is unsupported",
+    "detail": "`Object.create` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -210,8 +210,8 @@
     "id": "test262.test.built-ins.string.prototype.charat.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:19: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -219,7 +219,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Object.create` reflection is unsupported",
+    "detail": "`Object.create` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -245,8 +245,8 @@
     "id": "test262.test.built-ins.string.prototype.charcodeat.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:24: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -254,7 +254,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -262,7 +262,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -336,24 +336,24 @@
     "id": "test262.test.built-ins.string.prototype.codepointat.this-is-null-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.codepointat.this-is-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.concat.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -369,7 +369,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -377,7 +377,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -385,7 +385,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -436,8 +436,8 @@
     "id": "test262.test.built-ins.string.prototype.endswith.searchstring-is-regexp-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -532,16 +532,16 @@
     "id": "test262.test.built-ins.string.prototype.endswith.this-is-null-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.endswith.this-is-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -557,7 +557,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -565,7 +565,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -573,7 +573,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -625,8 +625,8 @@
     "id": "test262.test.built-ins.string.prototype.includes.searchstring-is-regexp-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -718,32 +718,32 @@
     "id": "test262.test.built-ins.string.prototype.includes.this-is-null-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.includes.this-is-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-bigint",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-errors",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -767,15 +767,15 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring-errors",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -798,16 +798,16 @@
     "id": "test262.test.built-ins.string.prototype.indexof.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.iswellformed.return-abrupt-from-this",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:34:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -837,24 +837,24 @@
     "id": "test262.test.built-ins.string.prototype.lastindexof.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:25: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.localecompare.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:26: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:9: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:42: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -862,15 +862,15 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | the `arguments` object is unsupported | `instanceof` has no DashScript mapping (static types; no runtime type check)",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:19: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -878,7 +878,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -886,7 +886,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -901,8 +901,8 @@
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:9: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:31: error[E0599]: no method named `match_all` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -918,7 +918,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -926,23 +926,23 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported",
+    "detail": "`delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-matchall-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:5: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:23: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:31: error[E0599]: no method named `match_all` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.this-val-non-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -957,8 +957,8 @@
     "id": "test262.test.built-ins.string.prototype.normalize.form-is-not-valid-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -966,7 +966,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -974,7 +974,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1005,32 +1005,32 @@
     "id": "test262.test.built-ins.string.prototype.normalize.this-is-null-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.normalize.this-is-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.padend.exception-fill-string-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.padend.exception-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1095,16 +1095,16 @@
     "id": "test262.test.built-ins.string.prototype.padstart.exception-fill-string-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.padstart.exception-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1177,8 +1177,8 @@
     "id": "test262.test.built-ins.string.prototype.repeat.count-is-infinity-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1196,8 +1196,8 @@
     "id": "test262.test.built-ins.string.prototype.repeat.count-less-than-zero-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1227,7 +1227,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1235,23 +1235,23 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.repeat.this-is-null-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.repeat.this-is-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1266,8 +1266,8 @@
     "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -1306,24 +1306,24 @@
     "id": "test262.test.built-ins.string.prototype.replace.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:19: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.tostring-this-throws-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.tostring-this-throws-toprimitive",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1465,15 +1465,15 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-flags-null-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:10:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:22:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:30:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:30:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1481,7 +1481,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -1496,16 +1496,16 @@
     "id": "test262.test.built-ins.string.prototype.replaceall.this-is-null-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.this-is-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1520,8 +1520,8 @@
     "id": "test262.test.built-ins.string.prototype.search.cstm-search-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:12: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:43: error[E0599]: no method named `search` found for struct `String` in the current scope: method not found in `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -1529,7 +1529,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | the `arguments` object is unsupported | `instanceof` has no DashScript mapping (static types; no runtime type check)",
     "note": ""
   },
   {
@@ -1552,32 +1552,32 @@
     "id": "test262.test.built-ins.string.prototype.search.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.slice.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.slice.this-value-tostring-throws-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.slice.this-value-tostring-throws-toprimitive",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1704,8 +1704,8 @@
     "id": "test262.test.built-ins.string.prototype.split.cstm-split-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:15: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -1776,16 +1776,16 @@
     "id": "test262.test.built-ins.string.prototype.split.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.transferred-to-number-separator-override-tostring-returns-regexp",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:30: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:10:13: error[E0425]: cannot find value `test262_error` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:18: error[E0599]: no method named `split` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:25:13: warning: unreachable expression: unreachable expression",
+    "status": "unsupported",
+    "detail": "`instanceof` has no DashScript mapping (static types; no runtime type check)",
     "note": ""
   },
   {
@@ -1812,7 +1812,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1820,7 +1820,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1828,7 +1828,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1869,8 +1869,8 @@
     "id": "test262.test.built-ins.string.prototype.startswith.searchstring-is-regexp-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1899,48 +1899,48 @@
     "id": "test262.test.built-ins.string.prototype.startswith.this-is-null-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.startswith.this-is-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.substring.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.substring.this-value-tostring-throws-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.substring.this-value-tostring-throws-toprimitive",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.symbol.iterator.this-val-non-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1979,8 +1979,8 @@
     "id": "test262.test.built-ins.string.prototype.tolocalelowercase.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:32: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2003,8 +2003,8 @@
     "id": "test262.test.built-ins.string.prototype.tolocaleuppercase.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:32: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2055,40 +2055,40 @@
     "id": "test262.test.built-ins.string.prototype.tolowercase.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:25: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.tolowercase.this-value-tostring-throws-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.tolowercase.this-value-tostring-throws-toprimitive",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.tostring.non-generic-realm",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.tostring.non-generic",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2125,16 +2125,16 @@
     "id": "test262.test.built-ins.string.prototype.touppercase.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:25: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.towellformed.return-abrupt-from-this",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:34:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2169,16 +2169,16 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-1",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-2",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2589,8 +2589,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-42",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:7:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:19:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2620,12 +2620,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-46",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=1"
-    },
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -2655,8 +2651,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-51",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:35: warning: unreachable expression: unreachable expression\nsrc\\main.rs:2:19: error[E0618]: expected function, found `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -3457,8 +3453,8 @@
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3473,8 +3469,8 @@
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-cannot-convert-to-primitive-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3489,8 +3485,8 @@
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-toprimitive-returns-object-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3505,8 +3501,8 @@
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-tostring-returns-object-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3521,8 +3517,8 @@
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-valueof-returns-object-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3530,7 +3526,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3561,8 +3557,8 @@
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-not-obj-coercible",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3577,8 +3573,8 @@
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-cannot-convert-to-primitive-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3593,8 +3589,8 @@
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-toprimitive-returns-object-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3609,8 +3605,8 @@
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-tostring-returns-object-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3625,8 +3621,8 @@
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-valueof-returns-object-err",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3634,7 +3630,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3649,16 +3645,16 @@
     "id": "test262.test.built-ins.string.prototype.valueof.non-generic-realm",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:6:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:6:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:18:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:23:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.valueof.non-generic",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3674,7 +3670,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3773,8 +3769,8 @@
     "id": "test262.test.built-ins.string.raw.returns-abrupt-from-substitution-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3801,24 +3797,24 @@
     "id": "test262.test.built-ins.string.raw.template-length-is-symbol-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-not-object-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-raw-not-object-throws",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
