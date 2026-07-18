@@ -29,6 +29,7 @@ mod definition;
 mod diagnostics;
 mod document_symbols;
 mod hover;
+mod references;
 mod signatures;
 mod text;
 
@@ -69,6 +70,7 @@ fn server_capabilities() -> ServerCapabilities {
         definition_provider: Some(OneOf::Left(true)),
         hover_provider: Some(HoverProviderCapability::Simple(true)),
         document_symbol_provider: Some(OneOf::Left(true)),
+        references_provider: Some(OneOf::Left(true)),
         signature_help_provider: Some(SignatureHelpOptions {
             trigger_characters: Some(vec!["(".to_string()]),
             retrigger_characters: Some(vec![",".to_string()]),
@@ -151,6 +153,14 @@ impl Server {
                     .extract::<lsp_types::SignatureHelpParams>("textDocument/signatureHelp")
                     .ok()
                     .and_then(|(_, params)| self.on_signature_help(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            "textDocument/references" => {
+                let result = req
+                    .extract::<lsp_types::ReferenceParams>("textDocument/references")
+                    .ok()
+                    .and_then(|(_, params)| self.on_references(&params))
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }
