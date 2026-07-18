@@ -1,0 +1,36 @@
+// classes — `class` → `struct` + `impl` (`new` + methods); `this` → `self`.
+// Mirrors crates/dashscript/src/translator/class.rs.
+//
+// `new Foo(args)` → `Foo::new(args)`. A `constructor(x) { this.x = x }` folds
+// into `fn new(x) -> Foo { Foo { x } }`. Methods take `&self` (or `&mut self`
+// when they assign `this.field`). Note: calling a `&mut self` method needs a
+// mutable binding at the call site, which the translator does not yet infer —
+// prefer `&self` methods that return a new value, or mutate fields directly.
+class Point {
+  x: number;
+  y: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+  magnitude(): number {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+  dot(other: Point): number {
+    return this.x * other.x + this.y * other.y;
+  }
+}
+class Counter {
+  count: number = 0;
+  value(): number {
+    return this.count;
+  }
+}
+function main(): void {
+  const p = new Point(3, 4);
+  console.log("magnitude:", p.magnitude());
+  const q = new Point(1, 0);
+  console.log("dot:", p.dot(q));
+  const c = new Counter();
+  console.log("count:", c.value());
+}

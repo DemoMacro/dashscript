@@ -1,0 +1,23 @@
+// functions — declarations, generics, default params, arrows.
+// Mirrors crates/dashscript/src/translator/functions/mod.rs.
+function add(a: number, b: number): number {
+  return a + b;
+}
+// A generic `<T>` passes through verbatim; Rust monomorphizes each call.
+function identity<T>(x: T): T {
+  return x;
+}
+// A default parameter becomes `Option<T>` — callers pass `None` when it is
+// omitted, or `Some(v)` when supplied.
+function greet(name: string, greeting: string = "hello"): string {
+  return greeting + ", " + name;
+}
+function main(): void {
+  console.log("add:", add(2, 3));
+  console.log("identity:", identity(42));
+  console.log("default:", greet("world"));
+  console.log("override:", greet("world", "hi"));
+  // An arrow function → a Rust closure (`|n| n * n`).
+  const square = (n: number) => n * n;
+  console.log("square:", square(9));
+}

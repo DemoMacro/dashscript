@@ -1,0 +1,30 @@
+// destructuring — object/array patterns, rename, rest.
+// Mirrors crates/dashscript/src/translator/functions/destructure.rs.
+interface Point {
+  x: number;
+  y: number;
+}
+function main(): void {
+  // object destructuring
+  const p: Point = {
+    x: 3,
+    y: 4
+  };
+  const { x, y } = p;
+  console.log("obj:", x, y);
+  // rename: bind field `x` to a new local `a`
+  const { x: a } = p;
+  console.log("renamed:", a);
+  // array destructuring
+  const pair = [10, 20];
+  const [first, second] = pair;
+  console.log("array:", first, second);
+  // rest element collects the tail into a Vec
+  const [head, ...rest] = [
+    1,
+    2,
+    3,
+    4
+  ];
+  console.log("head:", head, "rest:", rest.length);
+}

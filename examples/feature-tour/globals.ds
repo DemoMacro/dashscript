@@ -1,0 +1,15 @@
+// globals — the free-standing builtins (parseInt, isNaN, value casts).
+// Mirrors crates/dashscript/src/translator/builtins/global.rs.
+function main(): void {
+  console.log("parseInt:", parseInt("42"));
+  console.log("parseFloat:", parseFloat("3.14"));
+  console.log("isNaN:", isNaN(NaN), isNaN(5));
+  console.log("isFinite:", isFinite(5), isFinite(Infinity));
+  // value casts: String() / Number() / Boolean()
+  console.log("String(42):", String(42));
+  console.log("Number('7'):", Number("7"));
+  console.log("Boolean(0):", Boolean(0));
+  console.log("Boolean('x'):", Boolean("x"));
+  // string coercion via +
+  console.log("concat:", "answer: " + 42);
+}

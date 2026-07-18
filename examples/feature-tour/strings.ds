@@ -1,0 +1,20 @@
+// strings — String methods and concatenation.
+// Mirrors crates/dashscript/src/translator/builtins/string.rs.
+function main(): void {
+  const s = "  Hello, World!  ";
+  console.log("trim:", s.trim());
+  console.log("upper:", s.toUpperCase());
+  console.log("lower:", s.toLowerCase());
+  console.log("length:", s.length);
+  const greeting = "Hello";
+  console.log("repeat:", greeting.repeat(3));
+  console.log("concat:", greeting + ", " + "ada");
+  console.log("includes:", greeting.includes("ell"));
+  console.log("indexOf:", greeting.indexOf("l"));
+  console.log("slice:", greeting.slice(1, 3));
+  const parts = "a,b,c".split(",");
+  console.log("split len:", parts.length);
+  // a template literal → format!
+  const name = "world";
+  console.log(`hi ${name}!`);
+}

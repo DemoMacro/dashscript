@@ -1,0 +1,38 @@
+// records — object literals, Record<K,V>, and Object methods.
+// Mirrors crates/dashscript/src/translator/{expressions/object,builtins/object}.rs.
+interface Point {
+  x: number;
+  y: number;
+}
+function main(): void {
+  // object literal → struct literal
+  const p: Point = {
+    x: 3,
+    y: 4
+  };
+  console.log("point:", p.x, p.y);
+  // a field map → a HashMap-backed `Record<K, V>`
+  const tags: Record<string, number> = {
+    a: 1,
+    b: 2,
+    c: 3
+  };
+  console.log("a:", tags.a);
+  // Object.keys / values / entries → the key / value / pair sets
+  const keys = Object.keys(tags);
+  const values = Object.values(tags);
+  console.log("keys len:", keys.length);
+  console.log("values len:", values.length);
+  const entries = Object.entries(tags);
+  console.log("entries len:", entries.length);
+  // spread merges a typed struct: { ...base, field: v }
+  const base: Point = {
+    x: 1,
+    y: 2
+  };
+  const merged: Point = {
+    ...base,
+    y: 9
+  };
+  console.log("merged:", merged.x, merged.y);
+}

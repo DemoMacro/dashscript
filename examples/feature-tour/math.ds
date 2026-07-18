@@ -1,0 +1,19 @@
+// math — Math functions and constants.
+// Mirrors crates/dashscript/src/translator/builtins/math.rs.
+function main(): void {
+  console.log("pi:", Math.PI);
+  console.log("e:", Math.E);
+  console.log("abs:", Math.abs(-42));
+  console.log("floor:", Math.floor(3.7));
+  console.log("ceil:", Math.ceil(3.2));
+  console.log("round:", Math.round(3.5));
+  console.log("trunc:", Math.trunc(-3.9));
+  console.log("sqrt:", Math.sqrt(16));
+  console.log("pow:", Math.pow(2, 10));
+  console.log("cbrt:", Math.cbrt(27));
+  console.log("min:", Math.min(3, 1, 4, 1, 5));
+  console.log("max:", Math.max(3, 1, 4, 1, 5));
+  console.log("sign:", Math.sign(-5), Math.sign(0), Math.sign(5));
+  console.log("exp:", Math.exp(1));
+  console.log("log:", Math.log(Math.E));
+}
