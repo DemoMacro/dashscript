@@ -6,12 +6,14 @@
 //! lowers to `use serde::X` — see [`module_ident`].
 
 use oxc_allocator::Allocator;
-use oxc_ast::ast::{BindingIdentifier, Declaration, ImportDeclarationSpecifier, Statement};
+use oxc_ast::ast::{
+    BindingIdentifier, BindingPattern, Declaration, Function, ImportDeclarationSpecifier, Statement,
+};
 use oxc_parser::Parser;
-use oxc_span::{SourceType, Span};
+use oxc_span::{GetSpan, SourceType, Span};
 use syn::Ident;
 
-use super::bindings;
+use super::{bindings, semantic::SymbolKind};
 
 /// A `.ds` import of a local module: the Rust module name (`other`) and the
 /// original source string (`"./other"`).
@@ -170,6 +172,27 @@ pub struct LocalSymbol {
     pub name: String,
     /// The `.ds` byte span of the binding identifier.
     pub span: Span,
+    /// What the symbol declares — drives the document-symbol icon and hover.
+    pub kind: SymbolKind,
+    /// A function's parameter list and return type (source slices), for
+    /// signature help and hover. `None` for non-functions.
+    pub signature: Option<Signature>,
+}
+
+/// A function's signature as written in `.ds` — parameter names, their type
+/// annotation (verbatim source slice, e.g. `number`, `string[]`), and the
+/// return type. Powers LSP signature help and hover for user functions.
+#[derive(Debug, Clone)]
+pub struct Signature {
+    pub params: Vec<ParamInfo>,
+    pub return_type: Option<String>,
+}
+
+#[derive(Debug, Clone)]
+pub struct ParamInfo {
+    pub name: String,
+    pub type_text: Option<String>,
+    pub optional: bool,
 }
 
 /// Whether the `.ds` source declares a top-level `function main()` — the
@@ -198,22 +221,29 @@ fn is_named_main(id: &Option<BindingIdentifier>) -> bool {
     id.as_ref().is_some_and(|id| id.name.as_str() == "main")
 }
 
-/// Every declarable name in a `.ds` file with its binding span.
+/// Every declarable name in a `.ds` file with its binding span, kind, and (for
+/// functions) signature. Used by `ds lsp` for in-file go-to-definition,
+/// document symbols, hover, and signature help.
 pub(crate) fn collect_declarations(source: &str) -> Vec<LocalSymbol> {
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
     let mut out = Vec::new();
     for stmt in &ret.program.body {
-        collect_from_statement(stmt, &mut out);
+        collect_from_statement(stmt, source, &mut out);
     }
     out
 }
 
-fn collect_from_statement(stmt: &Statement, out: &mut Vec<LocalSymbol>) {
+fn collect_from_statement(stmt: &Statement, source: &str, out: &mut Vec<LocalSymbol>) {
     match stmt {
-        Statement::FunctionDeclaration(f) => extend_binding(&f.id, out),
-        Statement::TSInterfaceDeclaration(i) => out.push(symbol(&i.id)),
-        Statement::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id)),
+        Statement::FunctionDeclaration(f) => extend_binding(
+            &f.id,
+            SymbolKind::Function,
+            function_signature(f, source),
+            out,
+        ),
+        Statement::TSInterfaceDeclaration(i) => out.push(symbol(&i.id, SymbolKind::Interface)),
+        Statement::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id, SymbolKind::TypeAlias)),
         Statement::ImportDeclaration(imp) => {
             if let Some(specs) = &imp.specifiers {
                 for spec in specs {
@@ -226,6 +256,8 @@ fn collect_from_statement(stmt: &Statement, out: &mut Vec<LocalSymbol>) {
                         out.push(LocalSymbol {
                             name: local.name.to_string(),
                             span: local.span,
+                            kind: SymbolKind::Other,
+                            signature: None,
                         });
                     }
                 }
@@ -233,31 +265,135 @@ fn collect_from_statement(stmt: &Statement, out: &mut Vec<LocalSymbol>) {
         }
         Statement::ExportNamedDeclaration(exp) => {
             if let Some(decl) = &exp.declaration {
-                collect_from_declaration(decl, out);
+                collect_from_declaration(decl, source, out);
             }
         }
         _ => {}
     }
 }
 
-fn collect_from_declaration(decl: &Declaration, out: &mut Vec<LocalSymbol>) {
+fn collect_from_declaration(decl: &Declaration, source: &str, out: &mut Vec<LocalSymbol>) {
     match decl {
-        Declaration::FunctionDeclaration(f) => extend_binding(&f.id, out),
-        Declaration::TSInterfaceDeclaration(i) => out.push(symbol(&i.id)),
-        Declaration::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id)),
+        Declaration::FunctionDeclaration(f) => extend_binding(
+            &f.id,
+            SymbolKind::Function,
+            function_signature(f, source),
+            out,
+        ),
+        Declaration::TSInterfaceDeclaration(i) => out.push(symbol(&i.id, SymbolKind::Interface)),
+        Declaration::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id, SymbolKind::TypeAlias)),
         _ => {}
     }
 }
 
-fn extend_binding(id: &Option<BindingIdentifier>, out: &mut Vec<LocalSymbol>) {
+fn extend_binding(
+    id: &Option<BindingIdentifier>,
+    kind: SymbolKind,
+    signature: Option<Signature>,
+    out: &mut Vec<LocalSymbol>,
+) {
     if let Some(id) = id {
-        out.push(symbol(id));
+        out.push(symbol_with(id, kind, signature));
     }
 }
 
-fn symbol(id: &BindingIdentifier) -> LocalSymbol {
+fn symbol(id: &BindingIdentifier, kind: SymbolKind) -> LocalSymbol {
+    symbol_with(id, kind, None)
+}
+
+fn symbol_with(
+    id: &BindingIdentifier,
+    kind: SymbolKind,
+    signature: Option<Signature>,
+) -> LocalSymbol {
     LocalSymbol {
         name: id.name.to_string(),
         span: id.span,
+        kind,
+        signature,
+    }
+}
+
+/// A function's signature from its AST: parameter names, their type annotation
+/// (verbatim source slice, e.g. `number`, `string[]`), and the return type.
+/// Destructuring parameters (`{ x }`) show as `_`. Slices the source by the
+/// type's span so the text matches what the developer wrote.
+fn function_signature(f: &Function, source: &str) -> Option<Signature> {
+    let params = f
+        .params
+        .items
+        .iter()
+        .map(|fp| {
+            let name = match &fp.pattern {
+                BindingPattern::BindingIdentifier(id) => id.name.to_string(),
+                _ => "_".to_string(),
+            };
+            ParamInfo {
+                name,
+                type_text: fp
+                    .type_annotation
+                    .as_ref()
+                    .map(|ta| source[ta.type_annotation.span()].to_string()),
+                optional: fp.optional,
+            }
+        })
+        .collect();
+    Some(Signature {
+        params,
+        return_type: f
+            .return_type
+            .as_ref()
+            .map(|ta| source[ta.type_annotation.span()].to_string()),
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn function_signature_with_params_and_return() {
+        let src = "function greet(name: string, times?: number): string { return name; }";
+        let decls = collect_declarations(src);
+        let greet = decls.iter().find(|d| d.name == "greet").expect("greet");
+        assert_eq!(greet.kind, SymbolKind::Function);
+        let sig = greet.signature.as_ref().expect("signature");
+        assert_eq!(sig.params.len(), 2);
+        assert_eq!(sig.params[0].name, "name");
+        assert_eq!(sig.params[0].type_text.as_deref(), Some("string"));
+        assert_eq!(sig.params[1].name, "times");
+        assert!(sig.params[1].optional, "times is optional");
+        assert_eq!(sig.return_type.as_deref(), Some("string"));
+    }
+
+    #[test]
+    fn interface_and_type_alias_kinds_no_signature() {
+        let src = "interface Point { x: number } type Id = number;";
+        let decls = collect_declarations(src);
+        let p = decls.iter().find(|d| d.name == "Point").expect("Point");
+        assert_eq!(p.kind, SymbolKind::Interface);
+        assert!(p.signature.is_none());
+        let id = decls.iter().find(|d| d.name == "Id").expect("Id");
+        assert_eq!(id.kind, SymbolKind::TypeAlias);
+        assert!(id.signature.is_none());
+    }
+
+    #[test]
+    fn import_binding_is_other() {
+        let src = "import { foo } from \"./other\";";
+        let decls = collect_declarations(src);
+        let foo = decls.iter().find(|d| d.name == "foo").expect("foo");
+        assert_eq!(foo.kind, SymbolKind::Other);
+        assert!(foo.signature.is_none());
+    }
+
+    #[test]
+    fn function_without_return_type() {
+        let src = "function f(x: number) { return x; }";
+        let decls = collect_declarations(src);
+        let f = decls.iter().find(|d| d.name == "f").expect("f");
+        let sig = f.signature.as_ref().expect("sig");
+        assert!(sig.return_type.is_none());
+        assert_eq!(sig.params[0].type_text.as_deref(), Some("number"));
     }
 }
