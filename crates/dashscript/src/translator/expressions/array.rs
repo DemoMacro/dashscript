@@ -6,8 +6,8 @@ use syn::{parse_quote, Expr};
 use super::super::context::Ctx;
 use super::translate_expr;
 
-/// `[1, 2, 3]` → `vec![1.0, 2.0, 3.0]`. A spread (`[...xs, 4]`) builds via
-/// slice concat: `[xs.as_slice(), &[4.0][..]].concat()`.
+/// `[1, 2, 3]` → `vec![1_f64, 2_f64, 3_f64]`. A spread (`[...xs, 4]`) builds via
+/// slice concat: `[xs.as_slice(), &[4_f64][..]].concat()`.
 pub(super) fn array_expr(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
     if arr
         .elements
@@ -46,7 +46,7 @@ pub(in crate::translator) fn array_slice_expr(
     Some(parse_quote!(&[#(#elems),*]))
 }
 
-/// `[...xs, 4]` → `[xs.as_slice(), &[4.0][..]].concat()`: consecutive literals
+/// `[...xs, 4]` → `[xs.as_slice(), &[4_f64][..]].concat()`: consecutive literals
 /// batch into one `&[..]` slice, each spread into `arg.as_slice()`.
 fn spread_array(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
     let mut segments: Vec<Expr> = Vec::new();

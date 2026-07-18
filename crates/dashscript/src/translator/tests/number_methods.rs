@@ -5,7 +5,7 @@ fn translates_number_to_fixed_to_format_precision() {
     let src = "function f(): string { const pi = 3.14159; return pi.toFixed(2); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("format!(\"{:.*}\", 2.0 as usize, pi)"),
+        rust.contains("format!(\"{:.*}\", 2_f64 as usize, pi)"),
         "got:\n{rust}"
     );
 }

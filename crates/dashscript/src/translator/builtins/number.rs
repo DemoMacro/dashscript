@@ -89,9 +89,9 @@ pub(in crate::translator) fn number_static(
     Some(match name {
         "isNaN" => parse_quote!(#x.is_nan()),
         "isFinite" => parse_quote!(#x.is_finite()),
-        "isInteger" => parse_quote!(#x.is_finite() && #x.fract() == 0.0),
+        "isInteger" => parse_quote!(#x.is_finite() && #x.fract() == 0_f64),
         "isSafeInteger" => {
-            parse_quote!(#x.is_finite() && #x.fract() == 0.0 && #x.abs() <= 9_007_199_254_740_991.0)
+            parse_quote!(#x.is_finite() && #x.fract() == 0_f64 && #x.abs() <= 9_007_199_254_740_991_f64)
         }
         // `Number.parseFloat(s)` ≡ the global `parseFloat(s)` — base-10 f64
         // parse, NaN on a malformed string (never a throw, as in TS).

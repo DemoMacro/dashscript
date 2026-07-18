@@ -88,13 +88,13 @@ fn ident_string_local(arg: &Argument, ctx: &Ctx<'_>) -> bool {
 /// when possible: a number (`0`/`NaN` → `false`, else `true`), a string
 /// (`!is_empty()`), `true`/`false` to itself. An identifier dispatches on its
 /// known type: a `Vec`/`HashMap`/`String` → `!is_empty()`, an `Option` →
-/// `is_some()`, a `bool` → itself, anything else (an `f64`) → `!= 0.0`. An
-/// expression of unknown type falls back to `!= 0.0` (TS `Boolean` is most
+/// `is_some()`, a `bool` → itself, anything else (an `f64`) → `!= 0_f64`. An
+/// expression of unknown type falls back to `!= 0_f64` (TS `Boolean` is most
 /// often applied to numbers).
 fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     match arg {
         Argument::BooleanLiteral(b) => bool_expr(b.value),
-        Argument::NumericLiteral(n) => bool_expr(n.value != 0.0 && !n.value.is_nan()),
+        Argument::NumericLiteral(n) => bool_expr(n.value != 0_f64 && !n.value.is_nan()),
         Argument::StringLiteral(s) => {
             let e = string_expr(s);
             parse_quote!(!#e.is_empty())
@@ -109,12 +109,12 @@ fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
                 Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#name.is_empty()),
                 Some("Option") => parse_quote!(#name.is_some()),
                 Some("bool") => parse_quote!(#name),
-                _ => parse_quote!(#name != 0.0),
+                _ => parse_quote!(#name != 0_f64),
             }
         }
         _ => {
             let e = translate_argument(arg, ctx);
-            parse_quote!(#e != 0.0)
+            parse_quote!(#e != 0_f64)
         }
     }
 }

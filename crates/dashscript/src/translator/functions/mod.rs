@@ -570,17 +570,45 @@ fn build_local(name: &Ident, mutable: bool, ty: Option<&Type>, init: Option<&Exp
     syn::parse2(tokens).expect("dashscript: generated `let` should parse")
 }
 
-/// The scalar type inferred from a literal initializer, when a `let` has no
-/// type annotation: `true` → `bool`, `1`/`0.5` → `f64`, `"x"` → `String`.
-/// Anchors the binding's type (a bare float literal is otherwise an ambiguous
-/// `{float}` — E0689 on `.acosh()` etc.) and lets type-sensitive mappings
-/// (truthiness, `??`) work on unannotated locals.
+/// The type inferred from a literal initializer, when a binding has no type
+/// annotation: `true` → `bool`, `1`/`0.5` → `f64`, `"x"` → `String`, a
+/// homogeneous array → `Vec<f64>` / `Vec<String>`. Anchors the binding's type
+/// (a bare float literal is otherwise an ambiguous `{float}` — E0689 on
+/// `.acosh()` etc.) and lets type-sensitive mappings (truthiness, `??`, the
+/// array builtins) work on unannotated locals.
 fn infer_literal_type(expr: &Expression) -> Option<Type> {
     use oxc_syntax::operator::UnaryOperator;
     match expr {
         Expression::BooleanLiteral(_) => Some(parse_quote!(bool)),
         Expression::NumericLiteral(_) => Some(parse_quote!(f64)),
         Expression::StringLiteral(_) => Some(parse_quote!(String)),
+        // A homogeneous array literal infers its element type so the builtin
+        // array methods (`.map`/`.filter`/`.includes`/…) map correctly without
+        // an annotation. A mixed, empty, or spread array is left uninferred
+        // (Rust infers at the use site, or the user adds a `number[]` type).
+        Expression::ArrayExpression(arr) => {
+            let elems: Vec<&Expression> = arr
+                .elements
+                .iter()
+                .filter_map(|e| e.as_expression())
+                .collect();
+            if elems.is_empty() {
+                return None;
+            }
+            if elems
+                .iter()
+                .all(|e| matches!(e, Expression::NumericLiteral(_)))
+            {
+                Some(parse_quote!(Vec<f64>))
+            } else if elems
+                .iter()
+                .all(|e| matches!(e, Expression::StringLiteral(_)))
+            {
+                Some(parse_quote!(Vec<String>))
+            } else {
+                None
+            }
+        }
         // oxc parses a signed literal (`-1000`, `+0`) as
         // `UnaryExpression(-/+, …)` rather than a `NumericLiteral`, so a binding
         // `var i = -1000` / `var x = +0` would otherwise lose its f64 anchor

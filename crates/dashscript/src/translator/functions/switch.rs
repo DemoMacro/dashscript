@@ -26,13 +26,27 @@ pub(super) fn translate_switch(
     if let Some((scrut, type_name)) = discriminant_member(&sw.discriminant, locals, registry) {
         return discriminated_match(sw, &scrut, &type_name, locals, registry, return_path);
     }
-    let disc = expressions::translate_expr(&sw.discriminant, &Ctx::new(&*locals, registry, narrow));
     let enum_path = discriminant_path(&sw.discriminant, locals);
-    let arms: Vec<Arm> = sw
+    let is_string = enum_path.as_ref().is_some_and(|p| p.is_ident("String"));
+    let disc = expressions::translate_expr(&sw.discriminant, &Ctx::new(&*locals, registry, narrow));
+    // A switch on a plain `string` matches against `&str` literal cases, so the
+    // discriminant is borrowed as a slice.
+    let disc = if is_string {
+        parse_quote!(#disc.as_str())
+    } else {
+        disc
+    };
+    let mut arms: Vec<Arm> = sw
         .cases
         .iter()
         .filter_map(|c| switch_arm(c, enum_path.as_ref(), locals, registry, narrow, return_path))
         .collect();
+    // A `&str` match is never exhaustive (any other string is possible), so a
+    // switch with no `default` — the common JS form — needs a catch-all to
+    // compile. JS simply skips unmatched cases; the arm is a no-op.
+    if is_string && !arms.iter().any(|a| matches!(&a.pat, syn::Pat::Wild(_))) {
+        arms.push(parse_quote!(_ => {}));
+    }
     parse_quote!(match #disc { #(#arms)* })
 }
 
@@ -135,17 +149,25 @@ fn switch_arm(
     Some(parse_quote!(#pat => #body,))
 }
 
-/// A string-literal case on an enum becomes a variant pattern; anything else
-/// (non-enum, numeric, …) falls back to `_` — number switches on `f64` aren't
-/// valid Rust patterns, so prefer `if` there.
+/// A string-literal case becomes a pattern: on a plain `string` discriminant
+/// it is a `&str` literal pattern (`"idle" => …`); on an enum it is the
+/// matching variant (`Status::Idle`). Anything else (non-string, no enum path)
+/// falls back to `_` — number switches on `f64` aren't valid Rust patterns, so
+/// prefer `if` there.
 fn switch_pattern(test: &Expression, enum_path: Option<&syn::Path>) -> Pat {
     let Expression::StringLiteral(s) = test else {
         return parse_quote!(_);
     };
+    let value: &str = &s.value;
+    // A switch on a plain `string`: each case is a `&str` literal matched
+    // against `disc.as_str()` (set up in `translate_switch`).
+    if enum_path.is_some_and(|p| p.is_ident("String")) {
+        let lit = syn::LitStr::new(value, proc_macro2::Span::call_site());
+        return parse_quote!(#lit);
+    }
     let Some(path) = enum_path else {
         return parse_quote!(_);
     };
-    let value: &str = &s.value;
     let variant = bindings::pascal(value);
     parse_quote!(#path::#variant)
 }

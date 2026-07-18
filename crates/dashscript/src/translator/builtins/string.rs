@@ -69,7 +69,7 @@ pub(in crate::translator) fn string_method(
         // `.indexOf(s)` → byte offset (ASCII == char index), or -1.
         "indexOf" => {
             let needle = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1.0))
+            parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1_f64))
         }
         // `.slice(a, b)` / `.substring` → byte slice `s[a..b]` (ASCII), owned.
         "slice" | "substring" => {
@@ -159,7 +159,7 @@ pub(in crate::translator) fn string_method(
         // `.lastIndexOf(s)` → last byte offset of `s`, or -1 (`rfind`).
         "lastIndexOf" => {
             let needle = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.rfind(#needle).map(|b| b as f64).unwrap_or(-1.0))
+            parse_quote!(#obj.rfind(#needle).map(|b| b as f64).unwrap_or(-1_f64))
         }
         // `.valueOf()` → the string itself (a String identity).
         "valueOf" if args.is_empty() => parse_quote!(#obj),

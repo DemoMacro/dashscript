@@ -31,7 +31,7 @@ fn translates_optional_field_to_option_and_fills_none() {
             "interface V { x: number; y?: number; } function f(): void { const v: V = { x: 1 }; console.log(v.x); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("pub y: Option<f64>"), "got:\n{rust}");
-    assert!(rust.contains("V { x: 1.0, y: None }"), "got:\n{rust}");
+    assert!(rust.contains("V { x: 1_f64, y: None }"), "got:\n{rust}");
 }
 
 #[test]
@@ -39,7 +39,10 @@ fn translates_optional_field_supplied_wraps_some() {
     let src =
             "interface V { x: number; y?: number; } function f(): void { const v: V = { x: 1, y: 2 }; console.log(v.x); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("V { x: 1.0, y: Some(2.0) }"), "got:\n{rust}");
+    assert!(
+        rust.contains("V { x: 1_f64, y: Some(2_f64) }"),
+        "got:\n{rust}"
+    );
 }
 
 #[test]
@@ -87,7 +90,7 @@ fn translates_locals_object_literal_and_field_access() {
     let src =
             "interface Point { x: number } function main(): void { const p: Point = { x: 1 }; console.log(p.x); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("Point { x: 1.0 }"), "got:\n{rust}");
+    assert!(rust.contains("Point { x: 1_f64 }"), "got:\n{rust}");
     assert!(rust.contains("p.x"), "got:\n{rust}");
 }
 
@@ -169,7 +172,7 @@ fn translates_discriminated_union_variant_construction() {
     let src = "type Shape = { kind: \"circle\"; radius: number } | { kind: \"square\"; side: number }; function f(): void { const s: Shape = { kind: \"circle\", radius: 3 }; }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("Shape::Circle { radius: 3.0 }"),
+        rust.contains("Shape::Circle { radius: 3_f64 }"),
         "got:\n{rust}"
     );
 }
@@ -179,7 +182,7 @@ fn translates_return_object_literal_to_struct_init() {
     let src = "interface V { x: number; y: number; } function f(): V { return { x: 1, y: 2 }; }";
     let rust = Translator::new().translate(src).expect("should translate");
     // `return { … }` borrows the struct name from the return-type annotation.
-    assert!(rust.contains("V { x: 1.0, y: 2.0 }"), "got:\n{rust}");
+    assert!(rust.contains("V { x: 1_f64, y: 2_f64 }"), "got:\n{rust}");
 }
 
 #[test]
@@ -187,14 +190,14 @@ fn translates_object_literal_argument_to_struct_init() {
     let src = "interface V { x: number; y: number; } function g(v: V): number { return v.x; } function f(): number { return g({ x: 1, y: 2 }); }";
     let rust = Translator::new().translate(src).expect("should translate");
     // `f({ x, y })` borrows the struct name from the callee's parameter type.
-    assert!(rust.contains("g(V { x: 1.0, y: 2.0 })"), "got:\n{rust}");
+    assert!(rust.contains("g(V { x: 1_f64, y: 2_f64 })"), "got:\n{rust}");
 }
 
 #[test]
 fn translates_record_computed_key_to_hashmap_entry() {
     let src = "function f(k: string): void { const m: Record<string, number> = { [k]: 1 }; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("(k, 1.0)"), "got:\n{rust}");
+    assert!(rust.contains("(k, 1_f64)"), "got:\n{rust}");
 }
 
 #[test]
@@ -204,7 +207,7 @@ fn escapes_rust_keyword_variable_to_raw_ident() {
     // `const type = 5` now infers f64 and annotates the binding (a bare `5`
     // would leave the local as an ambiguous {float}); `type` still escapes to
     // `r#type`.
-    assert!(rust.contains("let r#type: f64 = 5.0"), "got:\n{rust}");
+    assert!(rust.contains("let r#type: f64 = 5_f64"), "got:\n{rust}");
     assert!(
         !rust.contains("return"),
         "trailing r#type, no return, got:\n{rust}"
@@ -236,7 +239,7 @@ fn translates_hashmap_index_assign_to_insert() {
     let src = "function f(): void { let m: Record<string, number> = { a: 1 }; m[\"b\"] = 2; }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains(".insert(\"b\".to_string(), 2.0)"),
+        rust.contains(".insert(\"b\".to_string(), 2_f64)"),
         "got:\n{rust}"
     );
 }

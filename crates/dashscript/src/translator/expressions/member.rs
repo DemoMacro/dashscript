@@ -29,6 +29,13 @@ pub(super) fn chain_expr(elem: &oxc_ast::ast::ChainElement, ctx: &Ctx<'_>) -> Ex
 /// `p.x` → field access. (A `console.log` callee is intercepted earlier.)
 pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     let field_name: &str = &sm.property.name;
+    // `tags.a` on a `Record`/HashMap local → `tags.get("a").copied().unwrap()`
+    // (a TS `Record` static field access and `m["a"]` are the same lookup).
+    if is_hashmap_local(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        let key = syn::LitStr::new(field_name, Span::call_site());
+        return parse_quote!(#obj.get(#key).copied().unwrap());
+    }
     // `Math.PI` / `Math.E` → the corresponding Rust constant.
     if builtins::is_ident(&sm.object, "Math") {
         if let Some(p) = builtins::math_constant(field_name) {

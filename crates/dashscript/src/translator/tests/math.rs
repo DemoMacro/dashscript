@@ -9,7 +9,7 @@ fn translates_math_methods() {
     // Math.max(x, 0) — the 0 now goes through math_receiver (literal → 0_f64)
     // since max folds every arg through it.
     assert!(rust.contains("x.max(0_f64)"), "got:\n{rust}");
-    assert!(rust.contains("x.powf(2.0)"), "got:\n{rust}");
+    assert!(rust.contains("x.powf(2_f64)"), "got:\n{rust}");
 }
 
 #[test]
@@ -76,7 +76,7 @@ fn translates_math_clz32_to_leading_zeros() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".leading_zeros()"), "got:\n{rust}");
     // ToUint32 (mod 2³²), not Rust's saturating `as u32` — clz32(2³²) = 32.
-    assert!(rust.contains("4294967296.0"), "got:\n{rust}");
+    assert!(rust.contains("4294967296_f64"), "got:\n{rust}");
 }
 
 #[test]
@@ -92,7 +92,7 @@ fn translates_math_imul_to_wrapping_mul() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".wrapping_mul("), "got:\n{rust}");
     // ToInt32 (ToUint32 mod 2³², reinterpreted signed) — imul wraps like JS.
-    assert!(rust.contains("4294967296.0"), "got:\n{rust}");
+    assert!(rust.contains("4294967296_f64"), "got:\n{rust}");
 }
 
 #[test]
@@ -155,7 +155,7 @@ fn translates_math_rounding_and_root_methods() {
     // reproduces V8's 0.49999999999999994 bug): the half check is
     // `x - floor(x) >= 0.5`, with a 2^52 guard for huge integral doubles.
     assert!(rust.contains(">= 0.5"), "round-half check: {rust}");
-    assert!(rust.contains("4503599627370496.0"), "2^52 guard: {rust}");
+    assert!(rust.contains("4503599627370496_f64"), "2^52 guard: {rust}");
     assert!(rust.contains(".sqrt()"), "got:\n{rust}");
     assert!(rust.contains(".trunc()"), "got:\n{rust}");
 }
@@ -189,7 +189,7 @@ fn translates_math_max_min_hypot_variadic() {
     let rust = Translator::new()
         .translate("function f(): number { return Math.hypot(); }")
         .expect("should translate");
-    assert!(rust.contains("0.0"), "hypot(): {rust}");
+    assert!(rust.contains("0_f64"), "hypot(): {rust}");
     // Math.max(a, b, c) folds binary f64::max left to right.
     let rust = Translator::new()
         .translate(
@@ -210,12 +210,12 @@ fn translates_math_max_min_hypot_variadic() {
 #[test]
 fn translates_math_round_avoids_add_half_bug() {
     // `(x + 0.5).floor()` reproduces V8's old bug at 0.49999999999999994
-    // (x + 0.5 rounds to 1.0 in double → 1, not 0) and breaks huge doubles;
+    // (x + 0.5 rounds to 1_f64 in double → 1, not 0) and breaks huge doubles;
     // the spec-faithful form uses `x - floor(x) >= 0.5` plus a 2^52 guard.
     let src = "function f(x: number): number { return Math.round(x); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(">= 0.5"), "half check: {rust}");
-    assert!(rust.contains("4503599627370496.0"), "2^52 guard: {rust}");
+    assert!(rust.contains("4503599627370496_f64"), "2^52 guard: {rust}");
     assert!(!rust.contains("+ 0.5).floor"), "no add-half form: {rust}");
 }
 
@@ -225,7 +225,7 @@ fn translates_math_sign_keeps_signed_zero() {
     // -1/+1, so ±0 is special-cased (return the input, preserving its sign).
     let src = "function f(x: number): number { return Math.sign(x); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("== 0.0"), "zero special-case: {rust}");
+    assert!(rust.contains("== 0_f64"), "zero special-case: {rust}");
     assert!(rust.contains(".signum()"), "non-zero signum: {rust}");
 }
 
@@ -236,7 +236,7 @@ fn translates_math_tonumber_coerces_nullish_and_object() {
     let rust = Translator::new()
         .translate("function f(): void { console.log(Math.log10(null)); }")
         .expect("should translate");
-    assert!(rust.contains("0.0f64"), "null -> +0: {rust}");
+    assert!(rust.contains("0_f64"), "null -> +0: {rust}");
     assert!(!rust.contains("None"), "not Option: {rust}");
     let rust = Translator::new()
         .translate("function f(): void { console.log(Math.max({})); }")

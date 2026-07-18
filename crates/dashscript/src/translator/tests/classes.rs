@@ -26,7 +26,7 @@ fn translates_class_with_default_initializer() {
     let src = "class C { x: number = 5; }";
     let rust = Translator::new().translate(src).expect("should translate");
     // `x = 5` fills the field initializer inside `fn new()`.
-    assert!(rust.contains("x: 5.0"), "default init: {rust}");
+    assert!(rust.contains("x: 5_f64"), "default init: {rust}");
 }
 
 #[test]
@@ -76,7 +76,7 @@ fn translates_method_mutates_this_to_mut_self() {
 fn translates_new_with_arguments() {
     let src = "class P { x: number; constructor(x: number) { this.x = x; } }\nfunction f(): number { let p = new P(5); return p.x; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("P::new(5.0)"), "new P(5): {rust}");
+    assert!(rust.contains("P::new(5_f64)"), "new P(5): {rust}");
 }
 
 #[test]

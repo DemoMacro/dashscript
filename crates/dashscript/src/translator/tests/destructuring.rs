@@ -47,7 +47,7 @@ fn translates_array_destructure_rest_to_slice() {
 fn translates_object_spread_to_struct_update() {
     let src = "interface Vector { x: number; y: number; } function f(v: Vector): Vector { return { ...v, y: 9 }; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("Vector { y: 9.0, ..v }"), "got:\n{rust}");
+    assert!(rust.contains("Vector { y: 9_f64, ..v }"), "got:\n{rust}");
 }
 
 #[test]
@@ -55,7 +55,7 @@ fn translates_array_spread_to_slice_concat() {
     let src = "function f(): void { const xs: number[] = [1, 2]; const ys = [...xs, 3]; }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("[xs.as_slice(), &[3.0][..]].concat()"),
+        rust.contains("[xs.as_slice(), &[3_f64][..]].concat()"),
         "got:\n{rust}"
     );
 }

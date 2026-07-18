@@ -36,7 +36,7 @@ fn translates_string_predicate_methods() {
 fn translates_string_repeat_and_replace() {
     let src = "function f(s: string): string { return s.repeat(3); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".repeat(3.0 as usize)"), "got:\n{rust}");
+    assert!(rust.contains(".repeat(3_f64 as usize)"), "got:\n{rust}");
     let src2 = "function g(s: string): string { return s.replace(\"a\", \"b\"); }";
     let rust2 = Translator::new().translate(src2).expect("should translate");
     assert!(
@@ -74,7 +74,7 @@ fn translates_string_index_of_to_find() {
     let src = "function f(): void { const s = \"hello\"; const i = s.indexOf(\"ll\"); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains(".find(\"ll\").map(|b| b as f64).unwrap_or(-1.0)"),
+        rust.contains(".find(\"ll\").map(|b| b as f64).unwrap_or(-1_f64)"),
         "got:\n{rust}"
     );
 }
@@ -84,7 +84,7 @@ fn translates_string_slice_to_byte_range() {
     let src = "function f(): string { return \"hello\".slice(1, 4); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("[1.0 as usize..4.0 as usize].to_string()"),
+        rust.contains("[1_f64 as usize..4_f64 as usize].to_string()"),
         "got:\n{rust}"
     );
 }
@@ -176,7 +176,7 @@ fn translates_string_last_index_of_to_rfind() {
     let src = "function f(s: string): number { return s.lastIndexOf(\"l\"); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".rfind("), "got:\n{rust}");
-    assert!(rust.contains("unwrap_or(-1.0)"), "got:\n{rust}");
+    assert!(rust.contains("unwrap_or(-1_f64)"), "got:\n{rust}");
 }
 
 #[test]
@@ -199,7 +199,7 @@ fn translates_string_replace_substring_methods() {
     let src = "function f(s: string): string { return s.replace(\"a\", \"b\").substring(1); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".replacen("), "got:\n{rust}");
-    assert!(rust.contains("[1.0 as usize..]"), "got:\n{rust}");
+    assert!(rust.contains("[1_f64 as usize..]"), "got:\n{rust}");
 }
 
 #[test]

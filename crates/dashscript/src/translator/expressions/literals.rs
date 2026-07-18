@@ -15,23 +15,26 @@ pub(in crate::translator) fn bool_expr(value: bool) -> Expr {
 }
 
 /// Render an `f64` as a valid Rust literal expression.
+///
+/// A `.ds` `number` is an IEEE-754 double — i.e. Rust `f64`. Every literal is
+/// anchored to `f64` with a `_f64` suffix so a bare literal can stand where
+/// rustc would otherwise see an ambiguous `{float}`: as a method receiver
+/// (`5.is_finite()`) or as a `Vec` element followed by a chained method
+/// (`vec![3, 1, 4].map(...)`). Consumers that need another integer type —
+/// `as usize` for indexing, `as i32` for bitwise, `as u32` for a radix — already
+/// cast, so anchoring is safe there too.
 pub(super) fn numeric_expr(value: f64) -> Expr {
     let s = if value.is_nan() {
         "f64::NAN".to_string()
     } else if value.is_infinite() {
-        if value > 0.0 {
+        if value > 0_f64 {
             "f64::INFINITY"
         } else {
             "f64::NEG_INFINITY"
         }
         .to_string()
     } else {
-        let s = format!("{value}");
-        if s.contains('.') || s.contains('e') || s.contains('E') {
-            s
-        } else {
-            format!("{s}.0")
-        }
+        format!("{value}_f64")
     };
     parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN))
 }

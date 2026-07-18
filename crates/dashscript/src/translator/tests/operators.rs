@@ -4,19 +4,19 @@ use super::super::Translator;
 fn translates_arithmetic_and_comparison() {
     let src = "function f(): void { console.log(1 + 2 * 3); console.log(4 >= 2); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("1.0 + 2.0 * 3.0"), "got:\n{rust}");
-    assert!(rust.contains("4.0 >= 2.0"), "got:\n{rust}");
+    assert!(rust.contains("1_f64 + 2_f64 * 3_f64"), "got:\n{rust}");
+    assert!(rust.contains("4_f64 >= 2_f64"), "got:\n{rust}");
 }
 
 #[test]
 fn translates_logical_and_unary() {
     let src = "function f(): void { let b = true; console.log(b && !b); console.log(-5); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    // `prettyplease` prints a space after unary `!`/`-` (`! b`, `- 5.0`); the
+    // `prettyplease` prints a space after unary `!`/`-` (`! b`, `- 5_f64`); the
     // structure — `&&` then logical-not, and unary negation — is what we check.
     assert!(rust.contains("b && "), "got:\n{rust}");
     assert!(rust.contains("! b"), "got:\n{rust}");
-    assert!(rust.contains("- 5.0"), "got:\n{rust}");
+    assert!(rust.contains("- 5_f64"), "got:\n{rust}");
 }
 
 #[test]
@@ -47,8 +47,8 @@ fn translates_typeof_to_js_type_string() {
 fn translates_compound_assignment() {
     let src = "function f(): void { let n = 0; n += 5; n = n * 2; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("n += 5.0"), "got:\n{rust}");
-    assert!(rust.contains("n = n * 2.0"), "got:\n{rust}");
+    assert!(rust.contains("n += 5_f64"), "got:\n{rust}");
+    assert!(rust.contains("n = n * 2_f64"), "got:\n{rust}");
 }
 
 #[test]
@@ -64,7 +64,7 @@ fn translates_template_literal() {
 fn translates_ternary_to_if_expression() {
     let src = "function f(x: number): string { return x > 0 ? \"pos\" : \"neg\"; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("if x > 0.0 {"), "got:\n{rust}");
+    assert!(rust.contains("if x > 0_f64 {"), "got:\n{rust}");
     assert!(rust.contains("\"pos\".to_string()"), "got:\n{rust}");
     assert!(rust.contains("} else {"), "got:\n{rust}");
     assert!(rust.contains("\"neg\".to_string()"), "got:\n{rust}");
@@ -89,7 +89,7 @@ fn unwraps_parenthesized_expression() {
 fn translates_exponent_operator() {
     let src = "function f(x: number): number { return x ** 2; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".powf(2.0)"), "got:\n{rust}");
+    assert!(rust.contains(".powf(2_f64)"), "got:\n{rust}");
 }
 
 #[test]
@@ -103,14 +103,14 @@ fn translates_in_operator_to_contains_key() {
 fn translates_arrow_function_expression_body() {
     let src = "function f(): void { const double = (x: number) => x * 2; console.log(double(5)); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("|x| x * 2.0"), "got:\n{rust}");
+    assert!(rust.contains("|x| x * 2_f64"), "got:\n{rust}");
 }
 
 #[test]
 fn translates_field_assign_to_field() {
     let src = "interface Vector { x: number; } function f(v: Vector): void { v.x = 5; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("v.x = 5.0"), "got:\n{rust}");
+    assert!(rust.contains("v.x = 5_f64"), "got:\n{rust}");
 }
 
 #[test]
@@ -145,7 +145,7 @@ fn translates_bitwise_compound_assign() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("a = ((a as i32) &"), "got:\n{rust}");
     assert!(rust.contains(".wrapping_shl("), "got:\n{rust}");
-    assert!(rust.contains("a = a.powf(2.0)"), "got:\n{rust}");
+    assert!(rust.contains("a = a.powf(2_f64)"), "got:\n{rust}");
 }
 
 #[test]
@@ -153,8 +153,8 @@ fn translates_comparison_chain_short_circuits() {
     let src = "function f(v: number): boolean { return v > 5 && v < 25; }";
     let rust = Translator::new().translate(src).expect("should translate");
     // Comparisons yield bool — the chain short-circuits as Rust `&&`,
-    // without a truthiness block (`__l != 0.0` would fail: bool ≠ f64).
-    assert!(rust.contains("v > 5.0 && v < 25.0"), "got:\n{rust}");
+    // without a truthiness block (`__l != 0_f64` would fail: bool ≠ f64).
+    assert!(rust.contains("v > 5_f64 && v < 25_f64"), "got:\n{rust}");
     assert!(!rust.contains("__l"), "got:\n{rust}");
 }
 

@@ -66,7 +66,7 @@ pub(in crate::translator) fn array_method(
             let idx = translate_argument(args.first()?, ctx);
             parse_quote!({
                 let __at_i = #idx;
-                #recv[if __at_i >= 0.0 { __at_i as usize } else { (#recv.len() as f64 + __at_i) as usize }]
+                #recv[if __at_i >= 0_f64 { __at_i as usize } else { (#recv.len() as f64 + __at_i) as usize }]
             })
         }
         // `.indexOf(x)` → first index of `x`, or -1 (TS returns a `number`).
@@ -78,7 +78,7 @@ pub(in crate::translator) fn array_method(
                     .copied()
                     .position(|y| y == #needle)
                     .map(|i| i as f64)
-                    .unwrap_or(-1.0)
+                    .unwrap_or(-1_f64)
             )
         }
         // `.lastIndexOf(x)` → last index of `x`, or -1 (`rposition`).
@@ -90,7 +90,7 @@ pub(in crate::translator) fn array_method(
                     .copied()
                     .rposition(|y| y == #needle)
                     .map(|i| i as f64)
-                    .unwrap_or(-1.0)
+                    .unwrap_or(-1_f64)
             )
         }
         // `.findIndex(cb)` → first index where cb holds, or -1. `position` takes
@@ -106,7 +106,7 @@ pub(in crate::translator) fn array_method(
                     .copied()
                     .position(#cb)
                     .map(|i| i as f64)
-                    .unwrap_or(-1.0)
+                    .unwrap_or(-1_f64)
             )
         }
         // `.includes(x)` → Vec::contains (by reference).
@@ -191,7 +191,7 @@ pub(in crate::translator) fn array_method(
                     .copied()
                     .rposition(#cb)
                     .map(|i| i as f64)
-                    .unwrap_or(-1.0)
+                    .unwrap_or(-1_f64)
             )
         }
         // `.reduceRight(cb, init)` → reverse `fold`; `.reduceRight(cb)` → reverse

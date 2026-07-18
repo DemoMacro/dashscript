@@ -242,6 +242,18 @@
       "fixture": "function f(xs: number[]): void { xs.copyWithin(0, 1, 3); }"
     },
     {
+      "id": "classes.translates_new_expression",
+      "category": "classes",
+      "source": "translator-tests",
+      "fixture": "class C { x: number = 1; } function f(): C { return new C(); }"
+    },
+    {
+      "id": "classes.translates_new_with_arguments",
+      "category": "classes",
+      "source": "translator-tests",
+      "fixture": "class P { x: number; constructor(x: number) { this.x = x; } } function f(): number { let p = new P(5); return p.x; }"
+    },
+    {
       "id": "clone_move.translates_unmutated_let_is_plain_let",
       "category": "clone_move",
       "source": "translator-tests",
@@ -252,6 +264,12 @@
       "category": "clone_move",
       "source": "translator-tests",
       "fixture": "function main(): void { let n: number = 0; n = 5; console.log(n); }"
+    },
+    {
+      "id": "clone_move.translates_mutated_var_is_let_mut",
+      "category": "clone_move",
+      "source": "translator-tests",
+      "fixture": "function main(): void { var n = 0; n = 5; console.log(n); }"
     },
     {
       "id": "clone_move.translates_mutated_let_by_compound_assign_is_let_mut",
@@ -660,6 +678,18 @@
       "category": "math",
       "source": "translator-tests",
       "fixture": "function f(a: number, b: number): number { return Math.min(a, b) + Math.E; }"
+    },
+    {
+      "id": "math.translates_math_round_avoids_add_half_bug",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.round(x); }"
+    },
+    {
+      "id": "math.translates_math_sign_keeps_signed_zero",
+      "category": "math",
+      "source": "translator-tests",
+      "fixture": "function f(x: number): number { return Math.sign(x); }"
     },
     {
       "id": "narrowing.translates_optional_chain_to_as_ref_map",

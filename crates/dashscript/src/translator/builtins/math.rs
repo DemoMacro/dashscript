@@ -26,7 +26,7 @@ pub(in crate::translator) fn math_method(
         // `Math.round(x)` → JS rounds half toward +∞ (`Math.round(2.5)` = 3),
         // not Rust's away-from-zero (`(-0.5).round()` = -1). The `(x + 0.5).floor()`
         // form matches JS; and when the result is 0 with a negative input JS
-        // returns -0 (`Math.round(-0.5)` = -0), so mirror that — Rust's `-0.0`
+        // returns -0 (`Math.round(-0.5)` = -0), so mirror that — Rust's `-0.0f64`
         // already prints "-0".
         "round" => {
             let recv = math_receiver(args.first()?, ctx);
@@ -36,16 +36,16 @@ pub(in crate::translator) fn math_method(
                 // stay signed; |x| ≥ 2^52 is already integral (no fraction
                 // bits); round half toward +∞. Avoid `(x + 0.5).floor()` — it
                 // reproduces V8's old bug at 0.49999999999999994 (x + 0.5
-                // rounds to 1.0 in double → 1, not 0) and loses precision for
+                // rounds to 1_f64 in double → 1, not 0) and loses precision for
                 // huge x. `x - floor(x) >= 0.5` avoids the x+0.5 rounding step.
-                if !__x.is_finite() || __x == 0.0 || __x.abs() >= 4503599627370496.0 {
+                if !__x.is_finite() || __x == 0_f64 || __x.abs() >= 4503599627370496_f64 {
                     __x
                 } else {
                     let __f = __x.floor();
-                    let __r = if __x - __f >= 0.5 { __f + 1.0 } else { __f };
+                    let __r = if __x - __f >= 0.5 { __f + 1_f64 } else { __f };
                     // JS returns -0 for -0.5 ≤ x < 0; round-half-up yields 0
                     // but loses the sign.
-                    if __r == 0.0 && __x.is_sign_negative() { -0.0f64 } else { __r }
+                    if __r == 0_f64 && __x.is_sign_negative() { -0.0f64 } else { __r }
                 }
             }))
         }
@@ -57,7 +57,7 @@ pub(in crate::translator) fn math_method(
                 // JS Math.sign keeps ±0 (Math.sign(-0) = -0, Math.sign(0) = +0);
                 // Rust's signum maps -0→-1 and +0→+1, so special-case zero.
                 // NaN/±∞ already behave the same under signum.
-                if __x == 0.0 { __x } else { __x.signum() }
+                if __x == 0_f64 { __x } else { __x.signum() }
             }))
         }
         // `Math.log(x)` (TS natural log) → `x.ln()` (Rust spells it `ln`).
@@ -113,7 +113,7 @@ pub(in crate::translator) fn math_method(
         // through `math_receiver` so a bare/negative literal anchors to f64.
         "hypot" => {
             if args.is_empty() {
-                return Some(parse_quote!(0.0f64));
+                return Some(parse_quote!(0_f64));
             }
             // JS Math.hypot returns +∞ if any arg is ±∞ (hypot(∞, NaN) = ∞,
             // not the NaN Rust's (Inf² + NaN²).sqrt() yields), so bind each arg
@@ -181,17 +181,17 @@ pub(in crate::translator) fn math_method(
             Some(parse_quote!({
                 let __arr: ::std::vec::Vec<f64> = #arr;
                 let mut __state: i8 = 0;
-                let mut __sum = 0.0f64;
+                let mut __sum = 0_f64;
                 for &__n in &__arr {
                     if __state != 4 {
                         if __n.is_nan() {
                             __state = 4;
-                        } else if __n.is_infinite() && __n > 0.0 {
+                        } else if __n.is_infinite() && __n > 0_f64 {
                             __state = if __state == 3 { 4 } else { 2 };
                         } else if __n.is_infinite() {
                             __state = if __state == 2 { 4 } else { 3 };
                         } else {
-                            let __neg0 = __n == 0.0 && __n.is_sign_negative();
+                            let __neg0 = __n == 0_f64 && __n.is_sign_negative();
                             if !__neg0 && (__state == 0 || __state == 1) {
                                 __state = 1;
                                 __sum += __n;
@@ -219,9 +219,9 @@ fn to_uint32_expr(recv: Expr) -> Expr {
     parse_quote!({
         let n = ((#recv) as f64).trunc();
         (if !n.is_finite() {
-            0.0f64
+            0_f64
         } else {
-            ((n % 4294967296.0) + 4294967296.0) % 4294967296.0
+            ((n % 4294967296_f64) + 4294967296_f64) % 4294967296_f64
         }) as u32
     })
 }
@@ -242,7 +242,7 @@ fn method_call(recv: Expr, method: &str, args: Vec<Expr>) -> Expr {
 }
 
 /// A `Math.` receiver: a numeric literal gets an `_f64` suffix so a bare
-/// literal like `3` isn't an ambiguous `{float}` (`3.0.max(7.0)` won't infer);
+/// literal like `3` isn't an ambiguous `{float}` (`3_f64.max(7_f64)` won't infer);
 /// any other receiver translates normally (its context already pins `f64`).
 fn math_receiver(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     if let Some(v) = math_numeric_literal(arg) {
@@ -301,14 +301,14 @@ fn math_numeric_literal(arg: &Argument) -> Option<String> {
 /// coerces to NaN). String ToNumber parsing is not yet modeled.
 fn to_number_expr(arg: &Argument) -> Option<Expr> {
     match arg {
-        Argument::NullLiteral(_) => Some(parse_quote!(0.0f64)),
+        Argument::NullLiteral(_) => Some(parse_quote!(0_f64)),
         Argument::Identifier(id) if id.name.as_str() == "undefined" => {
             Some(parse_quote!(::core::f64::NAN))
         }
         Argument::BooleanLiteral(b) => Some(if b.value {
-            parse_quote!(1.0f64)
+            parse_quote!(1_f64)
         } else {
-            parse_quote!(0.0f64)
+            parse_quote!(0_f64)
         }),
         Argument::ObjectExpression(_)
         | Argument::ArrayExpression(_)

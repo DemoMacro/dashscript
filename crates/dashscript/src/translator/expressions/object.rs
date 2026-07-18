@@ -110,7 +110,7 @@ fn missing_optionals(
         .collect()
 }
 
-/// `{ a: 1, b: 2 }` as a `HashMap` → `HashMap::from([("a".to_string(), 1.0), …])`.
+/// `{ a: 1, b: 2 }` as a `HashMap` → `HashMap::from([("a".to_string(), 1_f64), …])`.
 /// Keys are the `.ds` property names, owned so the map outlives the literal.
 fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
     let entries: Vec<Expr> = obj
@@ -134,7 +134,7 @@ fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
     parse_quote!(::std::collections::HashMap::from([#(#entries),*]))
 }
 
-/// `{ kind: "circle", radius: 2 }` → `Shape::Circle { radius: 2.0 }` when `path`
+/// `{ kind: "circle", radius: 2 }` → `Shape::Circle { radius: 2_f64 }` when `path`
 /// is a registered discriminated-union enum and the literal carries a matching
 /// `kind` string. Returns `None` for a plain struct literal (no `kind`, or a
 /// `kind` whose value isn't a registered variant of this enum).

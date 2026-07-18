@@ -88,17 +88,17 @@ pub(super) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
     }
 }
 
-/// `i++` / `i--` → `i += 1.0` / `i -= 1.0`. Statement-context only: TS returns
+/// `i++` / `i--` → `i += 1_f64` / `i -= 1_f64`. Statement-context only: TS returns
 /// the old value, which we don't preserve — fine for `i++;` but not `return i++`.
-/// The step is `1.0` because `.ds` `number` is `f64`; an integer step would be a
+/// The step is `1_f64` because `.ds` `number` is `f64`; an integer step would be a
 /// type error against an `f64` target.
 pub(super) fn update_expr(u: &UpdateExpression) -> Expr {
     let Some(target) = simple_target(&u.argument) else {
         return parse_quote!(::core::todo!());
     };
     let tokens = match u.operator {
-        UpdateOperator::Increment => quote!(#target += 1.0),
-        UpdateOperator::Decrement => quote!(#target -= 1.0),
+        UpdateOperator::Increment => quote!(#target += 1_f64),
+        UpdateOperator::Decrement => quote!(#target -= 1_f64),
     };
     syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
 }

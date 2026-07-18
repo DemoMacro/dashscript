@@ -4,7 +4,7 @@ use super::super::Translator;
 fn translates_string_global_to_format() {
     let src = "function f(): string { return String(42); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("format!(\"{}\", 42.0)"), "got:\n{rust}");
+    assert!(rust.contains("format!(\"{}\", 42_f64)"), "got:\n{rust}");
 }
 
 #[test]
@@ -96,7 +96,7 @@ fn translates_boolean_global_vec_to_is_empty() {
 fn translates_boolean_global_number_var_to_ne_zero() {
     let src = "function f(n: number): boolean { return Boolean(n); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("n != 0.0"), "got:\n{rust}");
+    assert!(rust.contains("n != 0_f64"), "got:\n{rust}");
 }
 
 #[test]
@@ -110,7 +110,7 @@ fn translates_boolean_global_option_to_is_some() {
 fn translates_number_static_type_checks() {
     let src = "function f(n: number): boolean { return Number.isInteger(n) && Number.isFinite(n) && Number.isNaN(n); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".fract() == 0.0"), "got:\n{rust}");
+    assert!(rust.contains(".fract() == 0_f64"), "got:\n{rust}");
     assert!(rust.contains(".is_finite()"), "got:\n{rust}");
     assert!(rust.contains(".is_nan()"), "got:\n{rust}");
 }
@@ -119,7 +119,7 @@ fn translates_number_static_type_checks() {
 fn translates_number_is_safe_integer() {
     let src = "function f(n: number): boolean { return Number.isSafeInteger(n); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("9_007_199_254_740_991.0"), "got:\n{rust}");
+    assert!(rust.contains("9_007_199_254_740_991_f64"), "got:\n{rust}");
 }
 
 #[test]
