@@ -97,6 +97,15 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
 /// so each `f64` operand is cast down, the op applied, and the result cast back
 /// to `f64` (`.ds` number). Shifts use `wrapping_shl`/`shr` (which mask the
 /// count); `>>>` casts to `u32` first for the zero-fill.
+///
+/// The cast must go through `i64`, not directly to `i32`: Rust's `f64 as i32`
+/// *saturates* (out-of-range → `i32::MAX`/`MIN`), but JS `ToInt32` *wraps*
+/// (mod 2³²). A bit-vector algorithm like Myers–Levenshtein routinely lets an
+/// operand grow past the i32 range (`(eq & pv) + pv` can reach ~2³²), where the
+/// two diverge — saturating turns the wrong bit pattern into the result. `f64
+/// as i64` is exact for finite values below 2⁵³, and `i64 as i32` then truncates
+/// with the same wrap semantics as `ToInt32`. (±Inf/NaN, which `ToInt32` maps
+/// to 0, are an unhandled edge here.)
 fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
     if !matches!(
         bin.operator,
@@ -112,21 +121,46 @@ fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
     let left = translate_expr(&bin.left, ctx);
     let right = translate_expr(&bin.right, ctx);
     Some(match bin.operator {
-        BinaryOperator::BitwiseAnd => parse_quote!(((#left as i32) & (#right as i32)) as f64),
-        BinaryOperator::BitwiseOR => parse_quote!(((#left as i32) | (#right as i32)) as f64),
-        BinaryOperator::BitwiseXOR => parse_quote!(((#left as i32) ^ (#right as i32)) as f64),
+        // Each operand is bound to a local first, then `as i64 as i32` (or
+        // `as u32` for `>>>`'s left) is applied to that local — never inline
+        // against a compound expression, where `as` would bind to its right
+        // subtree (`1 << i as i64` parsing as `1 << (i as i64)`). The `i64` hop
+        // matches JS `ToInt32`/`ToUint32` *wrap*, not Rust's saturating
+        // `f64 as i32`; see the doc comment above.
+        BinaryOperator::BitwiseAnd => parse_quote!({
+            let __a = (#left) as i64 as i32;
+            let __b = (#right) as i64 as i32;
+            (__a & __b) as f64
+        }),
+        BinaryOperator::BitwiseOR => parse_quote!({
+            let __a = (#left) as i64 as i32;
+            let __b = (#right) as i64 as i32;
+            (__a | __b) as f64
+        }),
+        BinaryOperator::BitwiseXOR => parse_quote!({
+            let __a = (#left) as i64 as i32;
+            let __b = (#right) as i64 as i32;
+            (__a ^ __b) as f64
+        }),
         // `<<`/`>>` use `wrapping_shl`/`shr` (they mask the shift count, so a
         // large `.ds` count won't panic like Rust's plain `<<` would).
-        BinaryOperator::ShiftLeft => {
-            parse_quote!(((#left as i32).wrapping_shl(#right as u32)) as f64)
-        }
-        BinaryOperator::ShiftRight => {
-            parse_quote!(((#left as i32).wrapping_shr(#right as u32)) as f64)
-        }
-        // `>>>` is logical (zero-fill): cast to `u32` before the shift.
-        BinaryOperator::ShiftRightZeroFill => {
-            parse_quote!((((#left as i32) as u32).wrapping_shr(#right as u32)) as f64)
-        }
+        BinaryOperator::ShiftLeft => parse_quote!({
+            let __a = (#left) as i64 as i32;
+            let __b = (#right) as i64 as u32;
+            __a.wrapping_shl(__b) as f64
+        }),
+        BinaryOperator::ShiftRight => parse_quote!({
+            let __a = (#left) as i64 as i32;
+            let __b = (#right) as i64 as u32;
+            __a.wrapping_shr(__b) as f64
+        }),
+        // `>>>` is logical (zero-fill): `ToUint32` the left operand (i64 → u32)
+        // before the shift.
+        BinaryOperator::ShiftRightZeroFill => parse_quote!({
+            let __a = (#left) as i64 as u32;
+            let __b = (#right) as i64 as u32;
+            __a.wrapping_shr(__b) as f64
+        }),
         _ => unreachable!(),
     })
 }

@@ -135,9 +135,12 @@ fn translates_field_assign_to_field() {
 fn translates_bitwise_and_or_xor() {
     let src = "function f(a: number, b: number): number { return (a & b) + (a | b) + (a ^ b); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("as i32) &"), "got:\n{rust}");
-    assert!(rust.contains("as i32) |"), "got:\n{rust}");
-    assert!(rust.contains("as i32) ^"), "got:\n{rust}");
+    // ToInt32 wrap via the i64 hop (`as i64 as i32`), not saturating `as i32`;
+    // operands bind to locals so `as` never binds into a compound expression.
+    assert!(rust.contains("as i64 as i32"), "got:\n{rust}");
+    assert!(rust.contains("__a & __b"), "got:\n{rust}");
+    assert!(rust.contains("__a | __b"), "got:\n{rust}");
+    assert!(rust.contains("__a ^ __b"), "got:\n{rust}");
 }
 
 #[test]
@@ -147,21 +150,21 @@ fn translates_bitwise_shifts() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".wrapping_shl("), "got:\n{rust}");
     assert!(rust.contains(".wrapping_shr("), "got:\n{rust}");
-    assert!(rust.contains("as u32).wrapping_shr"), "got:\n{rust}");
+    assert!(rust.contains("as i64 as u32"), "got:\n{rust}");
 }
 
 #[test]
 fn translates_bitwise_not() {
     let src = "function f(a: number): number { return ~a; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("!(a as i32)"), "got:\n{rust}");
+    assert!(rust.contains("(!__a) as f64"), "got:\n{rust}");
 }
 
 #[test]
 fn translates_bitwise_compound_assign() {
     let src = "function f(a: number, b: number): void { a &= b; a <<= b; a **= 2; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("a = ((a as i32) &"), "got:\n{rust}");
+    assert!(rust.contains("as i64) as i32 &"), "got:\n{rust}");
     assert!(rust.contains(".wrapping_shl("), "got:\n{rust}");
     assert!(rust.contains("a = a.powf(2_f64)"), "got:\n{rust}");
 }

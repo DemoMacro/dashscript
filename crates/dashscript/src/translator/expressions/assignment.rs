@@ -46,23 +46,27 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                 AssignmentOperator::Exponential => quote!(#target = #target.powf(#right)),
                 // Bitwise compound reads & writes the target, so it must be a
                 // simple identifier lvalue; the result is cast back to `f64`.
+                // Each operand is parenthesized before `as i64` so the cast
+                // never binds into a compound right-hand side, and the `i64`
+                // hop matches JS `ToInt32`/`ToUint32` wrap (not Rust's
+                // saturating `f64 as i32`) — see `binary::bitwise_expr`.
                 AssignmentOperator::BitwiseAnd => {
-                    quote!(#target = ((#target as i32) & (#right as i32)) as f64)
+                    quote!(#target = (((#target) as i64) as i32 & ((#right) as i64) as i32) as f64)
                 }
                 AssignmentOperator::BitwiseOR => {
-                    quote!(#target = ((#target as i32) | (#right as i32)) as f64)
+                    quote!(#target = (((#target) as i64) as i32 | ((#right) as i64) as i32) as f64)
                 }
                 AssignmentOperator::BitwiseXOR => {
-                    quote!(#target = ((#target as i32) ^ (#right as i32)) as f64)
+                    quote!(#target = (((#target) as i64) as i32 ^ ((#right) as i64) as i32) as f64)
                 }
                 AssignmentOperator::ShiftLeft => {
-                    quote!(#target = ((#target as i32).wrapping_shl(#right as u32)) as f64)
+                    quote!(#target = (((#target) as i64) as i32).wrapping_shl(((#right) as i64) as u32) as f64)
                 }
                 AssignmentOperator::ShiftRight => {
-                    quote!(#target = ((#target as i32).wrapping_shr(#right as u32)) as f64)
+                    quote!(#target = (((#target) as i64) as i32).wrapping_shr(((#right) as i64) as u32) as f64)
                 }
                 AssignmentOperator::ShiftRightZeroFill => {
-                    quote!(#target = (((#target as i32) as u32).wrapping_shr(#right as u32)) as f64)
+                    quote!(#target = (((#target) as i64) as u32).wrapping_shr(((#right) as i64) as u32) as f64)
                 }
                 // `x ??= y` on an Option<T>: assign Some(y) when x is None.
                 AssignmentOperator::LogicalNullish => {

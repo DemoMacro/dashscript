@@ -26,8 +26,14 @@ pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
             op: UnOp::Not(Default::default()),
             expr: Box::new(arg),
         }),
-        // `~a` → `!(a as i32) as f64` (TS `~` is 32-bit bitwise NOT).
-        UnaryOperator::BitwiseNot => parse_quote!((!(#arg as i32)) as f64),
+        // `~a` → `!ToInt32(a) as f64` (TS `~` is 32-bit bitwise NOT). Bind to a
+        // local first, then `as i64 as i32`, so `as` never binds into a
+        // compound operand; the `i64` hop matches JS `ToInt32` *wrap*, not
+        // Rust's saturating `f64 as i32` — see `binary::bitwise_expr`.
+        UnaryOperator::BitwiseNot => parse_quote!({
+            let __a = (#arg) as i64 as i32;
+            (!__a) as f64
+        }),
         // `typeof x` is a compile-time type query (DashScript is statically
         // typed), so the JS type string is known from the operand's spelling.
         UnaryOperator::Typeof => type_of_expr(&un.argument),
