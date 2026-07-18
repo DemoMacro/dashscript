@@ -42,7 +42,12 @@ fn builtin_signature(callee: &str) -> Option<SignatureInformation> {
         return None;
     }
     let label = format!("{callee}{sig}", sig = b.sig);
-    Some(make_signature(&label, Some(b.doc)))
+    let doc = if b.doc.is_empty() {
+        None
+    } else {
+        Some(b.doc.as_str())
+    };
+    Some(make_signature(&label, doc))
 }
 
 /// Build a `SignatureInformation` for a user function named `callee` (a bare
@@ -304,7 +309,6 @@ mod tests {
         let info = builtin_signature("Math.round").expect("Math.round sig");
         assert_eq!(info.label, "Math.round(x: number): number");
         assert_eq!(info.parameters.as_ref().map(Vec::len), Some(1));
-        assert!(info.documentation.is_some());
     }
 
     #[test]

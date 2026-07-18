@@ -1,0 +1,20 @@
+// Global functions and constants — plain identifiers (`parseInt`, `Infinity`).
+//
+// The `.ds` declaration counterpart of `global.rs`: each global function here is
+// implemented by a matching arm there. These are ES globals — not a
+// namespace member — so they use `declare function`/`declare var`, exactly as
+// TypeScript's `lib.es5.d.ts` does (`declare function parseInt`, `declare var
+// NaN`). A `declare var` carries a type but no initializer (it is an ambient
+// declaration, never lowered to a real binding); the translator maps each use
+// site directly (`NaN` → `f64::NAN`, `Infinity` → `f64::INFINITY`).
+
+declare function parseInt(s: string, radix?: number): number;  // Parse an integer from a string.
+declare function parseFloat(s: string): number;  // Parse a floating-point number from a string.
+declare function isNaN(x: number): boolean;  // True when `x` is NaN.
+declare function isFinite(x: number): boolean;  // True when `x` is finite (not ±∞ or NaN).
+declare function Boolean(x: unknown): boolean;  // The truthiness of `x`.
+declare function String(x: unknown): string;  // The string form of `x`.
+declare function Number(x: unknown): number;  // The numeric form of `x`.
+declare var undefined: any;  // The absent value.
+declare var Infinity: number;  // Positive infinity.
+declare var NaN: number;  // Not-a-Number.

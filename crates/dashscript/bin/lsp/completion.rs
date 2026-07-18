@@ -5,15 +5,16 @@
 //! provides its own `.ds` completion: global built-ins + user declarations, and
 //! the members of a builtin namespace after `.`.
 //!
-//! The completion tables mirror the methods/constants the translator actually
-//! maps — keep them in sync with `translator/builtins/{console,math,number,
-//! string,array,object,global}.rs`. (A future stage will derive them from those
-//! match arms so this table cannot drift.)
+//! Both the global list and each namespace's members derive from the single
+//! `BUILTINS` table in [`super::builtins`] — there is no parallel hand-written
+//! member table here. The drift-guard test there asserts every entry actually
+//! translates, so completion can never offer a name the translator rejects.
 
 use dashscript::Translator;
 use lsp_types::{CompletionItem, CompletionItemKind, CompletionList, CompletionParams};
 use serde_json::Value;
 
+use super::builtins::{self, BuiltinKind};
 use super::text;
 
 impl super::Server {
@@ -63,14 +64,30 @@ fn completion_context(text: &str, byte: usize) -> Context {
     Context::Global
 }
 
-/// Global-scope completions: DashScript builtin globals + every top-level
-/// declaration in the document. The client filters by the typed prefix; the
-/// server returns the full set.
+/// Global-scope completions: DashScript builtin namespaces + plain globals +
+/// every top-level declaration in the document. The client filters by the
+/// typed prefix; the server returns the full set.
 fn global_items(text: &str) -> Vec<CompletionItem> {
-    let mut items: Vec<CompletionItem> = GLOBALS
-        .iter()
-        .map(|&(label, kind)| item(label, kind))
-        .collect();
+    let mut items: Vec<CompletionItem> = Vec::new();
+    // Namespaces (console, Math, …) — each appears once as a MODULE entry, in
+    // first-seen order.
+    let mut namespaces: Vec<String> = Vec::new();
+    for b in builtins::all() {
+        if let Some(ns) = &b.ns {
+            if !namespaces.contains(ns) {
+                namespaces.push(ns.clone());
+                items.push(item(ns, CompletionItemKind::MODULE));
+            }
+        }
+    }
+    // Plain globals whose name is not also a namespace — `String`/`Number` are
+    // namespaces (so their MODULE entry already covers them); `parseInt`,
+    // `Boolean`, `undefined`, … are plain globals.
+    for b in builtins::all().iter().filter(|b| b.ns.is_none()) {
+        if !namespaces.contains(&b.name) {
+            items.push(item(&b.name, global_kind(b.kind)));
+        }
+    }
     for decl in Translator::new().declarations(text) {
         items.push(item(&decl.name, CompletionItemKind::VARIABLE));
     }
@@ -81,19 +98,10 @@ fn global_items(text: &str) -> Vec<CompletionItem> {
 /// Unknown receivers (a variable whose type is not a builtin) get nothing —
 /// the translator's per-variable types are not surfaced to completion yet.
 fn member_items(receiver: &str) -> Vec<CompletionItem> {
-    let members: &[&[(&str, CompletionItemKind)]] = match receiver {
-        "console" => &[CONSOLE_MEMBERS],
-        "Math" => &[MATH_CONSTANTS, MATH_METHODS],
-        "Number" => &[NUMBER_CONSTANTS, NUMBER_STATIC],
-        "String" => &[STRING_STATIC],
-        "Array" => &[ARRAY_STATIC],
-        "Object" => &[OBJECT_STATIC],
-        _ => return Vec::new(),
-    };
-    members
+    builtins::all()
         .iter()
-        .flat_map(|slice| slice.iter().copied())
-        .map(|(label, kind)| item(label, kind))
+        .filter(|b| b.ns.as_deref() == Some(receiver))
+        .map(|b| item(&b.name, member_kind(b.kind)))
         .collect()
 }
 
@@ -105,128 +113,24 @@ fn item(label: &str, kind: CompletionItemKind) -> CompletionItem {
     }
 }
 
-// === builtin tables (mirror translator/builtins/*.rs mapped members) ===
+/// A plain global's completion kind: a function (`parseInt`) or a constant
+/// (`undefined`).
+fn global_kind(kind: BuiltinKind) -> CompletionItemKind {
+    match kind {
+        BuiltinKind::Function => CompletionItemKind::FUNCTION,
+        BuiltinKind::Const => CompletionItemKind::CONSTANT,
+    }
+}
 
-type Member = (&'static str, CompletionItemKind);
-
-const GLOBALS: &[Member] = &[
-    ("console", CompletionItemKind::MODULE),
-    ("Math", CompletionItemKind::MODULE),
-    ("Number", CompletionItemKind::MODULE),
-    ("String", CompletionItemKind::MODULE),
-    ("Object", CompletionItemKind::MODULE),
-    ("Array", CompletionItemKind::MODULE),
-    ("parseInt", CompletionItemKind::FUNCTION),
-    ("parseFloat", CompletionItemKind::FUNCTION),
-    ("isNaN", CompletionItemKind::FUNCTION),
-    ("isFinite", CompletionItemKind::FUNCTION),
-    ("Boolean", CompletionItemKind::FUNCTION),
-    ("undefined", CompletionItemKind::CONSTANT),
-    ("Infinity", CompletionItemKind::CONSTANT),
-    ("NaN", CompletionItemKind::CONSTANT),
-];
-
-const CONSOLE_MEMBERS: &[Member] = &[
-    ("log", CompletionItemKind::METHOD),
-    ("warn", CompletionItemKind::METHOD),
-    ("error", CompletionItemKind::METHOD),
-];
-
-const MATH_CONSTANTS: &[Member] = &[
-    ("PI", CompletionItemKind::CONSTANT),
-    ("E", CompletionItemKind::CONSTANT),
-    ("LN10", CompletionItemKind::CONSTANT),
-    ("LN2", CompletionItemKind::CONSTANT),
-    ("LOG10E", CompletionItemKind::CONSTANT),
-    ("LOG2E", CompletionItemKind::CONSTANT),
-    ("SQRT2", CompletionItemKind::CONSTANT),
-    ("SQRT1_2", CompletionItemKind::CONSTANT),
-];
-
-const MATH_METHODS: &[Member] = &[
-    ("abs", CompletionItemKind::FUNCTION),
-    ("round", CompletionItemKind::FUNCTION),
-    ("floor", CompletionItemKind::FUNCTION),
-    ("ceil", CompletionItemKind::FUNCTION),
-    ("trunc", CompletionItemKind::FUNCTION),
-    ("sqrt", CompletionItemKind::FUNCTION),
-    ("cbrt", CompletionItemKind::FUNCTION),
-    ("exp", CompletionItemKind::FUNCTION),
-    ("expm1", CompletionItemKind::FUNCTION),
-    ("log", CompletionItemKind::FUNCTION),
-    ("log2", CompletionItemKind::FUNCTION),
-    ("log10", CompletionItemKind::FUNCTION),
-    ("log1p", CompletionItemKind::FUNCTION),
-    ("pow", CompletionItemKind::FUNCTION),
-    ("sign", CompletionItemKind::FUNCTION),
-    ("sin", CompletionItemKind::FUNCTION),
-    ("cos", CompletionItemKind::FUNCTION),
-    ("tan", CompletionItemKind::FUNCTION),
-    ("asin", CompletionItemKind::FUNCTION),
-    ("acos", CompletionItemKind::FUNCTION),
-    ("atan", CompletionItemKind::FUNCTION),
-    ("atan2", CompletionItemKind::FUNCTION),
-    ("sinh", CompletionItemKind::FUNCTION),
-    ("cosh", CompletionItemKind::FUNCTION),
-    ("tanh", CompletionItemKind::FUNCTION),
-    ("asinh", CompletionItemKind::FUNCTION),
-    ("acosh", CompletionItemKind::FUNCTION),
-    ("atanh", CompletionItemKind::FUNCTION),
-    ("hypot", CompletionItemKind::FUNCTION),
-    ("max", CompletionItemKind::FUNCTION),
-    ("min", CompletionItemKind::FUNCTION),
-    ("clz32", CompletionItemKind::FUNCTION),
-    ("fround", CompletionItemKind::FUNCTION),
-    ("imul", CompletionItemKind::FUNCTION),
-    ("sumPrecise", CompletionItemKind::FUNCTION),
-];
-
-const NUMBER_CONSTANTS: &[Member] = &[
-    ("EPSILON", CompletionItemKind::CONSTANT),
-    ("MAX_SAFE_INTEGER", CompletionItemKind::CONSTANT),
-    ("MAX_VALUE", CompletionItemKind::CONSTANT),
-    ("MIN_SAFE_INTEGER", CompletionItemKind::CONSTANT),
-    ("MIN_VALUE", CompletionItemKind::CONSTANT),
-    ("NaN", CompletionItemKind::CONSTANT),
-    ("NEGATIVE_INFINITY", CompletionItemKind::CONSTANT),
-    ("POSITIVE_INFINITY", CompletionItemKind::CONSTANT),
-];
-
-const NUMBER_STATIC: &[Member] = &[
-    ("isNaN", CompletionItemKind::FUNCTION),
-    ("isFinite", CompletionItemKind::FUNCTION),
-    ("isInteger", CompletionItemKind::FUNCTION),
-    ("isSafeInteger", CompletionItemKind::FUNCTION),
-    ("parseFloat", CompletionItemKind::FUNCTION),
-    ("parseInt", CompletionItemKind::FUNCTION),
-];
-
-const STRING_STATIC: &[Member] = &[
-    ("fromCharCode", CompletionItemKind::FUNCTION),
-    ("fromCodePoint", CompletionItemKind::FUNCTION),
-];
-
-const ARRAY_STATIC: &[Member] = &[
-    ("from", CompletionItemKind::FUNCTION),
-    ("of", CompletionItemKind::FUNCTION),
-    ("isArray", CompletionItemKind::FUNCTION),
-];
-
-const OBJECT_STATIC: &[Member] = &[
-    ("keys", CompletionItemKind::FUNCTION),
-    ("values", CompletionItemKind::FUNCTION),
-    ("entries", CompletionItemKind::FUNCTION),
-    ("assign", CompletionItemKind::FUNCTION),
-    ("fromEntries", CompletionItemKind::FUNCTION),
-    ("getOwnPropertyNames", CompletionItemKind::FUNCTION),
-    ("is", CompletionItemKind::FUNCTION),
-    ("freeze", CompletionItemKind::FUNCTION),
-    ("seal", CompletionItemKind::FUNCTION),
-    ("preventExtensions", CompletionItemKind::FUNCTION),
-    ("isFrozen", CompletionItemKind::FUNCTION),
-    ("isSealed", CompletionItemKind::FUNCTION),
-    ("isExtensible", CompletionItemKind::FUNCTION),
-];
+/// A namespace member's completion kind: a method (`Math.round`) or a constant
+/// (`Math.PI`). Methods render with the METHOD icon — a namespace member is a
+/// method of that namespace, never a free function.
+fn member_kind(kind: BuiltinKind) -> CompletionItemKind {
+    match kind {
+        BuiltinKind::Function => CompletionItemKind::METHOD,
+        BuiltinKind::Const => CompletionItemKind::CONSTANT,
+    }
+}
 
 #[cfg(test)]
 mod tests {

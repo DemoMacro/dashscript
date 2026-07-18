@@ -1,0 +1,13 @@
+// Array — the global array namespace (static members only).
+//
+// The `.ds` declaration counterpart of `array.rs`: each static method here is
+// implemented by a matching arm there. Instance methods (`map`, `filter`,
+// `push`, …) are NOT namespace members and are not declared here — completion
+// surfaces them from the receiver's inferred type. `ds lsp` parses this for
+// completion/hover/signature help.
+
+interface Array {
+  from(src: any, mapFn?: (x: any) => any): any[];  // Shallow-copy an array, mapping each element when `mapFn` is given.
+  of(...items: any[]): any[];  // Create an array from the arguments.
+  isArray(x: unknown): boolean;  // True when `x` is an array.
+}

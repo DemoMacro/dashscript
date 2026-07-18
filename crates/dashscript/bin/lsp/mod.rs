@@ -33,6 +33,7 @@ mod hover;
 mod references;
 mod rename;
 mod signatures;
+mod stdlib;
 mod text;
 
 use backend::RaClient;

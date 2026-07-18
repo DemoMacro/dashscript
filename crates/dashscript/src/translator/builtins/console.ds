@@ -1,0 +1,15 @@
+// console — the global logging object.
+//
+// The `.ds` declaration counterpart of `console.rs`: every member here is
+// implemented by a matching arm there (`log` → `println!`, `warn`/`error` →
+// `eprintln!`). `ds lsp` parses this file once (via oxc) to derive completion,
+// hover, and signature help; the trailing `// doc` on each line is read back as
+// that member's hover text. `interface console` models the member surface — TS
+// uses `declare var console: Console`, but a namespace interface is enough for
+// `.ds` and matches how the translator dispatches (`console.<method>`).
+
+interface console {
+  log(...data: any[]): void;  // Print to stdout (lowers to `println!`).
+  warn(...data: any[]): void;  // Print to stderr (lowers to `eprintln!`).
+  error(...data: any[]): void;  // Print to stderr (lowers to `eprintln!`).
+}

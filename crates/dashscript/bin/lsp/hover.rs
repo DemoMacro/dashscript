@@ -208,9 +208,9 @@ mod tests {
     }
 
     #[test]
-    fn builtin_hover_none_for_undocumented() {
-        // Math.imul is mapped but undocumented — no hover (no guess).
-        assert!(builtin_hover("Math.imul", 5).is_none());
+    fn builtin_hover_none_for_unknown() {
+        // A name the standard library does not declare — no hover (no guess).
+        assert!(builtin_hover("Math.nonexistent", 5).is_none());
     }
 
     #[test]

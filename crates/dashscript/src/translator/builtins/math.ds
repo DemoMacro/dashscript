@@ -1,0 +1,54 @@
+// Math — the global math namespace.
+//
+// The `.ds` declaration counterpart of `math.rs`: each constant and method here
+// is implemented by a matching arm there. `ds lsp` parses this file once (via
+// oxc) for completion/hover/signature help; each trailing `// doc` is that
+// member's hover text. The drift-guard test translates a one-line call per entry
+// and asserts no fall-through — so this file cannot declare a name `math.rs`
+// cannot lower to Rust.
+
+interface Math {
+  PI: number;  // The ratio π ≈ 3.14159.
+  E: number;  // Euler's number e ≈ 2.71828.
+  LN10: number;  // Natural log of 10 ≈ 2.30259.
+  LN2: number;  // Natural log of 2 ≈ 0.69315.
+  LOG10E: number;  // Base-10 log of e ≈ 0.43429.
+  LOG2E: number;  // Base-2 log of e ≈ 1.44270.
+  SQRT2: number;  // Square root of 2 ≈ 1.41421.
+  SQRT1_2: number;  // Square root of 1/2 ≈ 0.70711.
+  abs(x: number): number;  // Absolute value.
+  round(x: number): number;  // Round to the nearest integer (halves toward +∞).
+  floor(x: number): number;  // Round toward −∞.
+  ceil(x: number): number;  // Round toward +∞.
+  trunc(x: number): number;  // Drop the fractional part (round toward 0).
+  sqrt(x: number): number;  // Square root.
+  cbrt(x: number): number;  // Cube root.
+  exp(x: number): number;  // e raised to the power x.
+  expm1(x: number): number;  // e^x − 1 (accurate near 0).
+  log(x: number): number;  // Natural logarithm.
+  log2(x: number): number;  // Base-2 logarithm.
+  log10(x: number): number;  // Base-10 logarithm.
+  log1p(x: number): number;  // Natural log of (1 + x), accurate near 0.
+  pow(base: number, exp: number): number;  // `base` raised to the power `exp`.
+  sign(x: number): number;  // −1, 0, or +1 indicating the sign.
+  sin(x: number): number;  // Sine (radians).
+  cos(x: number): number;  // Cosine (radians).
+  tan(x: number): number;  // Tangent (radians).
+  asin(x: number): number;  // Arc sine (radians).
+  acos(x: number): number;  // Arc cosine (radians).
+  atan(x: number): number;  // Arc tangent (radians).
+  atan2(y: number, x: number): number;  // Angle of the point (x, y), in radians.
+  sinh(x: number): number;  // Hyperbolic sine.
+  cosh(x: number): number;  // Hyperbolic cosine.
+  tanh(x: number): number;  // Hyperbolic tangent.
+  asinh(x: number): number;  // Inverse hyperbolic sine.
+  acosh(x: number): number;  // Inverse hyperbolic cosine.
+  atanh(x: number): number;  // Inverse hyperbolic tangent.
+  hypot(...values: number[]): number;  // Square root of the sum of squares (+∞ if any arg is ±∞).
+  max(...values: number[]): number;  // The largest argument (−∞ if empty).
+  min(...values: number[]): number;  // The smallest argument (+∞ if empty).
+  clz32(x: number): number;  // Leading zero bits of the uint32 value of `x`.
+  fround(x: number): number;  // Round `x` to the nearest f32 and back to f64.
+  imul(a: number, b: number): number;  // 32-bit integer multiply of `a` and `b`.
+  sumPrecise(values: number[]): number;  // Exact sum (ES2026): NaN propagates, mixed ±∞ yield NaN.
+}

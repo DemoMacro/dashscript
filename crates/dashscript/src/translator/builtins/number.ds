@@ -1,0 +1,24 @@
+// Number — the global number namespace (static members only).
+//
+// The `.ds` declaration counterpart of `number.rs`: each constant and static
+// method here is implemented by a matching arm there. Instance methods
+// (`toFixed`, `toString(radix)`, …) are NOT namespace members, so they are not
+// declared here — completion surfaces them from the receiver's inferred type,
+// not from `Number.`. `ds lsp` parses this for completion/hover/signature help.
+
+interface Number {
+  EPSILON: number;  // Difference between 1 and the next f64 (≈ 2.22e-16).
+  MAX_SAFE_INTEGER: number;  // Largest safe integer (2^53 − 1).
+  MAX_VALUE: number;  // Largest positive finite value.
+  MIN_SAFE_INTEGER: number;  // Smallest safe integer (−(2^53 − 1)).
+  MIN_VALUE: number;  // Smallest positive value (> 0).
+  NaN: number;  // Not-a-Number.
+  NEGATIVE_INFINITY: number;  // Negative infinity.
+  POSITIVE_INFINITY: number;  // Positive infinity.
+  isNaN(x: number): boolean;  // True when `x` is NaN.
+  isFinite(x: number): boolean;  // True when `x` is finite.
+  isInteger(x: number): boolean;  // True when `x` is an integer.
+  isSafeInteger(x: number): boolean;  // True when `x` is a safe integer (|x| ≤ 2^53 − 1).
+  parseFloat(s: string): number;  // Parse a float from a string (NaN if malformed).
+  parseInt(s: string, radix?: number): number;  // Parse an integer from a string.
+}

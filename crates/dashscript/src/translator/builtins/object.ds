@@ -1,0 +1,22 @@
+// Object — the global object namespace (static members only).
+//
+// The `.ds` declaration counterpart of `object.rs`: each static method here is
+// implemented by a matching arm there. `ds lsp` parses this for
+// completion/hover/signature help; the drift-guard test asserts each entry
+// translates without fall-through.
+
+interface Object {
+  keys(o: any): string[];  // The record's own keys.
+  values(o: any): any[];  // The record's own values.
+  entries(o: any): [string, any][];  // The record's own [key, value] pairs.
+  assign(target: any, ...srcs: any[]): any;  // Merge each source into a clone of `target`.
+  fromEntries(entries: any): any;  // Build a record from key-value pairs.
+  getOwnPropertyNames(o: any): string[];  // The record's own property names (≡ `Object.keys`).
+  is(a: any, b: any): boolean;  // Value identity — equal, or both NaN.
+  freeze(o: any): any;  // Return the record unchanged (Rust has no runtime freeze).
+  seal(o: any): any;  // Return the record unchanged (a no-op in Rust).
+  preventExtensions(o: any): any;  // Return the record unchanged (a no-op in Rust).
+  isFrozen(o: any): boolean;  // Always false — a Record is never frozen.
+  isSealed(o: any): boolean;  // Always false — a Record is never sealed.
+  isExtensible(o: any): boolean;  // Always true — a Record is always extensible.
+}

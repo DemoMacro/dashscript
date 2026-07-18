@@ -1,0 +1,12 @@
+// String — the global string namespace (static members only).
+//
+// The `.ds` declaration counterpart of `string.rs`: each static method here is
+// implemented by a matching arm there. Instance methods (`toUpperCase`,
+// `slice`, `includes`, …) are NOT namespace members and are not declared here —
+// completion surfaces them from the receiver's inferred type. `ds lsp` parses
+// this for completion/hover/signature help.
+
+interface String {
+  fromCharCode(...codes: number[]): string;  // String from UTF-16 char codes.
+  fromCodePoint(...points: number[]): string;  // String from Unicode code points.
+}

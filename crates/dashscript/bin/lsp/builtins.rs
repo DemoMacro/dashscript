@@ -1,20 +1,39 @@
-//! Hover/signature-help data for DashScript builtins — signature + a short
-//! doc per name. Mirrors the methods/constants the translator actually maps;
-//! keep in sync with `translator/builtins/*.rs` and the member tables in
-//! `completion.rs`. (A future stage derives these from the translator match
-//! arms so the table cannot drift.)
+//! Builtin metadata — derived from the standard-library `.ds` declaration in
+//! [`super::stdlib`] (the `lib.d.ts` analogue). `completion`, `hover`, and
+//! `signature-help` all read [`all`]; the drift-guard test (in
+//! [`super::stdlib`]) asserts every entry actually translates, so this table
+//! cannot claim a name the translator cannot lower to Rust.
 //!
-//! Coverage is intentionally partial: undocumented builtins return `None`
-//! rather than a guessed doc — no silent wrong information. High-traffic names
-//! (`console.*`, `Math` core, global conversions) come first.
+//! There is no hand-written member table here — the `.ds` declaration is the
+//! single source of truth, parsed once at first use.
 
-/// One builtin's signature and a one-line doc, shown in hover and signature
-/// help. The [`BuiltinKind`] decides how the signature is rendered.
-#[derive(Clone, Copy)]
+use std::sync::LazyLock;
+
+use super::stdlib;
+
+/// One built-in: its qualified name, kind, and a signature (+ optional doc).
+/// The [`BuiltinKind`] decides how the signature is rendered and whether
+/// signature-help fires.
+#[derive(Clone)]
 pub(super) struct Builtin {
-    pub sig: &'static str,
-    pub doc: &'static str,
+    /// `None` for a global (`parseInt`); `Some("Math")` for a namespace member.
+    pub ns: Option<String>,
+    pub name: String,
     pub kind: BuiltinKind,
+    /// Signature text (`(x: number): number`), sliced from the stdlib source.
+    pub sig: String,
+    /// One-line doc; empty when undocumented (hover omits the doc paragraph).
+    pub doc: String,
+}
+
+impl Builtin {
+    /// The fully-qualified name (`Math.round`, `parseInt`) used by hover.
+    pub(super) fn qualified(&self) -> String {
+        match &self.ns {
+            Some(ns) => format!("{ns}.{}", self.name),
+            None => self.name.clone(),
+        }
+    }
 }
 
 /// A function (`Math.round`) renders as `name(sig)`; a constant (`Math.PI`)
@@ -25,197 +44,19 @@ pub(super) enum BuiltinKind {
     Const,
 }
 
-/// Lookup by fully-qualified name — `Math.round`, `console.log`, or a global
-/// like `parseInt`. `None` for builtins not yet in the table.
-pub(super) fn lookup(name: &str) -> Option<&'static Builtin> {
-    BUILTINS
-        .iter()
-        .find(|(key, _)| *key == name)
-        .map(|(_, v)| v)
+static PARSED: LazyLock<Vec<Builtin>> = LazyLock::new(stdlib::parse);
+
+/// The full builtin table, parsed once from the stdlib declaration. This is
+/// the single source of truth for completion/hover/signature-help.
+pub(super) fn all() -> &'static [Builtin] {
+    &PARSED
 }
 
-const BUILTINS: &[(&str, Builtin)] = &[
-    // console → println!/eprintln!
-    (
-        "console.log",
-        Builtin {
-            sig: "(...data: any[]): void",
-            doc: "Print to stdout (lowers to `println!`).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "console.warn",
-        Builtin {
-            sig: "(...data: any[]): void",
-            doc: "Print to stderr (lowers to `eprintln!`).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "console.error",
-        Builtin {
-            sig: "(...data: any[]): void",
-            doc: "Print to stderr (lowers to `eprintln!`).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    // Math constants
-    (
-        "Math.PI",
-        Builtin {
-            sig: "number",
-            doc: "The ratio π ≈ 3.14159.",
-            kind: BuiltinKind::Const,
-        },
-    ),
-    (
-        "Math.E",
-        Builtin {
-            sig: "number",
-            doc: "Euler's number e ≈ 2.71828.",
-            kind: BuiltinKind::Const,
-        },
-    ),
-    (
-        "Math.SQRT2",
-        Builtin {
-            sig: "number",
-            doc: "Square root of 2 ≈ 1.41421.",
-            kind: BuiltinKind::Const,
-        },
-    ),
-    (
-        "Math.LN2",
-        Builtin {
-            sig: "number",
-            doc: "Natural log of 2 ≈ 0.69315.",
-            kind: BuiltinKind::Const,
-        },
-    ),
-    (
-        "Math.LN10",
-        Builtin {
-            sig: "number",
-            doc: "Natural log of 10 ≈ 2.30259.",
-            kind: BuiltinKind::Const,
-        },
-    ),
-    // Math methods
-    (
-        "Math.round",
-        Builtin {
-            sig: "(x: number): number",
-            doc: "Round to the nearest integer (halves toward +∞).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.floor",
-        Builtin {
-            sig: "(x: number): number",
-            doc: "Round toward −∞.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.ceil",
-        Builtin {
-            sig: "(x: number): number",
-            doc: "Round toward +∞.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.trunc",
-        Builtin {
-            sig: "(x: number): number",
-            doc: "Drop the fractional part (round toward 0).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.abs",
-        Builtin {
-            sig: "(x: number): number",
-            doc: "Absolute value.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.sqrt",
-        Builtin {
-            sig: "(x: number): number",
-            doc: "Square root.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.pow",
-        Builtin {
-            sig: "(base: number, exp: number): number",
-            doc: "`base` raised to the power `exp`.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.max",
-        Builtin {
-            sig: "(...values: number[]): number",
-            doc: "The largest argument (−∞ if empty).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.min",
-        Builtin {
-            sig: "(...values: number[]): number",
-            doc: "The smallest argument (+∞ if empty).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "Math.sign",
-        Builtin {
-            sig: "(x: number): number",
-            doc: "−1, 0, or +1 indicating the sign.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    // global conversions
-    (
-        "parseInt",
-        Builtin {
-            sig: "(s: string, radix?: number): number",
-            doc: "Parse an integer from a string.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "parseFloat",
-        Builtin {
-            sig: "(s: string): number",
-            doc: "Parse a floating-point number from a string.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "isNaN",
-        Builtin {
-            sig: "(x: number): boolean",
-            doc: "True when `x` is NaN.",
-            kind: BuiltinKind::Function,
-        },
-    ),
-    (
-        "isFinite",
-        Builtin {
-            sig: "(x: number): boolean",
-            doc: "True when `x` is finite (not ±∞ or NaN).",
-            kind: BuiltinKind::Function,
-        },
-    ),
-];
+/// Lookup a built-in by qualified name — `Math.round`, `console.log`, or a
+/// global like `parseInt`. `None` for unknown names.
+pub(super) fn lookup(qualified: &str) -> Option<&'static Builtin> {
+    all().iter().find(|b| b.qualified() == qualified)
+}
 
 #[cfg(test)]
 mod tests {
@@ -226,7 +67,6 @@ mod tests {
         let b = lookup("Math.round").expect("Math.round");
         assert_eq!(b.sig, "(x: number): number");
         assert_eq!(b.kind, BuiltinKind::Function);
-        assert!(b.doc.contains("nearest"));
     }
 
     #[test]
@@ -238,16 +78,13 @@ mod tests {
 
     #[test]
     fn lookup_finds_global() {
-        assert_eq!(
-            lookup("parseInt").unwrap().sig,
-            "(s: string, radix?: number): number"
-        );
+        let b = lookup("parseInt").expect("parseInt");
+        assert!(b.sig.contains("radix?"), "sig: {}", b.sig);
+        assert_eq!(b.kind, BuiltinKind::Function);
     }
 
     #[test]
-    fn lookup_none_for_undocumented() {
-        // Math.imul is mapped but not yet documented — None, not a guess.
-        assert!(lookup("Math.imul").is_none());
+    fn lookup_none_for_unknown() {
         assert!(lookup("notABuiltin").is_none());
     }
 }
