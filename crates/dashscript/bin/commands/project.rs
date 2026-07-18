@@ -56,13 +56,143 @@ pub(crate) fn translate_sources(
     Ok(())
 }
 
-/// Translate a `.ds` file into a buildable Cargo project at `project_dir`: the
-/// resolved manifest as `Cargo.toml` + the translated source as `src/main.rs`.
+/// Translate one `.ds` file to `src/<stem>.rs`, prefixing `mod <module>;` for
+/// each of its local imports (deduped). The imported files are translated
+/// separately by [`translate_project`]'s directory walk — this emits only the
+/// current file and the modules it declares.
+fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<(), Box<dyn Error>> {
+    let src = fs::read_to_string(ds).map_err(|e| format!("cannot read {}: {e}", ds.display()))?;
+    let rust = Translator::new()
+        .translate(&src)
+        .map_err(|e| format!("translate {}: {e}", ds.display()))?;
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut mod_decls = String::new();
+    for imp in Translator::new().imports(&src) {
+        if seen.insert(imp.module.clone()) {
+            mod_decls.push_str(&format!("mod {};\n", imp.module));
+        }
+    }
+    let body = if mod_decls.is_empty() {
+        rust
+    } else {
+        format!("{mod_decls}\n{rust}")
+    };
+    fs::write(
+        project_dir.join("src").join(format!("{}.rs", stem_of(ds))),
+        body,
+    )?;
+    Ok(())
+}
+
+/// A project's resolved targets for `Cargo.toml`: the `(bin_name, ds_path)`
+/// pairs for `[[bin]]`, plus the `[lib]` entry path.
+type ProjectTargets = (Vec<(String, String)>, Option<String>);
+
+/// Translate every `.ds` under a manifest root into one multi-target crate at
+/// `project_dir/src/`: each file becomes `src/<stem>.rs` (prefixed with its
+/// `mod` declarations), and the manifest's `bin`/`lib` entries become the
+/// crate's `[[bin]]`/`[lib]` targets. Returns the resolved targets for
+/// `Cargo.toml` emission.
+///
+/// Two project-level guards: a stem collision (two files flatten to the same
+/// `src/<stem>.rs` — nested directories are not yet modeled as sub-modules),
+/// and a bin importing another bin (cargo forbids it; shared code must go
+/// through `[lib]`).
+fn translate_project(
+    root: &Path,
+    manifest: &Manifest,
+    project_dir: &Path,
+) -> Result<ProjectTargets, Box<dyn Error>> {
+    fs::create_dir_all(project_dir.join("src"))?;
+
+    let mut files = Vec::new();
+    walk_ds(root, &mut files);
+    files.sort();
+
+    let mut seen_stems: std::collections::HashMap<String, PathBuf> =
+        std::collections::HashMap::new();
+    for ds in &files {
+        let stem = stem_of(ds);
+        if let Some(prev) = seen_stems.insert(stem.clone(), ds.clone()) {
+            return Err(format!(
+                "dashscript: name collision — stem '{stem}' appears in both {} and {}; \
+                 rename one (nested directories are not yet modeled as modules)",
+                prev.display(),
+                ds.display()
+            )
+            .into());
+        }
+        translate_one_with_mods(ds, project_dir)?;
+    }
+
+    let bins = manifest.bin_entries();
+    let lib = manifest.lib.clone();
+    detect_bin_imports_bin(root, &bins)?;
+    Ok((bins, lib))
+}
+
+/// Guard: no bin may import another bin. cargo forbids one `[[bin]]` from
+/// `mod`-ing another, so shared code must live in a `[lib]` module. Compares
+/// canonical file paths so the check holds regardless of how the import is
+/// written.
+fn detect_bin_imports_bin(root: &Path, bins: &[(String, String)]) -> Result<(), Box<dyn Error>> {
+    let mut bin_files: std::collections::HashMap<PathBuf, String> =
+        std::collections::HashMap::new();
+    for (bin_name, ds_path) in bins {
+        if let Ok(canon) = root.join(ds_path).canonicalize() {
+            bin_files.insert(canon, bin_name.clone());
+        }
+    }
+    for (bin_name, ds_path) in bins {
+        let file = root.join(ds_path);
+        let Ok(src) = fs::read_to_string(&file) else {
+            continue;
+        };
+        let base = file.parent().unwrap_or_else(|| Path::new(""));
+        for imp in Translator::new().imports(&src) {
+            let Ok(dep) = resolve_local_module(base, &imp.source) else {
+                continue; // a missing module surfaces at `cargo build`
+            };
+            if let Ok(canon) = dep.canonicalize() {
+                if let Some(other) = bin_files.get(&canon) {
+                    if other != bin_name {
+                        return Err(format!(
+                            "dashscript: bin '{bin_name}' imports bin '{other}' (from {}); \
+                             move the shared code into a lib module (a .ds that is not a bin \
+                             entry) — cargo forbids one bin from mod-ing another",
+                            imp.source
+                        )
+                        .into());
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Translate a `.ds` entry into a buildable Cargo project at `project_dir`.
+///
+/// Project mode (a manifest declares `bin` or `lib`): every `.ds` under the
+/// root becomes `src/<stem>.rs` in one crate, and the declared entries become
+/// `[[bin]]`/`[lib]` targets — so a project's entries share one cache and never
+/// overwrite each other. Otherwise (a lone file, or a manifest with no declared
+/// targets): a minimal manifest + a single `src/main.rs`.
 pub(crate) fn emit_cargo_project(
     src: &str,
     src_path: &Path,
     project_dir: &Path,
 ) -> Result<(), Box<dyn Error>> {
+    if let Some(root) = find_manifest_root(src_path) {
+        if let Ok(manifest) = read_manifest(&root.join("manifest.json")) {
+            if manifest.bin.is_some() || manifest.lib.is_some() {
+                let (bins, lib) = translate_project(&root, &manifest, project_dir)?;
+                let cargo_toml = manifest.to_cargo_toml_with_bins(&bins, lib.as_deref());
+                fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
+                return Ok(());
+            }
+        }
+    }
     let cargo_toml = resolve_manifest(src_path);
     fs::create_dir_all(project_dir.join("src"))?;
     fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
@@ -315,5 +445,88 @@ pub(crate) fn status_to_code(status: ExitStatus) -> ExitCode {
         ExitCode::SUCCESS
     } else {
         ExitCode::FAILURE
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    fn write(dir: &Path, name: &str, body: &str) {
+        fs::write(dir.join(name), body).unwrap();
+    }
+
+    fn manifest_at(root: &Path) -> Manifest {
+        read_manifest(&root.join("manifest.json")).unwrap()
+    }
+
+    #[test]
+    fn translate_project_emits_per_file_bins() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "manifest.json",
+            r#"{ "name": "app", "bin": { "a": "a.ds", "b": "b.ds" } }"#,
+        );
+        write(root, "a.ds", "function main() { console.log(1); }");
+        write(root, "b.ds", "function main() { console.log(2); }");
+
+        let out = tmp.path().join("out");
+        let (bins, lib) = translate_project(root, &manifest_at(root), &out).unwrap();
+        let names: Vec<&str> = bins.iter().map(|(n, _)| n.as_str()).collect();
+        assert!(names.contains(&"a"), "bins: {bins:?}");
+        assert!(names.contains(&"b"), "bins: {bins:?}");
+        assert!(lib.is_none());
+        assert!(out.join("src").join("a.rs").exists(), "src/a.rs missing");
+        assert!(out.join("src").join("b.rs").exists(), "src/b.rs missing");
+    }
+
+    #[test]
+    fn translate_project_detects_stem_collision() {
+        // MVP flattens every .ds to src/<stem>.rs; two files with the same stem
+        // would clobber each other, so the translation refuses.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        fs::create_dir_all(root.join("sub")).unwrap();
+        write(
+            root,
+            "manifest.json",
+            r#"{ "name": "app", "bin": "main.ds" }"#,
+        );
+        write(root, "main.ds", "function main() {}");
+        write(root, "dup.ds", "function helper() {}");
+        write(&root.join("sub"), "dup.ds", "function other() {}");
+
+        let out = tmp.path().join("out");
+        let err = translate_project(root, &manifest_at(root), &out).unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("name collision"), "got: {msg}");
+        assert!(msg.contains("dup"), "got: {msg}");
+    }
+
+    #[test]
+    fn translate_project_detects_bin_imports_bin() {
+        // cargo forbids one bin from mod-ing another; shared code must go
+        // through a lib module. The guard surfaces this before cargo does.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "manifest.json",
+            r#"{ "name": "app", "bin": { "a": "a.ds", "b": "b.ds" } }"#,
+        );
+        write(
+            root,
+            "a.ds",
+            "import { x } from \"./b\";\nfunction main() {}",
+        );
+        write(root, "b.ds", "export function x() {}\nfunction main() {}");
+
+        let out = tmp.path().join("out");
+        let err = translate_project(root, &manifest_at(root), &out).unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("bin 'a' imports bin 'b'"), "got: {msg}");
     }
 }
