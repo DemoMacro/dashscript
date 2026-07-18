@@ -589,7 +589,16 @@ fn translate_variable_declaration(
                         .type_annotation
                         .as_ref()
                         .map(|ta| types::translate_type(&ta.type_annotation))
-                        .or_else(|| d.init.as_ref().and_then(infer_literal_type));
+                        .or_else(|| d.init.as_ref().and_then(infer_literal_type))
+                        .or_else(|| {
+                            // A numeric expression with no other inferred type
+                            // (unary `-0`, arithmetic, a `Math` call, a known
+                            // `f64` local) records as `f64`, so number→string
+                            // emit points route it through `__ds::number_to_string`.
+                            let init = d.init.as_ref()?;
+                            let ctx = Ctx::new(&*locals, registry, narrow, names);
+                            expressions::is_number_expr(init, &ctx).then(|| parse_quote!(f64))
+                        });
                     if let Some(path) = ty.as_ref().and_then(path_of) {
                         locals.insert(name.to_string(), path);
                     }

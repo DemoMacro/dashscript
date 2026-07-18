@@ -10,7 +10,7 @@ use super::super::builtins;
 use super::super::context::Ctx;
 use super::super::types;
 use super::fmt_merge;
-use super::{translate_argument, translate_argument_init, translate_expr};
+use super::{is_number_arg, translate_argument, translate_argument_init, translate_expr};
 
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
@@ -36,12 +36,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                         }
                     }
                 }
-                Argument::NumericLiteral(_) => {
+                _ if is_number_arg(a, ctx) => {
                     // An ES `Number::toString`: Rust's `f64` `Display` differs
                     // from ECMAScript (`1e21` → `1e+21`, `1e-7`, `-0` → `0`), so
-                    // route the literal through the `__ds` helper (ryu_js). The
-                    // helper call in the output flags the file as needing
-                    // `ryu_js`; see `Translator::translate_with_deps`.
+                    // route any numeric argument — a literal, a numeric local,
+                    // arithmetic, `Math.*`, `.length` — through the `__ds` helper
+                    // (ryu_js). Its presence in the output flags `needs_ryu_js`.
                     let e = translate_argument(a, ctx);
                     let wrapped: Expr = parse_quote!(crate::__ds::number_to_string(#e));
                     fmt.push_str("{}");

@@ -273,3 +273,107 @@ fn template_expr(t: &TemplateLiteral, ctx: &Ctx<'_>) -> Expr {
     let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
     parse_quote!(::std::format!(#fmt_lit, #(#exprs),*))
 }
+
+/// Whether `expr` evaluates to an `f64` (DashScript `number`). The number→
+/// string emit points use this to route a value through `__ds::number_to_string`
+/// (ryu-js) instead of Rust's `Display`, which differs from ECMAScript (`1e21`,
+/// `1e-7`, `-0`). Conservative: only patterns unambiguously numeric return
+/// `true`; an untracked call returns `false` and falls back to `Display`.
+pub(in crate::translator) fn is_number_expr(e: &Expression, ctx: &Ctx<'_>) -> bool {
+    use oxc_syntax::operator::UnaryOperator;
+    match e {
+        Expression::NumericLiteral(_) => true,
+        Expression::ParenthesizedExpression(p) => is_number_expr(&p.expression, ctx),
+        Expression::TSAsExpression(a) => is_number_expr(&a.expression, ctx),
+        Expression::TSTypeAssertion(t) => is_number_expr(&t.expression, ctx),
+        Expression::UnaryExpression(u) => {
+            matches!(
+                u.operator,
+                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus
+            ) && is_number_expr(&u.argument, ctx)
+        }
+        Expression::BinaryExpression(b) => {
+            is_arith_operator(&b.operator)
+                && is_number_expr(&b.left, ctx)
+                && is_number_expr(&b.right, ctx)
+        }
+        Expression::Identifier(id) => match id.name.as_str() {
+            "NaN" | "Infinity" => true,
+            _ => is_f64_local(id, ctx),
+        },
+        Expression::CallExpression(c) => is_number_call(&c.callee),
+        // `.length` is numeric (array/string length); other members are not
+        // tracked, so they fall back to `Display`.
+        Expression::StaticMemberExpression(sm) => sm.property.name.as_str() == "length",
+        _ => false,
+    }
+}
+
+/// Whether a call argument evaluates to an `f64` — [`is_number_expr`] over the
+/// parallel `Argument` enum. oxc models `Argument` and `Expression` separately;
+/// an `Argument`'s sub-expressions are `Expression`, so this delegates inward
+/// to [`is_number_expr`].
+pub(in crate::translator) fn is_number_arg(arg: &Argument, ctx: &Ctx<'_>) -> bool {
+    use oxc_syntax::operator::UnaryOperator;
+    match arg {
+        Argument::NumericLiteral(_) => true,
+        Argument::ParenthesizedExpression(p) => is_number_expr(&p.expression, ctx),
+        Argument::TSAsExpression(a) => is_number_expr(&a.expression, ctx),
+        Argument::TSTypeAssertion(t) => is_number_expr(&t.expression, ctx),
+        Argument::UnaryExpression(u) => {
+            matches!(
+                u.operator,
+                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus
+            ) && is_number_expr(&u.argument, ctx)
+        }
+        Argument::BinaryExpression(b) => {
+            is_arith_operator(&b.operator)
+                && is_number_expr(&b.left, ctx)
+                && is_number_expr(&b.right, ctx)
+        }
+        Argument::Identifier(id) => match id.name.as_str() {
+            "NaN" | "Infinity" => true,
+            _ => is_f64_local(id, ctx),
+        },
+        Argument::CallExpression(c) => is_number_call(&c.callee),
+        Argument::StaticMemberExpression(sm) => sm.property.name.as_str() == "length",
+        _ => false,
+    }
+}
+
+/// The arithmetic binary operators whose `f64 × f64 → f64` result is numeric.
+/// `+` is included: when both operands are numeric (checked by the caller) it
+/// is addition, not string concatenation.
+fn is_arith_operator(op: &oxc_syntax::operator::BinaryOperator) -> bool {
+    use oxc_syntax::operator::BinaryOperator;
+    matches!(
+        op,
+        BinaryOperator::Addition
+            | BinaryOperator::Subtraction
+            | BinaryOperator::Multiplication
+            | BinaryOperator::Division
+            | BinaryOperator::Remainder
+            | BinaryOperator::Exponential
+    )
+}
+
+/// True when `id` is a local whose recorded type is `f64`.
+fn is_f64_local(id: &IdentifierReference, ctx: &Ctx<'_>) -> bool {
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "f64"))
+}
+
+/// True when `callee` is a known-numeric call: `Math.<anything>(…)`, or the
+/// `parseInt`/`parseFloat`/`Number` globals.
+fn is_number_call(callee: &Expression) -> bool {
+    match callee {
+        Expression::StaticMemberExpression(sm) => {
+            matches!(&sm.object, Expression::Identifier(id) if id.name.as_str() == "Math")
+        }
+        Expression::Identifier(id) => {
+            matches!(id.name.as_str(), "parseInt" | "parseFloat" | "Number")
+        }
+        _ => false,
+    }
+}

@@ -35,3 +35,22 @@ fn numeric_console_log_routes_through_helper_and_flags_dep() {
         "needs_ryu_js must flag for a numeric console.log, got deps: {deps:?}"
     );
 }
+
+#[test]
+fn numeric_local_and_unary_route_through_helper() {
+    // A `number` local inferred from its initializer, and a unary `-0`, route
+    // through the helper — not just literals. `-0` must print "0" in ES, where
+    // Rust's `Display` would print "-0".
+    let src = "function main(): void { const x = 1e21; const z = -0; console.log(x, z); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("__ds::number_to_string"),
+        "numeric local/unary should route through the helper, got:\n{rust}"
+    );
+    assert!(
+        deps.needs_ryu_js,
+        "needs_ryu_js must flag, got deps: {deps:?}"
+    );
+}
