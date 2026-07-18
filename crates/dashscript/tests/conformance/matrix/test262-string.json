@@ -1729,7 +1729,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:11:13: error[E0425]: cannot find value `test262_error` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:12:13: error[E0425]: cannot find value `test262_error` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1753,7 +1753,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:11:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:18:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:25:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:32:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:39:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
+    "detail": "src\\main.rs:4:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:12:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:20:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:28:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:36:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:37:34: error[E0277]: cannot add `usize` to `f64`: no implementation for `f64 + usize`",
     "note": ""
   },
   {
@@ -1761,7 +1761,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:10:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:16:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:22:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:28:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:34:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
+    "detail": "src\\main.rs:4:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:11:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:18:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:25:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:26:10: warning: unreachable call: unreachable call\nsrc\\main.rs:32:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
     "note": ""
   },
   {
@@ -2160,11 +2160,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=11",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=11"
-    },
+    "detail": "src\\main.rs:21:27: error[E0382]: use of moved value: `whole_poo`: value used here after move\nsrc\\main.rs:3:9: warning: unused variable: `replacement_char`: help: if this is intentional, prefix it with an underscore: `_replacement_char`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
