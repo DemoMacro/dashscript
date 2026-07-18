@@ -1,10 +1,15 @@
 use super::super::Translator;
 
 #[test]
-fn translates_string_global_to_format() {
+fn translates_string_global_numeric_to_helper() {
     let src = "function f(): string { return String(42); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("format!(\"{}\", 42_f64)"), "got:\n{rust}");
+    // A numeric arg is ES NumberToString — routed through the ryu-js helper,
+    // not `format!` (Rust's `f64` Display differs from ECMAScript).
+    assert!(
+        rust.contains("__ds::number_to_string(42_f64)"),
+        "got:\n{rust}"
+    );
 }
 
 #[test]

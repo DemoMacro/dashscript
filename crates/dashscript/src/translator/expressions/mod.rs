@@ -268,7 +268,16 @@ fn template_expr(t: &TemplateLiteral, ctx: &Ctx<'_>) -> Expr {
     let exprs: Vec<Expr> = t
         .expressions
         .iter()
-        .map(|e| translate_expr(e, ctx))
+        .map(|e| {
+            let translated = translate_expr(e, ctx);
+            // A numeric interpolation routes through `__ds::number_to_string`
+            // so `${1e21}` is "1e+21", not Rust's "1000000000000000000000".
+            if is_number_expr(e, ctx) {
+                parse_quote!(crate::__ds::number_to_string(#translated))
+            } else {
+                translated
+            }
+        })
         .collect();
     let fmt_lit = syn::LitStr::new(&fmt, Span::call_site());
     parse_quote!(::std::format!(#fmt_lit, #(#exprs),*))

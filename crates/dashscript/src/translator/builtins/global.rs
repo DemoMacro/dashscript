@@ -8,7 +8,7 @@ use syn::{parse_quote, Expr};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::super::expressions::{bool_expr, string_expr, translate_argument};
+use super::super::expressions::{bool_expr, is_number_arg, string_expr, translate_argument};
 
 /// Global conversion functions called as plain identifiers: `String(x)` →
 /// `format!("{}", x)`; `parseInt(s)`/`parseFloat(s)` → `s.trim().parse::<f64>()`
@@ -34,7 +34,14 @@ pub(in crate::translator) fn global_function(
                 }
                 _ => {
                     let e = translate_argument(a, ctx);
-                    parse_quote!(::std::format!("{}", #e))
+                    // `String(<number>)` is ES NumberToString — route through the
+                    // helper; other values use `format!` (Rust `Display` already
+                    // matches ES for string/bool).
+                    if is_number_arg(a, ctx) {
+                        parse_quote!(crate::__ds::number_to_string(#e))
+                    } else {
+                        parse_quote!(::std::format!("{}", #e))
+                    }
                 }
             }
         }
