@@ -29,11 +29,6 @@
     "url": "git+https://github.com/DemoMacro/dashscript.git"
   },
   "publisher": "demomacro",
-  "files": [
-    "dist",
-    "syntaxes",
-    "language-configuration.json"
-  ],
   "main": "./dist/extension.mjs",
   "scripts": {
     "build": "vp pack",

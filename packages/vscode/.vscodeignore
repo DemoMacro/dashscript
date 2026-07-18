@@ -1,0 +1,9 @@
+# Only the bundle + language data ship in the vsix. vsce ignores via this file
+# (it does NOT read package.json `files`); deps are bundled into dist by vp pack.
+.vscode/**
+.vscode-test/**
+src/**
+node_modules/**
+vite.config.ts
+**/*.map
+.vscodeignore
