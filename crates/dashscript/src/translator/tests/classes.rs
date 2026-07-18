@@ -78,3 +78,43 @@ fn translates_new_with_arguments() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("P::new(5.0)"), "new P(5): {rust}");
 }
+
+#[test]
+fn flags_class_inheritance() {
+    let rust = Translator::new()
+        .translate("class C extends B { x: number; }")
+        .expect("should translate");
+    assert!(rust.contains("inheritance"), "extends diag: {rust}");
+}
+
+#[test]
+fn flags_static_field() {
+    let rust = Translator::new()
+        .translate("class C { static x: number; }")
+        .expect("should translate");
+    assert!(rust.contains("`static`"), "static diag: {rust}");
+}
+
+#[test]
+fn flags_get_accessor() {
+    let rust = Translator::new()
+        .translate("class C { get val(): number { return 1; } }")
+        .expect("should translate");
+    assert!(rust.contains("accessors"), "get diag: {rust}");
+}
+
+#[test]
+fn flags_private_field() {
+    let rust = Translator::new()
+        .translate("class C { #x: number; }")
+        .expect("should translate");
+    assert!(rust.contains("private"), "private diag: {rust}");
+}
+
+#[test]
+fn flags_abstract_class() {
+    let rust = Translator::new()
+        .translate("abstract class C { x: number; }")
+        .expect("should translate");
+    assert!(rust.contains("abstract"), "abstract diag: {rust}");
+}

@@ -9,7 +9,7 @@ use std::collections::HashSet;
 
 use oxc_ast::ast::{
     AssignmentTarget, Class, ClassElement, Expression, Function, MethodDefinition,
-    MethodDefinitionKind, PropertyDefinition, Statement, TSType,
+    MethodDefinitionKind, PropertyDefinition, PropertyKey, Statement, TSAccessibility, TSType,
 };
 use oxc_syntax::operator::AssignmentOperator;
 use proc_macro2::TokenStream;
@@ -40,23 +40,88 @@ pub(in crate::translator) fn translate_class(class: &Class, registry: &TypeRegis
     };
     let name = bindings::type_ident(&id.name);
 
+    let mut diags: Vec<Item> = Vec::new();
+    // Class-level unsupported features.
+    if class.super_class.is_some() {
+        diags.push(compile_error_item(
+            "DashScript does not support class inheritance (extends/super) — use composition",
+        ));
+    }
+    if class.r#abstract {
+        diags.push(compile_error_item(
+            "DashScript does not support `abstract` classes",
+        ));
+    }
+    if class.declare {
+        diags.push(compile_error_item(
+            "DashScript does not support `declare` classes",
+        ));
+    }
+    if !class.decorators.is_empty() {
+        diags.push(compile_error_item(
+            "DashScript does not support class decorators",
+        ));
+    }
+
     let mut fields: Vec<Field> = Vec::new();
     let mut ctor: Option<&MethodDefinition> = None;
     let mut methods: Vec<&MethodDefinition> = Vec::new();
     for elem in &class.body.body {
         match elem {
             ClassElement::PropertyDefinition(pd) => {
-                if let Some(f) = instance_field(pd, registry) {
+                if pd.r#static {
+                    diags.push(compile_error_item(
+                        "DashScript does not support `static` class fields",
+                    ));
+                } else if pd.computed {
+                    diags.push(compile_error_item(
+                        "DashScript does not support computed property names in classes",
+                    ));
+                } else if is_private_member(&pd.key, pd.accessibility.as_ref()) {
+                    diags.push(compile_error_item(
+                        "DashScript does not support private (`#`/`private`) class fields",
+                    ));
+                } else if let Some(f) = instance_field(pd, registry) {
                     fields.push(f);
                 }
             }
-            ClassElement::MethodDefinition(md) => match md.kind {
-                MethodDefinitionKind::Constructor => ctor = Some(md),
-                MethodDefinitionKind::Method => methods.push(md),
-                // get/set accessors land in the diagnostics phase.
-                _ => {}
-            },
-            _ => {} // static blocks / index signatures / accessor props: later
+            ClassElement::MethodDefinition(md) => {
+                if md.r#static {
+                    diags.push(compile_error_item(
+                        "DashScript does not support `static` class methods",
+                    ));
+                } else if md.computed {
+                    diags.push(compile_error_item(
+                        "DashScript does not support computed method names in classes",
+                    ));
+                } else if is_private_member(&md.key, md.accessibility.as_ref()) {
+                    diags.push(compile_error_item(
+                        "DashScript does not support private (`#`/`private`) class methods",
+                    ));
+                } else {
+                    match md.kind {
+                        MethodDefinitionKind::Constructor => ctor = Some(md),
+                        MethodDefinitionKind::Method => methods.push(md),
+                        MethodDefinitionKind::Get => diags.push(compile_error_item(
+                            "DashScript does not support `get` accessors — use a method",
+                        )),
+                        MethodDefinitionKind::Set => diags.push(compile_error_item(
+                            "DashScript does not support `set` accessors — use a method",
+                        )),
+                    }
+                }
+            }
+            ClassElement::StaticBlock(_) => {
+                diags.push(compile_error_item(
+                    "DashScript does not support `static` blocks",
+                ));
+            }
+            ClassElement::AccessorProperty(_) => {
+                diags.push(compile_error_item(
+                    "DashScript does not support `accessor` properties",
+                ));
+            }
+            ClassElement::TSIndexSignature(_) => {} // type-level; no runtime effect
         }
     }
 
@@ -73,7 +138,19 @@ pub(in crate::translator) fn translate_class(class: &Class, registry: &TypeRegis
         }
     };
 
-    vec![struct_item, impl_item]
+    let mut result = vec![struct_item, impl_item];
+    result.extend(diags);
+    result
+}
+
+/// Whether a class member is private: a `#private` key, or a TS `private`/
+/// `protected` accessibility modifier (Rust struct fields are all `pub`).
+fn is_private_member(key: &PropertyKey, accessibility: Option<&TSAccessibility>) -> bool {
+    matches!(key, PropertyKey::PrivateIdentifier(_))
+        || matches!(
+            accessibility,
+            Some(TSAccessibility::Private | TSAccessibility::Protected)
+        )
 }
 
 /// `#[derive(Clone)] struct Name { pub field: ty, … }`.
