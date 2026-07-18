@@ -1,0 +1,483 @@
+[
+  {
+    "id": "test262.test.built-ins.parseint.15.1.2.2-2-1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t3",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "src\\main.rs:17:22: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:33:22: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t7",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "unsupported",
+    "detail": "`instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t10",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t10_u180e",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t3",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t4",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t5",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t6",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t7",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t8",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a2_t9",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "src\\main.rs:17:49: error[E0605]: non-primitive cast: `String` as `i32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:33:49: error[E0605]: non-primitive cast: `String` as `i32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:49:49: error[E0605]: non-primitive cast: `String` as `i32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t3",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "src\\main.rs:17:49: error[E0605]: non-primitive cast: `Option<_>` as `i32`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:33:49: error[E0605]: non-primitive cast: `Option<_>` as `i32`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.1_t7",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "unsupported",
+    "detail": "`instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "oracle diff: line 4: ds=\"NaN\" node=\"11\"; line 5: ds=\"NaN\" node=\"11\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 4: ds=\"NaN\" node=\"11\"; line 5: ds=\"NaN\" node=\"11\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t3",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"3\"; line 2: ds=\"NaN\" node=\"11\"; line 4: ds=\"NaN\" node=\"3\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"3\"; line 2: ds=\"NaN\" node=\"11\"; line 4: ds=\"NaN\" node=\"3\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.1_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.1_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.2_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a4.2_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a5.1_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a5.2_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a5.2_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t3",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t4",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "src\\main.rs:30:24: error[E0308]: mismatched types: expected `&str`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t5",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "src\\main.rs:30:24: error[E0308]: mismatched types: expected `&str`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a6.1_t6",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.1_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.1_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.2_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.2_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.2_t3",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.3_t1",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.3_t2",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a7.3_t3",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a9.5",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "unsupported",
+    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parseint.s15.1.2.2_a9.6",
+    "layer": "test262",
+    "category": "parseint",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:3:54: error[E0425]: cannot find value `parse_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  }
+]

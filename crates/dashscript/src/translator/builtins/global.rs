@@ -203,11 +203,22 @@ pub(in crate::translator) fn parse_int_expr(a: Expr, radix: Option<Expr>) -> Exp
     };
     parse_quote!({
         let __pi = |__s: &str, __radix: i32| -> f64 {
-            let __b = __s.as_bytes();
+            // ES StringUnicodeWhitespaceTrim:  / - / / /
+            // 　 count as whitespace for parseInt. They are multi-byte
+            // UTF-8, so the old `(byte as char).is_whitespace()` walked raw
+            // bytes and missed them — `parseInt(" 1")` returned NaN instead
+            // of 1. Walk code points, advancing the byte offset past each
+            // whitespace char; everything after (sign, radix prefix, digits) is
+            // ASCII, so byte indexing from `__i` stays correct below.
             let mut __i = 0_usize;
-            while __i < __b.len() && (__b[__i] as char).is_whitespace() {
-                __i += 1;
+            for (__off, __c) in __s.char_indices() {
+                if __c.is_whitespace() {
+                    __i = __off + __c.len_utf8();
+                } else {
+                    break;
+                }
             }
+            let __b = __s.as_bytes();
             let mut __sign = 1_f64;
             if __i < __b.len() && (__b[__i] == b'+' || __b[__i] == b'-') {
                 if __b[__i] == b'-' {
