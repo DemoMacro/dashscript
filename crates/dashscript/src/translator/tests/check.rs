@@ -141,3 +141,34 @@ fn check_does_not_flag_supported_code() {
     );
     assert!(diags.is_empty(), "{diags:?}");
 }
+
+#[test]
+fn check_flags_reflection_in_function_expression() {
+    // A reflection call inside an IIFE body `(function () { … })()` is still
+    // surfaced — the walk recurses function-expression bodies, not just arrows.
+    let diags = Translator::new()
+        .check("function f(): void { (function () { Object.defineProperty({}, \"x\", {}); })(); }");
+    assert!(
+        diags
+            .iter()
+            .any(|d| d.message.contains("Object.defineProperty")),
+        "{diags:?}"
+    );
+}
+
+#[test]
+fn check_flags_reflection_in_try_catch() {
+    // A construct in the try body or the catch handler (`e.constructor`) is
+    // surfaced — the walk recurses both the try block and the catch body.
+    let diags = Translator::new().check(
+        "function f(): void { try { Object.create(null); } catch (e) { console.log(e.constructor); } }",
+    );
+    assert!(
+        diags.iter().any(|d| d.message.contains("Object.create")),
+        "{diags:?}"
+    );
+    assert!(
+        diags.iter().any(|d| d.message.contains("constructor")),
+        "{diags:?}"
+    );
+}

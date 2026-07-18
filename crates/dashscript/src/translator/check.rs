@@ -99,9 +99,17 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
                 }
             }
         }
-        Statement::BlockStatement(b) => {
-            for s in &b.body {
-                collect_unsupported(s, out);
+        Statement::BlockStatement(b) => collect_unsupported_stmts(&b.body, out),
+        // `try { … } catch (e) { … }` — recurse the try block, the handler
+        // body, and the optional `finally`, so a construct inside the handler
+        // (`e.constructor.name`) or the try body is still surfaced.
+        Statement::TryStatement(t) => {
+            collect_unsupported_stmts(&t.block.body, out);
+            if let Some(handler) = &t.handler {
+                collect_unsupported_stmts(&handler.body.body, out);
+            }
+            if let Some(fin) = &t.finalizer {
+                collect_unsupported_stmts(&fin.body, out);
             }
         }
         Statement::ExpressionStatement(es) => collect_expr(&es.expression, out),
@@ -163,6 +171,15 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
     }
 }
 
+/// Walk a slice of statements — the shared spine of [`collect_unsupported`]'s
+/// block-shaped arms (a BlockStatement, a function/arrow body, try/catch
+/// bodies).
+fn collect_unsupported_stmts(stmts: &[Statement], out: &mut Vec<OxcDiagnostic>) {
+    for s in stmts {
+        collect_unsupported(s, out);
+    }
+}
+
 /// Detect a low-compatibility pattern at `expr`, then recurse into its
 /// children. A `typeof` operand is **not** recursed: `typeof` has its own
 /// mapping (a global constructor → `"function"`), so `typeof Symbol`/
@@ -212,8 +229,13 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         // oxc wraps even a concise body as a FunctionBody whose single statement
         // is an ExpressionStatement.
         Expression::ArrowFunctionExpression(a) => {
-            for s in &a.body.statements {
-                collect_unsupported(s, out);
+            collect_unsupported_stmts(&a.body.statements, out);
+        }
+        // `(function () { … })()` — a function expression's body is walked
+        // too, so a reflection call inside an IIFE is flagged.
+        Expression::FunctionExpression(f) => {
+            if let Some(body) = &f.body {
+                collect_unsupported_stmts(&body.statements, out);
             }
         }
         Expression::AssignmentExpression(a) => collect_expr(&a.right, out),
