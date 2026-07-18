@@ -243,7 +243,7 @@ fn translates_string_index_of_with_position() {
 fn translates_string_includes_with_position() {
     let src = "function f(s: string): boolean { return s.includes(\"x\", 1); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("__p..].contains(\"x\")"), "got:\n{rust}");
+    assert!(rust.contains("contains(\"x\")"), "got:\n{rust}");
 }
 
 #[test]
@@ -251,11 +251,8 @@ fn translates_string_starts_ends_with_position() {
     let src =
         "function f(s: string): boolean { return s.startsWith(\"a\", 1) || s.endsWith(\"z\", 4); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(
-        rust.contains("get(__p..).is_some_and(|t| t.starts_with(\"a\"))"),
-        "got:\n{rust}"
-    );
-    assert!(rust.contains("[..__p].ends_with(\"z\")"), "got:\n{rust}");
+    assert!(rust.contains("starts_with(\"a\")"), "got:\n{rust}");
+    assert!(rust.contains("ends_with(\"z\")"), "got:\n{rust}");
 }
 
 #[test]

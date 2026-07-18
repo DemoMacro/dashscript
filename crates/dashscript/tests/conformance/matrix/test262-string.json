@@ -361,7 +361,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:8:42: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:20:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:24:42: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:36:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:8:27: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:20:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:24:27: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:36:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -403,16 +403,22 @@
     "id": "test262.test.built-ins.string.prototype.endswith.return-true-if-searchstring-is-empty",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nsrc\\main.rs:13:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:17:27: error[E0382]: use of moved value: `str`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.endswith.searchstring-found-with-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:12:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:12:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -438,8 +444,11 @@
     "id": "test262.test.built-ins.string.prototype.endswith.searchstring-not-found-with-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -540,7 +549,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:8:42: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:20:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:24:42: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:40:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:8:27: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:20:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:24:27: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:40:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -571,8 +580,11 @@
     "id": "test262.test.built-ins.string.prototype.includes.return-false-with-out-of-bounds-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nsrc\\main.rs:12:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:16:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:16:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -580,15 +592,22 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 3: ds=\"false\" node=\"true\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"false\" node=\"true\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.includes.searchstring-found-with-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:12:27: error[E0382]: use of moved value: `str`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -614,8 +633,11 @@
     "id": "test262.test.built-ins.string.prototype.includes.searchstring-not-found-with-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:9:46: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -729,7 +751,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:50: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:8:79: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:79: warning: unreachable expression: unreachable expression\nsrc\\main.rs:18:79: warning: unreachable expression: unreachable expression\nsrc\\main.rs:23:50: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:28:79: warning: unreachable expression: unreachable expression",
+    "detail": "src\\main.rs:3:32: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:8:61: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:61: warning: unreachable expression: unreachable expression\nsrc\\main.rs:18:61: warning: unreachable expression: unreachable expression\nsrc\\main.rs:23:32: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:28:61: warning: unreachable expression: unreachable expression",
     "note": ""
   },
   {
@@ -737,7 +759,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:118:79: warning: unreachable expression: unreachable expression\nsrc\\main.rs:38:48: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:43:48: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:58:48: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:63:48: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:68:48: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "detail": "src\\main.rs:107:61: warning: unreachable expression: unreachable expression\nsrc\\main.rs:33:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:37:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:49:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:54:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:59:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
     "note": ""
   },
   {
@@ -1771,15 +1793,18 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:8:42: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:20:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:24:42: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:36:42: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:8:27: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:20:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:24:27: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:36:27: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.startswith.out-of-bounds-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nsrc\\main.rs:12:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:16:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:20:27: error[E0382]: use of moved value: `str`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1811,15 +1836,22 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:45: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 4: ds=\"false\" node=\"true\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 4: ds=\"false\" node=\"true\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.startswith.searchstring-found-with-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:12:27: error[E0382]: use of moved value: `str`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1845,8 +1877,11 @@
     "id": "test262.test.built-ins.string.prototype.startswith.searchstring-not-found-with-position",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:8:27: error[E0382]: use of moved value: `str`: value used here after move\nsrc\\main.rs:9:22: error[E0382]: borrow of moved value: `str`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {

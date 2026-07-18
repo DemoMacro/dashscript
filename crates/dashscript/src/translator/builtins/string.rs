@@ -56,11 +56,11 @@ pub(in crate::translator) fn string_method_on(
             match args.get(1) {
                 Some(pos) => {
                     let p = translate_argument(pos, ctx);
+                    // `.get` borrows the receiver (`&self`), so a `String` local
+                    // isn't moved — later reads in the same fixture still work.
                     parse_quote!({
-                        let __s = #obj;
                         let __p = ((#p) as i64).max(0) as usize;
-                        let __p = __p.min(__s.len());
-                        __s[__p..].contains(#a)
+                        (#obj).get(__p..).is_some_and(|t| t.contains(#a))
                     })
                 }
                 None => parse_quote!(#obj.contains(#a)),
@@ -73,9 +73,8 @@ pub(in crate::translator) fn string_method_on(
                 Some(pos) => {
                     let p = translate_argument(pos, ctx);
                     parse_quote!({
-                        let __s = #obj;
                         let __p = ((#p) as i64).max(0) as usize;
-                        __s.get(__p..).is_some_and(|t| t.starts_with(#a))
+                        (#obj).get(__p..).is_some_and(|t| t.starts_with(#a))
                     })
                 }
                 None => parse_quote!(#obj.starts_with(#a)),
@@ -89,10 +88,9 @@ pub(in crate::translator) fn string_method_on(
                 Some(pos) => {
                     let p = translate_argument(pos, ctx);
                     parse_quote!({
-                        let __s = #obj;
                         let __p = ((#p) as i64).max(0) as usize;
-                        let __p = __p.min(__s.len());
-                        __s[..__p].ends_with(#a)
+                        let __p = __p.min((#obj).len());
+                        (#obj).get(..__p).is_some_and(|t| t.ends_with(#a))
                     })
                 }
                 None => parse_quote!(#obj.ends_with(#a)),
@@ -128,10 +126,8 @@ pub(in crate::translator) fn string_method_on(
                 Some(from) => {
                     let f = translate_argument(from, ctx);
                     parse_quote!({
-                        let __s = #obj;
                         let __from = ((#f) as i64).max(0) as usize;
-                        let __from = __from.min(__s.len());
-                        __s[__from..].find(#needle).map(|b| (b + __from) as f64).unwrap_or(-1_f64)
+                        (#obj).get(__from..).and_then(|t| t.find(#needle)).map(|b| (b + __from) as f64).unwrap_or(-1_f64)
                     })
                 }
                 None => parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1_f64)),
