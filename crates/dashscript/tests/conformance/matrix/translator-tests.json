@@ -339,40 +339,40 @@
     "id": "clone_move.translates_unmutated_let_is_plain_let",
     "layer": "translator-tests",
     "category": "clone_move",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "clone_move.translates_mutated_let_is_let_mut",
     "layer": "translator-tests",
     "category": "clone_move",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "clone_move.translates_mutated_var_is_let_mut",
     "layer": "translator-tests",
     "category": "clone_move",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "clone_move.translates_mutated_let_by_compound_assign_is_let_mut",
     "layer": "translator-tests",
     "category": "clone_move",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "clone_move.translates_mutated_vec_by_method_is_let_mut",
     "layer": "translator-tests",
     "category": "clone_move",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -387,8 +387,8 @@
     "id": "console.translates_multi_arg_console_log",
     "layer": "translator-tests",
     "category": "console",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -403,8 +403,8 @@
     "id": "control_flow.translates_if_else",
     "layer": "translator-tests",
     "category": "control_flow",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {

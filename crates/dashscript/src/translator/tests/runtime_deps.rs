@@ -1,7 +1,7 @@
 //! `translate_with_deps` returns the same Rust as `translate`, plus a
 //! runtime-dependency report. A source with no number→string formatting keeps
 //! an empty dep set, so `ds build` links nothing extra.
-use super::super::Translator;
+use super::super::{RuntimeDeps, Translator};
 
 #[test]
 fn with_deps_matches_translate() {
@@ -53,4 +53,52 @@ fn numeric_local_and_unary_route_through_helper() {
         deps.needs_ryu_js,
         "needs_ryu_js must flag, got deps: {deps:?}"
     );
+}
+
+#[test]
+fn helper_module_present_only_when_needed() {
+    // A ryu_js-flagged dep set exposes the `__ds` helper module; a plain one does not.
+    let with = RuntimeDeps { needs_ryu_js: true };
+    let without = RuntimeDeps {
+        needs_ryu_js: false,
+    };
+    assert!(
+        with.helper_module()
+            .is_some_and(|s| s.contains("number_to_string")),
+        "ryu_js dep exposes the helper"
+    );
+    assert!(without.helper_module().is_none(), "no dep → no helper");
+}
+
+#[test]
+fn apply_to_cargo_toml_inserts_into_dependencies_section() {
+    let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
+    let deps = RuntimeDeps { needs_ryu_js: true };
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(toml.contains("ryu-js = \"1.0\""), "got:\n{toml}");
+    // Idempotent: a second pass must not duplicate the line.
+    deps.apply_to_cargo_toml(&mut toml);
+    assert_eq!(toml.matches("ryu-js").count(), 1, "got:\n{toml}");
+}
+
+#[test]
+fn apply_to_cargo_toml_creates_section_when_absent() {
+    let mut toml = String::from("[package]\nname = \"x\"\n");
+    let deps = RuntimeDeps { needs_ryu_js: true };
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        toml.contains("[dependencies]\nryu-js = \"1.0\""),
+        "got:\n{toml}"
+    );
+}
+
+#[test]
+fn apply_to_cargo_toml_noop_when_not_needed() {
+    // A file with no number→string emit point must not pull ryu_js into Cargo.toml.
+    let mut toml = String::from("[package]\nname = \"x\"\n");
+    let deps = RuntimeDeps {
+        needs_ryu_js: false,
+    };
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(!toml.contains("ryu-js"), "got:\n{toml}");
 }

@@ -46,7 +46,58 @@ impl RuntimeDeps {
     pub fn merge(&mut self, other: &RuntimeDeps) {
         self.needs_ryu_js |= other.needs_ryu_js;
     }
+
+    /// The `__ds` helper module source — `number_to_string(f64) -> String` via
+    /// `ryu_js` (ES `Number::toString`) — when this dep set flags `ryu_js`.
+    /// `None` when no runtime dep is needed, so the caller writes nothing.
+    pub fn helper_module(&self) -> Option<&'static str> {
+        self.needs_ryu_js.then_some(DS_HELPER_MODULE)
+    }
+
+    /// Append `ryu-js = "1.0"` to a generated `Cargo.toml`, creating the
+    /// `[dependencies]` section if absent. A no-op when no runtime dep is needed
+    /// or `ryu-js` is already declared (e.g. the project declared `rust:ryu_js`)
+    /// — so a consumer can call this unconditionally and let the dep set gate it.
+    /// A string-level post-process keeps the dep out of the user's
+    /// `manifest.json` — it is a DashScript-internal runtime need, not a
+    /// declared project dependency.
+    pub fn apply_to_cargo_toml(&self, cargo_toml: &mut String) {
+        if !self.needs_ryu_js || cargo_toml.contains("ryu-js") {
+            return;
+        }
+        // The crates.io package is `ryu-js` (hyphen); Rust exposes it as
+        // `ryu_js` (underscore) in `use`, so the Cargo.toml key uses the
+        // package name.
+        const RYU_JS_LINE: &str = "ryu-js = \"1.0\"";
+        if let Some(pos) = cargo_toml.find("[dependencies]\n") {
+            cargo_toml.insert_str(pos + "[dependencies]\n".len(), &format!("{RYU_JS_LINE}\n"));
+        } else {
+            cargo_toml.push_str(&format!("\n[dependencies]\n{RYU_JS_LINE}\n"));
+        }
+    }
 }
+
+/// The DashScript runtime helper module, written to `src/__ds.rs` and declared
+/// `mod __ds;` at each crate root when a translated file references it. The
+/// single source for the `__ds` helpers — consumed by both `ds build` (bin) and
+/// the conformance harness (lib test) — so the helper text lives in the library
+/// rather than either consumer. Today only `number_to_string` (ES
+/// `Number::toString` via `ryu_js`); signed zero is normalized to `"0"` first
+/// (`ryu_js` covers NaN and ±Infinity already).
+const DS_HELPER_MODULE: &str = "\
+//! DashScript runtime helper: ES-correct `Number::toString` via `ryu_js`.
+use ryu_js::Buffer;
+
+/// Format an `f64` as ECMAScript `Number::toString` would. `ryu_js` covers NaN
+/// and ±Infinity; signed zero is normalized to `\"0\"` (ES prints both `+0`
+/// and `-0` that way).
+pub fn number_to_string(x: f64) -> String {
+    if x == 0.0 {
+        return \"0\".to_string();
+    }
+    Buffer::new().format(x).to_string()
+}
+";
 
 /// Translates a TypeScript-flavored `.ds` program into Rust source.
 #[derive(Default)]

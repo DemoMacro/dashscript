@@ -12,9 +12,9 @@ use std::{
 use dashscript::Manifest;
 
 use super::project::{
-    append_ryu_js_dep, apply_runtime_deps, bin_lib_stems, cache_project_dir, default_manifest,
-    emit_cargo_project, find_manifest_root, invoke_cargo, project_name, read_manifest,
-    resolve_entry, resolve_target, status_to_code, translate_project,
+    apply_runtime_deps, bin_lib_stems, cache_project_dir, default_manifest, emit_cargo_project,
+    find_manifest_root, invoke_cargo, project_name, read_manifest, resolve_entry, resolve_target,
+    status_to_code, translate_project,
 };
 
 /// Parsed `ds build` flags: optional entry file, optional `--target`, optional
@@ -293,9 +293,7 @@ pub(crate) fn workspace_build(
         let member_cache = cache.join(name);
         let ((bins, lib), deps) = translate_project(member_dir, manifest, &member_cache)?;
         let mut cargo_toml = manifest.to_member_toml_with_bins(&bins, lib.as_deref(), &inherited);
-        if deps.needs_ryu_js {
-            append_ryu_js_dep(&mut cargo_toml);
-        }
+        deps.apply_to_cargo_toml(&mut cargo_toml);
         fs::write(member_cache.join("Cargo.toml"), cargo_toml)?;
         apply_runtime_deps(&member_cache, &deps, &bin_lib_stems(&bins, lib.as_deref()))?;
         println!("ds: {name} (workspace member)");

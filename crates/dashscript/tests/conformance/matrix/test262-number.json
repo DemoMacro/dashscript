@@ -369,10 +369,10 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 41: ds=\"2e1\" node=\"3e+1\"; line 42: ds=\"1.234e4\" node=\"1.235e+4\"",
+    "detail": "oracle diff: line 41: ds=\"2e+1\" node=\"3e+1\"; line 42: ds=\"1.234e+4\" node=\"1.235e+4\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 41: ds=\"2e1\" node=\"3e+1\"; line 42: ds=\"1.234e4\" node=\"1.235e+4\""
+      "detail": "line 41: ds=\"2e+1\" node=\"3e+1\"; line 42: ds=\"1.234e+4\" node=\"1.235e+4\""
     },
     "note": ""
   },
@@ -381,7 +381,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:49: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:61: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -408,7 +408,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:15:33: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:10:33: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:11:33: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:13:33: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:38:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:43:45: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:48:45: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:53:45: error[E0605]: non-primitive cast: `Vec<_>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:58:45: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:63:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less",
     "note": ""
   },
   {
@@ -416,7 +416,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:39: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:67: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:9:35: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:18:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:35:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -974,7 +974,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0425]: cannot find function `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:4:58: error[E0425]: cannot find function `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1046,7 +1046,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:27: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nsrc\\main.rs:5:27: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "oracle diff: line count: ds=0 node=2",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=2"
+    },
     "note": ""
   },
   {
@@ -1073,7 +1077,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:47: error[E0369]: cannot multiply `String` by `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:47: error[E0369]: cannot multiply `String` by `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1372,7 +1376,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:8:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:13:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:18:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:4:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:10:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:16:34: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:23:34: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1380,7 +1384,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:4:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:9:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:13:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1399,7 +1403,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope",
+    "detail": "src\\main.rs:4:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:8:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:12:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:16:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:20:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:24:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -1429,7 +1433,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope",
+    "detail": "src\\main.rs:4:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:8:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:12:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:16:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:20:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:24:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -1448,7 +1452,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:4:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:8:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:12:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:16:46: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1489,7 +1493,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0277]: `Option<_>` doesn't implement `std::fmt::Display`: `Option<_>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:58: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1497,7 +1501,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0277]: `Option<_>` doesn't implement `std::fmt::Display`: `Option<_>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:58: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1505,11 +1509,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"false\" node=\"0\"; line 2: ds=\"true\" node=\"1\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"false\" node=\"0\"; line 2: ds=\"true\" node=\"1\""
-    },
+    "detail": "src\\main.rs:3:58: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:4:58: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1528,10 +1528,10 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 7: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022250738585072014\" node=\"5e-324\"",
+    "detail": "oracle diff: line 7: ds=\"2.2250738585072014e-308\" node=\"5e-324\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 7: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022250738585072014\" node=\"5e-324\""
+      "detail": "line 7: ds=\"2.2250738585072014e-308\" node=\"5e-324\""
     },
     "note": ""
   },

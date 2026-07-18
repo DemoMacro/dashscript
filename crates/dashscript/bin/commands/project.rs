@@ -212,9 +212,7 @@ pub(crate) fn emit_cargo_project(
             if manifest.bin.is_some() || manifest.lib.is_some() {
                 let ((bins, lib), deps) = translate_project(&root, &manifest, project_dir)?;
                 let mut cargo_toml = manifest.to_cargo_toml_with_bins(&bins, lib.as_deref());
-                if deps.needs_ryu_js {
-                    append_ryu_js_dep(&mut cargo_toml);
-                }
+                deps.apply_to_cargo_toml(&mut cargo_toml);
                 fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
                 apply_runtime_deps(project_dir, &deps, &bin_lib_stems(&bins, lib.as_deref()))?;
                 return Ok(());
@@ -224,33 +222,11 @@ pub(crate) fn emit_cargo_project(
     let mut cargo_toml = resolve_manifest(src_path);
     fs::create_dir_all(project_dir.join("src"))?;
     let deps = translate_sources(src, src_path, project_dir)?;
-    if deps.needs_ryu_js {
-        append_ryu_js_dep(&mut cargo_toml);
-    }
+    deps.apply_to_cargo_toml(&mut cargo_toml);
     fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
     apply_runtime_deps(project_dir, &deps, &["main".to_string()])?;
     Ok(())
 }
-
-/// The DashScript runtime helper module written beside the translated sources
-/// when a file routes an `f64` through ES `Number::toString`. `ryu_js`'s
-/// `Buffer::format` already matches ECMAScript for NaN and ±Infinity; the only
-/// special case it leaves is signed zero — ES prints both `+0` and `-0` as
-/// `"0"`, so the wrapper normalizes zero first.
-const DS_HELPER_MODULE: &str = "\
-//! DashScript runtime helper: ES-correct `Number::toString` via `ryu_js`.
-use ryu_js::Buffer;
-
-/// Format an `f64` as ECMAScript `Number::toString` would. `ryu_js` covers NaN
-/// and ±Infinity; signed zero is normalized to `\"0\"` (ES prints both `+0`
-/// and `-0` that way).
-pub fn number_to_string(x: f64) -> String {
-    if x == 0.0 {
-        return \"0\".to_string();
-    }
-    Buffer::new().format(x).to_string()
-}
-";
 
 /// The crate-root file stems (`src/<stem>.rs`) that declare modules — each bin
 /// entry's stem plus the lib stem, if any. The `__ds` helper is declared
@@ -275,10 +251,10 @@ pub(crate) fn apply_runtime_deps(
     deps: &RuntimeDeps,
     root_stems: &[String],
 ) -> Result<(), Box<dyn Error>> {
-    if !deps.needs_ryu_js {
+    let Some(helper) = deps.helper_module() else {
         return Ok(());
-    }
-    fs::write(project_dir.join("src").join("__ds.rs"), DS_HELPER_MODULE)?;
+    };
+    fs::write(project_dir.join("src").join("__ds.rs"), helper)?;
     for stem in root_stems {
         let path = project_dir.join("src").join(format!("{stem}.rs"));
         let Ok(body) = fs::read_to_string(&path) else {
@@ -290,25 +266,6 @@ pub(crate) fn apply_runtime_deps(
         fs::write(&path, format!("mod __ds;\n{body}"))?;
     }
     Ok(())
-}
-
-/// Append `ryu_js = "1.0"` to a generated `Cargo.toml`, creating the
-/// `[dependencies]` section if absent. A string-level post-process keeps the
-/// dep out of the user's `manifest.json` — it is a DashScript-internal runtime
-/// need, not a declared project dependency. Skipped if `ryu_js` is already
-/// present (e.g. the project declared `rust:ryu_js` itself).
-pub(crate) fn append_ryu_js_dep(cargo_toml: &mut String) {
-    // The crates.io package is `ryu-js` (hyphen); Rust exposes it as `ryu_js`
-    // (underscore) in `use`, so the Cargo.toml key uses the package name.
-    const RYU_JS_LINE: &str = "ryu-js = \"1.0\"";
-    if cargo_toml.contains("ryu-js") {
-        return;
-    }
-    if let Some(pos) = cargo_toml.find("[dependencies]\n") {
-        cargo_toml.insert_str(pos + "[dependencies]\n".len(), &format!("{RYU_JS_LINE}\n"));
-    } else {
-        cargo_toml.push_str(&format!("\n[dependencies]\n{RYU_JS_LINE}\n"));
-    }
 }
 
 /// Resolve a relative `.ds` import (`"./other"` or `"./other.ds"`) against the
@@ -645,25 +602,5 @@ mod tests {
         let err = translate_project(root, &manifest_at(root), &out).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("bin 'a' imports bin 'b'"), "got: {msg}");
-    }
-
-    #[test]
-    fn append_ryu_js_dep_inserts_into_dependencies_section() {
-        let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
-        append_ryu_js_dep(&mut toml);
-        assert!(toml.contains("ryu-js = \"1.0\""), "got:\n{toml}");
-        // Idempotent: a second pass must not duplicate the line.
-        append_ryu_js_dep(&mut toml);
-        assert_eq!(toml.matches("ryu-js").count(), 1, "got:\n{toml}");
-    }
-
-    #[test]
-    fn append_ryu_js_dep_creates_section_when_absent() {
-        let mut toml = String::from("[package]\nname = \"x\"\n");
-        append_ryu_js_dep(&mut toml);
-        assert!(
-            toml.contains("[dependencies]\nryu-js = \"1.0\""),
-            "got:\n{toml}"
-        );
     }
 }

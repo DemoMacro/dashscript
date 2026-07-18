@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 201 features: **200** supported, **1** partial, **0** unsupported, **0** untested
+- 201 features: **193** supported, **8** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## arrays
@@ -57,27 +57,27 @@
 
 ## clone_move
 
-| feature                                                         | status       | detail / note |
-| --------------------------------------------------------------- | ------------ | ------------- |
-| clone_move.translates_unmutated_let_is_plain_let                | 🟢 supported |               |
-| clone_move.translates_mutated_let_is_let_mut                    | 🟢 supported |               |
-| clone_move.translates_mutated_var_is_let_mut                    | 🟢 supported |               |
-| clone_move.translates_mutated_let_by_compound_assign_is_let_mut | 🟢 supported |               |
-| clone_move.translates_mutated_vec_by_method_is_let_mut          | 🟢 supported |               |
-| clone_move.translates_for_in_to_keys_cloned                     | 🟢 supported |               |
+| feature                                                         | status       | detail / note                                                                                                                                                                                                                                   |
+| --------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| clone_move.translates_unmutated_let_is_plain_let                | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpQzWhZO\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by: |
+| clone_move.translates_mutated_let_is_let_mut                    | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpQzWhZO\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by: |
+| clone_move.translates_mutated_var_is_let_mut                    | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpQzWhZO\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by: |
+| clone_move.translates_mutated_let_by_compound_assign_is_let_mut | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpQzWhZO\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by: |
+| clone_move.translates_mutated_vec_by_method_is_let_mut          | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpQzWhZO\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by: |
+| clone_move.translates_for_in_to_keys_cloned                     | 🟢 supported |                                                                                                                                                                                                                                                 |
 
 ## console
 
-| feature                                     | status       | detail / note |
-| ------------------------------------------- | ------------ | ------------- |
-| console.translates_multi_arg_console_log    | 🟢 supported |               |
-| console.translates_console_warn_to_eprintln | 🟢 supported |               |
+| feature                                     | status       | detail / note                                                                                                                                                                                                                                   |
+| ------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| console.translates_multi_arg_console_log    | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpQzWhZO\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by: |
+| console.translates_console_warn_to_eprintln | 🟢 supported |                                                                                                                                                                                                                                                 |
 
 ## control_flow
 
 | feature                                                | status       | detail / note                                                                                                                                                                                                                                                                          |
 | ------------------------------------------------------ | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| control_flow.translates_if_else                        | 🟢 supported |                                                                                                                                                                                                                                                                                        |
+| control_flow.translates_if_else                        | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpQzWhZO\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by:                                        |
 | control_flow.translates_while_with_update              | 🟢 supported |                                                                                                                                                                                                                                                                                        |
 | control_flow.translates_for_of_as_borrow               | 🟢 supported |                                                                                                                                                                                                                                                                                        |
 | control_flow.translates_switch_to_match                | 🟢 supported |                                                                                                                                                                                                                                                                                        |

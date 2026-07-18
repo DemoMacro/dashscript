@@ -29,7 +29,7 @@
 
 use std::{fs, path::Path, process::Command};
 
-use dashscript::Translator;
+use dashscript::{RuntimeDeps, Translator};
 use serde::{Deserialize, Serialize};
 use tempfile::TempDir;
 
@@ -203,14 +203,14 @@ fn conformance_matrix() {
                 .join(" | ");
             ("unsupported", msg)
         } else {
-            let rust = match translate_catch(&raw.fixture) {
+            let (rust, deps) = match translate_catch(&raw.fixture) {
                 Ok(r) => r,
                 Err(e) => {
                     outcomes.push(outcome(raw, layer, "partial", e, None, None));
                     continue;
                 }
             };
-            write_project(&project, &rust, &raw.fixture);
+            write_project(&project, &rust, &raw.fixture, &deps);
             let (ok, err) = cargo(
                 &project,
                 &target_dir,
@@ -229,8 +229,8 @@ fn conformance_matrix() {
         // never bare Vec/struct (no Display => won't compile).
         let correct = if status == "supported" {
             raw.expect_output.as_ref().map(|expected| {
-                let rust = translate_catch(&raw.fixture).unwrap_or_default();
-                write_project(&project, &rust, &raw.fixture);
+                let (rust, deps) = translate_catch(&raw.fixture).unwrap_or_default();
+                write_project(&project, &rust, &raw.fixture, &deps);
                 match cargo(&project, &target_dir, &["run", "--quiet"]) {
                     (true, stdout) => stdout.trim() == expected.trim(),
                     _ => false,
@@ -293,18 +293,30 @@ fn outcome(
     }
 }
 
-fn write_project(project: &Path, rust: &str, ds_source: &str) {
+fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps) {
     // `cargo check` on a bin crate requires a `main` (E0601). Most translator-tests
     // fixtures are bare declarations with no `main`, so synthesize an empty one
     // when the `.ds` source has no `function main()`. Correctness fixtures declare
     // their own, which lowers to `fn main` and is left untouched. AST-level
     // (`has_main`), so a `"fn main"` string literal never trips a false positive.
-    let body = if Translator::new().has_main(ds_source) {
+    let mut body = if Translator::new().has_main(ds_source) {
         rust.to_string()
     } else {
         format!("{rust}\nfn main() {{}}\n")
     };
-    let _ = fs::write(project.join("Cargo.toml"), MANIFEST);
+    let mut cargo_toml = MANIFEST.to_string();
+    // A fixture that routes an `f64` through ES NumberToString emits a
+    // `crate::__ds::number_to_string` call; the probe crate then needs the
+    // `__ds` helper module (declared `mod __ds;` at its root) and the `ryu_js`
+    // dependency — the same assembly `ds build` performs for a real project.
+    if let Some(helper) = deps.helper_module() {
+        let _ = fs::write(project.join("src").join("__ds.rs"), helper);
+        if !body.contains("mod __ds;") {
+            body = format!("mod __ds;\n{body}");
+        }
+        deps.apply_to_cargo_toml(&mut cargo_toml);
+    }
+    let _ = fs::write(project.join("Cargo.toml"), cargo_toml);
     let _ = fs::write(project.join("src").join("main.rs"), body);
 }
 
@@ -336,16 +348,18 @@ fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
 /// reported as `partial` instead of aborting the whole matrix run. `translate`
 /// itself returns `Result`; this wraps its panicking paths behind the same
 /// error channel (`translate error: …` / `translate panic: …`).
-fn translate_catch(source: &str) -> Result<String, String> {
+fn translate_catch(source: &str) -> Result<(String, RuntimeDeps), String> {
     use std::panic::AssertUnwindSafe;
-    std::panic::catch_unwind(AssertUnwindSafe(|| Translator::new().translate(source)))
-        .map_err(|p| {
-            p.downcast_ref::<String>()
-                .cloned()
-                .or_else(|| p.downcast_ref::<&'static str>().map(|s| s.to_string()))
-                .unwrap_or_else(|| "translator panic".to_string())
-        })
-        .and_then(|r| r.map_err(|e| format!("translate error: {e}")))
+    std::panic::catch_unwind(AssertUnwindSafe(|| {
+        Translator::new().translate_with_deps(source)
+    }))
+    .map_err(|p| {
+        p.downcast_ref::<String>()
+            .cloned()
+            .or_else(|| p.downcast_ref::<&'static str>().map(|s| s.to_string()))
+            .unwrap_or_else(|| "translator panic".to_string())
+    })
+    .and_then(|r| r.map_err(|e| format!("translate error: {e}")))
 }
 
 /// Whether `node` is on PATH (the test262 oracle). Probed once per run.
@@ -482,11 +496,11 @@ fn run_test262(
             .join(" | ");
         return ("unsupported", msg, None);
     }
-    let rust = match translate_catch(&raw.fixture) {
+    let (rust, deps) = match translate_catch(&raw.fixture) {
         Ok(r) => r,
         Err(e) => return ("partial", e, None),
     };
-    write_project(project, &rust, &raw.fixture);
+    write_project(project, &rust, &raw.fixture, &deps);
     let (ok, err) = cargo(
         project,
         target_dir,
