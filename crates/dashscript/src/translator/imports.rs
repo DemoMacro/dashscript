@@ -172,6 +172,32 @@ pub struct LocalSymbol {
     pub span: Span,
 }
 
+/// Whether the `.ds` source declares a top-level `function main()` — the
+/// entry point a `[[bin]]` target compiles. Used by `ds build`/`ds run` (a bin
+/// must have `main`) and the conformance harness. AST-level, so a `main_loop`
+/// helper or a `"fn main"` string literal never trips a substring match.
+pub(crate) fn has_main(source: &str) -> bool {
+    let allocator = Allocator::default();
+    let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+    ret.program.body.iter().any(has_main_stmt)
+}
+
+/// One statement declares `function main` (bare, or `export function main`).
+fn has_main_stmt(stmt: &Statement) -> bool {
+    match stmt {
+        Statement::FunctionDeclaration(f) => is_named_main(&f.id),
+        Statement::ExportNamedDeclaration(exp) => matches!(
+            &exp.declaration,
+            Some(Declaration::FunctionDeclaration(f)) if is_named_main(&f.id)
+        ),
+        _ => false,
+    }
+}
+
+fn is_named_main(id: &Option<BindingIdentifier>) -> bool {
+    id.as_ref().is_some_and(|id| id.name.as_str() == "main")
+}
+
 /// Every declarable name in a `.ds` file with its binding span.
 pub(crate) fn collect_declarations(source: &str) -> Vec<LocalSymbol> {
     let allocator = Allocator::default();

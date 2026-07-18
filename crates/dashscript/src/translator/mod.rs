@@ -127,6 +127,14 @@ impl Translator {
     pub fn declarations(&self, source: &str) -> Vec<imports::LocalSymbol> {
         imports::collect_declarations(source)
     }
+
+    /// Whether the `.ds` source declares a top-level `function main()` — the
+    /// entry point a `[[bin]]` target needs. AST-level (not a substring scan),
+    /// so a `main_loop` helper or a `"fn main"` string literal cannot trip it.
+    #[must_use]
+    pub fn has_main(&self, source: &str) -> bool {
+        imports::has_main(source)
+    }
 }
 
 #[cfg(test)]

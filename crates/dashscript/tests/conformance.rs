@@ -180,7 +180,7 @@ fn conformance_matrix() {
                     continue;
                 }
             };
-            write_project(&project, &rust);
+            write_project(&project, &rust, &raw.fixture);
             let (ok, err) = cargo(
                 &project,
                 &target_dir,
@@ -202,7 +202,7 @@ fn conformance_matrix() {
                 let rust = Translator::new()
                     .translate(&raw.fixture)
                     .unwrap_or_default();
-                write_project(&project, &rust);
+                write_project(&project, &rust, &raw.fixture);
                 match cargo(&project, &target_dir, &["run", "--quiet"]) {
                     (true, stdout) => stdout.trim() == expected.trim(),
                     _ => false,
@@ -263,12 +263,13 @@ fn outcome(
     }
 }
 
-fn write_project(project: &Path, rust: &str) {
+fn write_project(project: &Path, rust: &str, ds_source: &str) {
     // `cargo check` on a bin crate requires a `main` (E0601). Most translator-tests
     // fixtures are bare declarations with no `main`, so synthesize an empty one
-    // when the translated source lacks it. Correctness fixtures declare their own
-    // `function main()`, which lowers to `fn main` and is left untouched.
-    let body = if rust.contains("fn main") {
+    // when the `.ds` source has no `function main()`. Correctness fixtures declare
+    // their own, which lowers to `fn main` and is left untouched. AST-level
+    // (`has_main`), so a `"fn main"` string literal never trips a false positive.
+    let body = if Translator::new().has_main(ds_source) {
         rust.to_string()
     } else {
         format!("{rust}\nfn main() {{}}\n")
@@ -438,7 +439,7 @@ fn run_test262(
         Ok(r) => r,
         Err(e) => return ("partial", format!("translate error: {e}"), None),
     };
-    write_project(project, &rust);
+    write_project(project, &rust, &raw.fixture);
     let (ok, err) = cargo(
         project,
         target_dir,

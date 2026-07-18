@@ -117,3 +117,33 @@ fn declarations_list_local_bindings() {
     assert!(names.contains(&"Baz"), "missing Baz: {names:?}");
     assert!(names.contains(&"qux"), "missing qux: {names:?}");
 }
+
+#[test]
+fn has_main_detects_function_main() {
+    assert!(Translator::new().has_main("function main() { console.log(1); }"));
+}
+
+#[test]
+fn has_main_detects_export_function_main() {
+    assert!(Translator::new().has_main("export function main(): number { return 0; }"));
+}
+
+#[test]
+fn has_main_false_when_absent() {
+    assert!(!Translator::new().has_main("function helper() {}"));
+}
+
+#[test]
+fn has_main_ignores_main_loop_helper() {
+    // `main_loop` is a common helper name; a substring scan of `fn main` in the
+    // translated Rust would trip on it. AST-level matching only counts an
+    // identifier literally named `main`.
+    assert!(!Translator::new().has_main("function main_loop() {}"));
+}
+
+#[test]
+fn has_main_ignores_string_literal() {
+    // A `"fn main"` string literal must not count as declaring `main` — the
+    // reason `has_main` walks the AST rather than scanning the source text.
+    assert!(!Translator::new().has_main("const s = \"fn main\";"));
+}
