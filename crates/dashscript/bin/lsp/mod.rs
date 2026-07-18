@@ -26,6 +26,7 @@ mod backend;
 mod completion;
 mod definition;
 mod diagnostics;
+mod document_symbols;
 mod text;
 
 use backend::RaClient;
@@ -63,6 +64,7 @@ fn server_capabilities() -> ServerCapabilities {
     ServerCapabilities {
         text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)),
         definition_provider: Some(OneOf::Left(true)),
+        document_symbol_provider: Some(OneOf::Left(true)),
         completion_provider: Some(CompletionOptions {
             // `.` triggers member completion (`console.`, `Math.`).
             trigger_characters: Some(vec![".".to_string()]),
@@ -116,6 +118,14 @@ impl Server {
                     .extract::<lsp_types::CompletionParams>("textDocument/completion")
                     .ok()
                     .and_then(|(_, params)| self.on_completion(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
+            "textDocument/documentSymbol" => {
+                let result = req
+                    .extract::<lsp_types::DocumentSymbolParams>("textDocument/documentSymbol")
+                    .ok()
+                    .and_then(|(_, params)| self.on_document_symbol(&params))
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }
