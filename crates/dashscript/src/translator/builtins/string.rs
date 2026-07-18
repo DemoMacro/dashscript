@@ -326,20 +326,27 @@ pub(in crate::translator) fn string_method_on(
     })
 }
 
-/// `String.<m>(…)`: `fromCharCode(n)`/`fromCodePoint(n)` → a one-char
-/// `String` from the code point (or `""` if `n` isn't a valid `char`). Rust's
-/// `char` is a Unicode scalar value, so the two TS methods lower identically
-/// (`fromCharCode`'s UTF-16 surrogate distinction doesn't arise). Returns
-/// `None` otherwise.
+/// `String.<m>(…)`: `fromCharCode(n…)`/`fromCodePoint(n…)` → a `String` built
+/// from every code-point argument (`fromCodePoint(65, 90)` === `"AZ"`). Rust's
+/// `char` is a Unicode scalar value, so valid code points map directly; lone
+/// surrogates (invalid in Rust's UTF-8) fall back to U+FFFD — the closest a
+/// Rust `String` can get to ES's permissive UTF-16. Returns `None` for other
+/// static names.
 pub(in crate::translator) fn string_static(
     name: &str,
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    let n = translate_argument(args.first()?, ctx);
     Some(match name {
         "fromCharCode" | "fromCodePoint" => {
-            parse_quote!(char::from_u32(#n as u32).map(|c| c.to_string()).unwrap_or_default())
+            let parts: Vec<Expr> = args
+                .iter()
+                .map(|a| {
+                    let n = translate_argument(a, ctx);
+                    parse_quote!(char::from_u32((#n) as u32).unwrap_or('\u{FFFD}'))
+                })
+                .collect();
+            parse_quote!([#(#parts),*].into_iter().collect::<String>())
         }
         _ => return None,
     })

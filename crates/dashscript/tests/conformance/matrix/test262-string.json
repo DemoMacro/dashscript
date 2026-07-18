@@ -84,7 +84,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:2:30: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -99,11 +99,10 @@
     "id": "test262.test.built-ins.string.fromcodepoint.return-string-value",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "oracle diff: line 3: ds=\"A\" node=\"AZ\"; line 7: ds=\"𝌆\" node=\"𝌆a𝌇\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 3: ds=\"A\" node=\"AZ\"; line 7: ds=\"𝌆\" node=\"𝌆a𝌇\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -112,7 +111,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:20:15: warning: unreachable call: unreachable call\nsrc\\main.rs:3:30: error[E0605]: non-primitive cast: `Option<_>` as `u32`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:12:30: error[E0605]: non-primitive cast: `String` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:16:30: error[E0605]: non-primitive cast: `String` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:23:16: warning: unreachable call: unreachable call\nsrc\\main.rs:3:31: error[E0605]: non-primitive cast: `Option<_>` as `u32`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:15:31: error[E0605]: non-primitive cast: `String` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:19:31: error[E0605]: non-primitive cast: `String` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -124,19 +123,19 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.at.index-non-numeric-argument-tointeger-invalid",
-    "layer": "test262",
-    "category": "string",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
-    "note": ""
-  },
-  {
     "id": "test262.test.built-ins.string.prototype.at.index-non-numeric-argument-tointeger",
     "layer": "test262",
     "category": "string",
     "status": "partial",
     "detail": "src\\main.rs:25:66: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:40: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:15:40: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:20:40: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:30:40: error[E0605]: non-primitive cast: `Vec<_>` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:40:40: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.index-non-numeric-argument-tointeger-invalid",
+    "layer": "test262",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -156,19 +155,19 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.at.returns-item-relative-index",
-    "layer": "test262",
-    "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:10:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:15:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:20:27: error[E0382]: use of moved value: `s`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
-    "note": ""
-  },
-  {
     "id": "test262.test.built-ins.string.prototype.at.returns-item",
     "layer": "test262",
     "category": "string",
     "status": "partial",
     "detail": "src\\main.rs:10:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:15:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:20:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:25:27: error[E0382]: use of moved value: `s`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.at.returns-item-relative-index",
+    "layer": "test262",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:10:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:15:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:20:27: error[E0382]: use of moved value: `s`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -731,6 +730,14 @@
     "note": ""
   },
   {
+    "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger",
+    "layer": "test262",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:107:61: warning: unreachable expression: unreachable expression\nsrc\\main.rs:33:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:37:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:49:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:54:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:59:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "note": ""
+  },
+  {
     "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-bigint",
     "layer": "test262",
     "category": "string",
@@ -755,11 +762,11 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger",
+    "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring",
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:107:61: warning: unreachable expression: unreachable expression\nsrc\\main.rs:33:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:37:30: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:49:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:54:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:59:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "detail": "src\\main.rs:5:41: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:36: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:11:36: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:14:38: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:17:34: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:20:36: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
     "note": ""
   },
   {
@@ -784,14 +791,6 @@
     "category": "string",
     "status": "partial",
     "detail": "src\\main.rs:3:30: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:7:47: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:7:47: warning: unreachable call: unreachable call\nsrc\\main.rs:11:47: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:11:47: warning: unreachable call: unreachable call\nsrc\\main.rs:15:47: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`",
-    "note": ""
-  },
-  {
-    "id": "test262.test.built-ins.string.prototype.indexof.searchstring-tostring",
-    "layer": "test262",
-    "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:41: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:8:36: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:11:36: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:14:38: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:17:34: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:20:36: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
     "note": ""
   },
   {
@@ -978,6 +977,14 @@
     "note": ""
   },
   {
+    "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string",
+    "layer": "test262",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:3:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:4:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:5:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:6:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:7:53: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:8:53: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`",
+    "note": ""
+  },
+  {
     "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string-from-coerced-form",
     "layer": "test262",
     "category": "string",
@@ -991,14 +998,6 @@
     "category": "string",
     "status": "partial",
     "detail": "src\\main.rs:4:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:5:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
-    "note": ""
-  },
-  {
-    "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string",
-    "layer": "test262",
-    "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:4:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:5:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:6:29: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:7:53: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:8:53: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`",
     "note": ""
   },
   {
@@ -1287,19 +1286,19 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.replace.replacevalue-evaluation-order-regexp-object",
-    "layer": "test262",
-    "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nsrc\\main.rs:10:72: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:10:72: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
-    "note": ""
-  },
-  {
     "id": "test262.test.built-ins.string.prototype.replace.replacevalue-evaluation-order",
     "layer": "test262",
     "category": "string",
     "status": "partial",
     "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replace.replacevalue-evaluation-order-regexp-object",
+    "layer": "test262",
+    "category": "string",
+    "status": "partial",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nsrc\\main.rs:10:72: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:10:72: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -1324,6 +1323,18 @@
     "category": "string",
     "status": "unsupported",
     "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replaceall.getsubstitution-0x0024",
+    "layer": "test262",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=4",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=4"
+    },
     "note": ""
   },
   {
@@ -1383,18 +1394,6 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.replaceall.getsubstitution-0x0024",
-    "layer": "test262",
-    "category": "string",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=4",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=4"
-    },
-    "note": ""
-  },
-  {
     "id": "test262.test.built-ins.string.prototype.replaceall.getsubstitution-0x0024n",
     "layer": "test262",
     "category": "string",
@@ -1438,17 +1437,6 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-empty-string-this-empty-string",
-    "layer": "test262",
-    "category": "string",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
-    "note": ""
-  },
-  {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-empty-string",
     "layer": "test262",
     "category": "string",
@@ -1457,6 +1445,17 @@
     "oracle": {
       "status": "diff",
       "detail": "line count: ds=0 node=3"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-empty-string-this-empty-string",
+    "layer": "test262",
+    "category": "string",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
     },
     "note": ""
   },
@@ -1725,6 +1724,14 @@
     "note": ""
   },
   {
+    "id": "test262.test.built-ins.string.prototype.split.separator-override-tostring-limit-override-valueof",
+    "layer": "test262",
+    "category": "string",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
     "id": "test262.test.built-ins.string.prototype.split.separator-override-tostring-limit-override-valueof-throws",
     "layer": "test262",
     "category": "string",
@@ -1741,11 +1748,11 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.split.separator-override-tostring-limit-override-valueof",
+    "id": "test262.test.built-ins.string.prototype.split.separator-undef",
     "layer": "test262",
     "category": "string",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "partial",
+    "detail": "src\\main.rs:6:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:13:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:26: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:6:66: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:7:33: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`\nsrc\\main.rs:9:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
     "note": ""
   },
   {
@@ -1762,14 +1769,6 @@
     "category": "string",
     "status": "partial",
     "detail": "src\\main.rs:10:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:17:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:24:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:31:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:38:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:45:58: warning: unnecessary parentheses around function argument",
-    "note": ""
-  },
-  {
-    "id": "test262.test.built-ins.string.prototype.split.separator-undef",
-    "layer": "test262",
-    "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:6:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:13:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:26: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:6:66: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:7:33: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`\nsrc\\main.rs:9:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
     "note": ""
   },
   {
@@ -2094,7 +2093,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.tostring.non-generic-realm",
+    "id": "test262.test.built-ins.string.prototype.tostring.non-generic",
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
@@ -2102,7 +2101,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.tostring.non-generic",
+    "id": "test262.test.built-ins.string.prototype.tostring.non-generic-realm",
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
@@ -2176,7 +2175,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp7Q0ZrB\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3656,7 +3655,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.valueof.non-generic-realm",
+    "id": "test262.test.built-ins.string.prototype.valueof.non-generic",
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
@@ -3664,7 +3663,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.prototype.valueof.non-generic",
+    "id": "test262.test.built-ins.string.prototype.valueof.non-generic-realm",
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
@@ -3760,23 +3759,23 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.string.raw.return-the-string-value-from-template",
-    "layer": "test262",
-    "category": "string",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"_\\u{180e}\" node=\"123\\\\u0065\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"_\\u{180e}\" node=\"123\\\\u0065\""
-    },
-    "note": ""
-  },
-  {
     "id": "test262.test.built-ins.string.raw.return-the-string-value",
     "layer": "test262",
     "category": "string",
     "status": "partial",
     "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.string.raw.return-the-string-value-from-template",
+    "layer": "test262",
+    "category": "string",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
     "note": ""
   },
   {
@@ -3792,10 +3791,10 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"_\\u{180e}\" node=\"\\\\u0065\\\\`\\\\r\\\\r\\\\n\\\\ntestcheck\"; line 2: ds=\"\\u{180e}\" node=\"\\\\\"; line 3: ds=\"\\u{180e}_\" node=\"\\\\\"",
+    "detail": "oracle diff: line count: ds=0 node=4",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"_\\u{180e}\" node=\"\\\\u0065\\\\`\\\\r\\\\r\\\\n\\\\ntestcheck\"; line 2: ds=\"\\u{180e}\" node=\"\\\\\"; line 3: ds=\"\\u{180e}_\" node=\"\\\\\""
+      "detail": "line count: ds=0 node=4"
     },
     "note": ""
   },
@@ -3836,10 +3835,10 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"_\\u{180e}\" node=\"12345\"",
+    "detail": "oracle diff: line count: ds=0 node=1",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"_\\u{180e}\" node=\"12345\""
+      "detail": "line count: ds=0 node=1"
     },
     "note": ""
   },
@@ -3847,11 +3846,10 @@
     "id": "test262.test.built-ins.string.raw.zero-literal-segments",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=3 node=0",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=3 node=0"
+      "status": "matched"
     },
     "note": ""
   },

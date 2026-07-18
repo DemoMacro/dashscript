@@ -251,6 +251,24 @@ fn translates_string_from_code_point() {
 }
 
 #[test]
+fn translates_string_from_code_point_multiple_args() {
+    // ES fromCodePoint accepts any number of code points: (65, 90) === "AZ".
+    let src = "function f(): string { return String.fromCodePoint(65, 90); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    // both code points are present, collected into one String.
+    assert!(
+        rust.contains("char::from_u32((65_f64)"),
+        "first arg: {rust}"
+    );
+    assert!(
+        rust.contains("char::from_u32((90_f64)"),
+        "second arg: {rust}"
+    );
+    assert!(rust.contains("into_iter()"), "into_iter: {rust}");
+    assert!(rust.contains("collect::<String>()"), "collect: {rust}");
+}
+
+#[test]
 fn translates_string_value_of() {
     let src = "function f(s: string): string { return s.valueOf(); }";
     let rust = Translator::new().translate(src).expect("should translate");
