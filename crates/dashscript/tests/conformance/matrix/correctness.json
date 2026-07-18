@@ -1,15 +1,5 @@
 [
   {
-    "id": "correctness.parse_int_radix",
-    "layer": "correctness",
-    "category": "correctness",
-    "status": "supported",
-    "detail": "",
-    "expect": "supported",
-    "correct": true,
-    "note": "parseInt('ff', 16) prints 255"
-  },
-  {
     "id": "correctness.array_join",
     "layer": "correctness",
     "category": "correctness",
@@ -18,5 +8,15 @@
     "expect": "supported",
     "correct": true,
     "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
+  },
+  {
+    "id": "correctness.parse_int_radix",
+    "layer": "correctness",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "parseInt('ff', 16) prints 255"
   }
 ]

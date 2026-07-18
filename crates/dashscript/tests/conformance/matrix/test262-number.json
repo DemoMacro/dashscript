@@ -1068,16 +1068,22 @@
     "id": "test262.test.built-ins.number.s9.3.1_a10",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:47: error[E0369]: cannot multiply `String` by `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s9.3.1_a11",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:3:47: error[E0369]: cannot multiply `String` by `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1128,11 +1134,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a16",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"0x0\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"0x0\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1140,11 +1145,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a17",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"1\"; line 3: ds=\"0X1\" node=\"1\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"NaN\" node=\"1\"; line 3: ds=\"0X1\" node=\"1\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1152,11 +1156,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a18",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"2\"; line 3: ds=\"NaN\" node=\"2\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"NaN\" node=\"2\"; line 3: ds=\"NaN\" node=\"2\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1164,11 +1167,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a19",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"0x3\" node=\"3\"; line 3: ds=\"NaN\" node=\"3\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"0x3\" node=\"3\"; line 3: ds=\"NaN\" node=\"3\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1187,11 +1189,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a20",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"4\"; line 3: ds=\"0X4\" node=\"4\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"NaN\" node=\"4\"; line 3: ds=\"0X4\" node=\"4\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1199,11 +1200,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a21",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"5\"; line 3: ds=\"NaN\" node=\"5\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"NaN\" node=\"5\"; line 3: ds=\"NaN\" node=\"5\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1211,11 +1211,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a22",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"0x6\" node=\"6\"; line 3: ds=\"NaN\" node=\"6\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"0x6\" node=\"6\"; line 3: ds=\"NaN\" node=\"6\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1223,11 +1222,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a23",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"7\"; line 3: ds=\"0X7\" node=\"7\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"NaN\" node=\"7\"; line 3: ds=\"0X7\" node=\"7\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1235,11 +1233,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a24",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"8\"; line 3: ds=\"NaN\" node=\"8\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"NaN\" node=\"8\"; line 3: ds=\"NaN\" node=\"8\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1247,11 +1244,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a25",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"0x9\" node=\"9\"; line 3: ds=\"NaN\" node=\"9\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"0x9\" node=\"9\"; line 3: ds=\"NaN\" node=\"9\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1259,11 +1255,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a26",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"10\"; line 2: ds=\"NaN\" node=\"10\"; line 3: ds=\"NaN\" node=\"10\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"10\"; line 2: ds=\"NaN\" node=\"10\"; line 3: ds=\"NaN\" node=\"10\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1271,11 +1266,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a27",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"11\"; line 2: ds=\"NaN\" node=\"11\"; line 3: ds=\"0Xb\" node=\"11\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"11\"; line 2: ds=\"NaN\" node=\"11\"; line 3: ds=\"0Xb\" node=\"11\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1283,11 +1277,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a28",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"12\"; line 2: ds=\"0xC\" node=\"12\"; line 3: ds=\"NaN\" node=\"12\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"12\"; line 2: ds=\"0xC\" node=\"12\"; line 3: ds=\"NaN\" node=\"12\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1295,11 +1288,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a29",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"0xd\" node=\"13\"; line 2: ds=\"NaN\" node=\"13\"; line 3: ds=\"NaN\" node=\"13\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"0xd\" node=\"13\"; line 2: ds=\"NaN\" node=\"13\"; line 3: ds=\"NaN\" node=\"13\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1318,11 +1310,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a30",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"14\"; line 2: ds=\"NaN\" node=\"14\"; line 3: ds=\"NaN\" node=\"14\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"14\"; line 2: ds=\"NaN\" node=\"14\"; line 3: ds=\"NaN\" node=\"14\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1330,11 +1321,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a31",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"15\"; line 2: ds=\"NaN\" node=\"15\"; line 3: ds=\"0Xf\" node=\"15\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"15\"; line 2: ds=\"NaN\" node=\"15\"; line 3: ds=\"0Xf\" node=\"15\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1536,7 +1526,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-binary-literal-invalid",
+    "id": "test262.test.built-ins.number.string-binary-literal",
     "layer": "test262",
     "category": "number",
     "status": "supported",
@@ -1547,14 +1537,14 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-binary-literal",
+    "id": "test262.test.built-ins.number.string-binary-literal-invalid",
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "detail": "oracle diff: line 4: ds=\"1\" node=\"NaN\"; line 5: ds=\"-1\" node=\"NaN\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+      "detail": "line 4: ds=\"1\" node=\"NaN\"; line 5: ds=\"-1\" node=\"NaN\""
     },
     "note": ""
   },
@@ -1562,10 +1552,11 @@
     "id": "test262.test.built-ins.number.string-hex-literal-invalid",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "oracle diff: line 4: ds=\"16\" node=\"NaN\"; line 5: ds=\"-16\" node=\"NaN\"",
     "oracle": {
-      "status": "matched"
+      "status": "diff",
+      "detail": "line 4: ds=\"16\" node=\"NaN\"; line 5: ds=\"-16\" node=\"NaN\""
     },
     "note": ""
   },
@@ -1790,7 +1781,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd-one-of",
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd",
     "layer": "test262",
     "category": "number",
     "status": "supported",
@@ -1801,7 +1792,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd",
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd-one-of",
     "layer": "test262",
     "category": "number",
     "status": "supported",
@@ -1823,7 +1814,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od-one-of",
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od",
     "layer": "test262",
     "category": "number",
     "status": "supported",
@@ -1834,7 +1825,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od",
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od-one-of",
     "layer": "test262",
     "category": "number",
     "status": "supported",
@@ -1900,7 +1891,7 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-octal-literal-invald",
+    "id": "test262.test.built-ins.number.string-octal-literal",
     "layer": "test262",
     "category": "number",
     "status": "supported",
@@ -1911,14 +1902,14 @@
     "note": ""
   },
   {
-    "id": "test262.test.built-ins.number.string-octal-literal",
+    "id": "test262.test.built-ins.number.string-octal-literal-invald",
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "detail": "oracle diff: line 4: ds=\"8\" node=\"NaN\"; line 5: ds=\"-8\" node=\"NaN\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+      "detail": "line 4: ds=\"8\" node=\"NaN\"; line 5: ds=\"-8\" node=\"NaN\""
     },
     "note": ""
   }

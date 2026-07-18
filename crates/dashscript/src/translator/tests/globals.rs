@@ -220,3 +220,39 @@ fn translates_global_is_finite() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".is_finite()"), "got:\n{rust}");
 }
+
+#[test]
+fn translates_number_global_hex_string_to_value() {
+    // ES ToNumber parses hex integer literals: `Number("0xff")` is 255, not NaN
+    // (Rust's `str::parse::<f64>` rejects "0xff"). The closure detects the
+    // `0x` prefix and parses digit-by-digit via `to_digit(16)`.
+    let src = "function f(): number { return Number(\"0xff\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("strip_prefix(\"0x\")"),
+        "hex detection: {rust}"
+    );
+    assert!(rust.contains("to_digit"), "per-digit radix parse: {rust}");
+}
+
+#[test]
+fn translates_number_global_binary_octal_string() {
+    // `0b` (binary) and `0o` (octal) integer literals also feed ToNumber.
+    let src = "function f(): number { return Number(\"0b1010\") + Number(\"0o17\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("strip_prefix(\"0b\")"), "binary: {rust}");
+    assert!(rust.contains("strip_prefix(\"0o\")"), "octal: {rust}");
+}
+
+#[test]
+fn translates_unary_plus_on_hex_string_to_number() {
+    // `+"0xff"` is ES ToNumber — 255, not the string "0xff". The unary `+`
+    // operator shares the Number(string) StringToNumber path (the same closure
+    // `Number(s)` lowers to), not a bare pass-through of the string operand.
+    let src = "function f(): number { return +(\"0xff\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("strip_prefix(\"0x\")"),
+        "unary + on hex string routes through ToNumber: {rust}"
+    );
+}

@@ -63,18 +63,7 @@ pub(in crate::translator) fn global_function(
             let a = args.first()?;
             let e = translate_argument(a, ctx);
             if matches!(a, Argument::StringLiteral(_)) || ident_string_local(a, ctx) {
-                parse_quote!({
-                    // Bind the (possibly temporary) string first: `#e` may be
-                    // `"x".to_string()`, and `.trim()` would borrow a value
-                    // freed at the end of that expression (E0716).
-                    let __s = #e;
-                    let __t = __s.trim();
-                    if __t.is_empty() {
-                        0_f64
-                    } else {
-                        __t.parse::<f64>().unwrap_or(f64::NAN)
-                    }
-                })
+                to_number_expr(e)
             } else {
                 e
             }
@@ -93,6 +82,66 @@ pub(in crate::translator) fn global_function(
             parse_quote!(#a.is_finite())
         }
         _ => return None,
+    })
+}
+
+/// ES ToNumber applied to a string (§7.1.4.1): trim; empty → +0; otherwise a
+/// signed StrDecimalLiteral (Rust's `parse` covers decimal, `Infinity`, NaN)
+/// or a `0x`/`0b`/`0o` integer literal Rust's parse rejects —
+/// `Number("0xff")` is 255, not NaN. Shared by `Number(string)` and the unary
+/// `+` operator, both of which run ToNumber on a string.
+pub(in crate::translator) fn to_number_expr(e: Expr) -> Expr {
+    parse_quote!({
+        // Bind the (possibly temporary) string first: `#e` may be
+        // `"x".to_string()`, and `.trim()` would borrow a value freed at the
+        // end of that expression (E0716).
+        let __s = #e;
+        let __t = __s.trim();
+        if __t.is_empty() {
+            0_f64
+        } else {
+            let (__sign, __body): (f64, &str) = if let Some(__r) = __t.strip_prefix('-') {
+                (-1_f64, __r)
+            } else if let Some(__r) = __t.strip_prefix('+') {
+                (1_f64, __r)
+            } else {
+                (1_f64, __t)
+            };
+            let __radix: Option<(&str, u32)> =
+                if let Some(__r) = __body.strip_prefix("0x").or_else(|| __body.strip_prefix("0X")) {
+                    Some((__r, 16))
+                } else if let Some(__r) = __body
+                    .strip_prefix("0b")
+                    .or_else(|| __body.strip_prefix("0B"))
+                {
+                    Some((__r, 2))
+                } else if let Some(__r) = __body
+                    .strip_prefix("0o")
+                    .or_else(|| __body.strip_prefix("0O"))
+                {
+                    Some((__r, 8))
+                } else {
+                    None
+                };
+            let __val = match __radix {
+                Some((__rest, __r)) => {
+                    let mut __v: f64 = 0_f64;
+                    let mut __ok = !__rest.is_empty();
+                    for __c in __rest.chars() {
+                        match __c.to_digit(__r) {
+                            Some(__d) => __v = __v * __r as f64 + __d as f64,
+                            None => {
+                                __ok = false;
+                                break;
+                            }
+                        }
+                    }
+                    if __ok { __v } else { f64::NAN }
+                }
+                None => __body.parse::<f64>().unwrap_or(f64::NAN),
+            };
+            __sign * __val
+        }
     })
 }
 

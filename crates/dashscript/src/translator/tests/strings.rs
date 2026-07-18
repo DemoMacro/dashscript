@@ -170,11 +170,16 @@ fn translates_string_pad_end_with_fill_char() {
 fn translates_string_char_code_at_to_code_point() {
     let src = "function f(s: string): number { return s.charCodeAt(0); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    // ASCII fast path indexes raw bytes in O(1); the non-ASCII fallback keeps
-    // the `as u32 as f64` shape, so this assertion still holds.
+    // ASCII fast path indexes raw bytes in O(1); the non-ASCII fallback
+    // encodes UTF-16 first — ES indexes code *units*, not scalar values
+    // (`charCodeAt(0)` of a non-BMP char is the high surrogate, not the code
+    // point), so `encode_utf16().nth()` replaces the old `chars().nth`.
     assert!(rust.contains(".is_ascii()"), "got:\n{rust}");
     assert!(rust.contains(".as_bytes()"), "got:\n{rust}");
-    assert!(rust.contains("as u32 as f64"), "got:\n{rust}");
+    assert!(
+        rust.contains("encode_utf16()"),
+        "UTF-16 code unit path: {rust}"
+    );
     assert!(rust.contains("f64::NAN"), "got:\n{rust}");
 }
 

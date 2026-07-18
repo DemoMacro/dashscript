@@ -201,9 +201,13 @@ pub(in crate::translator) fn string_method_on(
         }
         // `.charCodeAt(i)` → the `i`-th UTF-16 code unit as `f64` (`NaN` out of
         // range). The ASCII fast path indexes raw bytes in O(1) — `is_ascii` is a
-        // SIMD scan, cheap enough to run per call — while non-ASCII falls back to
-        // the O(n) `chars().nth` walk. This is the hot loop of bit-vector string
-        // algorithms (Myers–Levenshtein), whose peq tables are pure ASCII.
+        // SIMD scan, cheap enough to run per call, and ASCII bytes are identical
+        // to UTF-16 units. Non-ASCII encodes to UTF-16 first, because ES indexes
+        // code units: a non-BMP character is a surrogate *pair*, so
+        // `charCodeAt(0)` of "𝌆" is 0xD834 (the high surrogate), not the code
+        // point — `chars().nth` would wrongly return the scalar (0x1D306). This
+        // is the hot loop of bit-vector string algorithms (Myers–Levenshtein),
+        // whose peq tables are pure ASCII.
         "charCodeAt" => {
             let i = usize_arg(args.first()?, ctx);
             parse_quote!({
@@ -215,9 +219,9 @@ pub(in crate::translator) fn string_method_on(
                         .map(|&b| b as f64)
                         .unwrap_or(f64::NAN)
                 } else {
-                    __s.chars()
+                    __s.encode_utf16()
                         .nth(__i)
-                        .map(|c| c as u32 as f64)
+                        .map(|u| u as f64)
                         .unwrap_or(f64::NAN)
                 }
             })

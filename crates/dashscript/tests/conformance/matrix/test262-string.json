@@ -120,7 +120,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:40: error[E0605]: non-primitive cast: `()` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:40: error[E0605]: non-primitive cast: `()` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -227,7 +227,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:34: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:4:47: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -689,7 +689,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:2:47: error[E0609]: no field `includes` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:4:46: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:66: error[E0609]: no field `includes` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1291,7 +1291,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:9:72: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:9:72: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nsrc\\main.rs:10:72: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:10:72: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -1299,7 +1299,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1753,7 +1753,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:12:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:20:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:28:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:36:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:37:34: error[E0277]: cannot add `usize` to `f64`: no implementation for `f64 + usize`",
+    "detail": "src\\main.rs:10:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:18:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:26:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:34:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:42:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:50:58: warning: unnecessary parentheses around function argument",
     "note": ""
   },
   {
@@ -1761,7 +1761,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:11:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:18:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:25:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:26:10: warning: unreachable call: unreachable call\nsrc\\main.rs:32:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
+    "detail": "src\\main.rs:10:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:17:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:24:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:31:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:38:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:45:58: warning: unnecessary parentheses around function argument",
     "note": ""
   },
   {
@@ -1769,7 +1769,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:5:35: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:6:33: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`\nsrc\\main.rs:8:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:12:35: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:13:33: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`",
+    "detail": "src\\main.rs:6:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:13:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:26: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:6:66: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:7:33: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`\nsrc\\main.rs:9:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
     "note": ""
   },
   {
@@ -2176,7 +2176,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:2:28: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp7Q0ZrB\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -3492,7 +3492,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3508,7 +3508,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3524,7 +3524,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3596,7 +3596,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3612,7 +3612,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3628,7 +3628,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3764,10 +3764,10 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
+    "detail": "oracle diff: line 1: ds=\"_\\u{180e}\" node=\"123\\\\u0065\"",
     "oracle": {
       "status": "diff",
-      "detail": "line count: ds=0 node=1"
+      "detail": "line 1: ds=\"_\\u{180e}\" node=\"123\\\\u0065\""
     },
     "note": ""
   },
@@ -3792,10 +3792,10 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=4",
+    "detail": "oracle diff: line 1: ds=\"_\\u{180e}\" node=\"\\\\u0065\\\\`\\\\r\\\\r\\\\n\\\\ntestcheck\"; line 2: ds=\"\\u{180e}\" node=\"\\\\\"; line 3: ds=\"\\u{180e}_\" node=\"\\\\\"",
     "oracle": {
       "status": "diff",
-      "detail": "line count: ds=0 node=4"
+      "detail": "line 1: ds=\"_\\u{180e}\" node=\"\\\\u0065\\\\`\\\\r\\\\r\\\\n\\\\ntestcheck\"; line 2: ds=\"\\u{180e}\" node=\"\\\\\"; line 3: ds=\"\\u{180e}_\" node=\"\\\\\""
     },
     "note": ""
   },
@@ -3836,10 +3836,10 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
+    "detail": "oracle diff: line 1: ds=\"_\\u{180e}\" node=\"12345\"",
     "oracle": {
       "status": "diff",
-      "detail": "line count: ds=0 node=1"
+      "detail": "line 1: ds=\"_\\u{180e}\" node=\"12345\""
     },
     "note": ""
   },
@@ -3847,10 +3847,11 @@
     "id": "test262.test.built-ins.string.raw.zero-literal-segments",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=3 node=0",
     "oracle": {
-      "status": "matched"
+      "status": "diff",
+      "detail": "line count: ds=3 node=0"
     },
     "note": ""
   },

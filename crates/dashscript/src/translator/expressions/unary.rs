@@ -15,7 +15,16 @@ use super::translate_expr;
 pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
     let arg = translate_expr(&un.argument, ctx);
     match un.operator {
-        UnaryOperator::UnaryPlus => arg,
+        // `+x` is ES ToNumber. A string operand needs the full StringToNumber
+        // (hex/binary/octal/decimal/Infinity) — `+"0xff"` is 255, not the
+        // string "0xff"; a number operand passes through unchanged.
+        UnaryOperator::UnaryPlus => {
+            if expr_is_string(&un.argument, ctx) {
+                builtins::to_number_expr(arg)
+            } else {
+                arg
+            }
+        }
         UnaryOperator::UnaryNegation => Expr::Unary(syn::ExprUnary {
             attrs: Vec::new(),
             op: UnOp::Neg(Default::default()),
@@ -38,6 +47,21 @@ pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
         // typed), so the JS type string is known from the operand's spelling.
         UnaryOperator::Typeof => type_of_expr(&un.argument),
         _ => parse_quote!(::core::todo!()),
+    }
+}
+
+/// True when `expr` evaluates to a string: a string literal (possibly
+/// parenthesized), or an identifier bound to a `string` local. Drives unary
+/// `+` to run ToNumber only on a string operand (a number is a no-op).
+fn expr_is_string(e: &Expression, ctx: &Ctx<'_>) -> bool {
+    match e {
+        Expression::StringLiteral(_) => true,
+        Expression::ParenthesizedExpression(p) => expr_is_string(&p.expression, ctx),
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name).is_some_and(|p| p.is_ident("String"))
+        }
+        _ => false,
     }
 }
 

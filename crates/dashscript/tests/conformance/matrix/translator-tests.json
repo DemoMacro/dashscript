@@ -1,174 +1,6 @@
 [
   {
-    "id": "arrays.translates_array_literal_to_vec_macro",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_index",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_in_operator_on_array_to_index_bound",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_map_to_iter_copied_map_collect",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_filter_to_iter_copied_filter_collect",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_slice_to_index_range_to_vec",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_index_of_to_position",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_find_index_to_position",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
     "id": "arrays.translates_array_at_to_signed_runtime_index",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_flat_map_to_flat_map_collect",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_literal_with_expression_elements",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_flat_to_concat",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_last_index_of_to_rposition",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_fill_to_vec_fill",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_for_each_to_for_each",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_includes_to_contains",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_find_to_iter_copied_find",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_some_every_to_any_all",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_join_to_vec_string_join",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_reduce_with_seed_to_fold",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_reduce_without_seed_to_reduce",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_index_assign_to_usize_index",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -184,7 +16,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_reverse_to_in_place_reverse",
+    "id": "arrays.translates_array_copy_within",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -192,7 +24,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_sort_to_numeric_sort_by",
+    "id": "arrays.translates_array_fill_to_vec_fill",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -200,7 +32,15 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_find_last_to_rev_find",
+    "id": "arrays.translates_array_filter_to_iter_copied_filter_collect",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_find_index_to_position",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -216,7 +56,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_reduce_right_to_rev_fold",
+    "id": "arrays.translates_array_find_last_to_rev_find",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -224,7 +64,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_to_sorted_to_clone_sort",
+    "id": "arrays.translates_array_find_to_iter_copied_find",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -232,7 +72,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_to_reversed_to_rev_collect",
+    "id": "arrays.translates_array_flat_map_to_flat_map_collect",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -240,7 +80,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_to_spliced_to_clone_splice",
+    "id": "arrays.translates_array_flat_to_concat",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -248,31 +88,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_with_to_clone_index_assign",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_shift_unshift_pop",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_of",
-    "layer": "translator-tests",
-    "category": "arrays",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "arrays.translates_array_is_array_vec_true",
+    "id": "arrays.translates_array_for_each_to_for_each",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -296,7 +112,183 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_includes_to_contains",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_index",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_index_assign_to_usize_index",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_index_of_to_position",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_is_array_vec_true",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_join_to_vec_string_join",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_last_index_of_to_rposition",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_literal_to_vec_macro",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_literal_with_expression_elements",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_map_to_iter_copied_map_collect",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_of",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reduce_right_to_rev_fold",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reduce_with_seed_to_fold",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reduce_without_seed_to_reduce",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_reverse_to_in_place_reverse",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_shift_unshift_pop",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_slice_to_index_range_to_vec",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_some_every_to_any_all",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_sort_to_numeric_sort_by",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "arrays.translates_array_splice",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_to_reversed_to_rev_collect",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_to_sorted_to_clone_sort",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_to_spliced_to_clone_splice",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -312,7 +304,15 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_copy_within",
+    "id": "arrays.translates_array_with_to_clone_index_assign",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_in_operator_on_array_to_index_bound",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -336,46 +336,6 @@
     "note": ""
   },
   {
-    "id": "clone_move.translates_unmutated_let_is_plain_let",
-    "layer": "translator-tests",
-    "category": "clone_move",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
-    "note": ""
-  },
-  {
-    "id": "clone_move.translates_mutated_let_is_let_mut",
-    "layer": "translator-tests",
-    "category": "clone_move",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
-    "note": ""
-  },
-  {
-    "id": "clone_move.translates_mutated_var_is_let_mut",
-    "layer": "translator-tests",
-    "category": "clone_move",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
-    "note": ""
-  },
-  {
-    "id": "clone_move.translates_mutated_let_by_compound_assign_is_let_mut",
-    "layer": "translator-tests",
-    "category": "clone_move",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
-    "note": ""
-  },
-  {
-    "id": "clone_move.translates_mutated_vec_by_method_is_let_mut",
-    "layer": "translator-tests",
-    "category": "clone_move",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
-    "note": ""
-  },
-  {
     "id": "clone_move.translates_for_in_to_keys_cloned",
     "layer": "translator-tests",
     "category": "clone_move",
@@ -384,11 +344,43 @@
     "note": ""
   },
   {
-    "id": "console.translates_multi_arg_console_log",
+    "id": "clone_move.translates_mutated_let_by_compound_assign_is_let_mut",
     "layer": "translator-tests",
-    "category": "console",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_mutated_let_is_let_mut",
+    "layer": "translator-tests",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_mutated_var_is_let_mut",
+    "layer": "translator-tests",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_mutated_vec_by_method_is_let_mut",
+    "layer": "translator-tests",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "clone_move.translates_unmutated_let_is_plain_let",
+    "layer": "translator-tests",
+    "category": "clone_move",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -400,39 +392,15 @@
     "note": ""
   },
   {
-    "id": "control_flow.translates_if_else",
+    "id": "console.translates_multi_arg_console_log",
     "layer": "translator-tests",
-    "category": "control_flow",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQzWhZO\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
-    "note": ""
-  },
-  {
-    "id": "control_flow.translates_while_with_update",
-    "layer": "translator-tests",
-    "category": "control_flow",
+    "category": "console",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "control_flow.translates_for_of_as_borrow",
-    "layer": "translator-tests",
-    "category": "control_flow",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "control_flow.translates_switch_to_match",
-    "layer": "translator-tests",
-    "category": "control_flow",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "control_flow.translates_do_while",
+    "id": "control_flow.translates_break_and_continue",
     "layer": "translator-tests",
     "category": "control_flow",
     "status": "supported",
@@ -448,7 +416,15 @@
     "note": ""
   },
   {
-    "id": "control_flow.translates_break_and_continue",
+    "id": "control_flow.translates_do_while",
+    "layer": "translator-tests",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_for_of_as_borrow",
     "layer": "translator-tests",
     "category": "control_flow",
     "status": "supported",
@@ -464,7 +440,23 @@
     "note": ""
   },
   {
+    "id": "control_flow.translates_if_else",
+    "layer": "translator-tests",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "control_flow.translates_if_option_truthiness",
+    "layer": "translator-tests",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "control_flow.translates_switch_to_match",
     "layer": "translator-tests",
     "category": "control_flow",
     "status": "supported",
@@ -488,6 +480,14 @@
     "note": ""
   },
   {
+    "id": "control_flow.translates_try_block_with_return_rejected",
+    "layer": "translator-tests",
+    "category": "control_flow",
+    "status": "partial",
+    "detail": "src\\main.rs:2:5: error: DashScript try blocks cannot contain return/break/continue (control flow cannot cross the catch boundary)\nsrc\\main.rs:1:11: error[E0308]: mismatched types: expected `f64`, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
     "id": "control_flow.translates_try_catch_to_catch_unwind",
     "layer": "translator-tests",
     "category": "control_flow",
@@ -504,63 +504,15 @@
     "note": ""
   },
   {
-    "id": "control_flow.translates_try_block_with_return_rejected",
+    "id": "control_flow.translates_while_with_update",
     "layer": "translator-tests",
     "category": "control_flow",
-    "status": "partial",
-    "detail": "src\\main.rs:2:5: error: DashScript try blocks cannot contain return/break/continue (control flow cannot cross the catch boundary)\nsrc\\main.rs:1:11: error[E0308]: mismatched types: expected `f64`, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
-    "note": ""
-  },
-  {
-    "id": "destructuring.translates_object_destructure_default_to_unwrap_or",
-    "layer": "translator-tests",
-    "category": "destructuring",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "destructuring.translates_discriminated_union_switch_destructure",
-    "layer": "translator-tests",
-    "category": "destructuring",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "destructuring.translates_object_destructuring_to_struct_pattern",
-    "layer": "translator-tests",
-    "category": "destructuring",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "destructuring.translates_array_destructuring_to_indexed_lets",
-    "layer": "translator-tests",
-    "category": "destructuring",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "destructuring.translates_array_destructure_rest_to_slice",
-    "layer": "translator-tests",
-    "category": "destructuring",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "destructuring.translates_object_spread_to_struct_update",
-    "layer": "translator-tests",
-    "category": "destructuring",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "destructuring.translates_array_spread_to_slice_concat",
     "layer": "translator-tests",
     "category": "destructuring",
     "status": "supported",
@@ -576,6 +528,38 @@
     "note": ""
   },
   {
+    "id": "destructuring.translates_array_destructuring_to_indexed_lets",
+    "layer": "translator-tests",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_array_spread_to_slice_concat",
+    "layer": "translator-tests",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_discriminated_union_switch_destructure",
+    "layer": "translator-tests",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "destructuring.translates_object_destructure_default_to_unwrap_or",
+    "layer": "translator-tests",
+    "category": "destructuring",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "destructuring.translates_object_destructure_rename",
     "layer": "translator-tests",
     "category": "destructuring",
@@ -584,79 +568,23 @@
     "note": ""
   },
   {
-    "id": "globals.translates_string_global_to_format",
+    "id": "destructuring.translates_object_destructuring_to_struct_pattern",
     "layer": "translator-tests",
-    "category": "globals",
+    "category": "destructuring",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "globals.translates_parse_int_to_parse_f64",
+    "id": "destructuring.translates_object_spread_to_struct_update",
     "layer": "translator-tests",
-    "category": "globals",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "globals.translates_parse_int_with_radix_to_from_str_radix",
-    "layer": "translator-tests",
-    "category": "globals",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "globals.translates_number_global_string_to_parse",
-    "layer": "translator-tests",
-    "category": "globals",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "globals.translates_number_global_string_var_to_parse",
-    "layer": "translator-tests",
-    "category": "globals",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "globals.translates_number_global_number_passes_through",
-    "layer": "translator-tests",
-    "category": "globals",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "globals.translates_boolean_global_zero_to_false",
-    "layer": "translator-tests",
-    "category": "globals",
+    "category": "destructuring",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "globals.translates_boolean_global_nonzero_to_true",
-    "layer": "translator-tests",
-    "category": "globals",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "globals.translates_boolean_global_string_literal_to_is_empty",
-    "layer": "translator-tests",
-    "category": "globals",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "globals.translates_boolean_global_vec_to_is_empty",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -680,7 +608,7 @@
     "note": ""
   },
   {
-    "id": "globals.translates_number_static_type_checks",
+    "id": "globals.translates_boolean_global_string_literal_to_is_empty",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -688,7 +616,31 @@
     "note": ""
   },
   {
-    "id": "globals.translates_number_is_safe_integer",
+    "id": "globals.translates_boolean_global_vec_to_is_empty",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_boolean_global_zero_to_false",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_global_is_finite",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_global_is_nan",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -697,6 +649,38 @@
   },
   {
     "id": "globals.translates_number_constants",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_number_passes_through",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_string_to_parse",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_string_var_to_parse",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_is_safe_integer",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -720,6 +704,14 @@
     "note": ""
   },
   {
+    "id": "globals.translates_number_static_type_checks",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "globals.translates_number_to_exponential",
     "layer": "translator-tests",
     "category": "globals",
@@ -736,7 +728,7 @@
     "note": ""
   },
   {
-    "id": "globals.translates_global_is_nan",
+    "id": "globals.translates_parse_int_to_parse_f64",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -744,7 +736,7 @@
     "note": ""
   },
   {
-    "id": "globals.translates_global_is_finite",
+    "id": "globals.translates_parse_int_with_radix_to_from_str_radix",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -752,63 +744,15 @@
     "note": ""
   },
   {
-    "id": "math.translates_math_methods",
+    "id": "globals.translates_string_global_to_format",
     "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "math.translates_math_constants",
-    "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "math.translates_math_trig_and_log_methods",
-    "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "math.translates_math_log_to_ln",
-    "layer": "translator-tests",
-    "category": "math",
+    "category": "globals",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
     "id": "math.translates_math_atan2_to_atan2",
-    "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "math.translates_math_hypot_to_pythagoras",
-    "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "math.translates_math_log1p_to_ln_1p",
-    "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "math.translates_math_expm1_to_exp_m1",
     "layer": "translator-tests",
     "category": "math",
     "status": "supported",
@@ -824,6 +768,38 @@
     "note": ""
   },
   {
+    "id": "math.translates_math_constants",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_exp_log_trig_methods",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_expm1_to_exp_m1",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_extra_constants",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "math.translates_math_fround_to_f32_round_trip",
     "layer": "translator-tests",
     "category": "math",
@@ -832,23 +808,23 @@
     "note": ""
   },
   {
-    "id": "math.translates_math_imul_to_wrapping_mul",
-    "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "math.translates_math_sign_to_signum",
-    "layer": "translator-tests",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
     "id": "math.translates_math_hyperbolic_methods",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_hypot_to_pythagoras",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_imul_to_wrapping_mul",
     "layer": "translator-tests",
     "category": "math",
     "status": "supported",
@@ -872,7 +848,7 @@
     "note": ""
   },
   {
-    "id": "math.translates_math_extra_constants",
+    "id": "math.translates_math_log1p_to_ln_1p",
     "layer": "translator-tests",
     "category": "math",
     "status": "supported",
@@ -880,7 +856,7 @@
     "note": ""
   },
   {
-    "id": "math.translates_math_rounding_and_root_methods",
+    "id": "math.translates_math_log_to_ln",
     "layer": "translator-tests",
     "category": "math",
     "status": "supported",
@@ -888,7 +864,7 @@
     "note": ""
   },
   {
-    "id": "math.translates_math_exp_log_trig_methods",
+    "id": "math.translates_math_methods",
     "layer": "translator-tests",
     "category": "math",
     "status": "supported",
@@ -912,6 +888,14 @@
     "note": ""
   },
   {
+    "id": "math.translates_math_rounding_and_root_methods",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "math.translates_math_sign_keeps_signed_zero",
     "layer": "translator-tests",
     "category": "math",
@@ -920,7 +904,23 @@
     "note": ""
   },
   {
-    "id": "narrowing.translates_optional_chain_to_as_ref_map",
+    "id": "math.translates_math_sign_to_signum",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "math.translates_math_trig_and_log_methods",
+    "layer": "translator-tests",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_logical_nullish_assign",
     "layer": "translator-tests",
     "category": "narrowing",
     "status": "supported",
@@ -928,7 +928,7 @@
     "note": ""
   },
   {
-    "id": "narrowing.translates_optional_chain_coalesce_to_unwrap_or",
+    "id": "narrowing.translates_logical_or_assign",
     "layer": "translator-tests",
     "category": "narrowing",
     "status": "supported",
@@ -936,7 +936,15 @@
     "note": ""
   },
   {
-    "id": "narrowing.translates_some_wrapping",
+    "id": "narrowing.translates_logical_or_bool_short_circuits",
+    "layer": "translator-tests",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "narrowing.translates_logical_or_value_returns_left_when_truthy",
     "layer": "translator-tests",
     "category": "narrowing",
     "status": "supported",
@@ -976,7 +984,7 @@
     "note": ""
   },
   {
-    "id": "narrowing.translates_logical_or_value_returns_left_when_truthy",
+    "id": "narrowing.translates_optional_chain_coalesce_to_unwrap_or",
     "layer": "translator-tests",
     "category": "narrowing",
     "status": "supported",
@@ -984,7 +992,7 @@
     "note": ""
   },
   {
-    "id": "narrowing.translates_logical_or_bool_short_circuits",
+    "id": "narrowing.translates_optional_chain_to_as_ref_map",
     "layer": "translator-tests",
     "category": "narrowing",
     "status": "supported",
@@ -992,15 +1000,7 @@
     "note": ""
   },
   {
-    "id": "narrowing.translates_logical_nullish_assign",
-    "layer": "translator-tests",
-    "category": "narrowing",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "narrowing.translates_logical_or_assign",
+    "id": "narrowing.translates_some_wrapping",
     "layer": "translator-tests",
     "category": "narrowing",
     "status": "supported",
@@ -1016,7 +1016,7 @@
     "note": ""
   },
   {
-    "id": "number_methods.translates_number_to_string_radix_hex",
+    "id": "number_methods.translates_number_to_string_no_arg_is_display",
     "layer": "translator-tests",
     "category": "number_methods",
     "status": "supported",
@@ -1032,7 +1032,7 @@
     "note": ""
   },
   {
-    "id": "number_methods.translates_number_to_string_no_arg_is_display",
+    "id": "number_methods.translates_number_to_string_radix_hex",
     "layer": "translator-tests",
     "category": "number_methods",
     "status": "supported",
@@ -1048,7 +1048,47 @@
     "note": ""
   },
   {
-    "id": "operators.translates_logical_and_unary",
+    "id": "operators.translates_arrow_function_expression_body",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_and_or_xor",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_compound_assign",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_not",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_bitwise_shifts",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_comparison_chain_short_circuits",
     "layer": "translator-tests",
     "category": "operators",
     "status": "supported",
@@ -1057,6 +1097,54 @@
   },
   {
     "id": "operators.translates_compound_assignment",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_exponent_operator",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_field_assign_to_field",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_in_operator_to_contains_key",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_length_to_len",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_logical_and_unary",
+    "layer": "translator-tests",
+    "category": "operators",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "operators.translates_logical_not_short_circuits",
     "layer": "translator-tests",
     "category": "operators",
     "status": "supported",
@@ -1080,89 +1168,113 @@
     "note": ""
   },
   {
-    "id": "operators.translates_length_to_len",
+    "id": "strings.translates_string_at_to_chars_nth",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_exponent_operator",
+    "id": "strings.translates_string_char_at_to_chars_nth",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_in_operator_to_contains_key",
+    "id": "strings.translates_string_char_code_at_to_code_point",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_arrow_function_expression_body",
+    "id": "strings.translates_string_code_point_at",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_field_assign_to_field",
+    "id": "strings.translates_string_compound_append",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_bitwise_and_or_xor",
+    "id": "strings.translates_string_concat_to_format",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_bitwise_shifts",
+    "id": "strings.translates_string_concatenation_to_format",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_bitwise_not",
+    "id": "strings.translates_string_ends_with_to_ends_with",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_bitwise_compound_assign",
+    "id": "strings.translates_string_from_char_code_to_char",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_comparison_chain_short_circuits",
+    "id": "strings.translates_string_from_code_point",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
   },
   {
-    "id": "operators.translates_logical_not_short_circuits",
+    "id": "strings.translates_string_index_of_to_find",
     "layer": "translator-tests",
-    "category": "operators",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_is_well_formed",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_last_index_of_to_rfind",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_lower_trim_methods",
+    "layer": "translator-tests",
+    "category": "strings",
     "status": "supported",
     "detail": "",
     "note": ""
@@ -1176,7 +1288,7 @@
     "note": ""
   },
   {
-    "id": "strings.translates_to_string_to_display",
+    "id": "strings.translates_string_pad_end_to_left_align",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1184,7 +1296,23 @@
     "note": ""
   },
   {
-    "id": "strings.translates_string_concatenation_to_format",
+    "id": "strings.translates_string_pad_end_with_fill_char",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_pad_start_to_right_align",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_pad_start_with_fill_char",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1216,23 +1344,7 @@
     "note": ""
   },
   {
-    "id": "strings.translates_string_compound_append",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_split_to_vec_string",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_index_of_to_find",
+    "id": "strings.translates_string_replace_substring_methods",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1248,143 +1360,7 @@
     "note": ""
   },
   {
-    "id": "strings.translates_trim_start_end_to_trim_methods",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_char_at_to_chars_nth",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_pad_start_to_right_align",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_pad_end_to_left_align",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_pad_start_with_fill_char",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_pad_end_with_fill_char",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_char_code_at_to_code_point",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_from_char_code_to_char",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_code_point_at",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_concat_to_format",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_at_to_chars_nth",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_last_index_of_to_rfind",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_lower_trim_methods",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_ends_with_to_ends_with",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_replace_substring_methods",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_from_code_point",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_value_of",
-    "layer": "translator-tests",
-    "category": "strings",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "strings.translates_string_is_well_formed",
+    "id": "strings.translates_string_split_to_vec_string",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1400,39 +1376,31 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_value_of",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_to_string_to_display",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_trim_start_end_to_trim_methods",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "types.translates_a_typed_function_returning_a_string",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_optional_field_to_option_and_fills_none",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_optional_field_supplied_wraps_some",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_generic_function_params",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_default_param_to_option_unwrap_or_and_call_none",
     "layer": "translator-tests",
     "category": "types",
     "status": "supported",
@@ -1448,47 +1416,7 @@
     "note": ""
   },
   {
-    "id": "types.translates_locals_object_literal_and_field_access",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_nullable_to_option",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_nullable_return_type",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_enum_variant_construction",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_keys_to_hashmap_keys",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_values_to_hashmap_values",
+    "id": "types.translates_default_param_to_option_unwrap_or_and_call_none",
     "layer": "translator-tests",
     "category": "types",
     "status": "supported",
@@ -1504,7 +1432,119 @@
     "note": ""
   },
   {
-    "id": "types.translates_return_object_literal_to_struct_init",
+    "id": "types.translates_enum_variant_construction",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_generic_function_params",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_hashmap_index_assign_to_insert",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_hashmap_index_to_get",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_locals_object_literal_and_field_access",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_nullable_return_type",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_nullable_to_option",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_assign_to_extend",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_freeze_to_passthrough",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_from_entries_to_collect",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_get_own_property_names_to_keys",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_has_own_to_contains_key",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_is_frozen_to_false",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_is_nan_equal",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_keys_to_hashmap_keys",
     "layer": "translator-tests",
     "category": "types",
     "status": "supported",
@@ -1513,6 +1553,30 @@
   },
   {
     "id": "types.translates_object_literal_argument_to_struct_init",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_values_to_hashmap_values",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_optional_field_supplied_wraps_some",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_optional_field_to_option_and_fills_none",
     "layer": "translator-tests",
     "category": "types",
     "status": "supported",
@@ -1536,71 +1600,7 @@
     "note": ""
   },
   {
-    "id": "types.translates_hashmap_index_to_get",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_hashmap_index_assign_to_insert",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_is_nan_equal",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_has_own_to_contains_key",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_get_own_property_names_to_keys",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_assign_to_extend",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_from_entries_to_collect",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_freeze_to_passthrough",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "supported",
-    "detail": "",
-    "note": ""
-  },
-  {
-    "id": "types.translates_object_is_frozen_to_false",
+    "id": "types.translates_return_object_literal_to_struct_init",
     "layer": "translator-tests",
     "category": "types",
     "status": "supported",
