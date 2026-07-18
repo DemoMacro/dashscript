@@ -113,8 +113,17 @@ pub(in crate::translator) fn string_method_on(
         }
         "split" => {
             // `split` yields `&str`; map to owned so the result is `Vec<String>`.
+            // A `limit` caps the segment count (TS `split(sep, n)`).
             let delim = str_method_arg(args.first()?, ctx);
-            parse_quote!(#obj.split(#delim).map(|part| part.to_string()).collect::<Vec<String>>())
+            match args.get(1) {
+                Some(lim) => {
+                    let l = usize_arg(lim, ctx);
+                    parse_quote!(#obj.split(#delim).take(#l).map(|part| part.to_string()).collect::<Vec<String>>())
+                }
+                None => {
+                    parse_quote!(#obj.split(#delim).map(|part| part.to_string()).collect::<Vec<String>>())
+                }
+            }
         }
         // `.indexOf(s)` → byte offset (ASCII == char index), or -1.
         // `.indexOf(s, from)` starts searching at byte offset `from` (a negative
@@ -133,15 +142,56 @@ pub(in crate::translator) fn string_method_on(
                 None => parse_quote!(#obj.find(#needle).map(|b| b as f64).unwrap_or(-1_f64)),
             }
         }
-        // `.slice(a, b)` / `.substring` → byte slice `s[a..b]` (ASCII), owned.
-        "slice" | "substring" => {
-            let start = usize_arg(args.first()?, ctx);
+        // `.slice(a, b)` → byte slice. TS `slice` treats a negative index as an
+        // offset from the end (clamped to 0); `a..b` order is preserved (empty
+        // when a >= b). ASCII byte offsets match char indices. The receiver is
+        // bound once so it is not re-evaluated for the length and the index.
+        "slice" => {
+            let start = translate_argument(args.first()?, ctx);
             match args.get(1) {
                 Some(end) => {
-                    let end = usize_arg(end, ctx);
-                    parse_quote!(#obj[#start..#end].to_string())
+                    let end = translate_argument(end, ctx);
+                    parse_quote!({
+                        let __s = #obj;
+                        let __n = __s.len() as f64;
+                        let __a = { let v = #start; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
+                        let __b = { let v = #end; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
+                        if __a < __b { __s.get(__a..__b).unwrap_or("").to_string() } else { String::new() }
+                    })
                 }
-                None => parse_quote!(#obj[#start..].to_string()),
+                None => parse_quote!({
+                    let __s = #obj;
+                    let __n = __s.len() as f64;
+                    let __a = { let v = #start; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
+                    __s.get(__a..).unwrap_or("").to_string()
+                }),
+            }
+        }
+        // `.substring(a, b)` → byte slice. TS `substring` maps negatives to 0,
+        // clamps to `[0, len]`, and swaps the bounds when `a > b` (unlike slice,
+        // which never swaps). ASCII byte offsets match char indices.
+        "substring" => {
+            let start = translate_argument(args.first()?, ctx);
+            match args.get(1) {
+                Some(end) => {
+                    let end = translate_argument(end, ctx);
+                    parse_quote!({
+                        let __s = #obj;
+                        let __n = __s.len() as f64;
+                        let mut __a = { let v = #start; if v < 0_f64 { 0_f64 } else { v }.min(__n) } as usize;
+                        let mut __b = { let v = #end; if v < 0_f64 { 0_f64 } else { v }.min(__n) } as usize;
+                        if __a > __b {
+                            ::core::mem::swap(&mut __a, &mut __b);
+                        }
+                        __s.get(__a..__b).unwrap_or("").to_string()
+                    })
+                }
+                None => parse_quote!({
+                    let __s = #obj;
+                    let __n = __s.len() as f64;
+                    let __a = { let v = #start; if v < 0_f64 { 0_f64 } else { v }.min(__n) } as usize;
+                    __s.get(__a..).unwrap_or("").to_string()
+                }),
             }
         }
         // `.charAt(i)` → the `i`-th char as a `String` ("" if out of range).
@@ -238,11 +288,13 @@ pub(in crate::translator) fn string_method_on(
         "isWellFormed" if args.is_empty() => parse_quote!(true),
         // `.toWellFormed()` → the string unchanged (already well-formed).
         "toWellFormed" if args.is_empty() => parse_quote!(#obj.to_string()),
-        // NOTE: `toLocaleLowerCase`/`toLocaleUpperCase`/`toLocaleString` are
-        // intentionally NOT mapped — they are locale-dependent (thousands
-        // separators, Turkish İ) and Rust has no locale, so any default would
-        // silently change a program's output. They fall through to a plain
-        // call, which `cargo check` rejects, surfacing the gap honestly.
+        // `toLocaleLowerCase`/`toLocaleUpperCase` are NOT handled here — a
+        // locale-less `s.toLocaleUpperCase()` falls through to
+        // `mod.rs::map_method`, which lowers it to the default casing (per
+        // ECMA-262 §22.1.3 a locale-less `toLocale*` ≡ `toUpperCase`/
+        // `toLowerCase`). A locale argument is intercepted by `check` (no ICU
+        // locale table). `toLocaleString` has no mapping, so `cargo check`
+        // rejects it honestly.
         _ => return None,
     })
 }

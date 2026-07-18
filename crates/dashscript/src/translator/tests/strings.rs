@@ -83,10 +83,32 @@ fn translates_string_index_of_to_find() {
 fn translates_string_slice_to_byte_range() {
     let src = "function f(): string { return \"hello\".slice(1, 4); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(
-        rust.contains("[1_f64 as usize..4_f64 as usize].to_string()"),
-        "got:\n{rust}"
-    );
+    assert!(rust.contains(".get("), "got:\n{rust}");
+    assert!(rust.contains(".to_string()"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_string_slice_negative_from_end() {
+    // TS `slice(-2)` counts from the end: `"hello".slice(-2)` === "lo".
+    let src = "function f(): string { return \"hello\".slice(-2); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__n +"), "negative offset from end: {rust}");
+}
+
+#[test]
+fn translates_string_substring_swaps_bounds() {
+    // TS `substring(4, 1)` swaps the bounds (unlike `slice`): === "ell".
+    let src = "function f(): string { return \"hello\".substring(4, 1); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("mem::swap"), "substring swaps bounds: {rust}");
+}
+
+#[test]
+fn translates_string_split_with_limit() {
+    // TS `split(sep, limit)` caps the segment count.
+    let src = "function f(): string[] { return \"a,b,c\".split(\",\", 2); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".take("), "split limit: {rust}");
 }
 
 #[test]
@@ -199,7 +221,7 @@ fn translates_string_replace_substring_methods() {
     let src = "function f(s: string): string { return s.replace(\"a\", \"b\").substring(1); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".replacen("), "got:\n{rust}");
-    assert!(rust.contains("[1_f64 as usize..]"), "got:\n{rust}");
+    assert!(rust.contains(".get(__a..)"), "got:\n{rust}");
 }
 
 #[test]

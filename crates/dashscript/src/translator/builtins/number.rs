@@ -66,12 +66,30 @@ pub(in crate::translator) fn number_method(
                 }
             })
         }
-        // `(n).toExponential(fracDigits)` → scientific notation with that many
-        // digits after the point. Rust's `{:.*e}` takes precision then value,
-        // matching TS's `fracDigits` semantics.
+        // `(n).toExponential(fracDigits)` / `(n).toExponential()` → scientific
+        // notation. Rust's `{:e}` prints a sign-less exponent (`1e4`); TS always
+        // signs it (`1e+4`), so a bare exponent gets a `+` prepended (a `-` and
+        // an explicit `+` are left alone).
         "toExponential" => {
-            let prec = usize_arg(args.first()?, ctx);
-            parse_quote!(format!("{:.*e}", #prec, #recv))
+            let formatted: Expr = match args.first() {
+                Some(a) => {
+                    let prec = usize_arg(a, ctx);
+                    parse_quote!(format!("{:.*e}", #prec, #recv))
+                }
+                None => parse_quote!(format!("{:e}", #recv)),
+            };
+            parse_quote!({
+                let __s = #formatted;
+                if let Some((__m, __e)) = __s.split_once('e') {
+                    if __e.starts_with('-') || __e.starts_with('+') {
+                        __s
+                    } else {
+                        format!("{}e+{}", __m, __e)
+                    }
+                } else {
+                    __s
+                }
+            })
         }
         // `(n).valueOf()` → the number itself (an `f64` identity).
         // `toLocaleString` is locale-dependent (thousands separators) and

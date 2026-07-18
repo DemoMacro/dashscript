@@ -166,6 +166,13 @@ fn translates_number_to_exponential() {
     let src = "function f(n: number): string { return n.toExponential(2); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("{:.*e}"), "got:\n{rust}");
+    // TS signs the exponent (`1e+4`); Rust's `{:e}` prints `1e4` — a bare
+    // exponent gets a `+` prepended via a `split_once('e')` fixup.
+    assert!(
+        rust.contains("split_once('e')"),
+        "exponent sign fixup: {rust}"
+    );
+    assert!(rust.contains("\"{}e+{}\""), "got:\n{rust}");
 }
 
 #[test]

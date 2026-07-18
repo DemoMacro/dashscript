@@ -49,14 +49,35 @@ fn translates_array_filter_to_iter_copied_filter_collect() {
 fn translates_array_slice_to_index_range_to_vec() {
     let src = "function f(): void { const xs: number[] = [1, 2, 3, 4]; const ys = xs.slice(1, 3); const zs = xs.slice(2); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(
-        rust.contains("xs[1_f64 as usize..3_f64 as usize].to_vec()"),
-        "got:\n{rust}"
-    );
-    assert!(
-        rust.contains("xs[2_f64 as usize..].to_vec()"),
-        "got:\n{rust}"
-    );
+    assert!(rust.contains(".to_vec()"), "got:\n{rust}");
+    // the negative-index math is emitted even for positive bounds.
+    assert!(rust.contains("__n +"), "negative-index math: {rust}");
+}
+
+#[test]
+fn translates_array_slice_negative_from_end() {
+    // TS `slice(-1)` counts from the end: `[1, 2, 3].slice(-1)` === `[3]`.
+    let src = "function f(): number[] { const xs: number[] = [1, 2, 3]; return xs.slice(-1); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__n +"), "negative offset from end: {rust}");
+}
+
+#[test]
+fn translates_array_index_of_with_from_index() {
+    // TS `indexOf(x, from)` starts the search at `from`: `[1, 2, 1].indexOf(1, 1)` === 2.
+    let src = "function f(): number { const xs: number[] = [1, 2, 1]; return xs.indexOf(1, 1); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__f"), "from-index bound: {rust}");
+    assert!(rust.contains("[__f..]"), "searches a suffix slice: {rust}");
+}
+
+#[test]
+fn translates_array_last_index_of_with_from_index() {
+    // TS `lastIndexOf(x, from)` searches backwards from `from`.
+    let src =
+        "function f(): number { const xs: number[] = [1, 2, 1]; return xs.lastIndexOf(1, 1); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("[..__end]"), "bounded prefix: {rust}");
 }
 
 #[test]

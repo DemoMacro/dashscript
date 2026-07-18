@@ -22,8 +22,21 @@ pub(in crate::translator) fn global_function(
     let name: &str = &id.name;
     Some(match name {
         "String" => {
-            let a = translate_argument(args.first()?, ctx);
-            parse_quote!(::std::format!("{}", #a))
+            let a = args.first()?;
+            // `String(null)` → "null", `String(undefined)` → "undefined" — both
+            // lower to Rust `None`, whose `Display` is "None" (not what TS
+            // prints). Other values go through `format!`, like the `.call`
+            // idiom's `to_string_expr`.
+            match a {
+                Argument::NullLiteral(_) => parse_quote!("null".to_string()),
+                Argument::Identifier(id) if id.name.as_str() == "undefined" => {
+                    parse_quote!("undefined".to_string())
+                }
+                _ => {
+                    let e = translate_argument(a, ctx);
+                    parse_quote!(::std::format!("{}", #e))
+                }
+            }
         }
         // A malformed string yields NaN in TS, never a throw — `unwrap_or`
         // matches that without a runtime panic.

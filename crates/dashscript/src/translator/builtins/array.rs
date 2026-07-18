@@ -81,13 +81,27 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             let cb = callback_arg(args.first()?, ctx, true)?;
             parse_quote!(#recv.iter().copied().filter(#cb).collect::<Vec<_>>())
         }
-        // `.ds` indices are `f64`; cast each bound to `usize`.
+        // `.slice(a, b)` — a negative index counts from the end (clamped to 0);
+        // `a..b` order is preserved (empty when a >= b). The Vec is borrowed
+        // (not moved) so the local stays usable after; the length is read once.
+        // Mirrors `String.prototype.slice`'s index math.
         "slice" => {
-            let start = args.first().map(|a| usize_arg(a, ctx));
-            let end = args.get(1).map(|a| usize_arg(a, ctx));
+            let start = args.first().map(|a| translate_argument(a, ctx));
+            let end = args.get(1).map(|a| translate_argument(a, ctx));
             match (start, end) {
-                (Some(s), Some(e)) => parse_quote!(#recv[#s..#e].to_vec()),
-                (Some(s), None) => parse_quote!(#recv[#s..].to_vec()),
+                (Some(s), Some(e)) => parse_quote!({
+                    let __v = &#recv;
+                    let __n = __v.len() as f64;
+                    let __a = { let v = #s; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
+                    let __b = { let v = #e; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
+                    if __a < __b { __v[__a..__b].to_vec() } else { Vec::new() }
+                }),
+                (Some(s), None) => parse_quote!({
+                    let __v = &#recv;
+                    let __n = __v.len() as f64;
+                    let __a = { let v = #s; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
+                    __v[__a..].to_vec()
+                }),
                 (None, _) => parse_quote!(#recv.clone()),
             }
         }
@@ -101,29 +115,50 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
                 #recv[if __at_i >= 0_f64 { __at_i as usize } else { (#recv.len() as f64 + __at_i) as usize }]
             })
         }
-        // `.indexOf(x)` → first index of `x`, or -1 (TS returns a `number`).
+        // `.indexOf(x)` / `.indexOf(x, from)` → first index of `x` at or after
+        // `from` (a negative `from` is `len + from`, clamped to 0; a `from` past
+        // the end yields -1), or -1. Searches a suffix slice and re-bases.
         "indexOf" => {
             let needle = translate_argument(args.first()?, ctx);
-            parse_quote!(
-                #recv
-                    .iter()
-                    .copied()
-                    .position(|y| y == #needle)
-                    .map(|i| i as f64)
-                    .unwrap_or(-1_f64)
-            )
+            match args.get(1) {
+                Some(from) => {
+                    let f = translate_argument(from, ctx);
+                    parse_quote!({
+                        let __n = #recv.len();
+                        let __f = { let v = #f; if v < 0_f64 { (__n as f64 + v).max(0_f64) } else { v } } as usize;
+                        let __f = __f.min(__n);
+                        #recv[__f..].iter().copied().position(|y| y == #needle).map(|i| (i + __f) as f64).unwrap_or(-1_f64)
+                    })
+                }
+                None => parse_quote!(
+                    #recv.iter().copied().position(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
+                ),
+            }
         }
-        // `.lastIndexOf(x)` → last index of `x`, or -1 (`rposition`).
+        // `.lastIndexOf(x)` / `.lastIndexOf(x, from)` → last index of `x` at or
+        // before `from` (a negative `from` is `len + from`, < 0 → -1; a `from` ≥
+        // len clamps to the last element), or -1. `rposition` over a bounded
+        // prefix `[0, from]`.
         "lastIndexOf" => {
             let needle = translate_argument(args.first()?, ctx);
-            parse_quote!(
-                #recv
-                    .iter()
-                    .copied()
-                    .rposition(|y| y == #needle)
-                    .map(|i| i as f64)
-                    .unwrap_or(-1_f64)
-            )
+            match args.get(1) {
+                Some(from) => {
+                    let f = translate_argument(from, ctx);
+                    parse_quote!({
+                        let __n = #recv.len();
+                        let __f = { let v = #f; if v < 0_f64 { __n as f64 + v } else { v.min(__n as f64) } };
+                        if __f < 0_f64 {
+                            -1_f64
+                        } else {
+                            let __end = ((__f as usize) + 1).min(__n);
+                            #recv[..__end].iter().copied().rposition(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
+                        }
+                    })
+                }
+                None => parse_quote!(
+                    #recv.iter().copied().rposition(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
+                ),
+            }
         }
         // `.findIndex(cb)` → first index where cb holds, or -1. `position` takes
         // the item by value (after `.copied()`), so the param is `|n|`.
