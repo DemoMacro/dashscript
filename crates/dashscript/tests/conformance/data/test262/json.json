@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.json.15.12-0-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar o = JSON;\ntry { function() {\n  var j = JSON();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar o = JSON;\ntry { (function() {\n  var j = JSON();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/15.12-0-3.js",
       "n_asserts": 1,
       "flags": []
@@ -29,19 +29,28 @@
       "flags": []
     },
     {
+      "id": "test262.test.built-ins.json.israwjson.basic",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst values = [1, 1.1, null, false, true, '123'];\nfor (const value of values) {\n  console.log(!JSON.isRawJSON(value));\n  console.log(JSON.isRawJSON(JSON.rawJSON(value)));\n}\nconsole.log(!JSON.isRawJSON(undefined));\nconsole.log(!JSON.isRawJSON(Symbol('123')));\nconsole.log(!JSON.isRawJSON([]));\nconsole.log(!JSON.isRawJSON({}));\nconsole.log(!JSON.isRawJSON({ rawJSON: '123' }));\n}\n",
+      "origin": "test/built-ins/JSON/isRawJSON/basic.js",
+      "n_asserts": 7,
+      "flags": []
+    },
+    {
       "id": "test262.test.built-ins.json.israwjson.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nassert(Object.isExtensible(JSON.isRawJSON), \"JSON.isRawJSON is extensible\");\nconsole.log(typeof JSON.isRawJSON);\nconsole.log(Object.getPrototypeOf(JSON.isRawJSON));\n\nconsole.log(Object.getOwnPropertyDescriptor(JSON.isRawJSON, \"prototype\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(JSON.isRawJSON));\nconsole.log(typeof JSON.isRawJSON);\nconsole.log(Object.getPrototypeOf(JSON.isRawJSON));\n\nconsole.log(Object.getOwnPropertyDescriptor(JSON.isRawJSON, \"prototype\"));\n}\n",
       "origin": "test/built-ins/JSON/isRawJSON/builtin.js",
-      "n_asserts": 3,
+      "n_asserts": 4,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('12\\t\\r\\n 34'); // should produce a syntax error as whitespace results in two tokens\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('12\\t\\r\\n 34'); // should produce a syntax error as whitespace results in two tokens\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-1.js",
       "n_asserts": 1,
       "flags": []
@@ -50,7 +59,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\\u000b1234'); // should produce a syntax error \n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u000b1234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-2.js",
       "n_asserts": 1,
       "flags": []
@@ -59,7 +68,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\\u000c1234'); // should produce a syntax error \n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u000c1234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-3.js",
       "n_asserts": 1,
       "flags": []
@@ -68,7 +77,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\\u00a01234'); // should produce a syntax error \n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u00a01234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-4.js",
       "n_asserts": 1,
       "flags": []
@@ -77,7 +86,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-5",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\\u200b1234'); // should produce a syntax error \n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u200b1234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-5.js",
       "n_asserts": 1,
       "flags": []
@@ -86,7 +95,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-6",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\\ufeff1234'); // should produce a syntax error a\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\ufeff1234'); // should produce a syntax error a\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-6.js",
       "n_asserts": 1,
       "flags": []
@@ -95,7 +104,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-8",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\\u2028\\u20291234'); // should produce a syntax error \n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u2028\\u20291234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-8.js",
       "n_asserts": 1,
       "flags": []
@@ -104,7 +113,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\t1234'));\n\ntry { function() {\n    JSON.parse('12\\t34');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\t1234'));\n\ntry { (function() {\n    JSON.parse('12\\t34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-1.js",
       "n_asserts": 2,
       "flags": []
@@ -113,7 +122,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\r1234'));\n\ntry { function() {\n    JSON.parse('12\\r34');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\r1234'));\n\ntry { (function() {\n    JSON.parse('12\\r34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-2.js",
       "n_asserts": 2,
       "flags": []
@@ -122,7 +131,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\n1234'));\n\ntry { function() {\n    JSON.parse('12\\n34');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\n1234'));\n\ntry { (function() {\n    JSON.parse('12\\n34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-3.js",
       "n_asserts": 2,
       "flags": []
@@ -131,7 +140,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse(' 1234'));\n\ntry { function() {\n    JSON.parse('12 34');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(JSON.parse(' 1234'));\n\ntry { (function() {\n    JSON.parse('12 34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-4.js",
       "n_asserts": 2,
       "flags": []
@@ -149,7 +158,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse(\"'abc'\");\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse(\"'abc'\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-2.js",
       "n_asserts": 1,
       "flags": []
@@ -158,7 +167,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse(\"\\\\u0022abc\\\\u0022\");\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse(\"\\\\u0022abc\\\\u0022\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-3.js",
       "n_asserts": 1,
       "flags": []
@@ -167,7 +176,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\"ab'+\"c'\");\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\"ab'+\"c'\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-4.js",
       "n_asserts": 1,
       "flags": []
@@ -185,7 +194,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n    JSON.parse('\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\"'); // invalid string characters should produce a syntax error\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-1.js",
       "n_asserts": 1,
       "flags": []
@@ -194,7 +203,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n    JSON.parse('\"\\u0008\\u0009\\u000a\\u000b\\u000c\\u000d\\u000e\\u000f\"'); // invalid string characters should produce a syntax error\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0008\\u0009\\u000a\\u000b\\u000c\\u000d\\u000e\\u000f\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-2.js",
       "n_asserts": 1,
       "flags": []
@@ -203,7 +212,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n    JSON.parse('\"\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\"'); // invalid string characters should produce a syntax error\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-3.js",
       "n_asserts": 1,
       "flags": []
@@ -212,7 +221,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n    JSON.parse('\"\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"'); // invalid string characters should produce a syntax error\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-4.js",
       "n_asserts": 1,
       "flags": []
@@ -230,7 +239,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n        JSON.parse('\"\\\\u005\"') \n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n        JSON.parse('\"\\\\u005\"') \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g5-2.js",
       "n_asserts": 1,
       "flags": []
@@ -239,7 +248,7 @@
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n        JSON.parse('\"\\\\u0X50\"') \n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n        JSON.parse('\"\\\\u0X50\"') \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g5-3.js",
       "n_asserts": 1,
       "flags": []
@@ -311,9 +320,9 @@
       "id": "test262.test.built-ins.json.parse.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar parse = JSON.parse;\nassert(Object.isExtensible(parse), 'Object.isExtensible(parse) must return true');\nconsole.log(typeof parse);\nconsole.log(Object.prototype.toString.call(parse));\nconsole.log(Object.getPrototypeOf(parse));\nconsole.log(parse.hasOwnProperty('prototype'));\n}\n",
+      "fixture": "function main(): void {\nvar parse = JSON.parse;\nconsole.log(Object.isExtensible(parse));\nconsole.log(typeof parse);\nconsole.log(Object.prototype.toString.call(parse));\nconsole.log(Object.getPrototypeOf(parse));\nconsole.log(parse.hasOwnProperty('prototype'));\n}\n",
       "origin": "test/built-ins/JSON/parse/builtin.js",
-      "n_asserts": 4,
+      "n_asserts": 5,
       "flags": []
     },
     {
@@ -329,7 +338,7 @@
       "id": "test262.test.built-ins.json.parse.invalid-whitespace",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse('\\u16801');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u180e1');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20001');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20011');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20021');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20031');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20041');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20051');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20061');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20071');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20081');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u20091');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u200a1');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u202f1');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u205f1');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse('\\u30001');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u16801');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u180e1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20001');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20011');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20021');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20031');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20041');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20051');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20061');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20071');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20081');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20091');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u200a1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u202f1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u205f1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u30001');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/invalid-whitespace.js",
       "n_asserts": 16,
       "flags": []
@@ -338,7 +347,7 @@
       "id": "test262.test.built-ins.json.parse.revived-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\nvar returnCount = 0;\n\nhandle.revoke();\n\ntry { function() {\n  JSON.parse('[null, null]', function() {\n    this[1] = handle.proxy;\n    returnCount += 1;\n  });\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(returnCount);\n}\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\nvar returnCount = 0;\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.parse('[null, null]', function() {\n    this[1] = handle.proxy;\n    returnCount += 1;\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(returnCount);\n}\n",
       "origin": "test/built-ins/JSON/parse/revived-proxy-revoked.js",
       "n_asserts": 2,
       "flags": []
@@ -347,9 +356,9 @@
       "id": "test262.test.built-ins.json.parse.reviver-array-get-prop-from-prototype",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nArray.prototype[1] = 3;\n\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    assert(delete this[1]);\n  }\n\n  return value;\n});\n\nassert(delete Array.prototype[1]);\nconsole.log(arr[0]);\nassert(arr.hasOwnProperty('1'));\nconsole.log(arr[1]);\n}\n",
+      "fixture": "function main(): void {\nArray.prototype[1] = 3;\n\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    console.log(delete this[1]);\n  }\n\n  return value;\n});\n\nconsole.log(delete Array.prototype[1]);\nconsole.log(arr[0]);\nconsole.log(arr.hasOwnProperty('1'));\nconsole.log(arr[1]);\n}\n",
       "origin": "test/built-ins/JSON/parse/reviver-array-get-prop-from-prototype.js",
-      "n_asserts": 2,
+      "n_asserts": 5,
       "flags": []
     },
     {
@@ -365,18 +374,18 @@
       "id": "test262.test.built-ins.json.parse.reviver-array-non-configurable-prop-delete",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    Object.defineProperty(this, '1', {configurable: false});\n  }\n  if (key === '1') return;\n\n  return value;\n});\n\nconsole.log(arr[0]);\nassert(arr.hasOwnProperty('1'));\nconsole.log(arr[1]);\n}\n",
+      "fixture": "function main(): void {\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    Object.defineProperty(this, '1', {configurable: false});\n  }\n  if (key === '1') return;\n\n  return value;\n});\n\nconsole.log(arr[0]);\nconsole.log(arr.hasOwnProperty('1'));\nconsole.log(arr[1]);\n}\n",
       "origin": "test/built-ins/JSON/parse/reviver-array-non-configurable-prop-delete.js",
-      "n_asserts": 2,
+      "n_asserts": 3,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.json.parse.reviver-object-get-prop-from-prototype",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nObject.prototype.b = 3;\n\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    assert(delete this.b);\n  }\n\n  return value;\n});\n\nassert(delete Object.prototype.b);\nconsole.log(obj.a);\nassert(obj.hasOwnProperty('b'));\nconsole.log(obj.b);\n}\n",
+      "fixture": "function main(): void {\nObject.prototype.b = 3;\n\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    console.log(delete this.b);\n  }\n\n  return value;\n});\n\nconsole.log(delete Object.prototype.b);\nconsole.log(obj.a);\nconsole.log(obj.hasOwnProperty('b'));\nconsole.log(obj.b);\n}\n",
       "origin": "test/built-ins/JSON/parse/reviver-object-get-prop-from-prototype.js",
-      "n_asserts": 2,
+      "n_asserts": 5,
       "flags": []
     },
     {
@@ -392,18 +401,18 @@
       "id": "test262.test.built-ins.json.parse.reviver-object-non-configurable-prop-delete",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    Object.defineProperty(this, 'b', {configurable: false});\n  }\n  if (key === 'b') return;\n\n  return value;\n});\n\nconsole.log(obj.a);\nassert(obj.hasOwnProperty('b'));\nconsole.log(obj.b);\n}\n",
+      "fixture": "function main(): void {\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    Object.defineProperty(this, 'b', {configurable: false});\n  }\n  if (key === 'b') return;\n\n  return value;\n});\n\nconsole.log(obj.a);\nconsole.log(obj.hasOwnProperty('b'));\nconsole.log(obj.b);\n}\n",
       "origin": "test/built-ins/JSON/parse/reviver-object-non-configurable-prop-delete.js",
-      "n_asserts": 2,
+      "n_asserts": 3,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.json.parse.s15.12.2_a1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar x = JSON.parse('{\"__proto__\":[]}');\n\nconsole.log(Object.getPrototypeOf(x));\n\nassert(Array.isArray(x.__proto__), 'Array.isArray(x.__proto__) must return true');\n}\n",
+      "fixture": "function main(): void {\nvar x = JSON.parse('{\"__proto__\":[]}');\n\nconsole.log(Object.getPrototypeOf(x));\n\nconsole.log(Array.isArray(x.__proto__));\n}\n",
       "origin": "test/built-ins/JSON/parse/S15.12.2_A1.js",
-      "n_asserts": 1,
+      "n_asserts": 2,
       "flags": []
     },
     {
@@ -419,7 +428,7 @@
       "id": "test262.test.built-ins.json.parse.text-non-string-primitive",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { function() {\n  JSON.parse();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.parse(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(JSON.parse(null));\nconsole.log(JSON.parse(false));\nconsole.log(JSON.parse(true));\nconsole.log(JSON.parse(0));\nconsole.log(JSON.parse(3.14));\n\nvar sym = Symbol('desc');\ntry { function() {\n  JSON.parse(sym);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(JSON.parse(null));\nconsole.log(JSON.parse(false));\nconsole.log(JSON.parse(true));\nconsole.log(JSON.parse(0));\nconsole.log(JSON.parse(3.14));\n\nvar sym = Symbol('desc');\ntry { (function() {\n  JSON.parse(sym);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/parse/text-non-string-primitive.js",
       "n_asserts": 8,
       "flags": []
@@ -455,16 +464,16 @@
       "id": "test262.test.built-ins.json.rawjson.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nassert(Object.isExtensible(JSON.rawJSON), \"JSON.rawJSON is extensible\");\nconsole.log(typeof JSON.rawJSON);\n\nconsole.log(Object.getPrototypeOf(JSON.rawJSON));\n\nconsole.log(Object.getOwnPropertyDescriptor(JSON.rawJSON, \"prototype\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(JSON.rawJSON));\nconsole.log(typeof JSON.rawJSON);\n\nconsole.log(Object.getPrototypeOf(JSON.rawJSON));\n\nconsole.log(Object.getOwnPropertyDescriptor(JSON.rawJSON, \"prototype\"));\n}\n",
       "origin": "test/built-ins/JSON/rawJSON/builtin.js",
-      "n_asserts": 3,
+      "n_asserts": 4,
       "flags": []
     },
     {
       "id": "test262.test.built-ins.json.rawjson.illegal-empty-and-start-end-chars",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconst ILLEGAL_END_CHARS = ['\\n', '\\t', '\\r', ' '];\nfor (const char of ILLEGAL_END_CHARS) {\n  try { () => {\n    JSON.rawJSON(`${char}123`);\n  }(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n  try { () => {\n    JSON.rawJSON(`123${char}`);\n  }(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n\ntry { () => {\n  JSON.rawJSON('');\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconst ILLEGAL_END_CHARS = ['\\n', '\\t', '\\r', ' '];\nfor (const char of ILLEGAL_END_CHARS) {\n  try { (() => {\n    JSON.rawJSON(`${char}123`);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n  try { (() => {\n    JSON.rawJSON(`123${char}`);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n\ntry { (() => {\n  JSON.rawJSON('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/rawJSON/illegal-empty-and-start-end-chars.js",
       "n_asserts": 3,
       "flags": []
@@ -473,7 +482,7 @@
       "id": "test262.test.built-ins.json.rawjson.invalid-json-text",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { () => {\n  JSON.rawJSON(Symbol('123'));\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { () => {\n  JSON.rawJSON(undefined);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { () => {\n  JSON.rawJSON({});\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { () => {\n  JSON.rawJSON([]);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (() => {\n  JSON.rawJSON(Symbol('123'));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  JSON.rawJSON(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  JSON.rawJSON({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  JSON.rawJSON([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/rawJSON/invalid-JSON-text.js",
       "n_asserts": 4,
       "flags": []
@@ -482,9 +491,9 @@
       "id": "test262.test.built-ins.json.stringify.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nassert(Object.isExtensible(JSON.stringify), 'Object.isExtensible(JSON.stringify) must return true');\nconsole.log(Object.prototype.toString.call(JSON.stringify));\nconsole.log(Object.getPrototypeOf(JSON.stringify));\nconsole.log(JSON.stringify.hasOwnProperty('prototype'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(JSON.stringify));\nconsole.log(Object.prototype.toString.call(JSON.stringify));\nconsole.log(Object.getPrototypeOf(JSON.stringify));\nconsole.log(JSON.stringify.hasOwnProperty('prototype'));\n}\n",
       "origin": "test/built-ins/JSON/stringify/builtin.js",
-      "n_asserts": 3,
+      "n_asserts": 4,
       "flags": []
     },
     {
@@ -536,7 +545,7 @@
       "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked-realm",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OProxy = $262.createRealm().global.Proxy;\nvar handle = OProxy.revocable([], {});\n\nhandle.revoke();\n\ntry { function() {\n  JSON.stringify({}, handle.proxy);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar OProxy = $262.createRealm().global.Proxy;\nvar handle = OProxy.revocable([], {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify({}, handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-proxy-revoked-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -545,7 +554,7 @@
       "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\ntry { function() {\n  JSON.stringify({}, handle.proxy);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify({}, handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-proxy-revoked.js",
       "n_asserts": 1,
       "flags": []
@@ -554,7 +563,7 @@
       "id": "test262.test.built-ins.json.stringify.replacer-function-array-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar circular = [{}];\nvar circularReplacer = function(k, v) {\n  return circular;\n};\n\ntry { function() {\n  JSON.stringify(circular, circularReplacer);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar circular = [{}];\nvar circularReplacer = function(k, v) {\n  return circular;\n};\n\ntry { (function() {\n  JSON.stringify(circular, circularReplacer);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/replacer-function-array-circular.js",
       "n_asserts": 1,
       "flags": []
@@ -563,7 +572,7 @@
       "id": "test262.test.built-ins.json.stringify.replacer-function-object-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar direct = {prop: {}};\nvar directReplacer = function(k, v) {\n  return direct;\n};\n\ntry { function() {\n  JSON.stringify(direct, directReplacer);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = {p1: {p2: {}}};\nvar indirectReplacer = function(key, value) {\n  if (key === 'p2') {\n    return indirect;\n  } \n\n  return value;\n};\n\ntry { function() {\n  JSON.stringify(indirect, indirectReplacer);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar direct = {prop: {}};\nvar directReplacer = function(k, v) {\n  return direct;\n};\n\ntry { (function() {\n  JSON.stringify(direct, directReplacer);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = {p1: {p2: {}}};\nvar indirectReplacer = function(key, value) {\n  if (key === 'p2') {\n    return indirect;\n  } \n\n  return value;\n};\n\ntry { (function() {\n  JSON.stringify(indirect, indirectReplacer);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/replacer-function-object-circular.js",
       "n_asserts": 2,
       "flags": []
@@ -626,7 +635,7 @@
       "id": "test262.test.built-ins.json.stringify.value-array-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar direct = [];\ndirect.push(direct);\n\ntry { function() {\n  JSON.stringify(direct);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = [];\nindirect.push([[indirect]]);\n\ntry { function() {\n  JSON.stringify(indirect);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar direct = [];\ndirect.push(direct);\n\ntry { (function() {\n  JSON.stringify(direct);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = [];\nindirect.push([[indirect]]);\n\ntry { (function() {\n  JSON.stringify(indirect);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-array-circular.js",
       "n_asserts": 2,
       "flags": []
@@ -635,7 +644,7 @@
       "id": "test262.test.built-ins.json.stringify.value-array-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\ntry { function() {\n  JSON.stringify(handle.proxy);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.stringify([[[handle.proxy]]]);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify(handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.stringify([[[handle.proxy]]]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-array-proxy-revoked.js",
       "n_asserts": 2,
       "flags": []
@@ -644,7 +653,7 @@
       "id": "test262.test.built-ins.json.stringify.value-bigint-cross-realm",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar wrapped = other.Object(other.BigInt(100));\n\ntry { () => JSON.stringify(wrapped)(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nother.BigInt.prototype.toJSON = function () { return this.toString(); };\n\nconsole.log(JSON.stringify(wrapped));\n}\n",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar wrapped = other.Object(other.BigInt(100));\n\ntry { (() => JSON.stringify(wrapped))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nother.BigInt.prototype.toJSON = function () { return this.toString(); };\n\nconsole.log(JSON.stringify(wrapped));\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-cross-realm.js",
       "n_asserts": 2,
       "flags": []
@@ -653,7 +662,7 @@
       "id": "test262.test.built-ins.json.stringify.value-bigint-order",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nlet step;\n\nfunction replacer(x, k, v)\n{\n  console.log(step++);\n  console.log(v);\n  return x;\n}\n\nBigInt.prototype.toJSON = function () { console.log(step++); return 1n; };\n\nstep = 0;\ntry { () => JSON.stringify(0n, (k, v) => replacer(2n, k, v))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(step);\n\nstep = 0;\ntry { () => JSON.stringify(0n, (k, v) => replacer(Object(2n), k, v))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(step);\n}\n",
+      "fixture": "function main(): void {\nlet step;\n\nfunction replacer(x, k, v)\n{\n  console.log(step++);\n  console.log(v);\n  return x;\n}\n\nBigInt.prototype.toJSON = function () { console.log(step++); return 1n; };\n\nstep = 0;\ntry { (() => JSON.stringify(0n, (k, v) => replacer(2n, k, v)))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(step);\n\nstep = 0;\ntry { (() => JSON.stringify(0n, (k, v) => replacer(Object(2n), k, v)))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(step);\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-order.js",
       "n_asserts": 7,
       "flags": []
@@ -671,7 +680,7 @@
       "id": "test262.test.built-ins.json.stringify.value-bigint-tojson-receiver",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { () => JSON.stringify(1n)(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// The BigInt proposal changes the SerializeJSONProperty algorithm to\n// specifically allow passing BigInt objects as receivers for the toJSON\n// method.\nObject.defineProperty(BigInt.prototype, \"toJSON\", {\n    get() {\n        \"use strict\";\n        return () => typeof this;\n    }\n});\n\nconsole.log(JSON.stringify(1n));\n}\n",
+      "fixture": "function main(): void {\ntry { (() => JSON.stringify(1n))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// The BigInt proposal changes the SerializeJSONProperty algorithm to\n// specifically allow passing BigInt objects as receivers for the toJSON\n// method.\nObject.defineProperty(BigInt.prototype, \"toJSON\", {\n    get() {\n        \"use strict\";\n        return () => typeof this;\n    }\n});\n\nconsole.log(JSON.stringify(1n));\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-tojson-receiver.js",
       "n_asserts": 2,
       "flags": []
@@ -689,7 +698,7 @@
       "id": "test262.test.built-ins.json.stringify.value-bigint",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { () => JSON.stringify(0n)(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { () => JSON.stringify(Object(0n))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { () => JSON.stringify({x: 0n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (() => JSON.stringify(0n))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => JSON.stringify(Object(0n)))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => JSON.stringify({x: 0n}))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint.js",
       "n_asserts": 3,
       "flags": []
@@ -725,7 +734,7 @@
       "id": "test262.test.built-ins.json.stringify.value-object-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar direct = {};\ndirect.prop = direct;\n\ntry { function() {\n  JSON.stringify(direct);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = {\n  p1: {\n    p2: {\n      get p3() {\n        return indirect;\n      },\n    },\n  },\n};\n\ntry { function() {\n  JSON.stringify(indirect);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar direct = {};\ndirect.prop = direct;\n\ntry { (function() {\n  JSON.stringify(direct);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = {\n  p1: {\n    p2: {\n      get p3() {\n        return indirect;\n      },\n    },\n  },\n};\n\ntry { (function() {\n  JSON.stringify(indirect);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-object-circular.js",
       "n_asserts": 2,
       "flags": []
@@ -734,7 +743,7 @@
       "id": "test262.test.built-ins.json.stringify.value-object-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable({}, {});\n\nhandle.revoke();\n\ntry { function() {\n  JSON.stringify(handle.proxy);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function() {\n  JSON.stringify({a: {b: handle.proxy}});\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable({}, {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify(handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.stringify({a: {b: handle.proxy}});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-object-proxy-revoked.js",
       "n_asserts": 2,
       "flags": []
@@ -788,7 +797,7 @@
       "id": "test262.test.built-ins.json.stringify.value-tojson-array-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar arr = [];\nvar circular = [arr];\n\narr.toJSON = function() {\n  return circular;\n};\n\ntry { function() {\n  JSON.stringify(circular);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar arr = [];\nvar circular = [arr];\n\narr.toJSON = function() {\n  return circular;\n};\n\ntry { (function() {\n  JSON.stringify(circular);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-tojson-array-circular.js",
       "n_asserts": 1,
       "flags": []
@@ -806,7 +815,7 @@
       "id": "test262.test.built-ins.json.stringify.value-tojson-object-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {};\nvar circular = { prop: obj };\n\nobj.toJSON = function() {\n  return circular;\n};\n\ntry { function() {\n  JSON.stringify(circular);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar obj = {};\nvar circular = { prop: obj };\n\nobj.toJSON = function() {\n  return circular;\n};\n\ntry { (function() {\n  JSON.stringify(circular);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/JSON/stringify/value-tojson-object-circular.js",
       "n_asserts": 1,
       "flags": []
