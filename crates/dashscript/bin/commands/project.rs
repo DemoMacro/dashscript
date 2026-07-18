@@ -98,7 +98,7 @@ type ProjectTargets = (Vec<(String, String)>, Option<String>);
 /// `src/<stem>.rs` — nested directories are not yet modeled as sub-modules),
 /// and a bin importing another bin (cargo forbids it; shared code must go
 /// through `[lib]`).
-fn translate_project(
+pub(crate) fn translate_project(
     root: &Path,
     manifest: &Manifest,
     project_dir: &Path,

@@ -13,7 +13,7 @@ use dashscript::Manifest;
 
 use super::project::{
     cache_project_dir, default_manifest, emit_cargo_project, find_manifest_root, invoke_cargo,
-    project_name, read_manifest, resolve_entry, resolve_target, status_to_code, translate_sources,
+    project_name, read_manifest, resolve_entry, resolve_target, status_to_code, translate_project,
 };
 
 /// Parsed `ds build` flags: optional entry file, optional `--target`, optional
@@ -236,31 +236,65 @@ pub(crate) fn workspace_build(
     }
 
     // bin: emit one cargo workspace — members share `target/` + `Cargo.lock`.
-    // Member dirs sit directly under the cache root (`<cache>/<name>/`), mirroring
-    // the single-package `.cache/dash/<name>/`; a stale member from a prior run
-    // (renamed/removed) is simply absent from `members` and ignored by cargo —
-    // `ds cache clean` reclaims the space.
+    // Member dirs sit directly under the cache root (`<cache>/<name>/`),
+    // mirroring the single-package `.cache/dash/<name>/`; a stale member from
+    // a prior run is ignored by cargo, `ds cache clean` reclaims the space.
     let cache = root.join(".cache").join("dash");
     fs::create_dir_all(&cache)?;
+
+    let member_manifests: Vec<Manifest> = selected
+        .iter()
+        .map(|(_, dir, _)| {
+            read_manifest(&dir.join("manifest.json")).unwrap_or_else(|_| default_manifest())
+        })
+        .collect();
+
+    // bin names must be unique across the workspace (cargo builds each into
+    // one shared target/).
+    let mut bin_owners: std::collections::HashMap<String, String> =
+        std::collections::HashMap::new();
+    for (name, manifest) in selected.iter().map(|(n, _, _)| n).zip(&member_manifests) {
+        for (bin_name, _) in manifest.bin_entries() {
+            if let Some(prev) = bin_owners.insert(bin_name.clone(), name.clone()) {
+                return Err(format!(
+                    "dashscript: bin name '{bin_name}' is declared in members '{prev}' and \
+                     '{name}'; bin names must be unique within a workspace"
+                )
+                .into());
+            }
+        }
+    }
+
+    // [workspace.dependencies] = union of member deps, so a dep two members use
+    // is declared once (cargo's hoisted node_modules).
+    let mut all_deps: std::collections::BTreeMap<String, String> =
+        std::collections::BTreeMap::new();
+    for manifest in &member_manifests {
+        for (key, ver) in &manifest.dependencies {
+            if let Some(dep) = key.strip_prefix("rust:") {
+                all_deps
+                    .entry(dep.to_string())
+                    .or_insert_with(|| ver.clone());
+            }
+        }
+    }
+    let inherited: std::collections::BTreeSet<String> = all_deps.keys().cloned().collect();
+
     let names: Vec<String> = selected.iter().map(|(n, _, _)| n.clone()).collect();
+    let root_manifest =
+        read_manifest(&root.join("manifest.json")).unwrap_or_else(|_| default_manifest());
     fs::write(
         cache.join("Cargo.toml"),
-        Manifest::workspace_root_toml(&names),
+        root_manifest.workspace_root_toml(&names, &all_deps),
     )?;
 
-    for (name, member_dir, entry) in &selected {
-        let path = Path::new(entry);
-        let src =
-            fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
-        let member_manifest =
-            read_manifest(&member_dir.join("manifest.json")).unwrap_or_else(|_| default_manifest());
+    for ((name, member_dir, _), manifest) in selected.iter().zip(&member_manifests) {
         let member_cache = cache.join(name);
-        fs::create_dir_all(member_cache.join("src"))?;
+        let (bins, lib) = translate_project(member_dir, manifest, &member_cache)?;
         fs::write(
             member_cache.join("Cargo.toml"),
-            member_manifest.to_member_toml(),
+            manifest.to_member_toml_with_bins(&bins, lib.as_deref(), &inherited),
         )?;
-        translate_sources(&src, path, &member_cache)?;
         println!("ds: {name} (workspace member)");
     }
 
@@ -270,22 +304,21 @@ pub(crate) fn workspace_build(
         return Ok(status_to_code(status));
     }
 
-    // Copy each member binary to its own `<member>/dist/<name>` — not the
-    // workspace root — so each package's artifact is independent and
-    // publishable (like a pnpm workspace package's own dist).
-    for (name, member_dir, _) in &selected {
-        let bin_name = if cfg!(windows) {
-            format!("{name}.exe")
-        } else {
-            name.clone()
-        };
-        let bin = cache.join("target").join("release").join(&bin_name);
+    // Copy each member binary to its own `<member>/dist/` — not the workspace
+    // root — so each package's artifact is independent and publishable.
+    for ((name, member_dir, _), manifest) in selected.iter().zip(&member_manifests) {
         let dest_dir = member_dir.join("dist");
         let _ = fs::remove_dir_all(&dest_dir);
         fs::create_dir_all(&dest_dir)?;
-        let dest = dest_dir.join(&bin_name);
-        fs::copy(&bin, &dest)?;
-        println!("ds: built {}", dest.display());
+        let bins = manifest.bin_entries();
+        if bins.is_empty() {
+            // No declared bins → cargo built src/main.rs as <member name>.
+            copy_release_bin(&cache, name, &dest_dir)?;
+        } else {
+            for (bin_name, _) in &bins {
+                copy_release_bin(&cache, bin_name, &dest_dir)?;
+            }
+        }
     }
     Ok(ExitCode::SUCCESS)
 }

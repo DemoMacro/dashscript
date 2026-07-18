@@ -295,27 +295,140 @@ impl Manifest {
         out
     }
 
-    /// A workspace member's `Cargo.toml`: [`package_body`] only. The workspace
-    /// root owns `[profile]` and `[workspace]`; a member that repeats them is
-    /// rejected by cargo, so this omits both. Each member resolves its own
-    /// declared dependencies, but the shared workspace `target/` dedupes any
-    /// dependency several members have in common (serde compiles once).
-    pub fn to_member_toml(&self) -> String {
-        self.package_body()
+    /// A workspace member's `Cargo.toml` with inheritance from the workspace
+    /// root. `[package]` name + `version.workspace`/`edition.workspace` (shared
+    /// via `[workspace.package]`) + each bin/lib target. Run-time deps become
+    /// `name.workspace = true` when in `inherited_deps` (the root's
+    /// `[workspace.dependencies]` union); member-only deps are inline. Dev-deps
+    /// stay inline — cargo pools `[dependencies]`, not `[dev-dependencies]`.
+    /// The workspace root owns `[profile]` and `[workspace]`, so neither is
+    /// emitted here.
+    pub fn to_member_toml_with_bins(
+        &self,
+        bins: &[(String, String)],
+        lib: Option<&str>,
+        inherited_deps: &std::collections::BTreeSet<String>,
+    ) -> String {
+        let prefix = format!("{}:", BACKEND);
+        let mut out = String::from("[package]\n");
+        out.push_str(&format!("name = {:?}\n", self.name));
+        out.push_str("version.workspace = true\n");
+        out.push_str("edition.workspace = true\n");
+        if let Some(desc) = &self.description {
+            out.push_str(&format!("description = {desc:?}\n"));
+        }
+        if let Some(license) = &self.license {
+            out.push_str(&format!("license = {license:?}\n"));
+        }
+        if let Some(repo) = &self.repository {
+            out.push_str(&format!("repository = {repo:?}\n"));
+        }
+        if let Some(home) = &self.homepage {
+            out.push_str(&format!("homepage = {home:?}\n"));
+        }
+        if !self.keywords.is_empty() {
+            let kws: Vec<String> = self.keywords.iter().map(|k| format!("{k:?}")).collect();
+            out.push_str(&format!("keywords = [{}]\n", kws.join(", ")));
+        }
+        if !self.authors.is_empty() {
+            let auths: Vec<String> = self.authors.iter().map(|a| format!("{a:?}")).collect();
+            out.push_str(&format!("authors = [{}]\n", auths.join(", ")));
+        }
+
+        let deps: Vec<String> = self
+            .dependencies
+            .iter()
+            .filter_map(|(key, req)| {
+                let name = key.strip_prefix(&prefix)?;
+                Some(if inherited_deps.contains(name) {
+                    format!("{name}.workspace = true")
+                } else {
+                    format!("{name} = {req:?}")
+                })
+            })
+            .collect();
+        if !deps.is_empty() {
+            out.push_str("\n[dependencies]\n");
+            out.push_str(&deps.join("\n"));
+            out.push('\n');
+        }
+        let dev_deps: Vec<String> = self
+            .dev_dependencies
+            .iter()
+            .filter_map(|(key, req)| {
+                let name = key.strip_prefix(&prefix)?;
+                Some(format!("{name} = {req:?}"))
+            })
+            .collect();
+        if !dev_deps.is_empty() {
+            out.push_str("\n[dev-dependencies]\n");
+            out.push_str(&dev_deps.join("\n"));
+            out.push('\n');
+        }
+
+        for (name, ds_path) in bins {
+            out.push_str(&format!(
+                "\n[[bin]]\nname = {name:?}\npath = {:?}\n",
+                ds_to_rust_path(ds_path)
+            ));
+        }
+        if let Some(lib_path) = lib {
+            out.push_str(&format!(
+                "\n[lib]\npath = {:?}\n",
+                ds_to_rust_path(lib_path)
+            ));
+        }
+        out
     }
 
-    /// A workspace root `Cargo.toml`: `[workspace] members` (each expected at
-    /// `<name>/`, directly under the workspace root — no extra `members/` layer,
-    /// since cargo does not require one and it would diverge from the
-    /// single-package `.cache/dash/<name>/` layout) + `[profile.release]`. One
-    /// root means one shared `target/` and one `Cargo.lock`, so a dependency
-    /// used by several members compiles once — cargo's native equivalent of a
-    /// hoisted `node_modules`.
-    pub fn workspace_root_toml(member_names: &[String]) -> String {
+    /// A workspace root `Cargo.toml`: `[workspace] members` + `[workspace.package]`
+    /// (metadata members inherit via `field.workspace = true`) +
+    /// `[workspace.dependencies]` (the union of every member's deps, so a dep
+    /// two members use is declared once) + `[profile.release]`. One root means
+    /// one shared `target/` and one `Cargo.lock`, so a dependency used by
+    /// several members compiles once — cargo's native hoisted `node_modules`.
+    /// Members sit directly under the root (`<name>/`), mirroring the
+    /// single-package `.cache/dash/<name>/` layout (no `members/` layer).
+    pub fn workspace_root_toml(
+        &self,
+        member_names: &[String],
+        all_deps: &BTreeMap<String, String>,
+    ) -> String {
         let members: Vec<String> = member_names.iter().map(|n| format!("\"{n}\"")).collect();
         let mut out = String::from("[workspace]\n");
         out.push_str(&format!("members = [{}]\n", members.join(", ")));
         out.push_str("resolver = \"2\"\n");
+
+        // [workspace.package]: the metadata every member inherits.
+        out.push_str("\n[workspace.package]\n");
+        out.push_str(&format!("version = {:?}\n", self.version));
+        out.push_str("edition = \"2021\"\n");
+        if let Some(license) = &self.license {
+            out.push_str(&format!("license = {license:?}\n"));
+        }
+        if let Some(repo) = &self.repository {
+            out.push_str(&format!("repository = {repo:?}\n"));
+        }
+        if let Some(home) = &self.homepage {
+            out.push_str(&format!("homepage = {home:?}\n"));
+        }
+        if !self.keywords.is_empty() {
+            let kws: Vec<String> = self.keywords.iter().map(|k| format!("{k:?}")).collect();
+            out.push_str(&format!("keywords = [{}]\n", kws.join(", ")));
+        }
+        if !self.authors.is_empty() {
+            let auths: Vec<String> = self.authors.iter().map(|a| format!("{a:?}")).collect();
+            out.push_str(&format!("authors = [{}]\n", auths.join(", ")));
+        }
+
+        // [workspace.dependencies]: union of member deps (name -> version).
+        if !all_deps.is_empty() {
+            out.push_str("\n[workspace.dependencies]\n");
+            for (name, req) in all_deps {
+                out.push_str(&format!("{name} = {req:?}\n"));
+            }
+        }
+
         out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
         out
     }
@@ -473,15 +586,20 @@ mod tests {
     }
 
     #[test]
-    fn to_member_toml_is_package_body_without_profile_or_workspace() {
+    fn to_member_toml_with_bins_inherits_via_workspace() {
         let mut m = Manifest {
             name: "demo".to_string(),
             ..Manifest::default()
         };
         m.add_dependency("rust", "serde", "1.0");
-        let toml = m.to_member_toml();
+        // serde is in the workspace pool → the member references it via .workspace.
+        let inherited: std::collections::BTreeSet<String> =
+            ["serde".to_string()].into_iter().collect();
+        let toml = m.to_member_toml_with_bins(&[], None, &inherited);
         assert!(toml.contains("[package]"), "got:\n{toml}");
-        assert!(toml.contains("serde = \"1.0\""), "got:\n{toml}");
+        assert!(toml.contains("version.workspace = true"), "got:\n{toml}");
+        assert!(toml.contains("edition.workspace = true"), "got:\n{toml}");
+        assert!(toml.contains("serde.workspace = true"), "got:\n{toml}");
         // A member must not repeat [profile] or [workspace] — the workspace
         // root owns them, and cargo rejects a member that redeclares either.
         assert!(
@@ -495,8 +613,29 @@ mod tests {
     }
 
     #[test]
-    fn workspace_root_toml_lists_members_directly_under_root() {
-        let toml = Manifest::workspace_root_toml(&["app-a".to_string(), "app-b".to_string()]);
+    fn to_member_toml_with_bins_declares_member_only_dep_inline() {
+        let mut m = Manifest {
+            name: "demo".to_string(),
+            ..Manifest::default()
+        };
+        m.add_dependency("rust", "local-only", "0.1");
+        // local-only is not in the workspace pool → declared inline.
+        let inherited = std::collections::BTreeSet::new();
+        let toml = m.to_member_toml_with_bins(&[], None, &inherited);
+        assert!(toml.contains("local-only = \"0.1\""), "got:\n{toml}");
+    }
+
+    #[test]
+    fn workspace_root_toml_inherits_package_and_deps() {
+        let root = Manifest {
+            name: "ws".to_string(),
+            version: "1.2.3".to_string(),
+            license: Some("MIT".to_string()),
+            ..Manifest::default()
+        };
+        let mut deps = std::collections::BTreeMap::new();
+        deps.insert("serde".to_string(), "1.0".to_string());
+        let toml = root.workspace_root_toml(&["app-a".to_string(), "app-b".to_string()], &deps);
         // Members sit directly under the root (<name>), mirroring the
         // single-package `.cache/dash/<name>/` — no `members/` layer.
         assert!(
@@ -504,6 +643,11 @@ mod tests {
             "got:\n{toml}"
         );
         assert!(toml.contains("resolver = \"2\""), "got:\n{toml}");
+        assert!(toml.contains("[workspace.package]"), "got:\n{toml}");
+        assert!(toml.contains("version = \"1.2.3\""), "got:\n{toml}");
+        assert!(toml.contains("license = \"MIT\""), "got:\n{toml}");
+        assert!(toml.contains("[workspace.dependencies]"), "got:\n{toml}");
+        assert!(toml.contains("serde = \"1.0\""), "got:\n{toml}");
         assert!(
             toml.contains("[profile.release]\npanic = \"unwind\""),
             "workspace pins release panic=unwind, got:\n{toml}"
