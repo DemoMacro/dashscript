@@ -2,7 +2,7 @@
 //! `test/built-ins/Array/prototype/`.
 
 use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
-use syn::{parse_quote, Expr};
+use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
 use super::super::context::Ctx;
@@ -12,11 +12,13 @@ use super::{str_method_arg, usize_arg};
 /// Array methods on a `Vec` of Copy elements. The callback methods share a
 /// `xs.iter().copied().<m>(f)` core: `.map`/`.filter` collect back into a
 /// `Vec`; `.find`/`.some`/`.every`/`.reduce` return a scalar. A closure that
-/// receives `&Item` (`filter`/`find`) destructures its param as `|&n|`; one that
-/// receives the item by value (`map`/`some`/`every`/`reduce`) uses a plain
-/// `|n|`. `.slice(a, b)` → `xs[a as usize..b as usize].to_vec()`; `.join(sep)`
+/// receives `&Item` (`filter`/`find`/`findLast`) destructures its param as
+/// `|&n|`; one that receives the item by value (`map`/`some`/`every`/`reduce`)
+/// uses a plain `|n|`. A callback may be an arrow function **or** a named
+/// reference (the test262 `callbackfn` convention) — see [`callback_arg`].
+/// `.slice(a, b)` → `xs[a as usize..b as usize].to_vec()`; `.join(sep)`
 /// stringifies each element first; `.indexOf`/`.includes` test membership.
-/// Returns `None` for an unmapped name.
+/// Returns `None` for an unmapped name or a non-`Vec` receiver.
 pub(in crate::translator) fn array_method(
     sm: &StaticMemberExpression,
     args: &[Argument],
@@ -25,28 +27,58 @@ pub(in crate::translator) fn array_method(
     let Expression::Identifier(id) = &sm.object else {
         return None;
     };
-    let recv = bindings::snake(&id.name);
+    array_method_on_ident(&id.name, &sm.property.name, args, ctx)
+}
+
+/// `Array.prototype.<m>.call(recv, …)` — the JS idiom of borrowing an Array
+/// prototype method via `.call`. Only a `Vec` local receiver is lowered (the
+/// common case); an array-like receiver (`arguments`, `{ length }`, `Math`)
+/// has no DashScript mapping, so this returns `None` and the call falls
+/// through to a plain (failing) translation — surfacing the gap honestly.
+pub(in crate::translator) fn array_method_on(
+    recv: &Argument,
+    name: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let Argument::Identifier(id) = recv else {
+        return None;
+    };
+    array_method_on_ident(&id.name, name, args, ctx)
+}
+
+/// Shared receiver guard: only a known-`Vec` local is lowered. Anything else
+/// (a non-Vec local, or — via [`array_method_on`] — a non-identifier/array-like
+/// receiver) returns `None`.
+fn array_method_on_ident(
+    recv_name: &str,
+    name: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let recv = bindings::snake(recv_name);
     let path = ctx.local_type(&recv.to_string())?;
     let is_vec = path.segments.last().is_some_and(|s| s.ident == "Vec");
     if !is_vec {
         return None;
     }
-    Some(match sm.property.name.as_str() {
+    array_method_impl(&recv, name, args, ctx)
+}
+
+fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    Some(match name {
         "map" => {
-            let cb = translate_argument(args.first()?, ctx);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(#recv.iter().copied().map(#cb).collect::<Vec<_>>())
         }
         // `.flatMap(cb)` → `flat_map` then collect; `cb` returns a `Vec` per
         // element (TS `flatMap` requires an array return), flattened into one.
         "flatMap" => {
-            let cb = translate_argument(args.first()?, ctx);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(#recv.iter().copied().flat_map(#cb).collect::<Vec<_>>())
         }
         "filter" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, true);
+            let cb = callback_arg(args.first()?, ctx, true)?;
             parse_quote!(#recv.iter().copied().filter(#cb).collect::<Vec<_>>())
         }
         // `.ds` indices are `f64`; cast each bound to `usize`.
@@ -96,10 +128,7 @@ pub(in crate::translator) fn array_method(
         // `.findIndex(cb)` → first index where cb holds, or -1. `position` takes
         // the item by value (after `.copied()`), so the param is `|n|`.
         "findIndex" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, false);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(
                 #recv
                     .iter()
@@ -117,36 +146,24 @@ pub(in crate::translator) fn array_method(
         // `.find(cb)` → first match as `Option<T>` (TS `T | undefined`); the
         // closure receives `&Item`, so its param destructures as `|&n|`.
         "find" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, true);
+            let cb = callback_arg(args.first()?, ctx, true)?;
             parse_quote!(#recv.iter().copied().find(#cb))
         }
         // `.some(cb)` → `any` (true if any element matches); `any` takes the
         // item by value (after `.copied()`), so the param is a plain `|n|`.
         "some" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, false);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(#recv.iter().copied().any(#cb))
         }
         // `.every(cb)` → `all` (true if all elements match); same value param.
         "every" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, false);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(#recv.iter().copied().all(#cb))
         }
         // `.forEach(cb)` → `for_each` (side-effecting; returns `()`). The
         // callback takes the item by value (after `.copied()`), so `|n|`.
         "forEach" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, false);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(#recv.iter().copied().for_each(#cb))
         }
         // `.join(sep)` → `Vec<String>.join(sep)` (each element stringified first).
@@ -157,10 +174,7 @@ pub(in crate::translator) fn array_method(
         // `.reduce(cb, init)` → `fold`; `.reduce(cb)` (no seed) → `reduce`,
         // which yields `Option<T>` (an empty `.ds` array has no first element).
         "reduce" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, false);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             match args.get(1) {
                 Some(init) => {
                     let init = translate_argument(init, ctx);
@@ -172,19 +186,13 @@ pub(in crate::translator) fn array_method(
         // `.findLast(cb)` → last match as `Option<T>` (reverse `find`); `find`
         // takes `&Item`, so the closure param destructures as `|&n|`.
         "findLast" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, true);
+            let cb = callback_arg(args.first()?, ctx, true)?;
             parse_quote!(#recv.iter().copied().rev().find(#cb))
         }
         // `.findLastIndex(cb)` → last index where cb holds, or -1 (`rposition`
         // searches from the end and returns the original index).
         "findLastIndex" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, false);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(
                 #recv
                     .iter()
@@ -197,10 +205,7 @@ pub(in crate::translator) fn array_method(
         // `.reduceRight(cb, init)` → reverse `fold`; `.reduceRight(cb)` → reverse
         // `reduce` (yields `Option<T>`, as the no-seed form does).
         "reduceRight" => {
-            let Argument::ArrowFunctionExpression(arrow) = args.first()? else {
-                return None;
-            };
-            let cb = arrow_expr(arrow, ctx, false);
+            let cb = callback_arg(args.first()?, ctx, false)?;
             match args.get(1) {
                 Some(init) => {
                     let init = translate_argument(init, ctx);
@@ -339,6 +344,30 @@ pub(in crate::translator) fn array_method(
         }
         _ => return None,
     })
+}
+
+/// A callback argument to an array method. An arrow function lowers to a
+/// closure — params borrowed as `|&n|` when `borrow` (for combinators whose
+/// predicate takes the item by reference: `filter`/`find`/`findLast`), else a
+/// plain `|n|` (`any`/`all`/`for_each`/`position`/`rposition`/`fold`/`reduce`/
+/// `map`/`flat_map` take it by value). A **named reference** like `callbackfn`
+/// (the test262 convention) is passed through — wrapped to deref when `borrow`,
+/// since a `fn(Item) -> bool` can't satisfy `FnMut(&Item)` directly. Returns
+/// `None` for an absent argument. A named callback with extra TS-only params
+/// `(val, idx, obj)` still compiles only when those are unused — a single-param
+/// callback; the multi-param form fails loudly under `cargo check` (a partial).
+fn callback_arg(arg: &Argument, ctx: &Ctx<'_>, borrow: bool) -> Option<Expr> {
+    match arg {
+        Argument::ArrowFunctionExpression(arrow) => Some(arrow_expr(arrow, ctx, borrow)),
+        _ => {
+            let f = translate_argument(arg, ctx);
+            if borrow {
+                Some(parse_quote!((|__cb| #f(*__cb))))
+            } else {
+                Some(f)
+            }
+        }
+    }
 }
 
 /// `Array.<m>(…)`: `of(…)` → a fresh `vec![…]`; `isArray(x)` folds at compile

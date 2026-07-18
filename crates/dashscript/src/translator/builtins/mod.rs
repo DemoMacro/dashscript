@@ -21,7 +21,7 @@ mod number;
 mod object;
 mod string;
 
-pub(in crate::translator) use array::{array_method, array_static};
+pub(in crate::translator) use array::{array_method, array_method_on, array_static};
 pub(in crate::translator) use console::console_method;
 pub(in crate::translator) use global::global_function;
 pub(in crate::translator) use math::{math_constant, math_method};

@@ -40,8 +40,9 @@ pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
 /// time query, not a runtime check). `typeof <number>` → `"number"`,
 /// `<string>` → `"string"`, `<boolean>` → `"boolean"`, `typeof null` →
 /// `"object"` (the JS quirk), `typeof Math.<const>` → `"number"`, `typeof
-/// Math.<method>` → `"function"` (a function reference). Anything else falls
-/// back to `"object"`. Returned as a Rust `String`.
+/// Math.<method>` → `"function"` (a function reference), `typeof Array`/
+/// `Object`/… → `"function"` (a global builtin constructor is callable).
+/// Anything else falls back to `"object"`. Returned as a Rust `String`.
 fn type_of_expr(arg: &Expression) -> Expr {
     let s: &str = match arg {
         Expression::NumericLiteral(_) => "number",
@@ -58,6 +59,17 @@ fn type_of_expr(arg: &Expression) -> Expr {
             }
         }
         Expression::FunctionExpression(_) | Expression::ArrowFunctionExpression(_) => "function",
+        // A global builtin constructor is callable (`typeof Array === "function"`).
+        // `Math`/`JSON` are namespace objects (`typeof === "object"`), not
+        // functions; a user identifier also falls back to "object" (a precise
+        // answer for a user symbol needs type inference — out of scope here).
+        Expression::Identifier(id) => match id.name.as_str() {
+            "Array" | "Object" | "String" | "Number" | "Boolean" | "Symbol" | "Function"
+            | "Date" | "RegExp" | "Error" | "TypeError" | "RangeError" | "SyntaxError"
+            | "ReferenceError" | "EvalError" | "URIError" | "Promise" | "Map" | "Set"
+            | "WeakMap" | "WeakSet" | "ArrayBuffer" | "Proxy" | "Reflect" => "function",
+            _ => "object",
+        },
         _ => "object",
     };
     let lit = LitStr::new(s, Span::call_site());

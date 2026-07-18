@@ -337,3 +337,46 @@ fn translates_array_copy_within() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains(".copy_within("), "got:\n{rust}");
 }
+
+#[test]
+fn translates_array_filter_with_named_callback() {
+    // A named function reference (the test262 `callbackfn` convention) is
+    // passed straight through. `filter`'s predicate takes `&T`, so a named
+    // `fn(Item) -> bool` is wrapped to deref (`|__cb| f(*__cb)`).
+    let src = "function isPos(n: number): boolean { return n > 0; }\nfunction f(): void { const xs: number[] = [1, 2]; const ys = xs.filter(isPos); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".filter("), "got:\n{rust}");
+    assert!(rust.contains("is_pos(*__cb)"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_array_every_with_named_callback() {
+    // `every`/`some`/`forEach` take the item by value, so a named callback is
+    // passed bare (no deref wrap).
+    let src = "function allPos(n: number): boolean { return n > 0; }\nfunction f(): boolean { const xs: number[] = [1, 2]; return xs.every(allPos); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".all(all_pos)"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_array_prototype_call_to_method() {
+    // `Array.prototype.map.call(xs, cb)` — borrowing an Array prototype method
+    // via `.call` — lowers like `xs.map(cb)` (the Vec receiver is the first arg).
+    let src = "function f(): void { const xs: number[] = [1, 2]; const ys = Array.prototype.map.call(xs, n => n * 2); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains(".iter().copied().map(|n| n * 2_f64)"),
+        "got:\n{rust}"
+    );
+    assert!(!rust.contains("prototype"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_typeof_global_constructor_to_function() {
+    // `typeof Array` → "function" (a global builtin constructor is callable),
+    // not "object" (the fallback for an unknown identifier). Mirrors
+    // test262's `Array/constructor.js`.
+    let src = "function f(): void { console.log(typeof Array); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("\"function\""), "got:\n{rust}");
+}

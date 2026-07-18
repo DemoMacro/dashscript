@@ -77,6 +77,16 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return parse_quote!(#obj.#m(#(#args),*));
             }
         }
+        // `Array.prototype.<m>.call(recv, …)` — borrow an Array prototype method
+        // via `.call`. Only a `Vec` receiver is lowered (`array_method_on`
+        // returns `None` otherwise); an array-like receiver has no mapping.
+        if builtin == "Array" && !call.arguments.is_empty() {
+            if let Some(expr) =
+                builtins::array_method_on(&call.arguments[0], method, &call.arguments[1..], ctx)
+            {
+                return expr;
+            }
+        }
     }
     // `Math.floor(x)` → `x.floor()`; `Math.max(a, b)` → `a.max(b)`.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
@@ -237,6 +247,7 @@ fn prototype_method_call<'a>(callee: &'a Expression) -> Option<(&'static str, &'
     };
     let builtin = match builtin.name.as_str() {
         "String" => "String",
+        "Array" => "Array",
         _ => return None,
     };
     Some((builtin, method))
