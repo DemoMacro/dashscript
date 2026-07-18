@@ -87,11 +87,15 @@ pub(in crate::translator) fn number_static(
 ) -> Option<Expr> {
     let x = translate_argument(args.first()?, ctx);
     Some(match name {
-        "isNaN" => parse_quote!(#x.is_nan()),
-        "isFinite" => parse_quote!(#x.is_finite()),
-        "isInteger" => parse_quote!(#x.is_finite() && #x.fract() == 0_f64),
+        // `(#x)` — the argument may be a negated literal (`-Infinity`); a bare
+        // `#x.is_finite()` would parse as `-(x.is_finite())` because method-call
+        // binds tighter than unary `-`, applying `-` to the resulting `bool`
+        // (E0600). Parenthesise so the receiver is the whole argument.
+        "isNaN" => parse_quote!((#x).is_nan()),
+        "isFinite" => parse_quote!((#x).is_finite()),
+        "isInteger" => parse_quote!((#x).is_finite() && (#x).fract() == 0_f64),
         "isSafeInteger" => {
-            parse_quote!(#x.is_finite() && #x.fract() == 0_f64 && #x.abs() <= 9_007_199_254_740_991_f64)
+            parse_quote!((#x).is_finite() && (#x).fract() == 0_f64 && (#x).abs() <= 9_007_199_254_740_991_f64)
         }
         // `Number.parseFloat(s)` ≡ the global `parseFloat(s)` — base-10 f64
         // parse, NaN on a malformed string (never a throw, as in TS).

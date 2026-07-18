@@ -146,7 +146,12 @@ function rewrite(body) {
         edits.push({
           start: node.start,
           end: node.end,
-          repl: `try { ${fn}(); console.log("__OK__"); } catch (e) { console.log(e.constructor.name); }`,
+          // Wrap the callable in parens: an anonymous `function () { … }`
+          // emitted bare in statement position is parsed as a
+          // `FunctionDeclaration` (which requires a name) by oxc's TS
+          // SourceType → "Expected function name". `(fn)()` forces the
+          // expression form so it parses as a call.
+          repl: `try { (${fn})(); console.log("__OK__"); } catch (e) { console.log(e.constructor.name); }`,
         });
       } else if (args[0]) {
         // sameValue / notSameValue: log the actual (left) operand.
@@ -154,6 +159,20 @@ function rewrite(body) {
         edits.push({ start: node.start, end: node.end, repl: `console.log(${actual})` });
       }
       if (args[0] || (kind === "throws" && args[1])) n++;
+    }
+    // `assert(x)` (a direct call, not `assert.sameValue`) is test262's shorthand
+    // for `assert.sameValue(x, true)` — rewrite it the same way (log the
+    // operand) so ds and Node emit identical stdout. Unrewritten, the bare
+    // `assert(...)` lowers to Rust's `assert` macro (E0423 expected function).
+    if (
+      node.type === "CallExpression" &&
+      node.callee?.type === "Identifier" &&
+      node.callee.name === "assert" &&
+      node.arguments[0]
+    ) {
+      const actual = body.slice(node.arguments[0].start, node.arguments[0].end);
+      edits.push({ start: node.start, end: node.end, repl: `console.log(${actual})` });
+      n++;
     }
     for (const k in node) {
       const v = node[k];

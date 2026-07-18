@@ -1,0 +1,1837 @@
+[
+  {
+    "id": "test262.test.built-ins.number.15.7.3-1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:2:62: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.15.7.3-2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:37: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isfinite.finite-numbers",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isfinite.infinity",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isfinite.nan",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isinteger.infinity",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isinteger.integers",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isinteger.nan",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isinteger.non-integers",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isnan.nan",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isnan.not-nan",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.issafeinteger.infinity",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.issafeinteger.nan",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.issafeinteger.not-integer",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.issafeinteger.not-safe-integer",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.issafeinteger.safe-integers",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a4",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:29: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.max_value.value",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"number\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"number\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a4",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:29: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.min_value.value",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"number\"; line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"number\"; line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.negative_infinity.s15.7.3.5_a1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.negative_infinity.value",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.positive_infinity.s15.7.3.6_a1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.positive_infinity.value",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:34: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a3",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:2:60: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.3",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.4",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.5",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.6",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.7",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.range",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:35:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.return-abrupt-tointeger-fractiondigits-symbol",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:14: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.return-values",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 41: ds=\"2e1\" node=\"3e+1\"; line 42: ds=\"1.234e4\" node=\"1.235e+4\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 41: ds=\"2e1\" node=\"3e+1\"; line 42: ds=\"1.234e4\" node=\"1.235e+4\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.this-is-0-fractiondigits-is-0",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:49: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.this-is-0-fractiondigits-is-not-0",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.this-type-not-number-or-number-object",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:26: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.tointeger-fractiondigits",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:15:33: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:10:33: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:11:33: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:13:33: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.undefined-fractiondigits",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:39: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:67: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:9:35: error[E0599]: no method named `to_exponential` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.exactness",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.range",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:23:16: error[E0618]: expected function, found `String`\nsrc\\main.rs:35:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.return-type",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"string\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"string\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a2_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:28: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-bigint",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-symbol",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-toprimitive",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.precision-cannot-be-coerced-to-a-number-in-range",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:24: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.range",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:22: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:22: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:34:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:37:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.return-abrupt-tointeger-precision-symbol",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:13: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.return-values",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:3:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:4:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.this-is-0-precision-is-1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.this-is-0-precision-is-gter-than-1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:3:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:4:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.this-type-not-number-or-number-object",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:24: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:5:13: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:17:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:22:13: error[E0618]: expected function, found `!`\nsrc\\main.rs:22:13: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.tointeger-precision",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:3:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:4:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.a-z",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:8:45: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-default-radix",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-10",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"4294967295\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"4294967295\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-11",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-12",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-13",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-14",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-15",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-16",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"ffffffff\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"ffffffff\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-17",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-18",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-19",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"11111111111111111111111111111111\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"11111111111111111111111111111111\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-20",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-21",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-22",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-23",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-24",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-25",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-26",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-27",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-28",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-29",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-3",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-30",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-31",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-32",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-33",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-34",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-35",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-36",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-37",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:4:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:16:37: error[E0609]: no field `constructor` on type `String`: unknown field\nsrc\\main.rs:21:16: error[E0618]: expected function, found `!`\nsrc\\main.rs:21:16: warning: unreachable call: unreachable call, any code following this expression is unreachable\nsrc\\main.rs:33:37: error[E0609]: no field `constructor` on type `String`: unknown field",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-4",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-5",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-6",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-7",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-8",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"37777777777\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"37777777777\" node=\"Infinity\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-9",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.1.1_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find function `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a3",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a4",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a5",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a6",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a7",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:2:62: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.3_a8",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:28: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.1_a1_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:27: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nsrc\\main.rs:5:27: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"0\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a10",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:47: error[E0369]: cannot multiply `String` by `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a11",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:47: error[E0369]: cannot multiply `String` by `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a12",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a13",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a14",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a15",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a16",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"0x0\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"0x0\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a17",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"1\"; line 3: ds=\"0X1\" node=\"1\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"NaN\" node=\"1\"; line 3: ds=\"0X1\" node=\"1\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a18",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"2\"; line 3: ds=\"NaN\" node=\"2\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"NaN\" node=\"2\"; line 3: ds=\"NaN\" node=\"2\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a19",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"0x3\" node=\"3\"; line 3: ds=\"NaN\" node=\"3\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"0x3\" node=\"3\"; line 3: ds=\"NaN\" node=\"3\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a20",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"4\"; line 3: ds=\"0X4\" node=\"4\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"NaN\" node=\"4\"; line 3: ds=\"0X4\" node=\"4\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a21",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"5\"; line 3: ds=\"NaN\" node=\"5\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"NaN\" node=\"5\"; line 3: ds=\"NaN\" node=\"5\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a22",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"0x6\" node=\"6\"; line 3: ds=\"NaN\" node=\"6\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"0x6\" node=\"6\"; line 3: ds=\"NaN\" node=\"6\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a23",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"7\"; line 3: ds=\"0X7\" node=\"7\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"NaN\" node=\"7\"; line 3: ds=\"0X7\" node=\"7\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a24",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"NaN\" node=\"8\"; line 3: ds=\"NaN\" node=\"8\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"NaN\" node=\"8\"; line 3: ds=\"NaN\" node=\"8\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a25",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"0x9\" node=\"9\"; line 3: ds=\"NaN\" node=\"9\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"0x9\" node=\"9\"; line 3: ds=\"NaN\" node=\"9\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a26",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"10\"; line 2: ds=\"NaN\" node=\"10\"; line 3: ds=\"NaN\" node=\"10\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"10\"; line 2: ds=\"NaN\" node=\"10\"; line 3: ds=\"NaN\" node=\"10\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a27",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"11\"; line 2: ds=\"NaN\" node=\"11\"; line 3: ds=\"0Xb\" node=\"11\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"11\"; line 2: ds=\"NaN\" node=\"11\"; line 3: ds=\"0Xb\" node=\"11\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a28",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"12\"; line 2: ds=\"0xC\" node=\"12\"; line 3: ds=\"NaN\" node=\"12\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"12\"; line 2: ds=\"0xC\" node=\"12\"; line 3: ds=\"NaN\" node=\"12\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a29",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"0xd\" node=\"13\"; line 2: ds=\"NaN\" node=\"13\"; line 3: ds=\"NaN\" node=\"13\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"0xd\" node=\"13\"; line 2: ds=\"NaN\" node=\"13\"; line 3: ds=\"NaN\" node=\"13\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a2_u180e",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a30",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"14\"; line 2: ds=\"NaN\" node=\"14\"; line 3: ds=\"NaN\" node=\"14\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"14\"; line 2: ds=\"NaN\" node=\"14\"; line 3: ds=\"NaN\" node=\"14\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a31",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"15\"; line 2: ds=\"NaN\" node=\"15\"; line 3: ds=\"0Xf\" node=\"15\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"15\"; line 2: ds=\"NaN\" node=\"15\"; line 3: ds=\"0Xf\" node=\"15\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a32",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a3_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"0\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a3_t1_u180e",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a3_t2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:8:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:13:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:18:15: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a3_t2_u180e",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a4_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a4_t2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a5_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a5_t2",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a5_t3",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a6_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a6_t2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `dyna_string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a7",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a8",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3.1_a9",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3_a1_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0277]: `Option<_>` doesn't implement `std::fmt::Display`: `Option<_>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3_a2_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0277]: `Option<_>` doesn't implement `std::fmt::Display`: `Option<_>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3_a3_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"false\" node=\"0\"; line 2: ds=\"true\" node=\"1\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"false\" node=\"0\"; line 2: ds=\"true\" node=\"1\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3_a4.1_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3_a4.2_t1",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 7: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022250738585072014\" node=\"5e-324\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 7: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000022250738585072014\" node=\"5e-324\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-binary-literal-invalid",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-binary-literal",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-hex-literal-invalid",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bd-nsl-bd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bd-nsl-bds",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bds-nsl-bd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bds-nsl-bds",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dd-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dds-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dd-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dds-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-nsl-dd-one-of",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dds-dot-dd-nsl-dd-ep-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dds-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dd-nsl-dd-ep",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dd-nsl-dds-ep",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dds-nsl-dd-ep",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dds-nsl-dds-ep",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hd-nsl-hd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hd-nsl-hds",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hds-nsl-hd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hds-nsl-hds",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-od-nsl-od-one-of",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd-one-of",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dds",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od-one-of",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-ods",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-ods-nsl-od",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-ods-nsl-ods",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-sign-minus-dds-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-numeric-separator-literal-sign-plus-dds-nsl-dd",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-octal-literal-invald",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.string-octal-literal",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+    },
+    "note": ""
+  }
+]

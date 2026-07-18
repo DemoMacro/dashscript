@@ -1085,7 +1085,7 @@
       "id": "test262.test.built-ins.math.sumprecise.takes-iterable",
       "category": "math",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Math.sumPrecise([1, 2]));\n\nfunction* gen() {\n  yield 1;\n  yield 2;\n}\nconsole.log(Math.sumPrecise(gen()));\n\nvar overridenArray = [4];\noverridenArray[Symbol.iterator] = gen;\nconsole.log(Math.sumPrecise(overridenArray));\n\ntry { function () {\n  Math.sumPrecise();\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function () {\n  Math.sumPrecise(1, 2);\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { function () {\n  Math.sumPrecise({});\n}(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Math.sumPrecise([1, 2]));\n\nfunction* gen() {\n  yield 1;\n  yield 2;\n}\nconsole.log(Math.sumPrecise(gen()));\n\nvar overridenArray = [4];\noverridenArray[Symbol.iterator] = gen;\nconsole.log(Math.sumPrecise(overridenArray));\n\ntry { (function () {\n  Math.sumPrecise();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Math.sumPrecise(1, 2);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  Math.sumPrecise({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
       "origin": "test/built-ins/Math/sumPrecise/takes-iterable.js",
       "n_asserts": 6,
       "flags": []
