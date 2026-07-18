@@ -12,8 +12,8 @@ use std::{
 use dashscript::Manifest;
 
 use super::project::{
-    cache_project_dir, default_manifest, emit_cargo_project, invoke_cargo, project_name,
-    read_manifest, resolve_entry, resolve_target, status_to_code, translate_sources,
+    cache_project_dir, default_manifest, emit_cargo_project, find_manifest_root, invoke_cargo,
+    project_name, read_manifest, resolve_entry, resolve_target, status_to_code, translate_sources,
 };
 
 /// Parsed `ds build` flags: optional entry file, optional `--target`, optional
@@ -123,17 +123,16 @@ pub(crate) fn build_at(
             if !status.success() {
                 return Ok(status_to_code(status));
             }
-            // cargo names the binary `<name>` (Unix) / `<name>.exe` (Windows);
-            // the dist output mirrors that so the file is runnable as-is.
-            let bin_name = if cfg!(windows) {
-                format!("{name}.exe")
+            let bins = project_bins(path);
+            if bins.is_empty() {
+                // Lone file: a single binary named after the project.
+                copy_release_bin(&cache, &name, dest_root)?;
             } else {
-                name.clone()
-            };
-            let bin = cache.join("target").join("release").join(&bin_name);
-            let dest = dest_base.with_file_name(&bin_name);
-            fs::copy(&bin, &dest)?;
-            println!("ds: built {}", dest.display());
+                // Project mode: every declared bin is a dist artifact.
+                for (bin_name, _) in &bins {
+                    copy_release_bin(&cache, bin_name, dest_root)?;
+                }
+            }
             Ok(ExitCode::SUCCESS)
         }
         other => Err(format!(
@@ -141,6 +140,32 @@ pub(crate) fn build_at(
         )
         .into()),
     }
+}
+
+/// The manifest bins declared for `path`'s project, or empty for a lone file
+/// (no manifest, or a manifest with no `bin`). `build` copies every declared
+/// binary into `dist/`.
+fn project_bins(path: &Path) -> Vec<(String, String)> {
+    find_manifest_root(path)
+        .and_then(|root| read_manifest(&root.join("manifest.json")).ok())
+        .map(|m| m.bin_entries())
+        .unwrap_or_default()
+}
+
+/// Copy `cargo build --release`'s output for `bin_name` from `cache` to
+/// `dest_root/<bin_name>`, mirroring cargo's binary naming (`.exe` on Windows).
+fn copy_release_bin(cache: &Path, bin_name: &str, dest_root: &Path) -> Result<(), Box<dyn Error>> {
+    let bin_file = if cfg!(windows) {
+        format!("{bin_name}.exe")
+    } else {
+        bin_name.to_string()
+    };
+    let bin = cache.join("target").join("release").join(&bin_file);
+    fs::create_dir_all(dest_root)?;
+    let dest = dest_root.join(&bin_file);
+    fs::copy(&bin, &dest)?;
+    println!("ds: built {}", dest.display());
+    Ok(())
 }
 
 /// Whether `dir` is a workspace root: its `manifest.json` has a non-empty

@@ -1,5 +1,19 @@
 {
   "name": "feature-tour",
   "target": "bin",
+  "bin": {
+    "declarations": "declarations.ds",
+    "classes": "classes.ds",
+    "functions": "functions.ds",
+    "operators": "operators.ds",
+    "control-flow": "control-flow.ds",
+    "destructuring": "destructuring.ds",
+    "arrays": "arrays.ds",
+    "strings": "strings.ds",
+    "math": "math.ds",
+    "numbers": "numbers.ds",
+    "globals": "globals.ds",
+    "records": "records.ds"
+  },
   "dependencies": {}
 }

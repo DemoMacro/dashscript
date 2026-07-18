@@ -103,7 +103,11 @@ fn translate_project(
     manifest: &Manifest,
     project_dir: &Path,
 ) -> Result<ProjectTargets, Box<dyn Error>> {
-    fs::create_dir_all(project_dir.join("src"))?;
+    let src_dir = project_dir.join("src");
+    fs::create_dir_all(&src_dir)?;
+    // Clear stale translations from a prior run (a renamed bin, or a switch
+    // between lone-file and project mode) so cargo never sees orphan modules.
+    clean_src_dir(&src_dir)?;
 
     let mut files = Vec::new();
     walk_ds(root, &mut files);
@@ -165,6 +169,21 @@ fn detect_bin_imports_bin(root: &Path, bins: &[(String, String)]) -> Result<(), 
                         .into());
                     }
                 }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Remove every `.rs` under `src/` so a prior translation (a renamed bin, or a
+/// lone-file `main.rs` left after switching to project mode) cannot leave an
+/// orphan module cargo would try to compile.
+fn clean_src_dir(src: &Path) -> std::io::Result<()> {
+    if let Ok(entries) = fs::read_dir(src) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.extension().and_then(|e| e.to_str()) == Some("rs") {
+                let _ = fs::remove_file(&path);
             }
         }
     }
@@ -369,10 +388,16 @@ pub(crate) fn project_name(src_path: &Path) -> String {
     stem_of(src_path)
 }
 
-/// Resolve the project entry file for a file-less `ds build`: the
-/// `manifest.json` `entry` if it exists, else `main.ds` in the cwd.
+/// Resolve the project entry file for a file-less `ds build`: the first
+/// declared `bin` (the project builds every bin; any one anchors the lookup),
+/// else the legacy `entry`, else `main.ds` in the cwd.
 pub(crate) fn resolve_entry() -> Result<String, Box<dyn Error>> {
     if let Ok(manifest) = read_manifest(Path::new("manifest.json")) {
+        if let Some((_, bin_path)) = manifest.bin_entries().into_iter().next() {
+            if Path::new(&bin_path).exists() {
+                return Ok(bin_path);
+            }
+        }
         if let Some(entry) = &manifest.entry {
             if Path::new(entry).exists() {
                 return Ok(entry.clone());
@@ -382,7 +407,7 @@ pub(crate) fn resolve_entry() -> Result<String, Box<dyn Error>> {
     if Path::new("main.ds").exists() {
         return Ok("main.ds".to_string());
     }
-    Err("ds build: no entry file (pass <file.ds>, set manifest entry, or add main.ds)".into())
+    Err("ds build: no entry file (pass <file.ds>, set manifest bin/entry, or add main.ds)".into())
 }
 
 /// The build target for `src_path`: the `--target` override, else the

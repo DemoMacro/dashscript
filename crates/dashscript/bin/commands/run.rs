@@ -8,8 +8,8 @@ use std::{
 };
 
 use super::project::{
-    cache_project_dir, default_manifest, emit_cargo_project, invoke_cargo, manifest_root,
-    read_manifest, status_to_code,
+    cache_project_dir, default_manifest, emit_cargo_project, find_manifest_root, invoke_cargo,
+    manifest_root, read_manifest, status_to_code,
 };
 
 /// Translate a `.ds` file into its cached Cargo project and `cargo run` it
@@ -26,8 +26,41 @@ pub(crate) fn run_file(file: &str) -> Result<ExitCode, Box<dyn Error>> {
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     let project = cache_project_dir(path);
     emit_cargo_project(&src, path, &project)?;
-    let status = invoke_cargo(&project, ["run", "--quiet"])?;
+
+    // Project mode (manifest declares bins): run the bin this file declares
+    // (`cargo run --bin <name>`). A lone file, or a manifest with no bins,
+    // runs the single `src/main.rs` (`cargo run`).
+    let status = match project_bin_for(path)? {
+        Some(name) => invoke_cargo(&project, ["run", "--quiet", "--bin", name.as_str()])?,
+        None => invoke_cargo(&project, ["run", "--quiet"])?,
+    };
     Ok(status_to_code(status))
+}
+
+/// Resolve the bin name `path` declares under its manifest, so `cargo run`
+/// targets it. `Ok(None)` = lone-file mode (no bins, `cargo run` finds
+/// `src/main.rs`); `Err` = project mode but the file is not a declared bin.
+fn project_bin_for(path: &Path) -> Result<Option<String>, Box<dyn Error>> {
+    let Some(root) = find_manifest_root(path) else {
+        return Ok(None);
+    };
+    let Ok(manifest) = read_manifest(&root.join("manifest.json")) else {
+        return Ok(None);
+    };
+    if manifest.bin.is_none() {
+        return Ok(None);
+    }
+    let canon = path.canonicalize()?;
+    for (name, ds_path) in manifest.bin_entries() {
+        if root.join(ds_path).canonicalize().is_ok_and(|c| c == canon) {
+            return Ok(Some(name));
+        }
+    }
+    Err(format!(
+        "dashscript: {} is not a declared bin entry; add it under `bin` in manifest.json",
+        path.display()
+    )
+    .into())
 }
 
 /// Run a `manifest.json` script by name (`ds run <script>`), executing its
