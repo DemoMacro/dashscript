@@ -131,13 +131,18 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
         .map_or_else(|| format_ident!("main"), bindings::ident_of);
     let mut locals = Locals::new();
     for fp in &func.params.items {
-        register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
+        register_local(
+            &mut locals,
+            &fp.pattern,
+            fp.type_annotation.as_deref(),
+            names,
+        );
     }
     // Mutations analysis runs before parameter emission so a reassigned parameter
     // — including via `??=`/`||=`/`&&=` — is declared `mut`. TS params reassign;
     // Rust params are immutable by default.
     if let Some(body) = func.body.as_deref() {
-        let analysis = super::analysis::analyze(&body.statements);
+        let analysis = super::analysis::analyze(&body.statements, names);
         locals.mutated = analysis.mutated;
         locals.use_counts = analysis.use_counts;
     }
@@ -250,11 +255,12 @@ pub(in crate::translator) fn register_local(
     locals: &mut Locals,
     pattern: &oxc_ast::ast::BindingPattern,
     type_annotation: Option<&oxc_ast::ast::TSTypeAnnotation>,
+    names: &NameTable<'_>,
 ) {
     let Some(ta) = type_annotation else { return };
     let ty = types::translate_type(&ta.type_annotation);
     let Some(path) = path_of(&ty) else { return };
-    let name = bindings::binding_name(pattern);
+    let name = names.of_pattern(pattern);
     locals.insert(name.to_string(), path);
 }
 

@@ -6,16 +6,19 @@
 //! snake-fold to `n` — producing a silent same-scope shadow in the emitted
 //! Rust. By keying on `SymbolId` we can give them distinct Rust names.
 //!
-//! Stage 1.1 (this file): `build` assigns every symbol `snake(name)` with **no
-//! disambiguation**, so output is byte-identical to the pre-`NameTable` code —
-//! it only establishes the plumbing (`of_binding` / `of_reference` read the
-//! semantic cells that `SemanticBuilder` fills). Stage 1.3 adds `rust_scope`
-//! grouping + `_2`-suffix disambiguation for same-scope collisions.
+//! `build` assigns each symbol `snake(name)`, disambiguating same-scope
+//! collisions: two bindings in one oxc scope share a Rust block (a function
+//! body is one flat block; `for (let …)` is a nested block; `for (var …)` is
+//! function-scoped, the way Rust sees it flattened), so a snake-name collision
+//! there (`N` and `n` both → `n`) would shadow silently. The second and later
+//! collisions in a scope get `_2`/`_3`. Bindings in different scopes are in
+//! different Rust blocks, where shadowing is legal, so they keep their base
+//! name.
 
 use std::collections::HashMap;
 
 use oxc_ast::ast::{BindingIdentifier, BindingPattern, IdentifierReference};
-use oxc_semantic::{Scoping, SymbolId};
+use oxc_semantic::{ScopeId, Scoping, SymbolId};
 use syn::Ident;
 
 use super::bindings;
@@ -72,13 +75,43 @@ impl<'a> NameTable<'a> {
     }
 }
 
-/// Build a name table for one file's symbols. Stage 1.1: every symbol keeps
-/// `snake(name)` (no disambiguation) — see the module doc for the staging plan.
+/// Build a name table for one file's symbols — see the module doc for the
+/// same-scope disambiguation rule.
 pub fn build(scoping: &Scoping) -> NameTable<'_> {
-    let mut map = HashMap::new();
+    // Group symbols by their declaring scope, keyed by the snake-folded name so
+    // `N` and `n` (both → `n`) land in the same collision group.
+    let mut by_scope: HashMap<ScopeId, HashMap<String, Vec<SymbolId>>> = HashMap::new();
     for sid in scoping.symbol_ids() {
-        let name = scoping.symbol_name(sid);
-        map.insert(sid, bindings::snake(name));
+        let scope = scoping.symbol_scope_id(sid);
+        let base = bindings::snake(scoping.symbol_name(sid)).to_string();
+        by_scope
+            .entry(scope)
+            .or_default()
+            .entry(base)
+            .or_default()
+            .push(sid);
+    }
+    let mut map = HashMap::new();
+    for group in by_scope.into_values() {
+        for (base, mut sids) in group {
+            // Stable order: `SymbolId` is assigned in declaration order, so the
+            // first-declared binding keeps the base name and later ones suffix.
+            sids.sort_unstable();
+            for (i, sid) in sids.into_iter().enumerate() {
+                let ident = if i == 0 {
+                    bindings::snake(scoping.symbol_name(sid))
+                } else {
+                    // `_{i+1}` on the snake base. Strip an `r#` raw-ident prefix
+                    // first so a keyword binding disambiguates as `type_2`, not
+                    // `r#type_2`; the suffixed name is never a keyword, so a
+                    // plain ident suffices.
+                    let stripped = base.strip_prefix("r#").unwrap_or(&base);
+                    let disambiguated = format!("{}_{}", stripped, i + 1);
+                    syn::Ident::new(&disambiguated, proc_macro2::Span::call_site())
+                };
+                map.insert(sid, ident);
+            }
+        }
     }
     NameTable { scoping, map }
 }

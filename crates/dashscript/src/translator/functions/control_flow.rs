@@ -13,7 +13,7 @@ use super::super::analysis;
 use super::super::context::{is_option_path, Ctx, Locals, Narrow};
 use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
-use super::super::{bindings, expressions, types};
+use super::super::{expressions, types};
 use super::{translate_stmt, translate_variable_declaration};
 
 pub(super) fn translate_if(
@@ -28,7 +28,7 @@ pub(super) fn translate_if(
     // → `if let Some(opt) = opt`. The bound copy leaves `opt` usable after the
     // branch (no move); `opt!`/`opt` inside read the inner value, so the
     // unwrap-after-is_some pattern is avoided.
-    if let Some((name, ident_expr)) = option_truthiness_target(&stmt.test, locals) {
+    if let Some((name, ident_expr)) = option_truthiness_target(&stmt.test, locals, names) {
         let child = narrow.with_option_some(name.clone());
         let then_block = statement_block(
             &stmt.consequent,
@@ -40,7 +40,7 @@ pub(super) fn translate_if(
         );
         // Bind the inner value only if the branch reads it; else discard it so
         // no `unused_variables` lint fires.
-        let bind = if analysis::references(&stmt.consequent, &name) {
+        let bind = if analysis::references(&stmt.consequent, &name, names) {
             format_ident!("{}", name)
         } else {
             format_ident!("_")
@@ -76,11 +76,15 @@ pub(super) fn translate_if(
 /// snake-cased name and a bare-identifier expression. A non-`Copy` inner type
 /// is left alone (the value would move out of the Option); so is a mutated
 /// binding (an `if let` binding cannot be reassigned).
-fn option_truthiness_target(test: &Expression, locals: &Locals) -> Option<(String, Expr)> {
+fn option_truthiness_target(
+    test: &Expression,
+    locals: &Locals,
+    names: &NameTable<'_>,
+) -> Option<(String, Expr)> {
     let Expression::Identifier(id) = test else {
         return None;
     };
-    let name = bindings::snake(&id.name).to_string();
+    let name = names.of_reference(id).to_string();
     let path = locals.get(&name)?;
     if !is_option_path(path) || !types::is_copy_path(path) {
         return None;
@@ -135,12 +139,12 @@ fn condition_expr(
     narrow: &Narrow,
     names: &NameTable<'_>,
 ) -> Expr {
-    if let Some(expr) = truthiness(test, false, locals) {
+    if let Some(expr) = truthiness(test, false, locals, names) {
         return expr;
     }
     if let Expression::UnaryExpression(un) = test {
         if matches!(un.operator, UnaryOperator::LogicalNot) {
-            if let Some(expr) = truthiness(&un.argument, true, locals) {
+            if let Some(expr) = truthiness(&un.argument, true, locals, names) {
                 return expr;
             }
         }
@@ -151,11 +155,16 @@ fn condition_expr(
 /// If `expr` is a bare identifier of a collection (`Vec`/`String`) or `Option`
 /// type, return its Rust boolean form. `negated` selects the falsy side
 /// (`is_empty`/`is_none`) vs the truthy side (`!is_empty`/`is_some`).
-fn truthiness(expr: &Expression, negated: bool, locals: &Locals) -> Option<Expr> {
+fn truthiness(
+    expr: &Expression,
+    negated: bool,
+    locals: &Locals,
+    names: &NameTable<'_>,
+) -> Option<Expr> {
     let Expression::Identifier(id) = expr else {
         return None;
     };
-    let ident = bindings::snake(&id.name);
+    let ident = names.of_reference(id);
     let last = locals
         .get(&ident.to_string())?
         .segments

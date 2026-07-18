@@ -1,5 +1,6 @@
 // End-to-end tests for `Translator::translate`, grouped by feature area.
 mod arrays;
+mod bindings;
 mod check;
 mod classes;
 mod clone_move;

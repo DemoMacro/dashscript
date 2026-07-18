@@ -200,11 +200,16 @@ fn build_constructor(
     if let Some(md) = ctor {
         let func = &md.value;
         for fp in &func.params.items {
-            register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
+            register_local(
+                &mut locals,
+                &fp.pattern,
+                fp.type_annotation.as_deref(),
+                names,
+            );
         }
         params = translate_params(&func.params, &locals, names);
         if let Some(body) = func.body.as_deref() {
-            let analysis = super::analysis::analyze(&body.statements);
+            let analysis = super::analysis::analyze(&body.statements, names);
             locals.mutated = analysis.mutated;
             locals.use_counts = analysis.use_counts;
             // Fold `this.field = expr` into the struct literal; drop those stmts.
@@ -279,11 +284,16 @@ fn build_method(
 
     let mut locals = Locals::new();
     for fp in &func.params.items {
-        register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
+        register_local(
+            &mut locals,
+            &fp.pattern,
+            fp.type_annotation.as_deref(),
+            names,
+        );
     }
     let mut is_mut = false;
     if let Some(body) = func.body.as_deref() {
-        let analysis = super::analysis::analyze(&body.statements);
+        let analysis = super::analysis::analyze(&body.statements, names);
         locals.mutated = analysis.mutated;
         locals.use_counts = analysis.use_counts;
         is_mut = analysis.mutates_this;
