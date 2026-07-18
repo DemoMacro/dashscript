@@ -52,10 +52,16 @@ $ ds run <script>                 # run a manifest.json script (like `pnpm run`)
 
 ### Declare dependencies — `manifest.json` → `Cargo.toml`
 
+`manifest.json` is the **package.json ∩ Cargo.toml intersection** — `bin` declares a project's executables (package.json `bin` → cargo `[[bin]]`), so one project compiles to several binaries; `lib`/`devDependencies` map to `[lib]`/`[dev-dependencies]`. Dependencies carry a `rust:` target prefix. On `ds build`, the manifest is translated into a `Cargo.toml`:
+
 ```json
 {
   "name": "my-app",
   "target": "bin",
+  "bin": {
+    "serve": "serve.ds",
+    "migrate": "migrate.ds"
+  },
   "dependencies": {
     "rust:serde": "1.0",
     "rust:tokio": "1.0"

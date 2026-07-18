@@ -67,12 +67,16 @@ $ ds run <script>    # run a manifest.json script (like `pnpm run`)
 
 ### Declare dependencies — `manifest.json` → `Cargo.toml`
 
-DashScript projects use a **`manifest.json`** — a dedicated file, so it never clashes with npm's `package.json`. Dependencies carry a **target prefix** (`rust:`, the backend DashScript targets). On `ds build`, the manifest is translated into a `Cargo.toml`:
+DashScript projects use a **`manifest.json`** — a dedicated file, so it never clashes with npm's `package.json`. It is the **package.json ∩ Cargo.toml intersection**: `bin` (package.json `bin` → cargo `[[bin]]`) declares a project's executables, so **one project compiles to several binaries**; `lib` → `[lib]`, `devDependencies` → `[dev-dependencies]`. Dependencies carry a **target prefix** (`rust:`, the backend DashScript targets). On `ds build`, the manifest is translated into a `Cargo.toml`:
 
 ```json
 {
   "name": "my-app",
   "target": "bin",
+  "bin": {
+    "serve": "serve.ds",
+    "migrate": "migrate.ds"
+  },
   "dependencies": {
     "rust:serde": "1.0",
     "rust:tokio": "1.0"

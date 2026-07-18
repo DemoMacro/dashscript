@@ -86,6 +86,7 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 
 - Use **target-prefixed** dependency keys (`rust:serde`) — they mirror `ds add <target>:<crate>` exactly.
 - Set `target` to the output shape (`bin` default — native binary; `rust` — translated crate; `wasm`/`napi` planned); `--target` overrides it on `ds build`.
+- Declare executables under `bin` (package.json `bin` → cargo `[[bin]]`): a project is **one crate** — the whole directory's `.ds` files translate into `src/<stem>.rs`, and only the `bin`/`lib` entries become cargo targets. `lib` → `[lib]`; `devDependencies` → `[dev-dependencies]`. A workspace root's shared metadata/deps inherit via `[workspace.package]`/`[workspace.dependencies]` (member `field.workspace = true`).
 - `manifest` must round-trip cleanly: every target-prefixed dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
 
 ## Conformance / Support Matrix
