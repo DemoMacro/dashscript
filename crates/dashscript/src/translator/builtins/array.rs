@@ -294,16 +294,21 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             let v = translate_argument(args.first()?, ctx);
             parse_quote!(#recv.insert(0, #v))
         }
-        // `.sort()` → in-place numeric ascending sort (TS default sort is
-        // lexicographic; DashScript treats number arrays numerically). A
-        // comparator argument is unsupported — it would return `Ordering`.
+        // `.sort()` → in-place numeric ascending sort. DELIBERATE divergence
+        // from ES: ES's default sort is lexicographic (toString then code-unit
+        // order — `[10, 2].sort()` → `[10, 2]`), a well-known footgun;
+        // DashScript sorts a `number[]` numerically (the intuitive expectation).
+        // test262's lexicographic-order cases are therefore `partial`, by
+        // design. A comparator argument is unsupported (it would return
+        // `Ordering`).
         "sort" if args.is_empty() => {
             // `partial_cmp` is `None` for NaN; fall back to `Equal` so a NaN
             // element never panics (TS sort never throws on NaN).
             parse_quote!(#recv.sort_by(|a, b| a.partial_cmp(b).unwrap_or(::core::cmp::Ordering::Equal)))
         }
-        // `.toSorted()` → copy + numeric sort (ES2023 immutable sort; no
-        // comparator arg — like `sort`, a comparator would return Ordering).
+        // `.toSorted()` → copy + numeric sort (ES2023 immutable sort). Same
+        // deliberate numeric-vs-lexicographic divergence as `sort` above; no
+        // comparator arg (would return `Ordering`).
         "toSorted" if args.is_empty() => parse_quote!({
             let mut __v = #recv.clone();
             __v.sort_by(|a, b| a.partial_cmp(b).unwrap_or(::core::cmp::Ordering::Equal));
