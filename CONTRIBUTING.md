@@ -19,7 +19,7 @@ Prerequisites: **Node.js 18+**, **pnpm 9+**, **Rust stable** (to build DashScrip
 
 ### Editor support — `.ds` in VS Code
 
-Syntax highlight, live diagnostics, and go-to-definition ship as a VS Code extension (`packages/vscode`) backed by the `ds lsp` server. After `pnpm install`:
+Syntax highlight, diagnostics, completions, go-to-definition, document symbols, hover, signature help, find references, and rename ship as a VS Code extension (`packages/vscode`) backed by the `ds lsp` server. After `pnpm install`:
 
 1. Put `ds` on your PATH: `cargo install --path crates/dashscript`.
 2. (Optional, for crate go-to-definition) Put `rust-analyzer` on your PATH: `rustup component add rust-analyzer`.
@@ -29,7 +29,7 @@ Syntax highlight, live diagnostics, and go-to-definition ship as a VS Code exten
    code --install-extension packages/vscode/dashscript-vscode-*.vsix
    ```
 
-After install, opening any `.ds` file gives TS-based syntax highlight, real-time `ds check` diagnostics, and go-to-definition — in-file symbols and imported crate names (resolved via the rust-analyzer backend).
+After install, opening any `.ds` file gives TS-based syntax highlight, real-time `ds check` diagnostics, completions, go-to-definition (in-file symbols and crate names via the rust-analyzer backend), a document-symbol outline, hover, signature help, find references, and rename. Find-references and rename are symbol-level — two same-named bindings in different scopes are never confused.
 
 ## Contribution Workflow
 
