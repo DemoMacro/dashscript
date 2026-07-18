@@ -96,13 +96,13 @@ fn user_hover(text: &str, byte: usize) -> Option<String> {
         .declarations(text)
         .into_iter()
         .find(|d| d.name == word)?;
-    render_symbol(&sym)
+    render_symbol(&sym, text)
 }
 
 /// Format a `LocalSymbol` as a markdown hover header, or `None` for kinds with
 /// no useful hover (imports).
-fn render_symbol(sym: &LocalSymbol) -> Option<String> {
-    let header = match sym.kind {
+fn render_symbol(sym: &LocalSymbol, text: &str) -> Option<String> {
+    let body = match sym.kind {
         DsSymbolKind::Function => {
             let sig = sym
                 .signature
@@ -111,13 +111,27 @@ fn render_symbol(sym: &LocalSymbol) -> Option<String> {
                 .unwrap_or_else(|| "(): void".to_string());
             format!("function {}{}", sym.name, sig)
         }
-        DsSymbolKind::Interface => format!("interface {}", sym.name),
-        DsSymbolKind::TypeAlias => format!("type {}", sym.name),
+        // Show the full declaration source — `interface Point { x: number }`
+        // — matching how TS surfaces a type on hover, not just the header.
+        DsSymbolKind::Interface | DsSymbolKind::TypeAlias => match sym.decl_span {
+            Some(s) => text[s.start as usize..s.end as usize].to_string(),
+            None => type_header(sym),
+        },
         DsSymbolKind::Class => format!("class {}", sym.name),
         DsSymbolKind::Variable => format!("let {}", sym.name),
         DsSymbolKind::Other => return None, // import — no hover
     };
-    Some(format!("```ts\n{header}\n```"))
+    Some(format!("```ts\n{body}\n```"))
+}
+
+/// Fallback `interface X` / `type X` header when no declaration span exists.
+fn type_header(sym: &LocalSymbol) -> String {
+    let kw = match sym.kind {
+        DsSymbolKind::Interface => "interface",
+        DsSymbolKind::TypeAlias => "type",
+        _ => "type",
+    };
+    format!("{kw} {}", sym.name)
 }
 
 /// The qualified identifier under `byte` — `Math.round` when the cursor sits
@@ -211,11 +225,22 @@ mod tests {
     }
 
     #[test]
-    fn user_hover_shows_interface_header() {
-        let text = "interface Point { x: number }";
+    fn user_hover_shows_full_interface_definition() {
+        let text = "interface Point { x: number; y: number }";
         // `Point` starts at byte 10.
         let md = user_hover(text, 10).expect("hover");
         assert!(md.contains("interface Point"), "missing header: {md}");
+        // The full definition — both fields — not just the header.
+        assert!(md.contains("x: number"), "missing field x: {md}");
+        assert!(md.contains("y: number"), "missing field y: {md}");
+    }
+
+    #[test]
+    fn user_hover_shows_full_type_alias_definition() {
+        let text = "type Id = number;";
+        // `Id` starts at byte 5.
+        let md = user_hover(text, 5).expect("hover");
+        assert!(md.contains("type Id = number"), "missing full alias: {md}");
     }
 
     #[test]

@@ -177,6 +177,10 @@ pub struct LocalSymbol {
     /// A function's parameter list and return type (source slices), for
     /// signature help and hover. `None` for non-functions.
     pub signature: Option<Signature>,
+    /// The full declaration span (`interface Point { … }`, `type Id = …`),
+    /// for hover to show the complete type. `None` when the hover is a
+    /// signature or header (functions, imports).
+    pub decl_span: Option<Span>,
 }
 
 /// A function's signature as written in `.ds` — parameter names, their type
@@ -266,8 +270,12 @@ fn collect_from_statement(stmt: &Statement, source: &str, out: &mut Vec<LocalSym
             function_signature(f, source),
             out,
         ),
-        Statement::TSInterfaceDeclaration(i) => out.push(symbol(&i.id, SymbolKind::Interface)),
-        Statement::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id, SymbolKind::TypeAlias)),
+        Statement::TSInterfaceDeclaration(i) => {
+            out.push(symbol_decl(&i.id, SymbolKind::Interface, i.span()))
+        }
+        Statement::TSTypeAliasDeclaration(t) => {
+            out.push(symbol_decl(&t.id, SymbolKind::TypeAlias, t.span()))
+        }
         Statement::ImportDeclaration(imp) => {
             if let Some(specs) = &imp.specifiers {
                 for spec in specs {
@@ -282,6 +290,7 @@ fn collect_from_statement(stmt: &Statement, source: &str, out: &mut Vec<LocalSym
                             span: local.span,
                             kind: SymbolKind::Other,
                             signature: None,
+                            decl_span: None,
                         });
                     }
                 }
@@ -304,8 +313,12 @@ fn collect_from_declaration(decl: &Declaration, source: &str, out: &mut Vec<Loca
             function_signature(f, source),
             out,
         ),
-        Declaration::TSInterfaceDeclaration(i) => out.push(symbol(&i.id, SymbolKind::Interface)),
-        Declaration::TSTypeAliasDeclaration(t) => out.push(symbol(&t.id, SymbolKind::TypeAlias)),
+        Declaration::TSInterfaceDeclaration(i) => {
+            out.push(symbol_decl(&i.id, SymbolKind::Interface, i.span()))
+        }
+        Declaration::TSTypeAliasDeclaration(t) => {
+            out.push(symbol_decl(&t.id, SymbolKind::TypeAlias, t.span()))
+        }
         _ => {}
     }
 }
@@ -321,10 +334,6 @@ fn extend_binding(
     }
 }
 
-fn symbol(id: &BindingIdentifier, kind: SymbolKind) -> LocalSymbol {
-    symbol_with(id, kind, None)
-}
-
 fn symbol_with(
     id: &BindingIdentifier,
     kind: SymbolKind,
@@ -335,6 +344,19 @@ fn symbol_with(
         span: id.span,
         kind,
         signature,
+        decl_span: None,
+    }
+}
+
+/// A symbol with a full declaration span — interface/type aliases, so hover
+/// can show the complete definition (`interface Point { x: number }`).
+fn symbol_decl(id: &BindingIdentifier, kind: SymbolKind, decl_span: Span) -> LocalSymbol {
+    LocalSymbol {
+        name: id.name.to_string(),
+        span: id.span,
+        kind,
+        signature: None,
+        decl_span: Some(decl_span),
     }
 }
 
