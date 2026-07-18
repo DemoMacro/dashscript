@@ -49,11 +49,25 @@ pub(in crate::translator) fn global_function(
             }
         }
         // `Number(s)` parses a string; `Number(n)` passes a number through.
+        // ToNumber coercion: an empty or whitespace-only string is `0` (not
+        // NaN — `Number("")` / `Number("  ")` are both `0`); anything else
+        // parses as `f64`, NaN on a malformed string (a throw is never raised).
         "Number" => {
             let a = args.first()?;
             let e = translate_argument(a, ctx);
             if matches!(a, Argument::StringLiteral(_)) || ident_string_local(a, ctx) {
-                parse_quote!(#e.trim().parse::<f64>().unwrap_or(f64::NAN))
+                parse_quote!({
+                    // Bind the (possibly temporary) string first: `#e` may be
+                    // `"x".to_string()`, and `.trim()` would borrow a value
+                    // freed at the end of that expression (E0716).
+                    let __s = #e;
+                    let __t = __s.trim();
+                    if __t.is_empty() {
+                        0_f64
+                    } else {
+                        __t.parse::<f64>().unwrap_or(f64::NAN)
+                    }
+                })
             } else {
                 e
             }

@@ -551,8 +551,11 @@
     "id": "test262.test.built-ins.number.prototype.tostring.a-z",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:8:45: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -579,10 +582,10 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"4294967295\" node=\"Infinity\"",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"9223372036854775807\" node=\"Infinity\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"4294967295\" node=\"Infinity\""
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"9223372036854775807\" node=\"Infinity\""
     },
     "note": ""
   },
@@ -591,7 +594,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1728002635214590697\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1728002635214590697\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -599,7 +606,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"41a792678515120367\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"41a792678515120367\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -607,7 +618,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"10b269549075433c37\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"10b269549075433c37\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -615,7 +630,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"4340724c6c71dc7a7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"4340724c6c71dc7a7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -623,7 +642,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"160e2ad3246366807\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"160e2ad3246366807\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -631,10 +654,10 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"ffffffff\" node=\"Infinity\"",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"7fffffffffffffff\" node=\"Infinity\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"ffffffff\" node=\"Infinity\""
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"7fffffffffffffff\" node=\"Infinity\""
     },
     "note": ""
   },
@@ -643,7 +666,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"33d3d8307b214008\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"33d3d8307b214008\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -651,7 +678,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"16agh595df825fa7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"16agh595df825fa7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -659,7 +690,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"ba643dci0ffeehh\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"ba643dci0ffeehh\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -667,10 +702,10 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"11111111111111111111111111111111\" node=\"Infinity\"",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"111111111111111111111111111111111111111111111111111111111111111\" node=\"Infinity\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"11111111111111111111111111111111\" node=\"Infinity\""
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"111111111111111111111111111111111111111111111111111111111111111\" node=\"Infinity\""
     },
     "note": ""
   },
@@ -679,7 +714,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"5cbfjia3fh26ja7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"5cbfjia3fh26ja7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -687,7 +726,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"2heiciiie82dh97\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"2heiciiie82dh97\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -695,7 +738,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1adaibb21dckfa7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1adaibb21dckfa7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -703,7 +750,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"i6k448cf4192c2\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"i6k448cf4192c2\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -711,7 +762,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"acd772jnc9l0l7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"acd772jnc9l0l7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -719,7 +774,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"64ie1focnn5g77\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"64ie1focnn5g77\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -727,7 +786,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"3igoecjbmca687\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"3igoecjbmca687\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -735,7 +798,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"27c48l5b37oaop\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"27c48l5b37oaop\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -743,7 +810,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1bk39f3ah3dmq7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1bk39f3ah3dmq7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -751,7 +822,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"q1se8f0m04isb\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"q1se8f0m04isb\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -759,7 +834,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"2021110011022210012102010021220101220221\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"2021110011022210012102010021220101220221\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -767,7 +846,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"hajppbc1fc207\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"hajppbc1fc207\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -775,7 +858,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"bm03i95hia437\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"bm03i95hia437\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -783,7 +870,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"7vvvvvvvvvvvv\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"7vvvvvvvvvvvv\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -791,7 +882,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"5hg4ck9jd4u37\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"5hg4ck9jd4u37\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -799,7 +894,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"3tdtk1v8j6tpp\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"3tdtk1v8j6tpp\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -807,7 +906,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"2pijmikexrxp7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"2pijmikexrxp7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -815,7 +918,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1y2p0ij32e8e7\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1y2p0ij32e8e7\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -831,7 +938,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"13333333333333333333333333333333\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"13333333333333333333333333333333\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -839,7 +950,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1104332401304422434310311212\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1104332401304422434310311212\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -847,7 +962,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1540241003031030222122211\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"1540241003031030222122211\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -855,7 +974,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"22341010611245052052300\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"22341010611245052052300\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -863,10 +986,10 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"37777777777\" node=\"Infinity\"",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"777777777777777777777\" node=\"Infinity\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"37777777777\" node=\"Infinity\""
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"777777777777777777777\" node=\"Infinity\""
     },
     "note": ""
   },
@@ -875,7 +998,11 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:33: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:43: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:48: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"67404283172107811827\" node=\"Infinity\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"0\" node=\"NaN\"; line 4: ds=\"67404283172107811827\" node=\"Infinity\""
+    },
     "note": ""
   },
   {
@@ -962,11 +1089,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"0\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1082,11 +1208,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a2",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"0\"; line 2: ds=\"NaN\" node=\"0\"; line 3: ds=\"NaN\" node=\"0\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -1260,11 +1385,10 @@
     "id": "test262.test.built-ins.number.s9.3.1_a3_t1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"NaN\" node=\"0\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"NaN\" node=\"0\""
+      "status": "matched"
     },
     "note": ""
   },

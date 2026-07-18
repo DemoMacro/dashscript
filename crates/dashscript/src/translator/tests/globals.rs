@@ -29,20 +29,28 @@ fn translates_parse_int_with_radix_to_from_str_radix() {
 fn translates_number_global_string_to_parse() {
     let src = "function f(): number { return Number(\"42\"); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(
-        rust.contains("\"42\".to_string().trim().parse::<f64>().unwrap_or(f64::NAN)"),
-        "got:\n{rust}"
-    );
+    // ToNumber coercion: an empty/whitespace string is 0, otherwise parse.
+    assert!(rust.contains("is_empty()"), "got:\n{rust}");
+    assert!(rust.contains("0_f64"), "got:\n{rust}");
+    assert!(rust.contains("parse::<f64>()"), "got:\n{rust}");
 }
 
 #[test]
 fn translates_number_global_string_var_to_parse() {
     let src = "function f(s: string): number { return Number(s); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(
-        rust.contains("s.trim().parse::<f64>().unwrap_or(f64::NAN)"),
-        "got:\n{rust}"
-    );
+    assert!(rust.contains("is_empty()"), "got:\n{rust}");
+    assert!(rust.contains("0_f64"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_number_global_empty_string_to_zero() {
+    // ToNumber("") / ToNumber("  ") is 0, not NaN — `Number("")` must not
+    // fall through to `parse` (which rejects an empty string). Mirrors
+    // test262's `number.s9.3.1` (ToNumber on a string).
+    let src = "function f(): number { return Number(\"\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("is_empty()"), "got:\n{rust}");
 }
 
 #[test]

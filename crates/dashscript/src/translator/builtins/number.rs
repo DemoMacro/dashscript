@@ -2,7 +2,6 @@
 //! `test/built-ins/Number/` (instance methods + static methods + constants).
 
 use oxc_ast::ast::{Argument, StaticMemberExpression};
-use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
@@ -24,23 +23,35 @@ pub(in crate::translator) fn number_method(
             let prec = usize_arg(args.first()?, ctx);
             parse_quote!(format!("{:.*}", #prec, #recv))
         }
-        // `(255).toString(radix)` → a format with the matching base. Only a
-        // literal radix of 2/8/16/10 maps; the f64 is cast to `u32` first (TS
-        // truncates the fractional part). A non-literal radix is unmapped.
+        // `(n).toString(radix)` → a base-`radix` integer string (radix 2-36).
+        // The receiver is cast to `i64` (TS truncates the fractional part of
+        // the receiver before converting); a variable radix lowers to a
+        // runtime conversion with digits `0-9a-z`, so `i.toString(radix)` in
+        // a loop works — not just literal radices. A fractional receiver
+        // loses its fraction, matching TS (`(3.5).toString(2)` first drops to
+        // the integer `3`).
         "toString" if !args.is_empty() => {
-            let radix = match args.first()? {
-                Argument::NumericLiteral(n) => n.value,
-                _ => return None,
-            };
-            let fmt = match radix as u64 {
-                16 => "{:x}",
-                2 => "{:b}",
-                8 => "{:o}",
-                10 => "{}",
-                _ => return None,
-            };
-            let fmt_lit = syn::LitStr::new(fmt, Span::call_site());
-            parse_quote!(format!(#fmt_lit, (#recv) as u32))
+            let radix = translate_argument(args.first()?, ctx);
+            parse_quote!({
+                let __n = (#recv) as i64;
+                let __r = (#radix) as u32;
+                let __digits = b"0123456789abcdefghijklmnopqrstuvwxyz";
+                let mut __m = __n.unsigned_abs();
+                let mut __buf: Vec<u8> = Vec::new();
+                if __m == 0 {
+                    __buf.push(b'0');
+                }
+                while __m > 0 {
+                    __buf.push(__digits[(__m % __r as u64) as usize]);
+                    __m /= __r as u64;
+                }
+                __buf.reverse();
+                let mut __s = String::from_utf8(__buf).unwrap();
+                if __n < 0 {
+                    __s.insert(0, '-');
+                }
+                __s
+            })
         }
         // `(n).toExponential(fracDigits)` → scientific notation with that many
         // digits after the point. Rust's `{:.*e}` takes precision then value,
