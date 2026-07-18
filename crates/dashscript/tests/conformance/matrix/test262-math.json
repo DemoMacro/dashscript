@@ -1097,7 +1097,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:16:15: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:17:16: error[E0425]: cannot find value `i` in this scope\nsrc\\main.rs:18:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:20:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:20:21: error[E0425]: cannot find value `i` in this scope: not found in this scope\nsrc\\main.rs:23:36: error[E0425]: cannot find value `x` in this scope: not found in this scope",
+    "detail": "src\\main.rs:17:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:19:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:22:36: error[E0425]: cannot find value `x` in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -1181,8 +1181,11 @@
     "id": "test262.test.built-ins.math.sqrt.results",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:1899:27: error[E0507]: cannot move out of index of `Vec<Vec<f64>>`: move occurs because value has type `Vec<f64>`, which does not implement the `Copy` trait\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1270,7 +1273,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpSKaePJ\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n                 ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJvOmbt\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n                 ^\r\n\r"
     },
     "note": ""
   },
@@ -1282,7 +1285,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpSKaePJ\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r\nTypeErr"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJvOmbt\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r\nTypeErr"
     },
     "note": ""
   },
@@ -1294,7 +1297,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpSKaePJ\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^\r\n\r\nType"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJvOmbt\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^\r\n\r\nType"
     },
     "note": ""
   },
@@ -1306,7 +1309,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpSKaePJ\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n                 ^\r\n\r\n"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJvOmbt\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n                 ^\r\n\r\n"
     },
     "note": ""
   },

@@ -68,6 +68,30 @@ fn multi_use_clones_non_copy_local() {
 }
 
 #[test]
+fn index_clone_for_multi_use_non_copy_element() {
+    // `let row = nested[i]` would move the inner Vec out of `nested`; `nested`
+    // is read again (the loop bound), so the non-Copy element is cloned at the
+    // index site.
+    let src = "function f(): void { const nested: number[][] = [[1, 2], [3, 4]]; for (let i = 0; i < nested.length; i++) { const row = nested[i]; console.log(row.length); } }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("nested[i as usize].clone()"),
+        "a reused Vec-of-Vec index is cloned, got:\n{rust}"
+    );
+}
+
+#[test]
+fn index_no_clone_for_copy_element() {
+    // A scalar element (f64) copies on index — no clone even when reused.
+    let src = "function f(): void { const xs: number[] = [1, 2, 3]; for (let i = 0; i < xs.length; i++) { const x = xs[i]; console.log(x); } }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains(".clone()"),
+        "a Copy element is not cloned, got:\n{rust}"
+    );
+}
+
+#[test]
 fn multi_use_with_field_read_clones_call_arg() {
     // `v` is read twice (call + field); the call must clone so `v.x` works.
     let src = "interface V { x: number } function consume(v: V): void {} function f(v: V): void { consume(v); console.log(v.x); }";

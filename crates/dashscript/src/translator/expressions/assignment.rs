@@ -24,7 +24,7 @@ enum AssignTarget {
 /// `x = …`, `x += …`, …. Plain targets (`x`, `obj.field`, `arr[i as usize]`)
 /// take every compound op; a `m["k"]` HashMap index becomes `m.insert(k, v)`
 /// (only `=` — HashMap has no compound-assign semantics).
-pub(super) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
+pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
     let right = translate_expr(&a.right, ctx);
     match assignment_target_kind(&a.left, ctx) {
         Some(AssignTarget::Plain(target)) => {

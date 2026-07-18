@@ -49,6 +49,23 @@ fn translates_c_style_for_loop() {
 }
 
 #[test]
+fn translates_var_shared_c_style_for_loops() {
+    // JS `var` is function-scoped: two C-style loops sharing `i` reuse one
+    // binding (no wrapping block that would confine it), and the second loop's
+    // `for (i = …; …)` assignment init emits the reassignment instead of
+    // dropping it (the catch-all used to).
+    let src = "function f(): void { var s = 0; for (var i = 0; i < 2; i++) { s += i; } for (i = 0; i < 2; i++) { s += i; } console.log(s); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    // Only one `let mut i` declaration; the second loop reuses it.
+    assert_eq!(rust.matches("let mut i").count(), 1, "got:\n{rust}");
+    // The assignment-form init `i = 0` is emitted (not dropped).
+    assert!(
+        rust.contains("i = 0_f64"),
+        "assignment init missing: got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_break_and_continue() {
     let src = "function f(): void { let i = 0; while (i < 10) { i++; if (i == 5) { continue; } if (i == 8) { break; } } }";
     let rust = Translator::new().translate(src).expect("should translate");

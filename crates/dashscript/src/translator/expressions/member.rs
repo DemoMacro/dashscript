@@ -7,6 +7,7 @@ use syn::{parse_quote, Expr};
 use super::super::bindings;
 use super::super::builtins;
 use super::super::context::Ctx;
+use super::super::types;
 use super::is_hashmap;
 use super::translate_expr;
 
@@ -87,7 +88,51 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
         as_token: syn::Token![as](Span::call_site()),
         ty: Box::new(parse_quote!(usize)),
     });
-    parse_quote!(#obj[#idx])
+    let indexed = parse_quote!(#obj[#idx]);
+    // `let x = arr[i]` moves the element out of `arr`; if `arr` is read again
+    // later (use count > 1) and the element is not `Copy`, clone it so those
+    // reads still see a value. A scalar element copies on index — no clone.
+    if index_needs_clone(&cm.object, ctx) {
+        parse_quote!(#indexed.clone())
+    } else {
+        indexed
+    }
+}
+
+/// Whether indexing `expr` (a `Vec` local) into a binding needs `.clone()`:
+/// the local is read more than once (a move would break later reads), and the
+/// element is not `Copy` (or its type is unknown — clone to be safe). A scalar
+/// element copies on index, so no clone.
+fn index_needs_clone(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    if ctx.use_count(&name) <= 1 {
+        return false;
+    }
+    match ctx.local_type(&name) {
+        None => true,
+        Some(ty) => !element_is_copy(ty),
+    }
+}
+
+/// Whether the element type of a `Vec<T>` is `Copy` (so indexing copies rather
+/// than moves). A non-`Vec` or non-generic type is treated as non-`Copy`.
+fn element_is_copy(path: &syn::Path) -> bool {
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
+    if seg.ident != "Vec" {
+        return false;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return false;
+    };
+    let Some(syn::GenericArgument::Type(elem)) = args.args.first() else {
+        return false;
+    };
+    types::type_path(elem).is_some_and(types::is_copy_path)
 }
 
 /// True when `expr` is a local whose type is a `HashMap`.

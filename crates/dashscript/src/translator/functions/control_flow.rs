@@ -224,9 +224,21 @@ pub(super) fn translate_for(
     narrow: &Narrow,
     return_path: Option<&Path>,
 ) -> Vec<Stmt> {
+    // JS `var` is function-scoped: `for (var i = …; …)` must not wrap the loop
+    // in a block — the binding is shared with sibling loops in the same
+    // function (a later `for (i = …; …)` reuses it). `let`/`const` stay
+    // block-scoped (keep the wrapper, matching Rust's block semantics).
+    let is_var = stmt.init.as_ref().is_some_and(|i| i.is_var_declaration());
     let init: Vec<Stmt> = match &stmt.init {
         Some(oxc_ast::ast::ForStatementInit::VariableDeclaration(decl)) => {
             translate_variable_declaration(decl, locals, registry, narrow)
+        }
+        // `for (i = -5; …)` — an assignment init reuses an outer (var) binding;
+        // emit the assignment as a statement. The catch-all dropped it, losing
+        // the reassignment and looping on the prior value.
+        Some(oxc_ast::ast::ForStatementInit::AssignmentExpression(a)) => {
+            let e = expressions::assignment_expr(a, &Ctx::new(&*locals, registry, narrow));
+            vec![parse_quote!(#e;)]
         }
         _ => Vec::new(),
     };
@@ -240,13 +252,21 @@ pub(super) fn translate_for(
         let e = expressions::translate_expr(u, &Ctx::new(&*locals, registry, narrow));
         parse_quote!(#e;)
     });
-    vec![parse_quote!({
-        #(#init)*
-        while #test {
-            #(#body)*
-            #update
-        }
-    })]
+    let while_loop: Stmt = parse_quote!(while #test {
+        #(#body)*
+        #update
+    });
+    if is_var {
+        // flat: the var bindings live in the enclosing function scope
+        let mut out = init;
+        out.push(while_loop);
+        out
+    } else {
+        vec![parse_quote!({
+            #(#init)*
+            #while_loop
+        })]
+    }
 }
 
 /// Binding name from `for (const v of …)`; other left forms are unmapped.

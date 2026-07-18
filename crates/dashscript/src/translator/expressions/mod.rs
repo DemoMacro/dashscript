@@ -25,6 +25,7 @@ mod unary;
 // reads `array_slice_expr`. Sibling families use fully-qualified paths
 // (`super::logical::assign_truthy`) instead, so they need no re-export.
 pub(in crate::translator) use array::array_slice_expr;
+pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
 
 use oxc_ast::ast::{
