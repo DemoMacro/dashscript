@@ -24,6 +24,9 @@ oxc_diagnostics = "0.140"
 oxc_codegen = "0.140"
 oxc_span = "0.140"
 oxc_syntax = "0.140"
+# Semantic analysis (scope tree + symbol table + reference resolution) — powers
+# LSP find-references/rename with symbol-level precision (no same-name collisions).
+oxc_semantic = "0.140"
 
 # Rust source emission (translator) — pulled in when codegen lands.
 prettyplease = "0.2"

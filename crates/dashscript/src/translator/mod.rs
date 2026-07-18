@@ -18,6 +18,7 @@ pub mod expressions;
 pub mod functions;
 pub mod imports;
 pub mod registry;
+pub mod semantic;
 pub mod types;
 
 use oxc_allocator::Allocator;
@@ -134,6 +135,17 @@ impl Translator {
     #[must_use]
     pub fn has_main(&self, source: &str) -> bool {
         imports::has_main(source)
+    }
+
+    /// Symbol-level analysis for one `.ds` file: every declaration's span,
+    /// kind, and resolved references (read/write). Powers LSP find-references /
+    /// rename with **symbol-level precision** — two same-named bindings in
+    /// different scopes are distinct symbols, so renaming one never touches the
+    /// other. Returns an owned snapshot that borrows nothing (the parse arena is
+    /// released). An empty table means the file failed to parse.
+    #[must_use]
+    pub fn symbols(&self, source: &str) -> semantic::SymbolTable {
+        semantic::analyze_symbols(source)
     }
 }
 
