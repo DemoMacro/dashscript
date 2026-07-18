@@ -136,7 +136,8 @@ impl Server {
     }
 
     /// Emit the `.ds` text to a cache Cargo project and tell rust-analyzer
-    /// about the resulting `main.rs`. Errors are swallowed — diagnostics and
+    /// about the resulting Rust file (`src/<stem>.rs` in project mode,
+    /// `src/main.rs` for a lone file). Errors are swallowed — diagnostics and
     /// go-to-definition degrade gracefully when emission or the backend fails.
     fn refresh(&mut self, uri: &Uri, text: &str) {
         let Some(src_path) = uri_to_path(uri) else {
@@ -148,7 +149,7 @@ impl Server {
         if crate::commands::project::emit_cargo_project(text, &src_path, &cache).is_err() {
             return;
         }
-        let main_rs = cache.join("src").join("main.rs");
+        let main_rs = rust_file_for(&cache, &src_path);
         let Ok(main_text) = std::fs::read_to_string(&main_rs) else {
             return;
         };
@@ -213,7 +214,8 @@ impl Server {
     ) -> Option<Value> {
         self.refresh(uri, text);
         let cache = self.cache_dir(uri)?;
-        let main_rs = cache.join("src").join("main.rs");
+        let src_path = uri_to_path(uri)?;
+        let main_rs = rust_file_for(&cache, &src_path);
         let main_text = std::fs::read_to_string(&main_rs).ok()?;
         // A symbol → its position in `use module::symbol`; no symbol (cursor on
         // the crate name) → the crate's own position, so RA resolves the root.
@@ -549,6 +551,22 @@ fn uri_to_path(uri: &Uri) -> Option<PathBuf> {
     url::Url::parse(uri.as_str()).ok()?.to_file_path().ok()
 }
 
+/// The cache Rust file for a `.ds` source: `src/<stem>.rs` (project mode — one
+/// Rust file per bin) when present, else `src/main.rs` (lone-file mode). Lets
+/// the language server point rust-analyzer at the right file in either mode.
+fn rust_file_for(cache: &Path, src_path: &Path) -> PathBuf {
+    let stem = src_path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("main");
+    let project_rs = cache.join("src").join(format!("{stem}.rs"));
+    if project_rs.exists() {
+        project_rs
+    } else {
+        cache.join("src").join("main.rs")
+    }
+}
+
 fn path_to_uri(path: &Path) -> Result<Uri, Box<dyn Error>> {
     let url = url::Url::from_file_path(path)
         .map_err(|_| format!("not an absolute file path: {}", path.display()))?;
@@ -558,6 +576,30 @@ fn path_to_uri(path: &Path) -> Result<Uri, Box<dyn Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn rust_file_for_prefers_project_stem() {
+        let tmp = tempfile::tempdir().unwrap();
+        let cache = tmp.path();
+        std::fs::create_dir_all(cache.join("src")).unwrap();
+        std::fs::write(cache.join("src").join("numbers.rs"), "").unwrap();
+        assert_eq!(
+            rust_file_for(cache, Path::new("numbers.ds")),
+            cache.join("src").join("numbers.rs")
+        );
+    }
+
+    #[test]
+    fn rust_file_for_falls_back_to_main_rs() {
+        let tmp = tempfile::tempdir().unwrap();
+        let cache = tmp.path();
+        std::fs::create_dir_all(cache.join("src")).unwrap();
+        // No src/<stem>.rs → lone-file mode picks src/main.rs.
+        assert_eq!(
+            rust_file_for(cache, Path::new("numbers.ds")),
+            cache.join("src").join("main.rs")
+        );
+    }
 
     #[test]
     fn position_tracks_lines_and_columns() {
