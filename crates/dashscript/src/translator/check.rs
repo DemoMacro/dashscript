@@ -21,8 +21,8 @@ use std::borrow::Cow;
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    BinaryOperator, CallExpression, Expression, ForStatementInit, ObjectPropertyKind, Statement,
-    UnaryOperator,
+    AssignmentTarget, BinaryOperator, CallExpression, Expression, ForStatementInit,
+    ObjectPropertyKind, Statement, UnaryOperator,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
@@ -171,6 +171,40 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
     }
 }
 
+/// Walk an assignment's left-hand target so a reflection nested in the lvalue
+/// is surfaced — `obj[Symbol.X] = v` (the index holds a `Symbol` reference),
+/// `Array.prototype[k] = v`, or `Array.prototype.foo = v` (mutating a builtin's
+/// prototype). The receiver of a member target is recursed too, so a
+/// reflection buried there is not missed. A plain `xs[i] = v` / `obj.f = v`
+/// adds nothing (no reflection), so legitimate mutation stays supported.
+fn collect_assignment_target(target: &AssignmentTarget, out: &mut Vec<OxcDiagnostic>) {
+    match target {
+        AssignmentTarget::ComputedMemberExpression(cm) => {
+            if is_prototype_member(&cm.object) {
+                out.push(err("`prototype` mutation is unsupported", cm.span));
+            }
+            collect_expr(&cm.object, out);
+            collect_expr(&cm.expression, out);
+        }
+        AssignmentTarget::StaticMemberExpression(sm) => {
+            if is_prototype_member(&sm.object) {
+                out.push(err("`prototype` mutation is unsupported", sm.span));
+            }
+            collect_expr(&sm.object, out);
+        }
+        _ => {}
+    }
+}
+
+/// True when `expr` is `<X>.prototype` — accessing (then mutating) a builtin's
+/// prototype, which DashScript's static model cannot express.
+fn is_prototype_member(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "prototype"
+    )
+}
+
 /// Walk a slice of statements — the shared spine of [`collect_unsupported`]'s
 /// block-shaped arms (a BlockStatement, a function/arrow body, try/catch
 /// bodies).
@@ -238,7 +272,12 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
                 collect_unsupported_stmts(&body.statements, out);
             }
         }
-        Expression::AssignmentExpression(a) => collect_expr(&a.right, out),
+        Expression::AssignmentExpression(a) => {
+            // Recurse the lvalue too — `obj[Symbol.X] = v` / `Array.prototype[k]
+            // = v` bury reflection in the assignment target.
+            collect_assignment_target(&a.left, out);
+            collect_expr(&a.right, out);
+        }
         Expression::ArrayExpression(arr) => {
             for el in &arr.elements {
                 if let Some(e) = el.as_expression() {

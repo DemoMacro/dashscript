@@ -172,3 +172,37 @@ fn check_flags_reflection_in_try_catch() {
         "{diags:?}"
     );
 }
+
+#[test]
+fn check_flags_symbol_in_assignment_index() {
+    // `obj[Symbol.X] = v` buries a `Symbol` reference in the assignment target
+    // — the walk recurses the lvalue's index, so it is surfaced (not lost).
+    let diags = Translator::new().check(
+        "function f(): void { const o: Record<string, number> = {}; o[Symbol.iterator] = 1; }",
+    );
+    assert!(
+        diags.iter().any(|d| d.message.contains("Symbol")),
+        "{diags:?}"
+    );
+}
+
+#[test]
+fn check_flags_prototype_mutation() {
+    // `Array.prototype[k] = v` mutates a builtin's prototype — reflection the
+    // static model cannot express.
+    let diags = Translator::new().check("function f(): void { Array.prototype[0] = 9; }");
+    assert!(
+        diags.iter().any(|d| d.message.contains("prototype")),
+        "{diags:?}"
+    );
+}
+
+#[test]
+fn check_does_not_flag_plain_member_assignment() {
+    // `xs[i] = v` is a legitimate mutation (no reflection) — the walk adds
+    // nothing, so the body stays supported (a later borrow-check is `partial`,
+    // not `unsupported`).
+    let diags = Translator::new()
+        .check("function f(): void { let xs: number[] = [1]; xs[0] = 5; console.log(xs[0]); }");
+    assert!(diags.is_empty(), "{diags:?}");
+}
