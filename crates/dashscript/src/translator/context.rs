@@ -121,16 +121,32 @@ pub struct Ctx<'a> {
     locals: &'a Locals,
     registry: &'a TypeRegistry,
     narrow: &'a Narrow,
+    names: &'a super::name_table::NameTable<'a>,
 }
 
 impl<'a> Ctx<'a> {
     #[must_use]
-    pub fn new(locals: &'a Locals, registry: &'a TypeRegistry, narrow: &'a Narrow) -> Self {
+    pub fn new(
+        locals: &'a Locals,
+        registry: &'a TypeRegistry,
+        narrow: &'a Narrow,
+        names: &'a super::name_table::NameTable<'a>,
+    ) -> Self {
         Self {
             locals,
             registry,
             narrow,
+            names,
         }
+    }
+
+    /// The per-file `SymbolId` → Rust-name table. Binding and reference
+    /// occurrences resolve their Rust identifier through this (not the lossy
+    /// `snake(name)` string), so two `.ds` bindings that fold to the same
+    /// snake-name (e.g. `N` and `n`) get distinct Rust names.
+    #[must_use]
+    pub fn names(&self) -> &'a super::name_table::NameTable<'a> {
+        self.names
     }
 
     /// The type path of a local binding named `name`, if it is known.

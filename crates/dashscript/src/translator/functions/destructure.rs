@@ -6,6 +6,7 @@ use quote::quote;
 use syn::{parse_quote, Expr, Ident, Stmt};
 
 use super::super::context::{Ctx, Locals, Narrow};
+use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
 use super::super::{bindings, expressions};
 use super::build_local;
@@ -21,11 +22,12 @@ pub(super) fn destructure_object(
     mutable: bool,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
     let Some(init_expr) = init else {
         return vec![parse_quote!(let _ = ::core::todo!();)];
     };
-    let ctx = Ctx::new(&*locals, registry, narrow);
+    let ctx = Ctx::new(&*locals, registry, narrow, names);
     let value = expressions::translate_expr(init_expr, &ctx);
     let Some(path) = expr_type_path(init_expr, locals) else {
         return vec![parse_quote!(let _ = #value;)];
@@ -44,7 +46,7 @@ pub(super) fn destructure_object(
         // the shorthand `{ x }` stays as a bare `x`.
         let renamed = match &p.value {
             BindingPattern::BindingIdentifier(id) => {
-                let var = bindings::ident_of(id);
+                let var = names.of_binding(id);
                 (var != key_name).then_some(var)
             }
             _ => None,
@@ -93,18 +95,20 @@ pub(super) fn destructure_array(
     mutable: bool,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
     let Some(init_expr) = init else {
         return vec![parse_quote!(let _ = ::core::todo!();)];
     };
-    let value = expressions::translate_expr(init_expr, &Ctx::new(&*locals, registry, narrow));
+    let value =
+        expressions::translate_expr(init_expr, &Ctx::new(&*locals, registry, narrow, names));
     let mut stmts: Vec<Stmt> = arr
         .elements
         .iter()
         .enumerate()
         .filter_map(|(i, elem)| {
             let pat = elem.as_ref()?;
-            let name = bindings::binding_name(pat);
+            let name = names.of_pattern(pat);
             let idx = syn::Index::from(i);
             Some(build_local(
                 &name,
@@ -117,7 +121,7 @@ pub(super) fn destructure_array(
     // `...rest` collects the remaining elements (after the last bound position)
     // as a new `Vec`. A default on the rest is unsupported.
     if let Some(rest) = &arr.rest {
-        let name = bindings::binding_name(&rest.argument);
+        let name = names.of_pattern(&rest.argument);
         let start = syn::Index::from(arr.elements.len());
         stmts.push(build_local(
             &name,

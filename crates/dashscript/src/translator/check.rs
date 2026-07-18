@@ -26,8 +26,10 @@ use oxc_ast::ast::{
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
+use oxc_semantic::SemanticBuilder;
 use oxc_span::{SourceType, Span};
 
+use super::name_table;
 use super::{functions, registry};
 
 /// Check `.ds` source for translatability. Returns syntax errors from
@@ -43,11 +45,20 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
     // Layer 1 — structure: oxc_parser syntax errors.
     let mut diagnostics = ret.diagnostics.into_vec();
 
+    // Build the per-symbol `NameTable` once. `check` only drives
+    // `translate_statement` to ask "is this top-level statement mapped?" — it
+    // never relies on the table's disambiguation (that is stage 1.3) — but the
+    // translator now resolves every identifier through it, so the same table
+    // the emit path uses must be built here too.
+    let program = allocator.alloc(ret.program);
+    let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+    let names = name_table::build(sret.semantic.scoping());
+
     // Layer 2 — translatability: the translator is the source of truth (its
     // `None` means "not mapped"); the match only adds a human message + span.
-    let registry = registry::build_registry(&ret.program.body);
-    for stmt in &ret.program.body {
-        if functions::translate_statement(stmt, &registry).is_empty() {
+    let registry = registry::build_registry(&program.body);
+    for stmt in &program.body {
+        if functions::translate_statement(stmt, &registry, &names).is_empty() {
             diagnostics.push(unmapped_top_level(stmt));
         }
         // Low-compatibility constructs inside the body — see

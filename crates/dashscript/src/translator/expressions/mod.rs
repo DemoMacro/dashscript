@@ -48,7 +48,7 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         Expression::NumericLiteral(n) => literals::numeric_expr(n.value),
         Expression::BooleanLiteral(b) => literals::bool_expr(b.value),
         Expression::NullLiteral(_) => parse_quote!(None),
-        Expression::Identifier(id) => ident_or_undefined(id),
+        Expression::Identifier(id) => ident_or_undefined(id, ctx),
         Expression::CallExpression(call) => call::translate_call(call, ctx),
         Expression::ArrayExpression(arr) => array::array_expr(arr, ctx),
         Expression::StaticMemberExpression(sm) => member::member_expr(sm, ctx),
@@ -59,7 +59,7 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         Expression::ConditionalExpression(c) => unary::conditional_expr(c, ctx),
         Expression::UnaryExpression(un) => unary::unary_expr(un, ctx),
         Expression::AssignmentExpression(a) => assignment::assignment_expr(a, ctx),
-        Expression::UpdateExpression(u) => assignment::update_expr(u),
+        Expression::UpdateExpression(u) => assignment::update_expr(u, ctx),
         Expression::TSNonNullExpression(nn) => unary::nonnull_expr(nn, ctx),
         // A TS type assertion (`x as T` / `<T>x`) has no runtime effect — the
         // inner expression is passed through unchanged.
@@ -85,7 +85,7 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::NumericLiteral(n) => literals::numeric_expr(n.value),
         Argument::BooleanLiteral(b) => literals::bool_expr(b.value),
         Argument::NullLiteral(_) => parse_quote!(None),
-        Argument::Identifier(id) => ident_or_undefined(id),
+        Argument::Identifier(id) => ident_or_undefined(id, ctx),
         Argument::CallExpression(call) => call::translate_call(call, ctx),
         Argument::ArrayExpression(arr) => array::array_expr(arr, ctx),
         Argument::StaticMemberExpression(sm) => member::member_expr(sm, ctx),
@@ -163,16 +163,18 @@ fn is_option(ty: &Type) -> bool {
     )
 }
 
-fn ident_expr(id: &IdentifierReference) -> Expr {
-    let name: &str = &id.name;
+fn ident_expr(id: &IdentifierReference, ctx: &Ctx<'_>) -> Expr {
     // ES global constants are bare identifiers (`NaN`, `Infinity`), not members
     // — map them to the matching `f64` constant instead of a renamed, undefined
-    // local. `-Infinity` lowers via unary `-` on `Infinity`.
-    match name {
+    // local. `-Infinity` lowers via unary `-` on `Infinity`. Every other
+    // identifier resolves its Rust name through the per-symbol `NameTable`
+    // (not the lossy `snake(name)` fold), so two `.ds` bindings that collapse to
+    // the same snake-name (e.g. `N` and `n`) read as distinct Rust idents.
+    match id.name.as_str() {
         "NaN" => parse_quote!(::std::f64::NAN),
         "Infinity" => parse_quote!(::std::f64::INFINITY),
         _ => {
-            let ident = bindings::snake(name);
+            let ident = ctx.names().of_reference(id);
             parse_quote!(#ident)
         }
     }
@@ -180,12 +182,11 @@ fn ident_expr(id: &IdentifierReference) -> Expr {
 
 /// `undefined` (a global identifier in TS) maps to `None`; any other
 /// identifier is a plain reference.
-fn ident_or_undefined(id: &IdentifierReference) -> Expr {
-    let name: &str = &id.name;
-    if name == "undefined" {
+fn ident_or_undefined(id: &IdentifierReference, ctx: &Ctx<'_>) -> Expr {
+    if id.name.as_str() == "undefined" {
         return parse_quote!(None);
     }
-    ident_expr(id)
+    ident_expr(id, ctx)
 }
 
 /// The source name of `expr` when it is a plain identifier bound to an

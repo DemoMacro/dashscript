@@ -11,6 +11,7 @@ use syn::{parse_quote, Block, Expr, Ident, Path, Stmt};
 
 use super::super::analysis;
 use super::super::context::{is_option_path, Ctx, Locals, Narrow};
+use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
 use super::super::{bindings, expressions, types};
 use super::{translate_stmt, translate_variable_declaration};
@@ -21,6 +22,7 @@ pub(super) fn translate_if(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Stmt {
     // `if (opt)` where `opt: Option<T>`, `T: Copy`, and `opt` is never mutated
     // → `if let Some(opt) = opt`. The bound copy leaves `opt` usable after the
@@ -28,7 +30,14 @@ pub(super) fn translate_if(
     // unwrap-after-is_some pattern is avoided.
     if let Some((name, ident_expr)) = option_truthiness_target(&stmt.test, locals) {
         let child = narrow.with_option_some(name.clone());
-        let then_block = statement_block(&stmt.consequent, locals, registry, &child, return_path);
+        let then_block = statement_block(
+            &stmt.consequent,
+            locals,
+            registry,
+            &child,
+            return_path,
+            names,
+        );
         // Bind the inner value only if the branch reads it; else discard it so
         // no `unused_variables` lint fires.
         let bind = if analysis::references(&stmt.consequent, &name) {
@@ -38,17 +47,24 @@ pub(super) fn translate_if(
         };
         return match &stmt.alternate {
             Some(alt) => {
-                let else_block = statement_block(alt, locals, registry, narrow, return_path);
+                let else_block = statement_block(alt, locals, registry, narrow, return_path, names);
                 parse_quote!(if let Some(#bind) = #ident_expr #then_block else #else_block)
             }
             None => parse_quote!(if let Some(#bind) = #ident_expr #then_block),
         };
     }
-    let cond = condition_expr(&stmt.test, locals, registry, narrow);
-    let then_block = statement_block(&stmt.consequent, locals, registry, narrow, return_path);
+    let cond = condition_expr(&stmt.test, locals, registry, narrow, names);
+    let then_block = statement_block(
+        &stmt.consequent,
+        locals,
+        registry,
+        narrow,
+        return_path,
+        names,
+    );
     match &stmt.alternate {
         Some(alt) => {
-            let else_block = statement_block(alt, locals, registry, narrow, return_path);
+            let else_block = statement_block(alt, locals, registry, narrow, return_path, names);
             parse_quote!(if #cond #then_block else #else_block)
         }
         None => parse_quote!(if #cond #then_block),
@@ -82,9 +98,10 @@ pub(super) fn translate_while(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Stmt {
-    let cond = condition_expr(&stmt.test, locals, registry, narrow);
-    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
+    let cond = condition_expr(&stmt.test, locals, registry, narrow, names);
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
     parse_quote!(while #cond #body)
 }
 
@@ -96,9 +113,10 @@ pub(super) fn translate_do_while(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Stmt {
-    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
-    let test = condition_expr(&stmt.test, locals, registry, narrow);
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
+    let test = condition_expr(&stmt.test, locals, registry, narrow, names);
     parse_quote!(loop {
         #body
         if !(#test) {
@@ -115,6 +133,7 @@ fn condition_expr(
     locals: &Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    names: &NameTable<'_>,
 ) -> Expr {
     if let Some(expr) = truthiness(test, false, locals) {
         return expr;
@@ -126,7 +145,7 @@ fn condition_expr(
             }
         }
     }
-    expressions::translate_expr(test, &Ctx::new(locals, registry, narrow))
+    expressions::translate_expr(test, &Ctx::new(locals, registry, narrow, names))
 }
 
 /// If `expr` is a bare identifier of a collection (`Vec`/`String`) or `Option`
@@ -170,25 +189,27 @@ pub(super) fn translate_for_of(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
-    let Some(pat) = for_of_binding(&stmt.left) else {
+    let Some(pat) = for_of_binding(&stmt.left, names) else {
         return vec![];
     };
     // Translate the iterable before the body — `Ctx` borrows `locals`
     // immutably while `statement_block` borrows it mutably, so they can't overlap.
     let slice = match &stmt.right {
         Expression::ArrayExpression(arr) => {
-            expressions::array_slice_expr(arr, &Ctx::new(&*locals, registry, narrow))
+            expressions::array_slice_expr(arr, &Ctx::new(&*locals, registry, narrow, names))
         }
         _ => None,
     };
-    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
     if let Some(slice) = slice {
         // A spread-free inline array literal iterates as a borrowed slice
         // `&[…]` (idiomatic; avoids clippy::useless_vec).
         return vec![parse_quote!(for &#pat in #slice #body)];
     }
-    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
+    let iter =
+        expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow, names));
     vec![parse_quote!(for &#pat in &#iter #body)]
 }
 
@@ -201,12 +222,14 @@ pub(super) fn translate_for_in(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
-    let Some(pat) = for_of_binding(&stmt.left) else {
+    let Some(pat) = for_of_binding(&stmt.left, names) else {
         return vec![];
     };
-    let iter = expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow));
-    let body = statement_block(&stmt.body, locals, registry, narrow, return_path);
+    let iter =
+        expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow, names));
+    let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
     vec![parse_quote!(for #pat in #iter.keys().cloned() #body)]
 }
 
@@ -223,6 +246,7 @@ pub(super) fn translate_for(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
     // JS `var` is function-scoped: `for (var i = …; …)` must not wrap the loop
     // in a block — the binding is shared with sibling loops in the same
@@ -231,13 +255,13 @@ pub(super) fn translate_for(
     let is_var = stmt.init.as_ref().is_some_and(|i| i.is_var_declaration());
     let init: Vec<Stmt> = match &stmt.init {
         Some(oxc_ast::ast::ForStatementInit::VariableDeclaration(decl)) => {
-            translate_variable_declaration(decl, locals, registry, narrow)
+            translate_variable_declaration(decl, locals, registry, narrow, names)
         }
         // `for (i = -5; …)` — an assignment init reuses an outer (var) binding;
         // emit the assignment as a statement. The catch-all dropped it, losing
         // the reassignment and looping on the prior value.
         Some(oxc_ast::ast::ForStatementInit::AssignmentExpression(a)) => {
-            let e = expressions::assignment_expr(a, &Ctx::new(&*locals, registry, narrow));
+            let e = expressions::assignment_expr(a, &Ctx::new(&*locals, registry, narrow, names));
             vec![parse_quote!(#e;)]
         }
         _ => Vec::new(),
@@ -245,11 +269,11 @@ pub(super) fn translate_for(
     let test = stmt
         .test
         .as_ref()
-        .map(|t| condition_expr(t, locals, registry, narrow))
+        .map(|t| condition_expr(t, locals, registry, narrow, names))
         .unwrap_or_else(|| parse_quote!(true));
-    let body = translate_stmt(&stmt.body, locals, registry, narrow, return_path);
+    let body = translate_stmt(&stmt.body, locals, registry, narrow, return_path, names);
     let update: Option<Stmt> = stmt.update.as_ref().map(|u| {
-        let e = expressions::translate_expr(u, &Ctx::new(&*locals, registry, narrow));
+        let e = expressions::translate_expr(u, &Ctx::new(&*locals, registry, narrow, names));
         parse_quote!(#e;)
     });
     let while_loop: Stmt = parse_quote!(while #test {
@@ -270,12 +294,12 @@ pub(super) fn translate_for(
 }
 
 /// Binding name from `for (const v of …)`; other left forms are unmapped.
-fn for_of_binding(left: &ForStatementLeft) -> Option<Ident> {
+fn for_of_binding(left: &ForStatementLeft, names: &NameTable<'_>) -> Option<Ident> {
     let ForStatementLeft::VariableDeclaration(decl) = left else {
         return None;
     };
     let d = decl.declarations.first()?;
-    Some(bindings::binding_name(&d.id))
+    Some(names.of_pattern(&d.id))
 }
 
 /// Turn any statement into a `{ … }` block (used by if/while/for bodies).
@@ -285,7 +309,8 @@ fn statement_block(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Block {
-    let stmts: Vec<Stmt> = translate_stmt(stmt, locals, registry, narrow, return_path);
+    let stmts: Vec<Stmt> = translate_stmt(stmt, locals, registry, narrow, return_path, names);
     parse_quote!({ #(#stmts)* })
 }

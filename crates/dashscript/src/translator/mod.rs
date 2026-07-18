@@ -17,6 +17,7 @@ pub mod declarations;
 pub mod expressions;
 pub mod functions;
 pub mod imports;
+pub mod name_table;
 pub mod registry;
 pub mod semantic;
 pub mod types;
@@ -25,6 +26,7 @@ use oxc_allocator::Allocator;
 use oxc_codegen::{Codegen, CodegenOptions, IndentChar};
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
+use oxc_semantic::SemanticBuilder;
 use oxc_span::SourceType;
 
 /// Translates a TypeScript-flavored `.ds` program into Rust source.
@@ -53,14 +55,24 @@ impl Translator {
             ));
         }
 
+        // Move the program into the arena so the arena, the program, and the
+        // semantic analysis all share one lifetime `'a` (the same trick
+        // `semantic::analyze_symbols` uses). `with_build_nodes(true)` fills the
+        // `symbol_id` / `reference_id` cells on each `BindingIdentifier` /
+        // `IdentifierReference` so the translator can resolve any identifier to
+        // its `SymbolId` — the identity `NameTable` keys on, replacing the lossy
+        // `snake(name)` string fold.
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+
         // First pass: collect discriminated-union enum shapes so later
         // expression translation can build variant constructors.
-        let registry = registry::build_registry(&ret.program.body);
-        let items = ret
-            .program
+        let registry = registry::build_registry(&program.body);
+        let items = program
             .body
             .iter()
-            .flat_map(|s| functions::translate_statement(s, &registry))
+            .flat_map(|s| functions::translate_statement(s, &registry, &names))
             .collect();
         let file = syn::File {
             shebang: None,

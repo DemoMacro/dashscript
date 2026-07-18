@@ -21,6 +21,7 @@ use super::context::{Ctx, Locals, Narrow};
 use super::functions::{
     register_local, return_path_of, translate_body, translate_params, translate_stmt,
 };
+use super::name_table::NameTable;
 use super::registry::TypeRegistry;
 use super::{expressions, types};
 
@@ -32,7 +33,11 @@ struct Field {
 }
 
 /// Translate a `class` declaration into its `struct` plus `impl` items.
-pub(in crate::translator) fn translate_class(class: &Class, registry: &TypeRegistry) -> Vec<Item> {
+pub(in crate::translator) fn translate_class(
+    class: &Class,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Vec<Item> {
     let Some(id) = class.id.as_ref() else {
         return vec![compile_error_item(
             "DashScript does not support class expressions — declare a named class",
@@ -81,7 +86,7 @@ pub(in crate::translator) fn translate_class(class: &Class, registry: &TypeRegis
                     diags.push(compile_error_item(
                         "DashScript does not support private (`#`/`private`) class fields",
                     ));
-                } else if let Some(f) = instance_field(pd, registry) {
+                } else if let Some(f) = instance_field(pd, registry, names) {
                     fields.push(f);
                 }
             }
@@ -126,10 +131,10 @@ pub(in crate::translator) fn translate_class(class: &Class, registry: &TypeRegis
     }
 
     let struct_item = build_struct(&name, &fields);
-    let ctor_item = build_constructor(ctor, &fields, &name, registry);
+    let ctor_item = build_constructor(ctor, &fields, &name, registry, names);
     let method_items: Vec<syn::ImplItem> = methods
         .iter()
-        .map(|md| build_method(md, registry))
+        .map(|md| build_method(md, registry, names))
         .collect();
     let impl_item: Item = parse_quote! {
         impl #name {
@@ -181,6 +186,7 @@ fn build_constructor(
     fields: &[Field],
     type_name: &Ident,
     registry: &TypeRegistry,
+    names: &NameTable<'_>,
 ) -> syn::ImplItem {
     let mut locals = Locals::new();
     let mut params: Vec<FnArg> = Vec::new();
@@ -196,7 +202,7 @@ fn build_constructor(
         for fp in &func.params.items {
             register_local(&mut locals, &fp.pattern, fp.type_annotation.as_deref());
         }
-        params = translate_params(&func.params, &locals);
+        params = translate_params(&func.params, &locals, names);
         if let Some(body) = func.body.as_deref() {
             let analysis = super::analysis::analyze(&body.statements);
             locals.mutated = analysis.mutated;
@@ -217,6 +223,7 @@ fn build_constructor(
                         registry,
                         &narrow,
                         return_path.as_ref(),
+                        names,
                     ));
                 }
             }
@@ -225,7 +232,7 @@ fn build_constructor(
 
     // Field initializers: a ctor `this.f = e` wins, then the field default,
     // else `todo!()`.
-    let ctx = Ctx::new(&locals, registry, &narrow);
+    let ctx = Ctx::new(&locals, registry, &narrow, names);
     let field_inits: Vec<TokenStream> = fields
         .iter()
         .map(|f| {
@@ -262,7 +269,11 @@ fn build_constructor(
 
 /// `pub fn method(&self | &mut self, args) -> ret { body }`. `&mut self` when
 /// the body assigns/updates a member of `this`.
-fn build_method(md: &MethodDefinition, registry: &TypeRegistry) -> syn::ImplItem {
+fn build_method(
+    md: &MethodDefinition,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> syn::ImplItem {
     let func = &md.value;
     let name = bindings::property_key_name(&md.key).unwrap_or_else(|| format_ident!("__method"));
 
@@ -277,7 +288,7 @@ fn build_method(md: &MethodDefinition, registry: &TypeRegistry) -> syn::ImplItem
         locals.use_counts = analysis.use_counts;
         is_mut = analysis.mutates_this;
     }
-    let params = translate_params(&func.params, &locals);
+    let params = translate_params(&func.params, &locals, names);
 
     let narrow = Narrow::in_method(format_ident!("self"));
     let return_path = func.return_type.as_deref().and_then(return_path_of);
@@ -287,6 +298,7 @@ fn build_method(md: &MethodDefinition, registry: &TypeRegistry) -> syn::ImplItem
         registry,
         &narrow,
         return_path.as_ref(),
+        names,
     );
 
     let output = method_return_type(func);
@@ -350,7 +362,11 @@ fn ctor_field_assign<'a>(stmt: &'a Statement<'a>) -> Option<(String, &'a Express
 
 /// An instance field `x: T` / `x?: T` / `x = v` → a [`Field`]. Static,
 /// computed, or private fields are unsupported (None).
-fn instance_field(pd: &PropertyDefinition, registry: &TypeRegistry) -> Option<Field> {
+fn instance_field(
+    pd: &PropertyDefinition,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Option<Field> {
     if pd.r#static || pd.computed {
         return None;
     }
@@ -370,7 +386,7 @@ fn instance_field(pd: &PropertyDefinition, registry: &TypeRegistry) -> Option<Fi
     let default = pd.value.as_ref().map(|e| {
         let locals = Locals::new();
         let narrow = Narrow::default();
-        let ctx = Ctx::new(&locals, registry, &narrow);
+        let ctx = Ctx::new(&locals, registry, &narrow, names);
         expressions::translate_expr(e, &ctx)
     });
     Some(Field { name, ty, default })

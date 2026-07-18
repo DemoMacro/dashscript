@@ -109,8 +109,8 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
 /// the old value, which we don't preserve — fine for `i++;` but not `return i++`.
 /// The step is `1_f64` because `.ds` `number` is `f64`; an integer step would be a
 /// type error against an `f64` target.
-pub(super) fn update_expr(u: &UpdateExpression) -> Expr {
-    let Some(target) = simple_target(&u.argument) else {
+pub(super) fn update_expr(u: &UpdateExpression, ctx: &Ctx<'_>) -> Expr {
+    let Some(target) = simple_target(&u.argument, ctx) else {
         return parse_quote!(::core::todo!());
     };
     let tokens = match u.operator {
@@ -126,7 +126,7 @@ pub(super) fn update_expr(u: &UpdateExpression) -> Expr {
 fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<AssignTarget> {
     match target {
         AssignmentTarget::AssignmentTargetIdentifier(id) => {
-            Some(AssignTarget::Plain(ident_expr(id)))
+            Some(AssignTarget::Plain(ident_expr(id, ctx)))
         }
         AssignmentTarget::StaticMemberExpression(sm) => {
             let obj = translate_expr(&sm.object, ctx);
@@ -152,9 +152,9 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
     }
 }
 
-fn simple_target(target: &SimpleAssignmentTarget) -> Option<Expr> {
+fn simple_target(target: &SimpleAssignmentTarget, ctx: &Ctx<'_>) -> Option<Expr> {
     match target {
-        SimpleAssignmentTarget::AssignmentTargetIdentifier(id) => Some(ident_expr(id)),
+        SimpleAssignmentTarget::AssignmentTargetIdentifier(id) => Some(ident_expr(id, ctx)),
         _ => None,
     }
 }

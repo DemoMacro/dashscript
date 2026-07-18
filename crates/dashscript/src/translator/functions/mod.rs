@@ -24,6 +24,7 @@ use quote::{format_ident, quote};
 use syn::{parse_quote, Block, Expr, FnArg, Ident, ItemFn, LitStr, Path, ReturnType, Stmt, Type};
 
 use super::context::{Ctx, Locals, Narrow};
+use super::name_table::NameTable;
 use super::registry::TypeRegistry;
 use super::{bindings, declarations, expressions, types};
 
@@ -32,12 +33,16 @@ use super::{bindings, declarations, expressions, types};
 /// `interface` / `type` / `function` become top-level items; other statements
 /// (variable bindings, expression statements) belong inside a function body
 /// and are not mapped at module scope.
-pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Vec<syn::Item> {
+pub fn translate_statement(
+    stmt: &Statement,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Vec<syn::Item> {
     match stmt {
         Statement::FunctionDeclaration(func) => {
-            vec![syn::Item::Fn(translate_function(func, registry))]
+            vec![syn::Item::Fn(translate_function(func, registry, names))]
         }
-        Statement::ClassDeclaration(class) => super::class::translate_class(class, registry),
+        Statement::ClassDeclaration(class) => super::class::translate_class(class, registry, names),
         Statement::TSInterfaceDeclaration(iface) => {
             vec![syn::Item::Struct(declarations::translate_interface(iface))]
         }
@@ -51,7 +56,7 @@ pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Vec<syn
             let Some(decl) = exp.declaration.as_ref() else {
                 return Vec::new();
             };
-            let mut items = translate_exported_declaration(decl, registry);
+            let mut items = translate_exported_declaration(decl, registry, names);
             for item in &mut items {
                 make_pub(item);
             }
@@ -83,12 +88,18 @@ pub fn translate_statement(stmt: &Statement, registry: &TypeRegistry) -> Vec<syn
 /// Translate the inner declaration of an `export` (`export function` /
 /// `export class` / `export interface` / `export type`). Re-exports and
 /// unsupported kinds (enum) yield `[]`. A class yields its `struct` plus `impl`.
-fn translate_exported_declaration(decl: &Declaration, registry: &TypeRegistry) -> Vec<syn::Item> {
+fn translate_exported_declaration(
+    decl: &Declaration,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Vec<syn::Item> {
     match decl {
         Declaration::FunctionDeclaration(func) => {
-            vec![syn::Item::Fn(translate_function(func, registry))]
+            vec![syn::Item::Fn(translate_function(func, registry, names))]
         }
-        Declaration::ClassDeclaration(class) => super::class::translate_class(class, registry),
+        Declaration::ClassDeclaration(class) => {
+            super::class::translate_class(class, registry, names)
+        }
         Declaration::TSInterfaceDeclaration(iface) => {
             vec![syn::Item::Struct(declarations::translate_interface(iface))]
         }
@@ -113,7 +124,7 @@ fn make_pub(item: &mut syn::Item) {
     }
 }
 
-fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
+fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTable<'_>) -> ItemFn {
     let name = func
         .id
         .as_ref()
@@ -130,7 +141,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         locals.mutated = analysis.mutated;
         locals.use_counts = analysis.use_counts;
     }
-    let inputs = translate_params(&func.params, &locals);
+    let inputs = translate_params(&func.params, &locals, names);
     // `void` / `undefined` map to an omitted return type (Rust infers `()`).
     let output = func
         .return_type
@@ -154,9 +165,11 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         .iter()
         .filter_map(|fp| {
             let init = fp.initializer.as_deref()?;
-            let name = bindings::binding_name(&fp.pattern);
-            let default =
-                expressions::translate_expr(init, &Ctx::new(&locals, registry, &Narrow::default()));
+            let name = names.of_pattern(&fp.pattern);
+            let default = expressions::translate_expr(
+                init,
+                &Ctx::new(&locals, registry, &Narrow::default(), names),
+            );
             Some(parse_quote!(let #name = #name.unwrap_or(#default);))
         })
         .collect();
@@ -166,6 +179,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry) -> ItemFn {
         registry,
         &Narrow::default(),
         return_path.as_ref(),
+        names,
     );
     if !defaults.is_empty() {
         let mut stmts = defaults;
@@ -203,12 +217,13 @@ pub(in crate::translator) fn return_path_of(ta: &oxc_ast::ast::TSTypeAnnotation)
 pub(in crate::translator) fn translate_params(
     params: &FormalParameters,
     locals: &Locals,
+    names: &NameTable<'_>,
 ) -> Vec<FnArg> {
     params
         .items
         .iter()
         .map(|fp| {
-            let pat = bindings::binding_name(&fp.pattern);
+            let pat = names.of_pattern(&fp.pattern);
             let ty = fp
                 .type_annotation
                 .as_ref()
@@ -249,12 +264,13 @@ pub(in crate::translator) fn translate_body(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Block {
     let mut stmts: Vec<Stmt> = body
         .map(|b| {
             b.statements
                 .iter()
-                .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
+                .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
                 .collect()
         })
         .unwrap_or_default();
@@ -287,12 +303,13 @@ pub(in crate::translator) fn translate_stmt(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
     match stmt {
         Statement::BlockStatement(block) => block
             .body
             .iter()
-            .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
+            .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
             .collect(),
         Statement::ReturnStatement(ret) => {
             let s: Stmt = match &ret.argument {
@@ -303,7 +320,7 @@ pub(in crate::translator) fn translate_stmt(
                     let expr = expressions::translate_init(
                         arg,
                         ret_ty.as_ref(),
-                        &Ctx::new(&*locals, registry, narrow),
+                        &Ctx::new(&*locals, registry, narrow, names),
                     );
                     parse_quote!(return #expr;)
                 }
@@ -312,15 +329,24 @@ pub(in crate::translator) fn translate_stmt(
             vec![s]
         }
         Statement::ExpressionStatement(es) => {
-            let expr =
-                expressions::translate_expr(&es.expression, &Ctx::new(&*locals, registry, narrow));
+            let expr = expressions::translate_expr(
+                &es.expression,
+                &Ctx::new(&*locals, registry, narrow, names),
+            );
             vec![parse_quote!(#expr;)]
         }
         Statement::VariableDeclaration(decl) => {
-            translate_variable_declaration(decl, locals, registry, narrow)
+            translate_variable_declaration(decl, locals, registry, narrow, names)
         }
         Statement::IfStatement(if_stmt) => {
-            vec![translate_if(if_stmt, locals, registry, narrow, return_path)]
+            vec![translate_if(
+                if_stmt,
+                locals,
+                registry,
+                narrow,
+                return_path,
+                names,
+            )]
         }
         Statement::WhileStatement(while_stmt) => {
             vec![translate_while(
@@ -329,6 +355,7 @@ pub(in crate::translator) fn translate_stmt(
                 registry,
                 narrow,
                 return_path,
+                names,
             )]
         }
         Statement::DoWhileStatement(dws) => vec![translate_do_while(
@@ -337,24 +364,36 @@ pub(in crate::translator) fn translate_stmt(
             registry,
             narrow,
             return_path,
+            names,
         )],
         Statement::ForOfStatement(for_of) => {
-            translate_for_of(for_of, locals, registry, narrow, return_path)
+            translate_for_of(for_of, locals, registry, narrow, return_path, names)
         }
         Statement::ForInStatement(for_in) => {
-            translate_for_in(for_in, locals, registry, narrow, return_path)
+            translate_for_in(for_in, locals, registry, narrow, return_path, names)
         }
         Statement::ForStatement(for_stmt) => {
-            translate_for(for_stmt, locals, registry, narrow, return_path)
+            translate_for(for_stmt, locals, registry, narrow, return_path, names)
         }
         Statement::SwitchStatement(sw) => {
-            vec![translate_switch(sw, locals, registry, narrow, return_path)]
+            vec![translate_switch(
+                sw,
+                locals,
+                registry,
+                narrow,
+                return_path,
+                names,
+            )]
         }
         Statement::BreakStatement(_) => vec![parse_quote!(break;)],
         Statement::ContinueStatement(_) => vec![parse_quote!(continue;)],
-        Statement::ThrowStatement(t) => vec![throw_stmt(&t.argument, locals, registry, narrow)],
+        Statement::ThrowStatement(t) => {
+            vec![throw_stmt(&t.argument, locals, registry, narrow, names)]
+        }
         // `try { … } catch (e) { … }` → `catch_unwind` (see `translate_try`).
-        Statement::TryStatement(t) => translate_try(t, locals, registry, narrow, return_path),
+        Statement::TryStatement(t) => {
+            translate_try(t, locals, registry, narrow, return_path, names)
+        }
         _ => vec![],
     }
 }
@@ -378,6 +417,7 @@ fn translate_try(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
     // Reject `return`/`break`/`continue` directly in the try block (one level
     // — a return nested deeper is rare and surfaces as a Rust type error).
@@ -390,7 +430,7 @@ fn translate_try(
         .block
         .body
         .iter()
-        .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
+        .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
         .collect();
 
     let catch_arm: TokenStream = match &t.handler {
@@ -399,13 +439,13 @@ fn translate_try(
                 .body
                 .body
                 .iter()
-                .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
+                .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
                 .collect();
             match handler.param.as_ref() {
                 // `catch (e) { … }` → bind the panic payload's message as `e`.
                 Some(cp) => match &cp.pattern {
                     BindingPattern::BindingIdentifier(id) => {
-                        let param = bindings::snake(&id.name);
+                        let param = names.of_binding(id);
                         quote! {
                             Err(__panic) => {
                                 let #param = __panic
@@ -439,7 +479,7 @@ fn translate_try(
         let finally: Vec<Stmt> = fin
             .body
             .iter()
-            .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
+            .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
             .collect();
         result.extend(finally);
     }
@@ -462,11 +502,17 @@ fn control_flow_in(stmts: &[Statement]) -> bool {
 /// `throw new Error("msg")` / `throw "msg"` → `panic!("msg")`; any other
 /// `throw expr` → `panic!("{}", expr)` (Rust has no `throw`; `.ds` errors are
 /// treated as unrecoverable panics, since there is no `try`/`catch` yet).
-fn throw_stmt(arg: &Expression, locals: &Locals, registry: &TypeRegistry, narrow: &Narrow) -> Stmt {
+fn throw_stmt(
+    arg: &Expression,
+    locals: &Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+    names: &NameTable<'_>,
+) -> Stmt {
     if let Some(lit) = thrown_message(arg) {
         return parse_quote!(panic!(#lit););
     }
-    let ctx = Ctx::new(locals, registry, narrow);
+    let ctx = Ctx::new(locals, registry, narrow, names);
     let e = expressions::translate_expr(arg, &ctx);
     parse_quote!(panic!("{}", #e);)
 }
@@ -498,20 +544,33 @@ fn translate_variable_declaration(
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
+    names: &NameTable<'_>,
 ) -> Vec<Stmt> {
     let kind_let = matches!(decl.kind, VariableDeclarationKind::Let);
     decl.declarations
         .iter()
         .flat_map(|d| -> Vec<Stmt> {
             match &d.id {
-                BindingPattern::ObjectPattern(obj) => {
-                    destructure_object(obj, d.init.as_ref(), locals, kind_let, registry, narrow)
-                }
-                BindingPattern::ArrayPattern(arr) => {
-                    destructure_array(arr, d.init.as_ref(), locals, kind_let, registry, narrow)
-                }
+                BindingPattern::ObjectPattern(obj) => destructure_object(
+                    obj,
+                    d.init.as_ref(),
+                    locals,
+                    kind_let,
+                    registry,
+                    narrow,
+                    names,
+                ),
+                BindingPattern::ArrayPattern(arr) => destructure_array(
+                    arr,
+                    d.init.as_ref(),
+                    locals,
+                    kind_let,
+                    registry,
+                    narrow,
+                    names,
+                ),
                 _ => {
-                    let name = bindings::binding_name(&d.id);
+                    let name = names.of_pattern(&d.id);
                     // `mut` when a reassignable binding (`let`/`var`) is actually
                     // mutated in this function. JS `var` is reassignable, so
                     // `var i = …; i++` needs `let mut i` (E0384 otherwise);
@@ -532,7 +591,7 @@ fn translate_variable_declaration(
                         expressions::translate_init(
                             e,
                             ty.as_ref(),
-                            &Ctx::new(&*locals, registry, narrow),
+                            &Ctx::new(&*locals, registry, narrow, names),
                         )
                     });
                     vec![build_local(&name, mutable, ty.as_ref(), init.as_ref())]

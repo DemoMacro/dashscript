@@ -6,6 +6,7 @@ use quote::format_ident;
 use syn::{parse_quote, Arm, Block, Ident, Pat, Path, Stmt};
 
 use super::super::context::{Ctx, Locals, Narrow};
+use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
 use super::super::{bindings, expressions};
 use super::{drop_trailing_return, translate_stmt};
@@ -22,13 +23,17 @@ pub(super) fn translate_switch(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Stmt {
     if let Some((scrut, type_name)) = discriminant_member(&sw.discriminant, locals, registry) {
-        return discriminated_match(sw, &scrut, &type_name, locals, registry, return_path);
+        return discriminated_match(sw, &scrut, &type_name, locals, registry, return_path, names);
     }
     let enum_path = discriminant_path(&sw.discriminant, locals);
     let is_string = enum_path.as_ref().is_some_and(|p| p.is_ident("String"));
-    let disc = expressions::translate_expr(&sw.discriminant, &Ctx::new(&*locals, registry, narrow));
+    let disc = expressions::translate_expr(
+        &sw.discriminant,
+        &Ctx::new(&*locals, registry, narrow, names),
+    );
     // A switch on a plain `string` matches against `&str` literal cases, so the
     // discriminant is borrowed as a slice.
     let disc = if is_string {
@@ -39,7 +44,17 @@ pub(super) fn translate_switch(
     let mut arms: Vec<Arm> = sw
         .cases
         .iter()
-        .filter_map(|c| switch_arm(c, enum_path.as_ref(), locals, registry, narrow, return_path))
+        .filter_map(|c| {
+            switch_arm(
+                c,
+                enum_path.as_ref(),
+                locals,
+                registry,
+                narrow,
+                return_path,
+                names,
+            )
+        })
         .collect();
     // A `&str` match is never exhaustive (any other string is possible), so a
     // switch with no `default` — the common JS form — needs a catch-all to
@@ -84,12 +99,15 @@ fn discriminated_match(
     locals: &mut Locals,
     registry: &TypeRegistry,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Stmt {
     let scrut_ident = format_ident!("{}", scrut);
     let arms: Vec<Arm> = sw
         .cases
         .iter()
-        .filter_map(|c| discriminated_arm(c, scrut, type_name, locals, registry, return_path))
+        .filter_map(|c| {
+            discriminated_arm(c, scrut, type_name, locals, registry, return_path, names)
+        })
         .collect();
     parse_quote!(match #scrut_ident { #(#arms)* })
 }
@@ -104,6 +122,7 @@ fn discriminated_arm(
     locals: &mut Locals,
     registry: &TypeRegistry,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Option<Arm> {
     let (pat, narrow) = match &c.test {
         Some(Expression::StringLiteral(s)) => {
@@ -121,7 +140,7 @@ fn discriminated_arm(
         }
         _ => (parse_quote!(_), Narrow::default()),
     };
-    let body = case_body(&c.consequent, locals, registry, &narrow, return_path);
+    let body = case_body(&c.consequent, locals, registry, &narrow, return_path, names);
     Some(parse_quote!(#pat => #body,))
 }
 
@@ -140,12 +159,13 @@ fn switch_arm(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Option<Arm> {
     let pat = match &c.test {
         Some(test) => switch_pattern(test, enum_path),
         None => parse_quote!(_),
     };
-    let body = case_body(&c.consequent, locals, registry, narrow, return_path);
+    let body = case_body(&c.consequent, locals, registry, narrow, return_path, names);
     Some(parse_quote!(#pat => #body,))
 }
 
@@ -178,11 +198,12 @@ fn case_body(
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
+    names: &NameTable<'_>,
 ) -> Block {
     let mut rust: Vec<Stmt> = stmts
         .iter()
         .filter(|s| !matches!(s, Statement::BreakStatement(_)))
-        .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path))
+        .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
         .collect();
     drop_trailing_return(&mut rust);
     parse_quote!({ #(#rust)* })
