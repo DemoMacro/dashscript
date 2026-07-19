@@ -7,6 +7,7 @@ use syn::{parse_quote, parse_str, BinOp, Expr};
 
 use super::super::bindings;
 use super::super::context::Ctx;
+use super::super::flavor::{expr_flavor, NumberFlavor};
 use super::fmt_merge;
 use super::option_local_name;
 use super::translate_expr;
@@ -67,8 +68,18 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     if let Some(expr) = bitwise_expr(bin, ctx) {
         return expr;
     }
-    let left = translate_expr(&bin.left, ctx);
-    let right = translate_expr(&bin.right, ctx);
+    // Flavor-aware operand emit: an `i64` counter mixed with an `f64` literal
+    // would be a Rust type error, so both operands emit at a common flavor.
+    // ES arithmetic is infectious-f64 (one double operand → whole op `f64`);
+    // `/` is always floating-point. Comparison ops match operands the same
+    // way. `**`, string `+`, and bitwise already returned above.
+    let combine = if matches!(bin.operator, BinaryOperator::Division) {
+        NumberFlavor::F64
+    } else {
+        expr_flavor(&bin.left, ctx).combine(expr_flavor(&bin.right, ctx))
+    };
+    let left = super::translate_number_to(&bin.left, combine, ctx);
+    let right = super::translate_number_to(&bin.right, combine, ctx);
     let op = match bin.operator {
         BinaryOperator::Addition => BinOp::Add(Default::default()),
         BinaryOperator::Subtraction => BinOp::Sub(Default::default()),

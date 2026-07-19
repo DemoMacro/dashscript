@@ -164,6 +164,10 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
         locals.mutated = analysis.mutated;
         locals.member_mutated = analysis.member_mutated;
         locals.use_counts = analysis.use_counts;
+        // Number-flavor inference (i64 vs f64): which `number` locals hold
+        // only pure integers. Conservative — a `: number` annotation or any
+        // fractional / division / `Math.*` value forces `F64` in `flavor::infer`.
+        locals.number_flavors = super::flavor::infer(&body.statements, names);
     }
     let inputs = translate_params(&func.params, &locals, names);
     // `void` / `undefined` map to an omitted return type (Rust infers `()`).
@@ -617,7 +621,7 @@ fn translate_variable_declaration(
                         VariableDeclarationKind::Let | VariableDeclarationKind::Var
                     ) && (locals.mutated.contains(&name.to_string())
                         || locals.member_mutated.contains(&name.to_string()));
-                    let ty = d
+                    let mut ty = d
                         .type_annotation
                         .as_ref()
                         .map(|ta| types::translate_type(&ta.type_annotation))
@@ -638,6 +642,21 @@ fn translate_variable_declaration(
                                 expressions::is_number_expr(init, &ctx).then(|| parse_quote!(f64))
                             })
                         });
+                    // Number-flavor promotion: an unannotated integer-only local
+                    // emits as `i64` (loop counters / accumulators) so the loop
+                    // skips the `f64` cast chain. `: number` already forced `F64`
+                    // in `flavor::infer` (R1), so an `I64` here is genuinely
+                    // integer-only. Only a current `f64` type is promoted —
+                    // `String`/`bool`/`Vec` are left untouched.
+                    if locals.number_flavors.get(&name.to_string())
+                        == Some(&super::flavor::NumberFlavor::I64)
+                        && ty
+                            .as_ref()
+                            .and_then(path_of)
+                            .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "f64"))
+                    {
+                        ty = Some(parse_quote!(i64));
+                    }
                     if let Some(path) = ty.as_ref().and_then(path_of) {
                         locals.insert(name.to_string(), path);
                     }

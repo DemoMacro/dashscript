@@ -4,8 +4,8 @@ use super::super::Translator;
 fn translates_arithmetic_and_comparison() {
     let src = "function f(): void { console.log(1 + 2 * 3); console.log(4 >= 2); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("1_f64 + 2_f64 * 3_f64"), "got:\n{rust}");
-    assert!(rust.contains("4_f64 >= 2_f64"), "got:\n{rust}");
+    assert!(rust.contains("1_i64 + 2_i64 * 3_i64"), "got:\n{rust}");
+    assert!(rust.contains("4_i64 >= 2_i64"), "got:\n{rust}");
 }
 
 #[test]
@@ -89,8 +89,8 @@ fn translates_typeof_global_constructors_and_namespaces() {
 fn translates_compound_assignment() {
     let src = "function f(): void { let n = 0; n += 5; n = n * 2; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("n += 5_f64"), "got:\n{rust}");
-    assert!(rust.contains("n = n * 2_f64"), "got:\n{rust}");
+    assert!(rust.contains("n += 5_i64"), "got:\n{rust}");
+    assert!(rust.contains("n = n * 2_i64"), "got:\n{rust}");
 }
 
 #[test]

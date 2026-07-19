@@ -8,9 +8,13 @@ use syn::{parse_quote, Expr, Type};
 use super::super::bindings;
 use super::super::builtins;
 use super::super::context::Ctx;
+use super::super::flavor::NumberFlavor;
 use super::super::types;
 use super::fmt_merge;
-use super::{is_number_arg, translate_argument, translate_argument_init, translate_expr};
+use super::{
+    array_elem_arg, is_number_arg, translate_argument, translate_argument_init, translate_expr,
+    translate_number_to,
+};
 
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
@@ -42,7 +46,14 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                     // route any numeric argument — a literal, a numeric local,
                     // arithmetic, `Math.*`, `.length` — through the `__ds` helper
                     // (ryu_js). Its presence in the output flags `needs_ryu_js`.
-                    let e = translate_argument(a, ctx);
+                    // `__ds::number_to_string` takes `f64`; a flavor-promoted
+                    // `i64` local (`console.log(total)` where `total` is `i64`)
+                    // is site-cast here so the call compiles.
+                    let e = if let Some(expr) = a.as_expression() {
+                        translate_number_to(expr, NumberFlavor::F64, ctx)
+                    } else {
+                        translate_argument(a, ctx)
+                    };
                     let wrapped: Expr = parse_quote!(crate::__ds::number_to_string(#e));
                     fmt.push_str("{}");
                     vals.push(wrapped);
@@ -171,10 +182,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         }
         if let Some(method) = builtins::map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object, ctx);
+            // `push` (the only `map_method` name with an argument) writes into a
+            // `Vec<f64>`, so a flavor-promoted `i64` arg is coerced to `f64`.
             let args: Vec<Expr> = call
                 .arguments
                 .iter()
-                .map(|a| translate_argument(a, ctx))
+                .map(|a| array_elem_arg(a, ctx))
                 .collect();
             return parse_quote!(#obj.#method(#(#args),*));
         }
@@ -206,7 +219,19 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 .and_then(|h| h.get(i))
                 .and_then(|opt| opt.as_ref())
                 .map(|p| -> Type { parse_quote!(#p) });
-            let val = translate_argument_init(a, hint_ty.as_ref(), ctx);
+            // A `number` parameter is `f64` (Phase 1 keeps cross-function
+            // flavor out of scope), so a flavor-promoted `i64` argument
+            // (`compute(i)` where `i` is an `i64` counter) is site-cast to
+            // match the callee's `f64` parameter type. A non-number argument
+            // keeps the struct-hint / default-aware path.
+            let val = if is_number_arg(a, ctx) {
+                match a.as_expression() {
+                    Some(e) => translate_number_to(e, NumberFlavor::F64, ctx),
+                    None => translate_argument_init(a, hint_ty.as_ref(), ctx),
+                }
+            } else {
+                translate_argument_init(a, hint_ty.as_ref(), ctx)
+            };
             // A reference-parameter position borrows a bare-identifier argument
             // in place (`&mut arg`): the callee's mutation is then visible
             // here, and the value is neither moved nor cloned. Any other

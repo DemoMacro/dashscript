@@ -1275,7 +1275,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
     },
     "note": ""
   },
@@ -1287,7 +1287,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
     },
     "note": ""
   },
@@ -1299,7 +1299,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
     },
     "note": ""
   },
@@ -1311,7 +1311,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
     },
     "note": ""
   },
@@ -1323,7 +1323,7 @@
     "detail": "via rquickjs engine",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
     },
     "note": ""
   },

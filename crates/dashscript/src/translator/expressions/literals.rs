@@ -38,3 +38,16 @@ pub(super) fn numeric_expr(value: f64) -> Expr {
     };
     parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN))
 }
+
+/// Render an integer-valued `f64` as an `i64` literal (`0_i64`, `42_i64`) —
+/// the initializer of a flavor-inferred `i64` local. Only integer values reach
+/// here (`flavor::literal` gates the promotion); a fractional value falls back
+/// to `_f64` defensively (cargo check would flag the type mismatch anyway).
+pub(super) fn numeric_expr_i64(value: f64) -> Expr {
+    if value.is_finite() && value.fract() == 0.0 {
+        let s = format!("{value}_i64");
+        parse_str(&s).unwrap_or_else(|_| parse_quote!(0_i64))
+    } else {
+        numeric_expr(value)
+    }
+}

@@ -5,7 +5,8 @@ use oxc_ast::ast::{Argument, StaticMemberExpression};
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
-use super::super::expressions::{translate_argument, translate_expr};
+use super::super::expressions::{translate_argument, translate_number_to};
+use super::super::flavor::NumberFlavor;
 use super::usize_arg;
 
 /// Methods on a `.ds` `number` (`f64`). `.toFixed(n)` → a formatted string
@@ -15,7 +16,11 @@ pub(in crate::translator) fn number_method(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    let recv = translate_expr(&sm.object, ctx);
+    // `number` methods (`toString`/`toPrecision`/…) emit `f64`-only operations
+    // (`.is_nan()`, `as i64`, …); coerce a flavor-promoted `i64` receiver to
+    // `f64` so those sites compile (an `i64 → f64` widening is exact below 2^53,
+    // the ES safe-integer range).
+    let recv = translate_number_to(&sm.object, NumberFlavor::F64, ctx);
     Some(match sm.property.name.as_str() {
         // `(3.14).toFixed(2)` → `format!("{:.*}", n, …)`. In Rust the `*`
         // precision argument comes first, the value second.
@@ -177,6 +182,17 @@ pub(in crate::translator) fn number_constant(name: &str) -> Option<Expr> {
     })
 }
 
+/// Translate a number `Argument` coerced to `f64`. The type-check arms below
+/// emit `f64`-only methods (`.is_nan()` / `.fract()` / `.abs()`); a flavor-
+/// promoted `i64` local would otherwise lack them.
+fn number_arg_to_f64(arg: &Argument, ctx: &Ctx<'_>) -> Option<Expr> {
+    Some(translate_number_to(
+        arg.as_expression()?,
+        NumberFlavor::F64,
+        ctx,
+    ))
+}
+
 /// `Number.<m>(x)`: static type checks on an `f64`. `isNaN` → `is_nan`,
 /// `isFinite` → `is_finite`, `isInteger` → a finite value with no fractional
 /// part, `isSafeInteger` adds the ±(2^53 − 1) bound. `parseFloat`/`parseInt`
@@ -187,17 +203,26 @@ pub(in crate::translator) fn number_static(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    let x = translate_argument(args.first()?, ctx);
+    let arg = args.first()?;
+    // `parseFloat` / `parseInt` take a string — keep the raw argument. The
+    // type-check arms re-translate at `f64` (see `number_arg_to_f64`).
+    let x = translate_argument(arg, ctx);
     Some(match name {
-        // `(#x)` — the argument may be a negated literal (`-Infinity`); a bare
-        // `#x.is_finite()` would parse as `-(x.is_finite())` because method-call
-        // binds tighter than unary `-`, applying `-` to the resulting `bool`
-        // (E0600). Parenthesise so the receiver is the whole argument.
-        "isNaN" => parse_quote!((#x).is_nan()),
-        "isFinite" => parse_quote!((#x).is_finite()),
-        "isInteger" => parse_quote!((#x).is_finite() && (#x).fract() == 0_f64),
+        "isNaN" => {
+            let n = number_arg_to_f64(arg, ctx)?;
+            parse_quote!((#n).is_nan())
+        }
+        "isFinite" => {
+            let n = number_arg_to_f64(arg, ctx)?;
+            parse_quote!((#n).is_finite())
+        }
+        "isInteger" => {
+            let n = number_arg_to_f64(arg, ctx)?;
+            parse_quote!((#n).is_finite() && (#n).fract() == 0_f64)
+        }
         "isSafeInteger" => {
-            parse_quote!((#x).is_finite() && (#x).fract() == 0_f64 && (#x).abs() <= 9_007_199_254_740_991_f64)
+            let n = number_arg_to_f64(arg, ctx)?;
+            parse_quote!((#n).is_finite() && (#n).fract() == 0_f64 && (#n).abs() <= 9_007_199_254_740_991_f64)
         }
         // `Number.parseFloat(s)` ≡ the global `parseFloat` — full ES
         // truncation semantics (see `global::parse_float_expr`).

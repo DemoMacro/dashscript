@@ -4,7 +4,7 @@ use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::translate_argument;
+use super::array_elem_arg;
 
 /// `new Foo(args)` → `Foo::new(args)`. Only an identifier callee (a user class)
 /// maps; `new foo.Bar()` or `new (factory())()` fall back to `todo!()`.
@@ -24,11 +24,10 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             _ => {}
         }
     }
-    let args: Vec<Expr> = n
-        .arguments
-        .iter()
-        .map(|a| translate_argument(a, ctx))
-        .collect();
+    // A class field typed `number` is `f64`, so the synthesized `new` takes
+    // `f64` parameters — a flavor-promoted `i64` argument (`new Point3D(i, …)`
+    // where `i` is an `i64` counter) is site-cast via `array_elem_arg`.
+    let args: Vec<Expr> = n.arguments.iter().map(|a| array_elem_arg(a, ctx)).collect();
     parse_quote!(#name::new(#(#args),*))
 }
 

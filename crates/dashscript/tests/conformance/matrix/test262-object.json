@@ -42,7 +42,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:12:46: warning: unnecessary parentheses around function argument\nsrc\\main.rs:6:13: error[E0599]: no method named `extend` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:13: error[E0599]: no method named `extend` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:8:13: error[E0599]: no method named `extend` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:12:54: error[E0599]: no method named `keys` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:15:33: error[E0608]: cannot index into a value of type `f64`",
+    "detail": "src\\main.rs:12:46: warning: unnecessary parentheses around function argument\nsrc\\main.rs:6:13: error[E0658]: use of unstable library feature `integer_extend_truncate`\nsrc\\main.rs:6:13: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:7:13: error[E0658]: use of unstable library feature `integer_extend_truncate`\nsrc\\main.rs:7:13: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:8:13: error[E0658]: use of unstable library feature `integer_extend_truncate`",
     "note": ""
   },
   {
@@ -8787,10 +8787,10 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -16072,10 +16072,10 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
+    "detail": "oracle diff: line 1: ds=\"false\" node=\"true\"",
     "oracle": {
       "status": "diff",
-      "detail": "line count: ds=0 node=1"
+      "detail": "line 1: ds=\"false\" node=\"true\""
     },
     "note": ""
   },

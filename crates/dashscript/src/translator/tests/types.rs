@@ -207,7 +207,7 @@ fn escapes_rust_keyword_variable_to_raw_ident() {
     // `const type = 5` now infers f64 and annotates the binding (a bare `5`
     // would leave the local as an ambiguous {float}); `type` still escapes to
     // `r#type`.
-    assert!(rust.contains("let r#type: f64 = 5_f64"), "got:\n{rust}");
+    assert!(rust.contains("let r#type: i64 = 5_i64"), "got:\n{rust}");
     assert!(
         !rust.contains("return"),
         "trailing r#type, no return, got:\n{rust}"

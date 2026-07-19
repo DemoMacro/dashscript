@@ -6,7 +6,7 @@ use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::super::expressions::{arrow_expr, translate_argument, translate_expr};
+use super::super::expressions::{array_elem_arg, arrow_expr, translate_argument, translate_expr};
 use super::{str_method_arg, usize_arg};
 
 /// Array methods on a `Vec` of Copy elements. The callback methods share a
@@ -99,8 +99,8 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // (not moved) so the local stays usable after; the length is read once.
         // Mirrors `String.prototype.slice`'s index math.
         "slice" => {
-            let start = args.first().map(|a| translate_argument(a, ctx));
-            let end = args.get(1).map(|a| translate_argument(a, ctx));
+            let start = args.first().map(|a| array_elem_arg(a, ctx));
+            let end = args.get(1).map(|a| array_elem_arg(a, ctx));
             match (start, end) {
                 (Some(s), Some(e)) => parse_quote!({
                     let __v = &#recv;
@@ -122,7 +122,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // from the end). `i` is `f64`; bind it once so a side-effecting index
         // expression evaluates only once, then branch on its sign.
         "at" => {
-            let idx = translate_argument(args.first()?, ctx);
+            let idx = array_elem_arg(args.first()?, ctx);
             parse_quote!({
                 let __at_i = #idx;
                 #recv[if __at_i >= 0_f64 { __at_i as usize } else { (#recv.len() as f64 + __at_i) as usize }]
@@ -132,10 +132,10 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // `from` (a negative `from` is `len + from`, clamped to 0; a `from` past
         // the end yields -1), or -1. Searches a suffix slice and re-bases.
         "indexOf" => {
-            let needle = translate_argument(args.first()?, ctx);
+            let needle = array_elem_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(from) => {
-                    let f = translate_argument(from, ctx);
+                    let f = array_elem_arg(from, ctx);
                     parse_quote!({
                         let __n = #recv.len();
                         let __f = { let v = #f; if v < 0_f64 { (__n as f64 + v).max(0_f64) } else { v } } as usize;
@@ -153,10 +153,10 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // len clamps to the last element), or -1. `rposition` over a bounded
         // prefix `[0, from]`.
         "lastIndexOf" => {
-            let needle = translate_argument(args.first()?, ctx);
+            let needle = array_elem_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(from) => {
-                    let f = translate_argument(from, ctx);
+                    let f = array_elem_arg(from, ctx);
                     parse_quote!({
                         let __n = #recv.len();
                         let __f = { let v = #f; if v < 0_f64 { __n as f64 + v } else { v.min(__n as f64) } };
@@ -190,10 +190,10 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // index `from` (negative clamps to 0; `from >= len` → empty slice →
         // false). `from` routes through `i64` so a negative value survives.
         "includes" => {
-            let needle = translate_argument(args.first()?, ctx);
+            let needle = array_elem_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(from) => {
-                    let f = translate_argument(from, ctx);
+                    let f = array_elem_arg(from, ctx);
                     parse_quote!({
                         let __from = ((#f) as i64).max(0) as usize;
                         #recv[__from.min(#recv.len())..].contains(&#needle)
@@ -291,7 +291,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // `.fill(v)` → in-place `Vec::fill` (every element set to `v`). Mutates;
         // a start/end range is unsupported.
         "fill" if args.len() == 1 => {
-            let v = translate_argument(args.first()?, ctx);
+            let v = array_elem_arg(args.first()?, ctx);
             parse_quote!(#recv.fill(#v))
         }
         // `.reverse()` → in-place `Vec::reverse`. Mutates; needs a mutable
@@ -304,7 +304,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // `.unshift(x)` → insert `x` at the front (TS returns the new length;
         // statement-style).
         "unshift" if args.len() == 1 => {
-            let v = translate_argument(args.first()?, ctx);
+            let v = array_elem_arg(args.first()?, ctx);
             parse_quote!(#recv.insert(0, #v))
         }
         // `.sort()` → in-place numeric ascending sort. DELIBERATE divergence
@@ -340,7 +340,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             let items: Vec<Expr> = args
                 .iter()
                 .skip(2)
-                .map(|a| translate_argument(a, ctx))
+                .map(|a| array_elem_arg(a, ctx))
                 .collect();
             parse_quote!({
                 let mut __v = #recv.clone();
@@ -353,7 +353,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // `.with(i, v)` → copy with element `i` replaced (ES2023).
         "with" if args.len() == 2 => {
             let i = usize_arg(args.first()?, ctx);
-            let v = translate_argument(args.get(1)?, ctx);
+            let v = array_elem_arg(args.get(1)?, ctx);
             parse_quote!({
                 let mut __v = #recv.clone();
                 __v[#i] = #v;
@@ -370,7 +370,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             let items: Vec<Expr> = args
                 .iter()
                 .skip(2)
-                .map(|a| translate_argument(a, ctx))
+                .map(|a| array_elem_arg(a, ctx))
                 .collect();
             parse_quote!({
                 let __start = #start;
@@ -447,7 +447,7 @@ pub(in crate::translator) fn array_static(
     Some(match sm.property.name.as_str() {
         // `Array.of(a, b, c)` → `vec![a, b, c]`.
         "of" => {
-            let items: Vec<Expr> = args.iter().map(|a| translate_argument(a, ctx)).collect();
+            let items: Vec<Expr> = args.iter().map(|a| array_elem_arg(a, ctx)).collect();
             parse_quote!(vec![#(#items),*])
         }
         // `Array.isArray(x)` — DashScript types are known at compile time, so

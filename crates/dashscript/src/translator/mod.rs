@@ -15,6 +15,7 @@ mod class;
 pub mod context;
 pub mod declarations;
 pub mod expressions;
+mod flavor;
 pub mod functions;
 mod globals;
 pub mod imports;

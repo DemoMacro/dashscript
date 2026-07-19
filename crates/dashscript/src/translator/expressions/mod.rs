@@ -39,6 +39,91 @@ use syn::{parse_quote, Expr, Pat, Type};
 use super::context::Ctx;
 use super::{bindings, types};
 
+/// Translate `expr` and cast it to number-flavor `to`. A numeric literal is
+/// re-emitted at the target flavor (no cast); any other expression is
+/// translated then cast if its own flavor differs. Used at arithmetic /
+/// comparison operand sites so an `i64` counter and an `f64` literal meet at
+/// one type.
+pub(in crate::translator) fn translate_number_to(
+    expr: &Expression,
+    to: super::flavor::NumberFlavor,
+    ctx: &Ctx<'_>,
+) -> Expr {
+    use super::flavor::{expr_flavor, NumberFlavor};
+    // A bare numeric literal — or its negation (`-1000`) — is re-emitted at the
+    // target flavor directly. Without this, a negated literal at `i64` would
+    // slip through the generic cast path: the unary emitter is f64-only
+    // (`-1000_f64`), but `expr_flavor` reports `I64`, so the `(I64, I64)` arm
+    // returns that f64 emit verbatim and `let i: i64 = -1000_f64` mismatches.
+    if let Some(v) = literal_value(expr) {
+        return match to {
+            NumberFlavor::I64 => literals::numeric_expr_i64(v),
+            NumberFlavor::F64 => literals::numeric_expr(v),
+        };
+    }
+    let e = translate_expr(expr, ctx);
+    match (expr_flavor(expr, ctx), to) {
+        (NumberFlavor::F64, NumberFlavor::I64) => cast_as(e, parse_quote!(i64)),
+        (NumberFlavor::I64, NumberFlavor::F64) => cast_as(e, parse_quote!(f64)),
+        _ => e,
+    }
+}
+
+/// Cast `e` to `ty`, parenthesizing a compound operand. `as` (precedence 7)
+/// outranks arithmetic (9) but does not bind tightly enough to wrap a binary
+/// expression on its left, so `(i - j) as f64` is required — a bare
+/// `i - j as f64` parses as `i - (j as f64)` (a type mismatch). A simple
+/// operand (path/literal/call/…) needs no parens, so call/assign sites stay
+/// free of `unused_parens`.
+fn cast_as(e: Expr, ty: Type) -> Expr {
+    let simple = matches!(
+        &e,
+        Expr::Path(_)
+            | Expr::Lit(_)
+            | Expr::Paren(_)
+            | Expr::Call(_)
+            | Expr::MethodCall(_)
+            | Expr::Field(_)
+            | Expr::Index(_)
+            | Expr::Tuple(_)
+    );
+    if simple {
+        parse_quote!(#e as #ty)
+    } else {
+        parse_quote!((#e) as #ty)
+    }
+}
+
+/// The numeric value of a literal expression: a `NumericLiteral`, or its
+/// negation (`-1000` → `-1000.0`). `None` for anything else — the generic cast
+/// path handles it. `-0` is reported as `-0.0`; callers reaching `i64` for it
+/// would be a flavor-inference bug (a `-0` binding is forced `f64`), caught by
+/// the conformance gate.
+fn literal_value(expr: &Expression) -> Option<f64> {
+    use oxc_syntax::operator::UnaryOperator;
+    match expr {
+        Expression::NumericLiteral(n) => Some(n.value),
+        Expression::UnaryExpression(u)
+            if matches!(
+                u.operator,
+                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus
+            ) =>
+        {
+            if let Expression::NumericLiteral(n) = &u.argument {
+                Some(if u.operator == UnaryOperator::UnaryNegation {
+                    -n.value
+                } else {
+                    n.value
+                })
+            } else {
+                None
+            }
+        }
+        Expression::ParenthesizedExpression(p) => literal_value(&p.expression),
+        _ => None,
+    }
+}
+
 /// Translate an expression to its `syn::Expr` form.
 ///
 /// Unmapped expressions fall back to `todo!()` so the generated Rust compiles
@@ -158,6 +243,26 @@ pub fn translate_init(expr: &Expression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) 
             return parse_quote!(#path::#variant);
         }
     }
+    // A `number` literal into an `i64`-flavored binding anchors to `_i64` so
+    // `let i: i64 = 0` emits `0_i64` (not `0_f64`, a type mismatch). Other
+    // contexts keep `_f64` — a bare literal must stay a valid method receiver
+    // (`5.is_finite()`).
+    if let Expression::NumericLiteral(n) = expr {
+        if ty_hint.is_some_and(is_i64_type) {
+            return literals::numeric_expr_i64(n.value);
+        }
+    }
+    // A non-literal number expression into a number-typed binding casts to
+    // the binding's flavor: `return i` where `i: i64` into `-> f64` needs
+    // `i as f64`; a same-flavor binding is an identity no-op.
+    if ty_hint.is_some_and(is_number_type) && is_number_expr(expr, ctx) {
+        let to = if ty_hint.is_some_and(is_i64_type) {
+            super::flavor::NumberFlavor::I64
+        } else {
+            super::flavor::NumberFlavor::F64
+        };
+        return translate_number_to(expr, to, ctx);
+    }
     translate_expr(expr, ctx)
 }
 
@@ -166,6 +271,22 @@ fn is_option(ty: &Type) -> bool {
     matches!(
         ty,
         Type::Path(tp) if tp.path.segments.last().is_some_and(|s| s.ident == "Option")
+    )
+}
+
+/// True when `ty` is `i64` — a flavor-promoted integer binding.
+fn is_i64_type(ty: &Type) -> bool {
+    matches!(
+        ty,
+        Type::Path(tp) if tp.path.segments.last().is_some_and(|s| s.ident == "i64")
+    )
+}
+
+/// True when `ty` is a numeric scalar (`f64` or `i64`).
+fn is_number_type(ty: &Type) -> bool {
+    matches!(
+        ty,
+        Type::Path(tp) if tp.path.segments.last().is_some_and(|s| s.ident == "f64" || s.ident == "i64")
     )
 }
 
@@ -283,8 +404,10 @@ fn template_expr(t: &TemplateLiteral, ctx: &Ctx<'_>) -> Expr {
             let translated = translate_expr(e, ctx);
             // A numeric interpolation routes through `__ds::number_to_string`
             // so `${1e21}` is "1e+21", not Rust's "1000000000000000000000".
+            // Coerced to `f64` so a flavor-promoted `i64` local compiles.
             if is_number_expr(e, ctx) {
-                parse_quote!(crate::__ds::number_to_string(#translated))
+                let n = translate_number_to(e, super::flavor::NumberFlavor::F64, ctx);
+                parse_quote!(crate::__ds::number_to_string(#n))
             } else {
                 translated
             }
@@ -319,7 +442,7 @@ pub(in crate::translator) fn is_number_expr(e: &Expression, ctx: &Ctx<'_>) -> bo
         }
         Expression::Identifier(id) => match id.name.as_str() {
             "NaN" | "Infinity" => true,
-            _ => is_f64_local(id, ctx),
+            _ => is_number_local(id, ctx),
         },
         Expression::CallExpression(c) => is_number_call(&c.callee),
         // `.length` is numeric (array/string length); other members are not
@@ -353,12 +476,38 @@ pub(in crate::translator) fn is_number_arg(arg: &Argument, ctx: &Ctx<'_>) -> boo
         }
         Argument::Identifier(id) => match id.name.as_str() {
             "NaN" | "Infinity" => true,
-            _ => is_f64_local(id, ctx),
+            _ => is_number_local(id, ctx),
         },
         Argument::CallExpression(c) => is_number_call(&c.callee),
         Argument::StaticMemberExpression(sm) => sm.property.name.as_str() == "length",
         _ => false,
     }
+}
+
+/// Coerce a number expression to `f64` for writing into a `Vec<f64>` (an ES
+/// array's element type is `number`). A flavor-promoted `i64` scalar — `i` in
+/// `arr.push(i)` where `i` is an `i64` counter, or an element of a `[i, j]`
+/// literal — would otherwise mismatch `Vec<f64>::push` / `vec![i64; …]`. A
+/// non-number expression translates unchanged (cargo backstops it: TS forbids
+/// a number in a `string[]`, so a number never lands in a `Vec<String>`).
+pub(in crate::translator) fn array_elem_expr(e: &Expression, ctx: &Ctx<'_>) -> Expr {
+    if is_number_expr(e, ctx) {
+        translate_number_to(e, super::flavor::NumberFlavor::F64, ctx)
+    } else {
+        translate_expr(e, ctx)
+    }
+}
+
+/// [`array_elem_expr`] over a call argument — the write site for `arr.push(arg)`
+/// / `arr.unshift(arg)` / `arr.fill(arg)` / `splice(…, items)` / `with(i, arg)`
+/// / `Array.of(…, arg)`.
+pub(in crate::translator) fn array_elem_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    if is_number_arg(arg, ctx) {
+        if let Some(e) = arg.as_expression() {
+            return translate_number_to(e, super::flavor::NumberFlavor::F64, ctx);
+        }
+    }
+    translate_argument(arg, ctx)
 }
 
 /// The arithmetic binary operators whose `f64 × f64 → f64` result is numeric.
@@ -377,11 +526,16 @@ fn is_arith_operator(op: &oxc_syntax::operator::BinaryOperator) -> bool {
     )
 }
 
-/// True when `id` is a local whose recorded type is `f64`.
-fn is_f64_local(id: &IdentifierReference, ctx: &Ctx<'_>) -> bool {
+/// True when `id` is a numeric local (`f64` or `i64`) — so a number→string
+/// coercion routes through `__ds::number_to_string`. ES rendering applies to
+/// integers too, not just doubles.
+fn is_number_local(id: &IdentifierReference, ctx: &Ctx<'_>) -> bool {
     let name = bindings::snake(&id.name).to_string();
-    ctx.local_type(&name)
-        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "f64"))
+    ctx.local_type(&name).is_some_and(|p| {
+        p.segments
+            .last()
+            .is_some_and(|s| s.ident == "f64" || s.ident == "i64")
+    })
 }
 
 /// True when `callee` is a known-numeric call: `Math.<anything>(…)`, or the

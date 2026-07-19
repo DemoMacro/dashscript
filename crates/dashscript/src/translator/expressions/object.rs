@@ -11,7 +11,7 @@ use super::super::bindings;
 use super::super::context::Ctx;
 use super::super::types;
 use super::is_hashmap;
-use super::translate_expr;
+use super::{array_elem_expr, translate_expr};
 
 /// `Point { x: 1 }` — needs the target type's name from the binding annotation.
 /// A `{ kind: "circle", … }` literal whose target is a registered
@@ -57,7 +57,7 @@ pub(super) fn object_expr(
                         }
                     }
                 }
-                let mut value = translate_expr(&op.value, ctx);
+                let mut value = array_elem_expr(&op.value, ctx);
                 if is_optional {
                     value = parse_quote!(Some(#value));
                 }
@@ -125,7 +125,7 @@ fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
             let ObjectPropertyKind::ObjectProperty(op) = p else {
                 return None;
             };
-            let value = translate_expr(&op.value, ctx);
+            let value = array_elem_expr(&op.value, ctx);
             let key = if op.computed {
                 // `[k]: v` — a dynamic key (an expression, typically a String).
                 translate_expr(op.key.as_expression()?, ctx)
@@ -160,7 +160,7 @@ fn variant_construct(obj: &ObjectExpression, path: &syn::Path, ctx: &Ctx<'_>) ->
             if key == "kind" {
                 return None;
             }
-            let value = translate_expr(&op.value, ctx);
+            let value = array_elem_expr(&op.value, ctx);
             Some(parse_quote!(#key: #value))
         })
         .collect();

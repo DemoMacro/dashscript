@@ -6,7 +6,8 @@ use quote::{format_ident, quote};
 use syn::{parse_quote, parse_str, Expr};
 
 use super::super::context::Ctx;
-use super::super::expressions::translate_argument;
+use super::super::expressions::{translate_argument, translate_number_to};
+use super::super::flavor::NumberFlavor;
 
 /// `Math.<m>(args)` → the idiomatic Rust float operation. Single-arg methods
 /// (`floor`, `ceil`, `abs`, …) become a method on the argument; `max`/`min`
@@ -97,13 +98,13 @@ pub(in crate::translator) fn math_method(
         }
         "pow" => {
             let a = math_receiver(args.first()?, ctx);
-            let b = translate_argument(args.get(1)?, ctx);
+            let b = math_receiver(args.get(1)?, ctx);
             Some(method_call(a, "powf", vec![b]))
         }
         // `Math.atan2(y, x)` → `y.atan2(x)` (2-arg, unlike the 1-arg `atan`).
         "atan2" => {
             let y = math_receiver(args.first()?, ctx);
-            let x = translate_argument(args.get(1)?, ctx);
+            let x = math_receiver(args.get(1)?, ctx);
             Some(method_call(y, "atan2", vec![x]))
         }
         // `Math.hypot` is variadic: `hypot()` = 0, `hypot(a)` = |a|, and the
@@ -250,11 +251,14 @@ fn math_receiver(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         return parse_str(&s).unwrap_or_else(|_| parse_quote!(::core::f64::NAN));
     }
     // JS Math applies ToNumber to a non-number argument (`null` → +0,
-    // `undefined`/an object → NaN, a boolean → 1/0). DashScript is statically
-    // typed, so a real `number` arg (a variable, an arithmetic expression)
-    // falls through to `translate_argument` and keeps its own f64 type.
+    // `undefined`/an object → NaN, a boolean → 1/0).
     if let Some(e) = to_number_expr(arg) {
         return e;
+    }
+    // A real `number` arg may be flavor-promoted to `i64`; coerce to `f64` so
+    // the float-only method the caller emits (`cos`/`exp`/`ceil`/…) compiles.
+    if let Some(e) = arg.as_expression() {
+        return translate_number_to(e, NumberFlavor::F64, ctx);
     }
     translate_argument(arg, ctx)
 }

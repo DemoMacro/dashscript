@@ -11,7 +11,7 @@ use super::super::bindings;
 use super::super::context::Ctx;
 use super::logical::assign_truthy;
 use super::member::is_hashmap_local;
-use super::{ident_expr, translate_expr};
+use super::{array_elem_expr, ident_expr, translate_expr};
 
 /// The lvalue kind of an assignment's left-hand side. A plain target is any
 /// Rust lvalue (`x`, `obj.field`, `arr[i as usize]`); a `m["k"]` on a
@@ -40,6 +40,12 @@ enum AssignTarget {
 /// (only `=` — HashMap has no compound-assign semantics).
 pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
     let right = translate_expr(&a.right, ctx);
+    // Arithmetic (and plain `=`) compound assignments must match the target's
+    // flavor — an `i64` counter `= 5_f64` is a type error. A literal re-emits
+    // at the target flavor; any other expression casts. Bitwise and logical
+    // arms keep `right` (they lower to `f64`/`Option`).
+    let target_flavor = assign_target_flavor(&a.left, ctx);
+    let num_right = super::translate_number_to(&a.right, target_flavor, ctx);
     match assignment_target_kind(&a.left, ctx) {
         Some(AssignTarget::Plain(target)) => {
             let tokens = match a.operator {
@@ -54,7 +60,7 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                             let lit_token = syn::LitStr::new(lit, proc_macro2::Span::call_site());
                             quote!(#target.push_str(#lit_token))
                         }
-                        None => quote!(#target = #right),
+                        None => quote!(#target = #num_right),
                     }
                 }
                 // `s += "lit"` is string append (String has no AddAssign) → `push_str`.
@@ -64,13 +70,13 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                             syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
                         quote!(#target.push_str(#lit))
                     }
-                    _ => quote!(#target += #right),
+                    _ => quote!(#target += #num_right),
                 },
-                AssignmentOperator::Subtraction => quote!(#target -= #right),
-                AssignmentOperator::Multiplication => quote!(#target *= #right),
-                AssignmentOperator::Division => quote!(#target /= #right),
-                AssignmentOperator::Remainder => quote!(#target %= #right),
-                AssignmentOperator::Exponential => quote!(#target = #target.powf(#right)),
+                AssignmentOperator::Subtraction => quote!(#target -= #num_right),
+                AssignmentOperator::Multiplication => quote!(#target *= #num_right),
+                AssignmentOperator::Division => quote!(#target /= #num_right),
+                AssignmentOperator::Remainder => quote!(#target %= #num_right),
+                AssignmentOperator::Exponential => quote!(#target = #target.powf(#num_right)),
                 // Bitwise compound reads & writes the target, so it must be a
                 // simple identifier lvalue; the result is cast back to `f64`.
                 // Each operand is parenthesized before `as i64` so the cast
@@ -124,6 +130,10 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
             // needs it. The `__ds::array_set` token in the output flags
             // `needs_array_helper`.
             AssignmentOperator::Assign => {
+                // Coerce a numeric RHS to `f64` — `__ds::array_set` stores into
+                // a `Vec<f64>`, so an `i64` scalar RHS (`arr[i] = count`) needs
+                // the same site-cast as `arr.push(count)`.
+                let val = array_elem_expr(&a.right, ctx);
                 // Bind the value first so an RHS that reads the same array
                 // (`arr[i] = arr[j]`) cannot collide with the `&mut` borrow
                 // `array_set` takes — the immutable borrow ends at the `let`
@@ -134,12 +144,12 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                 // auto-reborrows the binding.
                 if is_ref {
                     parse_quote!({
-                        let __ds_v = #right;
+                        let __ds_v = #val;
                         crate::__ds::array_set(#obj, #idx, __ds_v);
                     })
                 } else {
                     parse_quote!({
-                        let __ds_v = #right;
+                        let __ds_v = #val;
                         crate::__ds::array_set(&mut #obj, #idx, __ds_v);
                     })
                 }
@@ -150,19 +160,48 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
     }
 }
 
-/// `i++` / `i--` → `i += 1_f64` / `i -= 1_f64`. Statement-context only: TS returns
-/// the old value, which we don't preserve — fine for `i++;` but not `return i++`.
-/// The step is `1_f64` because `.ds` `number` is `f64`; an integer step would be a
-/// type error against an `f64` target.
+/// `i++` / `i--` → `i += 1` / `i -= 1`. Statement-context only: TS returns the
+/// old value, which we don't preserve — fine for `i++;` but not `return i++`.
+/// The step matches the target's flavor: an `i64` counter steps by `1_i64`,
+/// an `f64` local by `1_f64` (a mismatch is a type error).
 pub(super) fn update_expr(u: &UpdateExpression, ctx: &Ctx<'_>) -> Expr {
     let Some(target) = simple_target(&u.argument, ctx) else {
         return parse_quote!(::core::todo!());
     };
+    let step = if target_is_i64(&u.argument, ctx) {
+        quote!(1_i64)
+    } else {
+        quote!(1_f64)
+    };
     let tokens = match u.operator {
-        UpdateOperator::Increment => quote!(#target += 1_f64),
-        UpdateOperator::Decrement => quote!(#target -= 1_f64),
+        UpdateOperator::Increment => quote!(#target += #step),
+        UpdateOperator::Decrement => quote!(#target -= #step),
     };
     syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+}
+
+/// True when an update target (`i++`) is an `i64`-flavored local — so the step
+/// is `1_i64`, not `1_f64`.
+fn target_is_i64(arg: &SimpleAssignmentTarget, ctx: &Ctx<'_>) -> bool {
+    match arg {
+        SimpleAssignmentTarget::AssignmentTargetIdentifier(id) => {
+            ctx.local_flavor_for(id) == super::super::flavor::NumberFlavor::I64
+        }
+        _ => false,
+    }
+}
+
+/// The number flavor of an assignment target (`x = …` / `x += …`), so the RHS
+/// can be cast to match. A non-identifier target (member) or a non-numeric
+/// local defaults to `F64` — `translate_number_to` then no-ops the cast.
+fn assign_target_flavor(
+    target: &AssignmentTarget,
+    ctx: &Ctx<'_>,
+) -> super::super::flavor::NumberFlavor {
+    match target {
+        AssignmentTarget::AssignmentTargetIdentifier(id) => ctx.local_flavor_for(id),
+        _ => super::super::flavor::NumberFlavor::F64,
+    }
 }
 
 /// Resolve an assignment's left-hand side to an [`AssignTarget`]. Member
@@ -193,7 +232,13 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
             // of range; ES grows the array instead). The `__ds::array_set` token
             // in the output flags `needs_array_helper`.
             let obj = translate_expr(&cm.object, ctx);
-            let idx = translate_expr(&cm.expression, ctx);
+            // `__ds::array_set` takes the index as `f64` (an ES array index is a
+            // `number`); a flavor-promoted `i64` loop counter is site-cast here.
+            let idx = super::translate_number_to(
+                &cm.expression,
+                super::super::flavor::NumberFlavor::F64,
+                ctx,
+            );
             let is_ref = is_ref_param_target(&cm.object, ctx);
             Some(AssignTarget::ArraySet { obj, idx, is_ref })
         }

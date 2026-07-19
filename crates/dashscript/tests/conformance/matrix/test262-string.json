@@ -2512,7 +2512,7 @@
     "detail": "via rquickjs engine",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpn6u6wb\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w6\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
     },
     "note": ""
   },
@@ -4185,7 +4185,7 @@
     "detail": "via rquickjs engine",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpn6u6wb\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w6\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
     },
     "note": ""
   },

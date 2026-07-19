@@ -8,7 +8,10 @@ use syn::{parse_quote, Expr};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::super::expressions::{bool_expr, is_number_arg, string_expr, translate_argument};
+use super::super::expressions::{
+    bool_expr, is_number_arg, string_expr, translate_argument, translate_number_to,
+};
+use super::super::flavor::NumberFlavor;
 
 /// Global conversion functions called as plain identifiers: `String(x)` →
 /// `format!("{}", x)`; `parseInt(s)`/`parseFloat(s)` → `s.trim().parse::<f64>()`
@@ -33,13 +36,15 @@ pub(in crate::translator) fn global_function(
                     parse_quote!("undefined".to_string())
                 }
                 _ => {
-                    let e = translate_argument(a, ctx);
                     // `String(<number>)` is ES NumberToString — route through the
-                    // helper; other values use `format!` (Rust `Display` already
-                    // matches ES for string/bool).
+                    // helper (coerced to `f64` so a flavor-promoted `i64` arg
+                    // compiles); other values use `format!` (Rust `Display`
+                    // already matches ES for string/bool).
                     if is_number_arg(a, ctx) {
+                        let e = translate_number_to(a.as_expression()?, NumberFlavor::F64, ctx);
                         parse_quote!(crate::__ds::number_to_string(#e))
                     } else {
+                        let e = translate_argument(a, ctx);
                         parse_quote!(::std::format!("{}", #e))
                     }
                 }
@@ -73,12 +78,13 @@ pub(in crate::translator) fn global_function(
         // `isNaN(x)` → `x.is_nan()` (DashScript's `number` is `f64`, so the TS
         // global's ToNumber coercion is already done).
         "isNaN" => {
-            let a = translate_argument(args.first()?, ctx);
+            // `.is_nan()` is `f64`-only; coerce a flavor-promoted `i64` arg.
+            let a = translate_number_to(args.first()?.as_expression()?, NumberFlavor::F64, ctx);
             parse_quote!(#a.is_nan())
         }
         // `isFinite(x)` → `x.is_finite()`.
         "isFinite" => {
-            let a = translate_argument(args.first()?, ctx);
+            let a = translate_number_to(args.first()?.as_expression()?, NumberFlavor::F64, ctx);
             parse_quote!(#a.is_finite())
         }
         _ => return None,

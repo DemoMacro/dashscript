@@ -10,8 +10,10 @@
 
 use std::collections::{HashMap, HashSet};
 
+use oxc_ast::ast::IdentifierReference;
 use syn::{parse_quote, Expr, Ident, Path};
 
+use super::flavor::NumberFlavor;
 use super::registry::{TypeRegistry, VariantShape};
 
 /// A function body's locals: their declared types, plus the set of names that
@@ -27,6 +29,9 @@ pub struct Locals {
     /// `&mut` of an owned binding.
     pub ref_params: HashSet<String>,
     pub use_counts: HashMap<String, u32>,
+    /// Per-local number flavor (`f64` vs `i64`) inferred by
+    /// [`super::flavor::infer`]. Absent names default to `F64` at query time.
+    pub number_flavors: HashMap<String, NumberFlavor>,
 }
 
 impl Locals {
@@ -38,6 +43,7 @@ impl Locals {
             member_mutated: HashSet::new(),
             ref_params: HashSet::new(),
             use_counts: HashMap::new(),
+            number_flavors: HashMap::new(),
         }
     }
 
@@ -161,6 +167,19 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn local_type(&self, name: &str) -> Option<&'a Path> {
         self.locals.get(name)
+    }
+
+    /// The inferred number flavor (`f64` vs `i64`) of the numeric local named by
+    /// `id`. `F64` for any unknown name (the conservative default — an ES
+    /// `number` is a double unless every value bound to it is a pure integer).
+    #[must_use]
+    pub fn local_flavor_for(&self, id: &IdentifierReference) -> NumberFlavor {
+        let name = self.names.of_reference(id).to_string();
+        self.locals
+            .number_flavors
+            .get(&name)
+            .copied()
+            .unwrap_or(NumberFlavor::F64)
     }
 
     /// How often local `name` (snake-cased) is read in this body. A non-`Copy`

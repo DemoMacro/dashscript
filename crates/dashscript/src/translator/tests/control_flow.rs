@@ -4,7 +4,7 @@ use super::super::Translator;
 fn translates_if_else() {
     let src = "function main(): void { let x = 1; if (x > 0) { console.log(1); } else { console.log(2); } }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("if x > 0_f64"), "got:\n{rust}");
+    assert!(rust.contains("if x > 0_i64"), "got:\n{rust}");
     assert!(rust.contains(" else "), "got:\n{rust}");
 }
 
@@ -12,8 +12,8 @@ fn translates_if_else() {
 fn translates_while_with_update() {
     let src = "function main(): void { let i = 0; while (i < 10) { i++; } }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("while i < 10_f64"), "got:\n{rust}");
-    assert!(rust.contains("i += 1_f64"), "got:\n{rust}");
+    assert!(rust.contains("while i < 10_i64"), "got:\n{rust}");
+    assert!(rust.contains("i += 1_i64"), "got:\n{rust}");
 }
 
 #[test]
@@ -44,8 +44,8 @@ fn translates_do_while() {
 fn translates_c_style_for_loop() {
     let src = "function f(): void { let total = 0; for (let i = 0; i < 5; i++) { total += i; } console.log(total); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("while i < 5_f64"), "got:\n{rust}");
-    assert!(rust.contains("i += 1_f64"), "got:\n{rust}");
+    assert!(rust.contains("while i < 5_i64"), "got:\n{rust}");
+    assert!(rust.contains("i += 1_i64"), "got:\n{rust}");
 }
 
 #[test]
@@ -60,7 +60,7 @@ fn translates_var_shared_c_style_for_loops() {
     assert_eq!(rust.matches("let mut i").count(), 1, "got:\n{rust}");
     // The assignment-form init `i = 0` is emitted (not dropped).
     assert!(
-        rust.contains("i = 0_f64"),
+        rust.contains("i = 0_i64"),
         "assignment init missing: got:\n{rust}"
     );
 }

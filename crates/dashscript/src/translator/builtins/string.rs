@@ -6,7 +6,7 @@ use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
-use super::super::expressions::{translate_argument, translate_expr};
+use super::super::expressions::{array_elem_arg, translate_argument, translate_expr};
 use super::{str_method_arg, usize_arg};
 
 /// A string method's receiver. A string literal stays a bare `&str` — every
@@ -55,7 +55,7 @@ pub(in crate::translator) fn string_method_on(
             let a = str_method_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(pos) => {
-                    let p = translate_argument(pos, ctx);
+                    let p = array_elem_arg(pos, ctx);
                     // `.get` borrows the receiver (`&self`), so a `String` local
                     // isn't moved — later reads in the same fixture still work.
                     parse_quote!({
@@ -71,7 +71,7 @@ pub(in crate::translator) fn string_method_on(
             let a = str_method_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(pos) => {
-                    let p = translate_argument(pos, ctx);
+                    let p = array_elem_arg(pos, ctx);
                     parse_quote!({
                         let __p = ((#p) as i64).max(0) as usize;
                         (#obj).get(__p..).is_some_and(|t| t.starts_with(#a))
@@ -86,7 +86,7 @@ pub(in crate::translator) fn string_method_on(
             let a = str_method_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(pos) => {
-                    let p = translate_argument(pos, ctx);
+                    let p = array_elem_arg(pos, ctx);
                     parse_quote!({
                         let __p = ((#p) as i64).max(0) as usize;
                         let __p = __p.min((#obj).len());
@@ -133,7 +133,7 @@ pub(in crate::translator) fn string_method_on(
             let needle = str_method_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(from) => {
-                    let f = translate_argument(from, ctx);
+                    let f = array_elem_arg(from, ctx);
                     parse_quote!({
                         let __from = ((#f) as i64).max(0) as usize;
                         (#obj).get(__from..).and_then(|t| t.find(#needle)).map(|b| (b + __from) as f64).unwrap_or(-1_f64)
@@ -147,10 +147,10 @@ pub(in crate::translator) fn string_method_on(
         // when a >= b). ASCII byte offsets match char indices. The receiver is
         // bound once so it is not re-evaluated for the length and the index.
         "slice" => {
-            let start = translate_argument(args.first()?, ctx);
+            let start = array_elem_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(end) => {
-                    let end = translate_argument(end, ctx);
+                    let end = array_elem_arg(end, ctx);
                     parse_quote!({
                         let __s = &(#obj);
                         let __n = __s.len() as f64;
@@ -171,10 +171,10 @@ pub(in crate::translator) fn string_method_on(
         // clamps to `[0, len]`, and swaps the bounds when `a > b` (unlike slice,
         // which never swaps). ASCII byte offsets match char indices.
         "substring" => {
-            let start = translate_argument(args.first()?, ctx);
+            let start = array_elem_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(end) => {
-                    let end = translate_argument(end, ctx);
+                    let end = array_elem_arg(end, ctx);
                     parse_quote!({
                         let __s = &(#obj);
                         let __n = __s.len() as f64;
@@ -311,7 +311,7 @@ pub(in crate::translator) fn string_method_on(
         // a negative `i` to count from the end; `obj` is bound once so it isn't
         // re-evaluated for the length lookup.
         "at" => {
-            let i = translate_argument(args.first()?, ctx);
+            let i = array_elem_arg(args.first()?, ctx);
             parse_quote!({
                 let __s = &(#obj);
                 let __n = (#i) as i64;

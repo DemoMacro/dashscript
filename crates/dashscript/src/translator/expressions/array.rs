@@ -4,7 +4,7 @@ use oxc_ast::ast::{ArrayExpression, ArrayExpressionElement};
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
-use super::translate_expr;
+use super::{array_elem_expr, translate_expr};
 
 /// `[1, 2, 3]` → `vec![1_f64, 2_f64, 3_f64]`. A spread (`[...xs, 4]`) builds via
 /// slice concat: `[xs.as_slice(), &[4_f64][..]].concat()`.
@@ -85,6 +85,8 @@ fn array_element(elem: &ArrayExpressionElement, ctx: &Ctx<'_>) -> Option<Expr> {
     // literal may hold any expression, not just value literals.
     match elem {
         ArrayExpressionElement::SpreadElement(_) | ArrayExpressionElement::Elision(_) => None,
-        _ => Some(translate_expr(elem.as_expression()?, ctx)),
+        // An element coerces to `f64` when numeric, so `[i, j]` where `i`/`j`
+        // are flavor-promoted `i64` scalars still builds a `Vec<f64>`.
+        _ => Some(array_elem_expr(elem.as_expression()?, ctx)),
     }
 }

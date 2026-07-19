@@ -5,7 +5,8 @@ use oxc_ast::ast::Argument;
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
-use super::super::expressions::{is_number_arg, translate_argument};
+use super::super::expressions::{is_number_arg, translate_argument, translate_number_to};
+use super::super::flavor::NumberFlavor;
 use super::str_method_arg;
 
 /// `Object.<m>(record)` on a `Record` (a `HashMap`): `keys` → the map's keys
@@ -34,10 +35,15 @@ pub(in crate::translator) fn object_method(
         "is" if args.len() == 2 => {
             let a = args.first()?;
             let b_arg = args.get(1)?;
-            let b = translate_argument(b_arg, ctx);
             if is_number_arg(a, ctx) && is_number_arg(b_arg, ctx) {
+                // Re-translate both operands at `f64` so `.is_nan()` compiles
+                // for a flavor-promoted `i64` argument (the function-level `r`
+                // may be `i64`; `i64 → f64` is exact below 2^53).
+                let r = translate_number_to(a.as_expression()?, NumberFlavor::F64, ctx);
+                let b = translate_number_to(b_arg.as_expression()?, NumberFlavor::F64, ctx);
                 parse_quote!((#r == #b) || (#r.is_nan() && #b.is_nan()))
             } else {
+                let b = translate_argument(b_arg, ctx);
                 parse_quote!(#r == #b)
             }
         }
