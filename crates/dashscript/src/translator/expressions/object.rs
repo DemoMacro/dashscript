@@ -22,7 +22,12 @@ pub(super) fn object_expr(
     ctx: &Ctx<'_>,
 ) -> Expr {
     let Some(path) = ty_hint.and_then(types::type_path) else {
-        return parse_quote!(::core::todo!());
+        // No type hint: an anonymous object literal lowers to a `HashMap` (JS
+        // objects are dynamic maps). A binding infers `HashMap<String, V>` from
+        // its values via `infer_literal_type`, so its field accesses route
+        // through `is_hashmap_local`; a literal with no binding context still
+        // produces a usable `HashMap` rather than `todo!()`.
+        return hashmap_literal(obj, ctx);
     };
     // `Record<K, V>` (a `HashMap`) → `HashMap::from([(key, value), …])`.
     if is_hashmap(path) {

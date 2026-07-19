@@ -17,7 +17,8 @@ use switch::translate_switch;
 
 use oxc_ast::ast::{
     Argument, BindingPattern, Declaration, Expression, FormalParameters, Function, FunctionBody,
-    Statement, TSType, TryStatement, VariableDeclaration, VariableDeclarationKind,
+    ObjectExpression, ObjectPropertyKind, Statement, TSType, TryStatement, VariableDeclaration,
+    VariableDeclarationKind,
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
@@ -597,13 +598,20 @@ fn translate_variable_declaration(
                         .map(|ta| types::translate_type(&ta.type_annotation))
                         .or_else(|| d.init.as_ref().and_then(infer_literal_type))
                         .or_else(|| {
-                            // A numeric expression with no other inferred type
-                            // (unary `-0`, arithmetic, a `Math` call, a known
-                            // `f64` local) records as `f64`, so number→string
-                            // emit points route it through `__ds::number_to_string`.
+                            // An initializer that needs the local's recorded
+                            // type context. `Object.assign(target, …)` returns a
+                            // value of `target`'s type, so an unannotated
+                            // `let r = Object.assign(t, …)` records `t`'s type —
+                            // letting `r.foo` route through `is_hashmap_local`
+                            // (HashMap field access). Otherwise a numeric
+                            // expression (`-0`, arithmetic, a `Math` call, a
+                            // known `f64` local) records as `f64` so number→
+                            // string emit routes through `__ds::number_to_string`.
                             let init = d.init.as_ref()?;
                             let ctx = Ctx::new(&*locals, registry, narrow, names);
-                            expressions::is_number_expr(init, &ctx).then(|| parse_quote!(f64))
+                            object_assign_type(init, &ctx).or_else(|| {
+                                expressions::is_number_expr(init, &ctx).then(|| parse_quote!(f64))
+                            })
                         });
                     if let Some(path) = ty.as_ref().and_then(path_of) {
                         locals.insert(name.to_string(), path);
@@ -652,6 +660,73 @@ fn build_local(name: &Ident, mutable: bool, ty: Option<&Type>, init: Option<&Exp
 
 /// The type inferred from a literal initializer, when a binding has no type
 /// annotation: `true` → `bool`, `1`/`0.5` → `f64`, `"x"` → `String`, a
+/// An object literal's type when all its property values share one scalar
+/// kind (`HashMap<String, f64>` / `…, String>` / `…, bool>`); `None` for a
+/// mixed, empty, or spread object. Mirrors the homogeneous-array rule so an
+/// unannotated `var x = { … }` lowers to a `HashMap` and routes field access
+/// through `is_hashmap_local` (matching JS object semantics).
+fn homogeneous_object_type(obj: &ObjectExpression) -> Option<Type> {
+    let values: Vec<&Expression> = obj
+        .properties
+        .iter()
+        .filter_map(|p| match p {
+            ObjectPropertyKind::ObjectProperty(op) => Some(&op.value),
+            ObjectPropertyKind::SpreadProperty(_) => None,
+        })
+        .collect();
+    if values.is_empty() {
+        return None;
+    }
+    if values
+        .iter()
+        .all(|e| matches!(e, Expression::NumericLiteral(_)))
+    {
+        Some(parse_quote!(::std::collections::HashMap<String, f64>))
+    } else if values
+        .iter()
+        .all(|e| matches!(e, Expression::StringLiteral(_)))
+    {
+        Some(parse_quote!(::std::collections::HashMap<String, String>))
+    } else if values
+        .iter()
+        .all(|e| matches!(e, Expression::BooleanLiteral(_)))
+    {
+        Some(parse_quote!(::std::collections::HashMap<String, bool>))
+    } else {
+        None
+    }
+}
+
+/// `Object.assign(target, …)` returns a value of `target`'s type, so an
+/// unannotated `let r = Object.assign(t, …)` records `t`'s recorded type —
+/// letting `r.foo` route through `is_hashmap_local` (HashMap field access)
+/// instead of failing as a struct field. Only a plain `Object.assign` call
+/// whose first argument is a typed local is recognized; anything else falls
+/// through to other inference.
+fn object_assign_type(init: &Expression, ctx: &Ctx<'_>) -> Option<Type> {
+    let Expression::CallExpression(c) = init else {
+        return None;
+    };
+    let Expression::StaticMemberExpression(sm) = &c.callee else {
+        return None;
+    };
+    let is_object_assign = matches!(&sm.object, Expression::Identifier(id) if id.name.as_str() == "Object")
+        && sm.property.name.as_str() == "assign";
+    if !is_object_assign {
+        return None;
+    }
+    let first = c.arguments.first()?;
+    let Argument::Identifier(tgt) = first else {
+        return None;
+    };
+    let name = bindings::snake(&tgt.name).to_string();
+    let path = ctx.local_type(&name)?;
+    Some(Type::Path(syn::TypePath {
+        qself: None,
+        path: path.clone(),
+    }))
+}
+
 /// homogeneous array → `Vec<f64>` / `Vec<String>`. Anchors the binding's type
 /// (a bare float literal is otherwise an ambiguous `{float}` — E0689 on
 /// `.acosh()` etc.) and lets type-sensitive mappings (truthiness, `??`, the
@@ -689,6 +764,9 @@ fn infer_literal_type(expr: &Expression) -> Option<Type> {
                 None
             }
         }
+        // An anonymous object literal infers `HashMap<String, V>` when its
+        // values share one scalar kind (see `homogeneous_object_type`).
+        Expression::ObjectExpression(obj) => homogeneous_object_type(obj),
         // oxc parses a signed literal (`-1000`, `+0`) as
         // `UnaryExpression(-/+, …)` rather than a `NumericLiteral`, so a binding
         // `var i = -1000` / `var x = +0` would otherwise lose its f64 anchor

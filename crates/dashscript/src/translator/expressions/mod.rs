@@ -103,6 +103,11 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         Argument::ThisExpression(_) => super::context::this_expr(ctx),
         Argument::NewExpression(n) => new::new_expr(n, ctx),
+        // An anonymous object literal argument lowers to a `HashMap` (no
+        // parameter type hint at a call site) — same as an unannotated object
+        // binding. Fixes `Object.assign(target, { a: 2 })`, where the source
+        // previously fell through to `todo!()`.
+        Argument::ObjectExpression(obj) => object::object_expr(obj, None, ctx),
         _ => parse_quote!(::core::todo!()),
     }
 }

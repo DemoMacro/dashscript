@@ -5,7 +5,7 @@ use oxc_ast::ast::Argument;
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
-use super::super::expressions::translate_argument;
+use super::super::expressions::{is_number_arg, translate_argument};
 use super::str_method_arg;
 
 /// `Object.<m>(record)` on a `Record` (a `HashMap`): `keys` → the map's keys
@@ -26,11 +26,20 @@ pub(in crate::translator) fn object_method(
             parse_quote!(#r.iter().map(|(k, v)| (k.clone(), v.clone())).collect::<Vec<_>>())
         }
         // `Object.is(a, b)` → value identity: equal, or both NaN (TS `Object.is`
-        // treats `NaN === NaN`, unlike `===`). `+0`/`-0` differ in TS but not
-        // under Rust `==` — that edge is not honored.
+        // treats `NaN === NaN`, unlike `===`). The NaN arm is emitted only when
+        // both operands are numeric — `.is_nan()` exists solely on `f64`, so a
+        // blanket emit fails to compile for `Object.is(true, false)` /
+        // `Object.is("a", "b")` / Record operands. `+0`/`-0` differ in TS but
+        // not under Rust `==` — that edge is not honored.
         "is" if args.len() == 2 => {
-            let b = translate_argument(args.get(1)?, ctx);
-            parse_quote!((#r == #b) || (#r.is_nan() && #b.is_nan()))
+            let a = args.first()?;
+            let b_arg = args.get(1)?;
+            let b = translate_argument(b_arg, ctx);
+            if is_number_arg(a, ctx) && is_number_arg(b_arg, ctx) {
+                parse_quote!((#r == #b) || (#r.is_nan() && #b.is_nan()))
+            } else {
+                parse_quote!(#r == #b)
+            }
         }
         // `Object.hasOwn(m, key)` → `HashMap::contains_key` (a Record owns its
         // keys). `key` is a `&str` (a literal stays a bare pattern).
