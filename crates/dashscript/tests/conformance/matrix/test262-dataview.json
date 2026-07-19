@@ -1,0 +1,366 @@
+[
+  {
+    "id": "test262.test.built-ins.dataview.constructor",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.extensibility",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.proto",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.buffer.invoked-as-accessor",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.buffer.invoked-as-func",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.buffer.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.bytelength.invoked-as-accessor",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.bytelength.invoked-as-func",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.bytelength.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.byteoffset.invoked-as-accessor",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.byteoffset.invoked-as-func",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.byteoffset.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getbigint64.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getbiguint64.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getfloat16.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getfloat32.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getfloat64.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getint16.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getint32.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getint8.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getuint16.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getuint32.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.getuint8.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setbigint64.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setfloat16.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setfloat32.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setfloat64.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setint16.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setint32.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setint8.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setuint16.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setuint32.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.dataview.prototype.setuint8.this-is-not-object",
+    "layer": "test262",
+    "category": "dataview",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  }
+]

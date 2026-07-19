@@ -1,0 +1,38 @@
+[
+  {
+    "id": "test262.test.built-ins.uint8array.frombase64.illegal-characters",
+    "layer": "test262",
+    "category": "uint8array",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"SyntaxError\" node=\"TypeError\"; line 2: ds=\"SyntaxError\" node=\"TypeError\"; line 3: ds=\"SyntaxError\" node=\"TypeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"SyntaxError\" node=\"TypeError\"; line 2: ds=\"SyntaxError\" node=\"TypeError\"; line 3: ds=\"SyntaxError\" node=\"TypeError\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.uint8array.fromhex.illegal-characters",
+    "layer": "test262",
+    "category": "uint8array",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"SyntaxError\" node=\"TypeError\"; line 2: ds=\"SyntaxError\" node=\"TypeError\"; line 3: ds=\"SyntaxError\" node=\"TypeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"SyntaxError\" node=\"TypeError\"; line 2: ds=\"SyntaxError\" node=\"TypeError\"; line 3: ds=\"SyntaxError\" node=\"TypeError\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.uint8array.fromhex.odd-length-input",
+    "layer": "test262",
+    "category": "uint8array",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"SyntaxError\" node=\"TypeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"SyntaxError\" node=\"TypeError\""
+    },
+    "note": ""
+  }
+]

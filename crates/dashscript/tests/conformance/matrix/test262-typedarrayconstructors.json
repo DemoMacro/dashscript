@@ -1,0 +1,244 @@
+[
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.bigint64array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.bigint64array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.biguint64array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.biguint64array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.float32array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.float32array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.float64array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.float64array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.int16array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.int16array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.int32array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.int32array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.int8array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.int8array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint16array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint16array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint32array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint32array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint8array.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint8array.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint8clampedarray.constructor",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.typedarrayconstructors.uint8clampedarray.prototype.not-typedarray-object",
+    "layer": "test262",
+    "category": "typedarrayconstructors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  }
+]
