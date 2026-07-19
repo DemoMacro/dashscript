@@ -77,24 +77,24 @@ in `array-ops`, and the `&mut self` receiver inference in `method-calls`.)
 
 | bench               |     ds |   node |    bun | checksum       |     |
 | ------------------- | -----: | -----: | -----: | -------------- | --- |
-| array-ops           |  168.8 |  218.7 |  169.8 | 5000000000     | ✓   |
-| array-read          |  608.4 | 1106.6 |  690.0 | 499999500000   | ✓   |
-| array-write         | 1193.6 | 1048.8 |  706.9 | 999999         | ✓   |
-| binary-trees        |   30.0 |  124.6 |  120.1 | 1500001500000  | ✓   |
-| closure             |   62.5 |  152.5 |  155.8 | 25000000000000 | ✓   |
-| factorial           |  321.9 |  206.0 |  197.6 | 49950000000    | ✓   |
-| fib                 |   62.3 |  194.1 |  157.3 | 9227465        | ✓   |
-| int-add             |  691.6 |  776.1 |  755.9 | 49999999906710 | ✓   |
-| levenshtein         |  159.6 |  138.9 |  123.0 | 600000         | ✓   |
-| loop-data-dependent | 3466.8 | 1478.0 | 1466.2 | 2.550796048282 | ✓   |
-| mandelbrot          |   45.9 |  134.2 |  126.2 | 8011148        | ✓   |
-| matrix-multiply     |   69.6 |  154.4 |  137.0 | 0              | ✗   |
-| method-calls        |   34.1 |  127.3 |  114.4 | 10000000       | ✓   |
-| nested-loops        |  627.3 | 1074.7 |  708.2 | 499999500000   | ✓   |
-| object-create       |  165.0 |  269.9 |  198.7 | 1499998500000  | ✓   |
-| primes              |   36.2 |  139.7 |  136.0 | 78498          | ✓   |
-| str-concat          |   31.5 |  121.3 |  145.1 | 100000         | ✓   |
-| string-ops          |  176.2 |  170.7 |  173.2 | 129991         | ✓   |
+| array-ops           |  140.6 |  215.8 |  159.7 | 5000000000     | ✓   |
+| array-read          |  583.6 | 1000.2 |  666.4 | 499999500000   | ✓   |
+| array-write         |  646.8 | 1002.7 |  635.5 | 999999         | ✓   |
+| binary-trees        |   30.6 |  122.1 |  113.7 | 1500001500000  | ✓   |
+| closure             |   61.4 |  141.1 |  143.0 | 25000000000000 | ✓   |
+| factorial           |  306.2 |  201.4 |  190.8 | 49950000000    | ✓   |
+| fib                 |   66.4 |  179.2 |  148.9 | 9227465        | ✓   |
+| int-add             |  683.6 |  762.5 |  740.8 | 49999999906710 | ✓   |
+| levenshtein         |  162.0 |  139.8 |  120.7 | 600000         | ✓   |
+| loop-data-dependent | 3457.3 | 1450.8 | 1440.9 | 2.550796048282 | ✓   |
+| mandelbrot          |   48.0 |  125.9 |  119.2 | 8011148        | ✓   |
+| matrix-multiply     |   71.9 |  156.5 |  142.7 | 0              | ✗   |
+| method-calls        |   32.1 |  119.9 |  108.7 | 10000000       | ✓   |
+| nested-loops        |  586.9 | 1025.7 |  728.8 | 499999500000   | ✓   |
+| object-create       |  161.2 |  266.7 |  181.7 | 1499998500000  | ✓   |
+| primes              |   35.2 |  140.8 |  131.9 | 78498          | ✓   |
+| str-concat          |   28.5 |  121.6 |  107.2 | 100000         | ✓   |
+| string-ops          |  166.5 |  166.0 |  166.6 | 129991         | ✓   |
 
 _All times wall-clock ms per process launch, median of 5 samples. Measured
 2026-07-19, Windows 11, ds 0.0.0 / node v24.18.0 / bun 1.3.6. `results.json`
@@ -129,29 +129,31 @@ them once available._
 ## Interpretation
 
 - **Numeric / allocation-free (`fib`, `mandelbrot`, `method-calls`, `primes`,
-  `binary-trees`, `closure`)** — `ds` leads 2.4–4×: zero-overhead native code,
-  no JIT warmup, no boxing. `fib` 3.1×, `primes` 3.8×, `binary-trees` 4.0×,
+  `binary-trees`, `closure`)** — `ds` leads 2.7–4×: zero-overhead native code,
+  no JIT warmup, no boxing. `fib` 2.7×, `primes` 4.0×, `binary-trees` 4.0×,
   `method-calls` 3.7× faster than node. The `&mut self` receiver in
   `method-calls` is marked `let mut` by the translator (task #134); without
   that inference the bench would not compile under `ds`.
 - **`factorial`** — the exception in the numeric group: `ds` is _slower_
-  (322 vs node 206). The kernel is `sum += i % 1000` over 1e8 iterations; the
-  `f64` modulo + loop overhead is a real optimization target — DashScript's
-  emitted loop has not yet had the index/induction-variable cleanup V8 applies.
+  (306 vs node 201). The kernel is `sum += i % 1000` over 1e8 iterations; the
+  `f64` modulo + loop overhead is the real cost — the emitted loop keeps `sum`
+  as `f64` rather than an integer induction variable. Inferring an integer
+  number flavor (i64) here is the P0 translator fix.
 - **Array-read kernels (`array-read`, `nested-loops`, `object-create`)** — `ds`
   leads 1.6–1.8×: Rust's bounds-check elimination handles the sequential read
   pattern, and there's no GC pause. Arrays here are built by indexed assignment
   (`arr[i] = v` → `__ds::array_set`, ES auto-grow).
-- **Array-write kernels (`array-write`)** — `ds` trails bun (1194 vs 707). Each
-  `arr[i] = v` routes through the `__ds::array_set` helper (bounds check + grow
-  branch) rather than an inlined store; over 1e6 × 2 × 100 calls that helper
-  call dominates. bun's JIT inlines the grow. An indexed-store fast path when
-  the index is already in range is the obvious win.
-- **`loop-data-dependent`** — `ds` is 2.3× _slower_ (3467 vs node 1478). The
+- **Array-write kernels (`array-write`)** — `ds` now matches bun (647 vs 636),
+  recovered from a 1194 ms regression, after `#[inline]` on `__ds::array_set`
+  plus the release profile (`opt-level = 3`, `lto = "thin"`,
+  `codegen-units = 1`). Each `arr[i] = v` still routes through the helper
+  (bounds check + ES auto-grow branch), but inlining lets the optimizer fold
+  the grow path, closing the gap to bun's JIT-inlined store.
+- **`loop-data-dependent`** — `ds` is 2.4× _slower_ (3457 vs node 1451). The
   `sum = sum*x[i&63] + x[(i*7)&63]` recurrence is a sequential dependency chain
   the optimizer cannot reorder, and the array reads keep their bounds check.
   This is the clearest perf gap in the suite and a flagged optimization target.
-- **`str-concat`** — `ds` leads (31.5 vs node 121). `s = s + "x"` lowers to
+- **`str-concat`** — `ds` leads (28.5 vs node 122). `s = s + "x"` lowers to
   Rust `String + &str`, whose growth is amortized-O(1) doubling, _not_ naive
   per-append reallocation.
 - **`string-ops`** — the three runtimes are within ~6 ms (170–176): the

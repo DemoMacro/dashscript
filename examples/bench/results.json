@@ -6,9 +6,9 @@
       "bench": "array-ops",
       "name": "array-ops",
       "times": {
-        "ds": 168.798,
-        "node": 218.7438,
-        "bun": 169.8163
+        "ds": 140.5888,
+        "node": 215.8241,
+        "bun": 159.716
       },
       "checksums": {
         "ds": "5000000000",
@@ -22,9 +22,9 @@
       "bench": "array-read",
       "name": "array-read",
       "times": {
-        "ds": 608.3938,
-        "node": 1106.6454,
-        "bun": 689.9994
+        "ds": 583.5795,
+        "node": 1000.2471,
+        "bun": 666.397
       },
       "checksums": {
         "ds": "499999500000",
@@ -38,9 +38,9 @@
       "bench": "array-write",
       "name": "array-write",
       "times": {
-        "ds": 1193.6081,
-        "node": 1048.7576,
-        "bun": 706.8757
+        "ds": 646.8071,
+        "node": 1002.7213,
+        "bun": 635.5338
       },
       "checksums": {
         "ds": "999999",
@@ -54,9 +54,9 @@
       "bench": "binary-trees",
       "name": "binary-trees",
       "times": {
-        "ds": 30.0388,
-        "node": 124.6157,
-        "bun": 120.0907
+        "ds": 30.5674,
+        "node": 122.0594,
+        "bun": 113.6872
       },
       "checksums": {
         "ds": "1500001500000",
@@ -70,9 +70,9 @@
       "bench": "closure",
       "name": "closure",
       "times": {
-        "ds": 62.5333,
-        "node": 152.4704,
-        "bun": 155.7876
+        "ds": 61.3676,
+        "node": 141.1296,
+        "bun": 143.0079
       },
       "checksums": {
         "ds": "2500000000000000",
@@ -86,9 +86,9 @@
       "bench": "factorial",
       "name": "factorial",
       "times": {
-        "ds": 321.9407,
-        "node": 206.0296,
-        "bun": 197.5678
+        "ds": 306.2018,
+        "node": 201.438,
+        "bun": 190.7671
       },
       "checksums": {
         "ds": "49950000000",
@@ -102,9 +102,9 @@
       "bench": "fib",
       "name": "fib",
       "times": {
-        "ds": 62.2792,
-        "node": 194.0823,
-        "bun": 157.2876
+        "ds": 66.3884,
+        "node": 179.1784,
+        "bun": 148.9252
       },
       "checksums": {
         "ds": "9227465",
@@ -118,9 +118,9 @@
       "bench": "int-add",
       "name": "int-add",
       "times": {
-        "ds": 691.5947,
-        "node": 776.1179,
-        "bun": 755.8768
+        "ds": 683.6117,
+        "node": 762.52,
+        "bun": 740.8333
       },
       "checksums": {
         "ds": "499999999067109000",
@@ -134,9 +134,9 @@
       "bench": "levenshtein",
       "name": "levenshtein",
       "times": {
-        "ds": 159.59,
-        "node": 138.8945,
-        "bun": 122.9587
+        "ds": 161.9758,
+        "node": 139.7997,
+        "bun": 120.7284
       },
       "checksums": {
         "ds": "600000",
@@ -150,9 +150,9 @@
       "bench": "loop-data-dependent",
       "name": "loop-data-dependent",
       "times": {
-        "ds": 3466.8089,
-        "node": 1478.0465,
-        "bun": 1466.2045
+        "ds": 3457.3248,
+        "node": 1450.8143,
+        "bun": 1440.9074
       },
       "checksums": {
         "ds": "2.5507960482823666",
@@ -166,9 +166,9 @@
       "bench": "mandelbrot",
       "name": "mandelbrot",
       "times": {
-        "ds": 45.8813,
-        "node": 134.1961,
-        "bun": 126.1944
+        "ds": 47.9817,
+        "node": 125.9323,
+        "bun": 119.1675
       },
       "checksums": {
         "ds": "8011148",
@@ -182,9 +182,9 @@
       "bench": "matrix-multiply",
       "name": "matrix-multiply",
       "times": {
-        "ds": 69.5504,
-        "node": 154.4481,
-        "bun": 137.0373
+        "ds": 71.9482,
+        "node": 156.5128,
+        "bun": 142.6792
       },
       "checksums": {
         "ds": "0",
@@ -198,9 +198,9 @@
       "bench": "method-calls",
       "name": "method-calls",
       "times": {
-        "ds": 34.1328,
-        "node": 127.3179,
-        "bun": 114.3607
+        "ds": 32.1195,
+        "node": 119.8519,
+        "bun": 108.6565
       },
       "checksums": {
         "ds": "10000000",
@@ -214,9 +214,9 @@
       "bench": "nested-loops",
       "name": "nested-loops",
       "times": {
-        "ds": 627.2807,
-        "node": 1074.6815,
-        "bun": 708.2091
+        "ds": 586.8591,
+        "node": 1025.6548,
+        "bun": 728.8224
       },
       "checksums": {
         "ds": "499999500000",
@@ -230,9 +230,9 @@
       "bench": "object-create",
       "name": "object-create",
       "times": {
-        "ds": 164.9907,
-        "node": 269.8599,
-        "bun": 198.6783
+        "ds": 161.2052,
+        "node": 266.6867,
+        "bun": 181.6506
       },
       "checksums": {
         "ds": "1499998500000",
@@ -246,9 +246,9 @@
       "bench": "primes",
       "name": "primes",
       "times": {
-        "ds": 36.1969,
-        "node": 139.6516,
-        "bun": 136.0481
+        "ds": 35.1757,
+        "node": 140.8209,
+        "bun": 131.9396
       },
       "checksums": {
         "ds": "78498",
@@ -262,9 +262,9 @@
       "bench": "str-concat",
       "name": "str-concat",
       "times": {
-        "ds": 31.5137,
-        "node": 121.2673,
-        "bun": 145.07
+        "ds": 28.5309,
+        "node": 121.6104,
+        "bun": 107.2029
       },
       "checksums": {
         "ds": "100000",
@@ -278,9 +278,9 @@
       "bench": "string-ops",
       "name": "string-ops",
       "times": {
-        "ds": 176.1862,
-        "node": 170.749,
-        "bun": 173.1589
+        "ds": 166.4973,
+        "node": 166.0492,
+        "bun": 166.6275
       },
       "checksums": {
         "ds": "129991",

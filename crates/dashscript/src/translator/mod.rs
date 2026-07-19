@@ -146,6 +146,7 @@ use ryu_js::Buffer;
 /// Format an `f64` as ECMAScript `Number::toString` would. `ryu_js` covers NaN
 /// and ±Infinity; signed zero is normalized to `\"0\"` (ES prints both `+0`
 /// and `-0` that way).
+#[inline]
 pub fn number_to_string(x: f64) -> String {
     if x == 0.0 {
         return \"0\".to_string();
@@ -163,6 +164,7 @@ const ARRAY_HELPER: &str = "\
 /// filling the gap (a JS array would use holes, but `T` has no undefined). A
 /// negative or non-integer index is a property set in JS, not an element —
 /// ignored here. A bare Rust `vec[i] = v` would panic instead of growing.
+#[inline]
 pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
     if !i.is_finite() || i < 0.0 || i.fract() != 0.0 {
         return;

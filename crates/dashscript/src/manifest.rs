@@ -257,7 +257,9 @@ impl Manifest {
         // manifest, so it owns the panic strategy: that is precisely what makes
         // `catch_unwind` sound, where on an arbitrary user `Cargo.toml` it
         // would not be (a `panic = "abort"` build silently drops the catch).
-        out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
+        out.push_str(
+            "\n[profile.release]\npanic = \"unwind\"\nopt-level = 3\nlto = \"thin\"\ncodegen-units = 1\n",
+        );
         out.push_str("\n[workspace]\n");
         out
     }
@@ -290,7 +292,9 @@ impl Manifest {
                 ds_to_rust_path(lib_path)
             ));
         }
-        out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
+        out.push_str(
+            "\n[profile.release]\npanic = \"unwind\"\nopt-level = 3\nlto = \"thin\"\ncodegen-units = 1\n",
+        );
         out.push_str("\n[workspace]\n");
         out
     }
@@ -429,7 +433,9 @@ impl Manifest {
             }
         }
 
-        out.push_str("\n[profile.release]\npanic = \"unwind\"\n");
+        out.push_str(
+            "\n[profile.release]\npanic = \"unwind\"\nopt-level = 3\nlto = \"thin\"\ncodegen-units = 1\n",
+        );
         out
     }
 
