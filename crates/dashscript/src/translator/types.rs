@@ -38,8 +38,11 @@ fn reference_type(r: &TSTypeReference) -> Type {
             return parse_quote!(Vec<#inner_ty>);
         }
     }
-    // `Record<K, V>` → `HashMap<K, V>` (the TS record/map type).
-    if name == "Record" {
+    // `Record<K, V>` / `Map<K, V>` → `HashMap<K, V>` — the TS record and the ES
+    // `Map` both lower to a Rust `HashMap`. (A `Map`'s insertion order is not
+    // preserved — an `IndexMap` would — but DashScript targets std collections
+    // today; an ordered map is a later dep.)
+    if matches!(name, "Record" | "Map") {
         if let Some(args) = r.type_arguments.as_ref() {
             let ps = &args.params;
             if ps.len() == 2 {
@@ -47,6 +50,13 @@ fn reference_type(r: &TSTypeReference) -> Type {
                 let v_ty = translate_type(&ps[1]);
                 return parse_quote!(::std::collections::HashMap<#k_ty, #v_ty>);
             }
+        }
+    }
+    // `Set<T>` → `HashSet<T>` (the ES `Set`).
+    if name == "Set" {
+        if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
+            let inner_ty = translate_type(inner);
+            return parse_quote!(::std::collections::HashSet<#inner_ty>);
         }
     }
     let ident = format_ident!("{}", name);

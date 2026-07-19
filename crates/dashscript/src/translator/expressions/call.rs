@@ -164,6 +164,11 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::number_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `m.set(k, v)` / `s.add(v)` / `m.has(k)` on a Map/Set (HashMap/HashSet
+        // local) — dispatched on the receiver's resolved type.
+        if let Some(expr) = builtins::collection_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(method) = builtins::map_method(&sm.property.name) {
             let obj = translate_expr(&sm.object, ctx);
             let args: Vec<Expr> = call

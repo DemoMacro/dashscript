@@ -13,6 +13,7 @@
 //! `node:fs`) will live under `node/`, parallel to the ES built-ins.
 
 mod array;
+mod collection;
 mod console;
 mod global;
 mod json;
@@ -23,6 +24,7 @@ mod object;
 mod string;
 
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
+pub(in crate::translator) use collection::collection_method;
 pub(in crate::translator) use console::console_method;
 pub(in crate::translator) use global::{global_function, to_number_expr};
 pub(in crate::translator) use json::json_static;

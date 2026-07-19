@@ -27,6 +27,7 @@ mod unary;
 pub(in crate::translator) use array::array_slice_expr;
 pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
+pub(in crate::translator) use member::{is_hashmap_local, is_hashset_local};
 
 use oxc_ast::ast::{
     Argument, ArrowFunctionExpression, Expression, FunctionBody, IdentifierReference, Statement,
@@ -206,9 +207,14 @@ pub(in crate::translator) fn option_local_name<'a>(
         .then_some(name)
 }
 
-/// True when `path` names a `HashMap` (the target of a `Record<K, V>`).
+/// True when `path` names a `HashMap` (the target of a `Record<K, V>` / `Map`).
 pub(in crate::translator) fn is_hashmap(path: &syn::Path) -> bool {
     path.segments.last().is_some_and(|s| s.ident == "HashMap")
+}
+
+/// True when `path` names a `HashSet` (the target of an ES `Set<T>`).
+pub(in crate::translator) fn is_hashset(path: &syn::Path) -> bool {
+    path.segments.last().is_some_and(|s| s.ident == "HashSet")
 }
 
 /// `(x) => expr` → `|x| expr` (expression body only; a block body is unmapped).

@@ -27,6 +27,24 @@
       "expect": "supported",
       "expect_output": "42",
       "note": "JSON.stringify(42) inlines serde_json::to_string (serde_json dep injected, no __ds helper); prints 42"
+    },
+    {
+      "id": "correctness.map_size_has",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { let m: Map<string, number> = new Map(); m.set(\"a\", 1); console.log(m.size); console.log(m.has(\"a\")); console.log(m.has(\"b\")); }",
+      "expect": "supported",
+      "expect_output": "1\ntrue\nfalse",
+      "note": "Map<K,V> -> HashMap; set/size/has map to insert/len/contains_key"
+    },
+    {
+      "id": "correctness.set_dedup_size",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { let s: Set<string> = new Set(); s.add(\"a\"); s.add(\"b\"); s.add(\"a\"); console.log(s.size); console.log(s.has(\"b\")); }",
+      "expect": "supported",
+      "expect_output": "2\ntrue",
+      "note": "Set<T> -> HashSet<T: Hash+Eq>; string elements work (number can't — f64 has no Eq)"
     }
   ]
 }

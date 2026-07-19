@@ -39,6 +39,11 @@ const MUTATORS: &[&str] = &[
     "fill",
     "splice",
     "copyWithin",
+    // ES Map/Set mutators — the receiver takes `&mut self`.
+    "set",
+    "add",
+    "delete",
+    "clear",
 ];
 
 /// The body facts: the set of mutated bindings and per-local read counts.

@@ -9,6 +9,7 @@ use super::super::builtins;
 use super::super::context::Ctx;
 use super::super::types;
 use super::is_hashmap;
+use super::is_hashset;
 use super::translate_expr;
 
 /// Optional chaining `a?.field` → `a.as_ref().map(|__c| __c.field)`. The
@@ -30,6 +31,16 @@ pub(super) fn chain_expr(elem: &oxc_ast::ast::ChainElement, ctx: &Ctx<'_>) -> Ex
 /// `p.x` → field access. (A `console.log` callee is intercepted earlier.)
 pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     let field_name: &str = &sm.property.name;
+    // `m.size` on a Map/Set (HashMap/HashSet) → `.len()` — a property, not a
+    // key lookup. Checked before the `is_hashmap_local` arm below, which would
+    // otherwise lower it to `m.get("size")`. A user struct with a `size` field
+    // is unaffected (its receiver is not a HashMap/HashSet local).
+    if field_name == "size"
+        && (is_hashmap_local(&sm.object, ctx) || is_hashset_local(&sm.object, ctx))
+    {
+        let obj = translate_expr(&sm.object, ctx);
+        return parse_quote!((#obj.len() as f64));
+    }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").copied().unwrap()`
     // (a TS `Record` static field access and `m["a"]` are the same lookup).
     if is_hashmap_local(&sm.object, ctx) {
@@ -161,12 +172,21 @@ fn element_is_copy(path: &syn::Path) -> bool {
 }
 
 /// True when `expr` is a local whose type is a `HashMap`.
-pub(super) fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+pub(in crate::translator) fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     let Expression::Identifier(id) = expr else {
         return false;
     };
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name).is_some_and(is_hashmap)
+}
+
+/// True when `expr` is a local whose type is a `HashSet` (an ES `Set`).
+pub(in crate::translator) fn is_hashset_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(is_hashset)
 }
 
 /// A HashMap key: a string literal stays bare (a `&str` for `HashMap::get`);
