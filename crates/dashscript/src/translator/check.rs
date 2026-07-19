@@ -581,6 +581,17 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
         if obj.name.as_str() == "Reflect" {
             out.push(err("`Reflect` is unsupported", sm.span));
         }
+        // `String.raw` — the tagged-template runtime form. DashScript has no
+        // tagged-template model, and `String.raw` builds from a `{ raw }`
+        // template object the static mapping cannot express. Without this the
+        // translator snake-cases `String` → `string` and emits broken Rust
+        // (E0425 `partial`).
+        if obj.name.as_str() == "String" && prop == "raw" {
+            out.push(err(
+                "`String.raw` (tagged template) is unsupported",
+                sm.span,
+            ));
+        }
     }
 }
 

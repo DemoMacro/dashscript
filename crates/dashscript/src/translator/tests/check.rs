@@ -238,3 +238,16 @@ fn check_does_not_flag_localeless_tolocale() {
         Translator::new().check("function f(s: string): string { return s.toLocaleUpperCase(); }");
     assert!(diags.is_empty(), "{diags:?}");
 }
+
+#[test]
+fn check_flags_string_raw() {
+    // `String.raw` is the tagged-template runtime form — no static mapping;
+    // without this the translator snake-cases `String` → `string` (E0425
+    // `partial`). Reported honestly as `unsupported`.
+    let diags =
+        Translator::new().check("function f(): string { return String.raw({ raw: [\"a\"] }); }");
+    assert!(
+        diags.iter().any(|d| d.message.contains("String.raw")),
+        "{diags:?}"
+    );
+}

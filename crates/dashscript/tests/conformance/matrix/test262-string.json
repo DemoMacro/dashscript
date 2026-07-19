@@ -2496,7 +2496,7 @@
     "detail": "via rquickjs engine",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpuzrFAO\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJznFiK\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
     },
     "note": ""
   },
@@ -4165,7 +4165,7 @@
     "detail": "via rquickjs engine",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpuzrFAO\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJznFiK\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
     },
     "note": ""
   },
@@ -4195,80 +4195,110 @@
     "id": "test262.test.built-ins.string.raw.return-empty-string-from-empty-array-length",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-negative-infinity",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-not-defined",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-undefined",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-boolean",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-nan",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-null",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:18: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-or-less-number",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:5:14: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:8:14: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:11:14: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:49: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-or-less-string",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:5:14: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:8:14: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:49: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:49: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:49: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-the-string-value",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:2:50: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4310,8 +4340,11 @@
     "id": "test262.test.built-ins.string.raw.substitutions-are-appended-on-same-index",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:9:15: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
