@@ -167,8 +167,19 @@ use rquickjs::{Context, Ctx, Runtime};
 /// spaces, stringified by the engine's own `String()` coercion — ES
 /// `Number::toString` for numbers — so the output matches Node for primitives.
 pub fn run(source: &str) {
+    use rquickjs::context::EvalOptions;
     let runtime = Runtime::new().expect("rquickjs Runtime");
     let ctx = Context::full(&runtime).expect("rquickjs Context");
+    // Sloppy-mode eval (strict=false): test262 fixtures use `this` at the top
+    // of `main` for property-attribute setup (`this.configurable = true`), the
+    // sloppy-mode `this`=global. Node runs the oracle the same way (a plain
+    // script, not a strict module); strict eval would make `this`=undefined
+    // and throw before the first console.log.
+    let sloppy = || {
+        let mut o = EvalOptions::default();
+        o.strict = false;
+        o
+    };
     let result = ctx.with(|ctx: Ctx<'_>| -> rquickjs::Result<()> {
         // A native line-print primitive; `console.log` (defined in JS below)
         // joins its arguments with spaces and hands each finished line here.
@@ -180,17 +191,18 @@ pub fn run(source: &str) {
         // engine's own `String()` coercion (ES NumberToString for numbers),
         // matching Node's `console.log` output for primitives. A plain number
         // arg prints `1e+21` (not Rust's `f64` Display spelling).
-        ctx.eval::<(), _>(
+        ctx.eval_with_options::<(), _>(
             r#"this.console = { log: function () {
                 for (var i = 0, out = []; i < arguments.length; i++) {
                     out.push(String(arguments[i]));
                 }
                 __ds_print_line(out.join(" "));
             } };"#,
+            sloppy(),
         )?;
         // Eval the source (defines `main`), then invoke it.
-        ctx.eval::<(), _>(source)?;
-        ctx.eval::<(), _>("main();")?;
+        ctx.eval_with_options::<(), _>(source, sloppy())?;
+        ctx.eval_with_options::<(), _>("main();", sloppy())?;
         Ok(())
     });
     result.expect("rquickjs eval");
