@@ -8787,10 +8787,10 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343916862.3899 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -10778,8 +10778,11 @@
     "id": "test262.test.built-ins.object.entries.getter-adding-key",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:12:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:15:58: error[E0608]: cannot index into a value of type `(String, String)`\nsrc\\main.rs:16:58: error[E0608]: cannot index into a value of type `(String, String)`\nsrc\\main.rs:17:58: error[E0608]: cannot index into a value of type `(String, String)`\nsrc\\main.rs:18:58: error[E0608]: cannot index into a value of type `(String, String)`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -15285,11 +15288,10 @@
     "id": "test262.test.built-ins.object.hasown.hasown_own_getter",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=1"
+      "status": "matched"
     },
     "note": ""
   },
@@ -15297,11 +15299,10 @@
     "id": "test262.test.built-ins.object.hasown.hasown_own_getter_and_setter",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=1"
+      "status": "matched"
     },
     "note": ""
   },
@@ -15452,11 +15453,10 @@
     "id": "test262.test.built-ins.object.hasown.hasown_own_setter",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=1"
+      "status": "matched"
     },
     "note": ""
   },
@@ -16958,10 +16958,11 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-3-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "oracle diff: line 2: ds=\"y\" node=\"x\"; line 3: ds=\"x\" node=\"y\"",
     "oracle": {
-      "status": "matched"
+      "status": "diff",
+      "detail": "line 2: ds=\"y\" node=\"x\"; line 3: ds=\"x\" node=\"y\""
     },
     "note": ""
   },
@@ -19395,11 +19396,10 @@
     "id": "test262.test.built-ins.object.values.getter-adding-key",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=4",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=4"
+      "status": "matched"
     },
     "note": ""
   },

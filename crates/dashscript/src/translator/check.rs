@@ -23,7 +23,7 @@ use std::cell::Cell;
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
     AssignmentTarget, BinaryOperator, CallExpression, Expression, ForStatementInit,
-    ObjectPropertyKind, Statement, UnaryOperator,
+    ObjectPropertyKind, PropertyKind, Statement, UnaryOperator,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
@@ -498,6 +498,22 @@ fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
                 "`<builtin>.prototype.<method>` reflection is unsupported",
                 sm.span,
             ));
+        }
+        // `{ get x() { … } }` / `{ set x(v) { … } }` — accessor properties have
+        // no Rust struct/HashMap analogue (a field is a plain value, not a
+        // computed property), and a getter's side effect of adding an own key
+        // during enumeration has no static lowering.
+        Expression::ObjectExpression(o) => {
+            for p in &o.properties {
+                if let ObjectPropertyKind::ObjectProperty(op) = p {
+                    if matches!(op.kind, PropertyKind::Get | PropertyKind::Set) {
+                        out.push(err(
+                            "object accessor properties (get/set) are unsupported",
+                            op.span,
+                        ));
+                    }
+                }
+            }
         }
         // `123n` — BigInt literals (DashScript numbers are `f64`/`i64`).
         Expression::BigIntLiteral(b) => {

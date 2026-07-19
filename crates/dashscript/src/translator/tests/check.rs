@@ -109,6 +109,16 @@ fn check_flags_bigint_literal() {
 }
 
 #[test]
+fn check_flags_object_accessor() {
+    let diags =
+        Translator::new().check("function f(): void { var o = { get x() { return 1; } }; }");
+    assert!(
+        diags.iter().any(|d| d.message.contains("accessor")),
+        "{diags:?}"
+    );
+}
+
+#[test]
 fn check_flags_low_compat_nested_in_callback() {
     // A construct buried inside a callback body is still surfaced — the walk
     // recurses through every expression kind the translator itself walks.
