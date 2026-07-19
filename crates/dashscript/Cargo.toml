@@ -43,4 +43,5 @@ path = "bin/main.rs"
 # throwaway Cargo projects to tempdirs. `serde`/`serde_json` come from
 # `[dependencies]` above (available to integration tests too).
 [dev-dependencies]
+rquickjs = { workspace = true }
 tempfile = { workspace = true }

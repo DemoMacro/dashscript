@@ -243,27 +243,48 @@ pub(crate) fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec
     stems
 }
 
-/// Write the `__ds` helper module and declare it (`mod __ds;`) at each crate
-/// root, when the translated sources reference it. A no-op when no runtime dep
-/// is set.
+/// Write the runtime helper modules and declare them at each crate root, when
+/// the translated sources reference them: `__ds` (`ryu_js`) and `__ds_engine`
+/// (the `rquickjs` compat engine). A no-op when no runtime dep is set.
 pub(crate) fn apply_runtime_deps(
     project_dir: &Path,
     deps: &RuntimeDeps,
     root_stems: &[String],
 ) -> Result<(), Box<dyn Error>> {
-    let Some(helper) = deps.helper_module() else {
-        return Ok(());
-    };
-    fs::write(project_dir.join("src").join("__ds.rs"), helper)?;
+    if let Some(helper) = deps.helper_module() {
+        inject_helper_module(project_dir, "__ds", helper, root_stems)?;
+    }
+    if let Some(engine) = deps.engine_helper_module() {
+        inject_helper_module(project_dir, "__ds_engine", engine, root_stems)?;
+    }
+    Ok(())
+}
+
+/// Write a helper module (`__ds.rs` / `__ds_engine.rs`) to `src/` and prepend
+/// `mod <name>;` to each crate root that may reference it. A root already
+/// declaring the module is left untouched. Both helpers are addressed as
+/// `crate::<name>::…`, so every crate root that lowered a call needing one must
+/// declare it.
+fn inject_helper_module(
+    project_dir: &Path,
+    mod_name: &str,
+    source: &str,
+    root_stems: &[String],
+) -> Result<(), Box<dyn Error>> {
+    fs::write(
+        project_dir.join("src").join(format!("{mod_name}.rs")),
+        source,
+    )?;
+    let decl = format!("mod {mod_name};");
     for stem in root_stems {
         let path = project_dir.join("src").join(format!("{stem}.rs"));
         let Ok(body) = fs::read_to_string(&path) else {
             continue;
         };
-        if body.contains("mod __ds;") {
+        if body.contains(&decl) {
             continue;
         }
-        fs::write(&path, format!("mod __ds;\n{body}"))?;
+        fs::write(&path, format!("{decl}\n{body}"))?;
     }
     Ok(())
 }

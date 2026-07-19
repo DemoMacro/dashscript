@@ -52,7 +52,10 @@ crossbeam-channel = "0.5"
 lsp-server = "0.10.0"
 lsp-types = "0.97.0"
 
-# dev-only — the conformance test harness (`tests/conformance.rs`).
+# dev-only — the conformance test harness (`tests/conformance.rs`). rquickjs
+# runs engine-gated fixtures in-process (ES reflection the static translator
+# cannot lower), skipping a cargo compile per fixture.
+rquickjs = "0.12"
 tempfile = "3"
 
 [profile.release]

@@ -272,6 +272,39 @@ fn conformance_matrix() {
     );
 }
 
+/// Once-per-run check that the engine compat path assembles into a building
+/// cargo project: a reflection `.ds` source → `translate_with_deps` (flips
+/// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`
+/// dep) → `cargo check`. The in-process `engine_eval` path skips cargo per
+/// fixture, so this smoke test is the verification the per-fixture cargo check
+/// used to provide — not repeated 1600×, just once. Fails loudly if the engine
+/// Rust template, the `__ds_engine` module, or the dep wiring regresses.
+#[test]
+fn engine_path_compiles_to_valid_rust_project() {
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let src = "function main(): void {\n  const o = {};\n  Object.defineProperty(o, \"x\", { value: 1 });\n  console.log(o.x);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate reflection source");
+    assert!(
+        deps.needs_engine,
+        "Object.defineProperty should flip needs_engine"
+    );
+    write_project(&project, &rust, src, &deps);
+    let (ok, err) = cargo(
+        &project,
+        &target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    assert!(
+        ok,
+        "engine path must compile to a valid cargo project: {err}"
+    );
+}
+
 fn outcome(
     raw: &RawFeature,
     layer: &str,
@@ -538,47 +571,111 @@ fn engine_note(via_engine: bool) -> String {
     }
 }
 
-/// Run one test262 fixture through the differential pipeline:
-/// `translate` → (engine gate, else `Translator::check`) → `cargo check`
-/// (compiles) → `cargo run` vs the Node oracle (semantics). Returns
-/// `(status, detail, oracle)`.
-///
-/// An engine-gated fixture (ES reflection the static translator cannot lower)
-/// bypasses the `check` unsupported gate — the embedded QuickJS engine runs
-/// it. Static-mode fixtures still answer to `check` (translator scope limits
-/// like top-level statements stay honestly unsupported).
-fn run_test262(
-    raw: &RawFeature,
-    project: &Path,
-    target_dir: &Path,
+/// QuickJS prelude that defines `console.log` with a Node-`inspect`-style
+/// formatter. ES `String()` coerces objects to `[object Object]`, functions to
+/// their source text, and BigInt without the `n` suffix — all diverging from
+/// Node's `console.log`, which would surface as a spurious oracle diff. This
+/// prelude renders objects `{ k: v }`, functions `[Function: name]`, and BigInt
+/// `0n`, matching Node for the test262 fixture shapes (depth-limited,
+/// single-quoted nested strings). `__ds_print_line` is the native line sink
+/// [`engine_eval`] installs per call.
+const INSPECT_PRELUDE: &str = r#"
+this.console = {
+  log: function () {
+    var out = [];
+    for (var i = 0; i < arguments.length; i++) {
+      out.push(__ds_inspect(arguments[i], 0));
+    }
+    __ds_print_line(out.join(" "));
+  }
+};
+function __ds_inspect(v, depth) {
+  if (v === null) return "null";
+  if (v === undefined) return "undefined";
+  var t = typeof v;
+  if (t === "string") return depth === 0 ? v : "'" + v + "'";
+  if (t === "number" || t === "boolean") return String(v);
+  if (t === "bigint") return v.toString() + "n";
+  if (t === "symbol") return v.toString();
+  if (t === "function") {
+    var name = v.name ? v.name : "(anonymous)";
+    return "[Function: " + name + "]";
+  }
+  if (depth >= 6) return "...";
+  if (Array.isArray(v)) {
+    if (v.length === 0) return "[]";
+    var items = [];
+    for (var i = 0; i < v.length; i++) {
+      items.push(__ds_inspect(v[i], depth + 1));
+    }
+    return "[ " + items.join(", ") + " ]";
+  }
+  try {
+    var keys = Object.keys(v);
+  } catch (e) {
+    return String(v);
+  }
+  if (keys.length === 0) return "{}";
+  var items = [];
+  for (var i = 0; i < keys.length; i++) {
+    items.push(__ds_format_key(keys[i]) + ": " + __ds_inspect(v[keys[i]], depth + 1));
+  }
+  return "{ " + items.join(", ") + " }";
+}
+function __ds_format_key(k) {
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(k)) return k;
+  return "'" + k + "'";
+}
+"#;
+
+/// Run an engine-gated fixture's ECMAScript under an embedded QuickJS engine —
+/// the same engine `__ds_engine` embeds for `ds build`, but in-process —
+/// capturing `console.log` output via [`INSPECT_PRELUDE`]. Skips the cargo
+/// compile entirely: the engine Rust template (`fn main() {
+/// __ds_engine::run(src) }`) is fixed-shape and its compile correctness is
+/// covered by translator unit tests + the engine-path integration test, so
+/// re-compiling a throwaway project per fixture would only burn time. Returns
+/// the captured stdout, or `None` if the engine fails to start or the source
+/// throws (a throw surfaces as empty stdout → an oracle diff → `partial`).
+fn engine_eval(js_source: &str) -> Option<String> {
+    use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
+    use std::sync::{Arc, Mutex};
+    let runtime = Runtime::new().ok()?;
+    let ctx = Context::full(&runtime).ok()?;
+    let sloppy = || {
+        let mut o = EvalOptions::default();
+        o.strict = false;
+        o
+    };
+    let captured: Arc<Mutex<String>> = Arc::new(Mutex::new(String::new()));
+    let cap = captured.clone();
+    let result = ctx.with(move |ctx: Ctx<'_>| -> rquickjs::Result<()> {
+        let print_line = rquickjs::Function::new(ctx.clone(), move |s: String| {
+            let mut g = cap.lock().expect("engine capture lock");
+            g.push_str(&s);
+            g.push('\n');
+        })?;
+        ctx.globals().set("__ds_print_line", print_line)?;
+        ctx.eval_with_options::<(), _>(INSPECT_PRELUDE, sloppy())?;
+        ctx.eval_with_options::<(), _>(js_source, sloppy())?;
+        ctx.eval_with_options::<(), _>("main();", sloppy())?;
+        Ok(())
+    });
+    result.ok()?;
+    let mut g = captured.lock().expect("engine capture lock");
+    Some(std::mem::take(&mut g))
+}
+
+/// Compare `ds_stdout` against the Node oracle for a test262 fixture. Shared by
+/// the engine path (in-process QuickJS) and the static path (cargo run) — the
+/// differential logic is identical; only the success `detail` note differs.
+fn compare_oracle(
+    ds_stdout: &str,
+    fixture: &str,
     work: &Path,
     node_ok: bool,
+    via_engine: bool,
 ) -> (&'static str, String, Option<Oracle>) {
-    let (rust, deps) = match translate_catch(&raw.fixture) {
-        Ok(r) => r,
-        Err(e) => return ("partial", e, None),
-    };
-    let via_engine = deps.needs_engine;
-    if !via_engine {
-        let diags = Translator::new().check(&raw.fixture);
-        if !diags.is_empty() {
-            let msg = diags
-                .iter()
-                .map(|d| format!("{d}"))
-                .collect::<Vec<_>>()
-                .join(" | ");
-            return ("unsupported", msg, None);
-        }
-    }
-    write_project(project, &rust, &raw.fixture, &deps);
-    let (ok, err) = cargo(
-        project,
-        target_dir,
-        &["check", "--quiet", "--message-format=short"],
-    );
-    if !ok {
-        return ("partial", err, None);
-    }
     if !node_ok {
         return (
             "supported",
@@ -586,15 +683,14 @@ fn run_test262(
             Some(Oracle::missing()),
         );
     }
-    let ds_stdout = cargo_run_full(project, target_dir).unwrap_or_default();
-    match node_oracle(&raw.fixture, work) {
+    match node_oracle(fixture, work) {
         NodeResult::Missing => (
             "supported",
             engine_note(via_engine),
             Some(Oracle::missing()),
         ),
         NodeResult::Error(e) => ("supported", engine_note(via_engine), Some(Oracle::err(e))),
-        NodeResult::Ok(oracle_stdout) => match diff_stdout(&ds_stdout, &oracle_stdout) {
+        NodeResult::Ok(oracle_stdout) => match diff_stdout(ds_stdout, &oracle_stdout) {
             None => (
                 "supported",
                 engine_note(via_engine),
@@ -607,6 +703,67 @@ fn run_test262(
             ),
         },
     }
+}
+
+/// Run one test262 fixture through the differential pipeline. Returns
+/// `(status, detail, oracle)`.
+///
+/// Engine path (`needs_engine`, ES reflection the static translator cannot
+/// lower): run the source in-process under QuickJS vs the Node oracle — no
+/// cargo compile (see [`engine_eval`]). Static path: `Translator::check`
+/// (translatability) → `cargo check` (compiles) → `cargo run` vs the Node
+/// oracle (semantics); translator scope limits like top-level statements stay
+/// honestly `unsupported`.
+fn run_test262(
+    raw: &RawFeature,
+    project: &Path,
+    target_dir: &Path,
+    work: &Path,
+    node_ok: bool,
+) -> (&'static str, String, Option<Oracle>) {
+    let (rust, deps) = match translate_catch(&raw.fixture) {
+        Ok(r) => r,
+        Err(e) => return ("partial", e, None),
+    };
+    // Engine path: ES reflection the static translator cannot lower. Run the
+    // source in-process under QuickJS (the exact bytes `translate_with_deps`
+    // embeds in `__ds_engine::run`), skipping the cargo compile entirely.
+    if deps.needs_engine {
+        let js_source = match Translator::new().engine_source(&raw.fixture) {
+            Some(s) => s,
+            None => {
+                return (
+                    "partial",
+                    "engine flag set but engine_source returned None".into(),
+                    None,
+                )
+            }
+        };
+        let ds_stdout = engine_eval(&js_source).unwrap_or_default();
+        return compare_oracle(&ds_stdout, &raw.fixture, work, node_ok, true);
+    }
+    // Static path: `check` (translatability) → cargo check (compiles) → cargo
+    // run vs the Node oracle (semantics).
+    let diags = Translator::new().check(&raw.fixture);
+    if !diags.is_empty() {
+        let msg = diags
+            .iter()
+            .map(|d| format!("{d}"))
+            .collect::<Vec<_>>()
+            .join(" | ");
+        return ("unsupported", msg, None);
+    }
+    write_project(project, &rust, &raw.fixture, &deps);
+    let (ok, err) = cargo(
+        project,
+        target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    if !ok {
+        return ("partial", err, None);
+    }
+    let ds_stdout = cargo_run_full(project, target_dir).unwrap_or_default();
+    compare_oracle(&ds_stdout, &raw.fixture, work, node_ok, false)
 }
 
 /// One fixture, run against a worker-owned `project`/`target_dir`/`work`

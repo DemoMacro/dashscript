@@ -209,6 +209,22 @@ pub fn run(source: &str) {
 }
 "##;
 
+/// Strip TS type annotations from a program's top-level function declarations
+/// (a `.ds` source annotates `main`'s return; test262 fixtures wrap the file in
+/// `function main(): void`) and regenerate the source via oxc codegen, so the
+/// embedded QuickJS engine evaluates plain ECMAScript rather than TypeScript.
+/// Shared by the engine lowering ([`Translator::translate_with_deps`]) and
+/// [`Translator::engine_source`] (the conformance harness's direct-eval path),
+/// so both run the exact same bytes.
+fn engine_js_source(program: &mut oxc_ast::ast::Program<'_>) -> String {
+    for stmt in &mut program.body {
+        if let oxc_ast::ast::Statement::FunctionDeclaration(f) = stmt {
+            f.return_type = None;
+        }
+    }
+    Codegen::new().build(&*program).code
+}
+
 /// Translates a TypeScript-flavored `.ds` program into Rust source.
 #[derive(Default)]
 pub struct Translator;
@@ -277,18 +293,11 @@ impl Translator {
         // `rquickjs` engine dep (and its C compile).
         if check::program_uses_engine(program) {
             // The engine evaluates ECMAScript, so strip the TS type annotations
-            // a `.ds` source carries — QuickJS parses JS, not TS. test262
-            // fixtures annotate only the wrapped `main` (their bodies are the
-            // test262 file's original JS); a real `.ds` source with richer
-            // annotations (`as`, generics, ...) needs fuller stripping — a
-            // follow-up. Regenerate via oxc codegen so the embedded source is
-            // annotation-free JS, then `syn::LitStr` escapes it for embedding.
-            for stmt in &mut program.body {
-                if let oxc_ast::ast::Statement::FunctionDeclaration(f) = stmt {
-                    f.return_type = None;
-                }
-            }
-            let js_source = Codegen::new().build(&*program).code;
+            // the source carries — QuickJS parses JS, not TS. `engine_js_source`
+            // does the strip + codegen and is shared with `engine_source`, so
+            // the conformance harness can run the exact bytes the engine path
+            // embeds without compiling a throwaway cargo project per fixture.
+            let js_source = engine_js_source(program);
             let src_lit = syn::LitStr::new(&js_source, proc_macro2::Span::call_site());
             let main_item: syn::Item = syn::parse_quote! {
                 fn main() {
@@ -350,6 +359,28 @@ impl Translator {
     #[must_use]
     pub fn check(&self, source: &str) -> Vec<OxcDiagnostic> {
         check::check(source)
+    }
+
+    /// The annotation-stripped ECMAScript the engine compat path would run,
+    /// when the source uses ES dynamic reflection (`Object.defineProperty`,
+    /// `Reflect.*`, …) the static translator cannot lower. `None` for a plain
+    /// source (no engine). The conformance harness uses this to run an engine
+    /// fixture directly under an embedded QuickJS engine — the exact bytes
+    /// `translate_with_deps` embeds in `__ds_engine::run` — without compiling
+    /// a throwaway cargo project per fixture.
+    #[must_use]
+    pub fn engine_source(&self, source: &str) -> Option<String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return None;
+        }
+        let program = allocator.alloc(ret.program);
+        if check::program_uses_engine(program) {
+            Some(engine_js_source(program))
+        } else {
+            None
+        }
     }
 
     /// Format `.ds` source with `oxc_codegen` (pretty-print, 2-space indent,
