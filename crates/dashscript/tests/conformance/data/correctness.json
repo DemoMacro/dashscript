@@ -18,6 +18,15 @@
       "expect": "supported",
       "expect_output": "1-2-3",
       "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
+    },
+    {
+      "id": "correctness.json_stringify_number",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { console.log(JSON.stringify(42)); }",
+      "expect": "supported",
+      "expect_output": "42",
+      "note": "JSON.stringify(42) inlines serde_json::to_string (serde_json dep injected, no __ds helper); prints 42"
     }
   ]
 }

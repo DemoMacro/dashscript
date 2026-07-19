@@ -58,9 +58,13 @@ fn numeric_local_and_unary_route_through_helper() {
 #[test]
 fn helper_module_present_only_when_needed() {
     // A ryu_js-flagged dep set exposes the `__ds` helper module; a plain one does not.
-    let with = RuntimeDeps { needs_ryu_js: true };
+    let with = RuntimeDeps {
+        needs_ryu_js: true,
+        needs_serde_json: false,
+    };
     let without = RuntimeDeps {
         needs_ryu_js: false,
+        needs_serde_json: false,
     };
     assert!(
         with.helper_module()
@@ -73,7 +77,10 @@ fn helper_module_present_only_when_needed() {
 #[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
-    let deps = RuntimeDeps { needs_ryu_js: true };
+    let deps = RuntimeDeps {
+        needs_ryu_js: true,
+        needs_serde_json: false,
+    };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(toml.contains("ryu-js = \"1.0\""), "got:\n{toml}");
     // Idempotent: a second pass must not duplicate the line.
@@ -84,7 +91,10 @@ fn apply_to_cargo_toml_inserts_into_dependencies_section() {
 #[test]
 fn apply_to_cargo_toml_creates_section_when_absent() {
     let mut toml = String::from("[package]\nname = \"x\"\n");
-    let deps = RuntimeDeps { needs_ryu_js: true };
+    let deps = RuntimeDeps {
+        needs_ryu_js: true,
+        needs_serde_json: false,
+    };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(
         toml.contains("[dependencies]\nryu-js = \"1.0\""),
@@ -98,6 +108,7 @@ fn apply_to_cargo_toml_noop_when_not_needed() {
     let mut toml = String::from("[package]\nname = \"x\"\n");
     let deps = RuntimeDeps {
         needs_ryu_js: false,
+        needs_serde_json: false,
     };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(!toml.contains("ryu-js"), "got:\n{toml}");

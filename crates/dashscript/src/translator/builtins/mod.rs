@@ -15,6 +15,7 @@
 mod array;
 mod console;
 mod global;
+mod json;
 mod math;
 mod node;
 mod number;
@@ -24,6 +25,7 @@ mod string;
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
 pub(in crate::translator) use console::console_method;
 pub(in crate::translator) use global::{global_function, to_number_expr};
+pub(in crate::translator) use json::json_static;
 pub(in crate::translator) use math::{math_constant, math_method};
 pub(in crate::translator) use number::{number_constant, number_method, number_static};
 pub(in crate::translator) use object::object_method;

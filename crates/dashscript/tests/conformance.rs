@@ -305,8 +305,12 @@ fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps
         if !body.contains("mod __ds;") {
             body = format!("mod __ds;\n{body}");
         }
-        deps.apply_to_cargo_toml(&mut cargo_toml);
     }
+    // Dep injection is independent of the `__ds` helper module: `serde_json`
+    // needs the Cargo.toml line but inlines its calls directly (no helper), so
+    // apply unconditionally — `apply_to_cargo_toml` is itself a no-op when no
+    // dep is flagged. (Tying it to `helper_module` missed serde_json-only files.)
+    deps.apply_to_cargo_toml(&mut cargo_toml);
     let _ = fs::write(project.join("Cargo.toml"), cargo_toml);
     let _ = fs::write(project.join("src").join("main.rs"), body);
 }

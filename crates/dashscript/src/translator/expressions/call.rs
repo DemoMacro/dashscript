@@ -138,6 +138,14 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `JSON.parse(s)` / `JSON.stringify(x)` (inlines `serde_json::`).
+        if builtins::is_ident(&sm.object, "JSON") {
+            if let Some(expr) =
+                builtins::json_static(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
+                return expr;
+            }
+        }
     }
     // Global conversion functions: `String(x)`, `parseInt(s)`, `parseFloat(s)`.
     if let Expression::Identifier(id) = &call.callee {

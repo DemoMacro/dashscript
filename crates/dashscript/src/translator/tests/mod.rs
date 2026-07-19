@@ -9,6 +9,7 @@ mod control_flow;
 mod destructuring;
 mod fmt;
 mod globals;
+mod json;
 mod math;
 mod modules;
 mod narrowing;

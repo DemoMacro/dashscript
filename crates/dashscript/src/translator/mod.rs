@@ -38,6 +38,10 @@ pub struct RuntimeDeps {
     /// Some emit point routes an `f64` through `__ds::number_to_string`, so the
     /// generated crate needs the `ryu_js` crate and the `__ds` helper module.
     pub needs_ryu_js: bool,
+    /// A `JSON.parse`/`JSON.stringify` call inlines a `serde_json::` call into
+    /// the Rust text, so the generated crate needs the `serde_json` crate (no
+    /// helper module — the calls are direct).
+    pub needs_serde_json: bool,
 }
 
 impl RuntimeDeps {
@@ -45,6 +49,7 @@ impl RuntimeDeps {
     /// any of its translated files does.
     pub fn merge(&mut self, other: &RuntimeDeps) {
         self.needs_ryu_js |= other.needs_ryu_js;
+        self.needs_serde_json |= other.needs_serde_json;
     }
 
     /// The `__ds` helper module source — `number_to_string(f64) -> String` via
@@ -62,18 +67,29 @@ impl RuntimeDeps {
     /// `manifest.json` — it is a DashScript-internal runtime need, not a
     /// declared project dependency.
     pub fn apply_to_cargo_toml(&self, cargo_toml: &mut String) {
-        if !self.needs_ryu_js || cargo_toml.contains("ryu-js") {
-            return;
-        }
         // The crates.io package is `ryu-js` (hyphen); Rust exposes it as
         // `ryu_js` (underscore) in `use`, so the Cargo.toml key uses the
         // package name.
-        const RYU_JS_LINE: &str = "ryu-js = \"1.0\"";
-        if let Some(pos) = cargo_toml.find("[dependencies]\n") {
-            cargo_toml.insert_str(pos + "[dependencies]\n".len(), &format!("{RYU_JS_LINE}\n"));
-        } else {
-            cargo_toml.push_str(&format!("\n[dependencies]\n{RYU_JS_LINE}\n"));
-        }
+        append_dep(cargo_toml, "ryu-js", "\"1.0\"", self.needs_ryu_js);
+        append_dep(cargo_toml, "serde_json", "\"1\"", self.needs_serde_json);
+    }
+}
+
+/// Append `<pkg> = <req>` to a generated `Cargo.toml`'s `[dependencies]`,
+/// creating the section if absent. A no-op when `needed` is false or the dep is
+/// already declared — so a consumer can call this per dep and let the flag gate
+/// it. A string-level post-process keeps these deps out of the user's
+/// `manifest.json` — they are DashScript-internal runtime needs.
+fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str, needed: bool) {
+    let needle = format!("{pkg} =");
+    if !needed || cargo_toml.contains(&needle) {
+        return;
+    }
+    let line = format!("{pkg} = {req}\n");
+    if let Some(pos) = cargo_toml.find("[dependencies]\n") {
+        cargo_toml.insert_str(pos + "[dependencies]\n".len(), &line);
+    } else {
+        cargo_toml.push_str(&format!("\n[dependencies]\n{line}"));
     }
 }
 
@@ -170,15 +186,18 @@ impl Translator {
         };
         // An emit point that routes an `f64` through the ES NumberToString
         // helper writes a `crate::__ds::number_to_string` call into the Rust
-        // text; its presence means the generated crate needs the `ryu_js` crate
-        // and the `__ds` helper module. Scanning the emitted text (rather than
-        // threading a `RefCell<RuntimeDeps>` through every expression) keeps the
-        // dep report a pure function of the output — the `__ds::` prefix is a
-        // DashScript-reserved namespace a `.ds` source cannot produce any other
-        // way.
+        // text; a `JSON.parse`/`JSON.stringify` call inlines `serde_json::`.
+        // Either prefix means the generated crate needs the matching crate (and
+        // the `__ds` helper module, for ryu_js). Scanning the emitted text
+        // (rather than threading a `RefCell<RuntimeDeps>` through every
+        // expression) keeps the dep report a pure function of the output — the
+        // `__ds::` prefix is a DashScript-reserved namespace a `.ds` source
+        // cannot produce any other way, and `serde_json::` likewise only
+        // appears via the `JSON` builtin.
         let rust = prettyplease::unparse(&file);
         let deps = RuntimeDeps {
             needs_ryu_js: rust.contains("__ds::number_to_string"),
+            needs_serde_json: rust.contains("serde_json::"),
         };
         Ok((rust, deps))
     }
