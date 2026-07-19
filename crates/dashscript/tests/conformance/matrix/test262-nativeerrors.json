@@ -1,0 +1,294 @@
+[
+  {
+    "id": "test262.test.built-ins.nativeerrors.evalerror.constructor",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.evalerror.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.evalerror.prototype.not-error-object",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.evalerror.prototype.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.nativeerror-tostring-message-throws-symbol",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.nativeerror-tostring-message-throws-toprimitive",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.rangeerror.constructor",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.rangeerror.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype.not-error-object",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.referenceerror.constructor",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.referenceerror.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype.not-error-object",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.syntaxerror.constructor",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.syntaxerror.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype.not-error-object",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.typeerror.constructor",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.typeerror.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.typeerror.prototype.not-error-object",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.typeerror.prototype.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.urierror.constructor",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.urierror.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: Error]\" node=\"[Function: Error] { stackTraceLimit: 10 }\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.urierror.prototype.not-error-object",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.nativeerrors.urierror.prototype.proto",
+    "layer": "test262",
+    "category": "nativeerrors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  }
+]

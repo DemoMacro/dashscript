@@ -1,0 +1,593 @@
+[
+  {
+    "id": "test262.test.built-ins.symbol.asyncdispose.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.asyncdispose.no-key",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.asynciterator.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.auto-boxing-non-strict",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.auto-boxing-strict",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.constructor",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.desc-to-string",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.desc-to-string-symbol",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.dispose.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.dispose.no-key",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.for.create-value",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.for.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.for.description",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.for.retrieve-value",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.hasinstance.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.isconcatspreadable.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.iterator.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.keyfor.arg-non-symbol",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.keyfor.arg-symbol-registry-hit",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.keyfor.arg-symbol-registry-miss",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.keyfor.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.match.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.matchall.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.description.description-symboldescriptivestring",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.description.get",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.description.is-not-own-property",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.description.this-val-symbol",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.description.wrapper",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.intrinsic",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{}\" node=\"Object [Symbol] {}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{}\" node=\"Object [Symbol] {}\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.redefined-symbol-wrapper-ordinary-toprimitive",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-non-obj",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-obj-non-symbol-wrapper",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-obj-symbol-wrapper",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-symbol",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.tostring.tostring",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-non-strict",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-strict",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.tostring.undefined",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-non-obj",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-obj-non-symbol",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-obj-symbol",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-symbol",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.replace.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.search.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.species.builtin-getter-name",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.species.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.species.subclassing",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: MyRegExp]\" node=\"[class MyRegExp extends RegExp]\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: MyRegExp]\" node=\"[class MyRegExp extends RegExp]\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.split.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.toprimitive.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.tostringtag.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.uniqueness",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.symbol.unscopables.cross-realm",
+    "layer": "test262",
+    "category": "symbol",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
+    },
+    "note": ""
+  }
+]

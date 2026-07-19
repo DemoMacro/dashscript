@@ -1,0 +1,1786 @@
+[
+  {
+    "id": "test262.test.built-ins.iterator.concat.fresh-iterator-result",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:10:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:12:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:31: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:55: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.get-value-after-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:18\r\nArray.from(Iterator.concat(iter, iter, iter));\r\n       "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"undefined\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"undefined\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.many-arguments",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:6:63: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:6:63: warning: unreachable call: unreachable call\nsrc\\main.rs:9:47: error[E0599]: no method named `as_slice` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:9:47: warning: unreachable call: unreachable call\nsrc\\main.rs:14:40: error[E0599]: no method named `next` found for struct `String` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.next-method-called-with-zero-arguments",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:22\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:14\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.concat));\r\n  "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar iter = Iterator.concat();\r\n                    ^\r\n\r\n"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.return-is-forwarded",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:9:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:11:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:55: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.return-method-called-with-zero-arguments",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:24\r\niterator = Iterator.concat(iterable);\r\n                "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.single-argument",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:3:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:3:52: error[E0599]: no method named `as_str` found for struct `Vec<f64>` in the current scope\nsrc\\main.rs:7:40: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:13:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-generator-is-running-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:18\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-generator-is-running-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:21\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-iterable-not-an-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-iterator-method-not-callable",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-iterator-not-an-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:12\r\niterator = Iterator.concat(MakeIterable(undefined));\r\n "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.zero-arguments",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:2:34: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:3:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.constructor",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.primitives",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.result-proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{}\" node=\"Object [Iterator] {}\"; line 2: ds=\"{}\" node=\"Object [Iterator] {}\"; line 3: ds=\"{}\" node=\"Object [Generator] {}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{}\" node=\"Object [Iterator] {}\"; line 2: ds=\"{}\" node=\"Object [Iterator] {}\"; line 3: ds=\"{}\" node=\"Object [Generator] {}\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.return-method-returns-iterator-result",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.constructor.prop-desc",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.constructor.weird-setter",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.limit-equals-total",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.limit-greater-than-total",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.limit-less-than-total",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.limit-rangeerror",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.limit-tonumber",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-advanced-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:12:27: error[E0425]: cannot find value `done` in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-closed",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-closed-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.iterator-has-no-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.non-callable-predicate",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-falsey",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-non-boolean",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-truthy",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-returns-truthy-then-falsey",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36390842.2694 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36390842.2694 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.result-is-boolean",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:24: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:24: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.non-callable-predicate",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.predicate-filters",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.predicate-returns-non-boolean",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.predicate-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36395026.7723 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36395026.7723 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.throws-typeerror-when-generator-is-running",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-advanced-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `done` in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-closed",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-closed-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.iterator-has-no-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.non-callable-predicate",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-falsey",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-falsey-then-truthy",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-non-boolean",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-returns-truthy",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36401151.5465 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36401151.5465 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:24: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:24: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36403991.5674 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36403991.5674 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.non-callable-mapper",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.return-is-forwarded-to-mapper-result",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.throws-typeerror-when-generator-is-running",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-advanced-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `done` in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-closed",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-closed-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.fn-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36406510.9629 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36406510.9629 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.non-callable-predicate",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.result-is-undefined",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:24: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:24: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.mapper-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36389112.167 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36389112.167 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.non-callable-mapper",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.throws-typeerror-when-generator-is-running",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-advanced-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `done` in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-closed",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-closed-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-already-exhausted-initial-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-already-exhausted-no-initial-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-yields-once-no-initial-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.non-callable-reducer",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-memo-can-be-any-type",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 16: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)]\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 16: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)]\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36395490.0065 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36395490.0065 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.iterator-has-no-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.non-callable-predicate",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-falsey",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-falsey-then-truthy",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-non-boolean",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-returns-truthy",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36399256.3036 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36399256.3036 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.result-is-boolean",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.symbol.dispose.invokes-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.symbol.dispose.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.symbol.dispose.return-val",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.symbol.iterator.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.symbol.iterator.return-val",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.symbol.tostringtag.prop-desc",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.symbol.tostringtag.weird-setter",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.limit-rangeerror",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-advanced-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:12:27: error[E0425]: cannot find value `done` in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-closed",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-closed-in-parallel",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.this-non-callable-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"undefined\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"undefined\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-non-iterable",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.options",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w7\\work\\oracle.ts:17\r\nIterator.zip([]);\r\n         ^\r\n\r\nTypeError: Iterator.zi"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.options-padding",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w6\\work\\oracle.ts:18\r\nIterator.zip([], {mode: \"longest\"});\r\n         ^\r\n\r\nTyp"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w7\\work\\oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zip));\r\n     "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.is-function",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"undefined\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"undefined\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.options",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w7\\work\\oracle.ts:17\r\nIterator.zipKeyed({});\r\n         ^\r\n\r\nTypeError: Iterat"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.options-padding",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w7\\work\\oracle.ts:17\r\nIterator.zipKeyed({}, {mode: \"longest\"});\r\n         ^\r\n"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.proto",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w7\\work\\oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zipKeyed));\r\n"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.result-objects-are-fresh",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.results-object-has-no-undefined-iterables-properties",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:7:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0308]: mismatched types: expected `Vec<String>`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.suspended-yield-iterator-close-calls-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w7\\work\\oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n         "
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.suspended-yield-iterator-close-calls-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w7\\work\\oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n         "
+    },
+    "note": ""
+  }
+]

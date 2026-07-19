@@ -1,0 +1,301 @@
+[
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.consecutive-yields",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.context-method-invocation",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{ g: [Function: g] }\" node=\"{ g: [GeneratorFunction: g] }\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ g: [Function: g] }\" node=\"{ g: [GeneratorFunction: g] }\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.from-state-executing",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.lone-return",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.lone-yield",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.no-control-flow",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.result-prototype",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"{}\" node=\"[Object: null prototype] {}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"{}\" node=\"[Object: null prototype] {}\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.return-yield-expr",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.this-val-not-generator",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.next.this-val-not-object",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.from-state-completed",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.from-state-executing",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.from-state-suspended-start",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.this-val-not-generator",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.this-val-not-object",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-catch-before-try",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-catch-within-try",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-finally-before-try",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-finally-following-finally",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-inner-try",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-outer-try-before-nested",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-finally-set-property-within-try",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-finally-within-finally",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.return.try-finally-within-try",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.throw.from-state-executing",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.throw.this-val-not-generator",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.generatorprototype.throw.this-val-not-object",
+    "layer": "test262",
+    "category": "generatorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  }
+]
