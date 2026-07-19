@@ -61,10 +61,12 @@ fn helper_module_present_only_when_needed() {
     let with = RuntimeDeps {
         needs_ryu_js: true,
         needs_serde_json: false,
+        needs_engine: false,
     };
     let without = RuntimeDeps {
         needs_ryu_js: false,
         needs_serde_json: false,
+        needs_engine: false,
     };
     assert!(
         with.helper_module()
@@ -80,6 +82,7 @@ fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let deps = RuntimeDeps {
         needs_ryu_js: true,
         needs_serde_json: false,
+        needs_engine: false,
     };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(toml.contains("ryu-js = \"1.0\""), "got:\n{toml}");
@@ -94,6 +97,7 @@ fn apply_to_cargo_toml_creates_section_when_absent() {
     let deps = RuntimeDeps {
         needs_ryu_js: true,
         needs_serde_json: false,
+        needs_engine: false,
     };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(
@@ -109,7 +113,46 @@ fn apply_to_cargo_toml_noop_when_not_needed() {
     let deps = RuntimeDeps {
         needs_ryu_js: false,
         needs_serde_json: false,
+        needs_engine: false,
     };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(!toml.contains("ryu-js"), "got:\n{toml}");
+}
+
+#[test]
+fn dynamic_reflection_routes_through_engine() {
+    // `Object.defineProperty` is ES reflection the static translator cannot
+    // lower; the whole program runs under the embedded QuickJS engine instead.
+    // The body is never lowered, so an anonymous `{}` receiver is fine — the
+    // engine path short-circuits before `translate_statement`.
+    let src = "function main(): void {\n  const o = {};\n  Object.defineProperty(o, \"x\", { value: 1 });\n  console.log(o.x);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine,
+        "defineProperty should flip needs_engine, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("__ds_engine::run"),
+        "engine fixture should lower to __ds_engine::run, got:\n{rust}"
+    );
+    assert!(
+        !deps.needs_ryu_js,
+        "engine path emits no __ds::number_to_string"
+    );
+}
+
+#[test]
+fn plain_source_stays_on_static_rust_path() {
+    // No reflection → the static Rust lowering; no engine dep.
+    let src = "function main(): void { console.log(1 + 2); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(!deps.needs_engine, "plain source pulls no engine");
+    assert!(
+        !rust.contains("__ds_engine::run"),
+        "plain source must not lower to engine, got:\n{rust}"
+    );
 }

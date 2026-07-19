@@ -18,6 +18,7 @@
 //! than what merely parses.
 
 use std::borrow::Cow;
+use std::cell::Cell;
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
@@ -31,6 +32,29 @@ use oxc_span::{SourceType, Span};
 
 use super::name_table;
 use super::{functions, registry};
+
+// The set of prototype borrows `is_borrow_call` whitelists depends on the
+// caller (`check` vs the engine detector). Rather than thread a `for_engine`
+// bool through every recursive `collect_*` call (~30 sites), a thread-local
+// flag carries it: `program_uses_engine` sets it for the duration of its walk
+// (`EngineScope` resets it on drop — even on panic), `check` leaves it at the
+// default `false`. Per-thread, so the conformance harness's parallel workers
+// each carry their own.
+thread_local! {
+    static FOR_ENGINE: Cell<bool> = const { Cell::new(false) };
+}
+
+/// RAII guard: constructed to mark an engine-path detection in progress;
+/// resets `FOR_ENGINE` on drop so a panic mid-walk cannot leak the flag into a
+/// later `check` on the same thread (which would then wrongly whitelist Array
+/// prototype borrows).
+struct EngineScope;
+
+impl Drop for EngineScope {
+    fn drop(&mut self) {
+        FOR_ENGINE.with(|c| c.set(false));
+    }
+}
 
 /// Check `.ds` source for translatability. Returns syntax errors from
 /// `oxc_parser` plus one diagnostic per construct the translator cannot map —
@@ -66,6 +90,33 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
         collect_unsupported(stmt, &mut diagnostics);
     }
     diagnostics
+}
+
+/// True when the program body contains any ES dynamic/reflection construct the
+/// static translator cannot lower — the same walk as [`collect_unsupported`],
+/// returning whether any construct was found (not the diagnostics). The
+/// translator routes such a program through the embedded QuickJS engine
+/// (`RuntimeDeps::needs_engine`) instead of static lowering, so a fixture that
+/// uses `Object.defineProperty`/`Reflect.*`/`Symbol`/`instanceof`/… runs
+/// correctly rather than failing `cargo check`.
+///
+/// Mirrors the unsupported-construct detection so the translator and `check`
+/// agree on what the engine path covers — no second list to drift. Parse
+/// errors are out of scope (a parse failure is fatal before this is called);
+/// unmapped top-level statements are too (top-level hoisting is a separate
+/// translator path, not an engine concern).
+pub(super) fn program_uses_engine(program: &oxc_ast::ast::Program) -> bool {
+    // For the duration of this walk, `is_borrow_call` whitelists every prototype
+    // borrow the translator *attempts* (String + Array), so a borrow the
+    // translator can lower is not needlessly stolen by the engine. The scope
+    // guard resets the flag on drop — even on panic.
+    FOR_ENGINE.with(|c| c.set(true));
+    let _scope = EngineScope;
+    let mut diags = Vec::new();
+    for stmt in &program.body {
+        collect_unsupported(stmt, &mut diags);
+    }
+    !diags.is_empty()
 }
 
 /// A human message + span for a top-level statement the translator skips.
@@ -613,24 +664,28 @@ fn is_global_method_chain(expr: &Expression) -> bool {
     )
 }
 
-/// True when `callee` is a prototype-method borrow the translator lowers — only
-/// `String.prototype.<m>.call(r)` qualifies (`String(r).<m>(…)` via
-/// `string_method_on`). The callee is then not recursed, so the prototype-method
-/// reflection rule below does not flag a legitimate borrow.
+/// True when `callee` is a prototype-method borrow whose callee should not be
+/// recursed (so the `<builtin>.prototype.<method>` reflection rule does not
+/// flag a legitimate borrow).
 ///
 /// The `<Builtin>.prototype.<method>.call` shape match is delegated to the
-/// translator's own [`prototype_method_call`] — the single structural matcher,
-/// so check.rs and the translator cannot drift on the AST shape (the bug that
-/// made the prior local matcher miss a layer). Only a `String` result is mapped:
-/// `Array` borrows are not (the translator's `array_method_on` needs a `Vec`
-/// receiver, and 0/790 test262 Array borrows are supported), so they fall
-/// through to the generic `<builtin>.prototype.<method>` reflection rule as
-/// `unsupported`. Only `.call` is mapped — `.apply`/`.bind` borrows have no
-/// translator mapping and likewise fall through (the prior local matcher
-/// incorrectly whitelisted them).
+/// translator's own [`super::super::expressions::call::prototype_method_call`]
+/// — the single structural matcher, so check.rs and the translator cannot drift
+/// on the AST shape (the bug that made the prior local matcher miss a layer).
+///
+/// Which builtins whitelist is caller-dependent (the [`FOR_ENGINE`] thread
+/// local): `check` whitelists only `String` — the translator's `array_method_on`
+/// lowers Array borrows too, but 0/790 test262 Array borrows compile (non-`Vec`
+/// receivers), so `check` keeps them `unsupported` rather than `partial`
+/// (honest binary). The engine detector whitelists `String` + `Array` — every
+/// borrow the translator *attempts* — so the engine fallback (a last resort for
+/// constructs with no lowering at all) does not steal a borrow the translator
+/// can lower. Only `.call` is mapped; `.apply`/`.bind` fall through.
 fn is_borrow_call(callee: &Expression) -> bool {
-    matches!(
-        super::expressions::call::prototype_method_call(callee),
-        Some(("String", _))
-    )
+    let for_engine = FOR_ENGINE.with(|c| c.get());
+    match super::expressions::call::prototype_method_call(callee) {
+        Some(("String", _)) => true,
+        Some(("Array", _)) => for_engine,
+        _ => false,
+    }
 }

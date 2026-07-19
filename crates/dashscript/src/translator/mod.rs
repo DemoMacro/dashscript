@@ -43,6 +43,15 @@ pub struct RuntimeDeps {
     /// the Rust text, so the generated crate needs the `serde_json` crate (no
     /// helper module — the calls are direct).
     pub needs_serde_json: bool,
+    /// The source uses ES dynamic reflection (`Object.defineProperty`/
+    /// `getOwnPropertyDescriptor`/`create`/`getPrototypeOf`, accessor
+    /// properties, …) the static translator cannot lower to idiomatic Rust.
+    /// The generated crate then runs the whole program under an embedded
+    /// QuickJS engine via the `__ds_engine` helper module (the `rquickjs`
+    /// crate) — a gated compat fallback, the same pattern as `ryu_js`. Default
+    /// `ds build` output stays pure Rust; only programs that actually use such
+    /// a construct pull the engine (and its C build dependency).
+    pub needs_engine: bool,
 }
 
 impl RuntimeDeps {
@@ -51,6 +60,7 @@ impl RuntimeDeps {
     pub fn merge(&mut self, other: &RuntimeDeps) {
         self.needs_ryu_js |= other.needs_ryu_js;
         self.needs_serde_json |= other.needs_serde_json;
+        self.needs_engine |= other.needs_engine;
     }
 
     /// The `__ds` helper module source — `number_to_string(f64) -> String` via
@@ -58,6 +68,14 @@ impl RuntimeDeps {
     /// `None` when no runtime dep is needed, so the caller writes nothing.
     pub fn helper_module(&self) -> Option<&'static str> {
         self.needs_ryu_js.then_some(DS_HELPER_MODULE)
+    }
+
+    /// The `__ds_engine` compat module source — runs a `.ds` source under an
+    /// embedded QuickJS engine — when this dep set flags `needs_engine`. `None`
+    /// otherwise, so the caller writes nothing and the default build pulls no
+    /// engine dependency.
+    pub fn engine_helper_module(&self) -> Option<&'static str> {
+        self.needs_engine.then_some(ENGINE_HELPER_MODULE)
     }
 
     /// Append `ryu-js = "1.0"` to a generated `Cargo.toml`, creating the
@@ -73,6 +91,9 @@ impl RuntimeDeps {
         // package name.
         append_dep(cargo_toml, "ryu-js", "\"1.0\"", self.needs_ryu_js);
         append_dep(cargo_toml, "serde_json", "\"1\"", self.needs_serde_json);
+        // `rquickjs` bundles QuickJS-NG C sources (compiled via `cc`), so this
+        // is only emitted for programs that opt into the engine compat path.
+        append_dep(cargo_toml, "rquickjs", "\"0.12\"", self.needs_engine);
     }
 }
 
@@ -115,6 +136,66 @@ pub fn number_to_string(x: f64) -> String {
     Buffer::new().format(x).to_string()
 }
 ";
+
+/// The DashScript compat engine module, written to `src/__ds_engine.rs` and
+/// declared `mod __ds_engine;` at the crate root when a translated file uses ES
+/// dynamic reflection the static translator cannot lower. It runs the whole
+/// `.ds` source under an embedded QuickJS engine (`rquickjs`), with a
+/// `console.log` wired to stdout. Number stringification uses the engine's own
+/// `String()` (ES `Number::toString`), so output matches Node for primitives.
+///
+/// Gated: only emitted for `needs_engine` programs, so a plain `ds build` pulls
+/// no engine dependency (and no QuickJS C compile). The single source for the
+/// engine helper — consumed by both `ds build` (project.rs) and the conformance
+/// harness — so the helper text lives in the library rather than either
+/// consumer.
+///
+/// Note: the engine evaluates the source as plain ECMAScript, so a `.ds` source
+/// with TypeScript type annotations is not yet handled on this path (today it
+/// serves the conformance oracle, whose test262 fixtures are annotation-free
+/// JS). Stripping annotations for real `.ds` sources is a follow-up.
+const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ds` source under an embedded QuickJS
+//! engine (`rquickjs`) when it uses ES dynamic reflection
+//! (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`, …) the static
+//! translator cannot lower to idiomatic Rust. Gated — only present when
+//! `RuntimeDeps::needs_engine`.
+use rquickjs::{Context, Ctx, Runtime};
+
+/// Run a `.ds` source under QuickJS with `console.log` wired to stdout, then
+/// call `main()` (the fixture entry — the same `main();` the conformance
+/// harness appends for the Node oracle). `console.log` joins its arguments with
+/// spaces, stringified by the engine's own `String()` coercion — ES
+/// `Number::toString` for numbers — so the output matches Node for primitives.
+pub fn run(source: &str) {
+    let runtime = Runtime::new().expect("rquickjs Runtime");
+    let ctx = Context::full(&runtime).expect("rquickjs Context");
+    let result = ctx.with(|ctx: Ctx<'_>| -> rquickjs::Result<()> {
+        // A native line-print primitive; `console.log` (defined in JS below)
+        // joins its arguments with spaces and hands each finished line here.
+        let print_line = rquickjs::Function::new(ctx.clone(), |s: String| {
+            println!("{s}");
+        })?;
+        ctx.globals().set("__ds_print_line", print_line)?;
+        // Define `console.log` in JS so argument stringification uses the
+        // engine's own `String()` coercion (ES NumberToString for numbers),
+        // matching Node's `console.log` output for primitives. A plain number
+        // arg prints `1e+21` (not Rust's `f64` Display spelling).
+        ctx.eval::<(), _>(
+            r#"this.console = { log: function () {
+                for (var i = 0, out = []; i < arguments.length; i++) {
+                    out.push(String(arguments[i]));
+                }
+                __ds_print_line(out.join(" "));
+            } };"#,
+        )?;
+        // Eval the source (defines `main`), then invoke it.
+        ctx.eval::<(), _>(source)?;
+        ctx.eval::<(), _>("main();")?;
+        Ok(())
+    });
+    result.expect("rquickjs eval");
+}
+"##;
 
 /// Translates a TypeScript-flavored `.ds` program into Rust source.
 #[derive(Default)]
@@ -172,6 +253,41 @@ impl Translator {
         let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
         let names = name_table::build(sret.semantic.scoping());
 
+        // Engine-gated compat path: a source using ES dynamic reflection
+        // (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`,
+        // `instanceof`, …) the static translator cannot lower is run whole
+        // under an embedded QuickJS engine instead of being lowered to Rust.
+        // The same `collect_unsupported` walk that flags these as
+        // `unsupported` in `ds check` here flips the file to the engine path —
+        // a single source of truth for what the engine covers, so the lint and
+        // the lowering cannot drift. Default `ds build` output stays pure Rust;
+        // only a program that actually uses such a construct pulls the
+        // `rquickjs` engine dep (and its C compile).
+        if check::program_uses_engine(program) {
+            // The raw source becomes a string literal — `syn::LitStr` escapes
+            // it correctly (quotes, backslashes, newlines) so any `.ds` source
+            // survives embedding. The engine re-evaluates it as ECMAScript.
+            let src_lit = syn::LitStr::new(source, proc_macro2::Span::call_site());
+            let main_item: syn::Item = syn::parse_quote! {
+                fn main() {
+                    crate::__ds_engine::run(#src_lit);
+                }
+            };
+            let rust = prettyplease::unparse(&syn::File {
+                shebang: None,
+                attrs: Vec::new(),
+                items: vec![main_item],
+            });
+            return Ok((
+                rust,
+                RuntimeDeps {
+                    needs_ryu_js: false,
+                    needs_serde_json: false,
+                    needs_engine: true,
+                },
+            ));
+        }
+
         // First pass: collect discriminated-union enum shapes so later
         // expression translation can build variant constructors.
         let registry = registry::build_registry(&program.body);
@@ -199,6 +315,7 @@ impl Translator {
         let deps = RuntimeDeps {
             needs_ryu_js: rust.contains("__ds::number_to_string"),
             needs_serde_json: rust.contains("serde_json::"),
+            needs_engine: false,
         };
         Ok((rust, deps))
     }
