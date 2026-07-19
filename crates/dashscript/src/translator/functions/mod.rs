@@ -648,8 +648,10 @@ fn translate_variable_declaration(
                     // in `flavor::infer` (R1), so an `I64` here is genuinely
                     // integer-only. Only a current `f64` type is promoted —
                     // `String`/`bool`/`Vec` are left untouched.
-                    if locals.number_flavors.get(&name.to_string())
-                        == Some(&super::flavor::NumberFlavor::I64)
+                    if names
+                        .symbol_of_pattern(&d.id)
+                        .and_then(|sym| locals.number_flavors.get(&sym).copied())
+                        == Some(super::flavor::NumberFlavor::I64)
                         && ty
                             .as_ref()
                             .and_then(path_of)

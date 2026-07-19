@@ -13,10 +13,16 @@
 //! `usize` for indexing is a site-cast, never a flavor. Flavor inference is
 //! scalar-only in the MVP — array elements stay `Vec<f64>` (an ES array's
 //! element type is `number`).
+//!
+//! The signal sets (`force_f64` / `allow_i64`) are keyed on `SymbolId`, not on
+//! the emitted Rust name: two `i` counters in different scopes share the Rust
+//! name `i` (block shadowing is legal) but are distinct symbols, so a `0.5`
+//! assigned to one must not force the other to `f64`. See `NameTable`.
 
 use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{AssignmentTarget, Expression, ForStatementInit, Statement, TSType};
+use oxc_semantic::SymbolId;
 use oxc_syntax::operator::{AssignmentOperator, BinaryOperator, UnaryOperator};
 
 use super::context::Ctx;
@@ -112,22 +118,24 @@ fn unary_flavor(op: UnaryOperator, arg: &Expression, ctx: &Ctx<'_>) -> NumberFla
 }
 
 /// Infer every local's number flavor in a function body. Returns only locals
-/// with a signal; absent names default to `F64` at query time.
+/// with a signal; absent symbols default to `F64` at query time. The map is
+/// keyed on `SymbolId` (scope-aware), so two same-named counters in different
+/// scopes do not cross-contaminate.
 pub(in crate::translator) fn infer(
     stmts: &[Statement],
     names: &NameTable,
-) -> HashMap<String, NumberFlavor> {
-    let mut force_f64: HashSet<String> = HashSet::new();
-    let mut allow_i64: HashSet<String> = HashSet::new();
+) -> HashMap<SymbolId, NumberFlavor> {
+    let mut force_f64: HashSet<SymbolId> = HashSet::new();
+    let mut allow_i64: HashSet<SymbolId> = HashSet::new();
     for s in stmts {
         walk_stmt(s, names, &mut force_f64, &mut allow_i64);
     }
     allow_i64
         .iter()
-        .map(|name| {
+        .map(|&sym| {
             (
-                name.clone(),
-                if force_f64.contains(name) {
+                sym,
+                if force_f64.contains(&sym) {
                     NumberFlavor::F64
                 } else {
                     NumberFlavor::I64
@@ -145,19 +153,15 @@ pub(in crate::translator) fn infer(
 fn structural_flavor(
     expr: &Expression,
     names: &NameTable,
-    allow_i64: &HashSet<String>,
-    force_f64: &HashSet<String>,
+    allow_i64: &HashSet<SymbolId>,
+    force_f64: &HashSet<SymbolId>,
 ) -> NumberFlavor {
     match expr {
         Expression::NumericLiteral(n) => NumberFlavor::literal(n.value),
-        Expression::Identifier(id) => {
-            let n = names.of_reference(id).to_string();
-            if allow_i64.contains(&n) && !force_f64.contains(&n) {
-                NumberFlavor::I64
-            } else {
-                NumberFlavor::F64
-            }
-        }
+        Expression::Identifier(id) => match names.symbol_of_reference(id) {
+            Some(sym) if allow_i64.contains(&sym) && !force_f64.contains(&sym) => NumberFlavor::I64,
+            _ => NumberFlavor::F64,
+        },
         Expression::UnaryExpression(u) => match u.operator {
             // `~x` emits via `bitwise_expr` which casts back to `f64`; keep
             // the binding `f64` to match (Phase 2 may promote the operand).
@@ -193,20 +197,20 @@ fn structural_flavor(
     }
 }
 
-/// Fold an expression's structural flavor into the target variable's signals.
+/// Fold an expression's structural flavor into the target symbol's signals.
 fn record(
-    name: &str,
+    sym: SymbolId,
     expr: &Expression,
     names: &NameTable,
-    force_f64: &mut HashSet<String>,
-    allow_i64: &mut HashSet<String>,
+    force_f64: &mut HashSet<SymbolId>,
+    allow_i64: &mut HashSet<SymbolId>,
 ) {
     match structural_flavor(expr, names, allow_i64, force_f64) {
         NumberFlavor::I64 => {
-            allow_i64.insert(name.to_string());
+            allow_i64.insert(sym);
         }
         NumberFlavor::F64 => {
-            force_f64.insert(name.to_string());
+            force_f64.insert(sym);
         }
     }
 }
@@ -214,8 +218,8 @@ fn record(
 fn walk_stmt(
     stmt: &Statement,
     names: &NameTable,
-    force_f64: &mut HashSet<String>,
-    allow_i64: &mut HashSet<String>,
+    force_f64: &mut HashSet<SymbolId>,
+    allow_i64: &mut HashSet<SymbolId>,
 ) {
     match stmt {
         Statement::BlockStatement(b) => {
@@ -295,24 +299,27 @@ fn walk_stmt(
 }
 
 /// Record a `let`/`const`/`var` binding's flavor signals from its annotation
-/// and initializer.
+/// and initializer. A destructuring pattern (no single symbol) is skipped —
+/// its sub-bindings are walked as separate declarations by the caller.
 fn declare_local(
     id: &oxc_ast::ast::BindingPattern,
     type_annotation: Option<&oxc_ast::ast::TSTypeAnnotation>,
     init: Option<&Expression>,
     names: &NameTable,
-    force_f64: &mut HashSet<String>,
-    allow_i64: &mut HashSet<String>,
+    force_f64: &mut HashSet<SymbolId>,
+    allow_i64: &mut HashSet<SymbolId>,
 ) {
-    let name = names.of_pattern(id).to_string();
+    let Some(sym) = names.symbol_of_pattern(id) else {
+        return;
+    };
     // A `: number` annotation forces f64 (R1: `let x: number = 5; x = 0.5`).
     if let Some(ta) = type_annotation {
         if matches!(ta.type_annotation, TSType::TSNumberKeyword(_)) {
-            force_f64.insert(name.clone());
+            force_f64.insert(sym);
         }
     }
     if let Some(init) = init {
-        record(&name, init, names, force_f64, allow_i64);
+        record(sym, init, names, force_f64, allow_i64);
         walk_expr(init, names, force_f64, allow_i64);
     }
 }
@@ -320,42 +327,43 @@ fn declare_local(
 fn walk_expr(
     expr: &Expression,
     names: &NameTable,
-    force_f64: &mut HashSet<String>,
-    allow_i64: &mut HashSet<String>,
+    force_f64: &mut HashSet<SymbolId>,
+    allow_i64: &mut HashSet<SymbolId>,
 ) {
     match expr {
         Expression::AssignmentExpression(asg) => {
             if let AssignmentTarget::AssignmentTargetIdentifier(id) = &asg.left {
-                let name = names.of_reference(id).to_string();
-                match asg.operator {
-                    // `v = expr`: the RHS flavor is v's flavor.
-                    AssignmentOperator::Assign => {
-                        record(&name, &asg.right, names, force_f64, allow_i64);
+                if let Some(sym) = names.symbol_of_reference(id) {
+                    match asg.operator {
+                        // `v = expr`: the RHS flavor is v's flavor.
+                        AssignmentOperator::Assign => {
+                            record(sym, &asg.right, names, force_f64, allow_i64);
+                        }
+                        // `v += int` keeps v integral; `v += 0.5` forces f64.
+                        // Bitwise-compound (`&=`) yields an integer.
+                        AssignmentOperator::Addition
+                        | AssignmentOperator::Subtraction
+                        | AssignmentOperator::Multiplication
+                        | AssignmentOperator::Remainder => {
+                            record(sym, &asg.right, names, force_f64, allow_i64);
+                        }
+                        // Bitwise compound emits via `bitwise_expr` which casts
+                        // back to `f64`; force the target `f64` so the result
+                        // matches (Phase 2 may promote the operand to `i64`).
+                        AssignmentOperator::BitwiseAnd
+                        | AssignmentOperator::BitwiseOR
+                        | AssignmentOperator::BitwiseXOR
+                        | AssignmentOperator::ShiftLeft
+                        | AssignmentOperator::ShiftRight
+                        | AssignmentOperator::ShiftRightZeroFill => {
+                            force_f64.insert(sym);
+                        }
+                        // `/=` and `**=` always produce a double.
+                        AssignmentOperator::Division | AssignmentOperator::Exponential => {
+                            force_f64.insert(sym);
+                        }
+                        _ => {}
                     }
-                    // `v += int` keeps v integral; `v += 0.5` forces f64.
-                    // Bitwise-compound (`&=`) yields an integer.
-                    AssignmentOperator::Addition
-                    | AssignmentOperator::Subtraction
-                    | AssignmentOperator::Multiplication
-                    | AssignmentOperator::Remainder => {
-                        record(&name, &asg.right, names, force_f64, allow_i64);
-                    }
-                    // Bitwise compound emits via `bitwise_expr` which casts
-                    // back to `f64`; force the target `f64` so the result
-                    // matches (Phase 2 may promote the operand to `i64`).
-                    AssignmentOperator::BitwiseAnd
-                    | AssignmentOperator::BitwiseOR
-                    | AssignmentOperator::BitwiseXOR
-                    | AssignmentOperator::ShiftLeft
-                    | AssignmentOperator::ShiftRight
-                    | AssignmentOperator::ShiftRightZeroFill => {
-                        force_f64.insert(name);
-                    }
-                    // `/=` and `**=` always produce a double.
-                    AssignmentOperator::Division | AssignmentOperator::Exponential => {
-                        force_f64.insert(name);
-                    }
-                    _ => {}
                 }
             }
             walk_expr(&asg.right, names, force_f64, allow_i64);
@@ -365,7 +373,9 @@ fn walk_expr(
                 &u.argument
             {
                 // `v++` / `v--`: the +1/-1 step is integral.
-                allow_i64.insert(names.of_reference(id).to_string());
+                if let Some(sym) = names.symbol_of_reference(id) {
+                    allow_i64.insert(sym);
+                }
             }
         }
         Expression::BinaryExpression(b) => {

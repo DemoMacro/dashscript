@@ -73,6 +73,19 @@ impl<'a> NameTable<'a> {
         let rid = id.reference_id.get()?;
         self.scoping.get_reference(rid).symbol_id()
     }
+
+    /// The `SymbolId` a binding pattern declares, if any. A `BindingIdentifier`
+    /// resolves via its `symbol_id` cell; a destructuring pattern has no single
+    /// symbol, so it returns `None` (the sub-bindings are walked separately).
+    /// Used by flavor inference to key the dep set scope-aware — two `i` loops
+    /// in different scopes are distinct `SymbolId`s even though their Rust name
+    /// is the same (`i`) in both.
+    pub fn symbol_of_pattern(&self, pat: &BindingPattern) -> Option<SymbolId> {
+        match pat {
+            BindingPattern::BindingIdentifier(id) => id.symbol_id.get(),
+            _ => None,
+        }
+    }
 }
 
 /// Build a name table for one file's symbols — see the module doc for the

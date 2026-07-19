@@ -11,6 +11,7 @@
 use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::IdentifierReference;
+use oxc_semantic::SymbolId;
 use syn::{parse_quote, Expr, Ident, Path};
 
 use super::flavor::NumberFlavor;
@@ -30,8 +31,10 @@ pub struct Locals {
     pub ref_params: HashSet<String>,
     pub use_counts: HashMap<String, u32>,
     /// Per-local number flavor (`f64` vs `i64`) inferred by
-    /// [`super::flavor::infer`]. Absent names default to `F64` at query time.
-    pub number_flavors: HashMap<String, NumberFlavor>,
+    /// [`super::flavor::infer`]. Keyed on `SymbolId` (scope-aware), so two
+    /// same-named counters in different scopes stay distinct. Absent symbols
+    /// default to `F64` at query time.
+    pub number_flavors: HashMap<SymbolId, NumberFlavor>,
 }
 
 impl Locals {
@@ -170,14 +173,18 @@ impl<'a> Ctx<'a> {
     }
 
     /// The inferred number flavor (`f64` vs `i64`) of the numeric local named by
-    /// `id`. `F64` for any unknown name (the conservative default — an ES
-    /// `number` is a double unless every value bound to it is a pure integer).
+    /// `id`. `F64` for any unknown / unresolved reference (the conservative
+    /// default — an ES `number` is a double unless every value bound to it is a
+    /// pure integer). Resolves scope-aware via `SymbolId` so a same-named
+    /// counter in a different scope does not leak another scope's flavor.
     #[must_use]
     pub fn local_flavor_for(&self, id: &IdentifierReference) -> NumberFlavor {
-        let name = self.names.of_reference(id).to_string();
+        let Some(sym) = self.names.symbol_of_reference(id) else {
+            return NumberFlavor::F64;
+        };
         self.locals
             .number_flavors
-            .get(&name)
+            .get(&sym)
             .copied()
             .unwrap_or(NumberFlavor::F64)
     }
