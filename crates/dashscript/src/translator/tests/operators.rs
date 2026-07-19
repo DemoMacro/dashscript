@@ -62,6 +62,30 @@ fn translates_typeof_number_static_members() {
 }
 
 #[test]
+fn translates_typeof_global_constructors_and_namespaces() {
+    // Constructors are callable (`typeof === "function"`); namespace objects
+    // (JSON/Reflect/Atomics) are not (`typeof === "object"`) — ES spec.
+    let src = "function f(): void {\n\
+        \x20   console.log(typeof BigInt);\n\
+        \x20   console.log(typeof Map);\n\
+        \x20   console.log(typeof Uint8Array);\n\
+        \x20   console.log(typeof JSON);\n\
+        \x20   console.log(typeof Reflect);\n\
+        }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    // BigInt/Map/Uint8Array are functions.
+    assert!(
+        rust.matches("\"function\"").count() >= 3,
+        "constructors: {rust}"
+    );
+    // JSON/Reflect are objects.
+    assert!(
+        rust.matches("\"object\"").count() >= 2,
+        "namespaces: {rust}"
+    );
+}
+
+#[test]
 fn translates_compound_assignment() {
     let src = "function f(): void { let n = 0; n += 5; n = n * 2; }";
     let rust = Translator::new().translate(src).expect("should translate");

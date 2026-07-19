@@ -1,0 +1,346 @@
+[
+  {
+    "id": "test262.test.built-ins.bigint.asintn.arithmetic",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bigint-tobigint",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bigint-tobigint-errors",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bigint-tobigint-wrapped-values",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bits-toindex",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bits-toindex-errors",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bits-toindex-wrapped-values",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.order-of-steps",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.arithmetic",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bigint-tobigint",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bigint-tobigint-errors",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bigint-tobigint-wrapped-values",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bits-toindex",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bits-toindex-errors",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bits-toindex-wrapped-values",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.order-of-steps",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-empty-string",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-from-binary-string",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:15:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-from-decimal-string",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-from-hex-string",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-from-octal-string",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-from-string-syntax-errors",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-integer",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-trailing-leading-spaces",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.infinity-throws-rangeerror",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.nan-throws-rangeerror",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.negative-infinity-throws.rangeerror",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.non-integer-rangeerror",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.parseint.nonexistent",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.proto",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.proto",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.a-z",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.default-radix",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.prototype-call",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.radix-2-to-36",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.radix-err",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.radix-tointegerorinfinity-throws-symbol",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.radix-tointegerorinfinity-throws-toprimitive-or-bigint",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.string-is-code-units-of-decimal-digits-only",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.valueof.cross-realm",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "partial",
+    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `big_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.valueof.return",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.valueof.this-value-invalid-object-throws",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.valueof.this-value-invalid-primitive-throws",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  }
+]

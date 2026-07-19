@@ -100,14 +100,54 @@ fn type_of_expr(arg: &Expression) -> Expr {
         }
         Expression::FunctionExpression(_) | Expression::ArrowFunctionExpression(_) => "function",
         // A global builtin constructor is callable (`typeof Array === "function"`).
-        // `Math`/`JSON` are namespace objects (`typeof === "object"`), not
-        // functions; a user identifier also falls back to "object" (a precise
-        // answer for a user symbol needs type inference — out of scope here).
+        // Namespace objects (`Math`/`JSON`/`Reflect`/`Atomics`/`Intl`/`globalThis`)
+        // are not — `typeof === "object"`; a user identifier also falls back to
+        // "object" (a precise answer for a user symbol needs type inference).
         Expression::Identifier(id) => match id.name.as_str() {
-            "Array" | "Object" | "String" | "Number" | "Boolean" | "Symbol" | "Function"
-            | "Date" | "RegExp" | "Error" | "TypeError" | "RangeError" | "SyntaxError"
-            | "ReferenceError" | "EvalError" | "URIError" | "Promise" | "Map" | "Set"
-            | "WeakMap" | "WeakSet" | "ArrayBuffer" | "Proxy" | "Reflect" => "function",
+            // Namespace objects — not callable, `typeof === "object"`.
+            "Math" | "JSON" | "Reflect" | "Atomics" | "Intl" | "globalThis" => "object",
+            // Global constructors — callable, `typeof === "function"`.
+            "Array"
+            | "Object"
+            | "String"
+            | "Number"
+            | "Boolean"
+            | "Symbol"
+            | "Function"
+            | "Date"
+            | "RegExp"
+            | "Error"
+            | "TypeError"
+            | "RangeError"
+            | "SyntaxError"
+            | "ReferenceError"
+            | "EvalError"
+            | "URIError"
+            | "AggregateError"
+            | "SuppressedError"
+            | "Promise"
+            | "Map"
+            | "Set"
+            | "WeakMap"
+            | "WeakSet"
+            | "WeakRef"
+            | "FinalizationRegistry"
+            | "ArrayBuffer"
+            | "SharedArrayBuffer"
+            | "DataView"
+            | "BigInt"
+            | "Proxy"
+            | "Int8Array"
+            | "Uint8Array"
+            | "Uint8ClampedArray"
+            | "Int16Array"
+            | "Uint16Array"
+            | "Int32Array"
+            | "Uint32Array"
+            | "Float32Array"
+            | "Float64Array"
+            | "BigInt64Array"
+            | "BigUint64Array" => "function",
             _ => "object",
         },
         _ => "object",
