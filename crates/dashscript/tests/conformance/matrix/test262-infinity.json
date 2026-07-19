@@ -3,8 +3,11 @@
     "id": "test262.test.built-ins.infinity.15.1.1.2-0",
     "layer": "test262",
     "category": "infinity",
-    "status": "unsupported",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -31,8 +34,11 @@
     "id": "test262.test.built-ins.infinity.s15.1.1.2_a3_t2",
     "layer": "test262",
     "category": "infinity",
-    "status": "unsupported",
-    "detail": "`delete` has no DashScript mapping",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {

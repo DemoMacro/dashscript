@@ -3,48 +3,66 @@
     "id": "test262.test.built-ins.boolean.prototype.constructor.s15.6.4.1_a1",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a1",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a4",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.prototype.s15.6.4_a2",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t5",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t5",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -95,32 +113,44 @@
     "id": "test262.test.built-ins.boolean.s15.6.3_a1",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.s15.6.3_a2",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.s15.6.3_a3",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.s9.2_a1_t1",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`eval` is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -146,16 +176,23 @@
     "id": "test262.test.built-ins.boolean.s9.2_a4_t1",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.s9.2_a4_t3",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -184,8 +221,11 @@
     "id": "test262.test.built-ins.boolean.symbol-coercion",
     "layer": "test262",
     "category": "boolean",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   }
 ]

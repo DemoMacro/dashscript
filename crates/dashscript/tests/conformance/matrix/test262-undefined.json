@@ -3,8 +3,11 @@
     "id": "test262.test.built-ins.undefined.15.1.1.3-0",
     "layer": "test262",
     "category": "undefined",
-    "status": "unsupported",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -19,8 +22,11 @@
     "id": "test262.test.built-ins.undefined.15.1.1.3-2",
     "layer": "test262",
     "category": "undefined",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {

@@ -917,11 +917,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=1"
-    },
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -939,8 +935,11 @@
     "id": "test262.test.built-ins.math.max.s15.8.2.11_a4",
     "layer": "test262",
     "category": "math",
-    "status": "unsupported",
-    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -970,11 +969,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=1"
-    },
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -992,8 +987,11 @@
     "id": "test262.test.built-ins.math.min.s15.8.2.12_a4",
     "layer": "test262",
     "category": "math",
-    "status": "unsupported",
-    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1033,8 +1031,12 @@
     "id": "test262.test.built-ins.math.proto",
     "layer": "test262",
     "category": "math",
-    "status": "unsupported",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{}\" node=\"[Object: null prototype] {}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{}\" node=\"[Object: null prototype] {}\""
+    },
     "note": ""
   },
   {
@@ -1273,7 +1275,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
     },
     "note": ""
   },
@@ -1285,7 +1287,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
     },
     "note": ""
   },
@@ -1297,7 +1299,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
     },
     "note": ""
   },
@@ -1309,7 +1311,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
     },
     "note": ""
   },
@@ -1317,8 +1319,12 @@
     "id": "test262.test.built-ins.math.sumprecise.takes-iterable",
     "layer": "test262",
     "category": "math",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
+    },
     "note": ""
   },
   {

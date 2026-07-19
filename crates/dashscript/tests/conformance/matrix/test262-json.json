@@ -3,128 +3,177 @@
     "id": "test262.test.built-ins.json.15.12-0-1",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.15.12-0-3",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.15.12-0-4",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.israwjson.basic",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.israwjson.builtin",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-0-1",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-0-2",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-0-3",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-0-4",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-0-5",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-0-6",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-0-8",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-1",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-2",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-3",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-4",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -143,24 +192,33 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-2",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-3",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-4",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -179,32 +237,44 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-1",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-2",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-3",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-4",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -223,16 +293,22 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-2",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-3",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -323,8 +399,12 @@
     "id": "test262.test.built-ins.json.parse.builtin",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "partial",
+    "detail": "oracle diff: line 4: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 4: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
     "note": ""
   },
   {
@@ -339,72 +419,100 @@
     "id": "test262.test.built-ins.json.parse.invalid-whitespace",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.revived-proxy-revoked",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Proxy` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.reviver-array-get-prop-from-prototype",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.reviver-array-non-configurable-prop-create",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.reviver-array-non-configurable-prop-delete",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.reviver-object-get-prop-from-prototype",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.reviver-object-non-configurable-prop-create",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.reviver-object-non-configurable-prop-delete",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.parse.s15.12.2_a1",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{}\" node=\"[Object: null prototype] {}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{}\" node=\"[Object: null prototype] {}\""
+    },
     "note": ""
   },
   {
@@ -422,8 +530,11 @@
     "id": "test262.test.built-ins.json.parse.text-non-string-primitive",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -431,11 +542,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=1",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=1"
-    },
+    "detail": "src\\main.rs:6:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:18: error[E0599]: the method `to_string` exists for struct `HashMap<std::string::String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<std::string::String, _>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
     "note": ""
   },
   {
@@ -450,56 +557,79 @@
     "id": "test262.test.built-ins.json.rawjson.bigint-raw-json-can-be-stringified",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.rawjson.builtin",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.rawjson.illegal-empty-and-start-end-chars",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.rawjson.invalid-json-text",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.builtin",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `hasOwnProperty` (prototype reflection) is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "oracle diff: line 3: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.property-order",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.replacer-array-duplicates",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:3:9: warning: unused variable: `get_calls`: help: if this is intentional, prefix it with an underscore: `_get_calls`\nsrc\\main.rs:4:9: warning: unused variable: `value`: help: if this is intentional, prefix it with an underscore: `_value`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 3 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -507,7 +637,11 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:7:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:11:39: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 3 warnings emitted",
+    "detail": "oracle diff: line count: ds=0 node=3",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=3"
+    },
     "note": ""
   },
   {
@@ -515,7 +649,11 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:2:9: warning: unused variable: `obj`: help: if this is intentional, prefix it with an underscore: `_obj`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "oracle diff: line 1: ds=\"{}\" node=\"{\\\"0\\\":0,\\\"1\\\":1,\\\"-4\\\":2,\\\"0.3\\\":3,\\\"-Infinity\\\":4,\\\"NaN\\\":5}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{}\" node=\"{\\\"0\\\":0,\\\"1\\\":1,\\\"-4\\\":2,\\\"0.3\\\":3,\\\"-Infinity\\\":4,\\\"NaN\\\":5}\""
+    },
     "note": ""
   },
   {
@@ -523,47 +661,63 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:4:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:8:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:9:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:2:9: warning: unused variable: `replacer`: help: if this is intentional, prefix it with an underscore: `_replacer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Proxy` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked-realm",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w3\\work\\oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         "
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.replacer-function-array-circular",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.replacer-function-object-circular",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.replacer-function-object-deleted-property",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`delete` has no DashScript mapping",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -571,7 +725,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:10:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:19:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:19:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:23:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:23:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`",
+    "detail": "src\\main.rs:14:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:23:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:13:9: warning: unused variable: `replacer`: help: if this is intentional, prefix it with an underscore: `_replacer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 3 warnings emitted",
     "note": ""
   },
   {
@@ -579,7 +733,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:7:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:3:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -587,7 +741,11 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:2:9: warning: unused variable: `obj`: help: if this is intentional, prefix it with an underscore: `_obj`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "oracle diff: line count: ds=0 node=16",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=16"
+    },
     "note": ""
   },
   {
@@ -595,7 +753,11 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:2:9: warning: unused variable: `obj`: help: if this is intentional, prefix it with an underscore: `_obj`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "oracle diff: line count: ds=0 node=16",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=16"
+    },
     "note": ""
   },
   {
@@ -603,71 +765,100 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:2:9: warning: unused variable: `obj`: help: if this is intentional, prefix it with an underscore: `_obj`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "oracle diff: line count: ds=0 node=15",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=15"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-array-circular",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-array-proxy-revoked",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Proxy` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-bigint",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-bigint-cross-realm",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpdNe9y8\\w3\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-bigint-order",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `prototype` mutation is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-bigint-replacer",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-bigint-tojson",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `BigInt` literals are unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-bigint-tojson-receiver",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `BigInt` literals are unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -675,7 +866,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:7:39: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`",
+    "detail": "src\\main.rs:3:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:7:39: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 3 warnings emitted",
     "note": ""
   },
   {
@@ -683,31 +874,40 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:6:62: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:10:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:6:62: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-number-non-finite",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:7:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-object-circular",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-object-proxy-revoked",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Proxy` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -723,7 +923,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nsrc\\main.rs:26:38: warning: unreachable expression: unreachable expression\nsrc\\main.rs:26:38: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:8:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:14:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nsrc\\main.rs:19:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:25:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nsrc\\main.rs:37:52: error[E0277]: the trait bound `std::string::String: Copy` is not satisfied: the trait `Copy` is not implemented for `std::string::String`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -742,8 +942,11 @@
     "id": "test262.test.built-ins.json.stringify.value-symbol",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -751,15 +954,18 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:21:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:21:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:16:51: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-tojson-array-circular",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -767,15 +973,18 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:7:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`\nsrc\\main.rs:11:37: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:37: error[E0277]: the trait bound `!: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `!`",
+    "detail": "src\\main.rs:15:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:4:23: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-tojson-object-circular",
     "layer": "test262",
     "category": "json",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   }
 ]
