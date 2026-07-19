@@ -1,0 +1,59 @@
+[
+  {
+    "id": "test262.test.built-ins.weakset.constructor",
+    "layer": "test262",
+    "category": "weakset",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.weakset.properties-of-the-weakset-prototype-object",
+    "layer": "test262",
+    "category": "weakset",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"{}\" node=\"[Object: null prototype] {}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{}\" node=\"[Object: null prototype] {}\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.weakset.prototype-of-weakset",
+    "layer": "test262",
+    "category": "weakset",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.weakset.prototype.constructor.weakset-prototype-constructor-intrinsic",
+    "layer": "test262",
+    "category": "weakset",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.weakset.undefined-newtarget",
+    "layer": "test262",
+    "category": "weakset",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  }
+]

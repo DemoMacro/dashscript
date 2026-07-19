@@ -1,0 +1,10 @@
+[
+  {
+    "id": "test262.test.built-ins.typedarray.from.iterated-array-changed-by-tonumber",
+    "layer": "test262",
+    "category": "typedarray",
+    "status": "partial",
+    "detail": "src\\main.rs:4:14: error[E0425]: cannot find value `int32_array` in this scope: not found in this scope\nsrc\\main.rs:5:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:3:47: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "note": ""
+  }
+]
