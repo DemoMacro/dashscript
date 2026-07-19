@@ -264,10 +264,20 @@ impl Translator {
         // only a program that actually uses such a construct pulls the
         // `rquickjs` engine dep (and its C compile).
         if check::program_uses_engine(program) {
-            // The raw source becomes a string literal — `syn::LitStr` escapes
-            // it correctly (quotes, backslashes, newlines) so any `.ds` source
-            // survives embedding. The engine re-evaluates it as ECMAScript.
-            let src_lit = syn::LitStr::new(source, proc_macro2::Span::call_site());
+            // The engine evaluates ECMAScript, so strip the TS type annotations
+            // a `.ds` source carries — QuickJS parses JS, not TS. test262
+            // fixtures annotate only the wrapped `main` (their bodies are the
+            // test262 file's original JS); a real `.ds` source with richer
+            // annotations (`as`, generics, ...) needs fuller stripping — a
+            // follow-up. Regenerate via oxc codegen so the embedded source is
+            // annotation-free JS, then `syn::LitStr` escapes it for embedding.
+            for stmt in &mut program.body {
+                if let oxc_ast::ast::Statement::FunctionDeclaration(f) = stmt {
+                    f.return_type = None;
+                }
+            }
+            let js_source = Codegen::new().build(&*program).code;
+            let src_lit = syn::LitStr::new(&js_source, proc_macro2::Span::call_site());
             let main_item: syn::Item = syn::parse_quote! {
                 fn main() {
                     crate::__ds_engine::run(#src_lit);

@@ -315,6 +315,17 @@ fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps
             body = format!("mod __ds;\n{body}");
         }
     }
+    // Engine compat: a `.ds` source using ES reflection lowers to a single
+    // `__ds_engine::run(src)` call; the probe crate then needs the engine
+    // helper module (declared `mod __ds_engine;`) — the same assembly `ds
+    // build` performs for a real project. `rquickjs` itself lands in
+    // Cargo.toml via `apply_to_cargo_toml` below (gated on `needs_engine`).
+    if let Some(engine) = deps.engine_helper_module() {
+        let _ = fs::write(project.join("src").join("__ds_engine.rs"), engine);
+        if !body.contains("mod __ds_engine;") {
+            body = format!("mod __ds_engine;\n{body}");
+        }
+    }
     // Dep injection is independent of the `__ds` helper module: `serde_json`
     // needs the Cargo.toml line but inlines its calls directly (no helper), so
     // apply unconditionally — `apply_to_cargo_toml` is itself a no-op when no
@@ -367,7 +378,7 @@ static OFFLINE_READY: AtomicBool = AtomicBool::new(false);
 /// original online behaviour, so a no-network machine degrades rather than
 /// hard-failing every dep-injecting fixture.
 fn warm_cargo_cache(seed_project: &Path) -> bool {
-    const SEED_TOML: &str = "[package]\nname = \"seed\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[dependencies]\nryu-js = \"1.0\"\nserde_json = \"1\"\n";
+    const SEED_TOML: &str = "[package]\nname = \"seed\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[dependencies]\nryu-js = \"1.0\"\nserde_json = \"1\"\nrquickjs = \"0.12\"\n";
     let _ = fs::write(seed_project.join("Cargo.toml"), SEED_TOML);
     let _ = fs::write(seed_project.join("src").join("main.rs"), "fn main() {}\n");
     let ok = Command::new("cargo")
@@ -516,9 +527,26 @@ fn parse_num(s: &str) -> Option<f64> {
     }
 }
 
+/// The `detail` marker for a supported run that used the embedded QuickJS
+/// engine (ES reflection), so the matrix records honestly which supported
+/// fixtures run via the compat path rather than the static Rust lowering.
+fn engine_note(via_engine: bool) -> String {
+    if via_engine {
+        "via rquickjs engine".to_string()
+    } else {
+        String::new()
+    }
+}
+
 /// Run one test262 fixture through the differential pipeline:
-/// `Translator::check` (gate) → `translate` + `cargo check` (compiles) →
-/// `cargo run` vs the Node oracle (semantics). Returns `(status, detail, oracle)`.
+/// `translate` → (engine gate, else `Translator::check`) → `cargo check`
+/// (compiles) → `cargo run` vs the Node oracle (semantics). Returns
+/// `(status, detail, oracle)`.
+///
+/// An engine-gated fixture (ES reflection the static translator cannot lower)
+/// bypasses the `check` unsupported gate — the embedded QuickJS engine runs
+/// it. Static-mode fixtures still answer to `check` (translator scope limits
+/// like top-level statements stay honestly unsupported).
 fn run_test262(
     raw: &RawFeature,
     project: &Path,
@@ -526,19 +554,22 @@ fn run_test262(
     work: &Path,
     node_ok: bool,
 ) -> (&'static str, String, Option<Oracle>) {
-    let diags = Translator::new().check(&raw.fixture);
-    if !diags.is_empty() {
-        let msg = diags
-            .iter()
-            .map(|d| format!("{d}"))
-            .collect::<Vec<_>>()
-            .join(" | ");
-        return ("unsupported", msg, None);
-    }
     let (rust, deps) = match translate_catch(&raw.fixture) {
         Ok(r) => r,
         Err(e) => return ("partial", e, None),
     };
+    let via_engine = deps.needs_engine;
+    if !via_engine {
+        let diags = Translator::new().check(&raw.fixture);
+        if !diags.is_empty() {
+            let msg = diags
+                .iter()
+                .map(|d| format!("{d}"))
+                .collect::<Vec<_>>()
+                .join(" | ");
+            return ("unsupported", msg, None);
+        }
+    }
     write_project(project, &rust, &raw.fixture, &deps);
     let (ok, err) = cargo(
         project,
@@ -549,14 +580,26 @@ fn run_test262(
         return ("partial", err, None);
     }
     if !node_ok {
-        return ("supported", String::new(), Some(Oracle::missing()));
+        return (
+            "supported",
+            engine_note(via_engine),
+            Some(Oracle::missing()),
+        );
     }
     let ds_stdout = cargo_run_full(project, target_dir).unwrap_or_default();
     match node_oracle(&raw.fixture, work) {
-        NodeResult::Missing => ("supported", String::new(), Some(Oracle::missing())),
-        NodeResult::Error(e) => ("supported", String::new(), Some(Oracle::err(e))),
+        NodeResult::Missing => (
+            "supported",
+            engine_note(via_engine),
+            Some(Oracle::missing()),
+        ),
+        NodeResult::Error(e) => ("supported", engine_note(via_engine), Some(Oracle::err(e))),
         NodeResult::Ok(oracle_stdout) => match diff_stdout(&ds_stdout, &oracle_stdout) {
-            None => ("supported", String::new(), Some(Oracle::matched())),
+            None => (
+                "supported",
+                engine_note(via_engine),
+                Some(Oracle::matched()),
+            ),
             Some(d) => (
                 "partial",
                 format!("oracle diff: {d}"),
