@@ -37,8 +37,8 @@ fn json_calls_flag_needs_serde_json_not_ryu_js() {
         .translate_with_deps(src)
         .expect("translate_with_deps");
     assert!(
-        deps.needs_serde_json,
+        deps.needs_serde_json(),
         "serde_json dep must flag, got: {deps:?}"
     );
-    assert!(!deps.needs_ryu_js, "JSON alone pulls no ryu_js: {deps:?}");
+    assert!(!deps.needs_ryu_js(), "JSON alone pulls no ryu_js: {deps:?}");
 }

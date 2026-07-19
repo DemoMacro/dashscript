@@ -1,7 +1,7 @@
 //! `translate_with_deps` returns the same Rust as `translate`, plus a
 //! runtime-dependency report. A source with no number→string formatting keeps
 //! an empty dep set, so `ds build` links nothing extra.
-use super::super::{RuntimeDeps, Translator};
+use super::super::{RuntimeDep, RuntimeDeps, Translator};
 
 #[test]
 fn with_deps_matches_translate() {
@@ -13,7 +13,7 @@ fn with_deps_matches_translate() {
         .expect("translate_with_deps");
     assert_eq!(plain, with_deps);
     assert!(
-        !deps.needs_ryu_js,
+        !deps.needs_ryu_js(),
         "a string-only source pulls in no ryu_js"
     );
 }
@@ -31,7 +31,7 @@ fn numeric_console_log_routes_through_helper_and_flags_dep() {
         "numeric literal should route through the helper, got:\n{rust}"
     );
     assert!(
-        deps.needs_ryu_js,
+        deps.needs_ryu_js(),
         "needs_ryu_js must flag for a numeric console.log, got deps: {deps:?}"
     );
 }
@@ -50,7 +50,7 @@ fn numeric_local_and_unary_route_through_helper() {
         "numeric local/unary should route through the helper, got:\n{rust}"
     );
     assert!(
-        deps.needs_ryu_js,
+        deps.needs_ryu_js(),
         "needs_ryu_js must flag, got deps: {deps:?}"
     );
 }
@@ -58,18 +58,8 @@ fn numeric_local_and_unary_route_through_helper() {
 #[test]
 fn helper_module_present_only_when_needed() {
     // A ryu_js-flagged dep set exposes the `__ds` helper module; a plain one does not.
-    let with = RuntimeDeps {
-        needs_ryu_js: true,
-        needs_serde_json: false,
-        needs_engine: false,
-        needs_array_helper: false,
-    };
-    let without = RuntimeDeps {
-        needs_ryu_js: false,
-        needs_serde_json: false,
-        needs_engine: false,
-        needs_array_helper: false,
-    };
+    let with = RuntimeDeps::empty().with(RuntimeDep::RyuJs);
+    let without = RuntimeDeps::empty();
     assert!(
         with.helper_module()
             .is_some_and(|s| s.contains("number_to_string")),
@@ -80,16 +70,11 @@ fn helper_module_present_only_when_needed() {
 
 #[test]
 fn array_helper_module_exposes_array_set_without_ryu_js() {
-    // `needs_array_helper` alone exposes `array_set` but pulls no `ryu_js`
-    // (the helper module is assembled from whichever slices a dep set flagged,
-    // not a single blob) — so a `.ds` source that only does `xs[i] = v` links
-    // no number-formatting crate.
-    let deps = RuntimeDeps {
-        needs_ryu_js: false,
-        needs_serde_json: false,
-        needs_engine: false,
-        needs_array_helper: true,
-    };
+    // `ArrayHelper` alone exposes `array_set` but pulls no `ryu_js` (the helper
+    // module is assembled from whichever slices a dep set flagged, not a single
+    // blob) — so a `.ds` source that only does `xs[i] = v` links no number-
+    // formatting crate.
+    let deps = RuntimeDeps::empty().with(RuntimeDep::ArrayHelper);
     let helper = deps.helper_module().expect("array flag exposes helper");
     assert!(helper.contains("pub fn array_set"), "got:\n{helper}");
     assert!(
@@ -101,12 +86,7 @@ fn array_helper_module_exposes_array_set_without_ryu_js() {
 #[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
-    let deps = RuntimeDeps {
-        needs_ryu_js: true,
-        needs_serde_json: false,
-        needs_engine: false,
-        needs_array_helper: false,
-    };
+    let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);
     deps.apply_to_cargo_toml(&mut toml);
     assert!(toml.contains("ryu-js = \"1.0\""), "got:\n{toml}");
     // Idempotent: a second pass must not duplicate the line.
@@ -117,12 +97,7 @@ fn apply_to_cargo_toml_inserts_into_dependencies_section() {
 #[test]
 fn apply_to_cargo_toml_creates_section_when_absent() {
     let mut toml = String::from("[package]\nname = \"x\"\n");
-    let deps = RuntimeDeps {
-        needs_ryu_js: true,
-        needs_serde_json: false,
-        needs_engine: false,
-        needs_array_helper: false,
-    };
+    let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);
     deps.apply_to_cargo_toml(&mut toml);
     assert!(
         toml.contains("[dependencies]\nryu-js = \"1.0\""),
@@ -134,12 +109,7 @@ fn apply_to_cargo_toml_creates_section_when_absent() {
 fn apply_to_cargo_toml_noop_when_not_needed() {
     // A file with no number→string emit point must not pull ryu_js into Cargo.toml.
     let mut toml = String::from("[package]\nname = \"x\"\n");
-    let deps = RuntimeDeps {
-        needs_ryu_js: false,
-        needs_serde_json: false,
-        needs_engine: false,
-        needs_array_helper: false,
-    };
+    let deps = RuntimeDeps::empty();
     deps.apply_to_cargo_toml(&mut toml);
     assert!(!toml.contains("ryu-js"), "got:\n{toml}");
 }
@@ -155,7 +125,7 @@ fn dynamic_reflection_routes_through_engine() {
         .translate_with_deps(src)
         .expect("translate_with_deps");
     assert!(
-        deps.needs_engine,
+        deps.needs_engine(),
         "defineProperty should flip needs_engine, got deps: {deps:?}"
     );
     assert!(
@@ -163,7 +133,7 @@ fn dynamic_reflection_routes_through_engine() {
         "engine fixture should lower to __ds_engine::run, got:\n{rust}"
     );
     assert!(
-        !deps.needs_ryu_js,
+        !deps.needs_ryu_js(),
         "engine path emits no __ds::number_to_string"
     );
 }
@@ -175,7 +145,7 @@ fn plain_source_stays_on_static_rust_path() {
     let (rust, deps) = Translator::new()
         .translate_with_deps(src)
         .expect("translate_with_deps");
-    assert!(!deps.needs_engine, "plain source pulls no engine");
+    assert!(!deps.needs_engine(), "plain source pulls no engine");
     assert!(
         !rust.contains("__ds_engine::run"),
         "plain source must not lower to engine, got:\n{rust}"

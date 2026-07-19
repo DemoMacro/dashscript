@@ -24,6 +24,8 @@ pub mod registry;
 pub mod semantic;
 pub mod types;
 
+use std::collections::BTreeSet;
+
 use oxc_allocator::Allocator;
 use oxc_codegen::{Codegen, CodegenOptions, IndentChar};
 use oxc_diagnostics::OxcDiagnostic;
@@ -31,100 +33,186 @@ use oxc_parser::Parser;
 use oxc_semantic::SemanticBuilder;
 use oxc_span::SourceType;
 
-/// Runtime dependencies a translated file pulls in — extra crates or helper
-/// modules the generated Cargo project must include. Collected during
-/// translation so `ds build` only links what the source actually uses: a file
-/// that never formats a number to an ES string pulls in no `ryu_js`.
-#[derive(Default, Debug, Clone)]
-pub struct RuntimeDeps {
-    /// Some emit point routes an `f64` through `__ds::number_to_string`, so the
-    /// generated crate needs the `ryu_js` crate and the `__ds` helper module.
-    pub needs_ryu_js: bool,
-    /// A `JSON.parse`/`JSON.stringify` call inlines a `serde_json::` call into
-    /// the Rust text, so the generated crate needs the `serde_json` crate (no
+/// A runtime dependency a translated file may pull in — an extra crate, a
+/// helper module, or the embedded QuickJS engine. Each variant carries its own
+/// metadata ([`RuntimeDep::marker`] / [`RuntimeDep::cargo`] / [`RuntimeDep::helper`]),
+/// so adding a new runtime dep is one variant plus one arm per method — not a
+/// new field threaded through every construction site.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum RuntimeDep {
+    /// An emit point routes an `f64` through `__ds::number_to_string`, so the
+    /// crate needs `ryu_js` (ES `Number::toString`) and the `__ds` helper.
+    RyuJs,
+    /// A `JSON.parse`/`JSON.stringify` call inlines a `serde_json::` call (no
     /// helper module — the calls are direct).
-    pub needs_serde_json: bool,
-    /// The source uses ES dynamic reflection (`Object.defineProperty`/
-    /// `getOwnPropertyDescriptor`/`create`/`getPrototypeOf`, accessor
-    /// properties, …) the static translator cannot lower to idiomatic Rust.
-    /// The generated crate then runs the whole program under an embedded
-    /// QuickJS engine via the `__ds_engine` helper module (the `rquickjs`
-    /// crate) — a gated compat fallback, the same pattern as `ryu_js`. Default
-    /// `ds build` output stays pure Rust; only programs that actually use such
-    /// a construct pull the engine (and its C build dependency).
-    pub needs_engine: bool,
-    /// An indexed assignment `xs[i] = v` where `i` may equal or exceed the
-    /// length — ES `Array` auto-grows, but a bare Rust `Vec[i] = v` panics.
-    /// The store routes through `__ds::array_set` (append or grow), which this
-    /// flag gates into the `__ds` helper module.
-    pub needs_array_helper: bool,
+    SerdeJson,
+    /// ES dynamic reflection (`Object.defineProperty`/`getOwnPropertyDescriptor`/
+    /// `create`/`getPrototypeOf`, accessor properties, …) the static translator
+    /// cannot lower; the whole program runs under an embedded QuickJS engine
+    /// via `__ds_engine` (the `rquickjs` crate). A gated compat fallback — the
+    /// body is never lowered, so it carries no text marker.
+    Engine,
+    /// An indexed assignment `xs[i] = v` that may auto-grow; routes through
+    /// `__ds::array_set`. Pure `std` — no cargo dep.
+    ArrayHelper,
+}
+
+impl RuntimeDep {
+    /// All variants in declaration order — the order helper slices and cargo
+    /// deps are emitted, so output stays deterministic.
+    const ALL: [RuntimeDep; 4] = [
+        RuntimeDep::RyuJs,
+        RuntimeDep::SerdeJson,
+        RuntimeDep::Engine,
+        RuntimeDep::ArrayHelper,
+    ];
+
+    /// The emitted-text marker that signals this dep was pulled in. `None` for
+    /// `Engine` — it is set explicitly when the translator detects a reflection
+    /// construct (the body is never lowered, so there is no text to scan).
+    fn marker(self) -> Option<&'static str> {
+        match self {
+            RuntimeDep::RyuJs => Some("__ds::number_to_string"),
+            RuntimeDep::SerdeJson => Some("serde_json::"),
+            RuntimeDep::ArrayHelper => Some("__ds::array_set"),
+            RuntimeDep::Engine => None,
+        }
+    }
+
+    /// The cargo dependency `(<pkg>, <req>)` to append, if this dep needs a
+    /// crate. `None` for `ArrayHelper` (pure `std`).
+    fn cargo(self) -> Option<(&'static str, &'static str)> {
+        match self {
+            // The crates.io package is `ryu-js` (hyphen); Rust exposes it as
+            // `ryu_js` (underscore) in `use`, so the Cargo.toml key uses the
+            // package name.
+            RuntimeDep::RyuJs => Some(("ryu-js", "\"1.0\"")),
+            RuntimeDep::SerdeJson => Some(("serde_json", "\"1\"")),
+            // `rquickjs` bundles QuickJS-NG C sources (compiled via `cc`), so
+            // it is only emitted for programs that opt into the engine path.
+            RuntimeDep::Engine => Some(("rquickjs", "\"0.12\"")),
+            RuntimeDep::ArrayHelper => None,
+        }
+    }
+
+    /// The `__ds` helper source slice this dep contributes, if any.
+    fn helper(self) -> Option<&'static str> {
+        match self {
+            RuntimeDep::RyuJs => Some(RYUJS_HELPERS),
+            RuntimeDep::ArrayHelper => Some(ARRAY_HELPER),
+            RuntimeDep::SerdeJson | RuntimeDep::Engine => None,
+        }
+    }
+}
+
+/// Runtime dependencies a translated file pulls in. Collected during
+/// translation so `ds build` only links what the source actually uses: a file
+/// that never formats a number to an ES string pulls in no `ryu_js`. Adding a
+/// new runtime dep is a variant on [`RuntimeDep`] — the construction sites
+/// ([`RuntimeDeps::empty`] / [`RuntimeDeps::with`] / [`RuntimeDeps::merge`]) and
+/// the consumers ([`RuntimeDeps::helper_module`] /
+/// [`RuntimeDeps::apply_to_cargo_toml`], …) are table-driven over
+/// [`RuntimeDep::ALL`].
+#[derive(Debug, Clone, Default)]
+pub struct RuntimeDeps {
+    deps: BTreeSet<RuntimeDep>,
 }
 
 impl RuntimeDeps {
+    /// An empty dep set — the common case (a plain `.ds` file links nothing).
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    /// Add `dep` (builder-style: returns `self` moved).
+    pub fn with(mut self, dep: RuntimeDep) -> Self {
+        self.deps.insert(dep);
+        self
+    }
+
+    /// Add `dep` to this set in place.
+    pub fn insert(&mut self, dep: RuntimeDep) {
+        self.deps.insert(dep);
+    }
+
+    /// Whether `dep` is in the set.
+    pub fn has(&self, dep: RuntimeDep) -> bool {
+        self.deps.contains(&dep)
+    }
+
+    /// Readable accessors — `deps.needs_engine()` over `deps.has(RuntimeDep::Engine)`.
+    pub fn needs_ryu_js(&self) -> bool {
+        self.has(RuntimeDep::RyuJs)
+    }
+    pub fn needs_serde_json(&self) -> bool {
+        self.has(RuntimeDep::SerdeJson)
+    }
+    pub fn needs_engine(&self) -> bool {
+        self.has(RuntimeDep::Engine)
+    }
+    pub fn needs_array_helper(&self) -> bool {
+        self.has(RuntimeDep::ArrayHelper)
+    }
+
     /// Union another dep set into this one — a project links a runtime dep if
     /// any of its translated files does.
     pub fn merge(&mut self, other: &RuntimeDeps) {
-        self.needs_ryu_js |= other.needs_ryu_js;
-        self.needs_serde_json |= other.needs_serde_json;
-        self.needs_engine |= other.needs_engine;
-        self.needs_array_helper |= other.needs_array_helper;
+        self.deps.extend(&other.deps);
     }
 
-    /// The `__ds` helper module source — assembled from whichever helpers this
-    /// dep set flagged (`number_to_string` for `needs_ryu_js`, `array_set` for
-    /// `needs_array_helper`). `None` when neither is needed, so the caller
-    /// writes nothing and the default build pulls no `ryu_js`.
+    /// The `__ds` helper module source — assembled from whichever helper slices
+    /// this dep set flagged (`number_to_string` for `RyuJs`, `array_set` for
+    /// `ArrayHelper`), in [`RuntimeDep::ALL`] order. `None` when neither is
+    /// needed, so the caller writes nothing and the default build pulls no
+    /// `ryu_js`.
     pub fn helper_module(&self) -> Option<String> {
-        if !self.needs_ryu_js && !self.needs_array_helper {
-            return None;
-        }
         let mut src = String::from(
             "//! DashScript runtime helpers: ES-compat shims a bare Rust lowering\n//! would get wrong (Number::toString, Array auto-grow).\n\n",
         );
-        if self.needs_ryu_js {
-            src.push_str(RYUJS_HELPERS);
+        let mut any = false;
+        for d in RuntimeDep::ALL {
+            if self.has(d) {
+                if let Some(slice) = d.helper() {
+                    src.push_str(slice);
+                    any = true;
+                }
+            }
         }
-        if self.needs_array_helper {
-            src.push_str(ARRAY_HELPER);
-        }
-        Some(src)
+        any.then_some(src)
     }
 
     /// The `__ds_engine` compat module source — runs a `.ds` source under an
-    /// embedded QuickJS engine — when this dep set flags `needs_engine`. `None`
-    /// otherwise, so the caller writes nothing and the default build pulls no
-    /// engine dependency.
+    /// embedded QuickJS engine — when this dep set flags `Engine`. `None`
+    /// otherwise, so the caller writes nothing and pulls no engine dependency.
     pub fn engine_helper_module(&self) -> Option<&'static str> {
-        self.needs_engine.then_some(ENGINE_HELPER_MODULE)
+        self.needs_engine().then_some(ENGINE_HELPER_MODULE)
     }
 
-    /// Append `ryu-js = "1.0"` to a generated `Cargo.toml`, creating the
-    /// `[dependencies]` section if absent. A no-op when no runtime dep is needed
-    /// or `ryu-js` is already declared (e.g. the project declared `rust:ryu_js`)
-    /// — so a consumer can call this unconditionally and let the dep set gate it.
-    /// A string-level post-process keeps the dep out of the user's
-    /// `manifest.json` — it is a DashScript-internal runtime need, not a
-    /// declared project dependency.
+    /// Append each flagged cargo dep to a generated `Cargo.toml`, creating the
+    /// `[dependencies]` section if absent. A no-op for a dep already declared
+    /// (e.g. the project declared `rust:ryu_js`) — so a consumer can call this
+    /// unconditionally and let the dep set gate it. A string-level post-process
+    /// keeps the dep out of the user's `manifest.json` — it is a DashScript-
+    /// internal runtime need, not a declared project dependency.
     pub fn apply_to_cargo_toml(&self, cargo_toml: &mut String) {
-        // The crates.io package is `ryu-js` (hyphen); Rust exposes it as
-        // `ryu_js` (underscore) in `use`, so the Cargo.toml key uses the
-        // package name.
-        append_dep(cargo_toml, "ryu-js", "\"1.0\"", self.needs_ryu_js);
-        append_dep(cargo_toml, "serde_json", "\"1\"", self.needs_serde_json);
-        // `rquickjs` bundles QuickJS-NG C sources (compiled via `cc`), so this
-        // is only emitted for programs that opt into the engine compat path.
-        append_dep(cargo_toml, "rquickjs", "\"0.12\"", self.needs_engine);
+        for d in RuntimeDep::ALL {
+            if self.has(d) {
+                if let Some((pkg, req)) = d.cargo() {
+                    append_dep(cargo_toml, pkg, req);
+                }
+            }
+        }
     }
 }
 
 /// Append `<pkg> = <req>` to a generated `Cargo.toml`'s `[dependencies]`,
-/// creating the section if absent. A no-op when `needed` is false or the dep is
-/// already declared — so a consumer can call this per dep and let the flag gate
-/// it. A string-level post-process keeps these deps out of the user's
+/// creating the section if absent. A no-op when the dep is already declared —
+/// the caller gates per dep (via [`RuntimeDeps::has`]) and lets this handle the
+/// string edit. A string-level post-process keeps these deps out of the user's
 /// `manifest.json` — they are DashScript-internal runtime needs.
-fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str, needed: bool) {
+fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str) {
     let needle = format!("{pkg} =");
-    if !needed || cargo_toml.contains(&needle) {
+    if cargo_toml.contains(&needle) {
         return;
     }
     let line = format!("{pkg} = {req}\n");
@@ -354,15 +442,9 @@ impl Translator {
                 attrs: Vec::new(),
                 items: vec![main_item],
             });
-            return Ok((
-                rust,
-                RuntimeDeps {
-                    needs_ryu_js: false,
-                    needs_serde_json: false,
-                    needs_engine: true,
-                    needs_array_helper: false,
-                },
-            ));
+            let mut deps = RuntimeDeps::empty();
+            deps.insert(RuntimeDep::Engine);
+            return Ok((rust, deps));
         }
 
         // First pass: collect discriminated-union enum shapes so later
@@ -389,12 +471,12 @@ impl Translator {
         // cannot produce any other way, and `serde_json::` likewise only
         // appears via the `JSON` builtin.
         let rust = prettyplease::unparse(&file);
-        let deps = RuntimeDeps {
-            needs_ryu_js: rust.contains("__ds::number_to_string"),
-            needs_serde_json: rust.contains("serde_json::"),
-            needs_engine: false,
-            needs_array_helper: rust.contains("__ds::array_set"),
-        };
+        let mut deps = RuntimeDeps::empty();
+        for d in RuntimeDep::ALL {
+            if d.marker().is_some_and(|m| rust.contains(m)) {
+                deps.insert(d);
+            }
+        }
         Ok((rust, deps))
     }
 

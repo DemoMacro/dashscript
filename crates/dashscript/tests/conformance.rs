@@ -290,7 +290,7 @@ fn engine_path_compiles_to_valid_rust_project() {
         .translate_with_deps(src)
         .expect("translate reflection source");
     assert!(
-        deps.needs_engine,
+        deps.needs_engine(),
         "Object.defineProperty should flip needs_engine"
     );
     write_project(&project, &rust, src, &deps);
@@ -728,7 +728,7 @@ fn run_test262(
     // Engine path: ES reflection the static translator cannot lower. Run the
     // source in-process under QuickJS (the exact bytes `translate_with_deps`
     // embeds in `__ds_engine::run`), skipping the cargo compile entirely.
-    if deps.needs_engine {
+    if deps.needs_engine() {
         let js_source = match Translator::new().engine_source(&raw.fixture) {
             Some(s) => s,
             None => {
