@@ -47,7 +47,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -202,8 +202,8 @@
     "id": "test262.test.built-ins.object.create.15.2.3.5-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:59: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:3:58: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -403,7 +403,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.create` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `Object.create` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -1466,8 +1466,8 @@
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -2627,7 +2627,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `Object.defineProperties` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperties` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3003,7 +3003,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperties` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperties` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -3011,7 +3011,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperties` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Object.defineProperties` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -3027,7 +3027,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperties` reflection is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperties` reflection is unsupported | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -3051,7 +3051,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperties` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Object.defineProperties` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -3235,7 +3235,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperties` reflection is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperties` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -3450,8 +3450,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -4051,7 +4051,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4067,7 +4067,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4083,7 +4083,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4099,7 +4099,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4171,7 +4171,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4195,7 +4195,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4211,7 +4211,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4227,7 +4227,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4435,7 +4435,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4459,7 +4459,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4475,7 +4475,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4491,7 +4491,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4571,7 +4571,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4587,7 +4587,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4603,7 +4603,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4619,7 +4619,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -4691,7 +4691,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4707,7 +4707,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4731,7 +4731,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4747,7 +4747,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported",
     "note": ""
   },
   {
@@ -4987,7 +4987,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -5011,7 +5011,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -5027,7 +5027,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -5043,7 +5043,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -5091,7 +5091,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported | `<builtin>.<method>.length` arity reflection is unsupported",
     "note": ""
   },
   {
@@ -5515,7 +5515,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -5523,7 +5523,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -5555,7 +5555,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`Object.defineProperty` reflection is unsupported | `prototype` mutation is unsupported | `Object.defineProperty` reflection is unsupported | `.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -7914,8 +7914,8 @@
     "id": "test262.test.built-ins.object.freeze.15.2.3.9-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:59: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:3:58: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -10470,8 +10470,8 @@
     "id": "test262.test.built-ins.object.getownpropertynames.15.2.3.4-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -10559,7 +10559,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -10682,8 +10682,8 @@
     "id": "test262.test.built-ins.object.getprototypeof.15.2.3.2-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -11338,8 +11338,8 @@
     "id": "test262.test.built-ins.object.hasown.prototype",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -11514,8 +11514,8 @@
     "id": "test262.test.built-ins.object.isextensible.15.2.3.13-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -11784,8 +11784,8 @@
     "id": "test262.test.built-ins.object.isfrozen.15.2.3.12-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -12224,8 +12224,8 @@
     "id": "test262.test.built-ins.object.issealed.15.2.3.11-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -12537,8 +12537,8 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w4\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -12569,8 +12569,8 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-2-2",
     "layer": "test262",
     "category": "object",
-    "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "src\\main.rs:4:13: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:2:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -12578,7 +12578,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
     "note": ""
   },
   {
@@ -12626,7 +12626,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w4\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:5:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:3:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
     "note": ""
   },
   {
@@ -12642,7 +12642,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w4\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:5:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:15: error[E0599]: no method named `keys` found for struct `Vec<f64>` in the current scope: method not found in `Vec<f64>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -12825,8 +12825,8 @@
     "id": "test262.test.built-ins.object.preventextensions.15.2.3.10-0-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -12930,7 +12930,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -12962,7 +12962,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13026,7 +13026,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13090,7 +13090,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13122,7 +13122,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
     "note": ""
   },
   {
@@ -13169,8 +13169,8 @@
     "id": "test262.test.built-ins.object.prototype.constructor.s15.2.4.1_a1_t1",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13578,7 +13578,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13586,7 +13586,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13594,7 +13594,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13642,7 +13642,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13650,7 +13650,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13658,7 +13658,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -13666,7 +13666,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13674,7 +13674,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -13682,7 +13682,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13690,7 +13690,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13698,7 +13698,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13706,7 +13706,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13730,7 +13730,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `propertyIsEnumerable` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `propertyIsEnumerable` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13738,7 +13738,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -13793,8 +13793,8 @@
     "id": "test262.test.built-ins.object.prototype.s15.2.4_a2",
     "layer": "test262",
     "category": "object",
-    "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -13825,8 +13825,8 @@
     "id": "test262.test.built-ins.object.prototype.tolocalestring.s15.2.4.3_a1",
     "layer": "test262",
     "category": "object",
-    "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:4:44: error[E0599]: no method named `to_locale_string` found for type `!` in the current scope\nsrc\\main.rs:4:44: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -13834,7 +13834,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13842,7 +13842,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13850,7 +13850,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13866,7 +13866,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `propertyIsEnumerable` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `propertyIsEnumerable` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13874,15 +13874,15 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.prototype.tostring.direct-invocation",
     "layer": "test262",
     "category": "object",
-    "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:3:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -13890,7 +13890,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -13898,7 +13898,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | the `arguments` object is unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -13906,23 +13906,23 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `BigInt` literals are unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `BigInt` literals are unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `BigInt` literals are unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `BigInt` literals are unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.prototype.tostring.object.prototype.tostring.call-null",
     "layer": "test262",
     "category": "object",
-    "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.prototype.tostring.object.prototype.tostring.call-undefined",
     "layer": "test262",
     "category": "object",
-    "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "partial",
+    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -13930,7 +13930,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Proxy` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`Proxy` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -13938,7 +13938,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported",
+    "detail": "`Symbol` (JS reflection) is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -13946,7 +13946,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -13954,7 +13954,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `delete` has no DashScript mapping | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported",
+    "detail": "`delete` has no DashScript mapping | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `delete` has no DashScript mapping | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -13962,7 +13962,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -13970,7 +13970,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `prototype` mutation is unsupported | `Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `prototype` mutation is unsupported | `Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported",
+    "detail": "`prototype` mutation is unsupported | `Symbol` (JS reflection) is unsupported | `prototype` mutation is unsupported | `Symbol` (JS reflection) is unsupported | `prototype` mutation is unsupported | `Symbol` (JS reflection) is unsupported | `Object.defineProperty` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -13978,7 +13978,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -14008,7 +14008,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -14016,7 +14016,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -14024,7 +14024,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -14032,7 +14032,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -14040,7 +14040,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -14056,7 +14056,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `propertyIsEnumerable` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `propertyIsEnumerable` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -14064,7 +14064,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `hasOwnProperty` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -14400,7 +14400,7 @@
     "layer": "test262",
     "category": "object",
     "status": "unsupported",
-    "detail": "`Object.setPrototypeOf` reflection is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`Object.setPrototypeOf` reflection is unsupported",
     "note": ""
   },
   {

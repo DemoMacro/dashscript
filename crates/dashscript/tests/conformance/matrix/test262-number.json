@@ -265,7 +265,7 @@
     "layer": "test262",
     "category": "number",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -289,7 +289,7 @@
     "layer": "test262",
     "category": "number",
     "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
     "note": ""
   },
   {

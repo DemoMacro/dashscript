@@ -36,7 +36,7 @@
     "layer": "test262",
     "category": "json",
     "status": "unsupported",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -459,7 +459,7 @@
     "layer": "test262",
     "category": "json",
     "status": "unsupported",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -483,7 +483,7 @@
     "layer": "test262",
     "category": "json",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "detail": "`JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `hasOwnProperty` (prototype reflection) is unsupported | `JSON` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {

@@ -487,56 +487,77 @@
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a1",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a2",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a3",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a4",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a5",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.expm1.expm1-specialvals",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a1",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -918,8 +939,8 @@
     "id": "test262.test.built-ins.math.max.s15.8.2.11_a4",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:5:59: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:58: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -971,8 +992,8 @@
     "id": "test262.test.built-ins.math.min.s15.8.2.12_a4",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:5:59: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:58: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.<method>.length` arity reflection is unsupported | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -1252,7 +1273,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
     },
     "note": ""
   },
@@ -1264,7 +1285,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
     },
     "note": ""
   },
@@ -1276,7 +1297,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
     },
     "note": ""
   },
@@ -1288,7 +1309,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQdP4Ha\\w6\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
     },
     "note": ""
   },

@@ -771,8 +771,8 @@
     "id": "math.translates_math_constants",
     "layer": "translator-tests",
     "category": "math",
-    "status": "unsupported",
-    "detail": "`Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -795,8 +795,8 @@
     "id": "math.translates_math_extra_constants",
     "layer": "translator-tests",
     "category": "math",
-    "status": "unsupported",
-    "detail": "`Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -875,8 +875,8 @@
     "id": "math.translates_math_min_and_e_constant",
     "layer": "translator-tests",
     "category": "math",
-    "status": "unsupported",
-    "detail": "`Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {

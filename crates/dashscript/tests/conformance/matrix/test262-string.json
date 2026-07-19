@@ -1664,7 +1664,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `eval` is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`eval` is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3491,7 +3491,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3507,7 +3507,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3523,7 +3523,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3595,7 +3595,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3611,7 +3611,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3627,7 +3627,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
