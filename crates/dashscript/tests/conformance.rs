@@ -31,6 +31,7 @@ use std::{
     fs,
     path::{Path, PathBuf},
     process::Command,
+    sync::atomic::{AtomicBool, Ordering},
 };
 
 use dashscript::{RuntimeDeps, Translator};
@@ -203,9 +204,10 @@ fn conformance_matrix() {
 
     // Populate `~/.cargo` once (serially) with every runtime dep a fixture might
     // inject, so the N parallel workers don't race the crates-io registry
-    // update lock on their first `cargo` call. Without this the losers fail
-    // "unable to update registry `crates-io`" and the fixture is mis-recorded
-    // as `partial`; after the fetch the index is fresh, workers hit the cache.
+    // update lock on their first `cargo` call. On success the workers then build
+    // offline (`CARGO_NET_OFFLINE=true`), eliminating the registry-lock race
+    // entirely — without this the losers fail "unable to update registry
+    // `crates-io`" and the fixture is mis-recorded as `partial`.
     warm_cargo_cache(&workers[0].0);
 
     // Node is the test262 ground-truth oracle. Probe once; if absent, the
@@ -326,12 +328,16 @@ fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps
 /// Returns `(success, captured-output)` — stderr for `check`, stdout for `run`.
 fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
     let is_run = args.first().is_some_and(|a| *a == "run");
-    let out = match Command::new("cargo")
-        .args(args)
+    let mut cmd = Command::new("cargo");
+    cmd.args(args)
         .env("CARGO_TARGET_DIR", target_dir)
-        .current_dir(project)
-        .output()
-    {
+        .current_dir(project);
+    // After [`warm_cargo_cache`] succeeds the registry cache is fresh, so force
+    // offline — workers then never contend the crates-io registry-update lock.
+    if OFFLINE_READY.load(Ordering::SeqCst) {
+        cmd.env("CARGO_NET_OFFLINE", "true");
+    }
+    let out = match cmd.output() {
         Ok(o) => o,
         Err(e) => return (false, format!("cargo invoke failed: {e}")),
     };
@@ -345,21 +351,35 @@ fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
     (out.status.success(), trimmed)
 }
 
+/// Set by [`warm_cargo_cache`] once the seed `cargo fetch` has populated
+/// `~/.cargo` with every injectable runtime dep. While true, [`cargo`] forces
+/// `CARGO_NET_OFFLINE=true` so the parallel workers resolve deps from the
+/// cache and never race the crates-io registry-update lock (which surfaces as
+/// spurious "unable to update registry `crates-io`" partials). False (warm-up
+/// failed, e.g. an offline host) leaves the original online behaviour.
+static OFFLINE_READY: AtomicBool = AtomicBool::new(false);
+
 /// Populate `~/.cargo` with every runtime dep a fixture might inject, by
 /// fetching from a seed project once, serially, before the parallel workers
-/// start. Without this, each worker's first `cargo` invocation races the
-/// crates-io registry-update lock; losers fail "unable to update registry
-/// `crates-io`" and the fixture is mis-recorded as `partial`. After the fetch
-/// the index is fresh, so workers hit the cache and never contend. Best-effort:
-/// a fetch failure (offline) leaves the original race behavior.
-fn warm_cargo_cache(seed_project: &Path) {
+/// start. Returns `true` when the fetch succeeded — callers then flip
+/// [`OFFLINE_READY`] so workers build offline against the warm cache. Best
+/// effort: a fetch failure (offline host) returns `false` and leaves the
+/// original online behaviour, so a no-network machine degrades rather than
+/// hard-failing every dep-injecting fixture.
+fn warm_cargo_cache(seed_project: &Path) -> bool {
     const SEED_TOML: &str = "[package]\nname = \"seed\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[dependencies]\nryu-js = \"1.0\"\nserde_json = \"1\"\n";
     let _ = fs::write(seed_project.join("Cargo.toml"), SEED_TOML);
     let _ = fs::write(seed_project.join("src").join("main.rs"), "fn main() {}\n");
-    let _ = Command::new("cargo")
+    let ok = Command::new("cargo")
         .args(["fetch", "--quiet"])
         .current_dir(seed_project)
-        .output();
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false);
+    if ok {
+        OFFLINE_READY.store(true, Ordering::SeqCst);
+    }
+    ok
 }
 
 /// Translate a fixture, catching any panic — a `quote`/`Ident::new` on an
