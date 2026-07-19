@@ -131,7 +131,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:40: error[E0605]: non-primitive cast: `HashMap<String, ()>` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:44: error[E0605]: non-primitive cast: `HashMap<String, ()>` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -139,7 +139,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:25:66: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:40: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:15:40: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:20:40: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:30:40: error[E0605]: non-primitive cast: `Vec<_>` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:40:40: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "detail": "src\\main.rs:25:70: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:44: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:15:44: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:20:44: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:30:44: error[E0605]: non-primitive cast: `Vec<_>` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:40:44: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
     "note": ""
   },
   {
@@ -169,7 +169,11 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:10:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:15:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:20:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:25:27: error[E0382]: use of moved value: `s`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"; line 5: ds=\"d\" node=\"3\"; line 6: ds=\"8\" node=\"4\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\"; line 5: ds=\"d\" node=\"3\"; line 6: ds=\"8\" node=\"4\""
+    },
     "note": ""
   },
   {
@@ -177,7 +181,11 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:10:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:15:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:20:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:25:27: error[E0382]: use of moved value: `s`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
     "note": ""
   },
   {
@@ -185,7 +193,11 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:10:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:15:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:20:27: error[E0382]: use of moved value: `s`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
     "note": ""
   },
   {
@@ -193,7 +205,11 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:10:27: error[E0382]: use of moved value: `s`: value used here after move\nsrc\\main.rs:15:27: error[E0382]: use of moved value: `s`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\""
+    },
     "note": ""
   },
   {
@@ -1235,7 +1251,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:8:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:51: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:8:51: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1318,7 +1334,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:8:47: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:51: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:8:51: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -2496,7 +2512,7 @@
     "detail": "via rquickjs engine",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJznFiK\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpn6u6wb\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
     },
     "note": ""
   },
@@ -2560,7 +2576,11 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:21:27: error[E0382]: use of moved value: `whole_poo`: value used here after move\nsrc\\main.rs:3:9: warning: unused variable: `replacement_char`: help: if this is intentional, prefix it with an underscore: `_replacement_char`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"; line 2: ds=\"a�d83dc�d83de\" node=\"a�c�e\"; line 3: ds=\"a�dca9c�dca9e\" node=\"a�c�e\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"object\" node=\"function\"; line 2: ds=\"a�d83dc�d83de\" node=\"a�c�e\"; line 3: ds=\"a�dca9c�dca9e\" node=\"a�c�e\""
+    },
     "note": ""
   },
   {
@@ -4165,7 +4185,7 @@
     "detail": "via rquickjs engine",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpJznFiK\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpn6u6wb\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
     },
     "note": ""
   },
