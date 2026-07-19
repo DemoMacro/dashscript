@@ -143,8 +143,26 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
     // — including via `??=`/`||=`/`&&=` — is declared `mut`. TS params reassign;
     // Rust params are immutable by default.
     if let Some(body) = func.body.as_deref() {
-        let analysis = super::analysis::analyze(&body.statements, names, &registry.mut_methods);
+        let analysis = super::analysis::analyze(
+            &body.statements,
+            names,
+            &registry.mut_methods,
+            &registry.ref_params,
+        );
+        // Reference parameters: member-mutated but not rebound. Computed before
+        // moving `analysis.{mutated, member_mutated}` into locals below.
+        locals.ref_params = func
+            .params
+            .items
+            .iter()
+            .filter_map(|fp| {
+                let name = names.of_pattern(&fp.pattern).to_string();
+                (analysis.member_mutated.contains(&name) && !analysis.mutated.contains(&name))
+                    .then_some(name)
+            })
+            .collect();
         locals.mutated = analysis.mutated;
+        locals.member_mutated = analysis.member_mutated;
         locals.use_counts = analysis.use_counts;
     }
     let inputs = translate_params(&func.params, &locals, names);
@@ -247,8 +265,14 @@ pub(in crate::translator) fn translate_params(
             } else {
                 ty
             };
-            // A reassigned parameter (incl. `??=`/`||=`/`&&=`) needs `mut`.
-            if locals.mutated.contains(&pat.to_string()) {
+            let pat_str = pat.to_string();
+            // A member-mutated, non-rebound parameter is a reference parameter
+            // (`&mut T`): ES arrays/objects pass by reference, so `c[i] = v`
+            // inside the function is visible to the caller. A rebound parameter
+            // (`c = …`) stays owned `mut c` — a rebind does not propagate.
+            if locals.ref_params.contains(&pat_str) {
+                parse_quote!(#pat : &mut #ty)
+            } else if locals.mutated.contains(&pat_str) {
                 parse_quote!(mut #pat : #ty)
             } else {
                 parse_quote!(#pat : #ty)
@@ -591,7 +615,8 @@ fn translate_variable_declaration(
                     let mutable = matches!(
                         decl.kind,
                         VariableDeclarationKind::Let | VariableDeclarationKind::Var
-                    ) && locals.mutated.contains(&name.to_string());
+                    ) && (locals.mutated.contains(&name.to_string())
+                        || locals.member_mutated.contains(&name.to_string()));
                     let ty = d
                         .type_annotation
                         .as_ref()

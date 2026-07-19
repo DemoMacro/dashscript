@@ -20,6 +20,12 @@ use super::registry::{TypeRegistry, VariantShape};
 pub struct Locals {
     types: HashMap<String, Path>,
     pub mutated: HashSet<String>,
+    pub member_mutated: HashSet<String>,
+    /// This function's reference parameters (member-mutated but not rebound):
+    /// a `.ds` `c: number[]` the body mutates via `c[i] = v` becomes `c: &mut
+    /// Vec<f64>`, so an in-body `array_set` on it reborrows instead of taking
+    /// `&mut` of an owned binding.
+    pub ref_params: HashSet<String>,
     pub use_counts: HashMap<String, u32>,
 }
 
@@ -29,6 +35,8 @@ impl Locals {
         Self {
             types: HashMap::new(),
             mutated: HashSet::new(),
+            member_mutated: HashSet::new(),
+            ref_params: HashSet::new(),
             use_counts: HashMap::new(),
         }
     }
@@ -188,6 +196,23 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn function_defaults(&self, name: &str) -> Option<&'a [bool]> {
         self.registry.function_defaults.get(name).map(Vec::as_slice)
+    }
+
+    /// Per-parameter "is a reference parameter?" (`&mut`) flags for the function
+    /// named `name` (original `.ds` spelling), if any. A call site passes
+    /// `&mut arg` (not a clone) at those positions so the callee's mutation is
+    /// visible — ES reference semantics for arrays/objects.
+    #[must_use]
+    pub fn function_ref_params(&self, name: &str) -> Option<&'a [bool]> {
+        self.registry.ref_params.get(name).map(Vec::as_slice)
+    }
+
+    /// True when `name` (per-symbol Rust name) is a reference parameter of the
+    /// current function — a `&mut` binding, so an `array_set` on it reborrows
+    /// instead of taking `&mut` of an owned value.
+    #[must_use]
+    pub fn is_ref_param(&self, name: &str) -> bool {
+        self.locals.ref_params.contains(name)
     }
 
     /// The optional (`?:`) field names of the struct/interface named

@@ -50,6 +50,12 @@ const MUTATORS: &[&str] = &[
 #[derive(Default)]
 pub(super) struct Analysis {
     pub mutated: HashSet<String>,
+    /// Bindings whose *member* is assigned/updated (e.g. `c[0] = v`,
+    /// `o.x = 1`, `xs.push(v)`) — distinct from a plain rebind (`c = …`). A
+    /// *parameter* in this set (and not in `mutated`) becomes a `&mut`
+    /// reference parameter so the caller sees the mutation (ES reference
+    /// semantics); a *local* still takes `let mut` (it owns the value).
+    pub member_mutated: HashSet<String>,
     pub use_counts: HashMap<String, u32>,
     /// True when the body assigns/updates a member of `this` (e.g. `this.x = 1`
     /// or `this.n++`) — the enclosing method needs `&mut self`.
@@ -59,6 +65,12 @@ pub(super) struct Analysis {
     /// receiver binding is marked `let mut`. Built-in mutators (`push`,
     /// `splice` …) are covered by `MUTATORS`; this set carries user methods.
     pub mut_methods: HashSet<String>,
+    /// Callee name → per-parameter reference-parameter flags. A local passed at
+    /// one of these positions is borrowed `&mut` at the call site, so the
+    /// caller's binding needs `let mut` — recorded into `mutated` during the
+    /// walk. Empty during the first pass that builds the registry (it cannot
+    /// consult itself).
+    ref_params: HashMap<String, Vec<bool>>,
 }
 
 /// Walk a function body once, recording mutations and read counts.
@@ -66,9 +78,11 @@ pub(super) fn analyze(
     stmts: &[Statement],
     names: &NameTable,
     mut_methods: &HashSet<String>,
+    ref_params: &HashMap<String, Vec<bool>>,
 ) -> Analysis {
     let mut a = Analysis {
         mut_methods: mut_methods.clone(),
+        ref_params: ref_params.clone(),
         ..Analysis::default()
     };
     for s in stmts {
@@ -166,6 +180,22 @@ fn walk_expr(expr: &Expression, names: &NameTable, a: &mut Analysis) {
         Expression::UpdateExpression(u) => record_simple(&u.argument, names, a),
         Expression::CallExpression(c) => {
             walk_callee(&c.callee, names, a);
+            // A local passed at a reference-parameter position is borrowed
+            // `&mut` at the call site, so the caller's binding needs `let mut`
+            // even though the AST shows only a read. Mark such locals mutated.
+            if let Expression::Identifier(id) = &c.callee {
+                if let Some(flags) = a.ref_params.get(id.name.as_str()) {
+                    for (i, arg) in c.arguments.iter().enumerate() {
+                        if flags.get(i) == Some(&true) {
+                            if let Some(Expression::Identifier(arg_id)) = arg.as_expression() {
+                                if arg_id.name.as_str() != "undefined" {
+                                    a.mutated.insert(names.of_reference(arg_id).to_string());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             for arg in &c.arguments {
                 if let Some(e) = arg.as_expression() {
                     walk_expr(e, names, a);
@@ -277,7 +307,7 @@ fn record_simple(target: &SimpleAssignmentTarget, names: &NameTable, a: &mut Ana
 /// (the chain borrows it through `&mut`).
 fn record_root(expr: &Expression, names: &NameTable, a: &mut Analysis) {
     if let Some(name) = root_ident(expr, names) {
-        a.mutated.insert(name.clone());
+        a.member_mutated.insert(name.clone());
         *a.use_counts.entry(name).or_default() += 1;
     }
 }

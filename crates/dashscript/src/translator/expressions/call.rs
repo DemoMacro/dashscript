@@ -189,6 +189,14 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         Expression::Identifier(id) => ctx.function_defaults(&id.name),
         _ => None,
     };
+    // Per-parameter reference-parameter (`&mut`) flags — a call borrows a
+    // bare-identifier argument in place (`&mut arg`) at those positions instead
+    // of cloning, so the callee's `c[i] = v` is visible here (ES reference
+    // semantics for arrays/objects).
+    let ref_flags: Option<&[bool]> = match &call.callee {
+        Expression::Identifier(id) => ctx.function_ref_params(&id.name),
+        _ => None,
+    };
     let mut args: Vec<Expr> = call
         .arguments
         .iter()
@@ -199,9 +207,18 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 .and_then(|opt| opt.as_ref())
                 .map(|p| -> Type { parse_quote!(#p) });
             let val = translate_argument_init(a, hint_ty.as_ref(), ctx);
-            // A non-`Copy` local read elsewhere too is cloned at the call site
-            // (TS reference reuse vs Rust move); done before the `Some` wrap.
-            let val = clone_owned_local(a, val, ctx);
+            // A reference-parameter position borrows a bare-identifier argument
+            // in place (`&mut arg`): the callee's mutation is then visible
+            // here, and the value is neither moved nor cloned. Any other
+            // argument shape keeps the owned/clone path (rare; cargo check
+            // backstops a literal/expression passed for mutation).
+            let val = if ref_flags.is_some_and(|f| f.get(i) == Some(&true))
+                && matches!(a, Argument::Identifier(_))
+            {
+                parse_quote!(&mut #val)
+            } else {
+                clone_owned_local(a, val, ctx)
+            };
             // A supplied value for a defaulted parameter wraps in `Some`.
             if defaults.is_some_and(|d| d.get(i) == Some(&true)) {
                 parse_quote!(Some(#val))

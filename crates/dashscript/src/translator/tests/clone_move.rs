@@ -128,3 +128,69 @@ fn struct_and_enum_derive_clone() {
         "both struct and enum derive Clone, got:\n{rust}"
     );
 }
+
+#[test]
+fn member_mutated_array_param_is_ref_mut() {
+    // `c[i] = v` mutates a member of `c`, not a rebind — ES reference
+    // semantics, so the parameter is `&mut Vec` and the caller sees the change.
+    let src = "function f(c: number[]): void { c[0] = 1; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("c: &mut Vec<f64>"), "got:\n{rust}");
+    assert!(
+        !rust.contains("mut c:"),
+        "a non-rebound param is not `mut`, got:\n{rust}"
+    );
+}
+
+#[test]
+fn reassigned_array_param_stays_owned_mut() {
+    // A rebind (`c = …`) does not propagate to the caller, so the parameter
+    // stays owned `mut c` — reassign wins over member-mutation.
+    let src = "function f(c: number[]): void { c = [9]; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("mut c:"), "got:\n{rust}");
+    assert!(
+        !rust.contains("c: &mut"),
+        "a rebound param is not a reference, got:\n{rust}"
+    );
+}
+
+#[test]
+fn member_mutated_array_local_is_let_mut() {
+    // A local Vec whose element is assigned still needs `let mut` (it owns the
+    // value); only parameters become `&mut`.
+    let src = "function main(): void { let c: number[] = [1]; c[0] = 2; console.log(c[0]); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("let mut c:"), "got:\n{rust}");
+}
+
+#[test]
+fn ref_param_call_site_borrows_in_place() {
+    // A reference parameter is borrowed in place at the call site (`&mut a`),
+    // not cloned — the callee's mutation is then visible to the caller. The
+    // local also needs `let mut` since it is borrowed `&mut`.
+    let src = "function fill(c: number[]): void { c[0] = 1; }\nfunction main(): void { let a: number[] = [0]; fill(a); console.log(a[0]); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("fill(&mut a)"), "got:\n{rust}");
+    assert!(
+        !rust.contains("fill(a.clone())"),
+        "a ref-param arg is borrowed, not cloned, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("let mut a:"),
+        "a local borrowed `&mut` needs `let mut`, got:\n{rust}"
+    );
+}
+
+#[test]
+fn ref_param_array_set_reborrows_without_mut_prefix() {
+    // Inside the callee, `c[i] = v` on a reference parameter reborrows —
+    // `array_set(c, …)` (no leading `&mut`), since `c` is already a `&mut Vec`.
+    let src = "function f(c: number[]): void { c[0] = 1; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("array_set(c,"), "got:\n{rust}");
+    assert!(
+        !rust.contains("array_set(&mut c,"),
+        "a ref-param target reborrows, got:\n{rust}"
+    );
+}

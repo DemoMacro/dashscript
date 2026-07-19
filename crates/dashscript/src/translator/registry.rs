@@ -41,6 +41,11 @@ pub struct TypeRegistry {
     /// Function name → per-parameter "has a default initializer?" flag. Callers
     /// wrap a supplied value in `Some`, and an omitted trailing one in `None`.
     pub function_defaults: HashMap<String, Vec<bool>>,
+    /// Function name → per-parameter "is a reference parameter?" (`&mut`) flag.
+    /// A parameter the body member-mutates (`c[i] = v`, `xs.push(…)`) but does
+    /// not rebind becomes `&mut T`, so the caller's mutation is visible — ES
+    /// reference semantics for arrays/objects.
+    pub ref_params: HashMap<String, Vec<bool>>,
     /// Struct/interface name → its optional (`?:`) field names. A struct
     /// literal that omits one of these is filled with `None`.
     pub structs: HashMap<String, HashSet<String>>,
@@ -57,6 +62,7 @@ impl TypeRegistry {
             unions: HashMap::new(),
             functions: HashMap::new(),
             function_defaults: HashMap::new(),
+            ref_params: HashMap::new(),
             structs: HashMap::new(),
             mut_methods: HashSet::new(),
         }
@@ -103,7 +109,10 @@ pub fn build_registry(statements: &[Statement], names: &NameTable) -> TypeRegist
                     .insert(name.clone(), function_params(func));
                 registry
                     .function_defaults
-                    .insert(name, function_default_flags(func));
+                    .insert(name.clone(), function_default_flags(func));
+                registry
+                    .ref_params
+                    .insert(name, ref_param_flags(func, names));
             }
             Statement::ClassDeclaration(class) => {
                 collect_mut_methods(class, names, &mut registry.mut_methods);
@@ -120,6 +129,7 @@ pub fn build_registry(statements: &[Statement], names: &NameTable) -> TypeRegist
 /// first pass so call sites can mark their receiver `let mut`.
 fn collect_mut_methods(class: &Class, names: &NameTable, out: &mut HashSet<String>) {
     let empty: HashSet<String> = HashSet::new();
+    let no_ref_params: HashMap<String, Vec<bool>> = HashMap::new();
     for elem in &class.body.body {
         let ClassElement::MethodDefinition(md) = elem else {
             continue;
@@ -130,7 +140,7 @@ fn collect_mut_methods(class: &Class, names: &NameTable, out: &mut HashSet<Strin
         let Some(body) = md.value.body.as_deref() else {
             continue;
         };
-        let analysis = analysis::analyze(&body.statements, names, &empty);
+        let analysis = analysis::analyze(&body.statements, names, &empty, &no_ref_params);
         if analysis.mutates_this {
             if let Some(name) = bindings::property_key_name(&md.key) {
                 out.insert(name.to_string());
@@ -165,6 +175,27 @@ fn function_default_flags(func: &Function) -> Vec<bool> {
         .items
         .iter()
         .map(|fp| fp.initializer.is_some())
+        .collect()
+}
+
+/// Per-parameter "is a reference parameter?" (`&mut`) flag: `true` where the
+/// body member-mutates the parameter (`c[i] = v`, `xs.push(…)`) but does not
+/// rebind it — the ES reference-parameter case. A rebound parameter is owned
+/// (`mut c`), since rebinding does not propagate to the caller.
+fn ref_param_flags(func: &Function, names: &NameTable) -> Vec<bool> {
+    let Some(body) = func.body.as_deref() else {
+        return vec![false; func.params.items.len()];
+    };
+    let empty: HashSet<String> = HashSet::new();
+    let no_ref_params: HashMap<String, Vec<bool>> = HashMap::new();
+    let analysis = analysis::analyze(&body.statements, names, &empty, &no_ref_params);
+    func.params
+        .items
+        .iter()
+        .map(|fp| {
+            let name = names.of_pattern(&fp.pattern).to_string();
+            analysis.member_mutated.contains(&name) && !analysis.mutated.contains(&name)
+        })
         .collect()
 }
 

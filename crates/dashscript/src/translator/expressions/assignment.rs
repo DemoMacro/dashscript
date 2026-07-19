@@ -28,6 +28,10 @@ enum AssignTarget {
     ArraySet {
         obj: Expr,
         idx: Expr,
+        /// The target root is a reference parameter (`c: &mut Vec` binding), so
+        /// the `array_set` call reborrows it (`array_set(c, …)`) rather than
+        /// taking `&mut` of an owned binding.
+        is_ref: bool,
     },
 }
 
@@ -111,7 +115,7 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
             AssignmentOperator::Assign => parse_quote!(#map.insert(#key, #right)),
             _ => parse_quote!(::core::todo!()),
         },
-        Some(AssignTarget::ArraySet { obj, idx }) => match a.operator {
+        Some(AssignTarget::ArraySet { obj, idx, is_ref }) => match a.operator {
             // `xs[i] = v` → `__ds::array_set(&mut xs, i, v)` (ES auto-grow). A
             // bare `xs[i as usize] = v` would panic on a Rust `Vec` when `i` is
             // out of range; ES grows the array instead. Compound assign on an
@@ -125,11 +129,20 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                 // `array_set` takes — the immutable borrow ends at the `let`
                 // before the mutable one starts. (A function-call argument's
                 // `&mut` borrow activates immediately, unlike the two-phase
-                // borrow a direct `arr[i] = arr[j]` gets.)
-                parse_quote!({
-                    let __ds_v = #right;
-                    crate::__ds::array_set(&mut #obj, #idx, __ds_v);
-                })
+                // borrow a direct `arr[i] = arr[j]` gets.) A reference-parameter
+                // target (`c: &mut Vec`) drops the `&mut` — `array_set(c, …)`
+                // auto-reborrows the binding.
+                if is_ref {
+                    parse_quote!({
+                        let __ds_v = #right;
+                        crate::__ds::array_set(#obj, #idx, __ds_v);
+                    })
+                } else {
+                    parse_quote!({
+                        let __ds_v = #right;
+                        crate::__ds::array_set(&mut #obj, #idx, __ds_v);
+                    })
+                }
             }
             _ => parse_quote!(::core::todo!()),
         },
@@ -181,7 +194,8 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
             // in the output flags `needs_array_helper`.
             let obj = translate_expr(&cm.object, ctx);
             let idx = translate_expr(&cm.expression, ctx);
-            Some(AssignTarget::ArraySet { obj, idx })
+            let is_ref = is_ref_param_target(&cm.object, ctx);
+            Some(AssignTarget::ArraySet { obj, idx, is_ref })
         }
         _ => None,
     }
@@ -192,6 +206,19 @@ fn simple_target(target: &SimpleAssignmentTarget, ctx: &Ctx<'_>) -> Option<Expr>
         SimpleAssignmentTarget::AssignmentTargetIdentifier(id) => Some(ident_expr(id, ctx)),
         _ => None,
     }
+}
+
+/// Whether a computed-member assignment target's root is a reference parameter
+/// of the current function (`c` in `c[i] = v` where `c: &mut Vec`), so the
+/// `array_set` call reborrows the binding instead of taking `&mut` of an owned
+/// value. Only a bare-identifier root matches; a nested/indirect target keeps
+/// the owned path.
+fn is_ref_param_target(object: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = object else {
+        return false;
+    };
+    let name = ctx.names().of_reference(id).to_string();
+    ctx.is_ref_param(&name)
 }
 
 /// `s = s + "lit"` / `s = "lit" + s` lowers to `s.push_str("lit")` — an

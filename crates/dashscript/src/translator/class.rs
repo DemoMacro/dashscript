@@ -209,7 +209,12 @@ fn build_constructor(
         }
         params = translate_params(&func.params, &locals, names);
         if let Some(body) = func.body.as_deref() {
-            let analysis = super::analysis::analyze(&body.statements, names, &registry.mut_methods);
+            let analysis = super::analysis::analyze(
+                &body.statements,
+                names,
+                &registry.mut_methods,
+                &registry.ref_params,
+            );
             locals.mutated = analysis.mutated;
             locals.use_counts = analysis.use_counts;
             // Fold `this.field = expr` into the struct literal; drop those stmts.
@@ -293,7 +298,12 @@ fn build_method(
     }
     let mut is_mut = false;
     if let Some(body) = func.body.as_deref() {
-        let analysis = super::analysis::analyze(&body.statements, names, &registry.mut_methods);
+        let analysis = super::analysis::analyze(
+            &body.statements,
+            names,
+            &registry.mut_methods,
+            &registry.ref_params,
+        );
         locals.mutated = analysis.mutated;
         locals.use_counts = analysis.use_counts;
         is_mut = analysis.mutates_this;
