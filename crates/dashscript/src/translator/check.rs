@@ -341,7 +341,18 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         }
         Expression::ParenthesizedExpression(p) => collect_expr(&p.expression, out),
         Expression::TSNonNullExpression(nn) => collect_expr(&nn.expression, out),
-        Expression::StaticMemberExpression(sm) => collect_expr(&sm.object, out),
+        Expression::StaticMemberExpression(sm) => {
+            // A mapped static read (`Math.PI`, `Number.MAX_VALUE`,
+            // `Array.prototype`) takes a global receiver but is not a value
+            // reference to it — don't recurse (it would trip the identifier
+            // rule). A method name or arity on a global receiver
+            // (`Object.create`, `Math.floor.length`) is reflection: recurse so
+            // the global name is reached and flagged. Arity `.length` is also
+            // caught directly by `unsupported_pattern`.
+            if !is_static_value_read(expr) {
+                collect_expr(&sm.object, out);
+            }
+        }
         Expression::ComputedMemberExpression(cm) => {
             collect_expr(&cm.object, out);
             collect_expr(&cm.expression, out);
@@ -405,6 +416,18 @@ fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         // `.constructor` — prototype reflection.
         Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "constructor" => {
             out.push(err("`.constructor` reflection is unsupported", sm.span));
+        }
+        // `<Global>.<method>.length` — function arity reflection
+        // (`Math.floor.length`, `Object.create.length`). The static member read
+        // itself is mapped, but reading its `.length` (formal parameter count)
+        // is reflection the static mapping cannot express.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "length" && is_global_method_chain(&sm.object) =>
+        {
+            out.push(err(
+                "`<builtin>.<method>.length` arity reflection is unsupported",
+                sm.span,
+            ));
         }
         // `123n` — BigInt literals (DashScript numbers are `f64`/`i64`).
         Expression::BigIntLiteral(b) => {
@@ -516,15 +539,81 @@ fn is_global_object_callee(expr: &Expression) -> bool {
     }
 }
 
-/// True when `expr` is a global-object value — a bare global name (`JSON`) or
-/// a member-access chain rooted at one (`Array.prototype`,
-/// `Math.prototype.toString`). Used to skip such an argument: a no-op static
-/// method (`Object.isExtensible`) may take (and ignore) one.
+/// Mapped static constants on `Math`/`Number` that may be read as values
+/// (`Math.PI`, `Number.MAX_VALUE`, …). A `<Global>.<prop>` access where `prop`
+/// is one of these (or `prototype`) is a static-value read, not a reflection.
+const STATIC_VALUE_PROPS: &[&str] = &[
+    "PI",
+    "E",
+    "LN2",
+    "LN10",
+    "LOG2E",
+    "LOG10E",
+    "SQRT2",
+    "SQRT1_2",
+    "MAX_VALUE",
+    "MIN_VALUE",
+    "EPSILON",
+    "MAX_SAFE_INTEGER",
+    "MIN_SAFE_INTEGER",
+    "POSITIVE_INFINITY",
+    "NEGATIVE_INFINITY",
+    "NaN",
+];
+
+/// True when `expr` is a mapped static-value read — `<Global>.prototype` or
+/// `<Global>.<staticConstant>` (`Math.PI`, `Number.MAX_VALUE`,
+/// `Array.prototype`). These take a global receiver but are not value
+/// references to it.
+fn is_static_value_read(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::StaticMemberExpression(sm) if {
+            let p = sm.property.name.as_str();
+            (p == "prototype" || STATIC_VALUE_PROPS.contains(&p))
+                && is_global_object_receiver(&sm.object)
+        }
+    )
+}
+
+/// True when `expr` is a global-object value a no-op static method may take
+/// (and ignore) as an argument: a bare global name (`JSON`), `<Global>.
+/// prototype`, or a mapped static constant (`Math.PI`). A method reference
+/// (`Object.create`) or arity (`Math.floor.length`) is NOT matched — it stays
+/// visible so [`collect_expr`] reaches the global name and flags it.
 fn is_global_object_value(expr: &Expression) -> bool {
     match expr {
         Expression::Identifier(id) => is_global_object_name(id.name.as_str()),
-        Expression::StaticMemberExpression(sm) => is_global_object_value(&sm.object),
-        Expression::ComputedMemberExpression(cm) => is_global_object_value(&cm.object),
-        _ => false,
+        _ => is_static_value_read(expr),
     }
+}
+
+/// Names that may stand as the receiver of a mapped static-member read — the
+/// [`GLOBAL_OBJECTS`] plus the wrapper constructors `Number`/`String`/
+/// `Boolean`, which carry mapped static members (`Number.MAX_VALUE`,
+/// `String.prototype`, `Boolean.prototype`). Used only to skip the *receiver*
+/// of a member access in [`collect_expr`] so reading a static member is not
+/// mistaken for a bare value reference; a bare reference to a [`GLOBAL_OBJECTS`]
+/// name as a value is still caught by the identifier rule.
+const GLOBAL_RECEIVERS: &[&str] = &[
+    "Array", "Object", "Math", "JSON", "Map", "Set", "Number", "String", "Boolean",
+];
+
+/// True when `expr` is a bare global receiver name (`Math`, `Number`) — the
+/// root a static-member chain is read from.
+fn is_global_object_receiver(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::Identifier(id) if GLOBAL_RECEIVERS.contains(&id.name.as_str())
+    )
+}
+
+/// True when `expr` is a `<Global>.<method>` chain (`Math.floor`,
+/// `Object.create`, `Number.isFinite`) — a static method read as a value,
+/// e.g. to then take its `.length` (arity reflection).
+fn is_global_method_chain(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::StaticMemberExpression(sm) if is_global_object_receiver(&sm.object)
+    )
 }
