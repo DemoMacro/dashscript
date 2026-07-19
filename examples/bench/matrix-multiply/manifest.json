@@ -1,0 +1,5 @@
+{
+  "name": "matrix-multiply",
+  "target": "bin",
+  "dependencies": {}
+}

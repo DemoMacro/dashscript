@@ -1,0 +1,18 @@
+// factorial — large-number accumulation: `sum += i % 1000` over 100M
+// iterations, single call. Numeric-heavy and allocation-free (no GC pressure).
+// Mirrors perry's suite `13_factorial` (factorial-like accumulation pattern,
+// 100M iterations once). The same source runs under node/bun as TypeScript.
+function runFactorial(): number {
+  const ITERATIONS = 100000000;
+  let sum = 0;
+  for (let i = 0; i < ITERATIONS; i = i + 1) {
+    sum = sum + (i % 1000);
+  }
+  return sum;
+}
+function main(): void {
+  console.log(runFactorial());
+}
+
+main();
+export {};

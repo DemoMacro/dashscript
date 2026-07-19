@@ -1,0 +1,38 @@
+// matrix-multiply — ijk triple loop over 256×256 flat arrays, single call.
+// The innermost `sum += a[i*size+k] * b[k*size+j]` is the classic
+// multiply-accumulate with computed indices; `c[i*size+j] = sum` writes back
+// through ES auto-grow (`__ds::array_set`). Mirrors perry's suite
+// `16_matrix_multiply` (SIZE=256, ijk order). The same source runs under
+// node/bun as TypeScript.
+function matmul(a: number[], b: number[], c: number[], size: number): void {
+  for (let i = 0; i < size; i = i + 1) {
+    for (let j = 0; j < size; j = j + 1) {
+      let sum = 0;
+      for (let k = 0; k < size; k = k + 1) {
+        sum = sum + a[i * size + k] * b[k * size + j];
+      }
+      c[i * size + j] = sum;
+    }
+  }
+}
+function runMatrixMultiply(): number {
+  const SIZE = 256;
+  const n = SIZE * SIZE;
+  let a: number[] = [];
+  let b: number[] = [];
+  let c: number[] = [];
+  for (let i = 0; i < n; i = i + 1) {
+    a.push(i % 100);
+    b.push(i % 100);
+    c.push(0);
+  }
+  matmul(a, b, c, SIZE);
+  let checksum = 0;
+  for (let i = 0; i < n; i = i + 1) {
+    checksum = checksum + c[i];
+  }
+  return checksum;
+}
+function main(): void {
+  console.log(runMatrixMultiply());
+}

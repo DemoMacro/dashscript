@@ -1,0 +1,294 @@
+{
+  "samples": 5,
+  "runtimes": ["ds", "node", "bun"],
+  "results": [
+    {
+      "bench": "array-ops",
+      "name": "array-ops",
+      "times": {
+        "ds": 168.798,
+        "node": 218.7438,
+        "bun": 169.8163
+      },
+      "checksums": {
+        "ds": "5000000000",
+        "node": "5000000000",
+        "bun": "5000000000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "array-read",
+      "name": "array-read",
+      "times": {
+        "ds": 608.3938,
+        "node": 1106.6454,
+        "bun": 689.9994
+      },
+      "checksums": {
+        "ds": "499999500000",
+        "node": "499999500000",
+        "bun": "499999500000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "array-write",
+      "name": "array-write",
+      "times": {
+        "ds": 1193.6081,
+        "node": 1048.7576,
+        "bun": 706.8757
+      },
+      "checksums": {
+        "ds": "999999",
+        "node": "999999",
+        "bun": "999999"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "binary-trees",
+      "name": "binary-trees",
+      "times": {
+        "ds": 30.0388,
+        "node": 124.6157,
+        "bun": 120.0907
+      },
+      "checksums": {
+        "ds": "1500001500000",
+        "node": "1500001500000",
+        "bun": "1500001500000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "closure",
+      "name": "closure",
+      "times": {
+        "ds": 62.5333,
+        "node": 152.4704,
+        "bun": 155.7876
+      },
+      "checksums": {
+        "ds": "2500000000000000",
+        "node": "2500000000000000",
+        "bun": "2500000000000000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "factorial",
+      "name": "factorial",
+      "times": {
+        "ds": 321.9407,
+        "node": 206.0296,
+        "bun": 197.5678
+      },
+      "checksums": {
+        "ds": "49950000000",
+        "node": "49950000000",
+        "bun": "49950000000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "fib",
+      "name": "fib",
+      "times": {
+        "ds": 62.2792,
+        "node": 194.0823,
+        "bun": 157.2876
+      },
+      "checksums": {
+        "ds": "9227465",
+        "node": "9227465",
+        "bun": "9227465"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "int-add",
+      "name": "int-add",
+      "times": {
+        "ds": 691.5947,
+        "node": 776.1179,
+        "bun": 755.8768
+      },
+      "checksums": {
+        "ds": "499999999067109000",
+        "node": "499999999067109000",
+        "bun": "499999999067109000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "levenshtein",
+      "name": "levenshtein",
+      "times": {
+        "ds": 159.59,
+        "node": 138.8945,
+        "bun": 122.9587
+      },
+      "checksums": {
+        "ds": "600000",
+        "node": "600000",
+        "bun": "600000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "loop-data-dependent",
+      "name": "loop-data-dependent",
+      "times": {
+        "ds": 3466.8089,
+        "node": 1478.0465,
+        "bun": 1466.2045
+      },
+      "checksums": {
+        "ds": "2.5507960482823666",
+        "node": "2.5507960482823666",
+        "bun": "2.5507960482823666"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "mandelbrot",
+      "name": "mandelbrot",
+      "times": {
+        "ds": 45.8813,
+        "node": 134.1961,
+        "bun": 126.1944
+      },
+      "checksums": {
+        "ds": "8011148",
+        "node": "8011148",
+        "bun": "8011148"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "matrix-multiply",
+      "name": "matrix-multiply",
+      "times": {
+        "ds": 69.5504,
+        "node": 154.4481,
+        "bun": 137.0373
+      },
+      "checksums": {
+        "ds": "0",
+        "node": "41079519680",
+        "bun": "41079519680"
+      },
+      "error": {},
+      "consistent": false
+    },
+    {
+      "bench": "method-calls",
+      "name": "method-calls",
+      "times": {
+        "ds": 34.1328,
+        "node": 127.3179,
+        "bun": 114.3607
+      },
+      "checksums": {
+        "ds": "10000000",
+        "node": "10000000",
+        "bun": "10000000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "nested-loops",
+      "name": "nested-loops",
+      "times": {
+        "ds": 627.2807,
+        "node": 1074.6815,
+        "bun": 708.2091
+      },
+      "checksums": {
+        "ds": "499999500000",
+        "node": "499999500000",
+        "bun": "499999500000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "object-create",
+      "name": "object-create",
+      "times": {
+        "ds": 164.9907,
+        "node": 269.8599,
+        "bun": 198.6783
+      },
+      "checksums": {
+        "ds": "1499998500000",
+        "node": "1499998500000",
+        "bun": "1499998500000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "primes",
+      "name": "primes",
+      "times": {
+        "ds": 36.1969,
+        "node": 139.6516,
+        "bun": 136.0481
+      },
+      "checksums": {
+        "ds": "78498",
+        "node": "78498",
+        "bun": "78498"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "str-concat",
+      "name": "str-concat",
+      "times": {
+        "ds": 31.5137,
+        "node": 121.2673,
+        "bun": 145.07
+      },
+      "checksums": {
+        "ds": "100000",
+        "node": "100000",
+        "bun": "100000"
+      },
+      "error": {},
+      "consistent": true
+    },
+    {
+      "bench": "string-ops",
+      "name": "string-ops",
+      "times": {
+        "ds": 176.1862,
+        "node": 170.749,
+        "bun": 173.1589
+      },
+      "checksums": {
+        "ds": "129991",
+        "node": "129991",
+        "bun": "129991"
+      },
+      "error": {},
+      "consistent": true
+    }
+  ]
+}

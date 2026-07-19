@@ -1,0 +1,45 @@
+// array-ops — array build / sum / in-place reverse / even-count. Exercises
+// Vec indexing, indexed assignment (reverse swap), and tight numeric loops
+// over 100k elements × 100 iterations. Allocation-heavy (the Vec is rebuilt
+// each call), so a GC runtime can compete; the zero-overhead native build
+// is expected to lead on the indexed-assignment + modulo paths. The same
+// source runs under node/bun/perry as TypeScript (with a trailing `main()`).
+function runArrayBenchmark(): number {
+  const SIZE = 100000;
+  let arr: number[] = [];
+  for (let i = 0; i < SIZE; i = i + 1) {
+    arr.push(i);
+  }
+  let sum = 0;
+  for (let i = 0; i < SIZE; i = i + 1) {
+    sum = sum + arr[i];
+  }
+  let left = 0;
+  let right = SIZE - 1;
+  while (left < right) {
+    const temp = arr[left];
+    arr[left] = arr[right];
+    arr[right] = temp;
+    left = left + 1;
+    right = right - 1;
+  }
+  let evenCount = 0;
+  for (let i = 0; i < SIZE; i = i + 1) {
+    if (arr[i] % 2 === 0) {
+      evenCount = evenCount + 1;
+    }
+  }
+  return sum + evenCount;
+}
+function main(): void {
+  const WARMUP = 5;
+  const TIMED = 100;
+  for (let i = 0; i < WARMUP; i = i + 1) {
+    runArrayBenchmark();
+  }
+  let checksum = 0;
+  for (let i = 0; i < TIMED; i = i + 1) {
+    checksum = runArrayBenchmark();
+  }
+  console.log(checksum);
+}

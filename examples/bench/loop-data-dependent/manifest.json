@@ -1,0 +1,5 @@
+{
+  "name": "loop-data-dependent",
+  "target": "bin",
+  "dependencies": {}
+}

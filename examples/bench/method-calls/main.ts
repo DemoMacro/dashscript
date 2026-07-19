@@ -1,0 +1,31 @@
+// method-calls — method-invocation overhead: a `Counter` whose `increment()`
+// mutates `this.value` is called 10M times, single call. Stresses the `&mut
+// self` dispatch path (the translator marks `counter` mutable when a `&mut
+// self` method is called on it). Mirrors perry's suite `09_method_calls`.
+// The same source runs under node/bun as TypeScript.
+class Counter {
+  value: number;
+  constructor() {
+    this.value = 0;
+  }
+  increment(): void {
+    this.value = this.value + 1;
+  }
+  get(): number {
+    return this.value;
+  }
+}
+function runMethodCalls(): number {
+  const ITERATIONS = 10000000;
+  let counter = new Counter();
+  for (let i = 0; i < ITERATIONS; i = i + 1) {
+    counter.increment();
+  }
+  return counter.get();
+}
+function main(): void {
+  console.log(runMethodCalls());
+}
+
+main();
+export {};

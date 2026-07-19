@@ -1,0 +1,5 @@
+{
+  "name": "array-ops",
+  "target": "bin",
+  "dependencies": {}
+}

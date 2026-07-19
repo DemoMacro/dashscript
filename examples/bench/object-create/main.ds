@@ -1,0 +1,31 @@
+// object-create — struct allocation in a tight loop: 1M `Point { x, y }`
+// objects built and field-summed per call, 100 calls. Measures the allocator
+// + field-access path. DashScript lowers an `interface` literal to a Rust
+// `struct`; the optimizer eliminates the allocation when the object doesn't
+// escape (scalar replacement — perry's story). Mirrors perry's polyglot
+// `object_create`. The same source runs under node/bun as TypeScript.
+interface Point {
+  x: number;
+  y: number;
+}
+function runObjectCreateBenchmark(): number {
+  const N = 1000000;
+  let sum = 0;
+  for (let i = 0; i < N; i = i + 1) {
+    let p: Point = { x: i, y: i * 2 };
+    sum = sum + p.x + p.y;
+  }
+  return sum;
+}
+function main(): void {
+  const WARMUP = 5;
+  const TIMED = 100;
+  for (let i = 0; i < WARMUP; i = i + 1) {
+    runObjectCreateBenchmark();
+  }
+  let checksum = 0;
+  for (let i = 0; i < TIMED; i = i + 1) {
+    checksum = runObjectCreateBenchmark();
+  }
+  console.log(checksum);
+}

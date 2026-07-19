@@ -1,0 +1,35 @@
+// nested-loops — nested indexed reads over an n×n matrix (n=1000 → 1M cells),
+// 100 calls. Cache-bound: the inner loop strides memory sequentially. The
+// matrix is built by indexed assignment (`arr[i] = i`, ES auto-grow). Mirrors
+// perry's polyglot `nested_loops` (n=3000 → 9M, here n=1000 → 1M, fit to the
+// multi-call shape). The same source runs under node/bun as TypeScript.
+function runNestedLoopsBenchmark(): number {
+  const N = 1000;
+  const SIZE = N * N;
+  let arr: number[] = [];
+  for (let i = 0; i < SIZE; i = i + 1) {
+    arr[i] = i;
+  }
+  let sum = 0;
+  for (let i = 0; i < N; i = i + 1) {
+    for (let j = 0; j < N; j = j + 1) {
+      sum = sum + arr[i * N + j];
+    }
+  }
+  return sum;
+}
+function main(): void {
+  const WARMUP = 5;
+  const TIMED = 100;
+  for (let i = 0; i < WARMUP; i = i + 1) {
+    runNestedLoopsBenchmark();
+  }
+  let checksum = 0;
+  for (let i = 0; i < TIMED; i = i + 1) {
+    checksum = runNestedLoopsBenchmark();
+  }
+  console.log(checksum);
+}
+
+main();
+export {};
