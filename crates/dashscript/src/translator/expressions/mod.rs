@@ -86,11 +86,45 @@ fn cast_as(e: Expr, ty: Type) -> Expr {
             | Expr::Field(_)
             | Expr::Index(_)
             | Expr::Tuple(_)
+            | Expr::Cast(_)
     );
     if simple {
         parse_quote!(#e as #ty)
     } else {
         parse_quote!((#e) as #ty)
+    }
+}
+
+/// Cast a bitwise-operator operand to `i32` (signed) or `u32` (unsigned),
+/// matching ES `ToInt32`/`ToUint32` (mod-2³² wrap). The cast is *not* a plain
+/// `f64 as i32`: Rust saturates out-of-range floats to `i32::MAX`/`MIN`, but
+/// `ToInt32` wraps (mod 2³²). An `f64` operand goes through `i64` first —
+/// `f64 as i64` is exact below 2⁵³, then `i64 as i32` truncates with the same
+/// wrap semantics as `ToInt32` (verified against ECMA-262: `i64 as i32` is the
+/// low-32-bits-as-signed, which is step 4–5 of the abstract operation). An
+/// `i64` operand skips the hop — `i64 as i32` already wraps. A numeric literal
+/// re-emits at its own flavor so `1 << i` binds `1_i64`, not `1_f64`.
+pub(in crate::translator) fn bitwise_operand(e: &Expression, ctx: &Ctx<'_>, signed: bool) -> Expr {
+    use super::flavor::{expr_flavor, NumberFlavor};
+    let flavor = expr_flavor(e, ctx);
+    let base = if is_number_expr(e, ctx) {
+        translate_number_to(e, flavor, ctx)
+    } else {
+        translate_expr(e, ctx)
+    };
+    let target: Type = if signed {
+        parse_quote!(i32)
+    } else {
+        parse_quote!(u32)
+    };
+    match flavor {
+        // i64 → i32/u32: a single truncation, same mod-2³² wrap as ToInt32.
+        NumberFlavor::I64 => cast_as(base, target),
+        // f64 → i64 → i32/u32: the i64 hop is load-bearing (f64 as i32 saturates).
+        NumberFlavor::F64 => {
+            let via_i64 = cast_as(base, parse_quote!(i64));
+            cast_as(via_i64, target)
+        }
     }
 }
 

@@ -8,6 +8,7 @@ use syn::{parse_quote, parse_str, BinOp, Expr};
 use super::super::bindings;
 use super::super::context::Ctx;
 use super::super::flavor::{expr_flavor, NumberFlavor};
+use super::bitwise_operand;
 use super::fmt_merge;
 use super::option_local_name;
 use super::translate_expr;
@@ -129,47 +130,49 @@ fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
     ) {
         return None;
     }
-    let left = translate_expr(&bin.left, ctx);
-    let right = translate_expr(&bin.right, ctx);
+    // Each operand is cast via `bitwise_operand`, which routes an `f64` through
+    // `i64` (so the `i64 as i32` truncation matches JS `ToInt32` *wrap*, not
+    // Rust's saturating `f64 as i32`) and lets an `i64` operand skip the hop.
+    // The cast result is bound to a local first — never inlined against a
+    // compound expression, where `as` would bind to its right subtree
+    // (`1 << i as i64` parsing as `1 << (i as i64)`).
+    let a_i32 = bitwise_operand(&bin.left, ctx, true);
+    let b_i32 = bitwise_operand(&bin.right, ctx, true);
+    let a_u32 = bitwise_operand(&bin.left, ctx, false);
+    let b_u32 = bitwise_operand(&bin.right, ctx, false);
     Some(match bin.operator {
-        // Each operand is bound to a local first, then `as i64 as i32` (or
-        // `as u32` for `>>>`'s left) is applied to that local — never inline
-        // against a compound expression, where `as` would bind to its right
-        // subtree (`1 << i as i64` parsing as `1 << (i as i64)`). The `i64` hop
-        // matches JS `ToInt32`/`ToUint32` *wrap*, not Rust's saturating
-        // `f64 as i32`; see the doc comment above.
         BinaryOperator::BitwiseAnd => parse_quote!({
-            let __a = (#left) as i64 as i32;
-            let __b = (#right) as i64 as i32;
+            let __a = #a_i32;
+            let __b = #b_i32;
             (__a & __b) as f64
         }),
         BinaryOperator::BitwiseOR => parse_quote!({
-            let __a = (#left) as i64 as i32;
-            let __b = (#right) as i64 as i32;
+            let __a = #a_i32;
+            let __b = #b_i32;
             (__a | __b) as f64
         }),
         BinaryOperator::BitwiseXOR => parse_quote!({
-            let __a = (#left) as i64 as i32;
-            let __b = (#right) as i64 as i32;
+            let __a = #a_i32;
+            let __b = #b_i32;
             (__a ^ __b) as f64
         }),
         // `<<`/`>>` use `wrapping_shl`/`shr` (they mask the shift count, so a
         // large `.ds` count won't panic like Rust's plain `<<` would).
         BinaryOperator::ShiftLeft => parse_quote!({
-            let __a = (#left) as i64 as i32;
-            let __b = (#right) as i64 as u32;
+            let __a = #a_i32;
+            let __b = #b_u32;
             __a.wrapping_shl(__b) as f64
         }),
         BinaryOperator::ShiftRight => parse_quote!({
-            let __a = (#left) as i64 as i32;
-            let __b = (#right) as i64 as u32;
+            let __a = #a_i32;
+            let __b = #b_u32;
             __a.wrapping_shr(__b) as f64
         }),
-        // `>>>` is logical (zero-fill): `ToUint32` the left operand (i64 → u32)
+        // `>>>` is logical (zero-fill): `ToUint32` the left operand (→ u32)
         // before the shift.
         BinaryOperator::ShiftRightZeroFill => parse_quote!({
-            let __a = (#left) as i64 as u32;
-            let __b = (#right) as i64 as u32;
+            let __a = #a_u32;
+            let __b = #b_u32;
             __a.wrapping_shr(__b) as f64
         }),
         _ => unreachable!(),
