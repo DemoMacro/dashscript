@@ -20,11 +20,12 @@
  * not measure, and why the cross-runtime checksum is the load-bearing check.
  *
  * Per-sample timeout. The first available runtime (ds) sets the reference
- * median for a bench; every later runtime gets `max(BENCH_TIMEOUT_MS,
- * ds_median × BENCH_RATIO)` per sample, and a sample over that is killed and
- * the runtime marked `T/O` for that bench. This stops a pathologically slow
- * runtime from blocking the whole suite — perry on an f64 recurrence loop its
- * optimizer cannot fold ran ~100s/sample vs ds's ~3s, and timing it 5× added
+ * median for a bench; every later runtime gets `ds_median +
+ * BENCH_EXTRA_MS` per sample (at most ~30s slower than ds), and a sample over
+ * that is killed and the runtime marked `T/O` for that bench. This stops a
+ * pathologically slow runtime from blocking the whole suite — perry on an f64
+ * recurrence loop its optimizer cannot fold ran ~100s/sample vs ds's ~3.4s,
+ * and timing it 5× added
  * minutes for a number that is not informative. ds itself uses the absolute
  * `BENCH_TIMEOUT_MS` floor, so a genuinely hung bench still terminates.
  *
@@ -43,9 +44,9 @@ const SAMPLES = +(process.env.BENCH_SAMPLES ?? 5);
 const IS_WIN = process.platform === "win32";
 const EXE = IS_WIN ? ".exe" : "";
 // Per-sample wall-clock budget. The first runtime (ds) is the reference:
-// later runtimes get max(TIMEOUT_MS, ds_median × RATIO).
+// later runtimes get ds_median + EXTRA_MS (at most ~30s slower than ds).
 const TIMEOUT_MS = +(process.env.BENCH_TIMEOUT_MS ?? 60_000);
-const RATIO = +(process.env.BENCH_RATIO ?? 20);
+const EXTRA_MS = +(process.env.BENCH_EXTRA_MS ?? 30_000);
 // Builds (ds build / perry compile) get a separate, roomier ceiling — a cold
 // first compile is legitimately slower than any single run.
 const BUILD_TIMEOUT_MS = +(process.env.BENCH_BUILD_TIMEOUT_MS ?? 300_000);
@@ -169,7 +170,7 @@ for (const bench of benches) {
       continue;
     }
     const cmd = rt.runCmd(dir, name);
-    const budget = refMed == null ? TIMEOUT_MS : Math.max(TIMEOUT_MS, refMed * RATIO);
+    const budget = refMed == null ? TIMEOUT_MS : Math.round(refMed + EXTRA_MS);
     const samples = [];
     let checksum = null;
     let timedOut = false;
