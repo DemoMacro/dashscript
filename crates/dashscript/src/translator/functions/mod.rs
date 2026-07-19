@@ -675,7 +675,11 @@ fn homogeneous_object_type(obj: &ObjectExpression) -> Option<Type> {
         })
         .collect();
     if values.is_empty() {
-        return None;
+        // An empty object literal defaults to `HashMap<String, f64>` so an
+        // unannotated `var x = {}` has a concrete type — otherwise the empty
+        // `HashMap<_, _>` leaves key/value types undetermined and a downstream
+        // `Object.keys(x)` / `Object.hasOwn(x, …)` fails (E0282/E0283).
+        return Some(parse_quote!(::std::collections::HashMap<String, f64>));
     }
     if values
         .iter()

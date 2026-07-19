@@ -287,7 +287,7 @@ fn translates_object_from_entries_to_collect() {
     let src = "function f(m: Record<string, number>): Record<string, number> { return Object.fromEntries(Object.entries(m)); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("collect::<::std::collections::HashMap<_, _>>()"),
+        rust.contains("collect::<::std::collections::HashMap<String, f64>>()"),
         "got:\n{rust}"
     );
 }

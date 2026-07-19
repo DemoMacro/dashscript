@@ -8787,10 +8787,10 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 342398546.9235 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 342398546.9235 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 342398546.9235 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 342398546.9235 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 343427202.4315 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -10877,7 +10877,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
@@ -10916,7 +10920,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
@@ -10924,7 +10932,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<String, f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -10932,7 +10940,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<String, f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -10940,7 +10948,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<String, f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -10969,8 +10977,11 @@
     "id": "test262.test.built-ins.object.fromentries.empty-iterable",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:5:46: warning: unnecessary parentheses around function argument\nsrc\\main.rs:5:67: error[E0282]: type annotations needed for `&_`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -14376,7 +14387,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:34: error[E0282]: type annotations needed for `&_`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"false\" node=\"true\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"false\" node=\"true\""
+    },
     "note": ""
   },
   {
@@ -14394,8 +14409,11 @@
     "id": "test262.test.built-ins.object.getownpropertynames.15.2.3.4-2-3",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:5:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:34: error[E0282]: type annotations needed for `&_`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -14414,7 +14432,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:18: error: `this` is only valid inside a class method\nsrc\\main.rs:22:26: error[E0599]: no method named `keys` found for struct `Vec<String>` in the current scope: method not found in `Vec<String>`\nsrc\\main.rs:23:39: error[E0308]: mismatched types: expected `&_`, found `usize`\nsrc\\main.rs:23:39: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:2:18: error: `this` is only valid inside a class method\nsrc\\main.rs:20:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:22:26: error[E0599]: no method named `keys` found for struct `Vec<String>` in the current scope: method not found in `Vec<String>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -15256,8 +15274,11 @@
     "id": "test262.test.built-ins.object.hasown.hasown_nonexistent",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -15641,7 +15662,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:32: error[E0308]: mismatched types: expected `HashMap<_, _>`, found `bool`\nsrc\\main.rs:4:32: error[E0308]: mismatched types: expected `HashMap<_, _>`, found `String`\nsrc\\main.rs:5:32: error[E0308]: mismatched types: expected `HashMap<_, _>`, found `f64`\nsrc\\main.rs:6:32: error[E0308]: mismatched types: expected `HashMap<_, _>`, found `Option<_>`\nsrc\\main.rs:7:46: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `f64`, found `String`",
+    "detail": "src\\main.rs:3:32: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `bool`\nsrc\\main.rs:4:32: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `String`\nsrc\\main.rs:5:32: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `f64`\nsrc\\main.rs:6:32: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `Option<_>`\nsrc\\main.rs:7:46: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `f64`, found `String`",
     "note": ""
   },
   {
@@ -15872,8 +15893,11 @@
     "id": "test262.test.built-ins.object.isextensible.15.2.3.13-2-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -15902,8 +15926,11 @@
     "id": "test262.test.built-ins.object.isextensible.15.2.3.13-2-22",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -15911,7 +15938,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
@@ -17211,7 +17242,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:4:10: error[E0308]: mismatched types: expected `Option<_>`, found `HashMap<_, _>`\nsrc\\main.rs:5:27: error[E0277]: `Option<_>` doesn't implement `std::fmt::Display`: `Option<_>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:10: error[E0308]: mismatched types: expected `Option<_>`, found `HashMap<String, f64>`\nsrc\\main.rs:5:27: error[E0277]: `Option<_>` doesn't implement `std::fmt::Display`: `Option<_>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -17219,7 +17250,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 2: ds=\"true\" node=\"false\"; line 3: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"true\" node=\"false\"; line 3: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
@@ -17227,7 +17262,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 2: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
@@ -19155,7 +19194,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 2: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
@@ -19206,7 +19249,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<String, f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -19214,7 +19257,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<String, f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -19222,7 +19265,11 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:2:9: error[E0283]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 2: ds=\"true\" node=\"false\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 2: ds=\"true\" node=\"false\""
+    },
     "note": ""
   },
   {
@@ -19230,7 +19277,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:9: error[E0609]: no field `foo` on type `HashMap<String, f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {

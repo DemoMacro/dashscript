@@ -20,7 +20,7 @@ pub(in crate::translator) fn object_method(
 ) -> Option<Expr> {
     let r = translate_argument(args.first()?, ctx);
     Some(match name {
-        "keys" => parse_quote!(#r.keys().map(|k| k.to_string()).collect::<Vec<_>>()),
+        "keys" => parse_quote!(#r.keys().map(|k| k.to_string()).collect::<Vec<String>>()),
         "values" => parse_quote!(#r.values().cloned().collect::<Vec<_>>()),
         "entries" => {
             parse_quote!(#r.iter().map(|(k, v)| (k.clone(), v.clone())).collect::<Vec<_>>())
@@ -50,7 +50,7 @@ pub(in crate::translator) fn object_method(
         // `Object.getOwnPropertyNames(m)` ≡ `Object.keys(m)` for a Record (a
         // HashMap's keys are its own string property names).
         "getOwnPropertyNames" => {
-            parse_quote!(#r.keys().map(|k| k.to_string()).collect::<Vec<_>>())
+            parse_quote!(#r.keys().map(|k| k.to_string()).collect::<Vec<String>>())
         }
         // `Object.assign(target, …srcs)` → a cloned target with each source
         // merged in (Record = HashMap, so `extend` merges by key).
@@ -68,7 +68,7 @@ pub(in crate::translator) fn object_method(
         }
         // `Object.fromEntries(entries)` → collect `(K, V)` pairs into a HashMap.
         "fromEntries" => {
-            parse_quote!(#r.into_iter().collect::<::std::collections::HashMap<_, _>>())
+            parse_quote!(#r.into_iter().collect::<::std::collections::HashMap<String, f64>>())
         }
         // `Object.freeze`/`seal`/`preventExtensions` are no-ops returning the
         // value unchanged — Rust has no runtime immutability to enforce, and a
