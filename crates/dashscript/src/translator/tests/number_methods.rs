@@ -58,6 +58,25 @@ fn translates_number_to_string_no_arg_is_display() {
 }
 
 #[test]
+fn translates_number_to_precision_with_arg() {
+    // toPrecision(p) renders p significant digits, choosing fixed-point for
+    // exponents in [-6, p) and scientific outside — mirroring ECMAScript.
+    let src = "function f(n: number): string { return n.toPrecision(2); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("is_nan()"), "got:\n{rust}");
+    assert!(rust.contains("\"{:.*e}\""), "got:\n{rust}");
+    assert!(rust.contains("__p"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_number_to_precision_no_arg_is_number_to_string() {
+    // toPrecision(undefined) ≡ toString() — ES NumberToString via ryu-js.
+    let src = "function f(n: number): string { return n.toPrecision(); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__ds::number_to_string"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_number_to_string_radix_nan_infinity() {
     // `NaN.toString(r)` → "NaN", `Infinity.toString(r)` → "Infinity" in any
     // radix (TS keeps the names rather than converting). Mirrors test262's

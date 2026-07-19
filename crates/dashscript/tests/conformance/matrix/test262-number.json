@@ -3,16 +3,23 @@
     "id": "test262.test.built-ins.number.15.7.3-1",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.15.7.3-2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
+    },
     "note": ""
   },
   {
@@ -173,8 +180,11 @@
     "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a4",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -192,8 +202,11 @@
     "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a4",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`propertyIsEnumerable` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -256,16 +269,22 @@
     "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t1",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`delete` has no DashScript mapping",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -280,88 +299,121 @@
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a1",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`delete` has no DashScript mapping",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.1",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.3",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.4",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.5",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.6",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.7",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toexponential.range",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toexponential.return-abrupt-tointeger-fractiondigits-symbol",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -380,8 +432,11 @@
     "id": "test262.test.built-ins.number.prototype.toexponential.this-is-0-fractiondigits-is-0",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:3:61: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -399,8 +454,11 @@
     "id": "test262.test.built-ins.number.prototype.toexponential.this-type-not-number-or-number-object",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -434,8 +492,11 @@
     "id": "test262.test.built-ins.number.prototype.tofixed.range",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -454,88 +515,121 @@
     "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a2_t01",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-bigint",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-symbol",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-toprimitive",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.precision-cannot-be-coerced-to-a-number-in-range",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.range",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.return-abrupt-tointeger-precision-symbol",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.return-values",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:3:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:4:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.this-is-0-precision-is-1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.this-is-0-precision-is-gter-than-1",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:3:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:4:33: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:35: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toprecision.this-type-not-number-or-number-object",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -543,7 +637,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:2:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:3:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:4:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:39: error[E0599]: no method named `to_precision` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:53:58: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:70:58: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -572,8 +666,11 @@
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-1",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -899,8 +996,11 @@
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-37",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -981,64 +1081,88 @@
     "id": "test262.test.built-ins.number.s15.7.3_a1",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a3",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a4",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a5",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a6",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a7",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.3_a8",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1046,11 +1170,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=2",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=2"
-    },
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:58: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:58: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`",
     "note": ""
   },
   {
@@ -1365,16 +1485,22 @@
     "id": "test262.test.built-ins.number.s9.3.1_a3_t2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s9.3.1_a3_t2_u180e",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1392,8 +1518,11 @@
     "id": "test262.test.built-ins.number.s9.3.1_a4_t2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1422,8 +1551,11 @@
     "id": "test262.test.built-ins.number.s9.3.1_a5_t3",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1441,8 +1573,11 @@
     "id": "test262.test.built-ins.number.s9.3.1_a6_t2",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {

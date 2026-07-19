@@ -91,6 +91,66 @@ pub(in crate::translator) fn number_method(
                 }
             })
         }
+        // `(n).toPrecision(p)` / `(n).toPrecision()` → ES precision
+        // formatting. No arg ≡ `toString()` (ES NumberToString via the shared
+        // ryu-js helper, matching Node's oracle). With a `p` arg, `p`
+        // significant digits are rendered, choosing fixed-point for exponents
+        // in [-6, p) and scientific notation outside that — mirroring
+        // ECMAScript's toPrecision. Rust's `{:.prec$e}` supplies `p`
+        // significant digits (prec = p-1 fractional places); the digits +
+        // exponent are then reshaped to ES form. (Rust's round-half-to-even
+        // may diverge from ES round-half-away on exact `.5` boundaries — the
+        // common case; test262 is the arbiter.)
+        "toPrecision" if args.is_empty() => {
+            parse_quote!(crate::__ds::number_to_string(#recv))
+        }
+        "toPrecision" => {
+            let prec = usize_arg(args.first()?, ctx);
+            parse_quote!({
+                let __x = #recv;
+                let __p: usize = #prec;
+                if __x.is_nan() {
+                    "NaN".to_string()
+                } else if __x.is_infinite() {
+                    if __x < 0_f64 {
+                        "-Infinity".to_string()
+                    } else {
+                        "Infinity".to_string()
+                    }
+                } else {
+                    let __neg = __x < 0_f64;
+                    let __ax = __x.abs();
+                    let __sci = format!("{:.*e}", __p.saturating_sub(1), __ax);
+                    let (__mant, __exp_str) = __sci
+                        .split_once('e')
+                        .unwrap_or((__sci.as_str(), "0"));
+                    let __exp: i32 = __exp_str.parse().unwrap();
+                    let __digits: String = __mant.chars().filter(|c| *c != '.').collect();
+                    let __m = if __exp < -6 || __exp >= __p as i32 {
+                        let __body = if __p == 1 {
+                            __digits.clone()
+                        } else {
+                            format!("{}.{}", &__digits[..1], &__digits[1..])
+                        };
+                        let __esign = if __exp >= 0 { "+" } else { "-" };
+                        format!("{}e{}{}", __body, __esign, __exp.abs())
+                    } else if __exp == __p as i32 - 1 {
+                        __digits.clone()
+                    } else if __exp >= 0 {
+                        let __i = __exp as usize + 1;
+                        format!("{}.{}", &__digits[..__i], &__digits[__i..])
+                    } else {
+                        format!(
+                            "0.{}{}",
+                            "0".repeat(((-__exp) - 1) as usize),
+                            __digits.as_str()
+                        )
+                    };
+                    let __sign = if __neg { "-" } else { "" };
+                    format!("{}{}", __sign, __m)
+                }
+            })
+        }
         // `(n).valueOf()` → the number itself (an `f64` identity).
         // `toLocaleString` is locale-dependent (thousands separators) and
         // intentionally not mapped — see `string_method`.
