@@ -208,12 +208,8 @@
     "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t1",
     "layer": "test262",
     "category": "parseint",
-    "status": "partial",
-    "detail": "oracle diff: line 4: ds=\"NaN\" node=\"11\"; line 5: ds=\"NaN\" node=\"11\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 4: ds=\"NaN\" node=\"11\"; line 5: ds=\"NaN\" node=\"11\""
-    },
+    "status": "unsupported",
+    "detail": "`Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -476,8 +472,8 @@
     "id": "test262.test.built-ins.parseint.s15.1.2.2_a9.6",
     "layer": "test262",
     "category": "parseint",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:3:54: error[E0425]: cannot find value `parse_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "unsupported",
+    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   }
 ]

@@ -1086,8 +1086,8 @@
     "id": "test262.test.built-ins.string.prototype.padend.observable-operations",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:20: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:11:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:23: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:13:22: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:13:22: warning: unreachable call: unreachable call",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
     "note": ""
   },
   {
@@ -1160,8 +1160,8 @@
     "id": "test262.test.built-ins.string.prototype.padstart.observable-operations",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:20: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:11:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:23: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:13:22: error[E0425]: cannot find function `create_primitive_observer` in this scope: not found in this scope\nsrc\\main.rs:13:22: warning: unreachable call: unreachable call",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
     "note": ""
   },
   {
@@ -1282,7 +1282,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1536,7 +1536,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1544,7 +1544,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Symbol` (JS reflection) is unsupported",
     "note": ""
   },
   {
@@ -1664,7 +1664,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`eval` is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `eval` is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1720,7 +1720,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "detail": "`Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3491,7 +3491,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -3507,7 +3507,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -3523,7 +3523,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -3595,7 +3595,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -3611,7 +3611,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -3627,7 +3627,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:39: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w6\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {

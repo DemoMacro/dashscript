@@ -487,77 +487,56 @@
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a1",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a2",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a3",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a4",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.exp.s15.8.2.8_a5",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.expm1.expm1-specialvals",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.floor.s15.8.2.9_a1",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {
@@ -940,7 +919,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:59: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:58: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -993,7 +972,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:4:28: error[E0425]: cannot find value `math` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:59: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:5:58: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1097,7 +1076,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:17:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:19:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:22:36: error[E0425]: cannot find value `x` in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:19:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:21:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:24:67: error[E0425]: cannot find value `x` in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -1266,6 +1245,18 @@
     "note": ""
   },
   {
+    "id": "test262.test.built-ins.math.sumprecise.sum",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "node-error",
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
+    },
+    "note": ""
+  },
+  {
     "id": "test262.test.built-ins.math.sumprecise.sum-is-infinite",
     "layer": "test262",
     "category": "math",
@@ -1273,7 +1264,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmptASv8D\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n                 ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
     },
     "note": ""
   },
@@ -1285,7 +1276,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmptASv8D\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r\nTypeErr"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
     },
     "note": ""
   },
@@ -1297,19 +1288,7 @@
     "detail": "",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmptASv8D\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^\r\n\r\nType"
-    },
-    "note": ""
-  },
-  {
-    "id": "test262.test.built-ins.math.sumprecise.sum",
-    "layer": "test262",
-    "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmptASv8D\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n                 ^\r\n\r\n"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpNpwBZ0\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
     },
     "note": ""
   },
@@ -1318,7 +1297,7 @@
     "layer": "test262",
     "category": "math",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {

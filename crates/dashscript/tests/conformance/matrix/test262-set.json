@@ -1,0 +1,125 @@
+[
+  {
+    "id": "test262.test.built-ins.set.constructor",
+    "layer": "test262",
+    "category": "set",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.properties-of-the-set-prototype-object",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype-of-set",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.constructor.set-prototype-constructor-intrinsic",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.difference.builtins",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.intersection.builtins",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.isdisjointfrom.builtins",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.issubsetof.builtins",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.issupersetof.builtins",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.keys.keys",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.symmetricdifference.builtins",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.prototype.union.builtins",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.set-undefined-newtarget",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.symbol.species.return-value",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.set.symbol.species.symbol-species-name",
+    "layer": "test262",
+    "category": "set",
+    "status": "unsupported",
+    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Set` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Symbol` (JS reflection) is unsupported",
+    "note": ""
+  }
+]

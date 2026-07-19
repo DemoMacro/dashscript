@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "boolean",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "detail": "`.constructor` reflection is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "boolean",
     "status": "unsupported",
-    "detail": "`delete` has no DashScript mapping",
+    "detail": "`Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `delete` has no DashScript mapping | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -28,7 +28,7 @@
     "layer": "test262",
     "category": "boolean",
     "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported | `Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "test262",
     "category": "boolean",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "test262",
     "category": "boolean",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -104,7 +104,7 @@
     "layer": "test262",
     "category": "boolean",
     "status": "unsupported",
-    "detail": "`isPrototypeOf` (prototype reflection) is unsupported",
+    "detail": "`isPrototypeOf` (prototype reflection) is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -112,7 +112,7 @@
     "layer": "test262",
     "category": "boolean",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Boolean` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
@@ -146,23 +146,16 @@
     "id": "test262.test.built-ins.boolean.s9.2_a4_t1",
     "layer": "test262",
     "category": "boolean",
-    "status": "partial",
-    "detail": "oracle diff: line 3: ds=\"true\" node=\"false\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 3: ds=\"true\" node=\"false\""
-    },
+    "status": "unsupported",
+    "detail": "`Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.boolean.s9.2_a4_t3",
     "layer": "test262",
     "category": "boolean",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "unsupported",
+    "detail": "`Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Number` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
     "note": ""
   },
   {
