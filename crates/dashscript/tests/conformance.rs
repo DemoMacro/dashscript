@@ -201,6 +201,13 @@ fn conformance_matrix() {
         })
         .collect();
 
+    // Populate `~/.cargo` once (serially) with every runtime dep a fixture might
+    // inject, so the N parallel workers don't race the crates-io registry
+    // update lock on their first `cargo` call. Without this the losers fail
+    // "unable to update registry `crates-io`" and the fixture is mis-recorded
+    // as `partial`; after the fetch the index is fresh, workers hit the cache.
+    warm_cargo_cache(&workers[0].0);
+
     // Node is the test262 ground-truth oracle. Probe once; if absent, the
     // differential layer degrades to compile-only (oracle → node-missing).
     let node_ok = node_available();
@@ -336,6 +343,23 @@ fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
         .collect::<Vec<_>>()
         .join("\n");
     (out.status.success(), trimmed)
+}
+
+/// Populate `~/.cargo` with every runtime dep a fixture might inject, by
+/// fetching from a seed project once, serially, before the parallel workers
+/// start. Without this, each worker's first `cargo` invocation races the
+/// crates-io registry-update lock; losers fail "unable to update registry
+/// `crates-io`" and the fixture is mis-recorded as `partial`. After the fetch
+/// the index is fresh, so workers hit the cache and never contend. Best-effort:
+/// a fetch failure (offline) leaves the original race behavior.
+fn warm_cargo_cache(seed_project: &Path) {
+    const SEED_TOML: &str = "[package]\nname = \"seed\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[dependencies]\nryu-js = \"1.0\"\nserde_json = \"1\"\n";
+    let _ = fs::write(seed_project.join("Cargo.toml"), SEED_TOML);
+    let _ = fs::write(seed_project.join("src").join("main.rs"), "fn main() {}\n");
+    let _ = Command::new("cargo")
+        .args(["fetch", "--quiet"])
+        .current_dir(seed_project)
+        .output();
 }
 
 /// Translate a fixture, catching any panic — a `quote`/`Ident::new` on an
