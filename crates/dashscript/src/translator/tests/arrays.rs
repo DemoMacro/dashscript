@@ -204,10 +204,34 @@ fn translates_array_reduce_without_seed_to_reduce() {
 }
 
 #[test]
-fn translates_array_index_assign_to_usize_index() {
+fn translates_array_index_assign_to_array_set() {
+    // `xs[i] = v` lowers to `__ds::array_set` (ES `Array` auto-grow), not a
+    // bare `xs[i as usize] = v` (which would panic on a Rust `Vec` when `i` is
+    // out of range). The RHS is bound to a temp first so `arr[i] = arr[j]`
+    // cannot collide with the `&mut` borrow `array_set` takes. The call flags
+    // `needs_array_helper`.
     let src = "function f(): void { let xs: number[] = [1, 2, 3]; xs[0] = 9; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("xs[0_f64 as usize] = 9_f64"), "got:\n{rust}");
+    assert!(
+        rust.contains("__ds::array_set(&mut xs, 0_f64, __ds_v)"),
+        "got:\n{rust}"
+    );
+    assert!(
+        rust.contains("let __ds_v = 9_f64;"),
+        "RHS bound first: {rust}"
+    );
+}
+
+#[test]
+fn array_set_rhs_reading_same_array_compiles() {
+    // `arr[i] = arr[j]` — the RHS borrows the same array the store mutates. The
+    // temp binding keeps the immutable borrow's lifetime clear of the `&mut`.
+    let src = "function f(): void { let a: number[] = [1, 2, 3]; a[0] = a[1]; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let __ds_v = a[1_f64 as usize];"),
+        "RHS read bound before the store: {rust}"
+    );
 }
 
 #[test]

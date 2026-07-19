@@ -73,6 +73,18 @@ fn translates_method_mutates_this_to_mut_self() {
 }
 
 #[test]
+fn mut_self_method_call_marks_receiver_let_mut() {
+    // The call-site analogue of `translates_method_mutates_this_to_mut_self`:
+    // a local that calls a project `&mut self` method must itself be `let mut`.
+    let src = "class C { n: number; constructor() { this.n = 0; } inc(): void { this.n = this.n + 1; } }\nfunction f(): void { let c = new C(); c.inc(); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let mut c"),
+        "receiver of a `&mut self` call must be `let mut`: {rust}",
+    );
+}
+
+#[test]
 fn translates_new_with_arguments() {
     let src = "class P { x: number; constructor(x: number) { this.x = x; } }\nfunction f(): number { let p = new P(5); return p.x; }";
     let rust = Translator::new().translate(src).expect("should translate");

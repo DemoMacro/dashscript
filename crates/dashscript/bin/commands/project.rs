@@ -252,7 +252,7 @@ pub(crate) fn apply_runtime_deps(
     root_stems: &[String],
 ) -> Result<(), Box<dyn Error>> {
     if let Some(helper) = deps.helper_module() {
-        inject_helper_module(project_dir, "__ds", helper, root_stems)?;
+        inject_helper_module(project_dir, "__ds", &helper, root_stems)?;
     }
     if let Some(engine) = deps.engine_helper_module() {
         inject_helper_module(project_dir, "__ds_engine", engine, root_stems)?;

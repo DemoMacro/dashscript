@@ -18,7 +18,17 @@ use super::{ident_expr, translate_expr};
 /// `HashMap` local is an insert (the map takes the key and value separately).
 enum AssignTarget {
     Plain(Expr),
-    HashInsert { map: Ident, key: Expr },
+    HashInsert {
+        map: Ident,
+        key: Expr,
+    },
+    /// `xs[i] = v` on a `Vec` local — ES `Array` auto-grows on an out-of-range
+    /// index, so the store routes through `__ds::array_set` (append or grow),
+    /// not a bare `xs[i] = v` (which panics on a Rust `Vec`).
+    ArraySet {
+        obj: Expr,
+        idx: Expr,
+    },
 }
 
 /// `x = …`, `x += …`, …. Plain targets (`x`, `obj.field`, `arr[i as usize]`)
@@ -101,6 +111,28 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
             AssignmentOperator::Assign => parse_quote!(#map.insert(#key, #right)),
             _ => parse_quote!(::core::todo!()),
         },
+        Some(AssignTarget::ArraySet { obj, idx }) => match a.operator {
+            // `xs[i] = v` → `__ds::array_set(&mut xs, i, v)` (ES auto-grow). A
+            // bare `xs[i as usize] = v` would panic on a Rust `Vec` when `i` is
+            // out of range; ES grows the array instead. Compound assign on an
+            // array index (`xs[i] += v`) is rare and needs a read-modify-write
+            // through the same helper — left as a TODO until a real fixture
+            // needs it. The `__ds::array_set` token in the output flags
+            // `needs_array_helper`.
+            AssignmentOperator::Assign => {
+                // Bind the value first so an RHS that reads the same array
+                // (`arr[i] = arr[j]`) cannot collide with the `&mut` borrow
+                // `array_set` takes — the immutable borrow ends at the `let`
+                // before the mutable one starts. (A function-call argument's
+                // `&mut` borrow activates immediately, unlike the two-phase
+                // borrow a direct `arr[i] = arr[j]` gets.)
+                parse_quote!({
+                    let __ds_v = #right;
+                    crate::__ds::array_set(&mut #obj, #idx, __ds_v);
+                })
+            }
+            _ => parse_quote!(::core::todo!()),
+        },
         None => parse_quote!(::core::todo!()),
     }
 }
@@ -143,10 +175,13 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
                 let key = translate_expr(&cm.expression, ctx);
                 return Some(AssignTarget::HashInsert { map, key });
             }
-            // `xs[i] = v` → `xs[i as usize] = v`.
+            // `xs[i] = v` → ES `Array` auto-grow via `__ds::array_set` (a bare
+            // `xs[i as usize] = v` would panic on a Rust `Vec` when `i` is out
+            // of range; ES grows the array instead). The `__ds::array_set` token
+            // in the output flags `needs_array_helper`.
             let obj = translate_expr(&cm.object, ctx);
             let idx = translate_expr(&cm.expression, ctx);
-            Some(AssignTarget::Plain(parse_quote!(#obj[#idx as usize])))
+            Some(AssignTarget::ArraySet { obj, idx })
         }
         _ => None,
     }

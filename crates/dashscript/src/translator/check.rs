@@ -80,7 +80,7 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
 
     // Layer 2 — translatability: the translator is the source of truth (its
     // `None` means "not mapped"); the match only adds a human message + span.
-    let registry = registry::build_registry(&program.body);
+    let registry = registry::build_registry(&program.body, &names);
     for stmt in &program.body {
         if functions::translate_statement(stmt, &registry, &names).is_empty() {
             diagnostics.push(unmapped_top_level(stmt));

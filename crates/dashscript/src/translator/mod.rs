@@ -52,6 +52,11 @@ pub struct RuntimeDeps {
     /// `ds build` output stays pure Rust; only programs that actually use such
     /// a construct pull the engine (and its C build dependency).
     pub needs_engine: bool,
+    /// An indexed assignment `xs[i] = v` where `i` may equal or exceed the
+    /// length — ES `Array` auto-grows, but a bare Rust `Vec[i] = v` panics.
+    /// The store routes through `__ds::array_set` (append or grow), which this
+    /// flag gates into the `__ds` helper module.
+    pub needs_array_helper: bool,
 }
 
 impl RuntimeDeps {
@@ -61,13 +66,27 @@ impl RuntimeDeps {
         self.needs_ryu_js |= other.needs_ryu_js;
         self.needs_serde_json |= other.needs_serde_json;
         self.needs_engine |= other.needs_engine;
+        self.needs_array_helper |= other.needs_array_helper;
     }
 
-    /// The `__ds` helper module source — `number_to_string(f64) -> String` via
-    /// `ryu_js` (ES `Number::toString`) — when this dep set flags `ryu_js`.
-    /// `None` when no runtime dep is needed, so the caller writes nothing.
-    pub fn helper_module(&self) -> Option<&'static str> {
-        self.needs_ryu_js.then_some(DS_HELPER_MODULE)
+    /// The `__ds` helper module source — assembled from whichever helpers this
+    /// dep set flagged (`number_to_string` for `needs_ryu_js`, `array_set` for
+    /// `needs_array_helper`). `None` when neither is needed, so the caller
+    /// writes nothing and the default build pulls no `ryu_js`.
+    pub fn helper_module(&self) -> Option<String> {
+        if !self.needs_ryu_js && !self.needs_array_helper {
+            return None;
+        }
+        let mut src = String::from(
+            "//! DashScript runtime helpers: ES-compat shims a bare Rust lowering\n//! would get wrong (Number::toString, Array auto-grow).\n\n",
+        );
+        if self.needs_ryu_js {
+            src.push_str(RYUJS_HELPERS);
+        }
+        if self.needs_array_helper {
+            src.push_str(ARRAY_HELPER);
+        }
+        Some(src)
     }
 
     /// The `__ds_engine` compat module source — runs a `.ds` source under an
@@ -119,11 +138,9 @@ fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str, needed: bool) {
 /// `mod __ds;` at each crate root when a translated file references it. The
 /// single source for the `__ds` helpers — consumed by both `ds build` (bin) and
 /// the conformance harness (lib test) — so the helper text lives in the library
-/// rather than either consumer. Today only `number_to_string` (ES
-/// `Number::toString` via `ryu_js`); signed zero is normalized to `"0"` first
-/// (`ryu_js` covers NaN and ±Infinity already).
-const DS_HELPER_MODULE: &str = "\
-//! DashScript runtime helper: ES-correct `Number::toString` via `ryu_js`.
+/// rather than either consumer. [`RuntimeDeps::helper_module`] concatenates
+/// whichever slices a translation flagged.
+const RYUJS_HELPERS: &str = "\
 use ryu_js::Buffer;
 
 /// Format an `f64` as ECMAScript `Number::toString` would. `ryu_js` covers NaN
@@ -134,6 +151,31 @@ pub fn number_to_string(x: f64) -> String {
         return \"0\".to_string();
     }
     Buffer::new().format(x).to_string()
+}
+";
+
+/// ES `Array` indexed-assignment auto-grow for a `Vec<T>` — the slice a
+/// `xs[i] = v` store flags via `needs_array_helper`. Pure `std` (no external
+/// crate), so emitting this slice adds no `Cargo.toml` dependency.
+const ARRAY_HELPER: &str = "\
+/// ES indexed assignment `arr[i] = v` for a `Vec<T>`. ES `Array` auto-grows:
+/// `i < len` replaces, `i == len` appends, `i > len` grows with `T::default()`
+/// filling the gap (a JS array would use holes, but `T` has no undefined). A
+/// negative or non-integer index is a property set in JS, not an element —
+/// ignored here. A bare Rust `vec[i] = v` would panic instead of growing.
+pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
+    if !i.is_finite() || i < 0.0 || i.fract() != 0.0 {
+        return;
+    }
+    let idx = i as usize;
+    if idx < arr.len() {
+        arr[idx] = v;
+    } else if idx == arr.len() {
+        arr.push(v);
+    } else {
+        arr.resize(idx + 1, T::default());
+        arr[idx] = v;
+    }
 }
 ";
 
@@ -315,13 +357,14 @@ impl Translator {
                     needs_ryu_js: false,
                     needs_serde_json: false,
                     needs_engine: true,
+                    needs_array_helper: false,
                 },
             ));
         }
 
         // First pass: collect discriminated-union enum shapes so later
         // expression translation can build variant constructors.
-        let registry = registry::build_registry(&program.body);
+        let registry = registry::build_registry(&program.body, &names);
         let items = program
             .body
             .iter()
@@ -347,6 +390,7 @@ impl Translator {
             needs_ryu_js: rust.contains("__ds::number_to_string"),
             needs_serde_json: rust.contains("serde_json::"),
             needs_engine: false,
+            needs_array_helper: rust.contains("__ds::array_set"),
         };
         Ok((rust, deps))
     }

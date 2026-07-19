@@ -54,11 +54,23 @@ pub(super) struct Analysis {
     /// True when the body assigns/updates a member of `this` (e.g. `this.x = 1`
     /// or `this.n++`) — the enclosing method needs `&mut self`.
     pub mutates_this: bool,
+    /// The project's own `&mut self` class methods (by original `.ds` name). A
+    /// call `obj.m()` where `m` is in this set mutates the receiver, so the
+    /// receiver binding is marked `let mut`. Built-in mutators (`push`,
+    /// `splice` …) are covered by `MUTATORS`; this set carries user methods.
+    pub mut_methods: HashSet<String>,
 }
 
 /// Walk a function body once, recording mutations and read counts.
-pub(super) fn analyze(stmts: &[Statement], names: &NameTable) -> Analysis {
-    let mut a = Analysis::default();
+pub(super) fn analyze(
+    stmts: &[Statement],
+    names: &NameTable,
+    mut_methods: &HashSet<String>,
+) -> Analysis {
+    let mut a = Analysis {
+        mut_methods: mut_methods.clone(),
+        ..Analysis::default()
+    };
     for s in stmts {
         walk_stmt(s, names, &mut a);
     }
@@ -215,7 +227,9 @@ fn walk_expr(expr: &Expression, names: &NameTable, a: &mut Analysis) {
 /// (e.g. `a.b.c()` reads `a.b`).
 fn walk_callee(callee: &Expression, names: &NameTable, a: &mut Analysis) {
     if let Expression::StaticMemberExpression(sm) = callee {
-        if MUTATORS.contains(&sm.property.name.as_str()) {
+        let is_mutator = MUTATORS.contains(&sm.property.name.as_str())
+            || a.mut_methods.contains(sm.property.name.as_str());
+        if is_mutator {
             record_root(&sm.object, names, a);
             return;
         }

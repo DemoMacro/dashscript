@@ -13,11 +13,14 @@
 use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
-    Function, Statement, TSLiteral, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeLiteral,
+    Class, ClassElement, Function, MethodDefinitionKind, Statement, TSLiteral, TSSignature, TSType,
+    TSTypeAliasDeclaration, TSTypeLiteral,
 };
 use syn::{Ident, Path};
 
+use super::analysis;
 use super::bindings;
+use super::name_table::NameTable;
 use super::types;
 
 /// A discriminated-union variant: its Rust name (from the `kind` value) and its
@@ -41,6 +44,10 @@ pub struct TypeRegistry {
     /// Struct/interface name → its optional (`?:`) field names. A struct
     /// literal that omits one of these is filled with `None`.
     pub structs: HashMap<String, HashSet<String>>,
+    /// The project's own `&mut self` class methods, by original `.ds` name. A
+    /// call `obj.m()` with `m` in this set marks the receiver `let mut` — the
+    /// `&mut self` analogue of the built-in `MUTATORS` (`push`, `splice` …).
+    pub mut_methods: HashSet<String>,
 }
 
 impl TypeRegistry {
@@ -51,6 +58,7 @@ impl TypeRegistry {
             functions: HashMap::new(),
             function_defaults: HashMap::new(),
             structs: HashMap::new(),
+            mut_methods: HashSet::new(),
         }
     }
 }
@@ -64,7 +72,7 @@ impl Default for TypeRegistry {
 /// Scan top-level type aliases (discriminated unions) and function declarations
 /// (parameter types), recording both into a [`TypeRegistry`].
 #[must_use]
-pub fn build_registry(statements: &[Statement]) -> TypeRegistry {
+pub fn build_registry(statements: &[Statement], names: &NameTable) -> TypeRegistry {
     let mut registry = TypeRegistry::new();
     for stmt in statements {
         match stmt {
@@ -97,10 +105,38 @@ pub fn build_registry(statements: &[Statement]) -> TypeRegistry {
                     .function_defaults
                     .insert(name, function_default_flags(func));
             }
+            Statement::ClassDeclaration(class) => {
+                collect_mut_methods(class, names, &mut registry.mut_methods);
+            }
             _ => {}
         }
     }
     registry
+}
+
+/// Collect every `&mut self` instance method name across a class. A method is
+/// `&mut self` when its body assigns/updates a member of `this` — the same
+/// `mutates_this` test `build_method` applies at emit time, run here in the
+/// first pass so call sites can mark their receiver `let mut`.
+fn collect_mut_methods(class: &Class, names: &NameTable, out: &mut HashSet<String>) {
+    let empty: HashSet<String> = HashSet::new();
+    for elem in &class.body.body {
+        let ClassElement::MethodDefinition(md) = elem else {
+            continue;
+        };
+        if md.kind != MethodDefinitionKind::Method {
+            continue;
+        }
+        let Some(body) = md.value.body.as_deref() else {
+            continue;
+        };
+        let analysis = analysis::analyze(&body.statements, names, &empty);
+        if analysis.mutates_this {
+            if let Some(name) = bindings::property_key_name(&md.key) {
+                out.insert(name.to_string());
+            }
+        }
+    }
 }
 
 /// A function's original `.ds` name (defaults to `main` for anonymous).

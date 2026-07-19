@@ -152,7 +152,7 @@ pub(in crate::translator) fn string_method_on(
                 Some(end) => {
                     let end = translate_argument(end, ctx);
                     parse_quote!({
-                        let __s = #obj;
+                        let __s = &(#obj);
                         let __n = __s.len() as f64;
                         let __a = { let v = #start; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
                         let __b = { let v = #end; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
@@ -160,7 +160,7 @@ pub(in crate::translator) fn string_method_on(
                     })
                 }
                 None => parse_quote!({
-                    let __s = #obj;
+                    let __s = &(#obj);
                     let __n = __s.len() as f64;
                     let __a = { let v = #start; if v < 0_f64 { (__n + v).max(0_f64) } else { v.min(__n) } } as usize;
                     __s.get(__a..).unwrap_or("").to_string()
@@ -176,7 +176,7 @@ pub(in crate::translator) fn string_method_on(
                 Some(end) => {
                     let end = translate_argument(end, ctx);
                     parse_quote!({
-                        let __s = #obj;
+                        let __s = &(#obj);
                         let __n = __s.len() as f64;
                         let mut __a = { let v = #start; if v < 0_f64 { 0_f64 } else { v }.min(__n) } as usize;
                         let mut __b = { let v = #end; if v < 0_f64 { 0_f64 } else { v }.min(__n) } as usize;
@@ -187,7 +187,7 @@ pub(in crate::translator) fn string_method_on(
                     })
                 }
                 None => parse_quote!({
-                    let __s = #obj;
+                    let __s = &(#obj);
                     let __n = __s.len() as f64;
                     let __a = { let v = #start; if v < 0_f64 { 0_f64 } else { v }.min(__n) } as usize;
                     __s.get(__a..).unwrap_or("").to_string()
@@ -272,7 +272,7 @@ pub(in crate::translator) fn string_method_on(
             let n = usize_arg(args.first()?, ctx);
             let ch = str_method_arg(args.get(1)?, ctx);
             parse_quote!({
-                let __s = #obj;
+                let __s = &(#obj);
                 let __need = (#n).saturating_sub(__s.chars().count());
                 format!("{}{}", #ch.chars().cycle().take(__need).collect::<String>(), __s)
             })
@@ -291,7 +291,7 @@ pub(in crate::translator) fn string_method_on(
             let n = usize_arg(args.first()?, ctx);
             let ch = str_method_arg(args.get(1)?, ctx);
             parse_quote!({
-                let __s = #obj;
+                let __s = &(#obj);
                 let __need = (#n).saturating_sub(__s.chars().count());
                 format!("{}{}", __s, #ch.chars().cycle().take(__need).collect::<String>())
             })
@@ -313,7 +313,7 @@ pub(in crate::translator) fn string_method_on(
         "at" => {
             let i = translate_argument(args.first()?, ctx);
             parse_quote!({
-                let __s = #obj;
+                let __s = &(#obj);
                 let __n = (#i) as i64;
                 let __idx = if __n >= 0 {
                     __n as usize

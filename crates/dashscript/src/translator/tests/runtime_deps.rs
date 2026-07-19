@@ -62,11 +62,13 @@ fn helper_module_present_only_when_needed() {
         needs_ryu_js: true,
         needs_serde_json: false,
         needs_engine: false,
+        needs_array_helper: false,
     };
     let without = RuntimeDeps {
         needs_ryu_js: false,
         needs_serde_json: false,
         needs_engine: false,
+        needs_array_helper: false,
     };
     assert!(
         with.helper_module()
@@ -77,12 +79,33 @@ fn helper_module_present_only_when_needed() {
 }
 
 #[test]
+fn array_helper_module_exposes_array_set_without_ryu_js() {
+    // `needs_array_helper` alone exposes `array_set` but pulls no `ryu_js`
+    // (the helper module is assembled from whichever slices a dep set flagged,
+    // not a single blob) — so a `.ds` source that only does `xs[i] = v` links
+    // no number-formatting crate.
+    let deps = RuntimeDeps {
+        needs_ryu_js: false,
+        needs_serde_json: false,
+        needs_engine: false,
+        needs_array_helper: true,
+    };
+    let helper = deps.helper_module().expect("array flag exposes helper");
+    assert!(helper.contains("pub fn array_set"), "got:\n{helper}");
+    assert!(
+        !helper.contains("ryu_js"),
+        "no ryu_js slice: got:\n{helper}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps {
         needs_ryu_js: true,
         needs_serde_json: false,
         needs_engine: false,
+        needs_array_helper: false,
     };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(toml.contains("ryu-js = \"1.0\""), "got:\n{toml}");
@@ -98,6 +121,7 @@ fn apply_to_cargo_toml_creates_section_when_absent() {
         needs_ryu_js: true,
         needs_serde_json: false,
         needs_engine: false,
+        needs_array_helper: false,
     };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(
@@ -114,6 +138,7 @@ fn apply_to_cargo_toml_noop_when_not_needed() {
         needs_ryu_js: false,
         needs_serde_json: false,
         needs_engine: false,
+        needs_array_helper: false,
     };
     deps.apply_to_cargo_toml(&mut toml);
     assert!(!toml.contains("ryu-js"), "got:\n{toml}");

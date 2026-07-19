@@ -143,7 +143,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
     // — including via `??=`/`||=`/`&&=` — is declared `mut`. TS params reassign;
     // Rust params are immutable by default.
     if let Some(body) = func.body.as_deref() {
-        let analysis = super::analysis::analyze(&body.statements, names);
+        let analysis = super::analysis::analyze(&body.statements, names, &registry.mut_methods);
         locals.mutated = analysis.mutated;
         locals.use_counts = analysis.use_counts;
     }
