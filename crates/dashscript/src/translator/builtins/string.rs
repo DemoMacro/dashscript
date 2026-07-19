@@ -226,13 +226,33 @@ pub(in crate::translator) fn string_method_on(
                 }
             })
         }
-        // `.codePointAt(i)` → the `i`-th char's code point as `f64`. Kept on the
-        // `chars().nth` path: `codePointAt` is rare, and its surrogate-pair
-        // semantics for non-BMP already differ from `charCodeAt`, so the ASCII
-        // fast path buys little here.
+        // `.codePointAt(i)` → the code point at UTF-16 index `i`, merging a
+        // lead/trail surrogate pair into its code point (0x10000+). ES indexes
+        // UTF-16 code units, so Rust's `chars().nth` (scalar values) is wrong:
+        // `\uD800\uDBFF`.codePointAt(0) yields the lead surrogate 0xD800, not
+        // the replacement char a UTF-32 read would give. Mirror `charCodeAt`'s
+        // `encode_utf16` path, then apply ES's lead/trail merge.
         "codePointAt" => {
             let i = usize_arg(args.first()?, ctx);
-            parse_quote!(#obj.chars().nth(#i).map(|c| c as u32 as f64).unwrap_or(f64::NAN))
+            parse_quote!({
+                let __s = &#obj;
+                let __u16: ::std::vec::Vec<u16> = __s.encode_utf16().collect();
+                let __i = #i;
+                __u16
+                    .get(__i)
+                    .map(|&__c1| {
+                        let __c1 = __c1 as u32;
+                        if (0xD800..=0xDBFF).contains(&__c1) && __i + 1 < __u16.len() {
+                            let __c2 = __u16[__i + 1] as u32;
+                            if (0xDC00..=0xDFFF).contains(&__c2) {
+                                return (0x10000 + ((__c1 - 0xD800) << 10) + (__c2 - 0xDC00))
+                                    as f64;
+                            }
+                        }
+                        __c1 as f64
+                    })
+                    .unwrap_or(f64::NAN)
+            })
         }
         // `.padStart(n)` → right-align to width `n` (fills on the left with
         // spaces, TS's default pad). `.padStart(n, undefined)` is the same — an

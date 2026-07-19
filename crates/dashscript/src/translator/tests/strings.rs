@@ -194,7 +194,12 @@ fn translates_string_from_char_code_to_char() {
 fn translates_string_code_point_at() {
     let src = "function f(s: string): number { return s.codePointAt(0); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("as u32 as f64"), "got:\n{rust}");
+    // UTF-16 code-unit index + lead/trail surrogate merge — mirrors
+    // `charCodeAt`'s `encode_utf16` path. `chars().nth` (scalar values) is
+    // wrong: a non-BMP char at index 0 is the lead surrogate, and a lead/trail
+    // pair merges to 0x10000+.
+    assert!(rust.contains("encode_utf16()"), "got:\n{rust}");
+    assert!(rust.contains("0xD800"), "surrogate merge: {rust}");
 }
 
 #[test]
