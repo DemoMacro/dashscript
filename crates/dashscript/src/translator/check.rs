@@ -106,6 +106,19 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
         Statement::FunctionDeclaration(f) => {
             if let Some(body) = &f.body {
                 for s in &body.statements {
+                    // A nested `function` declaration (the test262 `callbackfn`
+                    // convention) has no Rust mapping — a Rust `fn` item cannot
+                    // sit inside another fn body in a way the translator lowers,
+                    // so the declaration is dropped and the call site then fails
+                    // `cargo check` (E0425 partial). Flag it here so it is
+                    // reported as `unsupported` rather than as a partial.
+                    if let Statement::FunctionDeclaration(nested) = s {
+                        out.push(err(
+                            "nested function declaration is unsupported — move it to \
+                             module scope, or use an arrow function for a callback",
+                            nested.span,
+                        ));
+                    }
                     collect_unsupported(s, out);
                 }
             }
@@ -252,17 +265,35 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
             collect_expr(&c.alternate, out);
         }
         Expression::CallExpression(c) => {
-            collect_expr(&c.callee, out);
+            // A global-object static call (`Math.floor(x)`, `Array.isArray(x)`,
+            // `Object.keys(m)`, `JSON.parse(s)`) takes the global name only as
+            // the call's receiver — not as a value reference. Don't recurse the
+            // callee (its receiver would otherwise trip the identifier rule
+            // below); recurse the arguments. Reflection methods
+            // (`Object.defineProperty`) are caught separately by `unsupported_call`.
+            if !is_global_object_callee(&c.callee) {
+                collect_expr(&c.callee, out);
+            }
             for arg in &c.arguments {
                 if let Some(e) = arg.as_expression() {
-                    collect_expr(e, out);
+                    // A global-object value as an argument
+                    // (`Object.isExtensible(JSON)`, `Object.isExtensible(Array.prototype)`)
+                    // is often an ignored param of a no-op method — the static
+                    // call above already resolved it — so skip the value-reference
+                    // rule on it; these stay supported. Other args are scanned.
+                    if !is_global_object_value(e) {
+                        collect_expr(e, out);
+                    }
                 }
             }
         }
         // `new X(…)` — recurse the constructor and args so `new Proxy(…)` /
-        // `new Symbol(…)` trip the identifier rule.
+        // `new Symbol(…)` trip the identifier rule. A global-object constructor
+        // (`new Map()`, `new Set()`) is mapped, so its receiver is skipped.
         Expression::NewExpression(n) => {
-            collect_expr(&n.callee, out);
+            if !is_global_object_callee(&n.callee) {
+                collect_expr(&n.callee, out);
+            }
             for arg in &n.arguments {
                 if let Some(e) = arg.as_expression() {
                     collect_expr(e, out);
@@ -352,6 +383,22 @@ fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
             }
             "arguments" => out.push(err("the `arguments` object is unsupported", id.span)),
             "eval" => out.push(err("`eval` is unsupported", id.span)),
+            // The global object/constructor names DashScript models only as a
+            // static-call/new receiver (`Array.isArray(x)`, `new Map()`) or a
+            // type annotation (`Map<K,V>`) — never as a first-class value.
+            // Referencing one as a value (`Array.isArray`, `Array.isArray.length`,
+            // `var f = Object.keys`, `Math.prototype`) is reflection the static
+            // TS→Rust mapping cannot express; without this the translator would
+            // snake-case the name (`Array`→`array`) and emit broken Rust (E0425
+            // `partial`). The typeof/global-call paths short-circuit before
+            // reaching here, so legitimate uses stay supported.
+            name if is_global_object_name(name) => out.push(err(
+                format!(
+                    "`{name}` as a value is unsupported (use it only as a static-call/new \
+                     receiver or type annotation)"
+                ),
+                id.span,
+            )),
             _ => {}
         },
         Expression::CallExpression(c) => unsupported_call(c, out),
@@ -430,4 +477,54 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
 
 fn err(message: impl Into<Cow<'static, str>>, span: Span) -> OxcDiagnostic {
     OxcDiagnostic::error(message).with_label(span)
+}
+
+/// The global object/constructor names DashScript models only as a static-call
+/// receiver (`Math.floor`, `Array.isArray`, `Object.keys`, `JSON.parse`), a
+/// `new` receiver (`new Map()`), or a type annotation (`Map<K,V>`). These are
+/// not first-class values: a bare reference (`Array.isArray` without a call,
+/// `Math.prototype`, `var f = Object.keys`) is reflection the static TS→Rust
+/// mapping cannot express; without this the translator would snake-case the
+/// name (`Object`→`object`, `JSON`→`j_s_o_n`) and emit broken Rust (E0425
+/// `partial`). The call/new paths short-circuit via `is_global_object_callee`
+/// before reaching the identifier rule, so legitimate static calls stay
+/// supported.
+///
+/// `Number`/`String`/`Boolean` are intentionally absent: they carry mapped
+/// static members read as values (`Number.MAX_VALUE`→`f64::MAX`,
+/// `String.prototype.trim.call(x)` prototype-borrow), so blanket-flagging the
+/// name would regress those. Their conversion-call form (`Number(x)`,
+/// `String(x)`) is already covered by `global_function`.
+const GLOBAL_OBJECTS: &[&str] = &["Array", "Object", "Math", "JSON", "Map", "Set"];
+
+fn is_global_object_name(name: &str) -> bool {
+    GLOBAL_OBJECTS.contains(&name)
+}
+
+/// True when `expr` is a global-object name in a call/new receiver position —
+/// either a static member (`Math.floor`, `Array.isArray`) or a bare reference
+/// (`new Map()`). Used to skip recursing the callee so the receiver is not
+/// mistaken for a value reference.
+fn is_global_object_callee(expr: &Expression) -> bool {
+    match expr {
+        Expression::StaticMemberExpression(sm) => matches!(
+            &sm.object,
+            Expression::Identifier(id) if is_global_object_name(id.name.as_str())
+        ),
+        Expression::Identifier(id) => is_global_object_name(id.name.as_str()),
+        _ => false,
+    }
+}
+
+/// True when `expr` is a global-object value — a bare global name (`JSON`) or
+/// a member-access chain rooted at one (`Array.prototype`,
+/// `Math.prototype.toString`). Used to skip such an argument: a no-op static
+/// method (`Object.isExtensible`) may take (and ignore) one.
+fn is_global_object_value(expr: &Expression) -> bool {
+    match expr {
+        Expression::Identifier(id) => is_global_object_name(id.name.as_str()),
+        Expression::StaticMemberExpression(sm) => is_global_object_value(&sm.object),
+        Expression::ComputedMemberExpression(cm) => is_global_object_value(&cm.object),
+        _ => false,
+    }
 }

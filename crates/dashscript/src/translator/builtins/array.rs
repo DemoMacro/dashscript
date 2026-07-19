@@ -437,19 +437,22 @@ pub(in crate::translator) fn array_static(
             let items: Vec<Expr> = args.iter().map(|a| translate_argument(a, ctx)).collect();
             parse_quote!(vec![#(#items),*])
         }
-        // `Array.isArray(x)` — DashScript types are known at compile time, so a
-        // Vec local is always an array and a non-Vec local never is. A non-
-        // identifier receiver (a call, literal, …) can't be classified → None.
+        // `Array.isArray(x)` — DashScript types are known at compile time, so
+        // this is a compile-time constant: a `Vec` local is always an array, an
+        // array literal always is, and anything else (a number/string/bool
+        // literal, an object literal, `this`, a function expression) never is.
         "isArray" if args.len() == 1 => {
-            let Argument::Identifier(id) = args.first()? else {
-                return None;
+            let is_array = match args.first()?.as_expression() {
+                Some(Expression::ArrayExpression(_)) => true,
+                Some(Expression::Identifier(id)) => {
+                    let name = bindings::snake(&id.name);
+                    ctx.local_type(&name.to_string())
+                        .and_then(|p| p.segments.last())
+                        .is_some_and(|s| s.ident == "Vec")
+                }
+                _ => false,
             };
-            let name = bindings::snake(&id.name);
-            let is_vec = ctx
-                .local_type(&name.to_string())
-                .and_then(|p| p.segments.last())
-                .is_some_and(|s| s.ident == "Vec");
-            if is_vec {
+            if is_array {
                 parse_quote!(true)
             } else {
                 parse_quote!(false)

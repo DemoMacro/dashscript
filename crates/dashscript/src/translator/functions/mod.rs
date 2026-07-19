@@ -229,11 +229,17 @@ pub(in crate::translator) fn translate_params(
         .iter()
         .map(|fp| {
             let pat = names.of_pattern(&fp.pattern);
+            // An unannotated parameter (common in test262 callbacks like
+            // `callbackfn(val, idx, obj)`) defaults to `f64`: Rust fn params
+            // need a concrete type (`_` is E0121), and a DashScript `number` is
+            // `f64`. A parameter the body actually uses as a string/array/bool
+            // then fails cargo check (a partial) — honest, and rarer than the
+            // self-contained number callback it now lets compile.
             let ty = fp
                 .type_annotation
                 .as_ref()
                 .map(|ta| types::translate_type(&ta.type_annotation))
-                .unwrap_or_else(|| parse_quote!(_));
+                .unwrap_or_else(|| parse_quote!(f64));
             // A parameter with a default becomes `Option<T>` (callers pass None).
             let ty = if fp.initializer.is_some() {
                 parse_quote!(Option<#ty>)
