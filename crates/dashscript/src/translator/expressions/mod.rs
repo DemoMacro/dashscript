@@ -11,7 +11,7 @@
 mod array;
 mod assignment;
 mod binary;
-mod call;
+pub(in crate::translator) mod call;
 mod fmt_merge;
 mod literals;
 mod logical;

@@ -1664,7 +1664,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `eval` is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `eval` is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {

@@ -1,52 +1,52 @@
 # DashScript Conformance Matrix
 
-- 201 features: **200** supported, **1** partial, **0** unsupported, **0** untested
+- 201 features: **199** supported, **2** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## arrays
 
-| feature                                                      | status       | detail / note |
-| ------------------------------------------------------------ | ------------ | ------------- |
-| arrays.translates_array_at_to_signed_runtime_index           | 🟢 supported |               |
-| arrays.translates_array_concat_to_slice_concat               | 🟢 supported |               |
-| arrays.translates_array_copy_within                          | 🟢 supported |               |
-| arrays.translates_array_fill_to_vec_fill                     | 🟢 supported |               |
-| arrays.translates_array_filter_to_iter_copied_filter_collect | 🟢 supported |               |
-| arrays.translates_array_find_index_to_position               | 🟢 supported |               |
-| arrays.translates_array_find_last_index_to_rposition         | 🟢 supported |               |
-| arrays.translates_array_find_last_to_rev_find                | 🟢 supported |               |
-| arrays.translates_array_find_to_iter_copied_find             | 🟢 supported |               |
-| arrays.translates_array_flat_map_to_flat_map_collect         | 🟢 supported |               |
-| arrays.translates_array_flat_to_concat                       | 🟢 supported |               |
-| arrays.translates_array_for_each_to_for_each                 | 🟢 supported |               |
-| arrays.translates_array_from_clone                           | 🟢 supported |               |
-| arrays.translates_array_from_mapped                          | 🟢 supported |               |
-| arrays.translates_array_includes_to_contains                 | 🟢 supported |               |
-| arrays.translates_array_index                                | 🟢 supported |               |
-| arrays.translates_array_index_assign_to_usize_index          | 🟢 supported |               |
-| arrays.translates_array_index_of_to_position                 | 🟢 supported |               |
-| arrays.translates_array_is_array_vec_true                    | 🟢 supported |               |
-| arrays.translates_array_join_to_vec_string_join              | 🟢 supported |               |
-| arrays.translates_array_last_index_of_to_rposition           | 🟢 supported |               |
-| arrays.translates_array_literal_to_vec_macro                 | 🟢 supported |               |
-| arrays.translates_array_literal_with_expression_elements     | 🟢 supported |               |
-| arrays.translates_array_map_to_iter_copied_map_collect       | 🟢 supported |               |
-| arrays.translates_array_of                                   | 🟢 supported |               |
-| arrays.translates_array_reduce_right_to_rev_fold             | 🟢 supported |               |
-| arrays.translates_array_reduce_with_seed_to_fold             | 🟢 supported |               |
-| arrays.translates_array_reduce_without_seed_to_reduce        | 🟢 supported |               |
-| arrays.translates_array_reverse_to_in_place_reverse          | 🟢 supported |               |
-| arrays.translates_array_shift_unshift_pop                    | 🟢 supported |               |
-| arrays.translates_array_slice_to_index_range_to_vec          | 🟢 supported |               |
-| arrays.translates_array_some_every_to_any_all                | 🟢 supported |               |
-| arrays.translates_array_sort_to_numeric_sort_by              | 🟢 supported |               |
-| arrays.translates_array_splice                               | 🟢 supported |               |
-| arrays.translates_array_to_reversed_to_rev_collect           | 🟢 supported |               |
-| arrays.translates_array_to_sorted_to_clone_sort              | 🟢 supported |               |
-| arrays.translates_array_to_spliced_to_clone_splice           | 🟢 supported |               |
-| arrays.translates_array_to_string_join                       | 🟢 supported |               |
-| arrays.translates_array_with_to_clone_index_assign           | 🟢 supported |               |
-| arrays.translates_in_operator_on_array_to_index_bound        | 🟢 supported |               |
+| feature                                                      | status       | detail / note                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------ | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| arrays.translates_array_at_to_signed_runtime_index           | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_concat_to_slice_concat               | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_copy_within                          | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_fill_to_vec_fill                     | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_filter_to_iter_copied_filter_collect | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_find_index_to_position               | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_find_last_index_to_rposition         | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_find_last_to_rev_find                | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_find_to_iter_copied_find             | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_flat_map_to_flat_map_collect         | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_flat_to_concat                       | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_for_each_to_for_each                 | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_from_clone                           | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_from_mapped                          | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_includes_to_contains                 | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_index                                | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_index_assign_to_usize_index          | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_index_of_to_position                 | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_is_array_vec_true                    | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_join_to_vec_string_join              | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_last_index_of_to_rposition           | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_literal_to_vec_macro                 | 🟡 partial   | error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\Users\abc\AppData\Local\Temp\.tmpR7MkaP\w0\probe)` Caused by: failed to load source for dependency `ryu-js` Caused by: unable to update registry `crates-io` Caused by: |
+| arrays.translates_array_literal_with_expression_elements     | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_map_to_iter_copied_map_collect       | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_of                                   | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_reduce_right_to_rev_fold             | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_reduce_with_seed_to_fold             | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_reduce_without_seed_to_reduce        | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_reverse_to_in_place_reverse          | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_shift_unshift_pop                    | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_slice_to_index_range_to_vec          | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_some_every_to_any_all                | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_sort_to_numeric_sort_by              | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_splice                               | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_to_reversed_to_rev_collect           | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_to_sorted_to_clone_sort              | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_to_spliced_to_clone_splice           | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_to_string_join                       | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_array_with_to_clone_index_assign           | 🟢 supported |                                                                                                                                                                                                                                                    |
+| arrays.translates_in_operator_on_array_to_index_bound        | 🟢 supported |                                                                                                                                                                                                                                                    |
 
 ## classes
 

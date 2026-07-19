@@ -613,43 +613,24 @@ fn is_global_method_chain(expr: &Expression) -> bool {
     )
 }
 
-/// True when `callee` is a `.call`/`.apply`/`.bind` invocation that borrows a
-/// mapped prototype method — only `String.prototype.<m>.call(r)` qualifies,
-/// because the translator lowers it (`String(r).<m>(…)` via `string_method_on`).
-/// The callee is then not recursed, so the prototype-method rule below does not
-/// flag a legitimate borrow.
+/// True when `callee` is a prototype-method borrow the translator lowers — only
+/// `String.prototype.<m>.call(r)` qualifies (`String(r).<m>(…)` via
+/// `string_method_on`). The callee is then not recursed, so the prototype-method
+/// reflection rule below does not flag a legitimate borrow.
 ///
-/// `Array.prototype.<m>.call(r)` is intentionally NOT matched here. The
-/// translator's `array_method_on` only lowers a `Vec` receiver, and the
-/// conformance data shows zero `Array.prototype.<m>.call` fixtures are
-/// supported — every receiver test262 probes (`{ length }`, `arguments`, a
-/// boolean, …) is an array-like, not a `Vec`. Matching it here would only let
-/// those calls past the lint so the translator then emits a phantom `array`
-/// binding (E0425 `partial`). Leaving it unmatched lets the generic
-/// `<builtin>.prototype.<method>` reflection rule in [`unsupported_pattern`]
-/// reject them honestly as `unsupported`. Other borrows
-/// (`Object.prototype.toString.call`, instance `obj.method.call`) are likewise
-/// not mapped and stay visible.
+/// The `<Builtin>.prototype.<method>.call` shape match is delegated to the
+/// translator's own [`prototype_method_call`] — the single structural matcher,
+/// so check.rs and the translator cannot drift on the AST shape (the bug that
+/// made the prior local matcher miss a layer). Only a `String` result is mapped:
+/// `Array` borrows are not (the translator's `array_method_on` needs a `Vec`
+/// receiver, and 0/790 test262 Array borrows are supported), so they fall
+/// through to the generic `<builtin>.prototype.<method>` reflection rule as
+/// `unsupported`. Only `.call` is mapped — `.apply`/`.bind` borrows have no
+/// translator mapping and likewise fall through (the prior local matcher
+/// incorrectly whitelisted them).
 fn is_borrow_call(callee: &Expression) -> bool {
-    // Match `String.prototype.<method>.call/apply/bind` — three StaticMember
-    // layers: .call → <method> → .prototype → String.
     matches!(
-        callee,
-        Expression::StaticMemberExpression(call_sm)
-            if matches!(call_sm.property.name.as_str(), "call" | "apply" | "bind")
-                && matches!(
-                    &call_sm.object,
-                    Expression::StaticMemberExpression(method_sm)
-                        if matches!(
-                            &method_sm.object,
-                            Expression::StaticMemberExpression(prototype_sm)
-                                if prototype_sm.property.name.as_str() == "prototype"
-                                    && matches!(
-                                        &prototype_sm.object,
-                                        Expression::Identifier(id)
-                                            if id.name.as_str() == "String"
-                                    )
-                        )
-                )
+        super::expressions::call::prototype_method_call(callee),
+        Some(("String", _))
     )
 }

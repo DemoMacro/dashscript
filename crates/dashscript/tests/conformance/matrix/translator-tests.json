@@ -171,8 +171,8 @@
     "id": "arrays.translates_array_literal_to_vec_macro",
     "layer": "translator-tests",
     "category": "arrays",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "error: failed to get `ryu-js` as a dependency of package `probe v0.0.0 (C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpR7MkaP\\w0\\probe)`\nCaused by:\n  failed to load source for dependency `ryu-js`\nCaused by:\n  unable to update registry `crates-io`\nCaused by:",
     "note": ""
   },
   {

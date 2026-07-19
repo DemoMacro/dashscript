@@ -249,7 +249,9 @@ fn clone_owned_local(arg: &Argument, val: Expr, ctx: &Ctx<'_>) -> Expr {
 /// would drag in oxc's arena lifetime). Only builtins DashScript can lower are
 /// matched (`String` today); a bare prototype access without `.call` is left
 /// for the fallback path.
-fn prototype_method_call<'a>(callee: &'a Expression) -> Option<(&'static str, &'a str)> {
+pub(in crate::translator) fn prototype_method_call<'a>(
+    callee: &'a Expression,
+) -> Option<(&'static str, &'a str)> {
     let Expression::StaticMemberExpression(call_me) = callee else {
         return None;
     };
