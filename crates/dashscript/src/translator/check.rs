@@ -271,7 +271,7 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
             // callee (its receiver would otherwise trip the identifier rule
             // below); recurse the arguments. Reflection methods
             // (`Object.defineProperty`) are caught separately by `unsupported_call`.
-            if !is_global_object_callee(&c.callee) {
+            if !is_global_object_callee(&c.callee) && !is_borrow_call(&c.callee) {
                 collect_expr(&c.callee, out);
             }
             for arg in &c.arguments {
@@ -426,6 +426,25 @@ fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         {
             out.push(err(
                 "`<builtin>.<method>.length` arity reflection is unsupported",
+                sm.span,
+            ));
+        }
+        // `<Global>.prototype.<method>` — a prototype method read as a value
+        // (`Object.prototype.toString`, `Array.prototype.concat`). The
+        // prototype itself is a mapped static read, but a method hanging off
+        // it (without a `.call`/`.apply`/`.bind` invocation) is reflection.
+        // Those borrows are skipped in collect_expr's CallExpression arm.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() != "prototype"
+                && matches!(
+                    &sm.object,
+                    Expression::StaticMemberExpression(outer)
+                        if outer.property.name.as_str() == "prototype"
+                            && is_global_object_receiver(&outer.object)
+                ) =>
+        {
+            out.push(err(
+                "`<builtin>.prototype.<method>` reflection is unsupported",
                 sm.span,
             ));
         }
@@ -615,5 +634,46 @@ fn is_global_method_chain(expr: &Expression) -> bool {
     matches!(
         expr,
         Expression::StaticMemberExpression(sm) if is_global_object_receiver(&sm.object)
+    )
+}
+
+/// True when `callee` is a `.call`/`.apply`/`.bind` invocation that borrows a
+/// mapped prototype method — only `String.prototype.<m>.call(r)` qualifies,
+/// because the translator lowers it (`String(r).<m>(…)` via `string_method_on`).
+/// The callee is then not recursed, so the prototype-method rule below does not
+/// flag a legitimate borrow.
+///
+/// `Array.prototype.<m>.call(r)` is intentionally NOT matched here. The
+/// translator's `array_method_on` only lowers a `Vec` receiver, and the
+/// conformance data shows zero `Array.prototype.<m>.call` fixtures are
+/// supported — every receiver test262 probes (`{ length }`, `arguments`, a
+/// boolean, …) is an array-like, not a `Vec`. Matching it here would only let
+/// those calls past the lint so the translator then emits a phantom `array`
+/// binding (E0425 `partial`). Leaving it unmatched lets the generic
+/// `<builtin>.prototype.<method>` reflection rule in [`unsupported_pattern`]
+/// reject them honestly as `unsupported`. Other borrows
+/// (`Object.prototype.toString.call`, instance `obj.method.call`) are likewise
+/// not mapped and stay visible.
+fn is_borrow_call(callee: &Expression) -> bool {
+    // Match `String.prototype.<method>.call/apply/bind` — three StaticMember
+    // layers: .call → <method> → .prototype → String.
+    matches!(
+        callee,
+        Expression::StaticMemberExpression(call_sm)
+            if matches!(call_sm.property.name.as_str(), "call" | "apply" | "bind")
+                && matches!(
+                    &call_sm.object,
+                    Expression::StaticMemberExpression(method_sm)
+                        if matches!(
+                            &method_sm.object,
+                            Expression::StaticMemberExpression(prototype_sm)
+                                if prototype_sm.property.name.as_str() == "prototype"
+                                    && matches!(
+                                        &prototype_sm.object,
+                                        Expression::Identifier(id)
+                                            if id.name.as_str() == "String"
+                                    )
+                        )
+                )
     )
 }

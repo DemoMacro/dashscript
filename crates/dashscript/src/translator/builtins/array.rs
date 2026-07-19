@@ -6,7 +6,7 @@ use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::super::expressions::{arrow_expr, translate_argument};
+use super::super::expressions::{arrow_expr, translate_argument, translate_expr};
 use super::{str_method_arg, usize_arg};
 
 /// Array methods on a `Vec` of Copy elements. The callback methods share a
@@ -24,10 +24,23 @@ pub(in crate::translator) fn array_method(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    let Expression::Identifier(id) = &sm.object else {
-        return None;
-    };
-    array_method_on_ident(&id.name, &sm.property.name, args, ctx)
+    match &sm.object {
+        // A `Vec` local receiver — dispatch only if its resolved type is `Vec`.
+        Expression::Identifier(id) => array_method_on_ident(&id.name, &sm.property.name, args, ctx),
+        // An array-literal receiver (`[1, 2, 3].map(cb)`) is always a `Vec`:
+        // translate it to a Vec expr, bind to a temp (the method body reads
+        // the receiver repeatedly for slice/at/indexOf), then dispatch on the
+        // temp. The element type is whatever the literal's elements lower to
+        // (f64 for numbers, String for string literals); `.iter().copied()`
+        // requires `Copy`, so non-Copy elements fall through to cargo check.
+        Expression::ArrayExpression(_) => {
+            let recv = translate_expr(&sm.object, ctx);
+            let temp: Ident = parse_quote!(__ds_arr);
+            let body = array_method_impl(&temp, &sm.property.name, args, ctx)?;
+            Some(parse_quote!({ let #temp = #recv; #body }))
+        }
+        _ => None,
+    }
 }
 
 /// `Array.prototype.<m>.call(recv, …)` — the JS idiom of borrowing an Array

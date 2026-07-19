@@ -210,7 +210,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -245,7 +245,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -352,7 +352,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -798,7 +798,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -837,7 +837,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -845,7 +845,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -869,7 +869,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -941,7 +941,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1306,7 +1306,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1552,7 +1552,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1560,7 +1560,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1592,7 +1592,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`prototype` mutation is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1664,7 +1664,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`eval` is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `eval` is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1672,7 +1672,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping | `hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `delete` has no DashScript mapping | `<builtin>.prototype.<method>` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -1680,7 +1680,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `propertyIsEnumerable` (prototype reflection) is unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `propertyIsEnumerable` (prototype reflection) is unsupported | `<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -1688,15 +1688,15 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-string-prototype-split-prototype",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -1712,7 +1712,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1720,7 +1720,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `.constructor` reflection is unsupported",
+    "detail": "`Math` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1776,7 +1776,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1784,7 +1784,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`prototype` mutation is unsupported | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "detail": "`prototype` mutation is unsupported | `<builtin>.prototype.<method>` reflection is unsupported | `instanceof` has no DashScript mapping (static types; no runtime type check)",
     "note": ""
   },
   {
@@ -1915,7 +1915,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -1991,7 +1991,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2021,7 +2021,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2073,7 +2073,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2097,7 +2097,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2112,8 +2112,8 @@
     "id": "test262.test.built-ins.string.prototype.tostring.string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:21: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -2143,7 +2143,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -2166,16 +2166,16 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-0-1",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:13: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-0-2",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:4:46: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -3450,16 +3450,16 @@
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-boolean",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-line-terminator",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -3467,15 +3467,15 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-number",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -3539,31 +3539,31 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-whitespace",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-boolean",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-line-terminator",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -3571,15 +3571,15 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-number",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -3643,15 +3643,15 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-whitespace",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:22: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
@@ -3659,7 +3659,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Symbol` (JS reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
     "note": ""
   },
   {
@@ -3674,8 +3674,8 @@
     "id": "test262.test.built-ins.string.prototype.valueof.string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find value `string` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
     "note": ""
   },
   {
