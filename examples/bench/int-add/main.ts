@@ -4,7 +4,7 @@
 // node/bun as TypeScript.
 function main(): void {
   const N = 1e9;
-  let sum = 0;
+  let sum: number = 0;
   for (let i = 0; i < N; i = i + 1) {
     sum = sum + i;
   }

@@ -6,10 +6,10 @@
       "bench": "array-ops",
       "name": "array-ops",
       "times": {
-        "ds": 140.8197,
-        "node": 212.2202,
-        "bun": 167.8564,
-        "perry": 2147.3149
+        "ds": 114.4881,
+        "node": 229.5169,
+        "bun": 172.1876,
+        "perry": 2053.0969
       },
       "checksums": {
         "ds": "5000000000",
@@ -25,10 +25,10 @@
       "bench": "array-read",
       "name": "array-read",
       "times": {
-        "ds": 652.5246,
-        "node": 1148.8502,
-        "bun": 749.5811,
-        "perry": 3028.7537
+        "ds": 502.608,
+        "node": 1140.1871,
+        "bun": 740.5885,
+        "perry": 3045.2652
       },
       "checksums": {
         "ds": "499999500000",
@@ -44,10 +44,10 @@
       "bench": "array-write",
       "name": "array-write",
       "times": {
-        "ds": 756.9991,
-        "node": 1130.6535,
-        "bun": 710.635,
-        "perry": 3564.4294
+        "ds": 533.2155,
+        "node": 1105.0563,
+        "bun": 721.0557,
+        "perry": 4171.9978
       },
       "checksums": {
         "ds": "999999",
@@ -63,10 +63,10 @@
       "bench": "binary-trees",
       "name": "binary-trees",
       "times": {
-        "ds": 29.4773,
-        "node": 119.0954,
-        "bun": 116.8858,
-        "perry": 145.6928
+        "ds": 32.8238,
+        "node": 130.6155,
+        "bun": 125.488,
+        "perry": 139.9485
       },
       "checksums": {
         "ds": "1500001500000",
@@ -82,10 +82,10 @@
       "bench": "closure",
       "name": "closure",
       "times": {
-        "ds": 64.1264,
-        "node": 154.0159,
-        "bun": 146.535,
-        "perry": 245.2039
+        "ds": 63.032,
+        "node": 153.1103,
+        "bun": 140.5758,
+        "perry": 242.7451
       },
       "checksums": {
         "ds": "2500000000000000",
@@ -101,10 +101,10 @@
       "bench": "factorial",
       "name": "factorial",
       "times": {
-        "ds": 313.0346,
-        "node": 209.0968,
-        "bun": 187.1544,
-        "perry": 591.3483
+        "ds": 72.7859,
+        "node": 216.7917,
+        "bun": 201.5054,
+        "perry": 590.8303
       },
       "checksums": {
         "ds": "49950000000",
@@ -120,10 +120,10 @@
       "bench": "fib",
       "name": "fib",
       "times": {
-        "ds": 69.3799,
-        "node": 190.2174,
-        "bun": 147.4191,
-        "perry": 139.3772
+        "ds": 67.909,
+        "node": 211.2761,
+        "bun": 182.4667,
+        "perry": 148.6209
       },
       "checksums": {
         "ds": "9227465",
@@ -139,10 +139,10 @@
       "bench": "int-add",
       "name": "int-add",
       "times": {
-        "ds": 689.8834,
-        "node": 771.3707,
-        "bun": 744.4253,
-        "perry": 2333.8214
+        "ds": 657.0212,
+        "node": 757.3633,
+        "bun": 736.1675,
+        "perry": 2317.789
       },
       "checksums": {
         "ds": "499999999067109000",
@@ -158,10 +158,10 @@
       "bench": "levenshtein",
       "name": "levenshtein",
       "times": {
-        "ds": 164.1351,
-        "node": 142.4898,
-        "bun": 118.8062,
-        "perry": 1127.6691
+        "ds": 153.4448,
+        "node": 151.6718,
+        "bun": 118.1434,
+        "perry": 1190.9705
       },
       "checksums": {
         "ds": "600000",
@@ -177,9 +177,9 @@
       "bench": "loop-data-dependent",
       "name": "loop-data-dependent",
       "times": {
-        "ds": 3347.2576,
-        "node": 1471.6977,
-        "bun": 1457.3465,
+        "ds": 2264.7815,
+        "node": 1512.0337,
+        "bun": 1445.9555,
         "perry": null
       },
       "checksums": {
@@ -197,10 +197,10 @@
       "bench": "mandelbrot",
       "name": "mandelbrot",
       "times": {
-        "ds": 43.3781,
-        "node": 144.7379,
-        "bun": 127.1169,
-        "perry": 143.2752
+        "ds": 41.3894,
+        "node": 162.2453,
+        "bun": 117.9584,
+        "perry": 140.512
       },
       "checksums": {
         "ds": "8011148",
@@ -216,10 +216,10 @@
       "bench": "matrix-multiply",
       "name": "matrix-multiply",
       "times": {
-        "ds": 71.668,
-        "node": 148.9312,
-        "bun": 143.461,
-        "perry": 2136.7744
+        "ds": 67.9431,
+        "node": 154.9393,
+        "bun": 139.3102,
+        "perry": 1949.1811
       },
       "checksums": {
         "ds": "41079519680",
@@ -235,10 +235,10 @@
       "bench": "method-calls",
       "name": "method-calls",
       "times": {
-        "ds": 31.4581,
-        "node": 138.3618,
-        "bun": 109.1895,
-        "perry": 3004.0701
+        "ds": 35.8562,
+        "node": 137.3915,
+        "bun": 120.305,
+        "perry": 2715.0232
       },
       "checksums": {
         "ds": "10000000",
@@ -254,10 +254,10 @@
       "bench": "nested-loops",
       "name": "nested-loops",
       "times": {
-        "ds": 690.3152,
-        "node": 1197.5348,
-        "bun": 790.0226,
-        "perry": 7251.9787
+        "ds": 514.7118,
+        "node": 1168.3419,
+        "bun": 754.9011,
+        "perry": 7401.9331
       },
       "checksums": {
         "ds": "499999500000",
@@ -273,10 +273,10 @@
       "bench": "object-create",
       "name": "object-create",
       "times": {
-        "ds": 155.6066,
-        "node": 253.0431,
-        "bun": 190.9202,
-        "perry": 1126.1695
+        "ds": 152.2474,
+        "node": 255.5926,
+        "bun": 177.2312,
+        "perry": 1165.974
       },
       "checksums": {
         "ds": "1499998500000",
@@ -292,10 +292,10 @@
       "bench": "primes",
       "name": "primes",
       "times": {
-        "ds": 35.8774,
-        "node": 116.5076,
-        "bun": 116.0344,
-        "perry": 314.6966
+        "ds": 32.1346,
+        "node": 125.1885,
+        "bun": 122.0715,
+        "perry": 311.3238
       },
       "checksums": {
         "ds": "78498",
@@ -311,10 +311,10 @@
       "bench": "str-concat",
       "name": "str-concat",
       "times": {
-        "ds": 21.8578,
-        "node": 115.7319,
-        "bun": 102.6521,
-        "perry": 132.0981
+        "ds": 24.9519,
+        "node": 119.3009,
+        "bun": 100.4982,
+        "perry": 130.4059
       },
       "checksums": {
         "ds": "100000",
@@ -330,10 +330,10 @@
       "bench": "string-ops",
       "name": "string-ops",
       "times": {
-        "ds": 151.5672,
-        "node": 160.4746,
-        "bun": 159.8832,
-        "perry": 235.1855
+        "ds": 155.7154,
+        "node": 157.8601,
+        "bun": 175.9816,
+        "perry": 241.0101
       },
       "checksums": {
         "ds": "129991",

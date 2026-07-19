@@ -56,27 +56,27 @@ without correctness is worthless.
 
 | bench               |     ds |   node |    bun |  perry | checksum       |     |
 | ------------------- | -----: | -----: | -----: | -----: | -------------- | --- |
-| array-ops           |  140.8 |  212.2 |  167.9 | 2147.3 | 5000000000     | ✓   |
-| array-read          |  652.5 | 1148.9 |  749.6 | 3028.8 | 499999500000   | ✓   |
-| array-write         |  757.0 | 1130.7 |  710.6 | 3564.4 | 999999         | ✓   |
-| binary-trees        |   29.5 |  119.1 |  116.9 |  145.7 | 1500001500000  | ✓   |
-| closure             |   64.1 |  154.0 |  146.5 |  245.2 | 25000000000000 | ✓   |
-| factorial           |  313.0 |  209.1 |  187.2 |  591.3 | 49950000000    | ✓   |
-| fib                 |   69.4 |  190.2 |  147.4 |  139.4 | 9227465        | ✓   |
-| int-add             |  689.9 |  771.4 |  744.4 | 2333.8 | 49999999906710 | ✗   |
-| levenshtein         |  164.1 |  142.5 |  118.8 | 1127.7 | 600000         | ✓   |
-| loop-data-dependent | 3347.3 | 1471.7 | 1457.3 |    T/O | 2.550796048282 | ✓   |
-| mandelbrot          |   43.4 |  144.7 |  127.1 |  143.3 | 8011148        | ✓   |
-| matrix-multiply     |   71.7 |  148.9 |  143.5 | 2136.8 | 41079519680    | ✓   |
-| method-calls        |   31.5 |  138.4 |  109.2 | 3004.1 | 10000000       | ✓   |
-| nested-loops        |  690.3 | 1197.5 |  790.0 | 7252.0 | 499999500000   | ✓   |
-| object-create       |  155.6 |  253.0 |  190.9 | 1126.2 | 1499998500000  | ✓   |
-| primes              |   35.9 |  116.5 |  116.0 |  314.7 | 78498          | ✓   |
-| str-concat          |   21.9 |  115.7 |  102.7 |  132.1 | 100000         | ✓   |
-| string-ops          |  151.6 |  160.5 |  159.9 |  235.2 | 129991         | ✓   |
+| array-ops           |  114.5 |  229.5 |  172.2 | 2053.1 | 5000000000     | ✓   |
+| array-read          |  502.6 | 1140.2 |  740.6 | 3045.3 | 499999500000   | ✓   |
+| array-write         |  533.2 | 1105.1 |  721.1 | 4172.0 | 999999         | ✓   |
+| binary-trees        |   32.8 |  130.6 |  125.5 |  139.9 | 1500001500000  | ✓   |
+| closure             |   63.0 |  153.1 |  140.6 |  242.7 | 25000000000000 | ✓   |
+| factorial           |   72.8 |  216.8 |  201.5 |  590.8 | 49950000000    | ✓   |
+| fib                 |   67.9 |  211.3 |  182.5 |  148.6 | 9227465        | ✓   |
+| int-add             |  657.0 |  757.4 |  736.2 | 2317.8 | 49999999906710 | ✗   |
+| levenshtein         |  153.4 |  151.7 |  118.1 | 1191.0 | 600000         | ✓   |
+| loop-data-dependent | 2264.8 | 1512.0 | 1446.0 |    T/O | 2.550796048282 | ✓   |
+| mandelbrot          |   41.4 |  162.2 |  118.0 |  140.5 | 8011148        | ✓   |
+| matrix-multiply     |   67.9 |  154.9 |  139.3 | 1949.2 | 41079519680    | ✓   |
+| method-calls        |   35.9 |  137.4 |  120.3 | 2715.0 | 10000000       | ✓   |
+| nested-loops        |  514.7 | 1168.3 |  754.9 | 7401.9 | 499999500000   | ✓   |
+| object-create       |  152.2 |  255.6 |  177.2 | 1166.0 | 1499998500000  | ✓   |
+| primes              |   32.1 |  125.2 |  122.1 |  311.3 | 78498          | ✓   |
+| str-concat          |   25.0 |  119.3 |  100.5 |  130.4 | 100000         | ✓   |
+| string-ops          |  155.7 |  157.9 |  176.0 |  241.0 | 129991         | ✓   |
 
 _All times wall-clock ms per process launch, median of 5 samples. Measured
-2026-07-19, Windows 11, ds 0.0.0 / node v24.18.0 / bun 1.3.6 / perry (native).
+2026-07-20, Windows 11, ds 0.0.0 / node v24.18.0 / bun 1.3.6 / perry (native).
 `results.json` holds the raw per-sample numbers._
 
 _The single `✗` is **`int-add`**, and it is perry's deviation, not
@@ -85,7 +85,10 @@ integer precision. `ds` / `node` / `bun` all return the ES-correct
 `499999999067109000` (f64); `perry` computes the sum as **i64** and returns
 `499999999067108992`. DashScript matches node/bun — the row is flagged only
 because the cross-runtime checksum gate refuses to silently endorse a
-divergence._
+divergence. (`int-add` annotates the accumulator `let sum: number = 0` so
+DashScript's number-flavor inference keeps it `f64`; without the annotation
+Phase 1 would promote it to `i64` and return the exact — but non-ES, since an
+ES `number` is `f64` — `499999999500000000`.)_
 
 _`perry` on `loop-data-dependent` is `T/O`: its optimizer cannot fold the f64
 recurrence, and a single sample runs past the `ds_median + 30s` ceiling._
@@ -115,17 +118,21 @@ recurrence, and a single sample runs past the `ds_median + 30s` ceiling._
 
 ## Interpretation
 
-- **Numeric / allocation-free (`fib`, `mandelbrot`, `method-calls`, `primes`,
-  `binary-trees`, `closure`)** — `ds` leads 2.4–4.4×: zero-overhead native
-  code, no JIT warmup, no boxing.
-- **`factorial`** — the exception in the numeric group: `ds` is _slower_
-  (313 vs node 209). The kernel is `sum += i % 1000` over 1e8 iterations; the
-  emitted loop keeps `sum` as `f64` rather than an integer induction variable.
-  Inferring an integer number flavor (i64) is the P0 translator fix.
-- **`loop-data-dependent`** — `ds` is 2.3× _slower_ (3347 vs node 1472). The
-  `sum = sum*x[i&63] + x[(i*7)&63]` recurrence is a sequential dependency chain
-  the optimizer cannot reorder, and the loop counter is emitted as `f64`. The
-  clearest perf gap in the suite — same number-flavor fix as `factorial`.
+- **Numeric / allocation-free (`fib`, `factorial`, `mandelbrot`,
+  `method-calls`, `primes`, `binary-trees`, `closure`)** — `ds` leads 2.4–4.4×:
+  zero-overhead native code, no JIT warmup, no boxing. `factorial` joins this
+  group after number-flavor inference (Phase 1) promoted its counter and
+  accumulator to `i64` — `sum += i % 1000` is now pure integer arithmetic (no
+  `f64` modulo); the sum stays under 2⁵³, so `i64` matches ES `f64` exactly.
+- **`loop-data-dependent`** — `ds` is 1.5× slower (2265 vs node 1512), down
+  from 2.3× before Phase 1 promoted the loop counter to `i64` (eliminating the
+  per-iteration `f64→i64→i32→f64→usize` cast chain). The remaining gap is the
+  `sum = sum*x[i&63] + x[(i*7)&63]` recurrence — a sequential dependency chain
+  the optimizer cannot reorder (a fundamental data hazard), not counter flavor.
+- **`levenshtein`** — `ds` now matches node (153 vs 152). The Myers bit-vector
+  inner loop is dominated by the `as i64 as i32` cast chain each bitwise op
+  emits (JS `ToInt32` wrap), which a future Phase 2 may shorten by promoting
+  the bit vectors to `i64`.
 - **Array kernels (`array-read`, `array-write`, `nested-loops`, `object-create`,
   `array-ops`)** — `ds` leads 1.5–1.8× on reads and matches bun on writes:
   Rust's bounds-check elimination handles the sequential pattern, and

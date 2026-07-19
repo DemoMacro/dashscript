@@ -216,9 +216,19 @@ for (const bench of benches) {
   results.push(row);
 }
 
+// Merge with any existing results.json: a single-bench run (`node run.mjs fib`)
+// updates only that row instead of discarding the others. Benches run this
+// pass replace same-named rows; un-run benches keep their prior data. The
+// `runtimes` header is the union of runtimes seen across both runs.
+const resultsPath = join(ROOT, "results.json");
+const existing = existsSync(resultsPath)
+  ? JSON.parse(readFileSync(resultsPath, "utf8"))
+  : { samples: SAMPLES, runtimes: [], results: [] };
+const byName = new Map(existing.results.map((r) => [r.bench, r]));
+for (const r of results) byName.set(r.bench, r);
+const runtimes = [...new Set([...(existing.runtimes ?? []), ...RUNTIMES.map((r) => r.name)])];
 writeFileSync(
-  join(ROOT, "results.json"),
-  JSON.stringify({ samples: SAMPLES, runtimes: RUNTIMES.map((r) => r.name), results }, null, 2) +
-    "\n",
+  resultsPath,
+  JSON.stringify({ samples: SAMPLES, runtimes, results: [...byName.values()] }, null, 2) + "\n",
 );
-console.log(`\nwrote results.json (${SAMPLES} samples each, median reported)`);
+console.log(`\nupdated results.json (${SAMPLES} samples each, median reported)`);
