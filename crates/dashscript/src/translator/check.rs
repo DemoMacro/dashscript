@@ -521,26 +521,12 @@ fn err(message: impl Into<Cow<'static, str>>, span: Span) -> OxcDiagnostic {
     OxcDiagnostic::error(message).with_label(span)
 }
 
-/// The global object/constructor names DashScript models only as a static-call
-/// receiver (`Math.floor`, `Array.isArray`, `Object.keys`, `JSON.parse`), a
-/// `new` receiver (`new Map()`), or a type annotation (`Map<K,V>`). These are
-/// not first-class values: a bare reference (`Array.isArray` without a call,
-/// `Math.prototype`, `var f = Object.keys`) is reflection the static TS→Rust
-/// mapping cannot express; without this the translator would snake-case the
-/// name (`Object`→`object`, `JSON`→`j_s_o_n`) and emit broken Rust (E0425
-/// `partial`). The call/new paths short-circuit via `is_global_object_callee`
-/// before reaching the identifier rule, so legitimate static calls stay
-/// supported.
-///
-/// `Number`/`String`/`Boolean` are intentionally absent: they carry mapped
-/// static members read as values (`Number.MAX_VALUE`→`f64::MAX`,
-/// `String.prototype.trim.call(x)` prototype-borrow), so blanket-flagging the
-/// name would regress those. Their conversion-call form (`Number(x)`,
-/// `String(x)`) is already covered by `global_function`.
-const GLOBAL_OBJECTS: &[&str] = &["Array", "Object", "Math", "JSON", "Map", "Set"];
-
+/// The global names DashScript models only as a static-call/new receiver or
+/// type annotation — never as a first-class value. Delegates to the canonical
+/// list in [`super::globals`] so the translator's dispatch and this lint share
+/// one source of truth (no duplicated name list to drift).
 fn is_global_object_name(name: &str) -> bool {
-    GLOBAL_OBJECTS.contains(&name)
+    super::globals::is_static_only_global(name)
 }
 
 /// True when `expr` is a global-object name in a call/new receiver position —
@@ -607,23 +593,13 @@ fn is_global_object_value(expr: &Expression) -> bool {
     }
 }
 
-/// Names that may stand as the receiver of a mapped static-member read — the
-/// [`GLOBAL_OBJECTS`] plus the wrapper constructors `Number`/`String`/
-/// `Boolean`, which carry mapped static members (`Number.MAX_VALUE`,
-/// `String.prototype`, `Boolean.prototype`). Used only to skip the *receiver*
-/// of a member access in [`collect_expr`] so reading a static member is not
-/// mistaken for a bare value reference; a bare reference to a [`GLOBAL_OBJECTS`]
-/// name as a value is still caught by the identifier rule.
-const GLOBAL_RECEIVERS: &[&str] = &[
-    "Array", "Object", "Math", "JSON", "Map", "Set", "Number", "String", "Boolean",
-];
-
 /// True when `expr` is a bare global receiver name (`Math`, `Number`) — the
-/// root a static-member chain is read from.
+/// root a static-member chain is read from. Delegates to the canonical list in
+/// [`super::globals`] so the translator's dispatch and this lint agree.
 fn is_global_object_receiver(expr: &Expression) -> bool {
     matches!(
         expr,
-        Expression::Identifier(id) if GLOBAL_RECEIVERS.contains(&id.name.as_str())
+        Expression::Identifier(id) if super::globals::is_global_receiver(id.name.as_str())
     )
 }
 

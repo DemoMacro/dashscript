@@ -16,6 +16,7 @@ pub mod context;
 pub mod declarations;
 pub mod expressions;
 pub mod functions;
+mod globals;
 pub mod imports;
 pub mod name_table;
 pub mod registry;
