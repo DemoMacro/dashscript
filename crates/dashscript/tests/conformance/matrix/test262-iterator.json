@@ -11,11 +11,10 @@
     "id": "test262.test.built-ins.iterator.concat.get-value-after-done",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:18\r\nArray.from(Iterator.concat(iter, iter, iter));\r\n       ",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:18\r\nArray.from(Iterator.concat(iter, iter, iter));\r\n       "
+      "status": "matched"
     },
     "note": ""
   },
@@ -24,10 +23,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"undefined\"",
+    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"undefined\""
+      "detail": "line 1: ds=\"object\" node=\"function\""
     },
     "note": ""
   },
@@ -43,11 +42,10 @@
     "id": "test262.test.built-ins.iterator.concat.next-method-called-with-zero-arguments",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:22\r\nlet iterator = Iterator.concat(iterable);\r\n            ",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:22\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+      "status": "matched"
     },
     "note": ""
   },
@@ -55,11 +53,10 @@
     "id": "test262.test.built-ins.iterator.concat.next-method-returns-non-object",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:14\r\nlet iterator = Iterator.concat(iterable);\r\n            ",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:14\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+      "status": "matched"
     },
     "note": ""
   },
@@ -68,10 +65,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.concat));\r\n  ",
+    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.concat));\r\n  "
+      "status": "diff",
+      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
     },
     "note": ""
   },
@@ -79,11 +76,10 @@
     "id": "test262.test.built-ins.iterator.concat.result-is-iterator",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nvar iter = Iterator.concat();\r\n                    ^\r\n\r\n",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nvar iter = Iterator.concat();\r\n                    ^\r\n\r\n"
+      "status": "matched"
     },
     "note": ""
   },
@@ -99,11 +95,10 @@
     "id": "test262.test.built-ins.iterator.concat.return-method-called-with-zero-arguments",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:24\r\niterator = Iterator.concat(iterable);\r\n                ",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:24\r\niterator = Iterator.concat(iterable);\r\n                "
+      "status": "matched"
     },
     "note": ""
   },
@@ -119,11 +114,10 @@
     "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-generator-is-running-next",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:18\r\nlet iterator = Iterator.concat(iterable);\r\n            ",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:18\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+      "status": "matched"
     },
     "note": ""
   },
@@ -131,11 +125,10 @@
     "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-generator-is-running-return",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:21\r\nlet iterator = Iterator.concat(iterable);\r\n            ",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:21\r\nlet iterator = Iterator.concat(iterable);\r\n            "
+      "status": "matched"
     },
     "note": ""
   },
@@ -165,11 +158,10 @@
     "id": "test262.test.built-ins.iterator.concat.throws-typeerror-when-iterator-not-an-object",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:12\r\niterator = Iterator.concat(MakeIterable(undefined));\r\n ",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:12\r\niterator = Iterator.concat(MakeIterable(undefined));\r\n "
+      "status": "matched"
     },
     "note": ""
   },
@@ -401,24 +393,33 @@
     "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-advanced-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:12:27: error[E0425]: cannot find value `done` in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-closed",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.drop.underlying-iterator-closed-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -437,8 +438,11 @@
     "id": "test262.test.built-ins.iterator.prototype.every.iterator-already-exhausted",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -512,10 +516,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52620568.602 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103430674.306 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52620568.602 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103430674.306 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -580,8 +584,11 @@
     "id": "test262.test.built-ins.iterator.prototype.filter.iterator-already-exhausted",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:24: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:24: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -622,10 +629,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52623967.9405 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103436010.6943 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52623967.9405 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103436010.6943 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -689,24 +696,33 @@
     "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-advanced-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `done` in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-closed",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.filter.underlying-iterator-closed-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -725,8 +741,11 @@
     "id": "test262.test.built-ins.iterator.prototype.find.iterator-already-exhausted",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -800,10 +819,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52630265.5131 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103444038.3677 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52630265.5131 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103444038.3677 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -857,8 +876,11 @@
     "id": "test262.test.built-ins.iterator.prototype.flatmap.iterator-already-exhausted",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:24: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:24: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -877,10 +899,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52633671.3093 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4877 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52633671.3093 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4877 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -966,24 +988,33 @@
     "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-advanced-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `done` in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-closed",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.flatmap.underlying-iterator-closed-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -991,10 +1022,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52636732.3201 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103428117.397 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52636732.3201 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103428117.397 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -1082,8 +1113,11 @@
     "id": "test262.test.built-ins.iterator.prototype.map.iterator-already-exhausted",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:24: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:24: warning: unreachable call: unreachable call, any code following this expression is unreachable",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1091,10 +1125,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52641604.3577 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103434706.4124 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52641604.3577 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103434706.4124 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -1169,24 +1203,33 @@
     "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-advanced-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `done` in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-closed",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.map.underlying-iterator-closed-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1205,8 +1248,11 @@
     "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-already-exhausted-initial-value",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1271,10 +1317,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52648106.7894 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103442847.127 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52648106.7894 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103442847.127 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -1305,8 +1351,11 @@
     "id": "test262.test.built-ins.iterator.prototype.some.iterator-already-exhausted",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1380,10 +1429,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52652146.6841 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4724 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52652146.6841 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4724 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -1581,24 +1630,33 @@
     "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-advanced-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:8:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:9:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:12:27: error[E0425]: cannot find value `done` in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-closed",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.take.underlying-iterator-closed-in-parallel",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "src\\main.rs:6:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:2:20: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:20: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1664,10 +1722,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:17\r\nIterator.zip([]);\r\n         ^\r\n\r\nTypeError: Iterator.zi",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zip([]);\r\n         ^\r\n\r\nTypeError: Ite",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:17\r\nIterator.zip([]);\r\n         ^\r\n\r\nTypeError: Iterator.zi"
+      "detail": "exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zip([]);\r\n         ^\r\n\r\nTypeError: Ite"
     },
     "note": ""
   },
@@ -1676,10 +1734,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:18\r\nIterator.zip([], {mode: \"longest\"});\r\n         ^\r\n\r\nTyp",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:18\r\nIterator.zip([], {mode: \"longest\"});\r\n         ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:18\r\nIterator.zip([], {mode: \"longest\"});\r\n         ^\r\n\r\nTyp"
+      "detail": "exit exit code: 1: fil<path>oracle.ts:18\r\nIterator.zip([], {mode: \"longest\"});\r\n         "
     },
     "note": ""
   },
@@ -1688,10 +1746,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zip));\r\n     ",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zip))",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zip));\r\n     "
+      "detail": "exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zip))"
     },
     "note": ""
   },
@@ -1712,10 +1770,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:17\r\nIterator.zipKeyed({});\r\n         ^\r\n\r\nTypeError: Iterat",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({});\r\n         ^\r\n\r\nTypeError",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:17\r\nIterator.zipKeyed({});\r\n         ^\r\n\r\nTypeError: Iterat"
+      "detail": "exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({});\r\n         ^\r\n\r\nTypeError"
     },
     "note": ""
   },
@@ -1724,10 +1782,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:17\r\nIterator.zipKeyed({}, {mode: \"longest\"});\r\n         ^\r\n",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({}, {mode: \"longest\"});\r\n    ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:17\r\nIterator.zipKeyed({}, {mode: \"longest\"});\r\n         ^\r\n"
+      "detail": "exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({}, {mode: \"longest\"});\r\n    "
     },
     "note": ""
   },
@@ -1736,10 +1794,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zipKeyed));\r\n",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zipKe",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zipKeyed));\r\n"
+      "detail": "exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zipKe"
     },
     "note": ""
   },
@@ -1764,10 +1822,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n         ",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n         "
+      "detail": "exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n "
     },
     "note": ""
   },
@@ -1776,10 +1834,10 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n         ",
+    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n         "
+      "detail": "exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n "
     },
     "note": ""
   }
