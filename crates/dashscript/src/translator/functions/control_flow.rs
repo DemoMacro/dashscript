@@ -2,12 +2,12 @@
 //! `for`, plus the truthiness and Option-narrowing helpers they share.
 
 use oxc_ast::ast::{
-    DoWhileStatement, Expression, ForInStatement, ForOfStatement, ForStatement, ForStatementLeft,
-    IfStatement, Statement, WhileStatement,
+    ArrayExpression, DoWhileStatement, Expression, ForInStatement, ForOfStatement, ForStatement,
+    ForStatementLeft, IfStatement, Statement, WhileStatement,
 };
 use oxc_syntax::operator::UnaryOperator;
 use quote::format_ident;
-use syn::{parse_quote, Block, Expr, Ident, Path, Stmt};
+use syn::{parse_quote, Block, Expr, Ident, Path, Stmt, Type};
 
 use super::super::analysis;
 use super::super::context::{is_option_path, Ctx, Locals, Narrow};
@@ -203,6 +203,28 @@ pub(super) fn translate_for_of(
     let Some(pat) = for_of_binding(&stmt.left, names) else {
         return vec![];
     };
+    // Record the loop variable's type so receiver-typed methods route
+    // correctly inside the body — a `for (let re of [/pat/]) re.test(s)` needs
+    // `re` typed as `regress::Regex`, or `.test` wouldn't lower to `.find`.
+    // Only a homogeneous inline array literal carries an element type; a
+    // non-literal iterable leaves the binding untyped (uses fall through).
+    // A non-Copy element (Regex/String) iterates by reference (`for re in &…`,
+    // `re: &T`); a Copy one (f64/bool) destructures (`for &v in &…`, `v: T`) —
+    // moving a non-Copy out of a shared borrow is E0507.
+    let arr_ty = match &stmt.right {
+        Expression::ArrayExpression(arr) => for_of_element_type(arr),
+        _ => None,
+    };
+    let is_copy = arr_ty
+        .as_ref()
+        .and_then(super::path_of)
+        .and_then(|p| p.segments.last().map(|s| s.ident.to_string()))
+        .is_some_and(|last| matches!(last.as_str(), "f64" | "bool"));
+    if let Some(ty) = arr_ty.as_ref() {
+        if let Some(path) = super::path_of(ty) {
+            locals.insert(pat.to_string(), path);
+        }
+    }
     // Translate the iterable before the body — `Ctx` borrows `locals`
     // immutably while `statement_block` borrows it mutably, so they can't overlap.
     let slice = match &stmt.right {
@@ -212,14 +234,31 @@ pub(super) fn translate_for_of(
         _ => None,
     };
     let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
+    // A non-Copy element (Regex/String) iterates by reference (`for re in &…`,
+    // `re: &T`); everything else — a Copy element (f64/bool) or an untyped
+    // iterable (a `number[]` local) — destructures (`for &v in &…`, `v: T`),
+    // since moving a non-Copy out of a shared borrow is E0507.
+    let iterates_by_ref = !is_copy
+        && arr_ty
+            .as_ref()
+            .and_then(super::path_of)
+            .and_then(|p| p.segments.last().map(|s| s.ident.to_string()))
+            .is_some_and(|last| matches!(last.as_str(), "Regex" | "String"));
     if let Some(slice) = slice {
         // A spread-free inline array literal iterates as a borrowed slice
         // `&[…]` (idiomatic; avoids clippy::useless_vec).
+        if iterates_by_ref {
+            return vec![parse_quote!(for #pat in #slice #body)];
+        }
         return vec![parse_quote!(for &#pat in #slice #body)];
     }
     let iter =
         expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow, names));
-    vec![parse_quote!(for &#pat in &#iter #body)]
+    if iterates_by_ref {
+        vec![parse_quote!(for #pat in &#iter #body)]
+    } else {
+        vec![parse_quote!(for &#pat in &#iter #body)]
+    }
 }
 
 /// `for (const k in m)` → `for k in m.keys().cloned()` — iterates a map's keys
@@ -309,6 +348,40 @@ fn for_of_binding(left: &ForStatementLeft, names: &NameTable<'_>) -> Option<Iden
     };
     let d = decl.declarations.first()?;
     Some(names.of_pattern(&d.id))
+}
+
+/// The element type of a homogeneous inline array literal — `[/pat/]` →
+/// `regress::Regex`, `[1, 2]` → `f64`, `["a"]` → `String`. Used by
+/// [`super::translate_for_of`] to type the loop variable so receiver-typed
+/// methods (`.test` on a regex, …) dispatch inside the body. A mixed, empty,
+/// or spread array yields `None` (the binding stays untyped).
+fn for_of_element_type(arr: &ArrayExpression) -> Option<Type> {
+    let elems: Vec<&Expression> = arr
+        .elements
+        .iter()
+        .filter_map(|e| e.as_expression())
+        .collect();
+    if elems.is_empty() {
+        return None;
+    }
+    if elems
+        .iter()
+        .all(|e| matches!(e, Expression::RegExpLiteral(_)))
+    {
+        Some(parse_quote!(regress::Regex))
+    } else if elems
+        .iter()
+        .all(|e| matches!(e, Expression::NumericLiteral(_)))
+    {
+        Some(parse_quote!(f64))
+    } else if elems
+        .iter()
+        .all(|e| matches!(e, Expression::StringLiteral(_)))
+    {
+        Some(parse_quote!(String))
+    } else {
+        None
+    }
 }
 
 /// Turn any statement into a `{ … }` block (used by if/while/for bodies).

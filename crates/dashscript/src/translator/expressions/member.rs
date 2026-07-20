@@ -55,6 +55,14 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             _ => {}
         }
     }
+    // `/pat/gi.flags` / `.source` / `.global` / `.ignoreCase` / … on a regex
+    // literal → the static property (known at translate time). Only a literal
+    // receiver; a regex local has lost its source flags.
+    if let Expression::RegExpLiteral(re) = &sm.object {
+        if let Some(e) = super::regex_literal_property(re, field_name) {
+            return e;
+        }
+    }
     // `d.year`/`d.month`/`d.day`/… on a `Temporal.PlainDate` local → the matching
     // `temporal_rs::PlainDate` accessor method (Rust accessors are methods, not
     // fields; ES Temporal calendar fields are properties). Numeric fields cast to

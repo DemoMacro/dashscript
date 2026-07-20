@@ -265,6 +265,22 @@ fn collect_assignment_target(target: &AssignmentTarget, out: &mut Vec<OxcDiagnos
             if is_prototype_member(&sm.object) {
                 out.push(err("`prototype` mutation is unsupported", sm.span));
             }
+            // `x.index = …` / `.input` / `.indices` / `.groups` — assigning an
+            // ES match-result field. It is read-only on a real match result
+            // (ES throws in strict mode), so an assignment is the test262
+            // idiom of stamping the property onto a plain Array
+            // (`["a"].index = 2`) — dynamic property mutation the static model
+            // cannot express. (A user struct field named `index` is rare and
+            // would surface honestly as unsupported, not silently mis-compile.)
+            if matches!(
+                sm.property.name.as_str(),
+                "index" | "input" | "indices" | "groups"
+            ) {
+                out.push(err(
+                    "match-result property assignment is unsupported",
+                    sm.span,
+                ));
+            }
             collect_expr(&sm.object, out);
         }
         _ => {}

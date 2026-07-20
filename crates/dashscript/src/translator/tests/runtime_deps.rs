@@ -446,3 +446,69 @@ fn temporal_plain_date_compare_emits_ordering_match() {
         "compare lowers an Ordering match, got:\n{rust}"
     );
 }
+
+#[test]
+fn regex_literal_flags_and_source_are_static() {
+    // `/abc/gi.flags` / `.source` / `.global` / `.ignoreCase` → bare literals
+    // (the flags are known at translate time), not a runtime `Regex` field —
+    // so a `.ds` source that only reads static regex properties links no
+    // `regress` dep and never constructs a `Regex`.
+    let src = "function main(): void {\n  console.log(/abc/gi.flags);\n  console.log(/abc/gi.global);\n  console.log(/abc/gi.ignoreCase);\n  console.log(/abc/gi.multiline);\n  console.log(/abc/gi.source);\n  console.log(/(?:)/.source);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !deps.needs_regress(),
+        "static regex properties pull no regress dep, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("\"gi\""),
+        ".flags lowers to the ES-order flag string, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("\"abc\""),
+        ".source lowers to the pattern literal, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("\"(?:)\""),
+        "an empty pattern's source is ES's (?:), got:\n{rust}"
+    );
+    assert!(
+        !rust.contains(".flags") && !rust.contains("__ds::regex"),
+        ".flags/.source must not survive as a field/Regex, got:\n{rust}"
+    );
+}
+
+#[test]
+fn for_of_regex_array_test_routes_through_find() {
+    // `for (let re of [/^.$/s]) re.test(s)` — the loop variable infers
+    // `regress::Regex`, so `.test` lowers to `.find(…).is_some()` (without the
+    // type, `.test` would be an unmapped method on `Regex` → E0599).
+    let src = "function main(): void {\n  for (let re of [/^.$/s]) {\n    console.log(re.test(\"a\"));\n  }\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_regress(),
+        "for-of regex array flags needs_regress, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains(".find("),
+        "for-of regex .test lowers to .find, got:\n{rust}"
+    );
+}
+
+#[test]
+fn check_rejects_match_result_property_assignment() {
+    // `["a"].index = 2` (the test262 s15.10.2.13 idiom of stamping match-result
+    // fields onto a plain Array) is dynamic property mutation → `check` flags
+    // it unsupported rather than letting it mis-compile into a `Vec` field.
+    let src = "function main(): void {\n  var a = [\"a\"];\n  a.index = 2;\n  a.input = \"x\";\n}";
+    let diags = Translator::new().check(src);
+    assert!(
+        diags
+            .iter()
+            .any(|d| format!("{d}").contains("match-result property")),
+        "index/input assignment should be unsupported, got: {diags:?}"
+    );
+}

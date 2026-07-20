@@ -243,6 +243,50 @@ pub(in crate::translator) fn regex_lit_parts(
     (pat, fl)
 }
 
+/// `/pat/gi.flags` / `.source` / `.global` / `.ignoreCase` / `.multiline` /
+/// `.dotAll` / `.unicode` / `.unicodeSets` / `.sticky` / `.hasIndices` on a
+/// regex literal — the property is fully known at translate time (oxc parsed
+/// the literal), so it lowers to a bare literal, not a runtime `Regex` field.
+/// `.source` follows ES's empty-pattern rule (`"(?:)"`); `.unicode` is true
+/// under either the `u` or `v` flag. Returns `None` for any other name.
+pub(in crate::translator) fn regex_literal_property(
+    re: &oxc_ast::ast::RegExpLiteral,
+    name: &str,
+) -> Option<Expr> {
+    use oxc_ast::ast::RegExpFlags;
+    let f = re.regex.flags;
+    let bool_expr = |set: bool| -> Expr {
+        if set {
+            parse_quote!(true)
+        } else {
+            parse_quote!(false)
+        }
+    };
+    match name {
+        "global" => Some(bool_expr(f.contains(RegExpFlags::G))),
+        "ignoreCase" => Some(bool_expr(f.contains(RegExpFlags::I))),
+        "multiline" => Some(bool_expr(f.contains(RegExpFlags::M))),
+        "dotAll" => Some(bool_expr(f.contains(RegExpFlags::S))),
+        "unicode" => Some(bool_expr(
+            f.contains(RegExpFlags::U) || f.contains(RegExpFlags::V),
+        )),
+        "unicodeSets" => Some(bool_expr(f.contains(RegExpFlags::V))),
+        "sticky" => Some(bool_expr(f.contains(RegExpFlags::Y))),
+        "hasIndices" => Some(bool_expr(f.contains(RegExpFlags::D))),
+        "flags" => {
+            let (_, fl) = regex_lit_parts(re);
+            Some(parse_quote!(#fl))
+        }
+        "source" => {
+            let pat = re.regex.pattern.text.as_str();
+            let src = if pat.is_empty() { "(?:)" } else { pat };
+            let lit = syn::LitStr::new(src, Span::call_site());
+            Some(parse_quote!(#lit))
+        }
+        _ => None,
+    }
+}
+
 fn regex_literal_expr(re: &oxc_ast::ast::RegExpLiteral) -> Expr {
     let (pat, fl) = regex_lit_parts(re);
     parse_quote!(crate::__ds::regex(#pat, #fl))
