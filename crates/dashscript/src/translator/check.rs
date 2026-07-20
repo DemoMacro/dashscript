@@ -740,6 +740,16 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
                 sm.span,
             ));
         }
+        // `JSON.<method>` other than parse/stringify (e.g. rawJSON/isRawJSON,
+        // ES2024) has no mapping — `json_static` inlines serde_json only for
+        // parse/stringify, so any other static method snake-cases `JSON`→
+        // `j_s_o_n` (E0425). Route to the engine, whose JSON matches ES.
+        if obj.name.as_str() == "JSON" && !matches!(prop, "parse" | "stringify") {
+            out.push(err(
+                format!("`JSON.{prop}` has no static mapping (only parse/stringify)"),
+                sm.span,
+            ));
+        }
     }
 }
 
