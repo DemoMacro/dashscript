@@ -175,6 +175,37 @@ fn regex_literal_test_flags_regress_dep() {
 }
 
 #[test]
+fn regex_exec_in_loop_routes_to_engine() {
+    // `re.exec(s)` inside a loop body — regress is stateless, so the loop
+    // would re-find the same match every iteration (an infinite loop). The
+    // engine (rquickjs) advances `lastIndex` like ES, so a looped exec routes
+    // there rather than hanging on the regress path.
+    let src = "function main(): void {\n  const re = /a/g;\n  const s = \"banana\";\n  var n = 0;\n  do {\n    const m = re.exec(s);\n    if (m !== null) { n = n + 1; } else { break; }\n  } while (1);\n  console.log(n);\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "looped .exec should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn regex_exec_once_outside_loop_stays_on_regress() {
+    // `/pat/.exec(s)` once, outside any loop, is a single `find` — regress
+    // handles it, so the engine dep must not flip.
+    let src =
+        "function main(): void {\n  const m = /a/.exec(\"abc\");\n  console.log(m !== null);\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !deps.needs_engine(),
+        "single .exec outside a loop must not pull the engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn regex_local_test_uses_regress() {
     // `let r = /pat/; r.test(s)` — the local infers `regress::Regex`, so
     // `.test` dispatches to the regress `find` method, not the engine.

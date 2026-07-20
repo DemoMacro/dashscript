@@ -42,6 +42,11 @@ use super::{functions, registry};
 // each carry their own.
 thread_local! {
     static FOR_ENGINE: Cell<bool> = const { Cell::new(false) };
+    /// True while `collect_unsupported` walks the body of a loop — a
+    /// `re.exec(…)` there needs the engine, because regress is stateless and
+    /// would re-find the same match every iteration (an infinite loop, killed
+    /// only by the harness timeout). Set by `collect_loop_body`.
+    static IN_LOOP: Cell<bool> = const { Cell::new(false) };
 }
 
 /// RAII guard: constructed to mark an engine-path detection in progress;
@@ -204,10 +209,10 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
         }
         Statement::WhileStatement(w) => {
             collect_expr(&w.test, out);
-            collect_unsupported(&w.body, out);
+            collect_loop_body(&w.body, out);
         }
         Statement::DoWhileStatement(dw) => {
-            collect_unsupported(&dw.body, out);
+            collect_loop_body(&dw.body, out);
             collect_expr(&dw.test, out);
         }
         Statement::ForStatement(f) => {
@@ -224,10 +229,10 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
             if let Some(update) = &f.update {
                 collect_expr(update, out);
             }
-            collect_unsupported(&f.body, out);
+            collect_loop_body(&f.body, out);
         }
-        Statement::ForOfStatement(fo) => collect_unsupported(&fo.body, out),
-        Statement::ForInStatement(fi) => collect_unsupported(&fi.body, out),
+        Statement::ForOfStatement(fo) => collect_loop_body(&fo.body, out),
+        Statement::ForInStatement(fi) => collect_loop_body(&fi.body, out),
         Statement::ReturnStatement(r) => {
             if let Some(arg) = &r.argument {
                 collect_expr(arg, out);
@@ -303,6 +308,16 @@ fn collect_unsupported_stmts(stmts: &[Statement], out: &mut Vec<OxcDiagnostic>) 
     for s in stmts {
         collect_unsupported(s, out);
     }
+}
+
+/// Walk a loop body with [`IN_LOOP`] set, so a `re.exec(…)` inside (the
+/// test262 `do { m = re.exec(s); … } while (1)` idiom) routes to the engine —
+/// regress is stateless, so the loop would re-find the same match every
+/// iteration (an infinite loop the harness times out at 30s).
+fn collect_loop_body(body: &Statement, out: &mut Vec<OxcDiagnostic>) {
+    let prev = IN_LOOP.with(|c| c.replace(true));
+    collect_unsupported(body, out);
+    IN_LOOP.with(|c| c.set(prev));
 }
 
 /// Detect a low-compatibility pattern at `expr`, then recurse into its
@@ -549,6 +564,17 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
         return;
     };
     let prop = sm.property.name.as_str();
+    // `<re>.exec(…)` inside a loop body — regress is stateless, so the loop
+    // would re-find the same match every iteration (an infinite loop, killed
+    // only by the harness timeout). The engine (rquickjs) advances `lastIndex`
+    // like ES, so a looped exec routes there. (`/pat/.exec(s)` once, outside a
+    // loop, stays on the regress path — it is a single `find`.)
+    if prop == "exec" && IN_LOOP.with(|c| c.get()) {
+        out.push(err(
+            "regex `.exec` inside a loop needs the engine (regress is stateless)",
+            sm.span,
+        ));
+    }
     // `s.toLocaleUpperCase(locale)` / `toLocaleLowerCase(locale)` — locale-aware
     // casing. DashScript has no ICU locale table, so an explicit locale cannot
     // be honored; the locale-less form lowers to the default casing (see

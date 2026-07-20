@@ -152,15 +152,31 @@ fn condition_expr(
     expressions::translate_expr(test, &Ctx::new(locals, registry, narrow, names))
 }
 
-/// If `expr` is a bare identifier of a collection (`Vec`/`String`) or `Option`
-/// type, return its Rust boolean form. `negated` selects the falsy side
-/// (`is_empty`/`is_none`) vs the truthy side (`!is_empty`/`is_some`).
+/// The Rust boolean form of an ES truthiness test. A numeric literal folds to
+/// its compile-time truthiness (nonzero and non-NaN); a bare identifier of a
+/// number (`f64`/integer), collection (`Vec`/`String`), or `Option` type maps
+/// to the matching runtime check. `negated` selects the falsy side (`== 0`/
+/// `is_nan`/`is_empty`/`is_none`) vs the truthy side. Anything else returns
+/// `None` (the caller treats the expression as already boolean).
 fn truthiness(
     expr: &Expression,
     negated: bool,
     locals: &Locals,
     names: &NameTable<'_>,
 ) -> Option<Expr> {
+    // A numeric literal's ES truthiness is known at translate time, so a
+    // `while (1)` / `do { … } while (0)` folds to a Rust `bool` literal
+    // instead of emitting `!(1_f64)` (E0600: `!` on f64).
+    if let Expression::NumericLiteral(n) = expr {
+        let v = n.value;
+        let truthy = v != 0.0 && !v.is_nan();
+        let b = if negated { !truthy } else { truthy };
+        return Some(if b {
+            parse_quote!(true)
+        } else {
+            parse_quote!(false)
+        });
+    }
     let Expression::Identifier(id) = expr else {
         return None;
     };
@@ -172,6 +188,19 @@ fn truthiness(
         .ident
         .to_string();
     match last.as_str() {
+        // ES `Boolean(f64)`: nonzero and non-NaN. NaN is falsy (`!NaN === true`),
+        // so the negated form ORs the two falsy cases.
+        "f64" => Some(if negated {
+            parse_quote!(#ident == 0.0 || #ident.is_nan())
+        } else {
+            parse_quote!(#ident != 0.0 && !#ident.is_nan())
+        }),
+        // Integer scalars have no NaN; truthiness is simply != 0.
+        "i64" | "i32" | "usize" | "u64" | "u32" | "u16" | "u8" | "i16" | "i8" => Some(if negated {
+            parse_quote!(#ident == 0)
+        } else {
+            parse_quote!(#ident != 0)
+        }),
         "Vec" | "String" => Some(if negated {
             parse_quote!(#ident.is_empty())
         } else {
