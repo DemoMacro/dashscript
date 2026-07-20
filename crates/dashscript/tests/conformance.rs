@@ -50,6 +50,14 @@ const CORRECTNESS_JSON: &str = include_str!("conformance/data/correctness.json")
 const MANIFEST: &str =
     "[package]\nname = \"probe\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[dependencies]\n";
 
+/// test262 `features:` that neither the Node oracle nor the ds engine ships — a
+/// fixture exercising one has neither an oracle nor ds support, so it is
+/// honestly `unsupported` without running anything. Today: `Temporal` (ES stage
+/// 3; node v24 and QuickJS both lack it). When ds gains a feature here (e.g.
+/// via `temporal-rs`), drop it from this list and route those fixtures through
+/// a ds-only oracle path.
+const UNSHIPPED_FEATURES: &[&str] = &["Temporal"];
+
 #[derive(Debug, Deserialize)]
 struct FeatureFile {
     features: Vec<RawFeature>,
@@ -65,6 +73,10 @@ struct RawFeature {
     expect_output: Option<String>,
     #[serde(default)]
     note: String,
+    /// test262 `features:` frontmatter (e.g. `["Temporal"]`) — drives the
+    /// unshipped-feature short-circuit in `run_test262`.
+    #[serde(default)]
+    features: Vec<String>,
 }
 
 /// Differential-test result against the Node oracle (test262 features only).
@@ -737,6 +749,19 @@ fn run_test262(
     work: &Path,
     node_ok: bool,
 ) -> (&'static str, String, Option<Oracle>) {
+    // A fixture whose `features:` neither Node nor the ds engine ships has no
+    // oracle and no ds support — `unsupported` up front, skipping translate +
+    // node + cargo. (A1 caught this at runtime as both-fail; A2 makes it static
+    // + precisely labeled.)
+    for feat in &raw.features {
+        if UNSHIPPED_FEATURES.contains(&feat.as_str()) {
+            return (
+                "unsupported",
+                format!("neither node nor ds ships feature: {feat}"),
+                None,
+            );
+        }
+    }
     let (rust, deps) = match translate_catch(&raw.fixture) {
         Ok(r) => r,
         Err(e) => return ("partial", e, None),

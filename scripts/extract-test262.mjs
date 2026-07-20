@@ -81,9 +81,10 @@ function walk(dir, out) {
 // Returns its flags + the offset where the body begins.
 function frontmatter(src) {
   const m = src.match(/\/\*---([\s\S]*?)---\*\//);
-  if (!m) return { flags: [], includes: [], bodyStart: 0 };
+  if (!m) return { flags: [], includes: [], features: [], bodyStart: 0 };
   const flags = [];
   const includes = [];
+  const features = [];
   const list = (block, key, out) => {
     const mm = block.match(new RegExp(`${key}:\\s*\\[([^\\]]*)\\]`));
     if (!mm) return;
@@ -96,7 +97,8 @@ function frontmatter(src) {
   };
   list(m[1], "flags", flags);
   list(m[1], "includes", includes);
-  return { flags, includes, bodyStart: m.index + m[0].length };
+  list(m[1], "features", features);
+  return { flags, includes, features, bodyStart: m.index + m[0].length };
 }
 
 const ASSERTS = new Set(["sameValue", "notSameValue", "throws"]);
@@ -220,7 +222,7 @@ function extract() {
       const rel = relative(TEST262, f).replace(/\\/g, "/");
       if (!FILTER(rel)) continue;
       const src = readFileSync(f, "utf8");
-      const { flags, includes, bodyStart } = frontmatter(src);
+      const { flags, includes, features, bodyStart } = frontmatter(src);
       const r = rewrite(src.slice(bodyStart));
       if (!r.ok) {
         if (r.reason === "parse error") tally.parse++;
@@ -252,6 +254,7 @@ function extract() {
         origin: rel,
         n_asserts: r.n,
         flags,
+        features,
       });
     }
     if (feats.length > 0) byCat.set(category, feats);
