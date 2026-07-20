@@ -57,10 +57,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 52807416.7347 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490543.4245 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 52807416.7347 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490543.4245 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -69,10 +69,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 52807591.0094 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490664.2277 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 52807591.0094 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490664.2277 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -200,10 +200,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 52809908.7043 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 52809908.7043 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 52809908.7043 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 52809908.7043 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -212,10 +212,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 52810043.1972 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 52810043.1972 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 52810043.1972 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 52810043.1972 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -876,7 +876,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n ",
     "note": ""
   },
   {
@@ -884,7 +884,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r",
     "note": ""
   },
   {
@@ -1392,10 +1392,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -2209,7 +2209,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -2217,7 +2217,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -2358,7 +2358,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -3116,10 +3116,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -3935,7 +3935,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -3943,7 +3943,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -4084,7 +4084,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -4632,7 +4632,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n ",
     "note": ""
   },
   {
@@ -4640,7 +4640,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r",
     "note": ""
   },
   {
@@ -5396,10 +5396,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -6188,7 +6188,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -6196,7 +6196,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -6249,7 +6249,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -6335,7 +6335,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -6701,8 +6701,11 @@
     "id": "test262.test.built-ins.array.prototype.includes.samevaluezero",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:43: error[E0308]: mismatched types: expected `&f64`, found `&str`\nsrc\\main.rs:4:57: error[E0599]: no method named `as_str` found for struct `Vec<f64>` in the current scope\nsrc\\main.rs:5:50: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:6:51: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:48: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:8:49: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -6731,8 +6734,11 @@
     "id": "test262.test.built-ins.array.prototype.includes.sparse",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:64: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nsrc\\main.rs:8:43: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nsrc\\main.rs:11:29: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -6913,10 +6919,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -7307,8 +7313,11 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-12",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:10:41: error[E0599]: no method named `find` found for reference `&[bool]` in the current scope: method not found in `&[bool]`\nsrc\\main.rs:10:51: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -7316,7 +7325,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -7327,7 +7336,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -7337,24 +7346,33 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-15",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:4:50: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:51: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:10:50: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-16",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:10:41: error[E0599]: no method named `find` found for reference `&[bool]` in the current scope: method not found in `&[bool]`\nsrc\\main.rs:10:51: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:9:30: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-17",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:43: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:4:63: error[E0277]: cannot add `String` to `f64`: no implementation for `f64 + String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -7385,24 +7403,33 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-21",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:7:34: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-22",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:7:34: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-23",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:10:34: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -7494,7 +7521,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -7505,7 +7532,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -7516,7 +7543,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -7619,8 +7646,11 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:14: error[E0308]: mismatched types: expected `HashMap<String, _>`, found `String`\nsrc\\main.rs:10:39: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:11:40: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -7843,8 +7873,11 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-b-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:16: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -7893,7 +7926,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -7901,10 +7934,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
+      "detail": "exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
     },
     "note": ""
   },
@@ -7955,7 +7988,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -7963,7 +7996,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -8074,7 +8107,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -8082,10 +8115,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
+      "detail": "exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
     },
     "note": ""
   },
@@ -8126,8 +8159,11 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-b-ii-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:74: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:4:10: error[E0599]: no method named `position` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:7:71: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:7:80: error[E0599]: no method named `position` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:12:9: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:16:9: error[E0308]: mismatched types: expected `Option<_>`, found `f64`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -8135,7 +8171,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -8153,16 +8189,22 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-b-ii-2",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:2:39: error[E0599]: no method named `index_of` found for struct `Vec<Option<_>>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-b-ii-3",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:80: error[E0282]: type annotations needed for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -8263,7 +8305,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -8453,10 +8495,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -8799,8 +8841,11 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-12",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:19: error[E0599]: no method named `rfind` found for struct `Vec<Option<_>>` in the current scope: method not found in `Vec<Option<_>>`\nsrc\\main.rs:9:30: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -8808,7 +8853,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -8818,8 +8863,11 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-14",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:10:43: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:17:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:24:43: error[E0308]: mismatched types: expected `bool`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -8834,16 +8882,22 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-16",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:19: error[E0599]: no method named `rfind` found for struct `Vec<bool>` in the current scope: method not found in `Vec<bool>`\nsrc\\main.rs:9:30: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-17",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:43: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:4:62: error[E0277]: cannot add `String` to `f64`: no implementation for `f64 + String`\nsrc\\main.rs:4:81: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:66: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -8882,8 +8936,11 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-23",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:10:34: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nsrc\\main.rs:10:70: error[E0599]: the method `min` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -8961,16 +9018,22 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-8",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:10:43: error[E0308]: mismatched types: expected `bool`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-9",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:44: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:10:43: error[E0308]: mismatched types: expected `bool`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -9278,8 +9341,11 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-8-b-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:16: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -9328,7 +9394,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -9336,10 +9402,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
+      "detail": "exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
     },
     "note": ""
   },
@@ -9390,10 +9456,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
+      "detail": "exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
     },
     "note": ""
   },
@@ -9402,7 +9468,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -9413,7 +9479,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -9521,7 +9587,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -9529,10 +9595,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node oracle error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
+      "detail": "exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
     },
     "note": ""
   },
@@ -9573,8 +9639,11 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-8-b-ii-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:74: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:4:10: error[E0599]: no method named `rposition` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:7:71: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:8:10: error[E0599]: no method named `rposition` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:12:9: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:16:9: error[E0308]: mismatched types: expected `Option<_>`, found `f64`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -9582,7 +9651,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -9600,16 +9669,22 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-8-b-ii-2",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:2:39: error[E0599]: no method named `last_index_of` found for struct `Vec<Option<_>>` in the current scope: method not found in `Vec<Option<_>>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-8-b-ii-3",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:81: error[E0282]: type annotations needed for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -9721,7 +9796,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -9861,10 +9936,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -10705,7 +10780,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -10713,7 +10788,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -10743,7 +10818,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -10840,7 +10915,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -11212,7 +11287,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n ",
     "note": ""
   },
   {
@@ -11220,7 +11295,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r",
     "note": ""
   },
   {
@@ -11633,10 +11708,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -12167,7 +12242,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -12175,7 +12250,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -12327,7 +12402,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -13486,10 +13561,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -15240,7 +15315,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -15282,7 +15357,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n ",
     "note": ""
   },
   {
@@ -15290,7 +15365,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r",
     "note": ""
   },
   {
@@ -15520,10 +15595,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/streams/readable:285\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
+      "detail": "exit exit code: 1: node:internal/streams/readable:290\r\n  this.length = 0;\r\n              ^\r\n\r\nTypeError: Cannot set property length of #<Ob"
     },
     "note": ""
   },
@@ -16502,7 +16577,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:550\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -17323,7 +17398,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:4\r\nvar OArray = $262.createRealm().global.Array;\r\n ",
     "note": ""
   },
   {
@@ -17331,7 +17406,7 @@
     "layer": "test262",
     "category": "array",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:5\r\nvar OObject = $262.createRealm().global.Object;\r",
     "note": ""
   },
   {
@@ -17850,10 +17925,11 @@
     "id": "test262.test.built-ins.array.s15.4.5.2_a1_t1",
     "layer": "test262",
     "category": "array",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=5",
     "oracle": {
-      "status": "matched"
+      "status": "diff",
+      "detail": "line count: ds=0 node=5"
     },
     "note": ""
   },
@@ -17892,10 +17968,11 @@
     "id": "test262.test.built-ins.array.s15.4_a1.1_t10",
     "layer": "test262",
     "category": "array",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "oracle diff: line count: ds=0 node=32",
     "oracle": {
-      "status": "matched"
+      "status": "diff",
+      "detail": "line count: ds=0 node=32"
     },
     "note": ""
   },

@@ -222,6 +222,36 @@ fn regex_exec_once_outside_loop_stays_on_regress() {
 }
 
 #[test]
+fn array_indexof_non_number_needle_routes_to_engine() {
+    // `xs.indexOf(true)` — ES SameValueZero distinguishes `true` from `1`, but
+    // DashScript's Vec<f64> search assumes a numeric needle, so a boolean needle
+    // would be a type error (E0277/E0308). The fixture routes to the engine,
+    // whose element comparison matches ES.
+    let src =
+        "function main(): void {\n  const xs = [0, 1, 2];\n  console.log(xs.indexOf(true));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "indexOf with a non-number needle should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn array_indexof_numeric_needle_stays_mapped() {
+    // `.indexOf(<number>)` stays on the mapped Vec<f64> path — no engine dep.
+    let src = "function main(): void {\n  const xs = [0, 1, 2];\n  console.log(xs.indexOf(1));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !deps.needs_engine(),
+        "indexOf with a numeric needle must not pull the engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn regex_lastindex_access_routes_to_engine() {
     // `<re>.lastIndex` read or write — regress is stateless (no lastIndex
     // field → E0609), so route to the engine, whose regex carries the cursor.

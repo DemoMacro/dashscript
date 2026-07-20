@@ -648,6 +648,21 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
             sm.span,
         ));
     }
+    // `.indexOf(x)` / `.lastIndexOf(x)` / `.includes(x)` where x is plainly not
+    // a number — ES uses SameValueZero (indexOf/lastIndexOf) / strict equality
+    // (includes), which distinguish `true` from `1` and `"1"` from `1`.
+    // DashScript's `Vec<f64>` search assumes a numeric needle, so a non-number
+    // needle lowers to `y == bool` (E0277) or `Vec::contains(&bool)` (E0308).
+    // Route to the engine, whose element comparison matches ES. (A numeric needle
+    // stays on the mapped path; a non-number *literal* or `undefined` triggers.)
+    if matches!(prop, "indexOf" | "lastIndexOf" | "includes")
+        && array_search_arg_needs_engine(&c.arguments)
+    {
+        out.push(err(
+            "`.indexOf`/`.lastIndexOf`/`.includes` on a non-number needs the engine (ES SameValueZero/strict equality)",
+            sm.span,
+        ));
+    }
     // `s.toLocaleUpperCase(locale)` / `toLocaleLowerCase(locale)` — locale-aware
     // casing. DashScript has no ICU locale table, so an explicit locale cannot
     // be honored; the locale-less form lowers to the default casing (see
@@ -736,6 +751,35 @@ fn regex_arg_needs_engine(args: &[Argument]) -> bool {
             // A variable bound (in this walk) to a non-string literal.
             NON_STRING_VARS.with(|s| s.borrow().contains(id.name.as_str()))
         }
+        _ => false,
+    }
+}
+
+/// True when an `.indexOf`/`.lastIndexOf`/`.includes` search element is plainly
+/// not a number — a non-number literal, or `undefined`. ES uses SameValueZero
+/// (indexOf/lastIndexOf) / strict equality (includes), which distinguish types,
+/// but DashScript's `Vec<f64>` search assumes a numeric needle, so a non-number
+/// would be a type error (E0277/E0308). The fixture routes to the engine, whose
+/// element comparison matches ES. (Mirrors [`regex_arg_needs_engine`] for the
+/// regex ToString case; this is the numeric complement.)
+fn array_search_arg_needs_engine(args: &[Argument]) -> bool {
+    let Some(arg) = args.first().and_then(|a| a.as_expression()) else {
+        return false;
+    };
+    match arg {
+        // A plainly non-number, non-string literal (boolean/object/array/null).
+        // A string needle is intentionally NOT routed: `"abc".indexOf("b")` is
+        // the normal string-search case, and only an array with a string needle
+        // is the E0308 (rarer) — routing every `string.indexOf` through the
+        // engine to catch it would regress the common path. bool/object/null
+        // needles route for both receivers: array (type mismatch) and string
+        // (ES ToString of bool/object differs from a naive cast).
+        Expression::BooleanLiteral(_)
+        | Expression::ObjectExpression(_)
+        | Expression::ArrayExpression(_)
+        | Expression::NullLiteral(_) => true,
+        Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Void) => true,
+        Expression::Identifier(id) if id.name.as_str() == "undefined" => true,
         _ => false,
     }
 }
