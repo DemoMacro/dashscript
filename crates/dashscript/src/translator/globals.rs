@@ -20,9 +20,14 @@
 /// (`RegExp(pat)`, `new RegExp(pat)`) are mapped, but it has no static *value*
 /// members — a bare reference is always reflection (`RegExp.prototype.X`,
 /// `RegExp.length`) the static mapping cannot express, so it routes to the
-/// engine rather than emitting a phantom `reg_exp` binding.
-pub const STATIC_ONLY_GLOBALS: &[&str] =
-    &["Array", "Object", "Math", "JSON", "Map", "Set", "RegExp"];
+/// engine rather than emitting a phantom `reg_exp` binding. `Function` is
+/// included for the same reason: the `Function` constructor has no DashScript
+/// mapping (dynamic function creation is reflection), so a bare reference
+/// (`Object.getOwnPropertyNames(Function)`, `Function.prototype.X`) routes to
+/// the engine instead of emitting a phantom `function` binding.
+pub const STATIC_ONLY_GLOBALS: &[&str] = &[
+    "Array", "Object", "Math", "JSON", "Map", "Set", "RegExp", "Function",
+];
 
 /// Names that may stand as the receiver of a mapped static-member read —
 /// [`STATIC_ONLY_GLOBALS`] plus the wrapper constructors `Number`/`String`/
