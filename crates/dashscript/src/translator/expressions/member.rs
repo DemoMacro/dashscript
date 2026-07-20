@@ -92,13 +92,7 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
         let key = index_key(&cm.expression, ctx);
         return parse_quote!(#obj.get(#key).copied().unwrap());
     }
-    let idx = translate_expr(&cm.expression, ctx);
-    let idx = Expr::Cast(syn::ExprCast {
-        attrs: Vec::new(),
-        expr: Box::new(idx),
-        as_token: syn::Token![as](Span::call_site()),
-        ty: Box::new(parse_quote!(usize)),
-    });
+    let idx = index_expr(&cm.expression, ctx);
     // `s[i]` on a string → the i-th char. Rust's `str` has no `Index<usize>`,
     // so a string index lowers to `chars().nth(i)` (the char as a `String`, or
     // "" if out of range — TS returns undefined). ASCII matches; non-BMP
@@ -115,6 +109,28 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
     } else {
         indexed
     }
+}
+
+/// A `usize`-typed index for `arr[expr]`. A bitwise index (`i & mask`) emits
+/// its masked result directly to `usize`, skipping the `f64` round-trip the
+/// number model adds between `bitwise_expr` and the index cast. That hop both
+/// costs a conversion per access and — worse — obscures the `& mask` range
+/// from LLVM, defeating bounds-check elision on the `Vec` index (V8 elides it;
+/// the `f64` intermediate was the gap). Any other index (counter, arithmetic)
+/// translates normally and casts to `usize`.
+fn index_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
+    if let Expression::BinaryExpression(bin) = expr {
+        if let Some(int_idx) = super::binary::bitwise_expr_to(bin, ctx, parse_quote!(usize)) {
+            return int_idx;
+        }
+    }
+    let e = translate_expr(expr, ctx);
+    Expr::Cast(syn::ExprCast {
+        attrs: Vec::new(),
+        expr: Box::new(e),
+        as_token: syn::Token![as](Span::call_site()),
+        ty: Box::new(parse_quote!(usize)),
+    })
 }
 
 /// Whether `expr` is a string receiver for `s[i]` indexing: a string literal

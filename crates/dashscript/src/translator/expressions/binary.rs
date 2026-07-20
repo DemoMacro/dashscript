@@ -3,7 +3,7 @@
 use oxc_ast::ast::{BinaryExpression, Expression};
 use oxc_syntax::operator::BinaryOperator;
 use proc_macro2::Span;
-use syn::{parse_quote, parse_str, BinOp, Expr};
+use syn::{parse_quote, parse_str, BinOp, Expr, Type};
 
 use super::super::bindings;
 use super::super::context::Ctx;
@@ -118,7 +118,11 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
 /// as i64` is exact for finite values below 2⁵³, and `i64 as i32` then truncates
 /// with the same wrap semantics as `ToInt32`. (±Inf/NaN, which `ToInt32` maps
 /// to 0, are an unhandled edge here.)
-fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+pub(super) fn bitwise_expr_to(
+    bin: &BinaryExpression,
+    ctx: &Ctx<'_>,
+    result_ty: Type,
+) -> Option<Expr> {
     if !matches!(
         bin.operator,
         BinaryOperator::BitwiseAnd
@@ -144,39 +148,48 @@ fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
         BinaryOperator::BitwiseAnd => parse_quote!({
             let __a = #a_i32;
             let __b = #b_i32;
-            (__a & __b) as f64
+            (__a & __b) as #result_ty
         }),
         BinaryOperator::BitwiseOR => parse_quote!({
             let __a = #a_i32;
             let __b = #b_i32;
-            (__a | __b) as f64
+            (__a | __b) as #result_ty
         }),
         BinaryOperator::BitwiseXOR => parse_quote!({
             let __a = #a_i32;
             let __b = #b_i32;
-            (__a ^ __b) as f64
+            (__a ^ __b) as #result_ty
         }),
         // `<<`/`>>` use `wrapping_shl`/`shr` (they mask the shift count, so a
         // large `.ds` count won't panic like Rust's plain `<<` would).
         BinaryOperator::ShiftLeft => parse_quote!({
             let __a = #a_i32;
             let __b = #b_u32;
-            __a.wrapping_shl(__b) as f64
+            __a.wrapping_shl(__b) as #result_ty
         }),
         BinaryOperator::ShiftRight => parse_quote!({
             let __a = #a_i32;
             let __b = #b_u32;
-            __a.wrapping_shr(__b) as f64
+            __a.wrapping_shr(__b) as #result_ty
         }),
         // `>>>` is logical (zero-fill): `ToUint32` the left operand (→ u32)
         // before the shift.
         BinaryOperator::ShiftRightZeroFill => parse_quote!({
             let __a = #a_u32;
             let __b = #b_u32;
-            __a.wrapping_shr(__b) as f64
+            __a.wrapping_shr(__b) as #result_ty
         }),
         _ => unreachable!(),
     })
+}
+
+/// The number-context bitwise emitter — the masked result rounds back to `f64`
+/// (a `.ds` `number`). Index sites use [`bitwise_expr_to`] with `usize` to skip
+/// that hop (see `member::index_expr`), which both saves a conversion per
+/// access and keeps the `& mask` range visible to LLVM so the `Vec` bounds
+/// check can be elided.
+fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    bitwise_expr_to(bin, ctx, parse_quote!(f64))
 }
 
 /// `x === null` / `null === x` → `x.is_none()`; `x !== null` → `x.is_some()`,

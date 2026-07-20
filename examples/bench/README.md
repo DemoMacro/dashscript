@@ -65,7 +65,7 @@ without correctness is worthless.
 | fib                 |   67.9 |  211.3 |  182.5 |  148.6 | 9227465        | ✓   |
 | int-add             |  657.0 |  757.4 |  736.2 | 2317.8 | 49999999906710 | ✗   |
 | levenshtein         |  153.4 |  151.7 |  118.1 | 1191.0 | 600000         | ✓   |
-| loop-data-dependent | 2264.8 | 1512.0 | 1446.0 |    T/O | 2.550796048282 | ✓   |
+| loop-data-dependent | 1383.4 | 1478.5 | 1463.6 |    T/O | 2.550796048282 | ✓   |
 | mandelbrot          |   41.4 |  162.2 |  118.0 |  140.5 | 8011148        | ✓   |
 | matrix-multiply     |   67.9 |  154.9 |  139.3 | 1949.2 | 41079519680    | ✓   |
 | method-calls        |   35.9 |  137.4 |  120.3 | 2715.0 | 10000000       | ✓   |
@@ -124,11 +124,13 @@ recurrence, and a single sample runs past the `ds_median + 30s` ceiling._
   group after number-flavor inference (Phase 1) promoted its counter and
   accumulator to `i64` — `sum += i % 1000` is now pure integer arithmetic (no
   `f64` modulo); the sum stays under 2⁵³, so `i64` matches ES `f64` exactly.
-- **`loop-data-dependent`** — `ds` is 1.5× slower (2265 vs node 1512), down
-  from 2.3× before Phase 1 promoted the loop counter to `i64` (eliminating the
-  per-iteration `f64→i64→i32→f64→usize` cast chain). The remaining gap is the
-  `sum = sum*x[i&63] + x[(i*7)&63]` recurrence — a sequential dependency chain
-  the optimizer cannot reorder (a fundamental data hazard), not counter flavor.
+- **`loop-data-dependent`** — `ds` now leads (1383 vs node 1478, vs bun 1464).
+  The earlier gap was the bitwise **index** `x[i & 63]` round-tripping through
+  `f64` (`(__a & __b) as f64 … as usize`): the `f64` intermediate both cost a
+  conversion per access and, worse, hid the `& 63` range from LLVM so the `Vec`
+  bounds check could not be elided (V8 elides it). Emitting the masked result
+  straight to `usize` restored the elision. The `sum = sum*x[i&63] + …`
+  recurrence is not the bottleneck — it is a sequential hazard either way.
 - **`levenshtein`** — `ds` now matches node (153 vs 152). The Myers bit-vector
   inner loop is dominated by the `as i64 as i32` cast chain each bitwise op
   emits (JS `ToInt32` wrap), which a future Phase 2 may shorten by promoting

@@ -177,9 +177,9 @@
       "bench": "loop-data-dependent",
       "name": "loop-data-dependent",
       "times": {
-        "ds": 2264.7815,
-        "node": 1512.0337,
-        "bun": 1445.9555,
+        "ds": 1383.3626,
+        "node": 1478.4778,
+        "bun": 1463.5867,
         "perry": null
       },
       "checksums": {
