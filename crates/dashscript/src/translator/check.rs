@@ -286,6 +286,14 @@ fn collect_assignment_target(target: &AssignmentTarget, out: &mut Vec<OxcDiagnos
                     sm.span,
                 ));
             }
+            // `<re>.lastIndex = …` (write) — same stateless-cursor reason as
+            // the read arm in `unsupported_pattern`; route to the engine.
+            if sm.property.name.as_str() == "lastIndex" {
+                out.push(err(
+                    "regex `.lastIndex` assignment needs the engine (regress is stateless)",
+                    sm.span,
+                ));
+            }
             collect_expr(&sm.object, out);
         }
         _ => {}
@@ -498,6 +506,15 @@ fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         // `.constructor` — prototype reflection.
         Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "constructor" => {
             out.push(err("`.constructor` reflection is unsupported", sm.span));
+        }
+        // `<re>.lastIndex` (read) — the ES regex stateful cursor. regress is
+        // stateless (no `lastIndex` field, so this would be E0609), so route to
+        // the engine, whose exec/test advance `lastIndex` like ES.
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "lastIndex" => {
+            out.push(err(
+                "regex `.lastIndex` needs the engine (regress is stateless)",
+                sm.span,
+            ));
         }
         // `<Global>.<method>.length` — function arity reflection
         // (`Math.floor.length`, `Object.create.length`). The static member read

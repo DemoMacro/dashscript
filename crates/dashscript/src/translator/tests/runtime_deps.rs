@@ -206,6 +206,20 @@ fn regex_exec_once_outside_loop_stays_on_regress() {
 }
 
 #[test]
+fn regex_lastindex_access_routes_to_engine() {
+    // `<re>.lastIndex` read or write — regress is stateless (no lastIndex
+    // field → E0609), so route to the engine, whose regex carries the cursor.
+    let src = "function main(): void {\n  const re = /a/g;\n  re.lastIndex = 2;\n  console.log(re.lastIndex);\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "lastIndex access should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn regex_local_test_uses_regress() {
     // `let r = /pat/; r.test(s)` — the local infers `regress::Regex`, so
     // `.test` dispatches to the regress `find` method, not the engine.
