@@ -24,9 +24,13 @@
 /// included for the same reason: the `Function` constructor has no DashScript
 /// mapping (dynamic function creation is reflection), so a bare reference
 /// (`Object.getOwnPropertyNames(Function)`, `Function.prototype.X`) routes to
-/// the engine instead of emitting a phantom `function` binding.
+/// the engine instead of emitting a phantom `function` binding. `Date` is
+/// included for the same reason: DashScript models Temporal (not `Date`), so
+/// the `Date` constructor has no mapping, and a bare reference (`Date.now`,
+/// `Date.prototype.X`) routes to the engine rather than emitting a phantom
+/// `date` binding.
 pub const STATIC_ONLY_GLOBALS: &[&str] = &[
-    "Array", "Object", "Math", "JSON", "Map", "Set", "RegExp", "Function",
+    "Array", "Object", "Math", "JSON", "Map", "Set", "RegExp", "Function", "Date",
 ];
 
 /// Names that may stand as the receiver of a mapped static-member read —
