@@ -37,15 +37,26 @@ fn regex_test(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> 
 }
 
 /// `/pat/.exec(s)` (non-global) → `Option<DsMatch>` (ES: the match result or
-/// `null`). Mirrors `String.prototype.match` but the receiver is the regex.
-/// Only a literal receiver is lowered (a variable's compiled pattern is lost);
-/// a non-regex `.exec` falls through.
+/// `null`). Mirrors `String.prototype.match` but the receiver is the regex. A
+/// literal receiver re-compiles via `regex_match`; a regex local
+/// (`let r = /pat/; r.exec(s)`) reuses the already-compiled `regress::Regex`
+/// and converts its `Match` to a `DsMatch`.
 fn regex_exec(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     let arg = builtins::str_method_arg(args.first()?, ctx);
     match &sm.object {
         Expression::RegExpLiteral(re) => {
             let (pat, fl) = super::regex_lit_parts(re);
             Some(parse_quote!(crate::__ds::regex_match(#pat, #fl, #arg)))
+        }
+        // `r.exec(s)` on a regex local — `r` is an already-compiled
+        // `regress::Regex`, so lower to `r.find(s)` and convert the `Match` to
+        // a `DsMatch` (mirrors `regex_match`, which re-compiles from a literal).
+        Expression::Identifier(_) if is_regex_local(&sm.object, ctx) => {
+            let r = translate_expr(&sm.object, ctx);
+            Some(parse_quote!({
+                let __t = #arg;
+                #r.find(__t).map(|__m| crate::__ds::ds_match_from(__t, &__m))
+            }))
         }
         _ => None,
     }
@@ -202,6 +213,30 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 builtins::json_static(&sm.property.name, call.arguments.as_slice(), ctx)
             {
                 return expr;
+            }
+        }
+        // `RegExp.escape(s)` (TC39 Stage 3).
+        if builtins::is_ident(&sm.object, "RegExp") {
+            if let Some(expr) =
+                builtins::reg_exp_static(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
+                return expr;
+            }
+        }
+    }
+    // `Temporal.PlainDate.from(s)` → temporal_rs. The callee is a nested
+    // `Temporal.<Type>.<method>` static member (its object is itself a member).
+    if let Expression::StaticMemberExpression(sm) = &call.callee {
+        if let Expression::StaticMemberExpression(type_me) = &sm.object {
+            if builtins::is_ident(&type_me.object, "Temporal") {
+                if let Some(expr) = builtins::temporal_static(
+                    type_me.property.name.as_str(),
+                    sm.property.name.as_str(),
+                    call.arguments.as_slice(),
+                    ctx,
+                ) {
+                    return expr;
+                }
             }
         }
     }

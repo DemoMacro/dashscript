@@ -3,6 +3,7 @@ use oxc_ast::ast::{Expression, NewExpression};
 use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
+use super::super::builtins;
 use super::super::context::Ctx;
 use super::array_elem_arg;
 
@@ -14,6 +15,16 @@ use super::array_elem_arg;
 /// supported), so it falls through to `Map::new(…)` and surfaces as a `cargo
 /// check` error honestly.
 pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
+    // `new RegExp("pat"[, flags])` — the ES RegExp constructor, lowered to the
+    // same `__ds::regex` helper as `/pat/` literals. Intercepted before the
+    // generic `Foo::new` lowering, which would emit `RegExp::new` (E0425).
+    if let Expression::Identifier(id) = &n.callee {
+        if id.name.as_str() == "RegExp" {
+            if let Some(e) = builtins::reg_exp_constructor(&n.arguments, ctx) {
+                return e;
+            }
+        }
+    }
     let Some(name) = class_name(&n.callee) else {
         return parse_quote!(::core::todo!());
     };

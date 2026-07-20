@@ -4,12 +4,13 @@
 //! a named built-in file.
 
 use oxc_ast::ast::{Argument, IdentifierReference};
+use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
 use super::super::bindings;
 use super::super::context::Ctx;
 use super::super::expressions::{
-    bool_expr, is_number_arg, string_expr, translate_argument, translate_number_to,
+    bool_expr, is_number_arg, regex_lit_parts, string_expr, translate_argument, translate_number_to,
 };
 use super::super::flavor::NumberFlavor;
 
@@ -87,6 +88,10 @@ pub(in crate::translator) fn global_function(
             let a = translate_number_to(args.first()?.as_expression()?, NumberFlavor::F64, ctx);
             parse_quote!(#a.is_finite())
         }
+        // `RegExp(pattern[, flags])` — the ES RegExp constructor (no `new`);
+        // lowered to the same `__ds::regex` helper as `/pat/` literals. See
+        // [`reg_exp_constructor`].
+        "RegExp" => return reg_exp_constructor(args, ctx),
         _ => return None,
     })
 }
@@ -322,4 +327,78 @@ pub(in crate::translator) fn parse_float_expr(a: Expr) -> Expr {
         let __arg = #a;
         __pf(&__arg.to_string())
     })
+}
+
+/// `RegExp(pattern[, flags])` / `new RegExp(...)` → `__ds::regex`. ES RegExp
+/// takes a runtime string pattern (a variable, not just a literal); flags
+/// default to empty. `RegExp(/pat/)` copies the literal's pattern and, absent a
+/// flags arg, its flags. Shared by the global `RegExp(...)` call and the
+/// `new RegExp(...)` lowering.
+pub(in crate::translator) fn reg_exp_constructor(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let first = args.first()?;
+    let pat = reg_exp_str_arg(first, ctx);
+    let fl = match args.get(1) {
+        Some(a) => reg_exp_str_arg(a, ctx),
+        None => match first {
+            // `RegExp(/pat/)` with no flags arg copies the literal's flags.
+            Argument::RegExpLiteral(re) => {
+                let (_, f) = regex_lit_parts(re);
+                parse_quote!(#f)
+            }
+            _ => parse_quote!(""),
+        },
+    };
+    Some(parse_quote!(crate::__ds::regex(#pat, #fl)))
+}
+
+/// A `&str` expression for a `RegExp` constructor argument: a string or regex
+/// literal is emitted as a `&str` literal; any other argument is ToString'd and
+/// borrowed (`&{ … }.to_string()` is a `&String` that deref-coerces to `&str`).
+fn reg_exp_str_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    match arg {
+        Argument::StringLiteral(s) => {
+            let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+            parse_quote!(#lit)
+        }
+        Argument::RegExpLiteral(re) => {
+            let (p, _) = regex_lit_parts(re);
+            parse_quote!(#p)
+        }
+        _ => {
+            let e = translate_argument(arg, ctx);
+            parse_quote!(&{ #e }.to_string())
+        }
+    }
+}
+
+/// `RegExp.<method>(...)` static methods. `RegExp.escape(s)` (TC39 Stage 3)
+/// backslash-escapes every regex metacharacter so `s` is safe to splice into a
+/// pattern; inlined so it pulls no runtime dep. Returns `None` for any other
+/// name (falls through; `RegExp.<other>` surfaces as E0425 honestly).
+pub(in crate::translator) fn reg_exp_static(
+    method: &str,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    if method != "escape" {
+        return None;
+    }
+    let s = args.first()?;
+    let e = translate_argument(s, ctx);
+    Some(parse_quote!({
+        // TC39 RegExp.escape: backslash-escape every SyntaxCharacter and `/`.
+        let __s = #e;
+        let mut __out = ::std::string::String::with_capacity(__s.len());
+        for __c in __s.chars() {
+            if matches!(
+                __c,
+                '^' | '$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}'
+                    | '|' | '/'
+            ) {
+                __out.push('\\');
+            }
+            __out.push(__c);
+        }
+        __out
+    }))
 }

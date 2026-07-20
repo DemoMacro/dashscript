@@ -55,6 +55,21 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             _ => {}
         }
     }
+    // `d.year`/`d.month`/`d.day`/… on a `Temporal.PlainDate` local → the matching
+    // `temporal_rs::PlainDate` accessor method (Rust accessors are methods, not
+    // fields; ES Temporal calendar fields are properties). Numeric fields cast to
+    // `f64` (a `.ds` `number` is `f64`); `inLeapYear` is a bool, no cast.
+    if is_plain_date_local(&sm.object, ctx) {
+        if let Some(m) = plain_date_method(field_name) {
+            let method = syn::Ident::new(m, Span::call_site());
+            let obj = translate_expr(&sm.object, ctx);
+            return if field_name == "inLeapYear" {
+                parse_quote!(#obj.#method())
+            } else {
+                parse_quote!((#obj.#method() as f64))
+            };
+        }
+    }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").copied().unwrap()`
     // (a TS `Record` static field access and `m["a"]` are the same lookup).
     if is_hashmap_local(&sm.object, ctx) {
@@ -187,6 +202,38 @@ fn is_match_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     };
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name).is_some_and(is_option_ds_match)
+}
+
+/// Whether `expr` is a `Temporal.PlainDate` local (a
+/// `let d = Temporal.PlainDate.from(…)` result), so `d.year`/`d.month`/…
+/// route to `temporal_rs::PlainDate`'s accessor methods instead of failing on a
+/// missing struct field (E0609 — PlainDate's slots are private).
+fn is_plain_date_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "PlainDate"))
+}
+
+/// The `temporal_rs::PlainDate` accessor method for an ES Temporal calendar
+/// field, if any (`dayOfYear` → `day_of_year`, …). Returns `None` for a field
+/// that is not a calendar accessor (e.g. `calendar`, or a user-added field).
+fn plain_date_method(name: &str) -> Option<&'static str> {
+    match name {
+        "year" => Some("year"),
+        "month" => Some("month"),
+        "day" => Some("day"),
+        "dayOfWeek" => Some("day_of_week"),
+        "dayOfYear" => Some("day_of_year"),
+        "daysInWeek" => Some("days_in_week"),
+        "daysInMonth" => Some("days_in_month"),
+        "daysInYear" => Some("days_in_year"),
+        "monthsInYear" => Some("months_in_year"),
+        "inLeapYear" => Some("in_leap_year"),
+        _ => None,
+    }
 }
 
 /// Whether a recorded type path is `Option<…DsMatch>` (a `.match` result). The

@@ -278,3 +278,171 @@ fn split_regex_emits_regex_split() {
         "string-arg split stays on str path, got:\n{rust}"
     );
 }
+
+#[test]
+fn regexp_call_constructor_emits_regex() {
+    // `RegExp("pat", "g")` (no `new`) → `__ds::regex`, same as a `/pat/` literal.
+    // The runtime-string pattern is ToString'd; flags pass through verbatim.
+    let src = "function main(): void {\n  const r = RegExp(\"\\\\d+\", \"g\");\n  console.log(r.test(\"abc123\"));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_regress(),
+        "RegExp() flags needs_regress, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("__ds::regex(") && rust.contains("\"g\""),
+        "RegExp() emits __ds::regex with flags, got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".find("),
+        "RegExp() local infers Regex so .test lowers to .find, got:\n{rust}"
+    );
+}
+
+#[test]
+fn new_regexp_constructor_emits_regex() {
+    // `new RegExp(/pat/)` copies the literal's pattern; `new RegExp(var)` takes
+    // a runtime pattern. Both lower to `__ds::regex`, not `RegExp::new`.
+    let src = "function main(): void {\n  const r1 = new RegExp(/[a-z]+/);\n  const pat = \"x\";\n  const r2 = new RegExp(pat);\n  console.log(r1.test(\"hi\"));\n  console.log(r2.test(\"ax\"));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_regress(),
+        "new RegExp flags needs_regress, got deps: {deps:?}"
+    );
+    assert!(
+        !rust.contains("RegExp::new"),
+        "new RegExp must not emit RegExp::new (E0425), got:\n{rust}"
+    );
+    assert!(
+        rust.matches("__ds::regex(").count() >= 2,
+        "two new RegExp() calls emit two __ds::regex, got:\n{rust}"
+    );
+}
+
+#[test]
+fn reg_exp_escape_emits_inline_metachar_escape() {
+    // `RegExp.escape(s)` (TC39 Stage 3) — inline backslash-escape of
+    // metacharacters; no runtime dep (a pure std char loop).
+    let src = "function main(): void {\n  console.log(RegExp.escape(\"a.b*c\"));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !deps.needs_regress(),
+        "RegExp.escape pulls no regress dep, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("push('\\\\')"),
+        "RegExp.escape emits backslash-escape loop, got:\n{rust}"
+    );
+}
+
+#[test]
+fn regex_local_exec_emits_ds_match_from() {
+    // `let r = /pat/; r.exec(s)` — the variable receiver reuses the already-
+    // compiled `Regex` (`.find` + `ds_match_from`), not `regex_match` (which
+    // needs the source pattern the variable has lost).
+    let src = "function main(): void {\n  const r = /(\\w+)/;\n  const m = r.exec(\"hi\");\n  console.log(m[0]);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "regex local exec flags needs_regress");
+    assert!(
+        rust.contains("ds_match_from"),
+        "variable .exec lowers to ds_match_from, got:\n{rust}"
+    );
+}
+
+#[test]
+fn regex_local_exec_result_infers_option_ds_match() {
+    // `let r = /pat/; const m = r.exec(s); m !== null` — `m` infers
+    // `Option<DsMatch>` (the receiver is a regex local, not just a literal),
+    // so `m !== null` lowers to `is_some()` (not a plain `!= None`, which would
+    // be E0369), and `m.index` reaches the DsMatch field, not Option's missing
+    // `index`.
+    let src = "function main(): void {\n  const r = /(\\w+)/;\n  const m = r.exec(\"hi\");\n  console.log(m !== null);\n  console.log(m.index);\n}";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains(".is_some()"),
+        "m !== null lowers to is_some, got:\n{rust}"
+    );
+    assert!(
+        !rust.contains("!= None") && !rust.contains("!= ::core::option::Option::None"),
+        "m !== null must not emit a plain != None (E0369), got:\n{rust}"
+    );
+}
+
+#[test]
+fn temporal_plain_date_from_routes_through_temporal_rs() {
+    // `Temporal.PlainDate.from(s)` → `temporal_rs::PlainDate::from_utf8` (the
+    // inherent constructor — no FromStr trait import). Flags `needs_temporal`;
+    // `.toString()` reuses the Display-based `to_string` mapping.
+    let src = "function main(): void {\n  const d = Temporal.PlainDate.from(\"2024-01-01\");\n  console.log(d.toString());\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_temporal(),
+        "Temporal.PlainDate.from flags needs_temporal, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("temporal_rs::PlainDate::from_utf8"),
+        "from routes through temporal_rs, got:\n{rust}"
+    );
+}
+
+#[test]
+fn temporal_plain_date_accessors_route_to_methods() {
+    // `d.year`/`d.month`/`d.day` on a `Temporal.PlainDate` local → the matching
+    // `temporal_rs::PlainDate` accessor method (ES calendar fields are
+    // properties; Rust accessors are methods — numeric ones cast to `f64`).
+    let src = "function main(): void {\n  const d = Temporal.PlainDate.from(\"2024-03-15\");\n  console.log(d.year);\n  console.log(d.month);\n  console.log(d.day);\n  console.log(d.inLeapYear);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_temporal(),
+        "flags needs_temporal, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains(".year()") && rust.contains(".month()") && rust.contains(".day()"),
+        "calendar accessors route to methods, got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".in_leap_year()"),
+        "inLeapYear routes to in_leap_year, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("as f64"),
+        "numeric accessors cast to f64, got:\n{rust}"
+    );
+}
+
+#[test]
+fn temporal_plain_date_compare_emits_ordering_match() {
+    // `Temporal.PlainDate.compare(a, b)` → -1/0/1 (Temporal.CompareResult) via
+    // `compare_iso` + an `Ordering` match; args are bound so a `&` borrow works
+    // for both locals and inline `from(…)` calls.
+    let src = "function main(): void {\n  const a = Temporal.PlainDate.from(\"2024-01-01\");\n  const b = Temporal.PlainDate.from(\"2024-12-31\");\n  console.log(Temporal.PlainDate.compare(a, b));\n  console.log(Temporal.PlainDate.compare(a, a));\n  console.log(Temporal.PlainDate.compare(b, a));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_temporal(),
+        "flags needs_temporal, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("compare_iso"),
+        "compare routes to compare_iso, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("Ordering::Less") && rust.contains("Ordering::Greater"),
+        "compare lowers an Ordering match, got:\n{rust}"
+    );
+}

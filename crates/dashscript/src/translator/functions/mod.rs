@@ -639,7 +639,7 @@ fn translate_variable_declaration(
                             let init = d.init.as_ref()?;
                             let ctx = Ctx::new(&*locals, registry, narrow, names);
                             object_assign_type(init, &ctx)
-                                .or_else(|| match_result_type(init))
+                                .or_else(|| match_result_type(init, &ctx))
                                 .or_else(|| {
                                     expressions::is_number_expr(init, &ctx)
                                         .then(|| parse_quote!(f64))
@@ -780,13 +780,13 @@ fn object_assign_type(init: &Expression, ctx: &Ctx<'_>) -> Option<Type> {
     }))
 }
 
-/// `s.match(/pat/)` or `/pat/.exec(s)` (non-global) returns an ES match result
-/// or `null`, so an unannotated `let m = …` records `Option<DsMatch>` —
-/// letting `m[0]`/`m.index`/`m.input`/`m.length` route through the `DsMatch`
-/// accessors instead of failing on `Option`'s missing `Index`/`len`. Only a
+/// `s.match(/pat/)` or `r.exec(s)` (non-global) returns an ES match result or
+/// `null`, so an unannotated `let m = …` records `Option<DsMatch>` — letting
+/// `m[0]`/`m.index`/`m.input`/`m.length` route through the `DsMatch` accessors
+/// instead of failing on `Option`'s missing `Index`/`len`. Recognized: a
 /// `.match` call with a regex-literal argument, or an `.exec` call on a regex
-/// literal, is recognized.
-fn match_result_type(init: &Expression) -> Option<Type> {
+/// literal or a local inferred to be one (`let r = /pat/; r.exec(s)`).
+fn match_result_type(init: &Expression, ctx: &Ctx<'_>) -> Option<Type> {
     let Expression::CallExpression(c) = init else {
         return None;
     };
@@ -795,9 +795,23 @@ fn match_result_type(init: &Expression) -> Option<Type> {
     };
     let is_match = sm.property.name.as_str() == "match"
         && matches!(c.arguments.first(), Some(Argument::RegExpLiteral(_)));
-    let is_exec =
-        sm.property.name.as_str() == "exec" && matches!(&sm.object, Expression::RegExpLiteral(_));
+    let is_exec = sm.property.name.as_str() == "exec" && is_regex_receiver(&sm.object, ctx);
     (is_match || is_exec).then(|| parse_quote!(Option<crate::__ds::DsMatch>))
+}
+
+/// Whether `obj` is a regex value `exec` can be called on — a `/pat/` literal
+/// or a local inferred to be `regress::Regex` (so `let r = /pat/; r.exec(s)`
+/// records `Option<DsMatch>` on `m`, matching the literal case).
+fn is_regex_receiver(obj: &Expression, ctx: &Ctx<'_>) -> bool {
+    if matches!(obj, Expression::RegExpLiteral(_)) {
+        return true;
+    }
+    let Expression::Identifier(id) = obj else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "Regex"))
 }
 
 /// homogeneous array → `Vec<f64>` / `Vec<String>`. Anchors the binding's type
@@ -862,6 +876,38 @@ fn infer_literal_type(expr: &Expression) -> Option<Type> {
                 _ => None,
             }
         }
+        // `RegExp("pat")` / `new RegExp("pat")` — the constructor returns a
+        // compiled regex, so `let r = RegExp("pat")` infers `regress::Regex`
+        // (the type `.test`/`.exec` dispatch on), matching the `/pat/` literal.
+        Expression::CallExpression(c) if matches!(&c.callee, Expression::Identifier(id) if id.name.as_str() == "RegExp") => {
+            Some(parse_quote!(regress::Regex))
+        }
+        Expression::NewExpression(n) if matches!(&n.callee, Expression::Identifier(id) if id.name.as_str() == "RegExp") => {
+            Some(parse_quote!(regress::Regex))
+        }
+        // `Temporal.PlainDate.from(s)` → `temporal_rs::PlainDate` (the type
+        // `.toString`/`.year`/`.month`/`.day` dispatch on).
+        Expression::CallExpression(_) if is_temporal_static_call(expr, "PlainDate", "from") => {
+            Some(parse_quote!(temporal_rs::PlainDate))
+        }
         _ => None,
     }
+}
+
+/// True when `expr` is `Temporal.<ty>.<method>(…)` — a nested static-member
+/// call on the `Temporal` namespace (`Temporal.PlainDate.from`, …).
+fn is_temporal_static_call(expr: &Expression, ty: &str, method: &str) -> bool {
+    let Expression::CallExpression(c) = expr else {
+        return false;
+    };
+    let Expression::StaticMemberExpression(sm) = &c.callee else {
+        return false;
+    };
+    sm.property.name.as_str() == method
+        && matches!(
+            &sm.object,
+            Expression::StaticMemberExpression(tm)
+            if tm.property.name.as_str() == ty
+                && matches!(&tm.object, Expression::Identifier(id) if id.name.as_str() == "Temporal")
+        )
 }

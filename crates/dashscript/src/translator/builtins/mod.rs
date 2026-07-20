@@ -22,16 +22,20 @@ mod node;
 mod number;
 mod object;
 mod string;
+mod temporal;
 
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
 pub(in crate::translator) use collection::collection_method;
 pub(in crate::translator) use console::console_method;
-pub(in crate::translator) use global::{global_function, to_number_expr};
+pub(in crate::translator) use global::{
+    global_function, reg_exp_constructor, reg_exp_static, to_number_expr,
+};
 pub(in crate::translator) use json::json_static;
 pub(in crate::translator) use math::{math_constant, math_method};
 pub(in crate::translator) use number::{number_constant, number_method, number_static};
 pub(in crate::translator) use object::object_method;
 pub(in crate::translator) use string::{string_method, string_method_on, string_static};
+pub(in crate::translator) use temporal::temporal_static;
 
 use oxc_ast::ast::{Argument, Expression};
 use proc_macro2::Span;

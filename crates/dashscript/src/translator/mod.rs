@@ -59,17 +59,23 @@ pub enum RuntimeDep {
     /// regex semantics — backreferences, lookaround, which the `regex` crate
     /// cannot express). Routes through `__ds::regex`; flags the `regress` dep.
     Regress,
+    /// A `Temporal.*` API call (`Temporal.PlainDate.from`, `.toString`, …)
+    /// lowered to the `temporal_rs` crate (boa-dev/temporal-rs — the Rust
+    /// implementation of ECMAScript Temporal). Routes through `temporal_rs::`
+    /// directly; no `__ds` helper slice.
+    Temporal,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 5] = [
+    const ALL: [RuntimeDep; 6] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
         RuntimeDep::ArrayHelper,
         RuntimeDep::Regress,
+        RuntimeDep::Temporal,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -81,6 +87,7 @@ impl RuntimeDep {
             RuntimeDep::SerdeJson => Some("serde_json::"),
             RuntimeDep::ArrayHelper => Some("__ds::array_set"),
             RuntimeDep::Regress => Some("__ds::regex"),
+            RuntimeDep::Temporal => Some("temporal_rs::"),
             RuntimeDep::Engine => None,
         }
     }
@@ -98,6 +105,10 @@ impl RuntimeDep {
             // it is only emitted for programs that opt into the engine path.
             RuntimeDep::Engine => Some(("rquickjs", "\"0.12\"")),
             RuntimeDep::Regress => Some(("regress", "\"0.11\"")),
+            // `temporal_rs` (boa-dev/temporal-rs) — the Rust implementation of
+            // ECMAScript Temporal. Default features embed time-zone data
+            // (`compiled_data`) so `Temporal.Now`/`ZonedDateTime` work standalone.
+            RuntimeDep::Temporal => Some(("temporal_rs", "\"0.2\"")),
             RuntimeDep::ArrayHelper => None,
         }
     }
@@ -108,7 +119,7 @@ impl RuntimeDep {
             RuntimeDep::RyuJs => Some(RYUJS_HELPERS),
             RuntimeDep::ArrayHelper => Some(ARRAY_HELPER),
             RuntimeDep::Regress => Some(REGRESS_HELPERS),
-            RuntimeDep::SerdeJson | RuntimeDep::Engine => None,
+            RuntimeDep::SerdeJson | RuntimeDep::Engine | RuntimeDep::Temporal => None,
         }
     }
 }
@@ -163,6 +174,9 @@ impl RuntimeDeps {
     }
     pub fn needs_regress(&self) -> bool {
         self.has(RuntimeDep::Regress)
+    }
+    pub fn needs_temporal(&self) -> bool {
+        self.has(RuntimeDep::Temporal)
     }
 
     /// Union another dep set into this one — a project links a runtime dep if
@@ -307,21 +321,28 @@ pub struct DsMatch {
     pub input: String,
 }
 
+/// Build a `DsMatch` from one regress `Match` — shared by `regex_match`
+/// (re-compiles from a source pattern) and the variable `.exec` lowering (uses
+/// an already-compiled `Regex`). regress' `groups()` yields group 0 (the whole
+/// match) followed by the capture groups — exactly the ES `m[0]`/`m[1]`/…
+/// layout, so no manual whole-match prefix (that would shift every group).
+#[inline]
+pub fn ds_match_from(text: &str, m: &Match) -> DsMatch {
+    let captures: Vec<Option<String>> =
+        m.groups().map(|g| g.map(|r| text[r].to_string())).collect();
+    DsMatch {
+        captures,
+        index: m.range().start,
+        input: text.to_string(),
+    }
+}
+
 /// `s.match(/pat/)` (non-global) — the first match as a `DsMatch`, or `None`.
 #[inline]
 pub fn regex_match(pattern: &str, flags: &str, text: &str) -> Option<DsMatch> {
     let re = Regex::with_flags(pattern, flags).ok()?;
     let m = re.find(text)?;
-    // regress' `groups()` yields group 0 (the whole match) followed by the
-    // capture groups — exactly the ES `m[0]`/`m[1]`/… layout, so no manual
-    // whole-match prefix (that would shift every group by one).
-    let captures: Vec<Option<String>> =
-        m.groups().map(|g| g.map(|r| text[r].to_string())).collect();
-    Some(DsMatch {
-        captures,
-        index: m.range().start,
-        input: text.to_string(),
-    })
+    Some(ds_match_from(text, &m))
 }
 
 /// `s.search(/pat/)` — the byte index of the first match, or `-1` (ES returns
