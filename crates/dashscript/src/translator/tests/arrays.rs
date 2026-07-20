@@ -27,7 +27,7 @@ fn translates_array_map_to_iter_copied_map_collect() {
         "function f(): void { const xs: number[] = [1, 2, 3]; const ys = xs.map(n => n * 2); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("xs.iter().copied().map(|n| n * 2_f64).collect::<Vec<_>>()"),
+        rust.contains("xs.iter().cloned().map(|n| n * 2_f64).collect::<Vec<_>>()"),
         "got:\n{rust}"
     );
 }
@@ -37,10 +37,10 @@ fn translates_array_filter_to_iter_copied_filter_collect() {
     let src =
         "function f(): void { const xs: number[] = [1, 2, 3]; const ys = xs.filter(n => n > 1); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    // `.filter`'s closure receives &Item after `.copied()`, so the param is
+    // `.filter`'s closure receives &Item after `.cloned()`, so the param is
     // destructured (`|&n|`) and the body reads the owned value.
     assert!(
-        rust.contains("xs.iter().copied().filter(|&n| n > 1_f64).collect::<Vec<_>>()"),
+        rust.contains("xs.iter().cloned().filter(|&n| n > 1_f64).collect::<Vec<_>>()"),
         "got:\n{rust}"
     );
 }
@@ -165,7 +165,7 @@ fn translates_array_find_to_iter_copied_find() {
         "function f(): void { const xs: number[] = [1, 2, 3]; const r = xs.find((n) => n > 1); }";
     let rust = Translator::new().translate(src).expect("should translate");
     // `.find`'s closure receives `&Item`, so its param is `|&n|`.
-    assert!(rust.contains(".iter().copied().find(|&n|"), "got:\n{rust}");
+    assert!(rust.contains(".iter().cloned().find(|&n|"), "got:\n{rust}");
 }
 
 #[test]
@@ -198,7 +198,7 @@ fn translates_array_reduce_without_seed_to_reduce() {
     let src = "function f(): void { const xs: number[] = [1, 2, 3]; const r = xs.reduce((a, b) => a + b); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains(".iter().copied().reduce(|a, b|"),
+        rust.contains(".iter().cloned().reduce(|a, b|"),
         "got:\n{rust}"
     );
 }
@@ -300,7 +300,7 @@ fn translates_array_to_reversed_to_rev_collect() {
     let src = "function f(xs: number[]): number[] { return xs.toReversed(); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains(".iter().copied().rev().collect::<Vec<_>>()"),
+        rust.contains(".iter().cloned().rev().collect::<Vec<_>>()"),
         "got:\n{rust}"
     );
 }
@@ -359,7 +359,7 @@ fn translates_array_from_clone() {
 fn translates_array_from_mapped() {
     let src = "function f(xs: number[]): number[] { return Array.from(xs, n => n * 2); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".iter().copied().map("), "got:\n{rust}");
+    assert!(rust.contains(".iter().cloned().map("), "got:\n{rust}");
 }
 
 #[test]
@@ -410,7 +410,7 @@ fn translates_array_prototype_call_to_method() {
     let src = "function f(): void { const xs: number[] = [1, 2]; const ys = Array.prototype.map.call(xs, n => n * 2); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains(".iter().copied().map(|n| n * 2_f64)"),
+        rust.contains(".iter().cloned().map(|n| n * 2_f64)"),
         "got:\n{rust}"
     );
     assert!(!rust.contains("prototype"), "got:\n{rust}");

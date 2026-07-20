@@ -57,10 +57,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490543.4245 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268409.1192 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490543.4245 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268409.1192 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -69,10 +69,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490664.2277 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268568.9892 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 93490664.2277 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268568.9892 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -200,10 +200,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492140.0566 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -212,10 +212,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 93492272.8831 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -4716,7 +4716,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:7:30: warning: unnecessary parentheses around method argument\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:14:30: warning: unnecessary parentheses around method argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:16: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:7:25: error[E0599]: no method named `find` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`",
+    "detail": "src\\main.rs:7:30: warning: unnecessary parentheses around method argument\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:14:30: warning: unnecessary parentheses around method argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:54: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:38: error[E0618]: expected function, found `!`",
     "note": ""
   },
   {
@@ -4827,7 +4827,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:16: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:7:25: error[E0599]: no method named `position` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:7:25: warning: unreachable call: unreachable call\nsrc\\main.rs:14:16: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`",
+    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:25: warning: unreachable call: unreachable call\nsrc\\main.rs:6:9: error[E0282]: type annotations needed for `Vec<_>`\nsrc\\main.rs:14:25: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 4 warnings emitted",
     "note": ""
   },
   {
@@ -4930,7 +4930,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:9:10: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:10:10: error[E0599]: no method named `position` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:10:10: warning: unreachable call: unreachable call\nsrc\\main.rs:17:10: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:18:10: error[E0599]: no method named `position` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:18:10: warning: unreachable call: unreachable call",
+    "detail": "src\\main.rs:10:10: warning: unreachable call: unreachable call\nsrc\\main.rs:18:10: warning: unreachable call: unreachable call\nsrc\\main.rs:25:10: warning: unreachable call: unreachable call\nsrc\\main.rs:32:10: warning: unreachable call: unreachable call\nsrc\\main.rs:39:10: warning: unreachable call: unreachable call\nsrc\\main.rs:46:10: warning: unreachable call: unreachable call",
     "note": ""
   },
   {
@@ -4938,7 +4938,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:7:36: warning: unnecessary parentheses around method argument\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:14:36: warning: unnecessary parentheses around method argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:16: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:7:25: error[E0599]: `Copied<std::slice::Iter<'_, String>>` is not an iterator: `Copied<std::slice::Iter<'_, String>>` is not an iterator",
+    "detail": "src\\main.rs:7:36: warning: unnecessary parentheses around method argument\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:14:36: warning: unnecessary parentheses around method argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:44: error[E0618]: expected function, found `!`",
     "note": ""
   },
   {
@@ -5057,7 +5057,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:16: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:7:25: error[E0599]: no method named `rposition` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:7:25: warning: unreachable call: unreachable call\nsrc\\main.rs:14:16: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`",
+    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:25: warning: unreachable call: unreachable call\nsrc\\main.rs:6:9: error[E0282]: type annotations needed for `Vec<_>`\nsrc\\main.rs:14:25: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 4 warnings emitted",
     "note": ""
   },
   {
@@ -5168,7 +5168,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:9:10: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:10:10: error[E0599]: no method named `rposition` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:10:10: warning: unreachable call: unreachable call\nsrc\\main.rs:17:10: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:18:10: error[E0599]: no method named `rposition` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nsrc\\main.rs:18:10: warning: unreachable call: unreachable call",
+    "detail": "src\\main.rs:10:10: warning: unreachable call: unreachable call\nsrc\\main.rs:18:10: warning: unreachable call: unreachable call\nsrc\\main.rs:25:10: warning: unreachable call: unreachable call\nsrc\\main.rs:32:10: warning: unreachable call: unreachable call\nsrc\\main.rs:39:10: warning: unreachable call: unreachable call\nsrc\\main.rs:46:10: warning: unreachable call: unreachable call",
     "note": ""
   },
   {
@@ -8182,7 +8182,11 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:6:54: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:10: error[E0277]: the trait bound `HashMap<String, f64>: Copy` is not satisfied: the trait `Copy` is not implemented for `HashMap<String, f64>`\nsrc\\main.rs:7:19: error[E0599]: no method named `position` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, HashMap<String, f64>>>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
     "note": ""
   },
   {
@@ -8266,8 +8270,11 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-b-ii-9",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:45: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:4:54: error[E0599]: no method named `position` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -9662,7 +9669,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:6:66: error[E0277]: the trait bound `HashMap<String, f64>: Copy` is not satisfied: the trait `Copy` is not implemented for `HashMap<String, f64>`\nsrc\\main.rs:6:75: error[E0599]: no method named `rposition` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, HashMap<String, f64>>>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:6:37: error[E0382]: use of moved value: `obj2`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -9746,8 +9753,11 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-8-b-ii-9",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:56: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:4:65: error[E0599]: no method named `rposition` found for struct `Copied<I>` in the current scope: method not found in `Copied<std::slice::Iter<'_, String>>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -12146,7 +12156,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:4:59: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:5:10: error[E0599]: `Copied<std::slice::Iter<'_, String>>` is not an iterator: `Copied<std::slice::Iter<'_, String>>` is not an iterator\nsrc\\main.rs:5:10: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:5:10: warning: unreachable call: unreachable call\nsrc\\main.rs:4:15: error[E0277]: `Option<String>` doesn't implement `std::fmt::Display`: `Option<String>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -13996,7 +14006,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:4:59: error[E0277]: the trait bound `String: Copy` is not satisfied: the trait `Copy` is not implemented for `String`\nsrc\\main.rs:4:68: error[E0599]: `Copied<std::slice::Iter<'_, String>>` is not an iterator: `Copied<std::slice::Iter<'_, String>>` is not an iterator\nsrc\\main.rs:5:10: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:5:10: warning: unreachable call: unreachable call\nsrc\\main.rs:4:15: error[E0277]: `Option<String>` doesn't implement `std::fmt::Display`: `Option<String>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {

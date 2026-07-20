@@ -10,7 +10,7 @@ use super::super::expressions::{array_elem_arg, arrow_expr, translate_argument, 
 use super::{str_method_arg, usize_arg};
 
 /// Array methods on a `Vec` of Copy elements. The callback methods share a
-/// `xs.iter().copied().<m>(f)` core: `.map`/`.filter` collect back into a
+/// `xs.iter().cloned().<m>(f)` core: `.map`/`.filter` collect back into a
 /// `Vec`; `.find`/`.some`/`.every`/`.reduce` return a scalar. A closure that
 /// receives `&Item` (`filter`/`find`/`findLast`) destructures its param as
 /// `|&n|`; one that receives the item by value (`map`/`some`/`every`/`reduce`)
@@ -31,7 +31,7 @@ pub(in crate::translator) fn array_method(
         // translate it to a Vec expr, bind to a temp (the method body reads
         // the receiver repeatedly for slice/at/indexOf), then dispatch on the
         // temp. The element type is whatever the literal's elements lower to
-        // (f64 for numbers, String for string literals); `.iter().copied()`
+        // (f64 for numbers, String for string literals); `.iter().cloned()`
         // requires `Copy`, so non-Copy elements fall through to cargo check.
         Expression::ArrayExpression(_) => {
             let recv = translate_expr(&sm.object, ctx);
@@ -82,17 +82,17 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
     Some(match name {
         "map" => {
             let cb = callback_arg(args.first()?, ctx, false)?;
-            parse_quote!(#recv.iter().copied().map(#cb).collect::<Vec<_>>())
+            parse_quote!(#recv.iter().cloned().map(#cb).collect::<Vec<_>>())
         }
         // `.flatMap(cb)` → `flat_map` then collect; `cb` returns a `Vec` per
         // element (TS `flatMap` requires an array return), flattened into one.
         "flatMap" => {
             let cb = callback_arg(args.first()?, ctx, false)?;
-            parse_quote!(#recv.iter().copied().flat_map(#cb).collect::<Vec<_>>())
+            parse_quote!(#recv.iter().cloned().flat_map(#cb).collect::<Vec<_>>())
         }
         "filter" => {
             let cb = callback_arg(args.first()?, ctx, true)?;
-            parse_quote!(#recv.iter().copied().filter(#cb).collect::<Vec<_>>())
+            parse_quote!(#recv.iter().cloned().filter(#cb).collect::<Vec<_>>())
         }
         // `.slice(a, b)` — a negative index counts from the end (clamped to 0);
         // `a..b` order is preserved (empty when a >= b). The Vec is borrowed
@@ -140,11 +140,11 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
                         let __n = #recv.len();
                         let __f = { let v = #f; if v < 0_f64 { (__n as f64 + v).max(0_f64) } else { v } } as usize;
                         let __f = __f.min(__n);
-                        #recv[__f..].iter().copied().position(|y| y == #needle).map(|i| (i + __f) as f64).unwrap_or(-1_f64)
+                        #recv[__f..].iter().cloned().position(|y| y == #needle).map(|i| (i + __f) as f64).unwrap_or(-1_f64)
                     })
                 }
                 None => parse_quote!(
-                    #recv.iter().copied().position(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
+                    #recv.iter().cloned().position(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
                 ),
             }
         }
@@ -164,23 +164,23 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
                             -1_f64
                         } else {
                             let __end = ((__f as usize) + 1).min(__n);
-                            #recv[..__end].iter().copied().rposition(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
+                            #recv[..__end].iter().cloned().rposition(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
                         }
                     })
                 }
                 None => parse_quote!(
-                    #recv.iter().copied().rposition(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
+                    #recv.iter().cloned().rposition(|y| y == #needle).map(|i| i as f64).unwrap_or(-1_f64)
                 ),
             }
         }
         // `.findIndex(cb)` → first index where cb holds, or -1. `position` takes
-        // the item by value (after `.copied()`), so the param is `|n|`.
+        // the item by value (after `.cloned()`), so the param is `|n|`.
         "findIndex" => {
             let cb = callback_arg(args.first()?, ctx, false)?;
             parse_quote!(
                 #recv
                     .iter()
-                    .copied()
+                    .cloned()
                     .position(#cb)
                     .map(|i| i as f64)
                     .unwrap_or(-1_f64)
@@ -206,24 +206,24 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         // closure receives `&Item`, so its param destructures as `|&n|`.
         "find" => {
             let cb = callback_arg(args.first()?, ctx, true)?;
-            parse_quote!(#recv.iter().copied().find(#cb))
+            parse_quote!(#recv.iter().cloned().find(#cb))
         }
         // `.some(cb)` → `any` (true if any element matches); `any` takes the
-        // item by value (after `.copied()`), so the param is a plain `|n|`.
+        // item by value (after `.cloned()`), so the param is a plain `|n|`.
         "some" => {
             let cb = callback_arg(args.first()?, ctx, false)?;
-            parse_quote!(#recv.iter().copied().any(#cb))
+            parse_quote!(#recv.iter().cloned().any(#cb))
         }
         // `.every(cb)` → `all` (true if all elements match); same value param.
         "every" => {
             let cb = callback_arg(args.first()?, ctx, false)?;
-            parse_quote!(#recv.iter().copied().all(#cb))
+            parse_quote!(#recv.iter().cloned().all(#cb))
         }
         // `.forEach(cb)` → `for_each` (side-effecting; returns `()`). The
-        // callback takes the item by value (after `.copied()`), so `|n|`.
+        // callback takes the item by value (after `.cloned()`), so `|n|`.
         "forEach" => {
             let cb = callback_arg(args.first()?, ctx, false)?;
-            parse_quote!(#recv.iter().copied().for_each(#cb))
+            parse_quote!(#recv.iter().cloned().for_each(#cb))
         }
         // `.join(sep)` → `Vec<String>.join(sep)` (each element stringified first).
         "join" => {
@@ -237,16 +237,16 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             match args.get(1) {
                 Some(init) => {
                     let init = translate_argument(init, ctx);
-                    parse_quote!(#recv.iter().copied().fold(#init, #cb))
+                    parse_quote!(#recv.iter().cloned().fold(#init, #cb))
                 }
-                None => parse_quote!(#recv.iter().copied().reduce(#cb)),
+                None => parse_quote!(#recv.iter().cloned().reduce(#cb)),
             }
         }
         // `.findLast(cb)` → last match as `Option<T>` (reverse `find`); `find`
         // takes `&Item`, so the closure param destructures as `|&n|`.
         "findLast" => {
             let cb = callback_arg(args.first()?, ctx, true)?;
-            parse_quote!(#recv.iter().copied().rev().find(#cb))
+            parse_quote!(#recv.iter().cloned().rev().find(#cb))
         }
         // `.findLastIndex(cb)` → last index where cb holds, or -1 (`rposition`
         // searches from the end and returns the original index).
@@ -255,7 +255,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             parse_quote!(
                 #recv
                     .iter()
-                    .copied()
+                    .cloned()
                     .rposition(#cb)
                     .map(|i| i as f64)
                     .unwrap_or(-1_f64)
@@ -268,9 +268,9 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             match args.get(1) {
                 Some(init) => {
                     let init = translate_argument(init, ctx);
-                    parse_quote!(#recv.iter().copied().rev().fold(#init, #cb))
+                    parse_quote!(#recv.iter().cloned().rev().fold(#init, #cb))
                 }
-                None => parse_quote!(#recv.iter().copied().rev().reduce(#cb)),
+                None => parse_quote!(#recv.iter().cloned().rev().reduce(#cb)),
             }
         }
         // `.flat()` → flatten one level (`Vec<Vec<T>>::concat` → `Vec<T>`).
@@ -329,7 +329,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
         }),
         // `.toReversed()` → reversed copy (ES2023 immutable reverse).
         "toReversed" if args.is_empty() => {
-            parse_quote!(#recv.iter().copied().rev().collect::<Vec<_>>())
+            parse_quote!(#recv.iter().cloned().rev().collect::<Vec<_>>())
         }
         // `.toSpliced(start, deleteCount, …items)` → copy + splice (ES2023).
         // `Vec::splice` replaces the range with the item iterator; the bounds
@@ -480,7 +480,7 @@ pub(in crate::translator) fn array_static(
                 None => parse_quote!(#src.clone()),
                 Some(cb) => {
                     let cb = translate_argument(cb, ctx);
-                    parse_quote!(#src.iter().copied().map(#cb).collect::<Vec<_>>())
+                    parse_quote!(#src.iter().cloned().map(#cb).collect::<Vec<_>>())
                 }
             }
         }
