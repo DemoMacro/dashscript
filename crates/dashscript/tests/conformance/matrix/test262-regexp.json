@@ -634,12 +634,8 @@
     "id": "test262.test.built-ins.regexp.prototype.dotall.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1289,12 +1285,8 @@
     "id": "test262.test.built-ins.regexp.prototype.global.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1356,12 +1348,8 @@
     "id": "test262.test.built-ins.regexp.prototype.hasindices.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1412,12 +1400,8 @@
     "id": "test262.test.built-ins.regexp.prototype.ignorecase.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1490,12 +1474,8 @@
     "id": "test262.test.built-ins.regexp.prototype.multiline.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1623,12 +1603,8 @@
     "id": "test262.test.built-ins.regexp.prototype.source.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1690,12 +1666,8 @@
     "id": "test262.test.built-ins.regexp.prototype.sticky.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -2176,12 +2148,8 @@
     "id": "test262.test.built-ins.regexp.prototype.symbol.replace.coerce-global",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w4\\work\\oracle.ts:2\r\nArray.print = print;\r\n              ^\r\n\r\nReferenceError:"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w6\\work\\oracle.ts:2\r\nArray.print = print;\r\n              ^\r\n\r\nReferenceError:",
     "note": ""
   },
   {
@@ -2248,10 +2216,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36794634.5957 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 39840993.053 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36794634.5957 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 39840993.053 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -2260,10 +2228,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36726377.4894 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 39841198.1007 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 36726377.4894 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 39841198.1007 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -3224,12 +3192,8 @@
     "id": "test262.test.built-ins.regexp.prototype.unicode.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w6\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -3288,12 +3252,8 @@
     "id": "test262.test.built-ins.regexp.prototype.unicodesets.cross-realm",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w5\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w6\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {

@@ -689,7 +689,23 @@ fn compare_oracle(
             engine_note(via_engine),
             Some(Oracle::missing()),
         ),
-        NodeResult::Error(e) => ("supported", engine_note(via_engine), Some(Oracle::err(e))),
+        NodeResult::Error(e) => {
+            // Node failed. If our side (engine or cargo run) also produced no
+            // output, both sides lack the feature the fixture exercises (e.g.
+            // `Temporal`, which neither Node nor QuickJS ships) — that is honest
+            // `unsupported`, not a spurious `supported` from empty-vs-empty
+            // stdout agreement. If our side did produce output, the oracle is
+            // unavailable, so we cannot claim `supported` → `partial`.
+            if ds_stdout.trim().is_empty() {
+                ("unsupported", format!("node + ds both error: {e}"), None)
+            } else {
+                (
+                    "partial",
+                    format!("node oracle error: {e}"),
+                    Some(Oracle::err(e)),
+                )
+            }
+        }
         NodeResult::Ok(oracle_stdout) => match diff_stdout(ds_stdout, &oracle_stdout) {
             None => (
                 "supported",

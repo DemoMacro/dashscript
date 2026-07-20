@@ -4122,8 +4122,8 @@
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-169",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper"
@@ -4156,8 +4156,8 @@
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-171",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper"
@@ -4179,8 +4179,8 @@
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-173",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper"
@@ -4312,36 +4312,24 @@
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-187",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-188",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-189",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -4359,36 +4347,24 @@
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-191",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-192",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.defineproperties.15.2.3.7-6-a-193",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -5572,8 +5548,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-3-144-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property "
@@ -5595,8 +5571,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-3-147-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property "
@@ -5618,8 +5594,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-3-149-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property "
@@ -5751,8 +5727,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-3-170-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property "
@@ -5774,8 +5750,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-3-173-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property "
@@ -5797,8 +5773,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-3-175-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/streams/readable:141\r\nObjectDefineProperties(ReadableState.prototype, {\r\n^\r\n\r\nTypeError: Invalid property "
@@ -7591,8 +7567,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-173",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper"
@@ -7614,8 +7590,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-175",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper"
@@ -7637,8 +7613,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-177",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/console/constructor:359\r\n      ArrayPrototypeUnshift(args, opts);\r\n      ^\r\n\r\nTypeError: Cannot set proper"
@@ -7770,48 +7746,32 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-192",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-193",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-196",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-197",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: node:internal/async_hooks:549\r\n  execution_async_resources[offset] = resource;\r\n                                    ^\r\n\r",
     "note": ""
   },
   {
@@ -8787,10 +8747,10 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 39921644.4002 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 39921644.4002 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 32976095.4933 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 39921644.4002 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 39921644.4002 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -16958,11 +16918,10 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-3-1",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"y\" node=\"x\"; line 3: ds=\"x\" node=\"y\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"y\" node=\"x\"; line 3: ds=\"x\" node=\"y\""
+      "status": "matched"
     },
     "note": ""
   },

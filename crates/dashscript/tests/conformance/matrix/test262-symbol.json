@@ -3,12 +3,8 @@
     "id": "test262.test.built-ins.symbol.asyncdispose.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -26,12 +22,8 @@
     "id": "test262.test.built-ins.symbol.asynciterator.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -93,12 +85,8 @@
     "id": "test262.test.built-ins.symbol.dispose.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -127,12 +115,8 @@
     "id": "test262.test.built-ins.symbol.for.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -161,36 +145,24 @@
     "id": "test262.test.built-ins.symbol.hasinstance.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.symbol.isconcatspreadable.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.symbol.iterator.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -230,36 +202,24 @@
     "id": "test262.test.built-ins.symbol.keyfor.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.symbol.match.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.symbol.matchall.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -476,24 +436,16 @@
     "id": "test262.test.built-ins.symbol.replace.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.symbol.search.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -511,12 +463,8 @@
     "id": "test262.test.built-ins.symbol.species.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w3\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -535,36 +483,24 @@
     "id": "test262.test.built-ins.symbol.split.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.symbol.toprimitive.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.symbol.tostringtag.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -582,12 +518,8 @@
     "id": "test262.test.built-ins.symbol.unscopables.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpO1eRLY\\w4\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   }
 ]

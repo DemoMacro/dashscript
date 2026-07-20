@@ -2508,12 +2508,8 @@
     "id": "test262.test.built-ins.string.prototype.tostring.non-generic-realm",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w6\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w6\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -4181,12 +4177,8 @@
     "id": "test262.test.built-ins.string.prototype.valueof.non-generic-realm",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w6\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {

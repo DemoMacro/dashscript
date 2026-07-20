@@ -679,12 +679,8 @@
     "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked-realm",
     "layer": "test262",
     "category": "json",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpEvZt0A\\w7\\work\\oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         ",
     "note": ""
   },
   {
@@ -809,12 +805,8 @@
     "id": "test262.test.built-ins.json.stringify.value-bigint-cross-realm",
     "layer": "test262",
     "category": "json",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpEvZt0A\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -954,7 +946,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:58: error[E0308]: mismatched types: expected `f64`, found `i64`\nsrc\\main.rs:16:51: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:19:58: error[E0308]: mismatched types: expected `f64`, found `i64`\nsrc\\main.rs:26:58: error[E0308]: mismatched types: expected `f64`, found `i64`",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:16:51: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
     "note": ""
   },
   {

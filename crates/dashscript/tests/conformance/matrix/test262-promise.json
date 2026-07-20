@@ -3,36 +3,24 @@
     "id": "test262.test.built-ins.promise.all.call-resolve-element",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:11\r\n  executor(resolve, Test262Error.thrower);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  executor(resolve, Test262Error.thrower);\r\n           ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.call-resolve-element-after-return",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.call-resolve-element-items",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:12\r\n  executor(resolve, Test262Error.thrower);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  executor(resolve, Test262Error.thrower);\r\n           ",
     "note": ""
   },
   {
@@ -73,8 +61,8 @@
     "id": "test262.test.built-ins.promise.all.invoke-resolve-get-once-multiple-calls",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/process/promises:392\r\n      new UnhandledPromiseRejection(reason);\r\n      ^\r\n\r\nUnhandledPromiseRejection: ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/process/promises:392\r\n      new UnhandledPromiseRejection(reason);\r\n      ^\r\n\r\nUnhandledPromiseRejection: "
@@ -128,36 +116,24 @@
     "id": "test262.test.built-ins.promise.all.iter-arg-is-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-arg-is-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-arg-is-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
@@ -172,240 +148,160 @@
     "id": "test262.test.built-ins.promise.all.iter-arg-is-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-arg-is-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-arg-is-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-assigned-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w6\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-assigned-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-assigned-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-assigned-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-assigned-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-assigned-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-assigned-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-returns-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-returns-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-returns-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-returns-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-returns-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-returns-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.iter-returns-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.new-resolve-function",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:5\r\n  executor(resolveFunction, Test262Error.thrower);\r\n    "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:5\r\n  executor(resolveFunction, Test262Error.thrower);\r\n    ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.resolve-before-loop-exit",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.resolve-before-loop-exit-from-same",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           ",
     "note": ""
   },
   {
@@ -446,12 +342,8 @@
     "id": "test262.test.built-ins.promise.all.resolve-from-same-thenable",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  executor(resolve, Test262Error.thrower);\r\n           ",
     "note": ""
   },
   {
@@ -466,12 +358,8 @@
     "id": "test262.test.built-ins.promise.all.resolve-not-callable-reject-with-typeerror",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: ",
     "note": ""
   },
   {
@@ -501,12 +389,8 @@
     "id": "test262.test.built-ins.promise.all.s25.4.4.1_a2.3_t1",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:6\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $DO"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:6\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $DO",
     "note": ""
   },
   {
@@ -540,24 +424,16 @@
     "id": "test262.test.built-ins.promise.all.s25.4.4.1_a7.1_t1",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.all.same-reject-function",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:5\r\n  executor(Test262Error.thrower, rejectFunction);\r\n     "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:5\r\n  executor(Test262Error.thrower, rejectFunction);\r\n     ",
     "note": ""
   },
   {
@@ -587,60 +463,40 @@
     "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-custom",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:7\r\nPromise.resolve = Test262Error.thrower;\r\n               "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:7\r\nPromise.resolve = Test262Error.thrower;\r\n               ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-get-once",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:26\r\nPromise.allKeyed(input);\r\n        ^\r\n\r\nTypeError: Promi"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:26\r\nPromise.allKeyed(input);\r\n        ^\r\n\r\nTypeError: Promi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-return",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:23\r\nPromise.allKeyed.call(Constructor, { key: originalThena"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:23\r\nPromise.allKeyed.call(Constructor, { key: originalThena",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.proto",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Promise.allKeyed));\r\n "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Promise.allKeyed));\r\n ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.resolve-from-same-thenable",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:28\r\nPromise.allKeyed.call(Constructor, input);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:28\r\nPromise.allKeyed.call(Constructor, input);\r\n           ",
     "note": ""
   },
   {
@@ -747,36 +603,24 @@
     "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
@@ -791,228 +635,152 @@
     "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-arg-is-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-assigned-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-assigned-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-assigned-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-assigned-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-assigned-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-assigned-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-assigned-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-returns-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-returns-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-returns-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-returns-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-returns-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-returns-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.iter-returns-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:14\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.new-reject-function",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:5\r\n  executor(rejectFunction, Test262Error.thrower);\r\n     "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:5\r\n  executor(rejectFunction, Test262Error.thrower);\r\n     ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.new-resolve-function",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:5\r\n  executor(resolveFunction, Test262Error.thrower);\r\n    "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:5\r\n  executor(resolveFunction, Test262Error.thrower);\r\n    ",
     "note": ""
   },
   {
@@ -1103,36 +871,24 @@
     "id": "test262.test.built-ins.promise.allsettled.resolve-not-callable-reject-with-typeerror",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.resolve-thenable",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:19\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:19\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettled.resolves-to-array",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:8\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $DO"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:8\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $DO",
     "note": ""
   },
   {
@@ -1174,80 +930,56 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-custom",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:7\r\nPromise.resolve = Test262Error.thrower;\r\n               "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:7\r\nPromise.resolve = Test262Error.thrower;\r\n               ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-get-once",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:26\r\nPromise.allSettledKeyed(input);\r\n        ^\r\n\r\nTypeError"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:26\r\nPromise.allSettledKeyed(input);\r\n        ^\r\n\r\nTypeError",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-return",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:23\r\nPromise.allSettledKeyed.call(Constructor, { key: origin"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:23\r\nPromise.allSettledKeyed.call(Constructor, { key: origin",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.proto",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Promise.allSettledKeye"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Promise.allSettledKeye",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.call-reject-element-after-return",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:6\r\n  executor(Test262Error.thrower, (error) => {\r\n         "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:6\r\n  executor(Test262Error.thrower, (error) => {\r\n         ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.call-reject-element-items",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  executor(Test262Error.thrower, reject);\r\n           ^"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  executor(Test262Error.thrower, reject);\r\n           ^",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.ctx-ctor",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/process/promises:394\r\n    triggerUncaughtException(err, true /* fromPromise */);\r\n    ^\r\n\r\n[AggregateError",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/process/promises:394\r\n    triggerUncaughtException(err, true /* fromPromise */);\r\n    ^\r\n\r\n[AggregateError"
@@ -1288,24 +1020,16 @@
     "id": "test262.test.built-ins.promise.any.invoke-resolve-get-once-multiple-calls",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:28\r\n  }).then($DONE, $DONE);\r\n          ^\r\n\r\nReferenceError"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:28\r\n  }).then($DONE, $DONE);\r\n          ^\r\n\r\nReferenceError",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.invoke-resolve-get-once-no-calls",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:23\r\n  }).then($DONE, $DONE);\r\n          ^\r\n\r\nReferenceError"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:23\r\n  }).then($DONE, $DONE);\r\n          ^\r\n\r\nReferenceError",
     "note": ""
   },
   {
@@ -1380,60 +1104,40 @@
     "id": "test262.test.built-ins.promise.any.iter-arg-is-empty-iterable-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-arg-is-empty-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-arg-is-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-arg-is-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-arg-is-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
@@ -1448,216 +1152,144 @@
     "id": "test262.test.built-ins.promise.any.iter-arg-is-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-arg-is-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-arg-is-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-assigned-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-assigned-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-assigned-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-assigned-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-assigned-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-assigned-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-assigned-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:12\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-returns-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-returns-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-returns-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-returns-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-returns-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-returns-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.iter-returns-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.new-reject-function",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:5\r\n  executor(rejectFunction, Test262Error.thrower);\r\n     "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:5\r\n  executor(rejectFunction, Test262Error.thrower);\r\n     ",
     "note": ""
   },
   {
@@ -1698,36 +1330,24 @@
     "id": "test262.test.built-ins.promise.any.reject-immed",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:17\r\n    $DONE();\r\n    ^\r\n\r\nReferenceError: $DONE is not def"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:17\r\n    $DONE();\r\n    ^\r\n\r\nReferenceError: $DONE is not def",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.resolve-before-loop-exit",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:17\r\n  executor(Test262Error.thrower, reject);\r\n           ^"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:17\r\n  executor(Test262Error.thrower, reject);\r\n           ^",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.resolve-before-loop-exit-from-same",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:17\r\n  executor(Test262Error.thrower, reject);\r\n           ^"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:17\r\n  executor(Test262Error.thrower, reject);\r\n           ^",
     "note": ""
   },
   {
@@ -1750,20 +1370,16 @@
     "id": "test262.test.built-ins.promise.any.resolve-not-callable-reject-with-typeerror",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:10\r\n  ).then($DONE, $DONE);\r\n         ^\r\n\r\nReferenceError: ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.any.returns-promise",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/process/promises:394\r\n    triggerUncaughtException(err, true /* fromPromise */);\r\n    ^\r\n\r\n[AggregateError",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/process/promises:394\r\n    triggerUncaughtException(err, true /* fromPromise */);\r\n    ^\r\n\r\n[AggregateError"
@@ -1913,12 +1529,8 @@
     "id": "test262.test.built-ins.promise.prototype.finally.resolved-observable-then-calls-promiseresolve",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:22\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:22\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
@@ -1944,8 +1556,8 @@
     "id": "test262.test.built-ins.promise.prototype.finally.subclass-species-constructor-reject-count",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/process/promises:392\r\n      new UnhandledPromiseRejection(reason);\r\n      ^\r\n\r\nUnhandledPromiseRejection: ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/process/promises:392\r\n      new UnhandledPromiseRejection(reason);\r\n      ^\r\n\r\nUnhandledPromiseRejection: "
@@ -2100,11 +1712,11 @@
     "id": "test262.test.built-ins.promise.race.invoke-resolve-error-close",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:20\r\n  throw err;\r\n  ^\r\n\r\nReferenceError: err is not defined",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:20\r\n  throw err;\r\n  ^\r\n\r\nReferenceError: err is not defined"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:20\r\n  throw err;\r\n  ^\r\n\r\nReferenceError: err is not defined"
     },
     "note": ""
   },
@@ -2166,36 +1778,24 @@
     "id": "test262.test.built-ins.promise.race.iter-arg-is-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-arg-is-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-arg-is-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
@@ -2210,204 +1810,136 @@
     "id": "test262.test.built-ins.promise.race.iter-arg-is-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-arg-is-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-arg-is-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:9\r\n  $DONE(`The promise should be rejected, but threw an ex",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-assigned-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-assigned-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-assigned-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-assigned-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-assigned-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-assigned-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-assigned-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:11\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-returns-false-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-returns-null-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-returns-number-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-returns-string-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-returns-symbol-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-returns-true-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.iter-returns-undefined-reject",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e"
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:13\r\n  $DONE(`The promise should be rejected, but threw an e",
     "note": ""
   },
   {
@@ -2475,24 +2007,16 @@
     "id": "test262.test.built-ins.promise.race.same-reject-function",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:5\r\n  executor(Test262Error.thrower, rejectFunction);\r\n     "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:5\r\n  executor(Test262Error.thrower, rejectFunction);\r\n     ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.race.same-resolve-function",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:5\r\n  executor(resolveFunction, Test262Error.thrower);\r\n    "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:5\r\n  executor(resolveFunction, Test262Error.thrower);\r\n    ",
     "note": ""
   },
   {
@@ -2521,8 +2045,8 @@
     "id": "test262.test.built-ins.promise.reject.ctx-ctor",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: node:internal/process/promises:392\r\n      new UnhandledPromiseRejection(reason);\r\n      ^\r\n\r\nUnhandledPromiseRejection: ",
     "oracle": {
       "status": "node-error",
       "detail": "exit exit code: 1: node:internal/process/promises:392\r\n      new UnhandledPromiseRejection(reason);\r\n      ^\r\n\r\nUnhandledPromiseRejection: "
@@ -2642,12 +2166,8 @@
     "id": "test262.test.built-ins.promise.resolve.resolve-from-promise-capability",
     "layer": "test262",
     "category": "promise",
-    "status": "supported",
-    "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpCXIbmp\\w7\\work\\oracle.ts:15\r\n  executor(resolve, Test262Error.thrower);\r\n           "
-    },
+    "status": "unsupported",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:15\r\n  executor(resolve, Test262Error.thrower);\r\n           ",
     "note": ""
   },
   {

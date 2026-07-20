@@ -1271,11 +1271,11 @@
     "id": "test262.test.built-ins.math.sumprecise.sum",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
     },
     "note": ""
   },
@@ -1283,11 +1283,11 @@
     "id": "test262.test.built-ins.math.sumprecise.sum-is-infinite",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
     },
     "note": ""
   },
@@ -1295,11 +1295,11 @@
     "id": "test262.test.built-ins.math.sumprecise.sum-is-minus-zero",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
     },
     "note": ""
   },
@@ -1307,11 +1307,11 @@
     "id": "test262.test.built-ins.math.sumprecise.sum-is-nan",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
     },
     "note": ""
   },
@@ -1319,11 +1319,11 @@
     "id": "test262.test.built-ins.math.sumprecise.takes-iterable",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpLTjcPJ\\w7\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
+      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
     },
     "note": ""
   },
