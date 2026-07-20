@@ -287,7 +287,7 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
 /// emitted when a translated file uses a regex literal, so a plain `ds build`
 /// pulls no `regress` dependency.
 const REGRESS_HELPERS: &str = "\
-use regress::Regex;
+use regress::{Match, Regex};
 
 /// Compile an ES RegExp literal `/pattern/flags` to a `regress::Regex`. oxc
 /// parses `/pat/` upfront, so an invalid literal never reaches runtime — the
@@ -332,6 +332,120 @@ pub fn regex_search(pattern: &str, flags: &str, text: &str) -> f64 {
         Ok(re) => re.find(text).map(|m| m.range().start as f64).unwrap_or(-1_f64),
         Err(_) => -1_f64,
     }
+}
+
+/// `s.replace(/pat/, repl)` (non-global) — the first match replaced by `repl`,
+/// with `$` patterns expanded (`$&` whole match, `$1`/`$2`… groups, `` $` ``
+/// before, `$'` after, `$$` literal `$`). Returns the input unchanged on no
+/// match.
+#[inline]
+pub fn regex_replace(pattern: &str, flags: &str, text: &str, repl: &str) -> String {
+    let Ok(re) = Regex::with_flags(pattern, flags) else {
+        return text.to_string();
+    };
+    let Some(m) = re.find(text) else {
+        return text.to_string();
+    };
+    let r = m.range();
+    let mut out = String::with_capacity(text.len() + repl.len());
+    out.push_str(&text[..r.start]);
+    expand_replacement(repl, text, &m, &mut out);
+    out.push_str(&text[r.end..]);
+    out
+}
+
+/// Expand `$&`/`$1`/`` $` ``/`$'`/`$$` patterns in a replacement string against
+/// one match. `$nn` is used when it indexes a capture group, else `$n`; an
+/// out-of-range or non-participating group expands to empty.
+fn expand_replacement(repl: &str, text: &str, m: &Match, out: &mut String) {
+    let r = m.range();
+    let chars: Vec<char> = repl.chars().collect();
+    let mut i = 0;
+    while i < chars.len() {
+        let c = chars[i];
+        if c != '$' {
+            out.push(c);
+            i += 1;
+            continue;
+        }
+        if i + 1 >= chars.len() {
+            out.push('$');
+            i += 1;
+            continue;
+        }
+        let nc = chars[i + 1];
+        match nc {
+            '$' => {
+                out.push('$');
+                i += 2;
+            }
+            '&' => {
+                out.push_str(&text[r.start..r.end]);
+                i += 2;
+            }
+            '`' => {
+                out.push_str(&text[..r.start]);
+                i += 2;
+            }
+            '\\'' => {
+                out.push_str(&text[r.end..]);
+                i += 2;
+            }
+            d @ '0'..='9' => {
+                let one = (d as u8 - b'0') as usize;
+                let (n, two) = if i + 2 < chars.len() && chars[i + 2].is_ascii_digit() {
+                    let cand = one * 10 + (chars[i + 2] as u8 - b'0') as usize;
+                    if m.group(cand).is_some() {
+                        (cand, true)
+                    } else {
+                        (one, false)
+                    }
+                } else {
+                    (one, false)
+                };
+                if let Some(gr) = m.group(n) {
+                    out.push_str(&text[gr]);
+                }
+                i += 2 + usize::from(two);
+            }
+            _ => {
+                out.push('$');
+                out.push(nc);
+                i += 2;
+            }
+        }
+    }
+}
+
+/// `s.split(/pat/, limit?)` — split `text` on regex matches into owned
+/// segments. `limit` caps the result count (`None` → unbounded; `Some(0)` →
+/// empty). A zero-width match at the cursor is skipped so the split advances
+/// (mirroring ES split's non-empty progression). Capture groups are not
+/// interleaved into the output (a later phase).
+#[inline]
+pub fn regex_split(pattern: &str, flags: &str, text: &str, limit: Option<usize>) -> Vec<String> {
+    let Ok(re) = Regex::with_flags(pattern, flags) else {
+        return vec![text.to_string()];
+    };
+    let cap = limit.unwrap_or(usize::MAX);
+    if cap == 0 {
+        return Vec::new();
+    }
+    let mut parts: Vec<String> = Vec::new();
+    let mut last = 0usize;
+    for m in re.find_iter(text) {
+        if parts.len() + 1 >= cap {
+            break;
+        }
+        let r = m.range();
+        if r.start == r.end && r.start == last {
+            continue;
+        }
+        parts.push(text[last..r.start].to_string());
+        last = r.end;
+    }
+    parts.push(text[last..].to_string());
+    parts
 }
 ";
 

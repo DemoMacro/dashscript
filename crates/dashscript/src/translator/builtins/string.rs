@@ -141,9 +141,28 @@ pub(in crate::translator) fn string_method_on(
             parse_quote!(crate::__ds::regex_search(#pat, #fl, #text))
         }
         "replace" => {
-            let a = str_method_arg(args.first()?, ctx);
             let b = str_method_arg(args.get(1)?, ctx);
-            parse_quote!(#obj.replacen(#a, #b, 1))
+            if let Argument::RegExpLiteral(re) = args.first()? {
+                // `.replace(/pat/, repl)` (non-global) — the first match with
+                // `$` patterns in `repl` expanded. A global regex falls through
+                // (global replace is a later phase).
+                let (pat, fl) = regex_lit_parts(re);
+                let text: Expr = if matches!(
+                    &obj,
+                    Expr::Lit(syn::ExprLit {
+                        lit: syn::Lit::Str(_),
+                        ..
+                    })
+                ) {
+                    obj
+                } else {
+                    parse_quote!(#obj.as_str())
+                };
+                parse_quote!(crate::__ds::regex_replace(#pat, #fl, #text, #b))
+            } else {
+                let a = str_method_arg(args.first()?, ctx);
+                parse_quote!(#obj.replacen(#a, #b, 1))
+            }
         }
         // `.replaceAll(a, b)` → `replace` (all matches; TS `replace` does one).
         "replaceAll" => {
@@ -156,6 +175,29 @@ pub(in crate::translator) fn string_method_on(
             parse_quote!(#obj.repeat(#n))
         }
         "split" => {
+            // `.split(/pat/, limit?)` — split on regex matches. A string
+            // separator stays on the str `split` path below.
+            if let Argument::RegExpLiteral(re) = args.first()? {
+                let (pat, fl) = regex_lit_parts(re);
+                let text: Expr = if matches!(
+                    &obj,
+                    Expr::Lit(syn::ExprLit {
+                        lit: syn::Lit::Str(_),
+                        ..
+                    })
+                ) {
+                    obj
+                } else {
+                    parse_quote!(#obj.as_str())
+                };
+                return Some(match args.get(1) {
+                    Some(lim) => {
+                        let l = usize_arg(lim, ctx);
+                        parse_quote!(crate::__ds::regex_split(#pat, #fl, #text, Some(#l)))
+                    }
+                    None => parse_quote!(crate::__ds::regex_split(#pat, #fl, #text, None)),
+                });
+            }
             // `split` yields `&str`; map to owned so the result is `Vec<String>`.
             // A `limit` caps the segment count (TS `split(sep, n)`).
             let delim = str_method_arg(args.first()?, ctx);

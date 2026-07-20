@@ -1472,7 +1472,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:18: error: `this` is only valid inside a class method\nsrc\\main.rs:5:47: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:5:73: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:5:73: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:3:18: error: `this` is only valid inside a class method\nsrc\\main.rs:4:76: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:4:76: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -2509,7 +2509,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQq1UZX\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpXz0E2H\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -4178,7 +4178,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQq1UZX\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpXz0E2H\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {

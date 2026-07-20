@@ -245,3 +245,36 @@ fn search_emits_regex_search() {
         "search emits regex_search, got:\n{rust}"
     );
 }
+
+#[test]
+fn replace_regex_emits_regex_replace() {
+    // `s.replace(/pat/, repl)` (non-global) — `$` patterns expanded.
+    let src = "function main(): void {\n  console.log(\"hello world\".replace(/(\\w+) (\\w+)/, \"$2 $1\"));\n  console.log(\"abc\".replace(/b/, \"[$&]\"));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "replace regex flags needs_regress");
+    assert!(
+        rust.contains("regex_replace"),
+        "replace regex emits regex_replace, got:\n{rust}"
+    );
+}
+
+#[test]
+fn split_regex_emits_regex_split() {
+    // `s.split(/pat/[, limit])` → regex_split; a string separator stays on
+    // the str `split` path.
+    let src = "function main(): void {\n  console.log(\"a1b2c\".split(/\\d/).length);\n  console.log(\"a1b2c\".split(/\\d/, 2).length);\n  console.log(\"a,b\".split(\",\").length);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "split regex flags needs_regress");
+    assert!(
+        rust.contains("regex_split"),
+        "split regex emits regex_split, got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".split(\",\")"),
+        "string-arg split stays on str path, got:\n{rust}"
+    );
+}
