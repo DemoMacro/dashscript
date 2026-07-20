@@ -18,12 +18,13 @@
 //! than what merely parses.
 
 use std::borrow::Cow;
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
+use std::collections::HashSet;
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    AssignmentTarget, BinaryOperator, CallExpression, Expression, ForStatementInit,
-    ObjectPropertyKind, PropertyKind, Statement, UnaryOperator,
+    Argument, AssignmentTarget, BinaryOperator, BindingPattern, CallExpression, Expression,
+    ForStatementInit, ObjectPropertyKind, PropertyKind, Statement, UnaryOperator,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
@@ -47,6 +48,15 @@ thread_local! {
     /// would re-find the same match every iteration (an infinite loop, killed
     /// only by the harness timeout). Set by `collect_loop_body`.
     static IN_LOOP: Cell<bool> = const { Cell::new(false) };
+    /// Names of variables in the current `check` walk whose initializer is a
+    /// plainly non-string literal (number/boolean/object/array). A later
+    /// `.test(x)` / `.exec(x)` on one routes to the engine: ES coerces the
+    /// argument via ToString, which regress (taking `&str`) cannot express;
+    /// without this the translator emits `x.as_str()` and fails cargo check
+    /// (E0599). Populated by `collect_unsupported`'s `VariableDeclaration`
+    /// arm; cleared at each `check` / `program_uses_engine` entry so the set
+    /// never leaks across programs on the same thread.
+    static NON_STRING_VARS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 /// RAII guard: constructed to mark an engine-path detection in progress;
@@ -68,6 +78,9 @@ impl Drop for EngineScope {
 /// Rust (as far as DashScript can tell — `cargo check` is still the final
 /// arbiter).
 pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
+    // Reset the non-string-var set for this program (a prior `check` on the
+    // same thread must not leak bindings forward — see [`NON_STRING_VARS`]).
+    NON_STRING_VARS.with(|s| s.borrow_mut().clear());
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
 
@@ -117,6 +130,8 @@ pub(super) fn program_uses_engine(program: &oxc_ast::ast::Program) -> bool {
     // guard resets the flag on drop — even on panic.
     FOR_ENGINE.with(|c| c.set(true));
     let _scope = EngineScope;
+    // Reset the non-string-var set for this walk — see `check`.
+    NON_STRING_VARS.with(|s| s.borrow_mut().clear());
     let mut diags = Vec::new();
     for stmt in &program.body {
         collect_unsupported(stmt, &mut diags);
@@ -196,6 +211,25 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
         Statement::VariableDeclaration(v) => {
             for d in &v.declarations {
                 if let Some(init) = &d.init {
+                    // A variable bound to a plainly non-string literal
+                    // (number/boolean/object/array) — recorded so a later
+                    // `.test(x)` / `.exec(x)` on it routes to the engine: ES
+                    // coerces the argument via ToString, which regress (taking
+                    // `&str`) cannot express. A function-call or identifier
+                    // initializer may still yield a string, so it is left
+                    // unrecorded (no false engine route).
+                    if matches!(
+                        init,
+                        Expression::NumericLiteral(_)
+                            | Expression::BooleanLiteral(_)
+                            | Expression::ObjectExpression(_)
+                            | Expression::ArrayExpression(_)
+                    ) {
+                        if let BindingPattern::BindingIdentifier(id) = &d.id {
+                            NON_STRING_VARS
+                                .with(|s| s.borrow_mut().insert(id.name.as_str().to_string()));
+                        }
+                    }
                     collect_expr(init, out);
                 }
             }
@@ -592,6 +626,17 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
             sm.span,
         ));
     }
+    // `.test(x)` / `.exec(x)` where x is plainly not a string — ES coerces
+    // the argument via ToString, but regress takes `&str`, so a non-string
+    // argument lowers to `x.as_str()` and fails cargo check (E0599). Route
+    // to the engine, whose ToString matches ES. (The looped-exec case above
+    // already routes; this catches the once-per-call non-string argument.)
+    if matches!(prop, "test" | "exec") && regex_arg_needs_engine(&c.arguments) {
+        out.push(err(
+            "regex `.test`/`.exec` on a non-string needs the engine (ES ToString coercion)",
+            sm.span,
+        ));
+    }
     // `s.toLocaleUpperCase(locale)` / `toLocaleLowerCase(locale)` — locale-aware
     // casing. DashScript has no ICU locale table, so an explicit locale cannot
     // be honored; the locale-less form lowers to the default casing (see
@@ -651,6 +696,36 @@ fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
                 sm.span,
             ));
         }
+    }
+}
+
+/// True when a regex method's first argument is plainly not a string — either
+/// a non-string literal, or an identifier bound (in this walk) to one. See
+/// [`NON_STRING_VARS`]. Regress takes `&str`, so such an argument would lower
+/// to `x.as_str()` (E0599); the caller reports it so the fixture routes to the
+/// engine, whose ES ToString coercion handles number/boolean/object/… .
+fn regex_arg_needs_engine(args: &[Argument]) -> bool {
+    let Some(arg) = args.first().and_then(|a| a.as_expression()) else {
+        return false;
+    };
+    match arg {
+        // A plainly non-string literal (number/boolean/object/array/null).
+        Expression::NumericLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::ObjectExpression(_)
+        | Expression::ArrayExpression(_)
+        | Expression::NullLiteral(_) => true,
+        // `void <expr>` evaluates to `undefined` → ToString "undefined".
+        Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Void) => true,
+        Expression::Identifier(id) => {
+            // `undefined` (the global) coerces the same way as `void 0`.
+            if id.name.as_str() == "undefined" {
+                return true;
+            }
+            // A variable bound (in this walk) to a non-string literal.
+            NON_STRING_VARS.with(|s| s.borrow().contains(id.name.as_str()))
+        }
+        _ => false,
     }
 }
 

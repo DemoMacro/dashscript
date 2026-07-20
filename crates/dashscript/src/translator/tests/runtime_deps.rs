@@ -220,6 +220,90 @@ fn regex_lastindex_access_routes_to_engine() {
 }
 
 #[test]
+fn regex_test_nonstring_var_routes_to_engine() {
+    // `var x = 1.01; re.test(x)` — ES coerces the number argument via
+    // ToString, but regress takes `&str` (the translator emits `x.as_str()`,
+    // E0599). Route to the engine, whose ToString matches ES.
+    let src = "function main(): void {\n  var x = 1.01;\n  const re = /1/;\n  console.log(re.test(x));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        ".test on a number-bound var should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn regex_test_nonstring_literal_arg_routes_to_engine() {
+    // `re.test(true)` — a non-string literal argument needs ES ToString.
+    let src = "function main(): void {\n  const re = /t/;\n  console.log(re.test(true));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        ".test on a boolean literal should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn regex_test_null_literal_routes_to_engine() {
+    // `re.test(null)` — null coerces to "null" via ES ToString (not a string
+    // the static `as_str` lowering can produce).
+    let src = "function main(): void {\n  const re = /ll/;\n  console.log(re.test(null));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        ".test on null should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn regex_test_void_zero_routes_to_engine() {
+    // `re.test(void 0)` — `void 0` is `undefined` → ToString "undefined".
+    let src = "function main(): void {\n  const re = /e/;\n  console.log(re.test(void 0));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        ".test on `void 0` should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn regex_test_string_var_stays_on_regress() {
+    // `var s = "abc"; re.test(s)` — a string-bound variable must NOT route to
+    // the engine (regress handles it). Guards against over-broad detection.
+    let src = "function main(): void {\n  var s = \"abc\";\n  const re = /a/;\n  console.log(re.test(s));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !deps.needs_engine(),
+        ".test on a string-bound var must stay on regress, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn regex_test_func_result_var_stays_on_regress() {
+    // `var s = " abc ".trim(); re.test(s)` — a function-call initializer may
+    // yield a string, so the var is not flagged; the engine is not pulled
+    // (regress lowers `.test`, and the String arg satisfies `as_str`).
+    let src = "function main(): void {\n  var s = \" abc \".trim();\n  const re = /a/;\n  console.log(re.test(s));\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !deps.needs_engine(),
+        ".test on a func-result var must stay on regress, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn regex_local_test_uses_regress() {
     // `let r = /pat/; r.test(s)` — the local infers `regress::Regex`, so
     // `.test` dispatches to the regress `find` method, not the engine.
