@@ -57,6 +57,9 @@ lsp-types = "0.97.0"
 # cannot lower), skipping a cargo compile per fixture.
 rquickjs = "0.12"
 tempfile = "3"
+# Per-fixture run timeout — a hanging fixture (catastropic regexp backtracking,
+# an infinite loop) is killed at 30s instead of stalling the whole matrix.
+wait-timeout = "0.2"
 
 [profile.release]
 # A transpiler CLI: optimize the generated-binary experience.

@@ -50,13 +50,17 @@ const CORRECTNESS_JSON: &str = include_str!("conformance/data/correctness.json")
 const MANIFEST: &str =
     "[package]\nname = \"probe\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[dependencies]\n";
 
+/// Ceiling on a single fixture's run. A hanging fixture (catastrophic regexp
+/// backtracking, an infinite loop) is killed instead of stalling the whole
+/// matrix. 30s sits between mutants.rs's 20s floor and nextest's 60s default.
+const PROBE_TIMEOUT_SECS: u64 = 30;
+
 /// test262 `features:` that neither the Node oracle nor the ds engine ships — a
 /// fixture exercising one has neither an oracle nor ds support, so it is
-/// honestly `unsupported` without running anything. Today: `Temporal` (ES stage
-/// 3; node v24 and QuickJS both lack it). When ds gains a feature here (e.g.
-/// via `temporal-rs`), drop it from this list and route those fixtures through
-/// a ds-only oracle path.
-const UNSHIPPED_FEATURES: &[&str] = &["Temporal"];
+/// honestly `unsupported` without running anything. Currently empty: Node 26
+/// ships Temporal (the oracle), and the ds side maps Temporal via the
+/// `temporal-rs` crate. Add a feature here only when both sides lack it.
+const UNSHIPPED_FEATURES: &[&str] = &[] as &[&str];
 
 #[derive(Debug, Deserialize)]
 struct FeatureFile {
@@ -452,6 +456,24 @@ fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps
 /// Returns `(success, captured-output)` — stderr for `check`, stdout for `run`.
 fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
     let is_run = args.first().is_some_and(|a| *a == "run");
+    // The run path executes the probe binary; route it through
+    // [`cargo_run_full`] so a hanging fixture is killed at the timeout instead
+    // of stalling here on `.output()`. (`cargo check` never hangs — fixtures
+    // carry no build scripts — so the check path keeps the simple form.)
+    if is_run {
+        return match cargo_run_full(project, target_dir) {
+            Some(full) => {
+                let trimmed = full
+                    .lines()
+                    .filter(|l| !l.trim().is_empty())
+                    .take(6)
+                    .collect::<Vec<_>>()
+                    .join("\n");
+                (true, trimmed)
+            }
+            None => (false, String::new()),
+        };
+    }
     let mut cmd = Command::new("cargo");
     cmd.args(args)
         .env("CARGO_TARGET_DIR", target_dir)
@@ -465,7 +487,7 @@ fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
         Ok(o) => o,
         Err(e) => return (false, format!("cargo invoke failed: {e}")),
     };
-    let captured = String::from_utf8_lossy(if is_run { &out.stdout } else { &out.stderr });
+    let captured = String::from_utf8_lossy(&out.stderr);
     let trimmed = captured
         .lines()
         .filter(|l| !l.trim().is_empty())
@@ -565,20 +587,58 @@ fn node_oracle(fixture: &str, work: &Path) -> NodeResult {
     }
 }
 
-/// Full stdout of `cargo run` (untrimmed) for the test262 differential — the
-/// shared `cargo()` truncates to 6 lines, which would mask multi-assert diffs.
+/// Full stdout of the compiled probe (untrimmed) for the test262 differential —
+/// the shared `cargo()` truncates to 6 lines, which would mask multi-assert
+/// diffs.
+///
+/// Build and run are split so a hanging fixture (catastrophic regexp
+/// backtracking, an infinite loop) cannot stall the matrix: `cargo build`
+/// emits the `probe` binary, then we spawn it directly and cap it at
+/// [`PROBE_TIMEOUT_SECS`]. Because the binary is our own child — not a
+/// grandchild under `cargo run` — `kill()` reaps it whole, leaving no orphaned
+/// loop hoarding a core. A timeout, a non-zero exit, or a build failure yields
+/// `None` (the caller reports empty output, never a hang).
 fn cargo_run_full(project: &Path, target_dir: &Path) -> Option<String> {
-    let out = Command::new("cargo")
-        .args(["run", "--quiet"])
+    use std::io::Read;
+    use std::process::Stdio;
+    use std::time::Duration;
+    use wait_timeout::ChildExt;
+
+    let mut build = Command::new("cargo");
+    build
+        .args(["build", "--quiet"])
         .env("CARGO_TARGET_DIR", target_dir)
-        .current_dir(project)
-        .output()
-        .ok()?;
-    if out.status.success() {
-        Some(String::from_utf8_lossy(&out.stdout).into_owned())
-    } else {
-        None
+        .current_dir(project);
+    if OFFLINE_READY.load(Ordering::SeqCst) {
+        build.env("CARGO_NET_OFFLINE", "true");
     }
+    if !build.output().ok()?.status.success() {
+        return None;
+    }
+
+    let bin = target_dir
+        .join("debug")
+        .join(if cfg!(windows) { "probe.exe" } else { "probe" });
+    let mut child = Command::new(&bin)
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .ok()?;
+    let status = match child.wait_timeout(Duration::from_secs(PROBE_TIMEOUT_SECS)) {
+        Ok(Some(s)) => s,
+        _ => {
+            let _ = child.kill();
+            let _ = child.wait();
+            return None;
+        }
+    };
+    if !status.success() {
+        return None;
+    }
+    let mut out = String::new();
+    child.stdout.as_mut()?.read_to_string(&mut out).ok()?;
+    Some(out)
 }
 
 /// Line-by-line diff of `ds` stdout vs the Node oracle. `None` = equivalent;

@@ -28,7 +28,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:17: error[E0609]: no field `constructor` on type `Regex`: unknown field\nsrc\\main.rs:5:27: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:17: error[E0609]: no field `constructor` on type `Regex`: unknown field\nsrc\\main.rs:5:66: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:5:27: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -337,7 +337,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
     "note": ""
   },
   {
@@ -345,7 +349,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 1: ds=\"\\u{2028}a\\u{2029}a\" node=\"\\\\u2028\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"\\u{2028}a\\u{2029}a\" node=\"\\\\u2028\""
+    },
     "note": ""
   },
   {
@@ -353,23 +361,29 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:20:31: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:24:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0277]: `&String` is not an iterator: `&String` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:15: error[E0277]: `&String` is not an iterator: `&String` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.escape.escaped-solidus-character-mixed",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.escape.escaped-solidus-character-simple",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -377,23 +391,33 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:38:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:39:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope",
+    "detail": "oracle diff: line 1: ds=\"�d800\" node=\"\\\\ud800\"; line 2: ds=\"�dbff\" node=\"\\\\udbff\"; line 3: ds=\"�dc00\" node=\"\\\\udc00\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"�d800\" node=\"\\\\ud800\"; line 2: ds=\"�dbff\" node=\"\\\\udbff\"; line 3: ds=\"�dc00\" node=\"\\\\udc00\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.escape.escaped-syntax-characters-mixed",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.escape.escaped-syntax-characters-simple",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -401,7 +425,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:9:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:12:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:13:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope",
+    "detail": "oracle diff: line 8: ds=\"Γειά σου\" node=\"Γειά\\\\x20σου\"; line 14: ds=\"안녕!\" node=\"안녕\\\\x21\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 8: ds=\"Γειά σου\" node=\"Γειά\\\\x20σου\"; line 14: ds=\"안녕!\" node=\"안녕\\\\x21\""
+    },
     "note": ""
   },
   {
@@ -409,7 +437,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "oracle diff: line 1: ds=\"\\u{feff}\" node=\"\\\\ufeff\"; line 2: ds=\"\\u{feff} \\u{a0}\\u{202f}\" node=\"\\\\x20\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"\\u{feff}\" node=\"\\\\ufeff\"; line 2: ds=\"\\u{feff} \\u{a0}\\u{202f}\" node=\"\\\\x20\""
+    },
     "note": ""
   },
   {
@@ -417,7 +449,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope",
+    "detail": "oracle diff: line 1: ds=\"1111\" node=\"\\\\x31111\"; line 2: ds=\"2222\" node=\"\\\\x32222\"; line 3: ds=\"3333\" node=\"\\\\x33333\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"1111\" node=\"\\\\x31111\"; line 2: ds=\"2222\" node=\"\\\\x32222\"; line 3: ds=\"3333\" node=\"\\\\x33333\""
+    },
     "note": ""
   },
   {
@@ -448,7 +484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:11:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:17:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:18:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:10:10: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:16:10: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:10: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:26:10: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -456,7 +492,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope",
+    "detail": "oracle diff: line 3: ds=\"hello_world\" node=\"\\\\x68ello_world\"; line 4: ds=\"1_hello_world\" node=\"\\\\x31_hello_world\"; line 5: ds=\"a_b_c\" node=\"\\\\x61_b_c\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"hello_world\" node=\"\\\\x68ello_world\"; line 4: ds=\"1_hello_world\" node=\"\\\\x31_hello_world\"; line 5: ds=\"a_b_c\" node=\"\\\\x61_b_c\""
+    },
     "note": ""
   },
   {
@@ -590,7 +630,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:11:27: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:12:27: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:11:62: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:13:56: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -606,7 +646,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:24:15: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:27:15: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:30:59: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:36:15: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:23:63: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:24:64: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:26:59: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:32:57: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -621,8 +661,11 @@
     "id": "test262.test.built-ins.regexp.nullable-quantifier",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:5:25: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -652,7 +695,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -704,7 +747,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:9:20: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:11:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:13:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:14:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -712,7 +755,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:17:13: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:18:13: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:19:14: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:20:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:21:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`",
+    "detail": "src\\main.rs:8:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:17:13: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:18:13: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:19:14: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:21:19: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:25:19: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter",
     "note": ""
   },
   {
@@ -893,7 +936,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:10:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "oracle diff: line count: ds=0 node=5",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=5"
+    },
     "note": ""
   },
   {
@@ -901,7 +948,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:11:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:18:12: error[E0600]: cannot apply unary operator `!` to type `f64`: cannot apply unary operator `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:21:12: error[E0600]: cannot apply unary operator `!` to type `f64`: cannot apply unary operator `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -909,7 +956,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:11:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:18:12: error[E0600]: cannot apply unary operator `!` to type `f64`: cannot apply unary operator `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:21:12: error[E0600]: cannot apply unary operator `!` to type `f64`: cannot apply unary operator `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -917,7 +964,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:14:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:21:12: error[E0600]: cannot apply unary operator `!` to type `f64`: cannot apply unary operator `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:24:12: error[E0600]: cannot apply unary operator `!` to type `f64`: cannot apply unary operator `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -925,7 +972,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:10:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "oracle diff: line count: ds=0 node=4",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=4"
+    },
     "note": ""
   },
   {
@@ -933,15 +984,22 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:10:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "oracle diff: line count: ds=0 node=4",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=4"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.prototype.exec.s15.10.6.2_a3_t7",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:23:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:12:35: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -949,7 +1007,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:10: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -957,7 +1015,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:24:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:17:9: warning: unreachable expression: unreachable expression",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:26:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:28:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:34:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:35:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field",
     "note": ""
   },
   {
@@ -965,7 +1023,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:25:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:17:9: warning: unreachable expression: unreachable expression",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:26:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:27:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:29:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:35:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field",
     "note": ""
   },
   {
@@ -973,7 +1031,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:10: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -981,7 +1039,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:10: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:25:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field",
     "note": ""
   },
   {
@@ -989,7 +1047,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:10: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -997,7 +1055,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:16:23: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field",
+    "detail": "src\\main.rs:25:23: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field",
     "note": ""
   },
   {
@@ -1005,7 +1063,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:10: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -1013,7 +1071,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:16:23: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field",
+    "detail": "src\\main.rs:25:23: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field",
     "note": ""
   },
   {
@@ -1021,7 +1079,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:10: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -1029,7 +1087,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:21:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:10: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:25:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:31:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:32:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -1037,7 +1095,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:7:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:16:23: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:18:32: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:9:16: error[E0609]: no field `index` on type `Vec<String>`: unknown field\nsrc\\main.rs:10:16: error[E0609]: no field `input` on type `Vec<String>`: unknown field\nsrc\\main.rs:29:27: error[E0600]: cannot apply unary operator `!` to type `Option<DsMatch>`: cannot apply unary operator `!`\nsrc\\main.rs:30:32: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1045,7 +1103,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:5:27: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:7:32: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:9:27: error[E0600]: cannot apply unary operator `!` to type `Option<DsMatch>`: cannot apply unary operator `!`\nsrc\\main.rs:10:32: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -1053,7 +1111,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:5:31: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:7:32: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:8:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:9:23: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:11:32: error[E0609]: no field `last_index` on type `Regex`: unknown field",
+    "detail": "src\\main.rs:4:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:13:32: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:14:10: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:23:32: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1091,7 +1149,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:7:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:5:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:5:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:20: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:9:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:5:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:5:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:18:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1099,7 +1157,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:11:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:9:20: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:13:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:13:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:22:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1123,7 +1181,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:7: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:5:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:8:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1131,7 +1189,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:5:7: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:6:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:9:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1158,7 +1216,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:6:17: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:11:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:7: error[E0609]: no field `last_index` on type `Regex`: unknown field\nsrc\\main.rs:10:35: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nsrc\\main.rs:11:67: error[E0624]: method `len` is private: private method\nsrc\\main.rs:12:34: error[E0608]: cannot index into a value of type `Option<DsMatch>`",
     "note": ""
   },
   {
@@ -1166,7 +1224,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:7: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:5:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:8:29: error[E0609]: no field `last_index` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1303,7 +1361,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -1366,7 +1424,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -1418,7 +1476,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -1492,7 +1550,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -1621,7 +1679,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -1684,7 +1742,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -2166,7 +2224,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nArray.print = print;\r\n              ^\r\n\r\nReferenceError:",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:2\r\nArray.print = print;\r\n              ^\r\n\r\nReferen",
     "note": ""
   },
   {
@@ -2233,10 +2291,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52813234.3931 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 69620539.6188 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52813234.3931 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 69620539.6188 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -2245,10 +2303,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52813397.6712 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 69620943.3397 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 52813397.6712 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 69620943.3397 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -3217,7 +3275,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -3277,7 +3335,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: fil<path>oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n        ",
     "note": ""
   },
   {
@@ -3834,7 +3892,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:12:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:9:20: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:16:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:12:7: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -3842,7 +3900,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:9:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:6:21: error[E0599]: no method named `exec` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:12:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:13:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:9:7: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nsrc\\main.rs:16:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -5743,7 +5801,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:22: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:10: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:67: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:5:10: error[E0609]: no field `indicator` on type `Regex`: unknown field\nsrc\\main.rs:6:38: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -5751,7 +5809,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:2:20: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:22: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:22: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:3:36: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:6:30: warning: unreachable call: unreachable call\nsrc\\main.rs:9:38: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -5759,7 +5817,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:22: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:5:10: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:19: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:6:19: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:8:10: error[E0609]: no field `indicator` on type `Regex`: unknown field\nsrc\\main.rs:9:38: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
