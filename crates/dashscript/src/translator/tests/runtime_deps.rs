@@ -151,3 +151,40 @@ fn plain_source_stays_on_static_rust_path() {
         "plain source must not lower to engine, got:\n{rust}"
     );
 }
+
+#[test]
+fn regex_literal_test_flags_regress_dep() {
+    // `/pat/i.test(s)` lowers to a `regress::Regex` (not the engine), so the
+    // file flags `needs_regress` and emits `__ds::regex` — no rquickjs.
+    let src = "function main(): void {\n  console.log(/\\d+/i.test(\"abc123\"));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_regress(),
+        "regex literal flags needs_regress, got deps: {deps:?}"
+    );
+    assert!(
+        !deps.needs_engine(),
+        "regex literal must not pull the engine, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("__ds::regex"),
+        "regex literal emits __ds::regex, got:\n{rust}"
+    );
+}
+
+#[test]
+fn regex_local_test_uses_regress() {
+    // `let r = /pat/; r.test(s)` — the local infers `regress::Regex`, so
+    // `.test` dispatches to the regress `find` method, not the engine.
+    let src = "function main(): void {\n  const r = /[a-z]+/g;\n  console.log(r.test(\"hi\"));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "regex local flags needs_regress");
+    assert!(
+        rust.contains(".find("),
+        "regex local .test lowers to .find, got:\n{rust}"
+    );
+}

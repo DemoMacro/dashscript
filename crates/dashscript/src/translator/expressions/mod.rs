@@ -194,8 +194,47 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         // outside a method → a `compile_error!`.
         Expression::ThisExpression(_) => super::context::this_expr(ctx),
         Expression::NewExpression(n) => new::new_expr(n, ctx),
+        Expression::RegExpLiteral(re) => regex_literal_expr(re),
         _ => parse_quote!(::core::todo!()),
     }
+}
+
+/// `/pattern/flags` → a compiled `regress::Regex` via `__ds::regex`. The
+/// `regress` crate implements ES regex semantics (backreferences, lookaround,
+/// unicode) the `regex` crate cannot express; oxc parses the literal upfront,
+/// so an invalid pattern never reaches runtime. Flags are reconstructed as an
+/// ES flag string ("gimsuydv") from oxc's bitflag set.
+fn regex_literal_expr(re: &oxc_ast::ast::RegExpLiteral) -> Expr {
+    use oxc_ast::ast::RegExpFlags;
+    let f = re.regex.flags;
+    let mut flags = String::new();
+    if f.contains(RegExpFlags::G) {
+        flags.push('g');
+    }
+    if f.contains(RegExpFlags::I) {
+        flags.push('i');
+    }
+    if f.contains(RegExpFlags::M) {
+        flags.push('m');
+    }
+    if f.contains(RegExpFlags::S) {
+        flags.push('s');
+    }
+    if f.contains(RegExpFlags::U) {
+        flags.push('u');
+    }
+    if f.contains(RegExpFlags::Y) {
+        flags.push('y');
+    }
+    if f.contains(RegExpFlags::D) {
+        flags.push('d');
+    }
+    if f.contains(RegExpFlags::V) {
+        flags.push('v');
+    }
+    let pat = syn::LitStr::new(re.regex.pattern.text.as_str(), Span::call_site());
+    let fl = syn::LitStr::new(&flags, Span::call_site());
+    parse_quote!(crate::__ds::regex(#pat, #fl))
 }
 
 /// Translate a call argument — [`Argument`] inherits the `Expression` variants.
@@ -222,6 +261,7 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         Argument::ThisExpression(_) => super::context::this_expr(ctx),
         Argument::NewExpression(n) => new::new_expr(n, ctx),
+        Argument::RegExpLiteral(re) => regex_literal_expr(re),
         // An anonymous object literal argument lowers to a `HashMap` (no
         // parameter type hint at a call site) — same as an unannotated object
         // binding. Fixes `Object.assign(target, { a: 2 })`, where the source

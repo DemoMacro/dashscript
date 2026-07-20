@@ -787,6 +787,10 @@ fn infer_literal_type(expr: &Expression) -> Option<Type> {
         Expression::BooleanLiteral(_) => Some(parse_quote!(bool)),
         Expression::NumericLiteral(_) => Some(parse_quote!(f64)),
         Expression::StringLiteral(_) => Some(parse_quote!(String)),
+        // `/pat/` lowers to a `regress::Regex` (see
+        // `expressions::regex_literal_expr`), so `let r = /pat/` infers the
+        // type `.test` dispatches on.
+        Expression::RegExpLiteral(_) => Some(parse_quote!(regress::Regex)),
         // A homogeneous array literal infers its element type so the builtin
         // array methods (`.map`/`.filter`/`.includes`/…) map correctly without
         // an annotation. A mixed, empty, or spread array is left uninferred

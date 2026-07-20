@@ -55,16 +55,21 @@ pub enum RuntimeDep {
     /// An indexed assignment `xs[i] = v` that may auto-grow; routes through
     /// `__ds::array_set`. Pure `std` — no cargo dep.
     ArrayHelper,
+    /// An ES RegExp literal `/pat/flags` lowered to a `regress::Regex` (ES
+    /// regex semantics — backreferences, lookaround, which the `regex` crate
+    /// cannot express). Routes through `__ds::regex`; flags the `regress` dep.
+    Regress,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 4] = [
+    const ALL: [RuntimeDep; 5] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
         RuntimeDep::ArrayHelper,
+        RuntimeDep::Regress,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -75,6 +80,7 @@ impl RuntimeDep {
             RuntimeDep::RyuJs => Some("__ds::number_to_string"),
             RuntimeDep::SerdeJson => Some("serde_json::"),
             RuntimeDep::ArrayHelper => Some("__ds::array_set"),
+            RuntimeDep::Regress => Some("__ds::regex"),
             RuntimeDep::Engine => None,
         }
     }
@@ -91,6 +97,7 @@ impl RuntimeDep {
             // `rquickjs` bundles QuickJS-NG C sources (compiled via `cc`), so
             // it is only emitted for programs that opt into the engine path.
             RuntimeDep::Engine => Some(("rquickjs", "\"0.12\"")),
+            RuntimeDep::Regress => Some(("regress", "\"0.11\"")),
             RuntimeDep::ArrayHelper => None,
         }
     }
@@ -100,6 +107,7 @@ impl RuntimeDep {
         match self {
             RuntimeDep::RyuJs => Some(RYUJS_HELPERS),
             RuntimeDep::ArrayHelper => Some(ARRAY_HELPER),
+            RuntimeDep::Regress => Some(REGRESS_HELPERS),
             RuntimeDep::SerdeJson | RuntimeDep::Engine => None,
         }
     }
@@ -152,6 +160,9 @@ impl RuntimeDeps {
     }
     pub fn needs_array_helper(&self) -> bool {
         self.has(RuntimeDep::ArrayHelper)
+    }
+    pub fn needs_regress(&self) -> bool {
+        self.has(RuntimeDep::Regress)
     }
 
     /// Union another dep set into this one — a project links a runtime dep if
@@ -267,6 +278,23 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
         arr.resize(idx + 1, T::default());
         arr[idx] = v;
     }
+}
+";
+
+/// ES RegExp helpers — `__ds::regex` compiles a `/pat/flags` literal to a
+/// `regress::Regex`. `regress` implements ES regex semantics (backreferences,
+/// lookaround, unicode case folding) the `regex` crate cannot express. Only
+/// emitted when a translated file uses a regex literal, so a plain `ds build`
+/// pulls no `regress` dependency.
+const REGRESS_HELPERS: &str = "\
+use regress::Regex;
+
+/// Compile an ES RegExp literal `/pattern/flags` to a `regress::Regex`. oxc
+/// parses `/pat/` upfront, so an invalid literal never reaches runtime — the
+/// fallback compiles an empty pattern rather than panic.
+#[inline]
+pub fn regex(pattern: &str, flags: &str) -> Regex {
+    Regex::with_flags(pattern, flags).unwrap_or_else(|_| Regex::new(\"\").unwrap())
 }
 ";
 

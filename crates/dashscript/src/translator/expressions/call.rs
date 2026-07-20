@@ -1,7 +1,7 @@
 //! Call expressions: `console.log` → `println!`, built-in static/instance
 //! methods, global conversions, and plain user calls.
 
-use oxc_ast::ast::{Argument, CallExpression, Expression};
+use oxc_ast::ast::{Argument, CallExpression, Expression, StaticMemberExpression};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr, Type};
 
@@ -15,6 +15,38 @@ use super::{
     array_elem_arg, is_number_arg, translate_argument, translate_argument_init, translate_expr,
     translate_number_to,
 };
+
+/// `/pat/.test(s)` / `r.test(s)` — ES `RegExp.prototype.test`. The receiver
+/// is a regex literal (compiled inline via `__ds::regex`) or a local bound to
+/// one (`let r = /pat/`, whose inferred type is `regress::Regex`); both lower
+/// to regress `Regex::find(...).is_some()`. Returns `None` for any other
+/// receiver so a non-regex `.test` falls through to a plain call.
+fn regex_test(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let arg = builtins::str_method_arg(args.first()?, ctx);
+    match &sm.object {
+        Expression::RegExpLiteral(re) => {
+            let re = super::regex_literal_expr(re);
+            Some(parse_quote!(#re.find(#arg).is_some()))
+        }
+        Expression::Identifier(_) if is_regex_local(&sm.object, ctx) => {
+            let r = translate_expr(&sm.object, ctx);
+            Some(parse_quote!(#r.find(#arg).is_some()))
+        }
+        _ => None,
+    }
+}
+
+/// Whether `expr` is a local whose inferred type is `regress::Regex` (a
+/// `let r = /pat/` binding) — so `.test` on it lowers to the regress method
+/// rather than a plain field call.
+fn is_regex_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "Regex"))
+}
 
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
@@ -166,6 +198,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     }
     // A method call (`s.toUpperCase()`) maps the method name, not the receiver.
     if let Expression::StaticMemberExpression(sm) = &call.callee {
+        // `/pat/.test(s)` / `r.test(s)` on a regex (ES RegExp.prototype.test).
+        if sm.property.name.as_str() == "test" {
+            if let Some(expr) = regex_test(sm, call.arguments.as_slice(), ctx) {
+                return expr;
+            }
+        }
         if let Some(expr) = builtins::array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
