@@ -780,11 +780,12 @@ fn object_assign_type(init: &Expression, ctx: &Ctx<'_>) -> Option<Type> {
     }))
 }
 
-/// `s.match(/pat/)` (non-global) returns an ES match result or `null`, so an
-/// unannotated `let m = s.match(/pat/)` records `Option<DsMatch>` — letting
-/// `m[0]`/`m.index`/`m.input`/`m.length` route through the `DsMatch` accessors
-/// instead of failing on `Option`'s missing `Index`/`len`. Only a `.match`
-/// call with a regex-literal argument is recognized.
+/// `s.match(/pat/)` or `/pat/.exec(s)` (non-global) returns an ES match result
+/// or `null`, so an unannotated `let m = …` records `Option<DsMatch>` —
+/// letting `m[0]`/`m.index`/`m.input`/`m.length` route through the `DsMatch`
+/// accessors instead of failing on `Option`'s missing `Index`/`len`. Only a
+/// `.match` call with a regex-literal argument, or an `.exec` call on a regex
+/// literal, is recognized.
 fn match_result_type(init: &Expression) -> Option<Type> {
     let Expression::CallExpression(c) = init else {
         return None;
@@ -792,11 +793,11 @@ fn match_result_type(init: &Expression) -> Option<Type> {
     let Expression::StaticMemberExpression(sm) = &c.callee else {
         return None;
     };
-    if sm.property.name.as_str() != "match" {
-        return None;
-    }
-    matches!(c.arguments.first(), Some(Argument::RegExpLiteral(_)))
-        .then(|| parse_quote!(Option<crate::__ds::DsMatch>))
+    let is_match = sm.property.name.as_str() == "match"
+        && matches!(c.arguments.first(), Some(Argument::RegExpLiteral(_)));
+    let is_exec =
+        sm.property.name.as_str() == "exec" && matches!(&sm.object, Expression::RegExpLiteral(_));
+    (is_match || is_exec).then(|| parse_quote!(Option<crate::__ds::DsMatch>))
 }
 
 /// homogeneous array → `Vec<f64>` / `Vec<String>`. Anchors the binding's type

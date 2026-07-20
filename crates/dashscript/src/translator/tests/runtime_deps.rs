@@ -212,3 +212,36 @@ fn match_emits_ds_match_accessor() {
         "m[i]/m.length route through captures, got:\n{rust}"
     );
 }
+
+#[test]
+fn exec_emits_ds_match_accessor() {
+    // `/pat/.exec(s)` mirrors `s.match(/pat/)` — the receiver is the regex,
+    // the arg is the string. Lowers to `regex_match` and infers DsMatch.
+    let src = "function main(): void {\n  const m = /(\\w+) (\\w+)/.exec(\"hello world\");\n  console.log(m[0]);\n  console.log(m.index);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "exec flags needs_regress");
+    assert!(
+        rust.contains("regex_match"),
+        "exec emits regex_match, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("DsMatch"),
+        "exec records DsMatch type, got:\n{rust}"
+    );
+}
+
+#[test]
+fn search_emits_regex_search() {
+    // `s.search(/pat/)` → the byte index of the first match, or -1.
+    let src = "function main(): void {\n  console.log(\"hello world\".search(/world/));\n  console.log(\"hello\".search(/xyz/));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "search flags needs_regress");
+    assert!(
+        rust.contains("regex_search"),
+        "search emits regex_search, got:\n{rust}"
+    );
+}

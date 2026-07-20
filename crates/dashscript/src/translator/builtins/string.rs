@@ -120,6 +120,26 @@ pub(in crate::translator) fn string_method_on(
             };
             parse_quote!(crate::__ds::regex_match(#pat, #fl, #text))
         }
+        // `.search(/pat/)` → the byte index of the first match, or -1. Only a
+        // regex-literal argument is lowered; a non-regex arg falls through.
+        "search" => {
+            let Argument::RegExpLiteral(re) = args.first()? else {
+                return None;
+            };
+            let (pat, fl) = regex_lit_parts(re);
+            let text: Expr = if matches!(
+                &obj,
+                Expr::Lit(syn::ExprLit {
+                    lit: syn::Lit::Str(_),
+                    ..
+                })
+            ) {
+                obj
+            } else {
+                parse_quote!(#obj.as_str())
+            };
+            parse_quote!(crate::__ds::regex_search(#pat, #fl, #text))
+        }
         "replace" => {
             let a = str_method_arg(args.first()?, ctx);
             let b = str_method_arg(args.get(1)?, ctx);

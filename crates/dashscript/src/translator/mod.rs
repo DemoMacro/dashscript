@@ -323,6 +323,16 @@ pub fn regex_match(pattern: &str, flags: &str, text: &str) -> Option<DsMatch> {
         input: text.to_string(),
     })
 }
+
+/// `s.search(/pat/)` — the byte index of the first match, or `-1` (ES returns
+/// -1 when no match). ASCII offsets match UTF-16 code-unit indices.
+#[inline]
+pub fn regex_search(pattern: &str, flags: &str, text: &str) -> f64 {
+    match Regex::with_flags(pattern, flags) {
+        Ok(re) => re.find(text).map(|m| m.range().start as f64).unwrap_or(-1_f64),
+        Err(_) => -1_f64,
+    }
+}
 ";
 
 /// The DashScript compat engine module, written to `src/__ds_engine.rs` and

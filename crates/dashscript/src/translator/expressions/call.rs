@@ -36,6 +36,21 @@ fn regex_test(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> 
     }
 }
 
+/// `/pat/.exec(s)` (non-global) → `Option<DsMatch>` (ES: the match result or
+/// `null`). Mirrors `String.prototype.match` but the receiver is the regex.
+/// Only a literal receiver is lowered (a variable's compiled pattern is lost);
+/// a non-regex `.exec` falls through.
+fn regex_exec(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let arg = builtins::str_method_arg(args.first()?, ctx);
+    match &sm.object {
+        Expression::RegExpLiteral(re) => {
+            let (pat, fl) = super::regex_lit_parts(re);
+            Some(parse_quote!(crate::__ds::regex_match(#pat, #fl, #arg)))
+        }
+        _ => None,
+    }
+}
+
 /// Whether `expr` is a local whose inferred type is `regress::Regex` (a
 /// `let r = /pat/` binding) — so `.test` on it lowers to the regress method
 /// rather than a plain field call.
@@ -201,6 +216,13 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         // `/pat/.test(s)` / `r.test(s)` on a regex (ES RegExp.prototype.test).
         if sm.property.name.as_str() == "test" {
             if let Some(expr) = regex_test(sm, call.arguments.as_slice(), ctx) {
+                return expr;
+            }
+        }
+        // `/pat/.exec(s)` on a regex literal (ES RegExp.prototype.exec, non-
+        // global) → the first match as `Option<DsMatch>`.
+        if sm.property.name.as_str() == "exec" {
+            if let Some(expr) = regex_exec(sm, call.arguments.as_slice(), ctx) {
                 return expr;
             }
         }

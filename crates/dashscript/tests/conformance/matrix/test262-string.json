@@ -2509,7 +2509,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpmaSfnE\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQq1UZX\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -4178,7 +4178,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpmaSfnE\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpQq1UZX\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
