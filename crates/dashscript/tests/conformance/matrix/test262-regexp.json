@@ -651,8 +651,11 @@
     "id": "test262.test.built-ins.regexp.named-groups.non-unicode-property-names",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:62: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:13:56: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -668,7 +671,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:23:63: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:24:64: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:26:59: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:32:57: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:26:59: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2402,10 +2405,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 104205428.1517 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 105105570.1599 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 104205428.1517 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 105105570.1599 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -2414,10 +2417,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 104205648.524 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 105105849.4698 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 104205648.524 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 105105849.4698 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },

@@ -34,6 +34,15 @@ fn regex_test(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> 
             let r = translate_expr(&sm.object, ctx);
             Some(parse_quote!(#r.find(#arg).is_some()))
         }
+        // `RegExp("pat").test(s)` / `new RegExp("pat").test(s)` — the
+        // constructor lowers to `__ds::regex` (a `regress::Regex`), so `.test`
+        // maps to `.find(s).is_some()` on the constructed value (no local).
+        Expression::CallExpression(_) | Expression::NewExpression(_)
+            if is_reg_exp_ctor(&sm.object) =>
+        {
+            let r = translate_expr(&sm.object, ctx);
+            Some(parse_quote!(#r.find(#arg).is_some()))
+        }
         _ => None,
     }
 }
@@ -60,6 +69,18 @@ fn regex_exec(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> 
                 #r.find(__t).map(|__m| crate::__ds::ds_match_from(__t, &__m))
             }))
         }
+        // `RegExp("pat").exec(s)` / `new RegExp("pat").exec(s)` — the
+        // constructor lowers to `__ds::regex`, so reuse the constructed value
+        // (no local) and convert its `Match` to a `DsMatch`.
+        Expression::CallExpression(_) | Expression::NewExpression(_)
+            if is_reg_exp_ctor(&sm.object) =>
+        {
+            let r = translate_expr(&sm.object, ctx);
+            Some(parse_quote!({
+                let __t = #arg;
+                #r.find(__t).map(|__m| crate::__ds::ds_match_from(__t, &__m))
+            }))
+        }
         _ => None,
     }
 }
@@ -74,6 +95,18 @@ fn is_regex_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
         .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "Regex"))
+}
+
+/// Whether `expr` is a `RegExp(...)` call or `new RegExp(...)` — both lower to
+/// `__ds::regex` (a `regress::Regex`), so `.test`/`.exec` on the constructed
+/// value dispatch like a regex local, without an intervening binding.
+fn is_reg_exp_ctor(expr: &Expression) -> bool {
+    let callee = match expr {
+        Expression::CallExpression(c) => &c.callee,
+        Expression::NewExpression(n) => &n.callee,
+        _ => return false,
+    };
+    matches!(callee, Expression::Identifier(id) if id.name.as_str() == "RegExp")
 }
 
 /// Whether a `console.log` argument evaluates to `Option<DsMatch>` — an ES
