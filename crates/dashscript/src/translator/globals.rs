@@ -16,8 +16,13 @@
 /// mapped static members read as values (`Number.MAX_VALUE`→`f64::MAX`) and a
 /// prototype-borrow form (`String.prototype.trim.call(x)`), so blanket-flagging
 /// the name would regress those. Their conversion-call form (`Number(x)`) is
-/// covered by `global_function`.
-pub const STATIC_ONLY_GLOBALS: &[&str] = &["Array", "Object", "Math", "JSON", "Map", "Set"];
+/// covered by `global_function`. `RegExp` is included: its call/new forms
+/// (`RegExp(pat)`, `new RegExp(pat)`) are mapped, but it has no static *value*
+/// members — a bare reference is always reflection (`RegExp.prototype.X`,
+/// `RegExp.length`) the static mapping cannot express, so it routes to the
+/// engine rather than emitting a phantom `reg_exp` binding.
+pub const STATIC_ONLY_GLOBALS: &[&str] =
+    &["Array", "Object", "Math", "JSON", "Map", "Set", "RegExp"];
 
 /// Names that may stand as the receiver of a mapped static-member read —
 /// [`STATIC_ONLY_GLOBALS`] plus the wrapper constructors `Number`/`String`/

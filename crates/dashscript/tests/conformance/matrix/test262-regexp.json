@@ -1188,8 +1188,11 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.s15.10.6.2_a6",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2386,10 +2389,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 76590584.5845 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 78403832.1883 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 76590584.5845 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 78403832.1883 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -2398,10 +2401,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 76590888.2817 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 78404172.2746 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 76590888.2817 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 78404172.2746 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -3262,8 +3265,11 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a6",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -6535,8 +6541,11 @@
     "id": "test262.test.built-ins.regexp.s15.10.5_a1",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:59: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:58: warning: unnecessary parentheses around function argument\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
