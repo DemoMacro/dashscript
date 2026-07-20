@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "abstractmodulesource",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w0\\work\\oracle.ts:2\r\nconsole.log(typeof $262.AbstractModuleSource);\r\n        ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(typeof $262.AbstractModuleSource);\r\n        ",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "abstractmodulesource",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w0\\work\\oracle.ts:2\r\nconsole.log(typeof $262.AbstractModuleSource);\r\n        ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(typeof $262.AbstractModuleSource);\r\n        ",
     "note": ""
   }
 ]

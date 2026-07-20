@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "asyncgeneratorprototype",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:8\r\n}).then($DONE, $DONE)\r\n        ^\r\n\r\nReferenceError: $DON",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:8\r\n}).then($DONE, $DONE)\r\n        ^\r\n\r\nReferenceError: $DON",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "asyncgeneratorprototype",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:40\r\n]).then(function() { $DONE(); }, $DONE);\r\n             ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:40\r\n]).then(function() { $DONE(); }, $DONE);\r\n             ",
     "note": ""
   },
   {
@@ -31,7 +31,7 @@
     "layer": "test262",
     "category": "asyncgeneratorprototype",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:8\r\n}).then($DONE, $DONE)\r\n        ^\r\n\r\nReferenceError: $DON",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:8\r\n}).then($DONE, $DONE)\r\n        ^\r\n\r\nReferenceError: $DON",
     "note": ""
   },
   {

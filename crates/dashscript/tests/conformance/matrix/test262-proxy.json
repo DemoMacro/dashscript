@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "proxy",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:2\r\nvar f = $262.createRealm().global.eval(\r\n        ^\r\n\r\nRe",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar f = $262.createRealm().global.eval(\r\n        ^\r\n\r\nRe",
     "note": ""
   },
   {
@@ -23,7 +23,7 @@
     "layer": "test262",
     "category": "proxy",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         ",
     "note": ""
   },
   {
@@ -53,7 +53,7 @@
     "layer": "test262",
     "category": "proxy",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         ",
     "note": ""
   },
   {
@@ -128,10 +128,10 @@
     "layer": "test262",
     "category": "proxy",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:7\r\ntry { (function() {\r\n  with(p.proxy) {\r\n  ^^^^\r\n    (att",
+    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:7\r\ntry { (function() {\r\n  with(p.proxy) {\r\n  ^^^^\r\n    (att",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:7\r\ntry { (function() {\r\n  with(p.proxy) {\r\n  ^^^^\r\n    (att"
+      "detail": "exit exit code: 1: <path>oracle.ts:7\r\ntry { (function() {\r\n  with(p.proxy) {\r\n  ^^^^\r\n    (att"
     },
     "note": ""
   },
@@ -329,7 +329,7 @@
     "layer": "test262",
     "category": "proxy",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm();\r\n            ^\r\n\r\nRefere",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar other = $262.createRealm();\r\n            ^\r\n\r\nRefere",
     "note": ""
   },
   {

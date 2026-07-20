@@ -1272,10 +1272,10 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              ",
+    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
+      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
     },
     "note": ""
   },
@@ -1284,10 +1284,10 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             ",
+    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
+      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
     },
     "note": ""
   },
@@ -1296,10 +1296,10 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r",
+    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
+      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
     },
     "note": ""
   },
@@ -1308,10 +1308,10 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^",
+    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
+      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
     },
     "note": ""
   },
@@ -1320,10 +1320,10 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 ",
+    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 ",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
+      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
     },
     "note": ""
   },

@@ -102,10 +102,10 @@
     "layer": "test262",
     "category": "arraybuffer",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:4\r\n).get;\r\n ^\r\n\r\nTypeError: Cannot read properties of undef",
+    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:4\r\n).get;\r\n ^\r\n\r\nTypeError: Cannot read properties of undef",
     "oracle": {
       "status": "node-error",
-      "detail": "exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:4\r\n).get;\r\n ^\r\n\r\nTypeError: Cannot read properties of undef"
+      "detail": "exit exit code: 1: <path>oracle.ts:4\r\n).get;\r\n ^\r\n\r\nTypeError: Cannot read properties of undef"
     },
     "note": ""
   },

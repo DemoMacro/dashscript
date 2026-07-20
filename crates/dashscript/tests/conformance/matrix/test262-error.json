@@ -56,7 +56,7 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:6:42: error[E0425]: cannot find value `error` in this scope: not found in this scope",
+    "detail": "src\\main.rs:3:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:7:42: error[E0425]: cannot find value `error` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -157,7 +157,7 @@
     "layer": "test262",
     "category": "error",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:2\r\nvar get = Object.getOwnPropertyDescriptor(Error.prototyp",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar get = Object.getOwnPropertyDescriptor(Error.prototyp",
     "note": ""
   },
   {
@@ -165,7 +165,7 @@
     "layer": "test262",
     "category": "error",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:2\r\nvar set = Object.getOwnPropertyDescriptor(Error.prototyp",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar set = Object.getOwnPropertyDescriptor(Error.prototyp",
     "note": ""
   },
   {
@@ -173,7 +173,7 @@
     "layer": "test262",
     "category": "error",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:2\r\nvar set = Object.getOwnPropertyDescriptor(Error.prototyp",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar set = Object.getOwnPropertyDescriptor(Error.prototyp",
     "note": ""
   },
   {

@@ -680,7 +680,7 @@
     "layer": "test262",
     "category": "json",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OProxy = $262.createRealm().global.Proxy;\r\n         ",
     "note": ""
   },
   {
@@ -806,7 +806,7 @@
     "layer": "test262",
     "category": "json",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w3\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -965,7 +965,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:15:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:4:23: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:16:37: error[E0277]: the trait bound `Regex: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {

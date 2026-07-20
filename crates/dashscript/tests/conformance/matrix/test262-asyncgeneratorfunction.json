@@ -15,7 +15,7 @@
     "layer": "test262",
     "category": "asyncgeneratorfunction",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:10\r\n}).then(undefined, $DONE)\r\n                   ^\r\n\r\nRefe",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:10\r\n}).then(undefined, $DONE)\r\n                   ^\r\n\r\nRefe",
     "note": ""
   },
   {
@@ -23,7 +23,7 @@
     "layer": "test262",
     "category": "asyncgeneratorfunction",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:10\r\n}).then($DONE, $DONE)\r\n        ^\r\n\r\nReferenceError: $DO",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:10\r\n}).then($DONE, $DONE)\r\n        ^\r\n\r\nReferenceError: $DO",
     "note": ""
   },
   {
@@ -31,7 +31,7 @@
     "layer": "test262",
     "category": "asyncgeneratorfunction",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:12\r\n}).then(undefined, $DONE)\r\n                   ^\r\n\r\nRefe",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:12\r\n}).then(undefined, $DONE)\r\n                   ^\r\n\r\nRefe",
     "note": ""
   },
   {

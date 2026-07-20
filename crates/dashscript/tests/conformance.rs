@@ -317,20 +317,88 @@ fn engine_path_compiles_to_valid_rust_project() {
     );
 }
 
+/// Strip host-local absolute paths from a captured tool diagnostic so the
+/// committed matrix never embeds a contributor's tempdir. Node/rustc emit the
+/// full path — `C:\Users\name\…\Temp\.tmpXXX\wN\work\oracle.ts` on Windows,
+/// `/tmp/.tmpXXX/…/oracle.ts` on POSIX — on a failed fixture; replace the
+/// absolute prefix with `<path>` and keep the trailing file name (plus any
+/// `:line:col`) so the note stays readable. Relative paths (cargo short
+/// diagnostics like `src/main.rs`) are left untouched.
+fn scrub_local_paths(s: &str) -> String {
+    /// Length of the absolute-path token starting at `s`, or `None` if `s`
+    /// does not open one. A token runs to the next whitespace or quote.
+    fn path_len(s: &str) -> Option<usize> {
+        let b = s.as_bytes();
+        // Windows drive path: `<letter>:\` or `<letter>:/`.
+        if b.len() >= 3
+            && b[0].is_ascii_alphabetic()
+            && b[1] == b':'
+            && (b[2] == b'\\' || b[2] == b'/')
+        {
+            return Some(consume(b));
+        }
+        // POSIX absolute prefixes used by TempDir / home / system caches.
+        const POSIX: &[&str] = &[
+            "/tmp/",
+            "/var/",
+            "/home/",
+            "/Users/",
+            "/private/",
+            "/root/",
+            "/mnt/",
+            "/opt/",
+            "/proc/",
+            "/dev/",
+        ];
+        POSIX.iter().find(|p| s.starts_with(*p)).map(|_| consume(b))
+    }
+    fn consume(b: &[u8]) -> usize {
+        b.iter()
+            .position(|&c| c.is_ascii_whitespace() || c == b'"' || c == b'\'')
+            .unwrap_or(b.len())
+    }
+
+    let mut out = String::with_capacity(s.len());
+    let mut rest = s;
+    while !rest.is_empty() {
+        match path_len(rest) {
+            Some(n) => {
+                let tail = rest[..n].rsplit(['\\', '/']).next().unwrap_or("");
+                out.push_str("<path>");
+                out.push_str(tail);
+                rest = &rest[n..];
+            }
+            None => {
+                let ch = rest.chars().next().expect("non-empty");
+                out.push(ch);
+                rest = &rest[ch.len_utf8()..];
+            }
+        }
+    }
+    out
+}
+
 fn outcome(
     raw: &RawFeature,
     layer: &str,
     status: &'static str,
     detail: String,
     correct: Option<bool>,
-    oracle: Option<Oracle>,
+    mut oracle: Option<Oracle>,
 ) -> Outcome {
+    // A failed fixture's `detail` may quote a tool diagnostic (node/rustc) that
+    // embeds the contributor's full tempdir. Scrub host-local absolute paths
+    // before the value lands in the committed matrix — both the top-level
+    // `detail` and the embedded `oracle.detail`.
+    if let Some(o) = oracle.as_mut() {
+        o.detail = scrub_local_paths(&o.detail);
+    }
     Outcome {
         id: raw.id.clone(),
         layer: layer.to_string(),
         category: raw.category.clone(),
         status,
-        detail,
+        detail: scrub_local_paths(&detail),
         expect: raw.expect.clone(),
         correct,
         oracle,
@@ -1073,4 +1141,24 @@ fn badge(status: &str) -> &'static str {
         "untested" => "⚪",
         _ => "❓",
     }
+}
+
+#[test]
+fn scrub_local_paths_strips_tempdir_only() {
+    // Windows tempdir leak → drop the absolute prefix, keep file name + line.
+    let win = r"C:\Users\abc\AppData\Local\Temp\.tmp0maPBl\w7\work\oracle.ts:2 var OSymbol";
+    assert_eq!(scrub_local_paths(win), "<path>oracle.ts:2 var OSymbol");
+    // POSIX tempdir leak.
+    let posix = "/tmp/.tmpXYZ/w3/work/oracle.ts";
+    assert_eq!(scrub_local_paths(posix), "<path>oracle.ts");
+    // Relative paths (cargo short diagnostics) are untouched.
+    assert_eq!(scrub_local_paths("src/main.rs:10:5"), "src/main.rs:10:5");
+    // Prose with a colon is not mistaken for a drive path.
+    assert_eq!(
+        scrub_local_paths("oracle diff: 1 vs 2"),
+        "oracle diff: 1 vs 2"
+    );
+    // Two absolute paths in one line are both scrubbed.
+    let two = r"C:\Temp\a.ts and /tmp/b.ts";
+    assert_eq!(scrub_local_paths(two), "<path>a.ts and <path>b.ts");
 }

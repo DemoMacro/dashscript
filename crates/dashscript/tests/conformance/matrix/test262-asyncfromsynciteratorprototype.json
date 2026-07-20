@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "asyncfromsynciteratorprototype",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:12\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:12\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "asyncfromsynciteratorprototype",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:12\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:12\r\n}).then($DONE, $DONE);\r\n        ^\r\n\r\nReferenceError: $D",
     "note": ""
   },
   {
@@ -31,7 +31,7 @@
     "layer": "test262",
     "category": "asyncfromsynciteratorprototype",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:36\r\n}).catch($DONE);\r\n         ^\r\n\r\nReferenceError: $DONE i",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:36\r\n}).catch($DONE);\r\n         ^\r\n\r\nReferenceError: $DONE i",
     "note": ""
   },
   {
@@ -39,7 +39,7 @@
     "layer": "test262",
     "category": "asyncfromsynciteratorprototype",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w2\\work\\oracle.ts:32\r\n}).catch($DONE);\r\n         ^\r\n\r\nReferenceError: $DONE i",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:32\r\n}).catch($DONE);\r\n         ^\r\n\r\nReferenceError: $DONE i",
     "note": ""
   }
 ]

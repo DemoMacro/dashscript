@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -23,7 +23,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -86,7 +86,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -116,7 +116,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -146,7 +146,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -154,7 +154,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -162,7 +162,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -203,7 +203,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -211,7 +211,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -219,7 +219,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -437,7 +437,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -445,7 +445,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -464,7 +464,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -500,7 +500,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   },
   {
@@ -519,7 +519,7 @@
     "layer": "test262",
     "category": "symbol",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
+    "detail": "node + ds both error: exit exit code: 1: <path>oracle.ts:2\r\nvar OSymbol = $262.createRealm().global.Symbol;\r\n       ",
     "note": ""
   }
 ]
