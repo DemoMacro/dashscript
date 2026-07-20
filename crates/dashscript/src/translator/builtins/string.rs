@@ -143,9 +143,9 @@ pub(in crate::translator) fn string_method_on(
         "replace" => {
             let b = str_method_arg(args.get(1)?, ctx);
             if let Argument::RegExpLiteral(re) = args.first()? {
-                // `.replace(/pat/, repl)` (non-global) — the first match with
-                // `$` patterns in `repl` expanded. A global regex falls through
-                // (global replace is a later phase).
+                // `.replace(/pat/, repl)` — the first match, or every match when
+                // the regex carries the global flag (`g`); `$` patterns in `repl`
+                // are expanded. `regex_replace` reads the flags itself.
                 let (pat, fl) = regex_lit_parts(re);
                 let text: Expr = if matches!(
                     &obj,

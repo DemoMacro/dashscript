@@ -337,12 +337,32 @@ pub fn regex_search(pattern: &str, flags: &str, text: &str) -> f64 {
 /// `s.replace(/pat/, repl)` (non-global) — the first match replaced by `repl`,
 /// with `$` patterns expanded (`$&` whole match, `$1`/`$2`… groups, `` $` ``
 /// before, `$'` after, `$$` literal `$`). Returns the input unchanged on no
-/// match.
+/// match. The global flag (`g`) replaces every match instead of just the first;
+/// a zero-width match advances one char so the loop terminates.
 #[inline]
 pub fn regex_replace(pattern: &str, flags: &str, text: &str, repl: &str) -> String {
     let Ok(re) = Regex::with_flags(pattern, flags) else {
         return text.to_string();
     };
+    if flags.contains('g') {
+        let mut out = String::with_capacity(text.len() + repl.len());
+        let mut last = 0usize;
+        for m in re.find_iter(text) {
+            let r = m.range();
+            out.push_str(&text[last..r.start]);
+            expand_replacement(repl, text, &m, &mut out);
+            last = r.end;
+            if r.start == r.end {
+                // zero-width: copy one char so the next match advances
+                if let Some((_, ch)) = text[r.end..].char_indices().next() {
+                    out.push(ch);
+                    last += ch.len_utf8();
+                }
+            }
+        }
+        out.push_str(&text[last..]);
+        return out;
+    }
     let Some(m) = re.find(text) else {
         return text.to_string();
     };
