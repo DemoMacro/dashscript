@@ -23,8 +23,20 @@ use super::{
 /// one (`let r = /pat/`, whose inferred type is `regress::Regex`); both lower
 /// to regress `Regex::find(...).is_some()`. Returns `None` for any other
 /// receiver so a non-regex `.test` falls through to a plain call.
+/// The string argument to `.test`/`.exec`: ES coerces a *missing* argument via
+/// ToString to `"undefined"` (so `re.test()` searches for the literal
+/// "undefined"), while a present argument follows the normal string-method
+/// coercion. Without this, a no-arg call would fail to lower (regress `find`
+/// needs a `&str`) and emit a phantom `.test()`.
+fn regex_str_arg(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
+    match args.first() {
+        Some(a) => builtins::str_method_arg(a, ctx),
+        None => parse_quote!("undefined"),
+    }
+}
+
 fn regex_test(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    let arg = builtins::str_method_arg(args.first()?, ctx);
+    let arg = regex_str_arg(args, ctx);
     match &sm.object {
         Expression::RegExpLiteral(re) => {
             let re = super::regex_literal_expr(re);
@@ -53,7 +65,7 @@ fn regex_test(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> 
 /// (`let r = /pat/; r.exec(s)`) reuses the already-compiled `regress::Regex`
 /// and converts its `Match` to a `DsMatch`.
 fn regex_exec(sm: &StaticMemberExpression, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    let arg = builtins::str_method_arg(args.first()?, ctx);
+    let arg = regex_str_arg(args, ctx);
     match &sm.object {
         Expression::RegExpLiteral(re) => {
             let (pat, fl) = super::regex_lit_parts(re);
