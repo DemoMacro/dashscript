@@ -300,7 +300,7 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
 /// lookaround, unicode case folding) the `regex` crate cannot express. Only
 /// emitted when a translated file uses a regex literal, so a plain `ds build`
 /// pulls no `regress` dependency.
-const REGRESS_HELPERS: &str = "\
+const REGRESS_HELPERS: &str = r##"
 use regress::{Match, Regex};
 
 /// Compile an ES RegExp literal `/pattern/flags` to a `regress::Regex`. oxc
@@ -308,7 +308,7 @@ use regress::{Match, Regex};
 /// fallback compiles an empty pattern rather than panic.
 #[inline]
 pub fn regex(pattern: &str, flags: &str) -> Regex {
-    Regex::with_flags(pattern, flags).unwrap_or_else(|_| Regex::new(\"\").unwrap())
+    Regex::with_flags(pattern, flags).unwrap_or_else(|_| Regex::new("").unwrap())
 }
 
 /// An ES `String.prototype.match` / `RegExp.prototype.exec` result.
@@ -334,6 +334,62 @@ pub fn ds_match_from(text: &str, m: &Match) -> DsMatch {
         captures,
         index: m.range().start,
         input: text.to_string(),
+    }
+}
+
+/// Render a string the way Node inspects it inside a match array: single-
+/// quoted, with backslash, quote, and control chars escaped.
+fn ds_inspect_str(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '\\' => out.push_str("\\\\"),
+            '\'' => out.push_str("\\'"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            _ => out.push(c),
+        }
+    }
+    out
+}
+
+/// Render a `DsMatch` the way Node's `console.log` prints a `RegExp.prototype
+/// .exec` / `String.prototype.match` result: the match array `[ '<match>',
+/// '<group1>', …, index: N, input: '<input>', groups: undefined ]`. A capture
+/// that did not participate is `undefined`; `groups` is `undefined` when the
+/// pattern has no named groups (named groups need the group names, which
+/// `DsMatch` does not carry — those fixtures stay on the engine path).
+impl std::fmt::Display for DsMatch {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "[ ")?;
+        for (i, c) in self.captures.iter().enumerate() {
+            if i > 0 {
+                write!(f, ", ")?;
+            }
+            match c {
+                None => write!(f, "undefined")?,
+                Some(s) => write!(f, "'{}'", ds_inspect_str(s))?,
+            }
+        }
+        write!(
+            f,
+            ", index: {}, input: '{}', groups: undefined ]",
+            self.index,
+            ds_inspect_str(&self.input)
+        )
+    }
+}
+
+/// `console.log(/pat/.exec(s))` renders `Option<DsMatch>` as Node prints a
+/// regex result: `null` (no match) or the match array via `DsMatch`'s Display.
+/// `Option` is std's, so `Display` on `Option<DsMatch>` is blocked by the
+/// orphan rule; the translator wraps an exec/match console.log argument here.
+#[inline]
+pub fn fmt_option_match(opt: Option<DsMatch>) -> String {
+    match opt {
+        None => "null".to_string(),
+        Some(m) => format!("{}", m),
     }
 }
 
@@ -428,7 +484,7 @@ fn expand_replacement(repl: &str, text: &str, m: &Match, out: &mut String) {
                 out.push_str(&text[..r.start]);
                 i += 2;
             }
-            '\\'' => {
+            '\'' => {
                 out.push_str(&text[r.end..]);
                 i += 2;
             }
@@ -488,7 +544,7 @@ pub fn regex_split(pattern: &str, flags: &str, text: &str, limit: Option<usize>)
     parts.push(text[last..].to_string());
     parts
 }
-";
+"##;
 
 /// The DashScript compat engine module, written to `src/__ds_engine.rs` and
 /// declared `mod __ds_engine;` at the crate root when a translated file uses ES

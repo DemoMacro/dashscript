@@ -247,7 +247,7 @@ fn plain_date_method(name: &str) -> Option<&'static str> {
 /// Whether a recorded type path is `Option<…DsMatch>` (a `.match` result). The
 /// last segment is `Option`; `DsMatch` sits in its generic argument, so a plain
 /// last-segment check (like `is_string_receiver`) misses it.
-fn is_option_ds_match(path: &syn::Path) -> bool {
+pub(in crate::translator) fn is_option_ds_match(path: &syn::Path) -> bool {
     let Some(seg) = path.segments.last() else {
         return false;
     };

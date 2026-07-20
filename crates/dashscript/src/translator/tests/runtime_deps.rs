@@ -508,6 +508,50 @@ fn regex_local_exec_result_infers_option_ds_match() {
 }
 
 #[test]
+fn console_log_exec_routes_to_fmt_option_match() {
+    // Option<DsMatch> has no Display, so console.log(/pat/.exec(s)) routes the
+    // arg through __ds::fmt_option_match (Node's match-array inspect form).
+    let src = "function main(): void {\n  console.log(/a/.exec(\"a\"));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "regex exec flags needs_regress");
+    assert!(
+        rust.contains("fmt_option_match"),
+        "console.log(exec) routes to fmt_option_match, got: {rust}"
+    );
+}
+
+#[test]
+fn console_log_match_local_routes_to_fmt_option_match() {
+    // console.log(m) where m is Option<DsMatch> routes through fmt_option_match
+    // too (the local path, not just the inline .exec call).
+    let src = "function main(): void {\n  const m = /a/.exec(\"a\");\n  console.log(m);\n}";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("fmt_option_match"),
+        "console.log(m) on Option<DsMatch> routes to fmt_option_match, got: {rust}"
+    );
+}
+
+#[test]
+fn console_log_string_match_routes_to_fmt_option_match() {
+    // console.log("s".match(/pat/)) — a non-global .match is Option<DsMatch>, so
+    // it routes through fmt_option_match too (the .match path, not just .exec).
+    let src = "function main(): void {\n  console.log(\"abc\".match(/a/));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "regex match flags needs_regress");
+    assert!(
+        rust.contains("fmt_option_match"),
+        "console.log(str.match) routes to fmt_option_match, got: {rust}"
+    );
+}
+
+#[test]
 fn temporal_plain_date_from_routes_through_temporal_rs() {
     // `Temporal.PlainDate.from(s)` → `temporal_rs::PlainDate::from_utf8` (the
     // inherent constructor — no FromStr trait import). Flags `needs_temporal`;

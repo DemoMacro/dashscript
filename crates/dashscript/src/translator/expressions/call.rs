@@ -1,7 +1,9 @@
 //! Call expressions: `console.log` → `println!`, built-in static/instance
 //! methods, global conversions, and plain user calls.
 
-use oxc_ast::ast::{Argument, CallExpression, Expression, StaticMemberExpression};
+use oxc_ast::ast::{
+    Argument, CallExpression, Expression, IdentifierReference, StaticMemberExpression,
+};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr, Type};
 
@@ -74,6 +76,62 @@ fn is_regex_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
         .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "Regex"))
 }
 
+/// Whether a `console.log` argument evaluates to `Option<DsMatch>` — an ES
+/// `RegExp.prototype.exec` result — so it must route through
+/// `__ds::fmt_option_match` (Node's match-array inspect form) rather than `{}`
+/// (which fails to compile: `Option<DsMatch>` has no `Display`, blocked by the
+/// orphan rule since `Option` is std's).
+fn is_match_arg(arg: &Argument, ctx: &Ctx<'_>) -> bool {
+    match arg {
+        Argument::CallExpression(c) => is_match_call(&c.callee, c.arguments.as_slice(), ctx),
+        Argument::Identifier(id) => is_match_local(id, ctx),
+        Argument::ParenthesizedExpression(p) => is_match_call_expr(&p.expression, ctx),
+        _ => false,
+    }
+}
+
+/// A call whose result is `Option<DsMatch>`: `.exec` on a regex (always), or
+/// `s.match(/pat/)` without the global flag (with `g` it lowers to
+/// `Vec<String>`). A variable pattern's flags are not visible at translate
+/// time, so only a literal pattern's `.match` is recognized.
+fn is_match_call(callee: &Expression, args: &[Argument], ctx: &Ctx<'_>) -> bool {
+    let Expression::StaticMemberExpression(sm) = callee else {
+        return false;
+    };
+    match sm.property.name.as_str() {
+        "exec" => {
+            matches!(sm.object, Expression::RegExpLiteral(_)) || is_regex_local(&sm.object, ctx)
+        }
+        "match" => match args.first().and_then(|a| a.as_expression()) {
+            Some(Expression::RegExpLiteral(re)) => {
+                let (_pat, fl) = super::regex_lit_parts(re);
+                !fl.value().contains('g')
+            }
+            _ => false,
+        },
+        _ => false,
+    }
+}
+
+fn is_match_call_expr(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    match expr {
+        Expression::CallExpression(c) => is_match_call(&c.callee, c.arguments.as_slice(), ctx),
+        Expression::Identifier(id) => is_match_local(id, ctx),
+        Expression::ParenthesizedExpression(p) => is_match_call_expr(&p.expression, ctx),
+        _ => false,
+    }
+}
+
+/// A local whose inferred type is `Option<DsMatch>` (a `let m = /pat/.exec(s)`
+/// binding) — so `console.log(m)` routes to the match-array formatter. Reuses
+/// [`super::member::is_option_ds_match`], which walks `Option`'s generic
+/// argument for `DsMatch` (a plain last-segment check would miss it).
+fn is_match_local(id: &IdentifierReference, ctx: &Ctx<'_>) -> bool {
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(super::member::is_option_ds_match)
+}
+
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
 pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
@@ -113,6 +171,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                         translate_argument(a, ctx)
                     };
                     let wrapped: Expr = parse_quote!(crate::__ds::number_to_string(#e));
+                    fmt.push_str("{}");
+                    vals.push(wrapped);
+                }
+                _ if is_match_arg(a, ctx) => {
+                    // `console.log(/pat/.exec(s))` — `Option<DsMatch>` has no
+                    // `Display` (orphan rule on `Option`), so render via the
+                    // Node match-array formatter instead of `{}`.
+                    let e = translate_argument(a, ctx);
+                    let wrapped: Expr = parse_quote!(crate::__ds::fmt_option_match(#e));
                     fmt.push_str("{}");
                     vals.push(wrapped);
                 }

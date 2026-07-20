@@ -531,16 +531,22 @@
     "id": "test262.test.built-ins.regexp.lookbehind.do-not-backtrack",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.lookbehind.sliced-strings",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:13:15: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:17:15: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:21:15: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1252,8 +1258,11 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.u-lastindex-adv",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -1294,7 +1303,11 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:3:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"[ 'b', index: 1, input: 'ab', groups: undefined ]\" node=\"null\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"[ 'b', index: 1, input: 'ab', groups: undefined ]\" node=\"null\""
+    },
     "note": ""
   },
   {
@@ -2389,10 +2402,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 80272143.6776 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 90407187.21 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 80272143.6776 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 90407187.21 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -2401,10 +2414,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 80272386.6951 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 90407461.8888 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 80272386.6951 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 90407461.8888 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -4035,7 +4048,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:16:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:4:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:12:7: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:19:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:15:7: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -4043,7 +4056,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:13:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:9:7: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nsrc\\main.rs:16:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:13:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:9:7: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -4127,8 +4140,11 @@
     "id": "test262.test.built-ins.regexp.s15.10.2.13_a1_t17",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:8:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
