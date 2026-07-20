@@ -638,9 +638,12 @@ fn translate_variable_declaration(
                             // string emit routes through `__ds::number_to_string`.
                             let init = d.init.as_ref()?;
                             let ctx = Ctx::new(&*locals, registry, narrow, names);
-                            object_assign_type(init, &ctx).or_else(|| {
-                                expressions::is_number_expr(init, &ctx).then(|| parse_quote!(f64))
-                            })
+                            object_assign_type(init, &ctx)
+                                .or_else(|| match_result_type(init))
+                                .or_else(|| {
+                                    expressions::is_number_expr(init, &ctx)
+                                        .then(|| parse_quote!(f64))
+                                })
                         });
                     // Number-flavor promotion: an unannotated integer-only local
                     // emits as `i64` (loop counters / accumulators) so the loop
@@ -775,6 +778,25 @@ fn object_assign_type(init: &Expression, ctx: &Ctx<'_>) -> Option<Type> {
         qself: None,
         path: path.clone(),
     }))
+}
+
+/// `s.match(/pat/)` (non-global) returns an ES match result or `null`, so an
+/// unannotated `let m = s.match(/pat/)` records `Option<DsMatch>` — letting
+/// `m[0]`/`m.index`/`m.input`/`m.length` route through the `DsMatch` accessors
+/// instead of failing on `Option`'s missing `Index`/`len`. Only a `.match`
+/// call with a regex-literal argument is recognized.
+fn match_result_type(init: &Expression) -> Option<Type> {
+    let Expression::CallExpression(c) = init else {
+        return None;
+    };
+    let Expression::StaticMemberExpression(sm) = &c.callee else {
+        return None;
+    };
+    if sm.property.name.as_str() != "match" {
+        return None;
+    }
+    matches!(c.arguments.first(), Some(Argument::RegExpLiteral(_)))
+        .then(|| parse_quote!(Option<crate::__ds::DsMatch>))
 }
 
 /// homogeneous array → `Vec<f64>` / `Vec<String>`. Anchors the binding's type

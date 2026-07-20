@@ -188,3 +188,27 @@ fn regex_local_test_uses_regress() {
         "regex local .test lowers to .find, got:\n{rust}"
     );
 }
+
+#[test]
+fn match_emits_ds_match_accessor() {
+    // `const m = s.match(/pat/); m[0]; m.index` — the local infers
+    // `Option<DsMatch>`, so `m[0]` lowers to the captures accessor and
+    // `m.index` to the field (not `Option::len` / `Option::Index`).
+    let src = "function main(): void {\n  const m = \"hello world\".match(/(\\w+) (\\w+)/);\n  console.log(m[0]);\n  console.log(m.index);\n  console.log(m.input);\n  console.log(m.length);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(deps.needs_regress(), "match flags needs_regress");
+    assert!(
+        rust.contains("regex_match"),
+        "match emits regex_match, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("DsMatch"),
+        "match records DsMatch type, got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".captures."),
+        "m[i]/m.length route through captures, got:\n{rust}"
+    );
+}

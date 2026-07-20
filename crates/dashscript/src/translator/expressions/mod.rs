@@ -204,7 +204,13 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
 /// unicode) the `regex` crate cannot express; oxc parses the literal upfront,
 /// so an invalid pattern never reaches runtime. Flags are reconstructed as an
 /// ES flag string ("gimsuydv") from oxc's bitflag set.
-fn regex_literal_expr(re: &oxc_ast::ast::RegExpLiteral) -> Expr {
+/// `(pattern, flags)` literals for an ES RegExp literal — shared by the
+/// literal lowering (`__ds::regex`) and the string-method lowering
+/// (`String.prototype.match` → `__ds::regex_match`). Flags are reconstructed
+/// as an ES flag string ("gimsuydv") from oxc's bitflag set.
+pub(in crate::translator) fn regex_lit_parts(
+    re: &oxc_ast::ast::RegExpLiteral,
+) -> (syn::LitStr, syn::LitStr) {
     use oxc_ast::ast::RegExpFlags;
     let f = re.regex.flags;
     let mut flags = String::new();
@@ -234,6 +240,11 @@ fn regex_literal_expr(re: &oxc_ast::ast::RegExpLiteral) -> Expr {
     }
     let pat = syn::LitStr::new(re.regex.pattern.text.as_str(), Span::call_site());
     let fl = syn::LitStr::new(&flags, Span::call_site());
+    (pat, fl)
+}
+
+fn regex_literal_expr(re: &oxc_ast::ast::RegExpLiteral) -> Expr {
+    let (pat, fl) = regex_lit_parts(re);
     parse_quote!(crate::__ds::regex(#pat, #fl))
 }
 

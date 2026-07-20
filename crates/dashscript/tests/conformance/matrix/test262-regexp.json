@@ -473,7 +473,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:4:36: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:27: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -481,7 +481,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:13:27: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nsrc\\main.rs:17:27: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nsrc\\main.rs:23:60: error[E0599]: no method named `r#match` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:13:15: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:17:15: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nsrc\\main.rs:21:15: error[E0277]: `Option<DsMatch>` doesn't implement `std::fmt::Display`: `Option<DsMatch>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -642,7 +642,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w2\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w2\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1293,7 +1293,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1356,7 +1356,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1408,7 +1408,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1482,7 +1482,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1611,7 +1611,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -1674,7 +1674,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w3\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -2156,7 +2156,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w3\\work\\oracle.ts:2\r\nArray.print = print;\r\n              ^\r\n\r\nReferenceError:",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w3\\work\\oracle.ts:2\r\nArray.print = print;\r\n              ^\r\n\r\nReferenceError:",
     "note": ""
   },
   {
@@ -2223,10 +2223,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 46007809.7015 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 48655845.3285 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 46007809.7015 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 48655845.3285 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -2235,10 +2235,10 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 46008027.1876 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 48656207.353 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 46008027.1876 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 48656207.353 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\""
     },
     "note": ""
   },
@@ -3207,7 +3207,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -3267,7 +3267,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpzpCIfI\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpfRZ6Is\\w4\\work\\oracle.ts:3\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {

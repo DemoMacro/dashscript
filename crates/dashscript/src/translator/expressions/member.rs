@@ -41,6 +41,20 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
         let obj = translate_expr(&sm.object, ctx);
         return parse_quote!((#obj.len() as f64));
     }
+    // `m.index`/`m.input`/`m.length` on a `let m = s.match(/pat/)` result → the
+    // `DsMatch` fields. Checked before the generic `.length` arm, which would
+    // try `Option<DsMatch>::len()` (no such method). `index`/`length` are ES
+    // numbers (cast to `f64`); `input` is the haystack string. `groups` is
+    // left to a later phase.
+    if is_match_local(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        match field_name {
+            "index" => return parse_quote!(#obj.as_ref().unwrap().index as f64),
+            "input" => return parse_quote!(#obj.as_ref().unwrap().input.clone()),
+            "length" => return parse_quote!(#obj.as_ref().unwrap().captures.len() as f64),
+            _ => {}
+        }
+    }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").copied().unwrap()`
     // (a TS `Record` static field access and `m["a"]` are the same lookup).
     if is_hashmap_local(&sm.object, ctx) {
@@ -91,6 +105,18 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
     if is_hashmap_local(&cm.object, ctx) {
         let key = index_key(&cm.expression, ctx);
         return parse_quote!(#obj.get(#key).copied().unwrap());
+    }
+    // `m[i]` on a `let m = s.match(/pat/)` result → `captures[i]` (the whole
+    // match at 0, the capture groups at 1..). Out-of-range or a non-
+    // participating group yields the string `"undefined"` (ES `undefined`, but
+    // `console.log` renders both identically). `as_ref` borrows so `m` survives
+    // repeat reads.
+    if is_match_local(&cm.object, ctx) {
+        let idx = index_expr(&cm.expression, ctx);
+        return parse_quote!(
+            #obj.as_ref().unwrap().captures.get(#idx).cloned().flatten()
+                .unwrap_or_else(|| "undefined".to_string())
+        );
     }
     let idx = index_expr(&cm.expression, ctx);
     // `s[i]` on a string → the i-th char. Rust's `str` has no `Index<usize>`,
@@ -148,6 +174,41 @@ fn is_string_receiver(expr: &Expression, ctx: &Ctx<'_>) -> bool {
         ty.segments
             .last()
             .is_some_and(|s| s.ident == "String" || s.ident == "str")
+    })
+}
+
+/// Whether `expr` is a `let m = s.match(/pat/)` result: a local whose recorded
+/// type is `Option<DsMatch>` (the last path segment is `DsMatch`). Lets
+/// `m[0]`/`m.index`/`m.input`/`m.length` route to the `DsMatch` accessors
+/// instead of failing on `Option`'s missing `Index`/`len`.
+fn is_match_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(is_option_ds_match)
+}
+
+/// Whether a recorded type path is `Option<…DsMatch>` (a `.match` result). The
+/// last segment is `Option`; `DsMatch` sits in its generic argument, so a plain
+/// last-segment check (like `is_string_receiver`) misses it.
+fn is_option_ds_match(path: &syn::Path) -> bool {
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
+    if seg.ident != "Option" {
+        return false;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return false;
+    };
+    args.args.iter().any(|arg| match arg {
+        syn::GenericArgument::Type(syn::Type::Path(tp)) => tp
+            .path
+            .segments
+            .last()
+            .is_some_and(|s| s.ident == "DsMatch"),
+        _ => false,
     })
 }
 

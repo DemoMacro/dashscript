@@ -1472,7 +1472,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:2:18: error: `this` is only valid inside a class method\nsrc\\main.rs:3:48: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:3:48: warning: unreachable call: unreachable call\nsrc\\main.rs:3:74: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:3:74: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:3:18: error: `this` is only valid inside a class method\nsrc\\main.rs:5:47: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:5:73: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:5:73: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1492,7 +1492,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:10:44: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:11:44: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:12:45: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:13:45: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:15:44: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:16:44: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`",
     "note": ""
   },
   {
@@ -1520,7 +1520,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nsrc\\main.rs:10:72: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:10:72: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:5:39: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:6:19: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:7:53: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:11:72: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -2509,7 +2509,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w6\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpmaSfnE\\w5\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {
@@ -4178,7 +4178,7 @@
     "layer": "test262",
     "category": "string",
     "status": "unsupported",
-    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmp0maPBl\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
+    "detail": "node + ds both error: exit exit code: 1: C:\\Users\\abc\\AppData\\Local\\Temp\\.tmpmaSfnE\\w7\\work\\oracle.ts:2\r\nvar other = $262.createRealm().global;\r\n            ^\r\n\r",
     "note": ""
   },
   {

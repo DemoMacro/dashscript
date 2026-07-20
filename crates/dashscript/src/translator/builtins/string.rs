@@ -6,7 +6,9 @@ use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
-use super::super::expressions::{array_elem_arg, translate_argument, translate_expr};
+use super::super::expressions::{
+    array_elem_arg, regex_lit_parts, translate_argument, translate_expr,
+};
 use super::{str_method_arg, usize_arg};
 
 /// A string method's receiver. A string literal stays a bare `&str` — every
@@ -95,6 +97,28 @@ pub(in crate::translator) fn string_method_on(
                 }
                 None => parse_quote!(#obj.ends_with(#a)),
             }
+        }
+        // `.match(/pat/)` (non-global) → `Option<DsMatch>` (ES: the match or
+        // `null`). Only a regex-literal argument is lowered; a non-regex arg
+        // falls through (returns None, leaving the call unmapped).
+        "match" => {
+            let Argument::RegExpLiteral(re) = args.first()? else {
+                return None;
+            };
+            let (pat, fl) = regex_lit_parts(re);
+            // `obj` is a bare `&str` literal or a `String` expr; pass as `&str`.
+            let text: Expr = if matches!(
+                &obj,
+                Expr::Lit(syn::ExprLit {
+                    lit: syn::Lit::Str(_),
+                    ..
+                })
+            ) {
+                obj
+            } else {
+                parse_quote!(#obj.as_str())
+            };
+            parse_quote!(crate::__ds::regex_match(#pat, #fl, #text))
         }
         "replace" => {
             let a = str_method_arg(args.first()?, ctx);

@@ -296,6 +296,33 @@ use regress::Regex;
 pub fn regex(pattern: &str, flags: &str) -> Regex {
     Regex::with_flags(pattern, flags).unwrap_or_else(|_| Regex::new(\"\").unwrap())
 }
+
+/// An ES `String.prototype.match` / `RegExp.prototype.exec` result.
+/// `captures[0]` is the whole match; `[1..]` are the capture groups (`None`
+/// when a group did not participate). `index` is the match-start byte offset
+/// (ASCII == UTF-16 code-unit index); `input` is the haystack.
+pub struct DsMatch {
+    pub captures: Vec<Option<String>>,
+    pub index: usize,
+    pub input: String,
+}
+
+/// `s.match(/pat/)` (non-global) — the first match as a `DsMatch`, or `None`.
+#[inline]
+pub fn regex_match(pattern: &str, flags: &str, text: &str) -> Option<DsMatch> {
+    let re = Regex::with_flags(pattern, flags).ok()?;
+    let m = re.find(text)?;
+    // regress' `groups()` yields group 0 (the whole match) followed by the
+    // capture groups — exactly the ES `m[0]`/`m[1]`/… layout, so no manual
+    // whole-match prefix (that would shift every group by one).
+    let captures: Vec<Option<String>> =
+        m.groups().map(|g| g.map(|r| text[r].to_string())).collect();
+    Some(DsMatch {
+        captures,
+        index: m.range().start,
+        input: text.to_string(),
+    })
+}
 ";
 
 /// The DashScript compat engine module, written to `src/__ds_engine.rs` and
