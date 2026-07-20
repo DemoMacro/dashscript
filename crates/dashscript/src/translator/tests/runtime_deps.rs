@@ -191,6 +191,22 @@ fn regex_exec_in_loop_routes_to_engine() {
 }
 
 #[test]
+fn regex_exec_in_loop_condition_routes_to_engine() {
+    // `re.exec(s)` in the loop *condition* (`while (re.exec(s) !== null)`) is
+    // looped just like one in the body — regress would re-find the same match
+    // every test (an infinite loop). The condition is walked with IN_LOOP set
+    // so it routes to the engine too.
+    let src = "function main(): void {\n  const re = /\\w/g;\n  const s = \"abc\";\n  var k = 0;\n  while (re.exec(s) !== null) { k = k + 1; }\n  console.log(k);\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "looped .exec in the condition should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn regex_exec_once_outside_loop_stays_on_regress() {
     // `/pat/.exec(s)` once, outside any loop, is a single `find` — regress
     // handles it, so the engine dep must not flip.

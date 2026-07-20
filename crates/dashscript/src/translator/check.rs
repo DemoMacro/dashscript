@@ -242,12 +242,12 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
             }
         }
         Statement::WhileStatement(w) => {
-            collect_expr(&w.test, out);
+            collect_loop_expr(&w.test, out);
             collect_loop_body(&w.body, out);
         }
         Statement::DoWhileStatement(dw) => {
             collect_loop_body(&dw.body, out);
-            collect_expr(&dw.test, out);
+            collect_loop_expr(&dw.test, out);
         }
         Statement::ForStatement(f) => {
             if let Some(ForStatementInit::VariableDeclaration(v)) = &f.init {
@@ -258,10 +258,10 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
                 }
             }
             if let Some(test) = &f.test {
-                collect_expr(test, out);
+                collect_loop_expr(test, out);
             }
             if let Some(update) = &f.update {
-                collect_expr(update, out);
+                collect_loop_expr(update, out);
             }
             collect_loop_body(&f.body, out);
         }
@@ -359,6 +359,17 @@ fn collect_unsupported_stmts(stmts: &[Statement], out: &mut Vec<OxcDiagnostic>) 
 fn collect_loop_body(body: &Statement, out: &mut Vec<OxcDiagnostic>) {
     let prev = IN_LOOP.with(|c| c.replace(true));
     collect_unsupported(body, out);
+    IN_LOOP.with(|c| c.set(prev));
+}
+
+/// Walk a loop's per-iteration expression (a `while`/`do-while` test, or a
+/// `for` test/update) with [`IN_LOOP`] set, so a `re.exec(…)` in the condition
+/// — `while (re.exec(s) !== null)` — routes to the engine like one in the body.
+/// (A `for` init is walked normally: it runs once, so a single `.exec` there
+/// stays on the regress path.)
+fn collect_loop_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
+    let prev = IN_LOOP.with(|c| c.replace(true));
+    collect_expr(expr, out);
     IN_LOOP.with(|c| c.set(prev));
 }
 
