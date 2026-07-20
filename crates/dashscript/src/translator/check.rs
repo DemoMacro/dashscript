@@ -400,6 +400,24 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
             collect_expr(&c.alternate, out);
         }
         Expression::CallExpression(c) => {
+            // A `function` expression as the callee (an IIFE
+            // `(function(){…})()`) or as an argument (a callback
+            // `xs.find(function(kValue){…})`) has no static lowering —
+            // `translate_expr` lowers a `FunctionExpression` to `todo!()`, so
+            // the call site is `!` (never) and fails `cargo check` (E0618
+            // "expected function, found `!`"). Route to the engine, which runs
+            // the function verbatim. (`typeof function(){}` is not a call and
+            // stays mapped — it never reaches `translate_expr`.)
+            if is_function_expression(&c.callee)
+                || c.arguments
+                    .iter()
+                    .any(|a| a.as_expression().is_some_and(is_function_expression))
+            {
+                out.push(err(
+                    "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+                    c.span,
+                ));
+            }
             // A global-object static call (`Math.floor(x)`, `Array.isArray(x)`,
             // `Object.keys(m)`, `JSON.parse(s)`) takes the global name only as
             // the call's receiver — not as a value reference. Don't recurse the
@@ -780,6 +798,23 @@ fn array_search_arg_needs_engine(args: &[Argument]) -> bool {
         | Expression::NullLiteral(_) => true,
         Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Void) => true,
         Expression::Identifier(id) if id.name.as_str() == "undefined" => true,
+        _ => false,
+    }
+}
+
+/// True when `expr` is a `function` expression, unwrapping the paren / TS
+/// wrappers oxc keeps around an IIFE callee `(function(){…})` or a typed
+/// callback. A `FunctionExpression` has no static lowering (`translate_expr`
+/// maps it to `todo!()`), so one used as a call callee (IIFE) or argument
+/// (callback) routes to the engine — see the `CallExpression` arm of
+/// `collect_expr`.
+fn is_function_expression(e: &Expression) -> bool {
+    match e {
+        Expression::FunctionExpression(_) => true,
+        Expression::ParenthesizedExpression(p) => is_function_expression(&p.expression),
+        Expression::TSAsExpression(a) => is_function_expression(&a.expression),
+        Expression::TSTypeAssertion(t) => is_function_expression(&t.expression),
+        Expression::TSNonNullExpression(n) => is_function_expression(&n.expression),
         _ => false,
     }
 }

@@ -731,3 +731,49 @@ fn check_rejects_match_result_property_assignment() {
         "index/input assignment should be unsupported, got: {diags:?}"
     );
 }
+
+#[test]
+fn function_expression_callback_routes_to_engine() {
+    // `[1].find(function (kValue) { … })` — a `function` expression as a call
+    // argument (a callback) has no static lowering (`translate_expr` maps a
+    // `FunctionExpression` to `todo!()`), so the call site is `!` (never) and
+    // fails `cargo check` (E0618 "expected function, found `!`"). The engine
+    // (rquickjs) runs the callback verbatim. (An arrow callback stays mapped.)
+    let src = "function main(): void {\n  const r = [1, 2, 3].find(function (kValue) { return kValue > 1; });\n  console.log(r);\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "function-expression callback should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn iife_routes_to_engine() {
+    // `(function () { … })()` — an IIFE's callee is a `function` expression,
+    // which has no static lowering, so the whole program routes to the engine.
+    let src = "function main(): void {\n  (function () { console.log(1); })();\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "an IIFE should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn arrow_callback_stays_mapped() {
+    // `[1,2,3].find((x) => x > 1)` — an arrow callback is statically lowered
+    // (a Rust closure), so the program must NOT pull the engine.
+    let src =
+        "function main(): void {\n  const r = [1, 2, 3].find((x) => x > 1);\n  console.log(r);\n}";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !deps.needs_engine(),
+        "an arrow callback must not pull the engine, got deps: {deps:?}"
+    );
+}

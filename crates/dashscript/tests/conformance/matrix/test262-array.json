@@ -57,10 +57,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268409.1192 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 101445356.9763 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268409.1192 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 101445356.9763 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -69,10 +69,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268568.9892 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
+    "detail": "oracle diff: line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 101445468.8498 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 100268568.9892 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
+      "detail": "line 9: ds=\"{ performance: { now: [Function: now], timeOrigin: 101445468.8498 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 10: ds=\"2\" node=\"  global: [Circular *1],\"; line 11: ds=\"42\" node=\"  clearImmediate: [Function: clearImmediate],\""
     },
     "note": ""
   },
@@ -200,10 +200,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447085.064 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447085.064 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270582.9324 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447085.064 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447085.064 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -212,10 +212,10 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
+    "detail": "oracle diff: line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447213.6623 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447213.6623 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 100270730.7634 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
+      "detail": "line 2: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447213.6623 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 3: ds=\"{ performance: { now: [Function: now], timeOrigin: 101447213.6623 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"  global: [Circular *1],\""
     },
     "note": ""
   },
@@ -512,7 +512,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "oracle": {
       "status": "matched"
     },
@@ -745,8 +745,11 @@
     "id": "test262.test.built-ins.array.prototype.at.index-non-numeric-argument-tointeger",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:52: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:6:23: error[E0277]: cannot add `bool` to `f64`: no implementation for `f64 + bool`\nsrc\\main.rs:9:51: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nsrc\\main.rs:10:23: error[E0277]: cannot add `Option<_>` to `f64`: no implementation for `f64 + Option<_>`\nsrc\\main.rs:13:51: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nsrc\\main.rs:14:23: error[E0277]: cannot add `Option<_>` to `f64`: no implementation for `f64 + Option<_>`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -3490,8 +3493,11 @@
     "id": "test262.test.built-ins.array.prototype.filter.15.4.4.20-5-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:2:5: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:5: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -3586,8 +3592,11 @@
     "id": "test262.test.built-ins.array.prototype.filter.15.4.4.20-5-27",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:21: warning: unnecessary parentheses around method argument\nsrc\\main.rs:7:45: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:29: error[E0618]: expected function, found `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -3605,8 +3614,11 @@
     "id": "test262.test.built-ins.array.prototype.filter.15.4.4.20-5-29",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:21: warning: unnecessary parentheses around method argument\nsrc\\main.rs:11:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:8:45: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:29: error[E0618]: expected function, found `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 3 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4715,8 +4727,11 @@
     "id": "test262.test.built-ins.array.prototype.find.array-altered-during-loop",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:30: warning: unnecessary parentheses around method argument\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:14:30: warning: unnecessary parentheses around method argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:54: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:38: error[E0618]: expected function, found `!`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4743,7 +4758,11 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:5:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:11:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:63: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:47: error[E0618]: expected function, found `!`\nsrc\\main.rs:11:63: warning: unreachable expression: unreachable expression",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101409909.2423 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101409909.2423 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
@@ -4751,15 +4770,22 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:5:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:11:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:63: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:47: error[E0618]: expected function, found `!`\nsrc\\main.rs:11:63: warning: unreachable expression: unreachable expression",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101410256.0532 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101410256.0532 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.find.predicate-called-for-each-array-property",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0308]: mismatched types: expected `Option<_>`, found `String`\nsrc\\main.rs:5:9: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4818,16 +4844,22 @@
     "id": "test262.test.built-ins.array.prototype.find.return-undefined-if-predicate-returns-false-value",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:47: warning: unnecessary parentheses around method argument\nsrc\\main.rs:10:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:12:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:14:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:16:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:18:39: warning: unnecessary parentheses around method argument",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.findindex.array-altered-during-loop",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:25: warning: unreachable call: unreachable call\nsrc\\main.rs:6:9: error[E0282]: type annotations needed for `Vec<_>`\nsrc\\main.rs:14:25: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 4 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4854,7 +4886,11 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:5:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:11:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:63: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:47: error[E0618]: expected function, found `!`\nsrc\\main.rs:11:63: warning: unreachable expression: unreachable expression",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101413981.8591 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101413981.8591 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
@@ -4862,15 +4898,22 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:5:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:11:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:63: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:47: error[E0618]: expected function, found `!`\nsrc\\main.rs:11:63: warning: unreachable expression: unreachable expression",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101414218.8544 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101414218.8544 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.findindex.predicate-called-for-each-array-property",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0308]: mismatched types: expected `Option<_>`, found `String`\nsrc\\main.rs:5:9: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4929,16 +4972,22 @@
     "id": "test262.test.built-ins.array.prototype.findindex.return-negative-one-if-predicate-returns-false-value",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:10:10: warning: unreachable call: unreachable call\nsrc\\main.rs:18:10: warning: unreachable call: unreachable call\nsrc\\main.rs:25:10: warning: unreachable call: unreachable call\nsrc\\main.rs:32:10: warning: unreachable call: unreachable call\nsrc\\main.rs:39:10: warning: unreachable call: unreachable call\nsrc\\main.rs:46:10: warning: unreachable call: unreachable call",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.findlast.array-altered-during-loop",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:36: warning: unnecessary parentheses around method argument\nsrc\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:14:36: warning: unnecessary parentheses around method argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:44: error[E0618]: expected function, found `!`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4953,8 +5002,11 @@
     "id": "test262.test.built-ins.array.prototype.findlast.maximum-index",
     "layer": "test262",
     "category": "array",
-    "status": "unsupported",
-    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4973,7 +5025,11 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:5:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:11:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:69: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:53: error[E0618]: expected function, found `!`\nsrc\\main.rs:11:69: warning: unreachable expression: unreachable expression",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101418171.4841 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101418171.4841 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
@@ -4981,15 +5037,22 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:5:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:11:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:69: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:53: error[E0618]: expected function, found `!`\nsrc\\main.rs:11:69: warning: unreachable expression: unreachable expression",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101418355.5178 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101418355.5178 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.findlast.predicate-called-for-each-array-property",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0308]: mismatched types: expected `Option<_>`, found `String`\nsrc\\main.rs:5:9: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5048,16 +5111,22 @@
     "id": "test262.test.built-ins.array.prototype.findlast.return-undefined-if-predicate-returns-false-value",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:53: warning: unnecessary parentheses around method argument\nsrc\\main.rs:10:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:12:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:14:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:16:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:18:45: warning: unnecessary parentheses around method argument",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.findlastindex.array-altered-during-loop",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:15:58: warning: unnecessary parentheses around function argument\nsrc\\main.rs:7:25: warning: unreachable call: unreachable call\nsrc\\main.rs:6:9: error[E0282]: type annotations needed for `Vec<_>`\nsrc\\main.rs:14:25: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 4 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5072,8 +5141,11 @@
     "id": "test262.test.built-ins.array.prototype.findlastindex.maximum-index",
     "layer": "test262",
     "category": "array",
-    "status": "unsupported",
-    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5092,7 +5164,11 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:14: warning: unreachable call: unreachable call\nsrc\\main.rs:19:14: warning: unreachable call: unreachable call\nsrc\\main.rs:8:24: error[E0277]: expected a `FnMut(f64)` closure, found `()`: expected an `FnMut(f64)` closure, found `()`\nsrc\\main.rs:19:24: error[E0277]: expected a `FnMut(f64)` closure, found `()`: expected an `FnMut(f64)` closure, found `()`\nsrc\\main.rs:12:27: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101422219.2564 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101422219.2564 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
@@ -5100,15 +5176,22 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:14: warning: unreachable call: unreachable call\nsrc\\main.rs:19:14: warning: unreachable call: unreachable call\nsrc\\main.rs:8:24: error[E0277]: expected a `FnMut(f64)` closure, found `()`: expected an `FnMut(f64)` closure, found `()`\nsrc\\main.rs:19:24: error[E0277]: expected a `FnMut(f64)` closure, found `()`: expected an `FnMut(f64)` closure, found `()`\nsrc\\main.rs:12:27: error[E0277]: `()` doesn't implement `std::fmt::Display`: `()` cannot be formatted with the default formatter",
+    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101422591.7321 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 101422591.7321 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"{}\" node=\"  global: [Circular *1],\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.findlastindex.predicate-called-for-each-array-property",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0308]: mismatched types: expected `Option<_>`, found `String`\nsrc\\main.rs:5:9: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5167,8 +5250,11 @@
     "id": "test262.test.built-ins.array.prototype.findlastindex.return-negative-one-if-predicate-returns-false-value",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:10:10: warning: unreachable call: unreachable call\nsrc\\main.rs:18:10: warning: unreachable call: unreachable call\nsrc\\main.rs:25:10: warning: unreachable call: unreachable call\nsrc\\main.rs:32:10: warning: unreachable call: unreachable call\nsrc\\main.rs:39:10: warning: unreachable call: unreachable call\nsrc\\main.rs:46:10: warning: unreachable call: unreachable call",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5770,8 +5856,11 @@
     "id": "test262.test.built-ins.array.prototype.foreach.15.4.4.18-5-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:2:5: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:5: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -10353,8 +10442,11 @@
     "id": "test262.test.built-ins.array.prototype.map.15.4.4.19-5-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:2:5: error: `this` is only valid inside a class method\nsrc\\main.rs:3:5: error[E0618]: expected function, found `!`\nsrc\\main.rs:3:5: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -10482,8 +10574,11 @@
     "id": "test262.test.built-ins.array.prototype.map.15.4.4.19-6-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:34: warning: unreachable call: unreachable call\nsrc\\main.rs:4:38: error[E0277]: expected a `FnMut(f64)` closure, found `()`: expected an `FnMut(f64)` closure, found `()`\nsrc\\main.rs:4:55: error[E0277]: expected a `FnMut(f64)` closure, found `()`: expected an `FnMut(f64)` closure, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -12147,16 +12242,22 @@
     "id": "test262.test.built-ins.array.prototype.reduce.15.4.4.21-7-10",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:65: warning: unreachable call: unreachable call\nsrc\\main.rs:5:9: error[E0277]: expected a `FnMut(String, _)` closure, found `()`: expected an `FnMut(String, _)` closure, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.reduce.15.4.4.21-7-11",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:10: warning: unreachable call: unreachable call\nsrc\\main.rs:4:15: error[E0277]: `Option<String>` doesn't implement `std::fmt::Display`: `Option<String>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -13978,8 +14079,11 @@
     "id": "test262.test.built-ins.array.prototype.reduceright.15.4.4.22-5-9",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:71: warning: unreachable call: unreachable call\nsrc\\main.rs:5:9: error[E0277]: expected a `FnMut(i64, _)` closure, found `()`: expected an `FnMut(i64, _)` closure, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -13997,16 +14101,22 @@
     "id": "test262.test.built-ins.array.prototype.reduceright.15.4.4.22-7-10",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:71: warning: unreachable call: unreachable call\nsrc\\main.rs:5:9: error[E0277]: expected a `FnMut(String, _)` closure, found `()`: expected an `FnMut(String, _)` closure, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.reduceright.15.4.4.22-7-11",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:10: warning: unreachable call: unreachable call\nsrc\\main.rs:4:15: error[E0277]: `Option<String>` doesn't implement `std::fmt::Display`: `Option<String>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -16012,8 +16122,11 @@
     "id": "test262.test.built-ins.array.prototype.some.15.4.4.17-5-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:2:5: error[E0618]: expected function, found `!`\nsrc\\main.rs:2:5: warning: unreachable call: unreachable call, any code following this expression is unreachable\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
