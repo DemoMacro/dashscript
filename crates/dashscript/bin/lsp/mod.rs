@@ -1,39 +1,30 @@
-//! `ds lsp` — the DashScript language server over stdio.
+//! `ds lsp` — DashScript's editor-agnostic LSP core over stdio.
 //!
-//! Layering (mirrors a conventional LSP server):
-//! - [`Server`] owns the connection and document state, routes requests, and
-//!   refreshes the rust-analyzer backend ([`backend`]).
-//! - [`diagnostics`] publishes translatability diagnostics (`Translator::check`).
-//! - [`definition`] resolves go-to-definition (crate imports via rust-analyzer,
-//!   in-file symbols locally).
-//! - [`text`] holds the byte↔position↔URI helpers shared across the above.
+//! Slimmed to the two things the editor's TS LSP cannot do itself:
+//! - [`definition`] crate go-to-definition — a cursor on `import { X } from
+//!   "cargo:crate"` is mapped to the emitted `use crate::X` position, then
+//!   forwarded to a rust-analyzer backend that resolves it to the crate's
+//!   `~/.cargo` source.
+//! - [`diagnostics`] translatability diagnostics (`Translator::check`).
 //!
-//! Stage 2: translatability diagnostics (`Translator::check`).
-//! Stage 3: crate go-to-definition — a cursor on `import { X } from "crate"`
-//! is mapped to the emitted `use crate::X` position, then forwarded to a
-//! rust-analyzer backend that resolves it to the crate's `~/.cargo` source.
+//! The TS-side features the old server grew (completion/hover/references/
+//! rename/documentSymbols/signature-help) moved to the editor's TS LSP. This
+//! is the shared core every editor (VS Code / Zed / JetBrains) connects to
+//! via the LSP protocol — [`backend`] drives the rust-analyzer subprocess,
+//! [`text`] holds the byte↔position↔URI helpers.
 
 use std::{collections::HashMap, error::Error, path::Path};
 
 use lsp_server::{Connection, Message, Request, Response};
 use lsp_types::{
-    CompletionOptions, HoverProviderCapability, InitializeParams, OneOf, RenameOptions,
-    ServerCapabilities, SignatureHelpOptions, TextDocumentSyncCapability, TextDocumentSyncKind,
+    InitializeParams, OneOf, ServerCapabilities, TextDocumentSyncCapability, TextDocumentSyncKind,
     Uri,
 };
 use serde_json::Value;
 
 mod backend;
-mod builtins;
-mod completion;
 mod definition;
 mod diagnostics;
-mod document_symbols;
-mod hover;
-mod references;
-mod rename;
-mod signatures;
-mod stdlib;
 mod text;
 
 use backend::RaClient;
@@ -70,25 +61,9 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 fn server_capabilities() -> ServerCapabilities {
     ServerCapabilities {
         text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)),
+        // Only crate go-to-definition is provided here — the editor's TS LSP
+        // handles completion/hover/references/rename/documentSymbols/signature-help.
         definition_provider: Some(OneOf::Left(true)),
-        hover_provider: Some(HoverProviderCapability::Simple(true)),
-        document_symbol_provider: Some(OneOf::Left(true)),
-        references_provider: Some(OneOf::Left(true)),
-        rename_provider: Some(OneOf::Right(RenameOptions {
-            work_done_progress_options: Default::default(),
-            prepare_provider: Some(true),
-        })),
-        signature_help_provider: Some(SignatureHelpOptions {
-            trigger_characters: Some(vec!["(".to_string()]),
-            retrigger_characters: Some(vec![",".to_string()]),
-            ..Default::default()
-        }),
-        completion_provider: Some(CompletionOptions {
-            // `.` triggers member completion (`console.`, `Math.`).
-            trigger_characters: Some(vec![".".to_string()]),
-            resolve_provider: Some(false),
-            ..Default::default()
-        }),
         ..Default::default()
     }
 }
@@ -121,8 +96,7 @@ impl Server {
 
     fn handle_request(&mut self, req: Request) {
         let id = req.id.clone();
-        let method = req.method.clone();
-        let resp = match method.as_str() {
+        let resp = match req.method.as_str() {
             "textDocument/definition" => {
                 let result = req
                     .extract::<lsp_types::GotoDefinitionParams>("textDocument/definition")
@@ -131,63 +105,7 @@ impl Server {
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }
-            "textDocument/hover" => {
-                let result = req
-                    .extract::<lsp_types::HoverParams>("textDocument/hover")
-                    .ok()
-                    .and_then(|(_, params)| self.on_hover(&params))
-                    .unwrap_or(Value::Null);
-                Response::new_ok(id, result)
-            }
-            "textDocument/completion" => {
-                let result = req
-                    .extract::<lsp_types::CompletionParams>("textDocument/completion")
-                    .ok()
-                    .and_then(|(_, params)| self.on_completion(&params))
-                    .unwrap_or(Value::Null);
-                Response::new_ok(id, result)
-            }
-            "textDocument/documentSymbol" => {
-                let result = req
-                    .extract::<lsp_types::DocumentSymbolParams>("textDocument/documentSymbol")
-                    .ok()
-                    .and_then(|(_, params)| self.on_document_symbol(&params))
-                    .unwrap_or(Value::Null);
-                Response::new_ok(id, result)
-            }
-            "textDocument/signatureHelp" => {
-                let result = req
-                    .extract::<lsp_types::SignatureHelpParams>("textDocument/signatureHelp")
-                    .ok()
-                    .and_then(|(_, params)| self.on_signature_help(&params))
-                    .unwrap_or(Value::Null);
-                Response::new_ok(id, result)
-            }
-            "textDocument/references" => {
-                let result = req
-                    .extract::<lsp_types::ReferenceParams>("textDocument/references")
-                    .ok()
-                    .and_then(|(_, params)| self.on_references(&params))
-                    .unwrap_or(Value::Null);
-                Response::new_ok(id, result)
-            }
-            "textDocument/prepareRename" => {
-                let result = req
-                    .extract::<lsp_types::TextDocumentPositionParams>("textDocument/prepareRename")
-                    .ok()
-                    .and_then(|(_, params)| self.on_prepare_rename(&params))
-                    .unwrap_or(Value::Null);
-                Response::new_ok(id, result)
-            }
-            "textDocument/rename" => {
-                let result = req
-                    .extract::<lsp_types::RenameParams>("textDocument/rename")
-                    .ok()
-                    .and_then(|(_, params)| self.on_rename(&params))
-                    .unwrap_or(Value::Null);
-                Response::new_ok(id, result)
-            }
-            // Other requests (hover, …) return null until wired.
+            // Only definition is provided — TS LSP handles everything else.
             _ => Response::new_ok(id, Value::Null),
         };
         let _ = self.conn.sender.send(resp.into());

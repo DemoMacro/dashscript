@@ -24,6 +24,9 @@ mod object;
 mod string;
 mod temporal;
 
+#[cfg(test)]
+mod drift_guard;
+
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
 pub(in crate::translator) use collection::collection_method;
 pub(in crate::translator) use console::console_method;
