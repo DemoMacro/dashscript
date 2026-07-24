@@ -20,7 +20,7 @@
 //! These are ambient declarations, exactly as TypeScript's `lib.es5.d.ts` does
 //! (`declare var NaN: number`), so they carry a type but no initializer.
 //!
-//! Unlike a crate added with `ds add rust:<crate>` (whose `.ds` declaration
+//! Unlike a crate added with `ds add cargo:<crate>` (whose `.ds` declaration
 //! bindgen can derive from the crate's `~/.cargo` source), these built-ins have
 //! no `.rs` file a user compiles — the translator generates their Rust inline.
 //! So this declaration is hand-written, like `lib.d.ts`.

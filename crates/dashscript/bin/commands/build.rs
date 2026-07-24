@@ -9,11 +9,11 @@ use std::{
     process::ExitCode,
 };
 
-use dashscript::Manifest;
+use dashscript::Package;
 
 use super::project::{
-    apply_runtime_deps, bin_lib_stems, cache_project_dir, default_manifest, emit_cargo_project,
-    find_manifest_root, invoke_cargo, project_name, read_manifest, resolve_entry, resolve_target,
+    apply_runtime_deps, bin_lib_stems, cache_project_dir, default_package, emit_cargo_project,
+    find_package_root, invoke_cargo, project_name, read_package, resolve_entry, resolve_target,
     status_to_code, translate_project,
 };
 
@@ -24,7 +24,7 @@ pub(crate) type BuildArgs = (Option<String>, Option<String>, Option<String>);
 /// Parse `ds build` arguments: an optional `.ds` file, an optional
 /// `--target <bin|rust>` override, and an optional `--filter <name>` (workspace
 /// member). Returns an error message on misuse (shown as usage). No file means
-/// build the project entry (`manifest.entry`/`main.ds`) — or, at a workspace
+/// build the project entry (`package.json bin`/`main.ds`) — or, at a workspace
 /// root, every member.
 pub(crate) fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
     let mut file = None;
@@ -143,12 +143,12 @@ pub(crate) fn build_at(
     }
 }
 
-/// The manifest bins declared for `path`'s project, or empty for a lone file
-/// (no manifest, or a manifest with no `bin`). `build` copies every declared
+/// The package bins declared for `path`'s project, or empty for a lone file
+/// (no package, or a package with no `bin`). `build` copies every declared
 /// binary into `dist/`.
 fn project_bins(path: &Path) -> Vec<(String, String)> {
-    find_manifest_root(path)
-        .and_then(|root| read_manifest(&root.join("manifest.json")).ok())
+    find_package_root(path)
+        .and_then(|root| read_package(&root.join("package.json")).ok())
         .map(|m| m.bin_entries())
         .unwrap_or_default()
 }
@@ -169,14 +169,14 @@ fn copy_release_bin(cache: &Path, bin_name: &str, dest_root: &Path) -> Result<()
     Ok(())
 }
 
-/// Whether `dir` is a workspace root: its `manifest.json` has a non-empty
+/// Whether `dir` is a workspace root: its `package.json` has a non-empty
 /// `workspace` member-glob list that resolves to at least one member.
 pub(crate) fn is_workspace_root(dir: &Path) -> bool {
     !discover_members(dir).is_empty()
 }
 
 /// Build the workspace at `root` — every member, or just the one named by
-/// `--filter` (manifest name or member directory). For `bin`, members are
+/// `--filter` (package name or member directory). For `bin`, members are
 /// emitted under `.cache/dash/members/<name>/` of one cargo workspace, so they
 /// share a single `target/` and `Cargo.lock`: a dependency two members use
 /// compiles once (cargo's native hoisted-`node_modules`). For `rust`, each
@@ -190,16 +190,16 @@ pub(crate) fn workspace_build(
     let members = discover_members(root);
     if members.is_empty() {
         return Err(
-            "ds build: no workspace members matched (check `workspaces` globs in manifest.json)"
+            "ds build: no workspace members matched (check `workspaces` globs in package.json)"
                 .into(),
         );
     }
 
-    // Select members, applying --filter (manifest name or member directory).
+    // Select members, applying --filter (package name or member directory).
     let mut selected: Vec<(String, PathBuf, String)> = Vec::new();
     for member in &members {
         let dir_name = member_name_fallback(member);
-        let name = manifest_name_of(member).unwrap_or_else(|| dir_name.clone());
+        let name = package_name_of(member).unwrap_or_else(|| dir_name.clone());
         if let Some(want) = filter {
             if name != want && dir_name != want {
                 continue;
@@ -243,10 +243,10 @@ pub(crate) fn workspace_build(
     let cache = root.join(".cache").join("dash");
     fs::create_dir_all(&cache)?;
 
-    let member_manifests: Vec<Manifest> = selected
+    let member_packages: Vec<Package> = selected
         .iter()
         .map(|(_, dir, _)| {
-            read_manifest(&dir.join("manifest.json")).unwrap_or_else(|_| default_manifest())
+            read_package(&dir.join("package.json")).unwrap_or_else(|_| default_package())
         })
         .collect();
 
@@ -254,8 +254,8 @@ pub(crate) fn workspace_build(
     // one shared target/).
     let mut bin_owners: std::collections::HashMap<String, String> =
         std::collections::HashMap::new();
-    for (name, manifest) in selected.iter().map(|(n, _, _)| n).zip(&member_manifests) {
-        for (bin_name, _) in manifest.bin_entries() {
+    for (name, package) in selected.iter().map(|(n, _, _)| n).zip(&member_packages) {
+        for (bin_name, _) in package.bin_entries() {
             if let Some(prev) = bin_owners.insert(bin_name.clone(), name.clone()) {
                 return Err(format!(
                     "dashscript: bin name '{bin_name}' is declared in members '{prev}' and \
@@ -266,33 +266,32 @@ pub(crate) fn workspace_build(
         }
     }
 
-    // [workspace.dependencies] = union of member deps, so a dep two members use
-    // is declared once (cargo's hoisted node_modules).
-    let mut all_deps: std::collections::BTreeMap<String, String> =
+    // [workspace.dependencies] = union of member cargo deps, so a dep two
+    // members use is declared once (cargo's hoisted node_modules). Each dep
+    // carries its full Cargo.toml spec (version/features/...) — JSON↔TOML zero
+    // loss. Only `dashscript.cargo.dependencies` flow here; package.json
+    // `dependencies` are npm packages (node_modules), not cargo crates.
+    let mut all_deps: std::collections::BTreeMap<String, dashscript::CargoDepSpec> =
         std::collections::BTreeMap::new();
-    for manifest in &member_manifests {
-        for (key, ver) in &manifest.dependencies {
-            if let Some(dep) = key.strip_prefix("rust:") {
-                all_deps
-                    .entry(dep.to_string())
-                    .or_insert_with(|| ver.clone());
-            }
+    for package in &member_packages {
+        for (name, spec) in &package.dashscript.cargo.dependencies {
+            all_deps.entry(name.clone()).or_insert_with(|| spec.clone());
         }
     }
     let inherited: std::collections::BTreeSet<String> = all_deps.keys().cloned().collect();
 
     let names: Vec<String> = selected.iter().map(|(n, _, _)| n.clone()).collect();
-    let root_manifest =
-        read_manifest(&root.join("manifest.json")).unwrap_or_else(|_| default_manifest());
+    let root_package =
+        read_package(&root.join("package.json")).unwrap_or_else(|_| default_package());
     fs::write(
         cache.join("Cargo.toml"),
-        root_manifest.workspace_root_toml(&names, &all_deps),
+        root_package.workspace_root_toml(&names, &all_deps),
     )?;
 
-    for ((name, member_dir, _), manifest) in selected.iter().zip(&member_manifests) {
+    for ((name, member_dir, _), package) in selected.iter().zip(&member_packages) {
         let member_cache = cache.join(name);
-        let ((bins, lib), deps) = translate_project(member_dir, manifest, &member_cache)?;
-        let mut cargo_toml = manifest.to_member_toml_with_bins(&bins, lib.as_deref(), &inherited);
+        let ((bins, lib), deps) = translate_project(member_dir, package, &member_cache)?;
+        let mut cargo_toml = package.to_member_toml(&bins, lib.as_deref(), &inherited);
         deps.apply_to_cargo_toml(&mut cargo_toml);
         fs::write(member_cache.join("Cargo.toml"), cargo_toml)?;
         apply_runtime_deps(&member_cache, &deps, &bin_lib_stems(&bins, lib.as_deref()))?;
@@ -307,11 +306,11 @@ pub(crate) fn workspace_build(
 
     // Copy each member binary to its own `<member>/dist/` — not the workspace
     // root — so each package's artifact is independent and publishable.
-    for ((name, member_dir, _), manifest) in selected.iter().zip(&member_manifests) {
+    for ((name, member_dir, _), package) in selected.iter().zip(&member_packages) {
         let dest_dir = member_dir.join("dist");
         let _ = fs::remove_dir_all(&dest_dir);
         fs::create_dir_all(&dest_dir)?;
-        let bins = manifest.bin_entries();
+        let bins = package.bin_entries();
         if bins.is_empty() {
             // No declared bins → cargo built src/main.rs as <member name>.
             copy_release_bin(&cache, name, &dest_dir)?;
@@ -324,21 +323,21 @@ pub(crate) fn workspace_build(
     Ok(ExitCode::SUCCESS)
 }
 
-/// Resolve a root manifest's `workspaces` globs (e.g. `["apps/*", "packages/*"]`)
-/// into member directories — each a subdirectory holding its own `manifest.json`.
+/// Resolve a root package's `workspaces` globs (e.g. `["apps/*", "packages/*"]`)
+/// into member directories — each a subdirectory holding its own `package.json`.
 /// Empty if `root` has no `workspaces` field or no members match.
 fn discover_members(root: &Path) -> Vec<PathBuf> {
-    let Ok(json) = fs::read_to_string(root.join("manifest.json")) else {
+    let Ok(json) = fs::read_to_string(root.join("package.json")) else {
         return Vec::new();
     };
-    let Ok(manifest) = Manifest::from_json(&json) else {
+    let Ok(package) = Package::from_json(&json) else {
         return Vec::new();
     };
-    if manifest.workspaces.is_empty() {
+    if package.workspaces.is_empty() {
         return Vec::new();
     }
     let mut members = Vec::new();
-    for glob in &manifest.workspaces {
+    for glob in &package.workspaces {
         for member in expand_member_glob(root, glob) {
             if !members.contains(&member) {
                 members.push(member);
@@ -349,7 +348,7 @@ fn discover_members(root: &Path) -> Vec<PathBuf> {
 }
 
 /// Expand one workspace glob (`<dir>/*`) relative to `root` into the
-/// subdirectories of `<dir>` that hold a `manifest.json`. Only the trailing
+/// subdirectories of `<dir>` that hold a `package.json`. Only the trailing
 /// `/*` form is supported (the common pnpm-workspace / cargo-members case).
 fn expand_member_glob(root: &Path, glob: &str) -> Vec<PathBuf> {
     let Some(dir_name) = glob.strip_suffix("/*") else {
@@ -362,18 +361,18 @@ fn expand_member_glob(root: &Path, glob: &str) -> Vec<PathBuf> {
     let mut out: Vec<PathBuf> = entries
         .flatten()
         .map(|e| e.path())
-        .filter(|p| p.is_dir() && p.join("manifest.json").exists())
+        .filter(|p| p.is_dir() && p.join("package.json").exists())
         .collect();
     out.sort();
     out
 }
 
-/// A member's entry: its manifest `entry`, else `main.ds` inside the member.
+/// A member's entry: its first declared `bin`, else `main.ds` inside the member.
 fn resolve_member_entry(member: &Path) -> Result<String, Box<dyn Error>> {
-    let manifest_path = member.join("manifest.json");
-    if let Ok(manifest) = read_manifest(&manifest_path) {
-        if let Some(entry) = &manifest.entry {
-            let p = member.join(entry);
+    let package_path = member.join("package.json");
+    if let Ok(package) = read_package(&package_path) {
+        if let Some((_, bin_path)) = package.bin_entries().into_iter().next() {
+            let p = member.join(&bin_path);
             if p.exists() {
                 return Ok(p.to_string_lossy().into_owned());
             }
@@ -384,15 +383,15 @@ fn resolve_member_entry(member: &Path) -> Result<String, Box<dyn Error>> {
         return Ok(main.to_string_lossy().into_owned());
     }
     Err(format!(
-        "ds build: member {} has no entry (set manifest entry or add main.ds)",
+        "ds build: member {} has no entry (set package.json bin or add main.ds)",
         member.display()
     )
     .into())
 }
 
-/// Read a member's manifest `name` (for `--filter` matching and display).
-fn manifest_name_of(member: &Path) -> Option<String> {
-    read_manifest(&member.join("manifest.json"))
+/// Read a member's package `name` (for `--filter` matching and display).
+fn package_name_of(member: &Path) -> Option<String> {
+    read_package(&member.join("package.json"))
         .ok()
         .map(|m| m.name)
 }

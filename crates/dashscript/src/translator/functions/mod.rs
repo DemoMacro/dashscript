@@ -443,9 +443,9 @@ pub(in crate::translator) fn translate_stmt(
 /// try body, the catch arm binding the panic payload as a `String` (its
 /// message), and the `finally` body appended after the match. DashScript emits
 /// `[profile.*] panic = "unwind"` in the `Cargo.toml` it generates (see
-/// `manifest`), so unwinding is guaranteed and `catch_unwind` reliably catches
+/// `package.rs`), so unwinding is guaranteed and `catch_unwind` reliably catches
 /// a `.ds` `throw` (which lowers to `panic!`) — this is sound *because*
-/// DashScript owns the manifest, not despite it.
+/// DashScript owns the Cargo.toml, not despite it.
 ///
 /// Control flow out of the try body (`return`/`break`/`continue`) cannot cross
 /// the `catch_unwind` closure boundary (a `return` inside the closure would

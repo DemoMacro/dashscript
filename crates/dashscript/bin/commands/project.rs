@@ -1,4 +1,4 @@
-//! Shared helpers for the `ds` subcommands: manifest discovery, cache
+//! Shared helpers for the `ds` subcommands: package discovery, cache
 //! resolution, source translation, and cargo invocation. The command modules
 //! ([`super::build`], [`super::run`], [`super::deps`], [`super::check`],
 //! [`super::cache`]) build on these.
@@ -10,7 +10,7 @@ use std::{
     process::{Command, ExitCode, ExitStatus},
 };
 
-use dashscript::{Manifest, RuntimeDeps, Translator};
+use dashscript::{Package, RuntimeDeps, Translator};
 
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
@@ -91,9 +91,9 @@ fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<RuntimeDeps,
 /// pairs for `[[bin]]`, plus the `[lib]` entry path.
 type ProjectTargets = (Vec<(String, String)>, Option<String>);
 
-/// Translate every `.ds` under a manifest root into one multi-target crate at
+/// Translate every `.ds` under a package root into one multi-target crate at
 /// `project_dir/src/`: each file becomes `src/<stem>.rs` (prefixed with its
-/// `mod` declarations), and the manifest's `bin`/`lib` entries become the
+/// `mod` declarations), and the package's `bin`/`lib` entries become the
 /// crate's `[[bin]]`/`[lib]` targets. Returns the resolved targets for
 /// `Cargo.toml` emission.
 ///
@@ -103,7 +103,7 @@ type ProjectTargets = (Vec<(String, String)>, Option<String>);
 /// through `[lib]`).
 pub(crate) fn translate_project(
     root: &Path,
-    manifest: &Manifest,
+    package: &Package,
     project_dir: &Path,
 ) -> Result<(ProjectTargets, RuntimeDeps), Box<dyn Error>> {
     let src_dir = project_dir.join("src");
@@ -134,8 +134,9 @@ pub(crate) fn translate_project(
         deps.merge(&file_deps);
     }
 
-    let bins = manifest.bin_entries();
-    let lib = manifest.lib.clone();
+    let bins = package.bin_entries();
+    // package.json `main` → the crate's `[lib]` target (shared code bins `use`).
+    let lib = package.main.clone();
     detect_bin_imports_bin(root, &bins)?;
     Ok(((bins, lib), deps))
 }
@@ -197,21 +198,21 @@ fn clean_src_dir(src: &Path) -> std::io::Result<()> {
 
 /// Translate a `.ds` entry into a buildable Cargo project at `project_dir`.
 ///
-/// Project mode (a manifest declares `bin` or `lib`): every `.ds` under the
+/// Project mode (a package declares `bin` or `lib`): every `.ds` under the
 /// root becomes `src/<stem>.rs` in one crate, and the declared entries become
 /// `[[bin]]`/`[lib]` targets — so a project's entries share one cache and never
-/// overwrite each other. Otherwise (a lone file, or a manifest with no declared
-/// targets): a minimal manifest + a single `src/main.rs`.
+/// overwrite each other. Otherwise (a lone file, or a package with no declared
+/// targets): a minimal package + a single `src/main.rs`.
 pub(crate) fn emit_cargo_project(
     src: &str,
     src_path: &Path,
     project_dir: &Path,
 ) -> Result<(), Box<dyn Error>> {
-    if let Some(root) = find_manifest_root(src_path) {
-        if let Ok(manifest) = read_manifest(&root.join("manifest.json")) {
-            if manifest.bin.is_some() || manifest.lib.is_some() {
-                let ((bins, lib), deps) = translate_project(&root, &manifest, project_dir)?;
-                let mut cargo_toml = manifest.to_cargo_toml_with_bins(&bins, lib.as_deref());
+    if let Some(root) = find_package_root(src_path) {
+        if let Ok(package) = read_package(&root.join("package.json")) {
+            if package.bin.is_some() || package.main.is_some() {
+                let ((bins, lib), deps) = translate_project(&root, &package, project_dir)?;
+                let mut cargo_toml = package.to_cargo_toml_with_bins(&bins, lib.as_deref());
                 deps.apply_to_cargo_toml(&mut cargo_toml);
                 fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
                 apply_runtime_deps(project_dir, &deps, &bin_lib_stems(&bins, lib.as_deref()))?;
@@ -219,7 +220,7 @@ pub(crate) fn emit_cargo_project(
             }
         }
     }
-    let mut cargo_toml = resolve_manifest(src_path);
+    let mut cargo_toml = resolve_package(src_path);
     fs::create_dir_all(project_dir.join("src"))?;
     let deps = translate_sources(src, src_path, project_dir)?;
     deps.apply_to_cargo_toml(&mut cargo_toml);
@@ -307,26 +308,26 @@ pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf,
     .into())
 }
 
-/// Resolve the Cargo manifest for `src_path`: the `manifest.json` found walking
-/// up from the file (Deno-style), otherwise a minimal manifest named after the
+/// Resolve the Cargo package for `src_path`: the `package.json` found walking
+/// up from the file (Deno-style), otherwise a minimal package named after the
 /// project (`project_name`).
-pub(crate) fn resolve_manifest(src_path: &Path) -> String {
-    if let Some(root) = find_manifest_root(src_path) {
-        if let Ok(json) = fs::read_to_string(root.join("manifest.json")) {
-            if let Ok(manifest) = Manifest::from_json(&json) {
-                return manifest.to_cargo_toml();
+pub(crate) fn resolve_package(src_path: &Path) -> String {
+    if let Some(root) = find_package_root(src_path) {
+        if let Ok(json) = fs::read_to_string(root.join("package.json")) {
+            if let Ok(package) = Package::from_json(&json) {
+                return package.to_cargo_toml();
             }
         }
     }
-    Manifest {
+    Package {
         name: project_name(src_path),
-        ..Manifest::default()
+        ..Package::default()
     }
     .to_cargo_toml()
 }
 
 /// The cache directory for a `.ds` entry file, Deno-style: walk up from the
-/// file for a `manifest.json`; found → in-project `.cache/dash/<project>/` —
+/// file for a `package.json`; found → in-project `.cache/dash/<project>/` —
 /// **one per project** (keyed by project name, not the entry stem, so two
 /// `main.ds` files in different projects don't collide and one project's
 /// entries share a cache); not found (a lone file) → global
@@ -337,7 +338,7 @@ pub(crate) fn resolve_manifest(src_path: &Path) -> String {
 /// scratch. Falls back to a temp dir if no platform cache dir is resolvable,
 /// so a lone file always runs.
 pub(crate) fn cache_project_dir(src_path: &Path) -> PathBuf {
-    if let Some(root) = find_manifest_root(src_path) {
+    if let Some(root) = find_package_root(src_path) {
         return root
             .join(".cache")
             .join("dash")
@@ -346,30 +347,30 @@ pub(crate) fn cache_project_dir(src_path: &Path) -> PathBuf {
     global_cache_dir(src_path)
 }
 
-/// Walk up from the `.ds` file's directory for the nearest `manifest.json`,
+/// Walk up from the `.ds` file's directory for the nearest `package.json`,
 /// returning its directory (the project root) if one exists.
-pub(crate) fn find_manifest_root(src_path: &Path) -> Option<PathBuf> {
+pub(crate) fn find_package_root(src_path: &Path) -> Option<PathBuf> {
     let dir = src_path.parent()?;
     for ancestor in dir.ancestors() {
-        if ancestor.join("manifest.json").exists() {
+        if ancestor.join("package.json").exists() {
             return Some(ancestor.to_path_buf());
         }
     }
     None
 }
 
-/// Find the nearest `manifest.json` walking up from the **cwd** (whereas
-/// [`find_manifest_root`] starts from a `.ds` file's directory). Used by
+/// Find the nearest `package.json` walking up from the **cwd** (whereas
+/// [`find_package_root`] starts from a `.ds` file's directory). Used by
 /// cwd-based commands (`install`, `add`, `remove`, `run`) so they work from a
 /// subdirectory — mirroring pnpm/cargo, which find the workspace root from any
-/// nested dir. Falls back to the cwd when no manifest is found, so callers
-/// report "no manifest.json here" instead of panicking.
-pub(crate) fn manifest_root() -> PathBuf {
+/// nested dir. Falls back to the cwd when no package is found, so callers
+/// report "no package.json here" instead of panicking.
+pub(crate) fn package_root() -> PathBuf {
     let Ok(cwd) = std::env::current_dir() else {
         return PathBuf::from(".");
     };
     for ancestor in cwd.ancestors() {
-        if ancestor.join("manifest.json").exists() {
+        if ancestor.join("package.json").exists() {
             return ancestor.to_path_buf();
         }
     }
@@ -377,13 +378,13 @@ pub(crate) fn manifest_root() -> PathBuf {
 }
 
 /// Collect every `.ds` file under the current project (the nearest
-/// `manifest.json` walking up, else the cwd), skipping generated/vendored
+/// `package.json` walking up, else the cwd), skipping generated/vendored
 /// directories (`target`, `.cache`, `dist`, `node_modules`, `.git`). Used by
 /// `ds lint` / `ds check` / `ds fmt` with no argument — the way `vp check` and
 /// `oxlint` check the whole project when given no target. Sorted for stable
 /// output.
 pub(crate) fn collect_ds_files() -> Vec<PathBuf> {
-    let root = manifest_root();
+    let root = package_root();
     let mut out = Vec::new();
     walk_ds(&root, &mut out);
     out.sort();
@@ -410,7 +411,7 @@ fn walk_ds(dir: &Path, out: &mut Vec<PathBuf>) {
     }
 }
 
-/// The global fallback cache for a lone `.ds` file (no `manifest.json` found
+/// The global fallback cache for a lone `.ds` file (no `package.json` found
 /// walking up): `~/.cache/dash/<hash(canonical_path)>/`, keyed by the file's
 /// canonical path so the same file reuses it across runs.
 pub(crate) fn global_cache_dir(src_path: &Path) -> PathBuf {
@@ -437,15 +438,15 @@ pub(crate) fn stem_of(path: &Path) -> String {
         .to_string()
 }
 
-/// The build output name: the `manifest.json` `name` if present, else the
+/// The build output name: the `package.json` `name` if present, else the
 /// project directory name, else the file stem — never the bare stem when a
 /// project exists, so two entry files don't clobber `dist/<name>`.
 pub(crate) fn project_name(src_path: &Path) -> String {
-    if let Some(root) = find_manifest_root(src_path) {
-        if let Ok(json) = fs::read_to_string(root.join("manifest.json")) {
-            if let Ok(manifest) = Manifest::from_json(&json) {
-                if !manifest.name.trim().is_empty() {
-                    return manifest.name;
+    if let Some(root) = find_package_root(src_path) {
+        if let Ok(json) = fs::read_to_string(root.join("package.json")) {
+            if let Ok(package) = Package::from_json(&json) {
+                if !package.name.trim().is_empty() {
+                    return package.name;
                 }
             }
         }
@@ -460,58 +461,53 @@ pub(crate) fn project_name(src_path: &Path) -> String {
 
 /// Resolve the project entry file for a file-less `ds build`: the first
 /// declared `bin` (the project builds every bin; any one anchors the lookup),
-/// else the legacy `entry`, else `main.ds` in the cwd.
+/// else `main.ds` in the cwd.
 pub(crate) fn resolve_entry() -> Result<String, Box<dyn Error>> {
-    if let Ok(manifest) = read_manifest(Path::new("manifest.json")) {
-        if let Some((_, bin_path)) = manifest.bin_entries().into_iter().next() {
+    if let Ok(package) = read_package(Path::new("package.json")) {
+        if let Some((_, bin_path)) = package.bin_entries().into_iter().next() {
             if Path::new(&bin_path).exists() {
                 return Ok(bin_path);
-            }
-        }
-        if let Some(entry) = &manifest.entry {
-            if Path::new(entry).exists() {
-                return Ok(entry.clone());
             }
         }
     }
     if Path::new("main.ds").exists() {
         return Ok("main.ds".to_string());
     }
-    Err("ds build: no entry file (pass <file.ds>, set manifest bin/entry, or add main.ds)".into())
+    Err("ds build: no entry file (pass <file.ds>, set package.json bin, or add main.ds)".into())
 }
 
 /// The build target for `src_path`: the `--target` override, else the
-/// `manifest.json` `target`, else `bin`.
+/// `package.json` `target`, else `bin`.
 pub(crate) fn resolve_target(src_path: &Path, override_target: Option<&str>) -> String {
     if let Some(t) = override_target {
         return t.to_string();
     }
-    if let Some(root) = find_manifest_root(src_path) {
-        if let Ok(json) = fs::read_to_string(root.join("manifest.json")) {
-            if let Ok(manifest) = Manifest::from_json(&json) {
-                return manifest.target;
+    if let Some(root) = find_package_root(src_path) {
+        if let Ok(json) = fs::read_to_string(root.join("package.json")) {
+            if let Ok(package) = Package::from_json(&json) {
+                return package.dashscript.target;
             }
         }
     }
     "bin".to_string()
 }
 
-/// Read and parse a `manifest.json`.
-pub(crate) fn read_manifest(path: &Path) -> Result<Manifest, Box<dyn Error>> {
+/// Read and parse a `package.json`.
+pub(crate) fn read_package(path: &Path) -> Result<Package, Box<dyn Error>> {
     let json =
         fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
-    Ok(Manifest::from_json(&json)?)
+    Ok(Package::from_json(&json)?)
 }
 
-/// A manifest named after the current directory, with defaults.
-pub(crate) fn default_manifest() -> Manifest {
+/// A package named after the current directory, with defaults.
+pub(crate) fn default_package() -> Package {
     let name = std::env::current_dir()
         .ok()
         .and_then(|d| d.file_name().map(|n| n.to_string_lossy().into_owned()))
         .unwrap_or_else(|| "dashscript".to_string());
-    Manifest {
+    Package {
         name,
-        ..Manifest::default()
+        ..Package::default()
     }
 }
 
@@ -552,8 +548,8 @@ mod tests {
         fs::write(dir.join(name), body).unwrap();
     }
 
-    fn manifest_at(root: &Path) -> Manifest {
-        read_manifest(&root.join("manifest.json")).unwrap()
+    fn package_at(root: &Path) -> Package {
+        read_package(&root.join("package.json")).unwrap()
     }
 
     #[test]
@@ -562,14 +558,14 @@ mod tests {
         let root = tmp.path();
         write(
             root,
-            "manifest.json",
+            "package.json",
             r#"{ "name": "app", "bin": { "a": "a.ds", "b": "b.ds" } }"#,
         );
         write(root, "a.ds", "function main() { console.log(1); }");
         write(root, "b.ds", "function main() { console.log(2); }");
 
         let out = tmp.path().join("out");
-        let ((bins, lib), _deps) = translate_project(root, &manifest_at(root), &out).unwrap();
+        let ((bins, lib), _deps) = translate_project(root, &package_at(root), &out).unwrap();
         let names: Vec<&str> = bins.iter().map(|(n, _)| n.as_str()).collect();
         assert!(names.contains(&"a"), "bins: {bins:?}");
         assert!(names.contains(&"b"), "bins: {bins:?}");
@@ -587,7 +583,7 @@ mod tests {
         fs::create_dir_all(root.join("sub")).unwrap();
         write(
             root,
-            "manifest.json",
+            "package.json",
             r#"{ "name": "app", "bin": "main.ds" }"#,
         );
         write(root, "main.ds", "function main() {}");
@@ -595,7 +591,7 @@ mod tests {
         write(&root.join("sub"), "dup.ds", "function other() {}");
 
         let out = tmp.path().join("out");
-        let err = translate_project(root, &manifest_at(root), &out).unwrap_err();
+        let err = translate_project(root, &package_at(root), &out).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("name collision"), "got: {msg}");
         assert!(msg.contains("dup"), "got: {msg}");
@@ -609,7 +605,7 @@ mod tests {
         let root = tmp.path();
         write(
             root,
-            "manifest.json",
+            "package.json",
             r#"{ "name": "app", "bin": { "a": "a.ds", "b": "b.ds" } }"#,
         );
         write(
@@ -620,7 +616,7 @@ mod tests {
         write(root, "b.ds", "export function x() {}\nfunction main() {}");
 
         let out = tmp.path().join("out");
-        let err = translate_project(root, &manifest_at(root), &out).unwrap_err();
+        let err = translate_project(root, &package_at(root), &out).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("bin 'a' imports bin 'b'"), "got: {msg}");
     }

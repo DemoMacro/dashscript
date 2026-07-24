@@ -27,7 +27,7 @@ fn main() -> ExitCode {
         }
         // `ds <file.ds>` — run a file directly (like `node a.js` / `vp node`).
         Some(arg) if is_ds_file(arg) => report(run::run_file(arg)),
-        // `ds run <script>` — run a `manifest.json` script (like `pnpm run`).
+        // `ds run <script>` — run a `package.json` script (like `pnpm run`).
         // `run` is always explicit: `ds <script>` would collide with `ds <file.ds>`.
         Some("run") => match args.next() {
             Some(script) => report(run::run_script(&script)),
@@ -57,11 +57,11 @@ fn main() -> ExitCode {
         }
         Some("add") => match args.next() {
             Some(spec) => report(deps::add(&spec)),
-            None => usage_exit("usage: ds add <crate|rust:crate|file.rs>"),
+            None => usage_exit("usage: ds add <crate|cargo:crate|file.rs>"),
         },
         Some("remove") => match args.next() {
             Some(name) => report(deps::remove(&name)),
-            None => usage_exit("usage: ds remove <crate|rust:crate>"),
+            None => usage_exit("usage: ds remove <crate|cargo:crate>"),
         },
         // `ds check` is the composite (lint + format, like `vp check`) and the
         // one you reach for most, so it leads. `--fix` writes the formatting
@@ -84,7 +84,7 @@ fn main() -> ExitCode {
         }
         Some("lint") => report(check::lint(args.next().as_deref())),
         Some("fmt") => report(check::fmt(args.next().as_deref())),
-        // `ds install` = ensure manifest deps are fetched + a Cargo.lock exists
+        // `ds install` = ensure package deps are fetched + a Cargo.lock exists
         // (like `pnpm install` / `vp install`). No node_modules equivalent —
         // cargo's `~/.cargo/registry` is the dependency store.
         Some("install") => report(deps::install()),
@@ -126,7 +126,7 @@ fn print_help() {
     println!();
     println!("Run:");
     println!("  <file.ds>            Run a file (translate → compile → run)");
-    println!("  run [<script>]       Run a manifest.json script (no arg lists scripts)");
+    println!("  run [<script>]       Run a package.json script (no arg lists scripts)");
     println!();
     println!("Build:");
     println!("  build [<file>]       Compile a native binary to dist/<name> (default)");
@@ -139,9 +139,9 @@ fn print_help() {
     println!("  fmt [<file>]            Format .ds in place");
     println!();
     println!("Dependencies:");
-    println!("  add <crate|file.rs>  Add a crate (rust:<name>) or bindgen a local .rs");
+    println!("  add <crate|file.rs>  Add a crate (cargo:<name>) or bindgen a local .rs");
     println!("  remove <crate>       Remove a crate dependency");
-    println!("  install              Fetch manifest deps + write Cargo.lock");
+    println!("  install              Fetch package deps + write Cargo.lock");
     println!();
     println!("Cache & editor:");
     println!("  cache clean          Remove the in-project .cache/");

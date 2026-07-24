@@ -215,9 +215,9 @@ impl RuntimeDeps {
 
     /// Append each flagged cargo dep to a generated `Cargo.toml`, creating the
     /// `[dependencies]` section if absent. A no-op for a dep already declared
-    /// (e.g. the project declared `rust:ryu_js`) — so a consumer can call this
+    /// (e.g. the project declared `cargo:ryu_js`) — so a consumer can call this
     /// unconditionally and let the dep set gate it. A string-level post-process
-    /// keeps the dep out of the user's `manifest.json` — it is a DashScript-
+    /// keeps the dep out of the user's `package.json` — it is a DashScript-
     /// internal runtime need, not a declared project dependency.
     pub fn apply_to_cargo_toml(&self, cargo_toml: &mut String) {
         for d in RuntimeDep::ALL {
@@ -234,7 +234,7 @@ impl RuntimeDeps {
 /// creating the section if absent. A no-op when the dep is already declared —
 /// the caller gates per dep (via [`RuntimeDeps::has`]) and lets this handle the
 /// string edit. A string-level post-process keeps these deps out of the user's
-/// `manifest.json` — they are DashScript-internal runtime needs.
+/// `package.json` — they are DashScript-internal runtime needs.
 fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str) {
     let needle = format!("{pkg} =");
     if cargo_toml.contains(&needle) {
