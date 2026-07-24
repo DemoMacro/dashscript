@@ -1,14 +1,13 @@
 //! DashScript's standard-library declarations — the `lib.d.ts` analogue.
 //!
-//! Each built-in's declaration lives beside its implementation, as a `.ds` file
-//! in `translator/builtins/` (`console.ds` ↔ `console.rs`, `math.ds` ↔
-//! `math.rs`, …). One `.rs` carries the Rust mapping; the matching `.ds`
-//! carries the names, signatures, and docs the language server surfaces — so a
-//! gap between "declared" and "implemented" is a gap you can see in one place.
+//! All built-in declarations live in one file, `translator/builtins/dashscript.d.ts`,
+//! which is also what the `@dashscript/typescript-plugin` injects so `.ts`
+//! sources get completion and types for `console`, `Math`, `parseInt`, …. Each
+//! member is implemented by a matching arm in `translator/builtins/<name>.rs`.
 //!
-//! [`SOURCES`] is the list of those files (via `include_str!`); [`parse`] reads
-//! each one through oxc into the [`Builtin`] table (the single source of truth
-//! for completion/hover/signature-help in [`super::builtins`]). A declaration's
+//! [`SOURCE`] is that file (via `include_str!`); [`parse`] reads it through oxc
+//! into the [`Builtin`] table (the single source of truth for
+//! completion/hover/signature-help in [`super::builtins`]). A declaration's
 //! trailing `// doc` is read back as that symbol's hover text — authored next to
 //! the signature it describes. The drift-guard test asserts every declared
 //! symbol actually translates, so the table cannot claim a name the translator
@@ -20,10 +19,10 @@
 //! These are ambient declarations, exactly as TypeScript's `lib.es5.d.ts` does
 //! (`declare var NaN: number`), so they carry a type but no initializer.
 //!
-//! Unlike a crate added with `ds add cargo:<crate>` (whose `.ds` declaration
-//! bindgen can derive from the crate's `~/.cargo` source), these built-ins have
-//! no `.rs` file a user compiles — the translator generates their Rust inline.
-//! So this declaration is hand-written, like `lib.d.ts`.
+//! Unlike a crate added with `ds add cargo:<crate>` (whose `.d.ts` declaration
+//! bindgen derives from the local `.rs` file), these built-ins have no `.rs`
+//! file a user compiles — the translator generates their Rust inline. So this
+//! declaration is hand-written, like `lib.d.ts`.
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{BindingPattern, PropertyKey, Statement, TSSignature, VariableDeclarator};
@@ -32,32 +31,22 @@ use oxc_span::{GetSpan, SourceType};
 
 use super::builtins::{Builtin, BuiltinKind};
 
-/// The standard-library declaration files — each beside its `.rs` counterpart
-/// in `translator/builtins/`. Parsed individually so each AST span is relative
-/// to its own file (and the trailing-`// doc` scan stays local to that text).
-const SOURCES: &[&str] = &[
-    include_str!("../../src/translator/builtins/console.ds"),
-    include_str!("../../src/translator/builtins/math.ds"),
-    include_str!("../../src/translator/builtins/number.ds"),
-    include_str!("../../src/translator/builtins/string.ds"),
-    include_str!("../../src/translator/builtins/array.ds"),
-    include_str!("../../src/translator/builtins/object.ds"),
-    include_str!("../../src/translator/builtins/global.ds"),
-];
+/// The standard-library declaration file — one `.d.ts` (also injected by the
+/// `@dashscript/typescript-plugin`), parsed in full so each AST span is relative
+/// to it (and the trailing-`// doc` scan stays local to that text).
+const SOURCE: &str = include_str!("../../src/translator/builtins/dashscript.d.ts");
 
-/// Parse every standard-library declaration into the builtin table. Called once
+/// Parse the standard-library declaration into the builtin table. Called once
 /// (lazily, via the `PARSED` static in [`super::builtins`]); the result is the
 /// single source of truth for completion/hover/signature-help.
 pub(super) fn parse() -> Vec<Builtin> {
     let mut out = Vec::new();
-    for source in SOURCES {
-        parse_file(source, &mut out);
-    }
+    parse_file(SOURCE, &mut out);
     out
 }
 
-/// Parse one declaration file, appending its builtins. Kept per-file so the
-/// AST spans (and the trailing-doc scan) are relative to that file's text.
+/// Parse the declaration file, appending its builtins. The AST spans (and the
+/// trailing-doc scan) are relative to that file's text.
 fn parse_file(source: &str, out: &mut Vec<Builtin>) {
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
