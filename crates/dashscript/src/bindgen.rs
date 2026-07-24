@@ -1,15 +1,15 @@
-//! Rust source → `.ds` type declaration.
+//! Rust source → `.d.ts` type declaration.
 //!
-//! Powers `ds add`: inspect a crate's public surface and emit a `.ds`
+//! Powers `ds add`: inspect a crate's public surface and emit a `.d.ts`
 //! declaration so importing it yields editor completion and types — the
 //! cross-language analogue of `@types` / DefinitelyTyped. The reverse of the
-//! [`translator`](crate::translator): Rust (`syn`) → `.ds`.
+//! [`translator`](crate::translator): Rust (`syn`) → `.d.ts`.
 
 use syn::{
     FnArg, GenericArgument, ItemFn, ItemStruct, PathArguments, ReturnType, Type, Visibility,
 };
 
-/// Generates a `.ds` type declaration from Rust source.
+/// Generates a `.d.ts` type declaration from Rust source.
 #[derive(Default)]
 pub struct Bindgen {
     // Options land here: visibility filters, rename rules, feature flags, ...
@@ -22,7 +22,7 @@ impl Bindgen {
         Self::default()
     }
 
-    /// Generate a `.ds` declaration from Rust source text.
+    /// Generate a `.d.ts` declaration from Rust source text.
     ///
     /// Only `pub` structs and functions are mapped today; `enum`, `trait`, and
     /// non-public items are skipped.
@@ -51,7 +51,7 @@ impl Bindgen {
     }
 }
 
-/// `pub struct Point { pub x: f64 }` → `interface Point { x: number; }`.
+/// `pub struct Point { pub x: f64 }` → `export interface Point { x: number; }`.
 /// Non-public structs are skipped.
 fn struct_decl(s: &ItemStruct) -> Option<String> {
     if !matches!(s.vis, Visibility::Public(_)) {
@@ -66,16 +66,16 @@ fn struct_decl(s: &ItemStruct) -> Option<String> {
         })
         .collect();
     if fields.is_empty() {
-        return Some(format!("interface {} {{}}\n\n", s.ident));
+        return Some(format!("export interface {} {{}}\n\n", s.ident));
     }
     Some(format!(
-        "interface {} {{\n{}\n}}\n\n",
+        "export interface {} {{\n{}\n}}\n\n",
         s.ident,
         fields.join("\n")
     ))
 }
 
-/// `pub fn add(a: f64, b: f64) -> f64` → `declare function add(a: number, b: number): number;`.
+/// `pub fn add(a: f64, b: f64) -> f64` → `export declare function add(a: number, b: number): number;`.
 /// Non-public functions are skipped.
 fn fn_decl(f: &ItemFn) -> Option<String> {
     if !matches!(f.vis, Visibility::Public(_)) {
@@ -93,14 +93,14 @@ fn fn_decl(f: &ItemFn) -> Option<String> {
         .collect();
     let ret = reverse_return(&f.sig.output);
     Some(format!(
-        "declare function {}({}): {};\n",
+        "export declare function {}({}): {};\n",
         f.sig.ident,
         params.join(", "),
         ret
     ))
 }
 
-/// Map a Rust type to its `.ds` spelling.
+/// Map a Rust type to its `.d.ts` spelling.
 fn reverse_type(ty: &Type) -> String {
     match ty {
         Type::Path(tp) => reverse_path(tp),
@@ -164,34 +164,34 @@ mod tests {
     #[test]
     fn generates_interface_from_struct() {
         let rust = "pub struct Point { pub x: f64, pub name: String }";
-        let ds = Bindgen::new().generate(rust).expect("should bindgen");
-        assert!(ds.contains("interface Point"), "got:\n{ds}");
-        assert!(ds.contains("x: number"), "got:\n{ds}");
-        assert!(ds.contains("name: string"), "got:\n{ds}");
+        let decl = Bindgen::new().generate(rust).expect("should bindgen");
+        assert!(decl.contains("export interface Point"), "got:\n{decl}");
+        assert!(decl.contains("x: number"), "got:\n{decl}");
+        assert!(decl.contains("name: string"), "got:\n{decl}");
     }
 
     #[test]
     fn generates_function_declaration() {
         let rust = "pub fn add(a: f64, b: f64) -> f64 { a + b }";
-        let ds = Bindgen::new().generate(rust).expect("should bindgen");
+        let decl = Bindgen::new().generate(rust).expect("should bindgen");
         assert!(
-            ds.contains("declare function add(a: number, b: number): number"),
-            "got:\n{ds}"
+            decl.contains("export declare function add(a: number, b: number): number"),
+            "got:\n{decl}"
         );
     }
 
     #[test]
     fn skips_non_public_items() {
         let rust = "struct Hidden { x: f64 } fn private() {}";
-        let ds = Bindgen::new().generate(rust).expect("should bindgen");
-        assert!(ds.trim().is_empty(), "got:\n{ds}");
+        let decl = Bindgen::new().generate(rust).expect("should bindgen");
+        assert!(decl.trim().is_empty(), "got:\n{decl}");
     }
 
     #[test]
     fn maps_vec_and_option() {
         let rust = "pub struct Bag { pub items: Vec<f64>, pub note: Option<String> }";
-        let ds = Bindgen::new().generate(rust).expect("should bindgen");
-        assert!(ds.contains("items: number[]"), "got:\n{ds}");
-        assert!(ds.contains("note: string | null"), "got:\n{ds}");
+        let decl = Bindgen::new().generate(rust).expect("should bindgen");
+        assert!(decl.contains("items: number[]"), "got:\n{decl}");
+        assert!(decl.contains("note: string | null"), "got:\n{decl}");
     }
 }

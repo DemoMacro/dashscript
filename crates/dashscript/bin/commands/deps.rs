@@ -11,10 +11,10 @@ use super::project::{
 
 /// Add a dependency to the project.
 ///
-/// A `.rs` path runs bindgen on that local file (writes `<stem>.ds` beside
+/// A `.rs` path runs bindgen on that local file (writes `<stem>.d.ts` beside
 /// it — the `bindgen-demo` flow). Any other spec is a crate name, with or
 /// without a `cargo:` prefix: cargo downloads it into its global registry and
-/// DashScript records it in `package.json`. No `.ds` declaration is generated
+/// DashScript records it in `package.json`. No `.d.ts` declaration is generated
 /// — type information comes from the crate source itself (read directly by the
 /// language server, the way rust-analyzer reads `~/.cargo`).
 pub(crate) fn add(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
@@ -47,17 +47,17 @@ pub(crate) fn remove(spec: &str) -> Result<ExitCode, Box<dyn Error>> {
     Ok(ExitCode::SUCCESS)
 }
 
-/// Generate a `.ds` type declaration from a local Rust source file (bindgen),
-/// written beside it as `<stem>.ds`.
+/// Generate a `.d.ts` type declaration from a local Rust source file (bindgen),
+/// written beside it as `<stem>.d.ts`.
 fn add_local_file(file: &str) -> Result<ExitCode, Box<dyn Error>> {
     let path = Path::new(file);
     let rust =
         fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
-    let ds = Bindgen::new()
+    let decl = Bindgen::new()
         .generate(&rust)
         .map_err(|e| format!("bindgen {}: {e}", path.display()))?;
-    let out = path.with_extension("ds");
-    fs::write(&out, ds)?;
+    let out = path.with_extension("d.ts");
+    fs::write(&out, decl)?;
     println!("ds: generated {}", out.display());
     Ok(ExitCode::SUCCESS)
 }
