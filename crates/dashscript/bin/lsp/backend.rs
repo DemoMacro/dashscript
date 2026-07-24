@@ -136,6 +136,21 @@ impl RaClient {
         Ok(serde_json::from_value(value)?)
     }
 
+    /// Forward a hover request to rust-analyzer: it returns the type/doc
+    /// markdown for the symbol at `position` in the emitted `src/main.rs`.
+    /// The caller maps a `.ts` cursor to that position, mirroring `definition`.
+    pub(super) fn hover(&self, uri: &str, position: Position) -> Result<Value, Box<dyn Error>> {
+        let params = serde_json::json!({
+            "textDocument": { "uri": uri },
+            "position": position,
+        });
+        let value = self.request("textDocument/hover", params)?;
+        if value.is_null() {
+            return Err("rust-analyzer returned no hover".into());
+        }
+        Ok(value)
+    }
+
     /// Best-effort shutdown: send `shutdown` + `exit`; the child is dropped on
     /// `RaClient` drop regardless.
     pub(super) fn shutdown(self) {

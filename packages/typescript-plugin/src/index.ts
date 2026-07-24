@@ -7,9 +7,11 @@
 //! - local `.d.ts` → `.rs` go-to-definition: jumping to a bindgen declaration
 //!   redirects to the real Rust source, where rust-analyzer takes over.
 //!
-//! Translatability diagnostics and crate go-to-definition come from the shared
-//! `ds lsp` core (connected via the editor's LSP client), not this plugin — so
-//! every editor (VS Code / Zed / JetBrains) gets them uniformly.
+//! Translatability diagnostics, crate go-to-definition, and crate hover all
+//! come from the shared `ds lsp` core (connected via the editor's LSP client),
+//! not this plugin — so every editor (VS Code / Zed / JetBrains) gets them
+//! uniformly. This plugin only suppresses the TS2307 that TS would otherwise
+//! raise on `cargo:` imports (types live in `~/.cargo`, not a `.d.ts`).
 //!
 //! Enable in `tsconfig.json`:
 //!   "compilerOptions": { "plugins": [{ "name": "@dashscript/typescript-plugin" }] }
@@ -88,12 +90,22 @@ function init(modules: { typescript: typeof ts }) {
 
     // Refresh local `.rs` bindgen declarations at diagnostic time (a frequent
     // hook) so the `.d.ts` is fresh when go-to-definition needs it. The
-    // diagnostics themselves come from `ds lsp` (shared core), not this plugin.
+    // translatability diagnostics themselves come from `ds lsp` (shared core),
+    // not this plugin.
+    //
+    // Suppress TS2307 ("Cannot find module") for `cargo:` imports: their
+    // types come from rust-analyzer via `ds lsp` hover (zero-stub — no `.d.ts`),
+    // so TS cannot resolve the `cargo:` module specifier. Every other
+    // diagnostic passes through unchanged.
     proxy.getSemanticDiagnostics = (fileName: string) => {
       const prior = info.languageService.getSemanticDiagnostics(fileName);
       if (!fileName.endsWith(".ts") || fileName.endsWith(".d.ts")) return prior;
       ensureLocalRsTypes(fileName);
-      return prior;
+      return prior.filter((d) => {
+        if (d.code !== 2307) return true;
+        const msg = typeof d.messageText === "string" ? d.messageText : "";
+        return !msg.includes("cargo:");
+      });
     };
 
     /** Go-to-definition: when the target is a local `<x>.d.ts` with a sibling

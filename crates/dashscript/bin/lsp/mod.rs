@@ -1,30 +1,36 @@
 //! `ds lsp` — DashScript's editor-agnostic LSP core over stdio.
 //!
-//! Slimmed to the two things the editor's TS LSP cannot do itself:
+//! Three things the editor's TS LSP cannot do itself:
 //! - [`definition`] crate go-to-definition — a cursor on `import { X } from
 //!   "cargo:crate"` is mapped to the emitted `use crate::X` position, then
 //!   forwarded to a rust-analyzer backend that resolves it to the crate's
 //!   `~/.cargo` source.
+//! - [`hover`] crate type/doc hover — the same `cargo:` symbol is forwarded to
+//!   rust-analyzer, which returns the type markdown from the crate source.
+//!   Non-`cargo:` (TS) symbols return `None`, so VS Code falls back to its TS
+//!   LSP hover: the `.ds`-era zero-stub model — no `.d.ts`, types from RA.
 //! - [`diagnostics`] translatability diagnostics (`Translator::check`).
 //!
-//! The TS-side features the old server grew (completion/hover/references/
-//! rename/documentSymbols/signature-help) moved to the editor's TS LSP. This
-//! is the shared core every editor (VS Code / Zed / JetBrains) connects to
-//! via the LSP protocol — [`backend`] drives the rust-analyzer subprocess,
-//! [`text`] holds the byte↔position↔URI helpers.
+//! The TS-side features the old server grew (completion/references/
+//! rename/documentSymbols/signature-help) moved to the editor's TS LSP; hover
+//! stayed because only RA can type a `cargo:` crate symbol. This is the shared
+//! core every editor (VS Code / Zed / JetBrains) connects to via the LSP
+//! protocol — [`backend`] drives the rust-analyzer subprocess, [`text`] holds
+//! the byte↔position↔URI helpers.
 
 use std::{collections::HashMap, error::Error, path::Path};
 
 use lsp_server::{Connection, Message, Request, Response};
 use lsp_types::{
-    InitializeParams, OneOf, ServerCapabilities, TextDocumentSyncCapability, TextDocumentSyncKind,
-    Uri,
+    HoverProviderCapability, InitializeParams, OneOf, ServerCapabilities,
+    TextDocumentSyncCapability, TextDocumentSyncKind, Uri,
 };
 use serde_json::Value;
 
 mod backend;
 mod definition;
 mod diagnostics;
+mod hover;
 mod text;
 
 use backend::RaClient;
@@ -61,9 +67,12 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 fn server_capabilities() -> ServerCapabilities {
     ServerCapabilities {
         text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)),
-        // Only crate go-to-definition is provided here — the editor's TS LSP
-        // handles completion/hover/references/rename/documentSymbols/signature-help.
+        // Crate go-to-definition and hover come from rust-analyzer (via RA);
+        // the editor's TS LSP handles completion/references/rename/
+        // documentSymbols/signature-help, plus hover for non-`cargo:` (TS)
+        // symbols (`on_hover` returns `None` there).
         definition_provider: Some(OneOf::Left(true)),
+        hover_provider: Some(HoverProviderCapability::Simple(true)),
         ..Default::default()
     }
 }
@@ -105,7 +114,14 @@ impl Server {
                     .unwrap_or(Value::Null);
                 Response::new_ok(id, result)
             }
-            // Only definition is provided — TS LSP handles everything else.
+            "textDocument/hover" => {
+                let result = req
+                    .extract::<lsp_types::HoverParams>("textDocument/hover")
+                    .ok()
+                    .and_then(|(_, params)| self.on_hover(&params))
+                    .unwrap_or(Value::Null);
+                Response::new_ok(id, result)
+            }
             _ => Response::new_ok(id, Value::Null),
         };
         let _ = self.conn.sender.send(resp.into());

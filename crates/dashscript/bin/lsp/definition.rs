@@ -25,6 +25,31 @@ impl Server {
         }
     }
 
+    /// Refresh the emitted Cargo project and map a `.ts` crate-import cursor
+    /// to the matching position in the emitted `src/main.rs`. Shared by
+    /// go-to-definition and hover, which then forward that position to
+    /// rust-analyzer. `symbol = None` (cursor on the crate name) maps to the
+    /// crate's own position so RA resolves the root.
+    pub(super) fn emitted_rust_position(
+        &mut self,
+        uri: &Uri,
+        text: &str,
+        module: &str,
+        symbol: Option<&str>,
+    ) -> Option<(Uri, Position)> {
+        self.refresh(uri, text);
+        let cache = self.cache_dir(uri)?;
+        let src_path = text::uri_to_path(uri)?;
+        let main_rs = text::rust_file_for(&cache, &src_path);
+        let main_text = std::fs::read_to_string(&main_rs).ok()?;
+        let rust_pos = match symbol {
+            Some(sym) => map_symbol_pos(&main_text, module, sym)?,
+            None => map_module_pos(&main_text, module)?,
+        };
+        let main_uri = text::path_to_uri(&main_rs).ok()?;
+        Some((main_uri, rust_pos))
+    }
+
     /// Forward an import specifier to rust-analyzer → the crate's `~/.cargo` source.
     fn definition_via_ra(
         &mut self,
@@ -33,18 +58,8 @@ impl Server {
         module: String,
         symbol: Option<String>,
     ) -> Option<Value> {
-        self.refresh(uri, text);
-        let cache = self.cache_dir(uri)?;
-        let src_path = text::uri_to_path(uri)?;
-        let main_rs = text::rust_file_for(&cache, &src_path);
-        let main_text = std::fs::read_to_string(&main_rs).ok()?;
-        // A symbol → its position in `use module::symbol`; no symbol (cursor on
-        // the crate name) → the crate's own position, so RA resolves the root.
-        let rust_pos = match &symbol {
-            Some(sym) => map_symbol_pos(&main_text, &module, sym)?,
-            None => map_module_pos(&main_text, &module)?,
-        };
-        let main_uri = text::path_to_uri(&main_rs).ok()?;
+        let (main_uri, rust_pos) =
+            self.emitted_rust_position(uri, text, &module, symbol.as_deref())?;
         let ra = self.ra.as_ref()?;
         let resp = ra.definition(main_uri.as_str(), rust_pos).ok()?;
         serde_json::to_value(resp).ok()
@@ -131,7 +146,7 @@ mod tests {
 
     #[test]
     fn locate_import_resolves_named_specifier() {
-        let text = "import { Adler32 } from \"adler\";";
+        let text = "import { Adler32 } from \"cargo:adler\";";
         // `Adler32` starts at character 9 on line 0.
         let (module, symbol) = locate_import(
             text,
@@ -168,13 +183,13 @@ mod tests {
 
     #[test]
     fn locate_import_resolves_crate_root_on_source_string() {
-        let text = "import { Adler32 } from \"adler\";";
-        // Cursor inside the `"adler"` source string (character 27 = the `l`).
+        let text = "import { Adler32 } from \"cargo:adler\";";
+        // Cursor inside the `"cargo:adler"` source string (character 28).
         let (module, symbol) = locate_import(
             text,
             Position {
                 line: 0,
-                character: 27,
+                character: 28,
             },
         )
         .unwrap();
