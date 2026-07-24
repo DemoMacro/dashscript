@@ -26,6 +26,8 @@ importers:
 
   packages/dashscript: {}
 
+  packages/typescript-plugin: {}
+
   packages/vscode:
     devDependencies:
       '@types/vscode':
