@@ -1,10 +1,15 @@
 //! @dashscript/typescript-plugin — a TypeScript language service plugin.
 //!
-//! Surfaces DashScript translatability diagnostics inline in the editor by
-//! decorating `getSemanticDiagnostics`: each `.ts` file is run through
-//! `ds lint --json` (cached per file version, so an unchanged file is not
-//! re-linted) and the structured diagnostics are merged into the TypeScript
-//! list with `source: "dashscript"`.
+//! Two editor features the shared `ds lsp` core cannot provide from inside the
+//! TS server:
+//! - local Rust bindgen: a relative `import "./x"` whose sibling `x.rs` exists
+//!   gets a fresh `x.d.ts` generated beside it (`ds add <x>.rs`), zero-friction.
+//! - local `.d.ts` → `.rs` go-to-definition: jumping to a bindgen declaration
+//!   redirects to the real Rust source, where rust-analyzer takes over.
+//!
+//! Translatability diagnostics and crate go-to-definition come from the shared
+//! `ds lsp` core (connected via the editor's LSP client), not this plugin — so
+//! every editor (VS Code / Zed / JetBrains) gets them uniformly.
 //!
 //! Enable in `tsconfig.json`:
 //!   "compilerOptions": { "plugins": [{ "name": "@dashscript/typescript-plugin" }] }
@@ -24,17 +29,6 @@ import { dirname, resolve } from "node:path";
 
 import type * as ts from "typescript/lib/tsserverlibrary";
 
-/** One entry from `ds lint --json` (1-based line/column, LSP convention). */
-interface DsLintDiagnostic {
-  file: string;
-  line: number;
-  column: number;
-  endLine: number;
-  endColumn: number;
-  message: string;
-  severity: "error" | "warning";
-}
-
 /** The plugin factory, in the shape TypeScript loads via tsconfig `plugins`. */
 function init(modules: { typescript: typeof ts }) {
   const ts = modules.typescript;
@@ -44,62 +38,6 @@ function init(modules: { typescript: typeof ts }) {
     logger.info("[dashscript] plugin create");
 
     const dsPath = (info.config?.dsPath as string) ?? "ds";
-    const host = info.languageServiceHost;
-
-    /** Per-file diagnostic cache keyed by script version — avoids re-linting
-     * an unchanged file on every `getSemanticDiagnostics` call. */
-    const cache = new Map<string, { version: string; diags: ts.Diagnostic[] }>();
-
-    /** Run `ds lint --json <fileName>` and convert its diagnostics to TS. */
-    function runLint(fileName: string): ts.Diagnostic[] {
-      let stdout = "";
-      try {
-        const res = spawnSync(dsPath, ["lint", "--json", fileName], {
-          encoding: "utf8",
-          windowsHide: true,
-        });
-        if (res.error) {
-          logger.info(`[dashscript] spawn failed: ${res.error.message}`);
-          return [];
-        }
-        stdout = res.stdout ?? "";
-      } catch (e) {
-        logger.info(`[dashscript] lint threw: ${(e as Error).message}`);
-        return [];
-      }
-      let parsed: DsLintDiagnostic[];
-      try {
-        parsed = JSON.parse(stdout || "[]");
-      } catch {
-        logger.info("[dashscript] non-JSON lint output (is 'ds' on PATH?)");
-        return [];
-      }
-      const sourceFile = info.languageService.getProgram()?.getSourceFile(fileName);
-      if (!sourceFile) return [];
-      return parsed
-        .map((d) => toDiagnostic(d, sourceFile))
-        .filter((d): d is ts.Diagnostic => d !== undefined);
-    }
-
-    /** Convert a 1-based line/column `ds` diagnostic to a 0-based `ts.Diagnostic`. */
-    function toDiagnostic(d: DsLintDiagnostic, file: ts.SourceFile): ts.Diagnostic | undefined {
-      try {
-        const start = file.getPositionOfLineAndCharacter(d.line - 1, d.column - 1);
-        const end = file.getPositionOfLineAndCharacter(d.endLine - 1, d.endColumn - 1);
-        return {
-          file,
-          start,
-          length: Math.max(0, end - start),
-          messageText: d.message,
-          category:
-            d.severity === "warning" ? ts.DiagnosticCategory.Warning : ts.DiagnosticCategory.Error,
-          code: 0,
-          source: "dashscript",
-        };
-      } catch {
-        return undefined;
-      }
-    }
 
     /** Relative `import "./x"` whose sibling `<x>.rs` exists — the local Rust
      * modules a DashScript project binds via bindgen. Resolved against the
@@ -140,8 +78,7 @@ function init(modules: { typescript: typeof ts }) {
       }
     }
 
-    // Pass-through proxy over the real language service, then override
-    // `getSemanticDiagnostics` to append DashScript translatability diagnostics.
+    // Pass-through proxy over the real language service.
     const proxy: ts.LanguageService = Object.create(null);
     for (const key of Object.keys(info.languageService) as Array<keyof ts.LanguageService>) {
       const original = info.languageService[key] as unknown as (...args: unknown[]) => unknown;
@@ -149,28 +86,22 @@ function init(modules: { typescript: typeof ts }) {
       proxy[key] = (...args: unknown[]) => original.apply(info.languageService, args);
     }
 
+    // Refresh local `.rs` bindgen declarations at diagnostic time (a frequent
+    // hook) so the `.d.ts` is fresh when go-to-definition needs it. The
+    // diagnostics themselves come from `ds lsp` (shared core), not this plugin.
     proxy.getSemanticDiagnostics = (fileName: string) => {
       const prior = info.languageService.getSemanticDiagnostics(fileName);
       if (!fileName.endsWith(".ts") || fileName.endsWith(".d.ts")) return prior;
-      ensureLocalRsTypes(fileName); // refresh `<x>.d.ts` for local `.rs` imports
-      const version = host.getScriptVersion(fileName);
-      const cached = cache.get(fileName);
-      let diags: ts.Diagnostic[];
-      if (cached && cached.version === version) {
-        diags = cached.diags;
-      } else {
-        diags = runLint(fileName);
-        cache.set(fileName, { version, diags });
-      }
-      return [...prior, ...diags];
+      ensureLocalRsTypes(fileName);
+      return prior;
     };
 
     /** Go-to-definition: when the target is a local `<x>.d.ts` with a sibling
      * `<x>.rs`, redirect to the `.rs` source — the developer reads the real
      * Rust, and rust-analyzer then handles symbol-level navigation inside it.
      * Best-effort position is the file head (the exact column is found by
-     * rust-analyzer once the file is open). Redirects for cargo crates land
-     * later — they need a crate `.d.ts` source first. */
+     * rust-analyzer once the file is open). Crate go-to-definition comes from
+     * `ds lsp` (shared core), not this plugin. */
     proxy.getDefinitionAtPosition = (fileName: string, position: number) => {
       const prior = info.languageService.getDefinitionAtPosition(fileName, position);
       if (!prior) return prior;

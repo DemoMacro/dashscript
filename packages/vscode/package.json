@@ -3,7 +3,7 @@
   "displayName": "DashScript",
   "version": "0.0.0",
   "private": true,
-  "description": "Language support for DashScript (.ds) — TypeScript ergonomics, Rust performance, compiled to native.",
+  "description": "DashScript editor support — connects the shared ds lsp core (crate go-to-definition + translatability diagnostics) and activates the TypeScript plugin for local .rs bindgen.",
   "categories": [
     "Programming Languages"
   ],
@@ -36,31 +36,17 @@
     "vscode:prepublish": "vp pack",
     "package": "vsce package --no-dependencies"
   },
+  "dependencies": {
+    "@dashscript/typescript-plugin": "workspace:*"
+  },
   "devDependencies": {
     "@types/vscode": "^1.125.0",
     "@vscode/vsce": "^3.9.2",
     "vscode-languageclient": "^10.1.0"
   },
   "contributes": {
-    "languages": [
-      {
-        "id": "dashscript",
-        "aliases": [
-          "DashScript",
-          "ds"
-        ],
-        "extensions": [
-          ".ds"
-        ],
-        "configuration": "./language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "dashscript",
-        "scopeName": "source.ds",
-        "path": "./syntaxes/dashscript.tmLanguage.json"
-      }
+    "typesServerPlugins": [
+      "@dashscript/typescript-plugin"
     ],
     "configuration": {
       "title": "DashScript",

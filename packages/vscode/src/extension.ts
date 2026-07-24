@@ -1,8 +1,10 @@
 //! DashScript VS Code extension entry.
 //!
-//! Wires the `.ds` language (declared statically in `package.json`) to the
-//! `ds lsp` language server over stdio. Stage 3 extends the server with crate
-//! go-to-definition via a rust-analyzer backend.
+//! Connects the shared `ds lsp` core (crate go-to-definition via rust-analyzer
+//! + translatability diagnostics) to `.ts` files over stdio, alongside the
+//! `@dashscript/typescript-plugin` (activated via `typesServerPlugins` in
+//! `package.json`) for local `.rs` bindgen and `.d.ts` → `.rs` jump. `.ts`
+//! uses VS Code's native TypeScript language — no custom grammar.
 
 import { ExtensionContext, workspace } from "vscode";
 import {
@@ -23,7 +25,7 @@ export function activate(context: ExtensionContext): void {
     debug: { command: dsPath, args: ["lsp"], transport: TransportKind.stdio },
   };
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: "file", language: "dashscript" }],
+    documentSelector: [{ scheme: "file", language: "typescript" }],
     // Forwarded to `ds lsp` so it can spawn the rust-analyzer backend.
     initializationOptions: { rustAnalyzerPath },
   };
