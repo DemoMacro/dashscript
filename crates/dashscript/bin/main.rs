@@ -82,7 +82,20 @@ fn main() -> ExitCode {
             }
             report(check::check(file.as_deref(), fix))
         }
-        Some("lint") => report(check::lint(args.next().as_deref())),
+        Some("lint") => {
+            let mut json = false;
+            let mut file: Option<String> = None;
+            for a in args.by_ref() {
+                if a == "--json" {
+                    json = true;
+                } else if !a.starts_with('-') {
+                    file = Some(a);
+                } else {
+                    return usage_exit(&format!("ds lint: unknown option '{a}'"));
+                }
+            }
+            report(check::lint(file.as_deref(), json))
+        }
         Some("fmt") => report(check::fmt(args.next().as_deref())),
         // `ds install` = ensure package deps are fetched + a Cargo.lock exists
         // (like `pnpm install` / `vp install`). No node_modules equivalent —
@@ -135,7 +148,9 @@ fn print_help() {
     println!();
     println!("Check & format:");
     println!("  check [<file>] [--fix]  Lint + format check (--fix writes fixes)");
-    println!("  lint [<file>]           Translatability check");
+    println!(
+        "  lint [<file>] [--json]  Translatability check (--json emits structured diagnostics)"
+    );
     println!("  fmt [<file>]            Format .ds in place");
     println!();
     println!("Dependencies:");
