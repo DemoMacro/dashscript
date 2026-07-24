@@ -1,4 +1,4 @@
 {
   "name": "greeter",
-  "target": "bin"
+  "version": "0.0.0"
 }

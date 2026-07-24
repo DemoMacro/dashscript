@@ -47,7 +47,7 @@ A hybrid cargo + pnpm workspace. Core logic lives only in `crates/`; everything 
 ```
 crates/
   dashscript/        the only crate — library + the `ds` binary
-                     library (src/): translator/, manifest.rs, bindgen.rs
+                     library (src/): translator/, package.rs, bindgen.rs
                        translator/
                          expressions/   one file per AST node family (literals, binary, …, call);
                                         mod.rs is the dispatch table + shared helpers only
@@ -82,12 +82,12 @@ packages/
 
 TypeScript-flavored surface. The mapping table is still growing — when adding `.ds` fixtures, follow TS conventions and keep samples minimal. Do not invent syntax the translator cannot yet map.
 
-### DashScript manifest (`manifest.json`)
+### DashScript package (`package.json`)
 
-- Use **target-prefixed** dependency keys (`rust:serde`) — they mirror `ds add <target>:<crate>` exactly.
-- Set `target` to the output shape (`bin` default — native binary; `rust` — translated crate; `wasm`/`napi` planned); `--target` overrides it on `ds build`.
-- Declare executables under `bin` (package.json `bin` → cargo `[[bin]]`): a project is **one crate** — the whole directory's `.ds` files translate into `src/<stem>.rs`, and only the `bin`/`lib` entries become cargo targets. `lib` → `[lib]`; `devDependencies` → `[dev-dependencies]`. A workspace root's shared metadata/deps inherit via `[workspace.package]`/`[workspace.dependencies]` (member `field.workspace = true`).
-- `manifest` must round-trip cleanly: every target-prefixed dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
+- Put Rust crate deps under **`dashscript.cargo.dependencies`** with bare crate names (`"serde": "1.0"` or `{ "version": "1.0", "features": [...] }`) — the same name `ds add cargo:<crate>` records (the `cargo:` prefix is optional). npm `dependencies` stay JS deps (→ `node_modules`) and never reach Cargo.toml.
+- Set `dashscript.target` to the output shape (`bin` default — native binary; `rust` — translated crate; `wasm`/`napi` planned); `--target` overrides it on `ds build`.
+- Declare executables under `bin` (package.json `bin` → cargo `[[bin]]`): a project is **one crate** — the whole directory's `.ds` files translate into `src/<stem>.rs`, and only the `bin`/`main` entries become cargo targets. `main` → `[lib]`; `dashscript.cargo.devDependencies` → `[dev-dependencies]`. A workspace root's shared metadata/deps inherit via `[workspace.package]`/`[workspace.dependencies]` (member `field.workspace = true`).
+- The package must round-trip cleanly: every `dashscript.cargo` dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
 
 ## Conformance / Support Matrix
 
@@ -142,7 +142,7 @@ Most changes fall into one of three shapes:
 | Change                     | Where                                    | Pattern                                                                                                                                                                       |
 | -------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **New AST → Rust mapping** | `translator/`                            | Add one rule for the AST node kind; add a `.ds` fixture; run `ds build --target rust` and `cargo check` the emitted Rust. Unmapped nodes must error, not silently miscompile. |
-| **New manifest field**     | `manifest/`                              | Extend the `manifest.json` reader and the `Cargo.toml` emitter together; keep target-prefixed dependency keys and normalize versions.                                         |
+| **New package field**      | `package.rs`                             | Extend the `package.json` reader and the `Cargo.toml` emitter together; keep npm and `dashscript.cargo` deps separate; normalize versions.                                    |
 | **New bindgen target**     | `bindgen/`                               | Map a Rust construct (e.g. `struct`, `enum`, `trait`) to its `.ds` declaration so editor types stay correct.                                                                  |
 | **New `ds` subcommand**    | `crates/dashscript` `bin/` + npm package | Wire a thin command to an existing core module; no logic in the CLI layer.                                                                                                    |
 

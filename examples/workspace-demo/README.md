@@ -1,6 +1,6 @@
 # workspace-demo
 
-A DashScript monorepo. A root `manifest.json` with a `workspaces` glob lists the
+A DashScript monorepo. A root `package.json` with a `workspaces` glob lists the
 members (`apps/*`), and `ds build` at the root compiles them under **one cargo
 workspace** — a shared `target/` and `Cargo.lock`, so a dependency two members
 use compiles once (cargo's hoisted-`node_modules`, the way pnpm hoists a shared
@@ -8,9 +8,9 @@ dep into the root `node_modules`).
 
 ```
 workspace-demo/
-  manifest.json          # { "workspaces": ["apps/*"] } — the workspace root
+  package.json          # { "workspaces": ["apps/*"] } — the workspace root
   apps/
-    greeter/             # a member: its own manifest.json + main.ds
+    greeter/             # a member: its own package.json + main.ds
     counter/             # another member
 ```
 

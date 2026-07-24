@@ -1,0 +1,18 @@
+{
+  "name": "feature-tour",
+  "version": "0.0.0",
+  "bin": {
+    "arrays": "arrays.ds",
+    "classes": "classes.ds",
+    "control-flow": "control-flow.ds",
+    "declarations": "declarations.ds",
+    "destructuring": "destructuring.ds",
+    "functions": "functions.ds",
+    "globals": "globals.ds",
+    "math": "math.ds",
+    "numbers": "numbers.ds",
+    "operators": "operators.ds",
+    "records": "records.ds",
+    "strings": "strings.ds"
+  }
+}

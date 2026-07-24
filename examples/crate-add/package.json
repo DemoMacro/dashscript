@@ -1,0 +1,11 @@
+{
+  "name": "crate-add",
+  "version": "0.0.0",
+  "dashscript": {
+    "cargo": {
+      "dependencies": {
+        "adler": "1.0.2"
+      }
+    }
+  }
+}

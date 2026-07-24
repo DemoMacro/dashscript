@@ -10,10 +10,10 @@ type names keep their `PascalCase`.
 
 ## Files
 
-| File            | Purpose                                          |
-| --------------- | ------------------------------------------------ |
-| `main.ds`       | The program source.                              |
-| `manifest.json` | Project manifest: target backend + dependencies. |
+| File           | Purpose                                             |
+| -------------- | --------------------------------------------------- |
+| `main.ds`      | The program source.                                 |
+| `package.json` | Project manifest: npm fields + `dashscript` config. |
 
 ## Run
 

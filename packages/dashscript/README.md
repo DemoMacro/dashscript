@@ -11,8 +11,8 @@
 - 🦀 **TypeScript → Rust → native binary** — write TypeScript-flavored `.ds`, compile to a native binary (or a Rust crate with `--target rust`)
 - ⚡ **Powered by oxc** — reuses [oxc](https://oxc.rs/) for parsing, lint, and format; no reimplementation
 - 📦 **One package** — `dashscript` provides the `ds` CLI, the core, and types
-- 🗂️ **`manifest.json` → `Cargo.toml`** — target-prefixed dependencies (`rust:serde`) compile straight to Cargo
-- 🔌 **Auto type hints** — `ds add rust:<crate>` generates `.ds` declarations for any Rust crate
+- 🗂️ **`package.json` → `Cargo.toml`** — Rust crate deps under `dashscript.cargo` compile straight to Cargo
+- 🔌 **Auto type hints** — types for any Rust crate come straight from its source (zero stubs); `ds add <file>.rs` bindgens a local Rust file to `.ds`
 - 🛠️ **Bundled toolchain** — DashScript manages its own pinned Rust toolchain; no separate `rustup` install
 
 ## Installation
@@ -45,26 +45,30 @@ const message: string = greet("DashScript");
 $ ds main.ds                      # run a file directly (like `node a.js`)
 $ ds build main.ds                # → dist/<name> — a native binary (default)
 $ ds build main.ds --target rust  # → dist/<name>/ — the translated Rust crate
-$ ds run <script>                 # run a manifest.json script (like `pnpm run`)
+$ ds run <script>                 # run a package.json script (like `pnpm run`)
 ```
 
-`ds main.ds` runs a file directly (translate → compile cached → run). `ds build` parses with oxc, translates the AST to idiomatic Rust, and compiles a **native binary** into `dist/<name>` (the way `vp pack` ships a runnable artifact); `--target rust` stops at the Rust crate. Both reuse the in-project cache (`.cache/dash/<name>/`, or `~/.cache/dash/` for a lone file). `ds run <script>` runs a shell command from `manifest.json` `scripts` (like `pnpm run`).
+`ds main.ds` runs a file directly (translate → compile cached → run). `ds build` parses with oxc, translates the AST to idiomatic Rust, and compiles a **native binary** into `dist/<name>` (the way `vp pack` ships a runnable artifact); `--target rust` stops at the Rust crate. Both reuse the in-project cache (`.cache/dash/<name>/`, or `~/.cache/dash/` for a lone file). `ds run <script>` runs a shell command from `package.json` `scripts` (like `pnpm run`).
 
-### Declare dependencies — `manifest.json` → `Cargo.toml`
+### Declare dependencies — `package.json` → `Cargo.toml`
 
-`manifest.json` is the **package.json ∩ Cargo.toml intersection** — `bin` declares a project's executables (package.json `bin` → cargo `[[bin]]`), so one project compiles to several binaries; `lib`/`devDependencies` map to `[lib]`/`[dev-dependencies]`. Dependencies carry a `rust:` target prefix. On `ds build`, the manifest is translated into a `Cargo.toml`:
+`package.json` is the one manifest every JS tool already reads. Standard npm fields map straight to cargo: `bin` declares a project's executables (package.json `bin` → cargo `[[bin]]`), so one project compiles to several binaries; `main` → `[lib]`; Rust crate deps under `dashscript.cargo.dependencies` → `[dependencies]` (npm `dependencies` stay JS deps, never reaching Cargo.toml). On `ds build`, the package is translated into a `Cargo.toml`:
 
 ```json
 {
   "name": "my-app",
-  "target": "bin",
   "bin": {
     "serve": "serve.ds",
     "migrate": "migrate.ds"
   },
-  "dependencies": {
-    "rust:serde": "1.0",
-    "rust:tokio": "1.0"
+  "dashscript": {
+    "target": "bin",
+    "cargo": {
+      "dependencies": {
+        "serde": "1.0",
+        "tokio": "1.0"
+      }
+    }
   }
 }
 ```
@@ -72,10 +76,10 @@ $ ds run <script>                 # run a manifest.json script (like `pnpm run`)
 ### Use a Rust crate with type hints
 
 ```bash
-$ ds add rust:serde
+$ ds add cargo:serde
 ```
 
-`ds add` runs **bindgen** — it reads a Rust crate and emits a `.ds` declaration, so importing the crate gives you editor completion and type checking.
+`ds add cargo:<crate>` fetches the crate via cargo and records it in `package.json` — **no `.ds` stub is generated**. Rust is statically typed, so the crate's own source (in `~/.cargo`) is the complete type truth, read directly by the editor the way rust-analyzer reads its deps. For a local Rust file, `ds add <file>.rs` runs bindgen to emit a `.ds` declaration beside it.
 
 ### Check & format (powered by oxc)
 
@@ -90,19 +94,19 @@ $ ds fmt <file>    # format .ds in place (in-process)
 | Command                                   | Description                                                                                                                                      |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `ds <file.ds>`                            | Run a file directly — translate → compile (cached) → run (like `node a.js`)                                                                      |
-| `ds run <script>`                         | Run a `manifest.json` script (like `pnpm run`)                                                                                                   |
+| `ds run <script>`                         | Run a `package.json` script (like `pnpm run`)                                                                                                    |
 | `ds build [<file>] [--target] [--filter]` | Compile a native binary in `dist/<name>` (at a workspace root, builds all members; `--filter <name>` picks one; `--target rust` emits the crate) |
 | `ds lint <file>`                          | Translatability check (in-process, on the oxc AST)                                                                                               |
 | `ds check <file>`                         | Lint + format check, like `vp check` (in-process)                                                                                                |
 | `ds fmt <file>`                           | Format `.ds` in place (in-process)                                                                                                               |
 | `ds install`                              | Fetch manifest deps via cargo + write `Cargo.lock` (like `pnpm install`)                                                                         |
-| `ds add rust:<crate>`                     | Fetch crate via cargo + record `rust:<crate>` in `manifest.json`                                                                                 |
+| `ds add cargo:<crate>`                    | Fetch crate via cargo + record under `dashscript.cargo.dependencies` (prefix optional)                                                           |
 | `ds add <file>.rs`                        | Bindgen a local Rust file → `<stem>.ds` declaration                                                                                              |
 | `ds cache clean`                          | Remove the in-project `.cache/`                                                                                                                  |
 
 ## Under the Hood
 
-`dashscript` is a TS → Rust transpiler. It reuses oxc for the TypeScript-flavored front end and owns only the AST → Rust mapping table, the `manifest.json` → `Cargo.toml` translation, and Rust-crate → `.ds` bindgen. Correctness of generated Rust is delegated to `cargo check` / `cargo clippy`.
+`dashscript` is a TS → Rust transpiler. It reuses oxc for the TypeScript-flavored front end and owns only the AST → Rust mapping table, the `package.json` → `Cargo.toml` translation, and Rust-crate → `.ds` bindgen. Correctness of generated Rust is delegated to `cargo check` / `cargo clippy`.
 
 ## License
 

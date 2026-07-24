@@ -16,16 +16,20 @@ This:
 
 - downloads `adler` (and all transitive deps) into cargo's global registry
   (`~/.cargo`) via `cargo add` — there is no second store;
-- records `rust:adler = "<version>"` in `manifest.json`.
+- records `adler = "<version>"` under `dashscript.cargo.dependencies` in
+  `package.json`.
 
-`manifest.json` afterwards:
+`package.json` afterwards:
 
 ```json
 {
   "name": "crate-add",
-  "target": "bin",
-  "dependencies": {
-    "rust:adler": "1.0.2"
+  "dashscript": {
+    "cargo": {
+      "dependencies": {
+        "adler": "1.0.2"
+      }
+    }
   }
 }
 ```
@@ -52,12 +56,12 @@ function main(): void {
 ```
 
 `ds check main.ds` reports no issues (the crate import is translatable), and
-`ds build main.ds` compiles `adler` (resolved from `manifest.json`) into a
+`ds build main.ds` compiles `adler` (resolved from `package.json`) into a
 native binary in `dist/` — reusing the source `ds add` already fetched.
 
 ## Build reuses cargo's cache (no re-download)
 
-`ds build` turns `manifest.json` into a `Cargo.toml` and compiles in
+`ds build` turns `package.json` into a `Cargo.toml` and compiles in
 `.cache/dash/<name>/`. cargo reuses the `~/.cargo` source that `ds add`
 already fetched — nothing is downloaded twice, and repeat builds are
 incremental. (Running `ds add` and `ds build` separately is the intended
@@ -77,7 +81,7 @@ type stubs. Rust is statically typed, so the source is the complete truth.
 ds remove adler
 ```
 
-Removes `rust:adler` from `manifest.json`.
+Removes `adler` from `package.json`.
 
 ## License
 

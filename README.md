@@ -5,13 +5,13 @@
 ![GitHub](https://img.shields.io/github/license/DemoMacro/dashscript)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
 
-> **TypeScript ergonomics, Rust performance, compiled to native.** A typed, TypeScript-flavored language (`.ds`) that compiles to **native binaries** via idiomatic **Rust** (`wasm` / `napi` outputs planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, with `ds check` / `ds fmt` built on its AST in-process, `ds build` / `ds run` caching builds in-project, dependencies declared in a `manifest.json` that lowers to `Cargo.toml`, and type hints for any Rust crate drawn straight from its source.
+> **TypeScript ergonomics, Rust performance, compiled to native.** A typed, TypeScript-flavored language (`.ds`) that compiles to **native binaries** via idiomatic **Rust** (`wasm` / `napi` outputs planned). Write TypeScript-flavored code, reuse [`oxc`](https://oxc.rs/) for parsing, with `ds check` / `ds fmt` built on its AST in-process, `ds build` / `ds run` caching builds in-project, dependencies declared in a `package.json` that lowers to `Cargo.toml`, and type hints for any Rust crate drawn straight from its source.
 
 ## Packages
 
-| Package                                       | Version                                         | Description                                                                                                                |
-| --------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| [dashscript](./packages/dashscript/README.md) | ![npm](https://img.shields.io/npm/v/dashscript) | The `ds` toolchain in one package — translates oxc AST → Rust, `manifest.json` → `Cargo.toml`, bindgen, CLI, editor types. |
+| Package                                       | Version                                         | Description                                                                                                               |
+| --------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| [dashscript](./packages/dashscript/README.md) | ![npm](https://img.shields.io/npm/v/dashscript) | The `ds` toolchain in one package — translates oxc AST → Rust, `package.json` → `Cargo.toml`, bindgen, CLI, editor types. |
 
 ## Quick Start
 
@@ -60,26 +60,30 @@ fn main() {
 ### Run
 
 ```bash
-$ ds run <script>    # run a manifest.json script (like `pnpm run`)
+$ ds run <script>    # run a package.json script (like `pnpm run`)
 ```
 
-`ds run` runs a shell command from `manifest.json` `scripts` (`"start": "ds main.ds"`, `"test": "cargo test"`, …) through the system shell, like `pnpm run`. (`ds run` is always explicit — running a file is `ds <file.ds>`.)
+`ds run` runs a shell command from `package.json` `scripts` (`"start": "ds main.ds"`, `"test": "cargo test"`, …) through the system shell, like `pnpm run`. (`ds run` is always explicit — running a file is `ds <file.ds>`.)
 
-### Declare dependencies — `manifest.json` → `Cargo.toml`
+### Declare dependencies — `package.json` → `Cargo.toml`
 
-DashScript projects use a **`manifest.json`** — a dedicated file, so it never clashes with npm's `package.json`. It is the **package.json ∩ Cargo.toml intersection**: `bin` (package.json `bin` → cargo `[[bin]]`) declares a project's executables, so **one project compiles to several binaries**; `lib` → `[lib]`, `devDependencies` → `[dev-dependencies]`. Dependencies carry a **target prefix** (`rust:`, the backend DashScript targets). On `ds build`, the manifest is translated into a `Cargo.toml`:
+DashScript projects use a **`package.json`** — the one manifest every JS tool already reads. Standard npm fields map straight to cargo: `bin` (package.json `bin` → cargo `[[bin]]`) declares a project's executables, so **one project compiles to several binaries**; `main` → `[lib]`; Rust crate deps under `dashscript.cargo.dependencies` → `[dependencies]` (npm `dependencies` stay JS deps and never reach Cargo.toml); `dashscript.cargo.devDependencies` → `[dev-dependencies]`. On `ds build`, the package is translated into a `Cargo.toml`:
 
 ```json
 {
   "name": "my-app",
-  "target": "bin",
   "bin": {
     "serve": "serve.ds",
     "migrate": "migrate.ds"
   },
-  "dependencies": {
-    "rust:serde": "1.0",
-    "rust:tokio": "1.0"
+  "dashscript": {
+    "target": "bin",
+    "cargo": {
+      "dependencies": {
+        "serde": "1.0",
+        "tokio": "1.0"
+      }
+    }
   }
 }
 ```
@@ -87,11 +91,11 @@ DashScript projects use a **`manifest.json`** — a dedicated file, so it never 
 ### Use a Rust crate with full type hints
 
 ```bash
-# fetch the crate and generate a .ds type declaration for it
-$ ds add rust:serde
+# fetch the crate — no .ds stub; types come straight from the crate source
+$ ds add cargo:serde
 ```
 
-`ds add` runs **bindgen** — it reads a Rust crate and emits a `.ds` declaration file, so importing the crate in `.ds` gives you editor completion and type checking. There is no separate `ds gen` step.
+`ds add cargo:<crate>` fetches the crate via cargo and records it in `package.json`, but generates **no `.ds` stub** — Rust is statically typed, so the crate's own source (in `~/.cargo`) is the complete type truth, read directly by the editor the way rust-analyzer reads its deps. For a local Rust file, `ds add <file>.rs` runs bindgen to emit a `.ds` declaration beside it. There is no separate `ds gen` step.
 
 ### Check & format
 
