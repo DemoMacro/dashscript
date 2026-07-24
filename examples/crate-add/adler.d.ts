@@ -3,7 +3,7 @@
 // cargo:<crate>` will bindgen this from the crate's own source in ~/.cargo —
 // the way rust-analyzer reads its deps — so this hand-written stub is a
 // placeholder until that lands. Adler32 is adler's rolling-hash state type.
-declare module "adler" {
+declare module "cargo:adler" {
   export class Adler32 {
     constructor();
     update(data: ArrayLike<number>): void;

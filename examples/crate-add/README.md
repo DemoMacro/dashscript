@@ -36,12 +36,12 @@ This:
 
 ## The source: `main.ts`
 
-[`main.ts`](./main.ts) imports the added crate's type and uses it — the same
-`import { X } from "crate"` syntax as a local module import, lowered to
-`use crate::X`:
+[`main.ts`](./main.ts) imports the added crate's type and uses it — the
+`cargo:` prefix (aligned with Deno's `npm:`/`jsr:`/`node:` family markers)
+marks a Cargo crate, lowered to `use crate::X`:
 
-```ds
-import { Adler32 } from "adler";
+```ts
+import { Adler32 } from "cargo:adler";
 
 function emptySlot(): Adler32 | null {
   return null;
@@ -55,7 +55,7 @@ function main(): void {
 }
 ```
 
-`ds check main.ts` reports no issues (the crate import is translatable), and
+`ds lint main.ts` reports no issues (the crate import is translatable), and
 `ds build main.ts` compiles `adler` (resolved from `package.json`) into a
 native binary in `dist/` — reusing the source `ds add` already fetched.
 

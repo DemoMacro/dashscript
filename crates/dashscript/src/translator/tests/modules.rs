@@ -42,31 +42,48 @@ fn import_groups_multiple_names() {
 }
 
 #[test]
-fn import_bare_crate_emits_use() {
-    // A bare specifier is a crate added via `ds add`; it lowers to a `use`.
+fn import_cargo_emits_use() {
+    // `cargo:serde` is a Cargo crate (the `cargo:` family marker, aligned
+    // with Deno's `npm:`/`jsr:`); it lowers to `use serde::foo`.
     let rust = Translator::new()
-        .translate("import { foo } from \"serde\";")
+        .translate("import { foo } from \"cargo:serde\";")
         .expect("should translate");
     assert!(rust.contains("use serde::foo"), "got: {rust}");
 }
 
 #[test]
-fn import_bare_crate_hyphen_to_underscore() {
+fn import_cargo_hyphen_to_underscore() {
     // A crate name may contain a hyphen, but a `use` path / module ident may
-    // not — `cfg-if` becomes `cfg_if`.
+    // not — `cargo:cfg-if` becomes `use cfg_if::x`.
     let rust = Translator::new()
-        .translate("import { x } from \"cfg-if\";")
+        .translate("import { x } from \"cargo:cfg-if\";")
         .expect("should translate");
     assert!(rust.contains("use cfg_if::x"), "got: {rust}");
     assert!(!rust.contains("cfg-if"), "hyphen leaked: {rust}");
 }
 
 #[test]
-fn collect_skips_bare_crate_import() {
-    // A bare specifier is a crate, not a local `.ts` file — it must not be
+fn collect_skips_cargo_import() {
+    // A `cargo:` import is a crate, not a local `.ts` file — it must not be
     // collected for module assembly (only relative imports are).
-    let imports = Translator::new().imports("import { foo } from \"serde\";");
-    assert!(imports.is_empty(), "bare import collected: {imports:?}");
+    let imports = Translator::new().imports("import { foo } from \"cargo:serde\";");
+    assert!(imports.is_empty(), "cargo import collected: {imports:?}");
+}
+
+#[test]
+fn bare_import_is_unsupported() {
+    // A bare specifier (`lodash`) has no resolver — DashScript supports only
+    // `cargo:` and relative imports. The translator emits no `use`, and
+    // `check` flags it as unsupported.
+    let rust = Translator::new()
+        .translate("import { x } from \"lodash\";")
+        .expect("should translate");
+    assert!(
+        !rust.contains("use lodash"),
+        "bare import emitted a use: {rust}"
+    );
+    let diags = Translator::new().check("import { x } from \"lodash\";");
+    assert!(!diags.is_empty(), "bare import not flagged by check");
 }
 
 #[test]
@@ -92,7 +109,7 @@ fn import_default_value_emits_use() {
     // A default import (`import foo`) lowers like a named one: Rust crates have
     // no default export, so the local name names the crate item directly.
     let rust = Translator::new()
-        .translate("import foo from \"serde\";")
+        .translate("import foo from \"cargo:serde\";")
         .expect("should translate");
     assert!(rust.contains("use serde::foo"), "got: {rust}");
 }
@@ -101,7 +118,7 @@ fn import_default_value_emits_use() {
 fn import_default_type_keeps_pascalcase() {
     // A default import naming a type keeps PascalCase, like a named type import.
     let rust = Translator::new()
-        .translate("import Foo from \"serde\";")
+        .translate("import Foo from \"cargo:serde\";")
         .expect("should translate");
     assert!(rust.contains("use serde::Foo"), "got: {rust}");
 }

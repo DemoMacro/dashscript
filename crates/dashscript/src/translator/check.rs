@@ -190,7 +190,11 @@ fn is_entry_call(stmt: &Statement) -> bool {
 /// A human message + span for a top-level statement the translator skips.
 fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
     match stmt {
-        Statement::ImportDeclaration(s) => err("module `import` is not supported yet", s.span),
+        Statement::ImportDeclaration(s) => err(
+            "bare module import is not supported — use `cargo:<crate>` for a \
+             Rust crate or `./<file>` for a local module",
+            s.span,
+        ),
         Statement::ExportNamedDeclaration(s) => err("module `export` is not supported yet", s.span),
         Statement::ExportDefaultDeclaration(s) => {
             err("module `export default` is not supported yet", s.span)

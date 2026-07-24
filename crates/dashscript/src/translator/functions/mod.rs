@@ -63,9 +63,11 @@ pub fn translate_statement(
             }
             items
         }
-        // `import { foo, bar } from "./other"` → `use other::{foo, bar};`. A
-        // bare specifier (`"serde"`) lowers the same way (`use serde::{…}`).
-        // A default/namespace import has no named specifier and yields `[]`.
+        // `import { foo, bar } from "./other"` → `use other::{foo, bar};`;
+        // `import { x } from "cargo:serde"` → `use serde::{x}`. A bare
+        // specifier (`"lodash"`) has no resolver → `module_ident` returns
+        // `None` → emits nothing, and `check` flags it unsupported. A
+        // default/namespace import has no named specifier and yields `[]`.
         Statement::ImportDeclaration(imp) => {
             let Some(mod_ident) = super::imports::module_ident(&imp.source.value) else {
                 return Vec::new();

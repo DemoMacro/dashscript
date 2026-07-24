@@ -1,9 +1,10 @@
 //! `.ts` module imports. A relative import (`import { x } from "./other"`)
 //! resolves to a local `.ts` file, so `ds build` emits one Rust module per
-//! dependency (the matching `mod` declarations and `use` aliases). A *bare*
-//! specifier (`import { X } from "serde"`) is a crate added via `ds add`: it is
-//! not a local file (so it is excluded from module assembly below) but still
-//! lowers to `use serde::X` — see [`module_ident`].
+//! dependency (the matching `mod` declarations and `use` aliases). A `cargo:`
+//! import (`import { X } from "cargo:serde"`) names a Cargo crate added via
+//! `ds add`: it is not a local file (so it is excluded from module assembly
+//! below) but still lowers to `use serde::X` — see [`module_ident`]. A bare
+//! specifier (`lodash`) has no resolver — `check` reports it.
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
@@ -37,9 +38,9 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
             let Statement::ImportDeclaration(imp) = stmt else {
                 return None;
             };
-            // A bare specifier is a crate (provided by cargo via `ds add`), not
-            // a local `.ts` file — only relative imports are assembled into
-            // `mod` decls.
+            // Only relative imports are local `.ts` files assembled into
+            // `mod` decls — `cargo:` names a crate, a bare specifier is an
+            // unsupported npm import.
             if !imp.source.value.starts_with('.') {
                 return None;
             }
@@ -52,12 +53,17 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
         .collect()
 }
 
-/// The Rust module name for an import source. A relative path (`./other`) maps
-/// to the local file stem (`other`); a bare specifier (`serde`, `cfg-if`) maps
-/// to the crate's module ident (`serde`, `cfg_if` — hyphens become underscores,
-/// since a `use` path may not contain `-`).
+/// The Rust module name for an import source. Three families, aligned with
+/// Deno's `npm:`/`jsr:`/`node:` markers (`.temp/architecture-proposal.md`):
+/// - `cargo:adler` → the crate's module ident (`adler`; `cfg-if` → `cfg_if` —
+///   a `use` path may not contain a hyphen).
+/// - `./other` → the local file stem (`other`).
+/// - a bare specifier (`lodash`) → `None`: an npm import DashScript has no
+///   resolver for — `check` reports it, the translator emits nothing.
 pub(crate) fn module_ident(source: &str) -> Option<Ident> {
-    if source.starts_with('.') {
+    if let Some(rest) = source.strip_prefix("cargo:") {
+        Some(bindings::crate_mod(rest))
+    } else if source.starts_with('.') {
         let stem = source.rsplit(['/', '\\']).next()?;
         let stem = stem.trim_end_matches(".ts");
         if stem.is_empty() || stem == "." || stem == ".." {
@@ -65,8 +71,7 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
         }
         Some(bindings::snake(stem))
     } else {
-        // Bare specifier: a crate, fetched by `ds add` and resolved by cargo.
-        Some(bindings::crate_mod(source))
+        None
     }
 }
 
@@ -90,7 +95,7 @@ pub(crate) fn named_local(spec: &ImportDeclarationSpecifier) -> Option<Ident> {
     }
 }
 
-/// One symbol brought in by a bare-crate import (`import { X } from "crate"`),
+/// One symbol brought in by a `cargo:` import (`import { X } from "cargo:crate"`),
 /// in the form the translator emits in the Rust `use` clause, plus the byte
 /// span of the local binding in the `.ts` source — so the language server can
 /// map a cursor position onto the symbol.
@@ -103,8 +108,8 @@ pub struct CrateImportSymbol {
     pub span: Span,
 }
 
-/// A bare-crate import (`import { X } from "serde"`) — not a local `.ts` file
-/// but a crate fetched via `ds add`. The module ident is hyphen-normalized
+/// A `cargo:` import (`import { X } from "cargo:serde"`) — not a local `.ts`
+/// file but a crate fetched via `ds add`. The module ident is hyphen-normalized
 /// (`cfg-if` → `cfg_if`); each symbol name matches what the translator writes
 /// in the `use` clause.
 #[derive(Debug, Clone)]
@@ -113,13 +118,13 @@ pub struct CrateImport {
     pub module: String,
     /// The symbols imported from this crate, with their `.ts` byte spans.
     pub symbols: Vec<CrateImportSymbol>,
-    /// The `.ts` byte span of the import source string (`"adler"`), for
+    /// The `.ts` byte span of the import source string (`"cargo:adler"`), for
     /// cursor hit-testing on the crate name (go-to-definition → crate root).
     pub source_span: Span,
 }
 
-/// The bare-crate imports in a `.ts` file (`import { X } from "crate"`), with
-/// each symbol's `.ts` byte span. Used by `ds lsp` to resolve a
+/// The `cargo:` imports in a `.ts` file (`import { X } from "cargo:crate"`),
+/// with each symbol's `.ts` byte span. Used by `ds lsp` to resolve a
 /// go-to-definition request on an import specifier to the crate's source.
 pub(crate) fn collect_crate_imports(source: &str) -> Vec<CrateImport> {
     let allocator = Allocator::default();
@@ -131,10 +136,9 @@ pub(crate) fn collect_crate_imports(source: &str) -> Vec<CrateImport> {
             let Statement::ImportDeclaration(imp) = stmt else {
                 return None;
             };
-            // Relative imports are local modules, not crates.
-            if imp.source.value.starts_with('.') {
-                return None;
-            }
+            // Only `cargo:` imports are crate imports — a bare specifier is an
+            // unsupported npm import, a relative import is a local `.ts` module.
+            imp.source.value.strip_prefix("cargo:")?;
             let module = module_ident(&imp.source.value)?.to_string();
             let symbols = imp
                 .specifiers
