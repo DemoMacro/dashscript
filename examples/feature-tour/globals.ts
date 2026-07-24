@@ -13,3 +13,6 @@ function main(): void {
   // string coercion via +
   console.log("concat:", "answer: " + 42);
 }
+
+main();
+export {};

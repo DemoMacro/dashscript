@@ -291,7 +291,7 @@ pub(super) fn translate_for_of(
 }
 
 /// `for (const k in m)` → `for k in m.keys().cloned()` — iterates a map's keys
-/// as owned `String`s (the `.ds` `Record` is a `HashMap<String, …>`). A struct
+/// as owned `String`s (the `.ts` `Record` is a `HashMap<String, …>`). A struct
 /// source has no keys iterator, so only a `Record`/`HashMap` is supported.
 pub(super) fn translate_for_in(
     stmt: &ForInStatement,
@@ -312,7 +312,7 @@ pub(super) fn translate_for_in(
 
 /// `for (init; test; update) body` → `{ init; while test { body; update; } }`.
 ///
-/// `.ds` `number` is `f64`, and `Range<f64>` isn't iterable in Rust, so a
+/// `.ts` `number` is `f64`, and `Range<f64>` isn't iterable in Rust, so a
 /// C-style loop decomposes into a `while` (not `for i in 0..n`). It is wrapped
 /// in a block so the loop's own bindings (e.g. `i`) don't collide across loops.
 /// A `continue` inside the body skips the `update` step — a known limitation;

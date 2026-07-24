@@ -2,7 +2,7 @@
 //!
 //! DashScript reuses `oxc` for parsing and linting, but `oxc`'s Rust layer has
 //! no type checker (its type-aware linting runs in a separate Go binary). So a
-//! `.ds` program's types come from the annotations the author wrote, which we
+//! `.ts` program's types come from the annotations the author wrote, which we
 //! record as we walk declarations and statements. `Ctx` carries that record
 //! into the expression layer so type-sensitive mappings — `x === null` →
 //! `x.is_none()`, `a ?? b`, enum construction, array callbacks — can decide
@@ -18,14 +18,14 @@ use super::flavor::NumberFlavor;
 use super::registry::{TypeRegistry, VariantShape};
 
 /// A function body's locals: their declared types, plus the set of names that
-/// are mutated (assigned / updated / mutator-method receiver) — so a `.ds`
+/// are mutated (assigned / updated / mutator-method receiver) — so a `.ts`
 /// `let` only becomes `let mut` when the binding is actually changed.
 pub struct Locals {
     types: HashMap<String, Path>,
     pub mutated: HashSet<String>,
     pub member_mutated: HashSet<String>,
     /// This function's reference parameters (member-mutated but not rebound):
-    /// a `.ds` `c: number[]` the body mutates via `c[i] = v` becomes `c: &mut
+    /// a `.ts` `c: number[]` the body mutates via `c[i] = v` becomes `c: &mut
     /// Vec<f64>`, so an in-body `array_set` on it reborrows instead of taking
     /// `&mut` of an owned binding.
     pub ref_params: HashSet<String>,
@@ -159,7 +159,7 @@ impl<'a> Ctx<'a> {
 
     /// The per-file `SymbolId` → Rust-name table. Binding and reference
     /// occurrences resolve their Rust identifier through this (not the lossy
-    /// `snake(name)` string), so two `.ds` bindings that fold to the same
+    /// `snake(name)` string), so two `.ts` bindings that fold to the same
     /// snake-name (e.g. `N` and `n`) get distinct Rust names.
     #[must_use]
     pub fn names(&self) -> &'a super::name_table::NameTable<'a> {
@@ -211,21 +211,21 @@ impl<'a> Ctx<'a> {
     }
 
     /// The parameter type paths declared by the function named `name` (original
-    /// `.ds` spelling), if any. Each entry is `None` for an unannotated param.
+    /// `.ts` spelling), if any. Each entry is `None` for an unannotated param.
     #[must_use]
     pub fn function_params(&self, name: &str) -> Option<&'a [Option<Path>]> {
         self.registry.functions.get(name).map(Vec::as_slice)
     }
 
     /// Per-parameter "has a default initializer?" flags for the function named
-    /// `name` (original `.ds` spelling), if any.
+    /// `name` (original `.ts` spelling), if any.
     #[must_use]
     pub fn function_defaults(&self, name: &str) -> Option<&'a [bool]> {
         self.registry.function_defaults.get(name).map(Vec::as_slice)
     }
 
     /// Per-parameter "is a reference parameter?" (`&mut`) flags for the function
-    /// named `name` (original `.ds` spelling), if any. A call site passes
+    /// named `name` (original `.ts` spelling), if any. A call site passes
     /// `&mut arg` (not a clone) at those positions so the callee's mutation is
     /// visible — ES reference semantics for arrays/objects.
     #[must_use]

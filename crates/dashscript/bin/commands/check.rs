@@ -1,25 +1,25 @@
 //! `ds check`, `ds lint`, and `ds fmt`: in-process translatability and format,
 //! built on the `oxc_parser` AST (no oxlint/oxfmt dependency). Each takes an
-//! optional file — no argument runs over every `.ds` in the project, like
+//! optional file — no argument runs over every `.ts` in the project, like
 //! `vp check` / `oxlint`. `ds check --fix` writes formatting fixes in place.
 
 use std::{error::Error, fs, path::PathBuf, process::ExitCode};
 
 use dashscript::Translator;
 
-use super::project::collect_ds_files;
+use super::project::collect_ts_files;
 
-/// Resolve the `.ds` targets for a check/lint/fmt command: a named file, or —
-/// with no argument — every `.ds` under the project root. Errors when no
-/// argument is given and no `.ds` files are found.
+/// Resolve the `.ts` targets for a check/lint/fmt command: a named file, or —
+/// with no argument — every `.ts` under the project root. Errors when no
+/// argument is given and no `.ts` files are found.
 fn targets_for(target: Option<&str>) -> Result<Vec<PathBuf>, Box<dyn Error>> {
     match target {
         Some(file) => Ok(vec![PathBuf::from(file)]),
         None => {
-            let files = collect_ds_files();
+            let files = collect_ts_files();
             if files.is_empty() {
                 Err(
-                    "ds: no .ds files found (pass <file.ds>, or run inside a DashScript project)"
+                    "ds: no .ts files found (pass <file.ts>, or run inside a DashScript project)"
                         .into(),
                 )
             } else {
@@ -33,7 +33,7 @@ fn targets_for(target: Option<&str>) -> Result<Vec<PathBuf>, Box<dyn Error>> {
 /// translatability plus format. Without `--fix`, a format mismatch is reported
 /// (no write); with `--fix`, the formatted source is written. Translatability
 /// issues are always reported (they are structural and cannot be auto-fixed).
-/// No argument → every `.ds` in the project. Fails if any file surfaces an
+/// No argument → every `.ts` in the project. Fails if any file surfaces an
 /// issue `--fix` cannot clear.
 pub(crate) fn check(target: Option<&str>, fix: bool) -> Result<ExitCode, Box<dyn Error>> {
     let mut any_failed = false;
@@ -81,7 +81,7 @@ pub(crate) fn check(target: Option<&str>, fix: bool) -> Result<ExitCode, Box<dyn
 
 /// Lint translatability only (`ds lint [<file>] [--json]`, the old `ds check`):
 /// syntax errors (from `oxc_parser`) plus any top-level statement the
-/// translator cannot lower to Rust. No argument → every `.ds` in the project.
+/// translator cannot lower to Rust. No argument → every `.ts` in the project.
 /// No external oxlint dependency.
 ///
 /// `--json` emits a machine-readable array (one object per diagnostic, 1-based
@@ -183,8 +183,8 @@ fn byte_to_line_col(source: &str, offset: usize) -> (usize, usize) {
     (line, column)
 }
 
-/// Format `.ds` in place with `oxc_codegen` (`ds fmt [<file>]`). No argument →
-/// every `.ds` in the project. No external oxfmt dependency.
+/// Format `.ts` in place with `oxc_codegen` (`ds fmt [<file>]`). No argument →
+/// every `.ts` in the project. No external oxfmt dependency.
 pub(crate) fn fmt(target: Option<&str>) -> Result<ExitCode, Box<dyn Error>> {
     for path in targets_for(target)? {
         let source = fs::read_to_string(&path)

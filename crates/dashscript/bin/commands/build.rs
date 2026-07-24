@@ -21,10 +21,10 @@ use super::project::{
 /// `--filter` (workspace member).
 pub(crate) type BuildArgs = (Option<String>, Option<String>, Option<String>);
 
-/// Parse `ds build` arguments: an optional `.ds` file, an optional
+/// Parse `ds build` arguments: an optional `.ts` file, an optional
 /// `--target <bin|rust>` override, and an optional `--filter <name>` (workspace
 /// member). Returns an error message on misuse (shown as usage). No file means
-/// build the project entry (`package.json bin`/`main.ds`) — or, at a workspace
+/// build the project entry (`package.json bin`/`main.ts`) — or, at a workspace
 /// root, every member.
 pub(crate) fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
     let mut file = None;
@@ -39,7 +39,7 @@ pub(crate) fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
                     i += 2;
                 } else {
                     return Err(
-                        "usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]"
+                        "usage: ds build [<file.ts>] [--target <bin|rust>] [--filter <name>]"
                             .into(),
                     );
                 }
@@ -50,7 +50,7 @@ pub(crate) fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
                     i += 2;
                 } else {
                     return Err(
-                        "usage: ds build [<file.ds>] [--target <bin|rust>] [--filter <name>]"
+                        "usage: ds build [<file.ts>] [--target <bin|rust>] [--filter <name>]"
                             .into(),
                     );
                 }
@@ -65,7 +65,7 @@ pub(crate) fn parse_build_args(args: &[String]) -> Result<BuildArgs, String> {
     Ok((file, target, filter))
 }
 
-/// Build a `.ds` file or the project entry. `--target rust` emits the
+/// Build a `.ts` file or the project entry. `--target rust` emits the
 /// translated Rust crate under `dist/<name>/` (no `target/`); the default
 /// `bin` target compiles (`cargo build --release`) and copies the native
 /// binary to `dist/<name>`. The compile uses the shared cache
@@ -367,7 +367,7 @@ fn expand_member_glob(root: &Path, glob: &str) -> Vec<PathBuf> {
     out
 }
 
-/// A member's entry: its first declared `bin`, else `main.ds` inside the member.
+/// A member's entry: its first declared `bin`, else `main.ts` inside the member.
 fn resolve_member_entry(member: &Path) -> Result<String, Box<dyn Error>> {
     let package_path = member.join("package.json");
     if let Ok(package) = read_package(&package_path) {
@@ -378,12 +378,12 @@ fn resolve_member_entry(member: &Path) -> Result<String, Box<dyn Error>> {
             }
         }
     }
-    let main = member.join("main.ds");
+    let main = member.join("main.ts");
     if main.exists() {
         return Ok(main.to_string_lossy().into_owned());
     }
     Err(format!(
-        "ds build: member {} has no entry (set package.json bin or add main.ds)",
+        "ds build: member {} has no entry (set package.json bin or add main.ts)",
         member.display()
     )
     .into())

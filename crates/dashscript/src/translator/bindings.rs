@@ -31,7 +31,7 @@ pub fn snake(name: &str) -> Ident {
             out.push('_');
         }
     }
-    // An ident cannot start with a digit; prefix `_`. A `.ds` name cannot
+    // An ident cannot start with a digit; prefix `_`. A `.ts` name cannot
     // start with one either, but the sigil→`_` mapping above can leave a
     // leading digit (e.g. `$2` → `_2` is fine; a hypothetical `$`-less digit
     // leader is guarded here too).
@@ -41,7 +41,7 @@ pub fn snake(name: &str) -> Ident {
     if out.is_empty() {
         out.push('_');
     }
-    // A `.ds` name that lands on a Rust keyword (`dyn`, `match`, `type`, …) is
+    // A `.ts` name that lands on a Rust keyword (`dyn`, `match`, `type`, …) is
     // emitted as a valid identifier so the generated code still parses.
     if is_rust_keyword(&out) {
         keyword_ident(&out)

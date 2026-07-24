@@ -1,4 +1,4 @@
-//! Methods and constants on a `.ds` `number` (`f64`). Mirrors
+//! Methods and constants on a `.ts` `number` (`f64`). Mirrors
 //! `test/built-ins/Number/` (instance methods + static methods + constants).
 
 use oxc_ast::ast::{Argument, StaticMemberExpression};
@@ -9,7 +9,7 @@ use super::super::expressions::{translate_argument, translate_number_to};
 use super::super::flavor::NumberFlavor;
 use super::usize_arg;
 
-/// Methods on a `.ds` `number` (`f64`). `.toFixed(n)` → a formatted string
+/// Methods on a `.ts` `number` (`f64`). `.toFixed(n)` → a formatted string
 /// with `n` decimal places. Returns `None` for an unmapped name.
 pub(in crate::translator) fn number_method(
     sm: &StaticMemberExpression,

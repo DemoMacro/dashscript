@@ -45,7 +45,7 @@ use syn::{parse_quote, Expr, Ident};
 use super::context::Ctx;
 use super::expressions::translate_argument;
 
-/// A `.ds` `number` argument cast to `usize` (e.g. for `repeat`, `slice`).
+/// A `.ts` `number` argument cast to `usize` (e.g. for `repeat`, `slice`).
 pub(in crate::translator) fn usize_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     let e = translate_argument(arg, ctx);
     parse_quote!(#e as usize)

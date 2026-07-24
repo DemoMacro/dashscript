@@ -8,14 +8,14 @@ function main(): void {
   // object literal → struct literal
   const p: Point = {
     x: 3,
-    y: 4
+    y: 4,
   };
   console.log("point:", p.x, p.y);
   // a field map → a HashMap-backed `Record<K, V>`
   const tags: Record<string, number> = {
     a: 1,
     b: 2,
-    c: 3
+    c: 3,
   };
   console.log("a:", tags.a);
   // Object.keys / values / entries → the key / value / pair sets
@@ -28,11 +28,14 @@ function main(): void {
   // spread merges a typed struct: { ...base, field: v }
   const base: Point = {
     x: 1,
-    y: 2
+    y: 2,
   };
   const merged: Point = {
     ...base,
-    y: 9
+    y: 9,
   };
   console.log("merged:", merged.x, merged.y);
 }
+
+main();
+export {};

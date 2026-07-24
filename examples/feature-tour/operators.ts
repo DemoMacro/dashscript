@@ -2,8 +2,12 @@
 // Mirrors crates/dashscript/src/translator/expressions/{binary,logical,unary}.rs.
 function main(): void {
   console.log("arith:", 1 + 2 * 3);
-  console.log("compare:", 4 >= 2, 3 < 5);
-  console.log("logical:", true && false, !true);
+  const cmpA = 4;
+  const cmpB = 2;
+  console.log("compare:", cmpA >= cmpB, cmpB < 5);
+  // `&&` / `!` on comparison results (not on bare literals — a constant
+  // `true && false` trips oxlint's no-constant-binary-expression).
+  console.log("logical:", cmpA >= cmpB && cmpB > 0, !(cmpA >= cmpB));
   // Bitwise `&`/`|`/`^` operate on 32-bit ints (`as i32`), like JS.
   console.log("bitwise:", 6 & 3, 6 | 1, 6 ^ 3);
   console.log("shift:", 1 << 3, 256 >> 2);
@@ -17,3 +21,6 @@ function main(): void {
   // `typeof` is a compile-time type query (DashScript is statically typed).
   console.log(typeof 1, typeof "x", typeof true, typeof null);
 }
+
+main();
+export {};

@@ -1,4 +1,4 @@
-//! `ds <file.ds>` (run a file directly) and `ds run <script>` (run a package
+//! `ds <file.ts>` (run a file directly) and `ds run <script>` (run a package
 //! script). [`list_scripts`] backs `ds run` with no argument.
 
 use std::{
@@ -12,8 +12,8 @@ use super::project::{
     package_root, read_package, status_to_code,
 };
 
-/// Translate a `.ds` file into its cached Cargo project and `cargo run` it
-/// (`ds <file.ds>`).
+/// Translate a `.ts` file into its cached Cargo project and `cargo run` it
+/// (`ds <file.ts>`).
 ///
 /// The cache is resolved Deno-style (`cache_project_dir`): in-project
 /// `.cache/dash/<project>/` when a `package.json` is found walking up, else a
@@ -65,7 +65,7 @@ fn project_bin_for(path: &Path) -> Result<Option<String>, Box<dyn Error>> {
 
 /// Run a `package.json` script by name (`ds run <script>`), executing its
 /// value through the system shell — so a script may be any shell command
-/// (`"ds main.ds"`, `"cargo test"`, …), like a `package.json` script.
+/// (`"ds main.ts"`, `"cargo test"`, …), like a `package.json` script.
 pub(crate) fn run_script(script: &str) -> Result<ExitCode, Box<dyn Error>> {
     let package_path = package_root().join("package.json");
     let package = read_package(&package_path)?;

@@ -34,3 +34,6 @@ function main(): void {
   const c = new Counter();
   console.log("count:", c.value());
 }
+
+main();
+export {};

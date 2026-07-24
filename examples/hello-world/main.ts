@@ -15,8 +15,10 @@ function magnitudeSquared(p: Point): number {
 // A switch on an enum becomes a `match` over its variants.
 function describe(s: Status): string {
   switch (s) {
-    case "pending": return "waiting";
-    case "done": return "finished";
+    case "pending":
+      return "waiting";
+    case "done":
+      return "finished";
   }
 }
 
@@ -60,3 +62,6 @@ function main(): void {
     }
   }
 }
+
+main();
+export {};

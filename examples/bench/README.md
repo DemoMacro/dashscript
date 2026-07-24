@@ -3,8 +3,9 @@
 Microbenchmarks comparing **DashScript** (`ds`, TypeScript → native Rust) against
 **node** (V8), **bun** (JSC), and **perry** (also TypeScript → native), all
 running the identical TypeScript source. Each bench is one algorithm written
-once: `main.ds` is DashScript's entry (it lowers to Rust `fn main`), `main.ts`
-runs unchanged under node / bun / perry with a trailing `main()`.
+once: `main.ts` is DashScript's entry (it lowers to Rust `fn main`),
+`main.reference.ts` runs unchanged under node / bun / perry with a trailing
+`main()`.
 
 The kernel selection mirrors perry's `benchmarks/` — the polyglot single-
 language kernels and the Node/Bun compute kernels — so the same algorithms
@@ -37,13 +38,13 @@ cannot block the suite.
 
 - **ds** — `ds build` produces `dist/<name>(.exe)`; the timed process is the
   prebuilt native binary — pure native execution, no `cargo` on the hot path.
-- **node** / **bun** — `node main.ts` / `bun main.ts`; the timed process
+- **node** / **bun** — `node main.reference.ts` / `bun main.reference.ts`; the timed process
   includes VM startup (V8 / JSC init), exactly what any `node script.ts`
   invocation pays.
 - **perry** — `perry compile` produces a native binary, timed the same way as
   ds.
 
-`main.ds` deliberately has no `Date.now()` — the bench output is a pure
+`main.ts` deliberately has no `Date.now()` — the bench output is a pure
 checksum — so all runtimes are measured by the same external yardstick: the
 time a real `<runtime> script` invocation takes end to end. Every bench
 `console.log`s a single value that depends on the full computation; a runtime

@@ -424,7 +424,7 @@ fn ident_expr(id: &IdentifierReference, ctx: &Ctx<'_>) -> Expr {
     // — map them to the matching `f64` constant instead of a renamed, undefined
     // local. `-Infinity` lowers via unary `-` on `Infinity`. Every other
     // identifier resolves its Rust name through the per-symbol `NameTable`
-    // (not the lossy `snake(name)` fold), so two `.ds` bindings that collapse to
+    // (not the lossy `snake(name)` fold), so two `.ts` bindings that collapse to
     // the same snake-name (e.g. `N` and `n`) read as distinct Rust idents.
     match id.name.as_str() {
         "NaN" => parse_quote!(::std::f64::NAN),

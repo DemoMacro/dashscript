@@ -1,7 +1,7 @@
 import { Adler32 } from "adler";
 
 // `Adler32` is adler's rolling-hash state type. Importing a crate's public
-// type into `.ds` lowers to `use adler::Adler32;` — exactly like importing a
+// type into `.ts` lowers to `use adler::Adler32;` — exactly like importing a
 // type from a local module (`import { Point } from "./geom"`). The crate is
 // brought in by `ds add cargo:adler`, which records `adler` under
 // `dashscript.cargo.dependencies` in `package.json`.
@@ -16,3 +16,5 @@ function main(): void {
     console.log("adler crate linked; no hash computed yet");
   }
 }
+
+main();

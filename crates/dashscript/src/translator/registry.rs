@@ -35,7 +35,7 @@ pub struct VariantShape {
 pub struct TypeRegistry {
     /// Discriminated-union enums: type name → (`kind` value → variant shape).
     pub unions: HashMap<String, HashMap<String, VariantShape>>,
-    /// Function name (original `.ds` spelling) → each parameter's type path,
+    /// Function name (original `.ts` spelling) → each parameter's type path,
     /// or `None` where the parameter has no annotation.
     pub functions: HashMap<String, Vec<Option<Path>>>,
     /// Function name → per-parameter "has a default initializer?" flag. Callers
@@ -49,7 +49,7 @@ pub struct TypeRegistry {
     /// Struct/interface name → its optional (`?:`) field names. A struct
     /// literal that omits one of these is filled with `None`.
     pub structs: HashMap<String, HashSet<String>>,
-    /// The project's own `&mut self` class methods, by original `.ds` name. A
+    /// The project's own `&mut self` class methods, by original `.ts` name. A
     /// call `obj.m()` with `m` in this set marks the receiver `let mut` — the
     /// `&mut self` analogue of the built-in `MUTATORS` (`push`, `splice` …).
     pub mut_methods: HashSet<String>,
@@ -149,7 +149,7 @@ fn collect_mut_methods(class: &Class, names: &NameTable, out: &mut HashSet<Strin
     }
 }
 
-/// A function's original `.ds` name (defaults to `main` for anonymous).
+/// A function's original `.ts` name (defaults to `main` for anonymous).
 fn function_name(func: &Function) -> String {
     func.id
         .as_ref()
@@ -199,7 +199,7 @@ fn ref_param_flags(func: &Function, names: &NameTable) -> Vec<bool> {
         .collect()
 }
 
-/// The `syn::Path` of a `.ds` type annotation, when it is a path-like type.
+/// The `syn::Path` of a `.ts` type annotation, when it is a path-like type.
 fn path_of_type(ty: &TSType) -> Option<Path> {
     match types::translate_type(ty) {
         syn::Type::Path(tp) => Some(tp.path),

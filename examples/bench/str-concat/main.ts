@@ -13,5 +13,6 @@ function main(): void {
   }
   console.log(s.length);
 }
+
 main();
 export {};

@@ -1,10 +1,10 @@
-//! `.ds` translatability check — the middle layer of the three-layer
+//! `.ts` translatability check — the middle layer of the three-layer
 //! correctness chain (structure → translatability → `cargo check`).
 //!
 //! It reuses the translator's own mapping as the single source of truth: any
 //! top-level statement [`super::functions::translate_statement`] cannot lower is
 //! reported as a diagnostic, alongside the syntax errors `oxc_parser` already
-//! surfaced. This answers "can this `.ds` become valid Rust?" — which
+//! surfaced. This answers "can this `.ts` become valid Rust?" — which
 //! eslint-style rules cannot express, and which `oxc_linter` (not on crates.io)
 //! is therefore not used for.
 //!
@@ -71,7 +71,7 @@ impl Drop for EngineScope {
     }
 }
 
-/// Check `.ds` source for translatability. Returns syntax errors from
+/// Check `.ts` source for translatability. Returns syntax errors from
 /// `oxc_parser` plus one diagnostic per construct the translator cannot map —
 /// both unmapped top-level statements and low-compatibility constructs buried
 /// inside a function body. An empty result means the file lowers to valid
@@ -100,6 +100,23 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
     // `None` means "not mapped"); the match only adds a human message + span.
     let registry = registry::build_registry(&program.body, &names);
     for stmt in &program.body {
+        // `export {}` is a standard TS module marker (no declaration, no
+        // specifiers): it makes the file a module so its declarations stay
+        // file-local instead of polluting the global scope. The translator
+        // lowers it to nothing, so skip it — otherwise the empty translate
+        // below would flag it as an unmapped statement.
+        if is_module_marker(stmt) {
+            continue;
+        }
+        // A top-level `main()` call is the standard TS/node entry pattern.
+        // DashScript already treats `function main` as the cargo entry (it
+        // lowers to `fn main`), so the explicit call is redundant and the
+        // translator emits nothing for it — but it lets the same `.ts` run
+        // unchanged under `node`/`bun`, so a bench ships one source, not two.
+        // Skip it so the empty translate below does not flag it as unmapped.
+        if is_entry_call(stmt) {
+            continue;
+        }
         if functions::translate_statement(stmt, &registry, &names).is_empty() {
             diagnostics.push(unmapped_top_level(stmt));
         }
@@ -137,6 +154,37 @@ pub(super) fn program_uses_engine(program: &oxc_ast::ast::Program) -> bool {
         collect_unsupported(stmt, &mut diags);
     }
     !diags.is_empty()
+}
+
+/// True for `export {}` — an empty named export (no declaration, no
+/// specifiers). It is the standard TS module marker that makes a file a
+/// module; the translator lowers it to nothing, so it is not a translatability
+/// gap. `export { x }` re-exports and `export ... from` are not matched (the
+/// translator does not support them).
+fn is_module_marker(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::ExportNamedDeclaration(exp)
+            if exp.declaration.is_none() && exp.specifiers.is_empty()
+    )
+}
+
+/// True for a top-level `main()` call — the standard TS/node entry pattern
+/// (`function main() { … }` + a trailing `main()` to run it). DashScript treats
+/// `function main` as the cargo entry (it lowers to `fn main`), so the explicit
+/// call is redundant for `ds` and the translator emits nothing for it — but it
+/// lets the same `.ts` run unchanged under `node`/`bun`, so a bench ships one
+/// source file, not two. Only a bare `main()` (no args) is matched; `main(argv)`
+/// or any other top-level expression stays unmapped.
+fn is_entry_call(stmt: &Statement) -> bool {
+    let Statement::ExpressionStatement(es) = stmt else {
+        return false;
+    };
+    let Expression::CallExpression(call) = &es.expression else {
+        return false;
+    };
+    matches!(&call.callee, Expression::Identifier(id) if id.name.as_str() == "main")
+        && call.arguments.is_empty()
 }
 
 /// A human message + span for a top-level statement the translator skips.

@@ -3,7 +3,7 @@
 //! Three data sources merged into one feature list:
 //! - `tests-fixtures.json` — auto-extracted from `translator/tests/*.rs` by
 //!   `scripts/extract-tests.mjs` (**zero hand-written fixtures**). Each entry is
-//!   a verified-translatable `.ds` snippet; the runner cargo-checks it
+//!   a verified-translatable `.ts` snippet; the runner cargo-checks it
 //!   informationally (`translator/tests` only asserts the translated Rust
 //!   *contains* a substring — it never compiles). No `expect`, so the run
 //!   reports the current state without asserting it.
@@ -289,7 +289,7 @@ fn conformance_matrix() {
 }
 
 /// Once-per-run check that the engine compat path assembles into a building
-/// cargo project: a reflection `.ds` source → `translate_with_deps` (flips
+/// cargo project: a reflection `.ts` source → `translate_with_deps` (flips
 /// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`
 /// dep) → `cargo check`. The in-process `engine_eval` path skips cargo per
 /// fixture, so this smoke test is the verification the per-fixture cargo check
@@ -413,7 +413,7 @@ fn outcome(
 fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps) {
     // `cargo check` on a bin crate requires a `main` (E0601). Most translator-tests
     // fixtures are bare declarations with no `main`, so synthesize an empty one
-    // when the `.ds` source has no `function main()`. Correctness fixtures declare
+    // when the `.ts` source has no `function main()`. Correctness fixtures declare
     // their own, which lowers to `fn main` and is left untouched. AST-level
     // (`has_main`), so a `"fn main"` string literal never trips a false positive.
     let mut body = if Translator::new().has_main(ds_source) {
@@ -432,7 +432,7 @@ fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps
             body = format!("mod __ds;\n{body}");
         }
     }
-    // Engine compat: a `.ds` source using ES reflection lowers to a single
+    // Engine compat: a `.ts` source using ES reflection lowers to a single
     // `__ds_engine::run(src)` call; the probe crate then needs the engine
     // helper module (declared `mod __ds_engine;`) — the same assembly `ds
     // build` performs for a real project. `rquickjs` itself lands in

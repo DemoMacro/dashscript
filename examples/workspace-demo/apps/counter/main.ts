@@ -8,3 +8,6 @@ function main(): void {
   }
   console.log(`sum: ${sum}`);
 }
+
+main();
+export {};

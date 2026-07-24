@@ -1,4 +1,4 @@
-//! String methods on a `.ds` string. Mirrors
+//! String methods on a `.ts` string. Mirrors
 //! `test/built-ins/String/prototype/` plus `String.<static>`.
 
 use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};

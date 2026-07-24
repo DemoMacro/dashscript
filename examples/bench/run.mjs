@@ -2,10 +2,11 @@
 /**
  * DashScript benchmark harness.
  *
- * Each bench is a subdirectory of examples/bench holding `main.ds` +
- * `main.ts` + `manifest.json` — one algorithm written once; `main.ds` is
- * DashScript's entry (it lowers to Rust `fn main`), `main.ts` runs unchanged
- * under node / bun / perry with a trailing `main()`.
+ * Each bench is a subdirectory of examples/bench holding `main.ts` +
+ * `manifest.json` — one algorithm written once. `function main` is DashScript's
+ * entry (it lowers to Rust `fn main`); the trailing `main()` call is a no-op
+ * for `ds` (cargo calls `fn main`) but runs the same source unchanged under
+ * node / bun / perry, so one file serves every runtime.
  *
  * Every available runtime runs each bench. We report the median wall-clock of
  * `BENCH_SAMPLES` (env, default 5) process launches and gate every result on
@@ -104,7 +105,7 @@ function median(samples) {
 }
 
 const benches = readdirSync(ROOT)
-  .filter((d) => existsSync(join(ROOT, d, "main.ds")))
+  .filter((d) => existsSync(join(ROOT, d, "main.ts")))
   .filter((d) => process.argv.slice(2).length === 0 || process.argv.slice(2).includes(d))
   .sort();
 

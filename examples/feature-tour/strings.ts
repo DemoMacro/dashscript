@@ -18,3 +18,6 @@ function main(): void {
   const name = "world";
   console.log(`hi ${name}!`);
 }
+
+main();
+export {};

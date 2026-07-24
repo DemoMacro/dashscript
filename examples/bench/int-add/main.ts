@@ -10,5 +10,6 @@ function main(): void {
   }
   console.log(sum);
 }
+
 main();
 export {};

@@ -1,8 +1,12 @@
-// array-ops — identical algorithm to main.ds (see there for rationale).
-// Runs under node/bun/perry as TypeScript with a trailing `main()` call.
+// array-ops — array build / sum / in-place reverse / even-count. Exercises
+// Vec indexing, indexed assignment (reverse swap), and tight numeric loops
+// over 100k elements × 100 iterations. Allocation-heavy (the Vec is rebuilt
+// each call), so a GC runtime can compete; the zero-overhead native build
+// is expected to lead on the indexed-assignment + modulo paths. The same
+// source runs under node/bun/perry as TypeScript (with a trailing `main()`).
 function runArrayBenchmark(): number {
   const SIZE = 100000;
-  const arr: number[] = [];
+  let arr: number[] = [];
   for (let i = 0; i < SIZE; i = i + 1) {
     arr.push(i);
   }
@@ -39,5 +43,6 @@ function main(): void {
   }
   console.log(checksum);
 }
+
 main();
 export {};

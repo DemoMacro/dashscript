@@ -1,6 +1,6 @@
 //! `ds` — the DashScript toolchain entry point.
 //!
-//! Wired: `<file.ds>` (run a file), `run <script>`, `build [--target]`, `add`,
+//! Wired: `<file.ts>` (run a file), `run <script>`, `build [--target]`, `add`,
 //! `remove`, `lint`, `check`, `fmt`, `install`, `cache clean`, `lsp`. Each
 //! command lives in [`commands`] (one module per group); this file is just the
 //! dispatch, the help text, and a couple of small helpers.
@@ -25,10 +25,10 @@ fn main() -> ExitCode {
             print_version();
             ExitCode::SUCCESS
         }
-        // `ds <file.ds>` — run a file directly (like `node a.js` / `vp node`).
-        Some(arg) if is_ds_file(arg) => report(run::run_file(arg)),
+        // `ds <file.ts>` — run a file directly (like `node a.js` / `vp node`).
+        Some(arg) if is_ts_file(arg) => report(run::run_file(arg)),
         // `ds run <script>` — run a `package.json` script (like `pnpm run`).
-        // `run` is always explicit: `ds <script>` would collide with `ds <file.ds>`.
+        // `run` is always explicit: `ds <script>` would collide with `ds <file.ts>`.
         Some("run") => match args.next() {
             Some(script) => report(run::run_script(&script)),
             // `ds run` with no script lists available scripts (like `pnpm run`).
@@ -67,7 +67,7 @@ fn main() -> ExitCode {
         // one you reach for most, so it leads. `--fix` writes the formatting
         // fix instead of just reporting it. `lint` (translatability only) and
         // `fmt` (format in place) are the focused variants. All three take an
-        // optional file — no argument runs over every `.ds` in the project.
+        // optional file — no argument runs over every `.ts` in the project.
         Some("check") => {
             let mut fix = false;
             let mut file: Option<String> = None;
@@ -134,11 +134,11 @@ fn print_help() {
     println!("DashScript — TypeScript ergonomics, Rust performance, compiled to native.");
     println!();
     println!("Usage: ds <command> [args]");
-    println!("       ds <file.ds>              run a file directly (like `node a.js`)");
+    println!("       ds <file.ts>              run a file directly (like `node a.js`)");
     println!("       ds [ -h | --help | -v | --version ]");
     println!();
     println!("Run:");
-    println!("  <file.ds>            Run a file (translate → compile → run)");
+    println!("  <file.ts>            Run a file (translate → compile → run)");
     println!("  run [<script>]       Run a package.json script (no arg lists scripts)");
     println!();
     println!("Build:");
@@ -151,7 +151,7 @@ fn print_help() {
     println!(
         "  lint [<file>] [--json]  Translatability check (--json emits structured diagnostics)"
     );
-    println!("  fmt [<file>]            Format .ds in place");
+    println!("  fmt [<file>]            Format .ts in place");
     println!();
     println!("Dependencies:");
     println!("  add <crate|file.rs>  Add a crate (cargo:<name>) or bindgen a local .rs");
@@ -184,8 +184,8 @@ fn usage_exit(msg: &str) -> ExitCode {
     ExitCode::FAILURE
 }
 
-/// Whether an argument is a direct `.ds` file run (`ds main.ds`). We only look
+/// Whether an argument is a direct `.ts` file run (`ds main.ts`). We only look
 /// at the suffix — a missing file is reported by `run_file`, not the dispatch.
-fn is_ds_file(arg: &str) -> bool {
-    arg.ends_with(".ds")
+fn is_ts_file(arg: &str) -> bool {
+    arg.ends_with(".ts")
 }

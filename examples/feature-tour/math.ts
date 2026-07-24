@@ -17,3 +17,6 @@ function main(): void {
   console.log("exp:", Math.exp(1));
   console.log("log:", Math.log(Math.E));
 }
+
+main();
+export {};

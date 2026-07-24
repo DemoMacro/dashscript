@@ -1,16 +1,7 @@
 // arrays — literals, indexing, length, and the Array<T> methods.
 // Mirrors crates/dashscript/src/translator/{expressions/array,builtins/array}.rs.
 function main(): void {
-  const xs = [
-    3,
-    1,
-    4,
-    1,
-    5,
-    9,
-    2,
-    6
-  ];
+  const xs = [3, 1, 4, 1, 5, 9, 2, 6];
   console.log("length:", xs.length);
   console.log("index:", xs[2]);
   // functional combinators → iterator chains on Vec
@@ -21,11 +12,7 @@ function main(): void {
   const total = xs.reduce((acc, n) => acc + n, 0);
   console.log("sum:", total);
   // in-place mutation: a `let` mutated by push → `let mut`
-  let ys = [
-    1,
-    2,
-    3
-  ];
+  let ys = [1, 2, 3];
   ys.push(4);
   console.log("after push len:", ys.length);
   // search & slicing (all &self methods)
@@ -34,3 +21,6 @@ function main(): void {
   const slice = xs.slice(1, 4);
   console.log("slice len:", slice.length);
 }
+
+main();
+export {};

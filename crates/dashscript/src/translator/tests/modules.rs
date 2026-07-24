@@ -63,7 +63,7 @@ fn import_bare_crate_hyphen_to_underscore() {
 
 #[test]
 fn collect_skips_bare_crate_import() {
-    // A bare specifier is a crate, not a local `.ds` file — it must not be
+    // A bare specifier is a crate, not a local `.ts` file — it must not be
     // collected for module assembly (only relative imports are).
     let imports = Translator::new().imports("import { foo } from \"serde\";");
     assert!(imports.is_empty(), "bare import collected: {imports:?}");

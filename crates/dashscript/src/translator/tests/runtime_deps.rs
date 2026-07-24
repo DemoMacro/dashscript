@@ -72,7 +72,7 @@ fn helper_module_present_only_when_needed() {
 fn array_helper_module_exposes_array_set_without_ryu_js() {
     // `ArrayHelper` alone exposes `array_set` but pulls no `ryu_js` (the helper
     // module is assembled from whichever slices a dep set flagged, not a single
-    // blob) — so a `.ds` source that only does `xs[i] = v` links no number-
+    // blob) — so a `.ts` source that only does `xs[i] = v` links no number-
     // formatting crate.
     let deps = RuntimeDeps::empty().with(RuntimeDep::ArrayHelper);
     let helper = deps.helper_module().expect("array flag exposes helper");
@@ -670,7 +670,7 @@ fn temporal_plain_date_compare_emits_ordering_match() {
 fn regex_literal_flags_and_source_are_static() {
     // `/abc/gi.flags` / `.source` / `.global` / `.ignoreCase` → bare literals
     // (the flags are known at translate time), not a runtime `Regex` field —
-    // so a `.ds` source that only reads static regex properties links no
+    // so a `.ts` source that only reads static regex properties links no
     // `regress` dep and never constructs a `Regex`.
     let src = "function main(): void {\n  console.log(/abc/gi.flags);\n  console.log(/abc/gi.global);\n  console.log(/abc/gi.ignoreCase);\n  console.log(/abc/gi.multiline);\n  console.log(/abc/gi.source);\n  console.log(/(?:)/.source);\n}";
     let (rust, deps) = Translator::new()

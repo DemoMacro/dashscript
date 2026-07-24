@@ -65,7 +65,7 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
         };
     }
     // Bitwise `&`/`|`/`^` operate on `i32` in both TS and Rust; cast each f64
-    // operand down and the result back up to `.ds`'s `number` (`f64`).
+    // operand down and the result back up to `.ts`'s `number` (`f64`).
     if let Some(expr) = bitwise_expr(bin, ctx) {
         return expr;
     }
@@ -107,7 +107,7 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
 
 /// Bitwise `&`/`|`/`^` and shifts `<<`/`>>`/`>>>`: TS applies these to `i32`,
 /// so each `f64` operand is cast down, the op applied, and the result cast back
-/// to `f64` (`.ds` number). Shifts use `wrapping_shl`/`shr` (which mask the
+/// to `f64` (`.ts` number). Shifts use `wrapping_shl`/`shr` (which mask the
 /// count); `>>>` casts to `u32` first for the zero-fill.
 ///
 /// The cast must go through `i64`, not directly to `i32`: Rust's `f64 as i32`
@@ -161,7 +161,7 @@ pub(super) fn bitwise_expr_to(
             (__a ^ __b) as #result_ty
         }),
         // `<<`/`>>` use `wrapping_shl`/`shr` (they mask the shift count, so a
-        // large `.ds` count won't panic like Rust's plain `<<` would).
+        // large `.ts` count won't panic like Rust's plain `<<` would).
         BinaryOperator::ShiftLeft => parse_quote!({
             let __a = #a_i32;
             let __b = #b_u32;
@@ -184,7 +184,7 @@ pub(super) fn bitwise_expr_to(
 }
 
 /// The number-context bitwise emitter — the masked result rounds back to `f64`
-/// (a `.ds` `number`). Index sites use [`bitwise_expr_to`] with `usize` to skip
+/// (a `.ts` `number`). Index sites use [`bitwise_expr_to`] with `usize` to skip
 /// that hop (see `member::index_expr`), which both saves a conversion per
 /// access and keeps the `& mask` range visible to LLVM so the `Vec` bounds
 /// check can be elided.

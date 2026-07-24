@@ -8,7 +8,7 @@ function main(): void {
   // object destructuring
   const p: Point = {
     x: 3,
-    y: 4
+    y: 4,
   };
   const { x, y } = p;
   console.log("obj:", x, y);
@@ -20,11 +20,9 @@ function main(): void {
   const [first, second] = pair;
   console.log("array:", first, second);
   // rest element collects the tail into a Vec
-  const [head, ...rest] = [
-    1,
-    2,
-    3,
-    4
-  ];
+  const [head, ...rest] = [1, 2, 3, 4];
   console.log("head:", head, "rest:", rest.length);
 }
+
+main();
+export {};

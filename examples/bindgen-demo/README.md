@@ -1,7 +1,7 @@
 # bindgen-demo
 
 Demonstrates `ds add` — turning a Rust source file's public surface into a
-`.ds` type declaration (the reverse of translation), so importing Rust from
+`.d.ts` type declaration (the reverse of translation), so importing Rust from
 DashScript yields editor completion and types. This is the cross-language
 analogue of `@types` / DefinitelyTyped.
 
@@ -11,7 +11,7 @@ analogue of `@types` / DefinitelyTyped.
 ds add examples/bindgen-demo/geometry.rs
 ```
 
-This writes `geometry.ds` beside the source:
+This writes `geometry.d.ts` beside the source:
 
 ```
 interface Point {

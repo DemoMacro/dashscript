@@ -1,7 +1,7 @@
 //! Two facts about a function body, gathered in a single walk:
 //!
 //! 1. **Mutations** — which locals are assigned / updated / mutated via a
-//!    mutator-method receiver, so a `.ds` `let` becomes `let mut` only when
+//!    mutator-method receiver, so a `.ts` `let` becomes `let mut` only when
 //!    the binding actually changes.
 //! 2. **Use counts** — how often each local is *read*. A non-`Copy` local read
 //!    more than once cannot be moved on its first read (a later read would see
@@ -60,7 +60,7 @@ pub(super) struct Analysis {
     /// True when the body assigns/updates a member of `this` (e.g. `this.x = 1`
     /// or `this.n++`) — the enclosing method needs `&mut self`.
     pub mutates_this: bool,
-    /// The project's own `&mut self` class methods (by original `.ds` name). A
+    /// The project's own `&mut self` class methods (by original `.ts` name). A
     /// call `obj.m()` where `m` is in this set mutates the receiver, so the
     /// receiver binding is marked `let mut`. Built-in mutators (`push`,
     /// `splice` …) are covered by `MUTATORS`; this set carries user methods.

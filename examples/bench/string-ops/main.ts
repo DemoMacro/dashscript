@@ -1,5 +1,8 @@
-// string-ops — identical algorithm to main.ds (see there for rationale).
-// Runs under node/bun/perry as TypeScript with a trailing `main()` call.
+// string-ops — heap-string build via concatenation, indexOf scan, and slice.
+// Heap-allocation-heavy: each call rebuilds a 10k-char string by `s + "a"`,
+// then scans it with indexOf for three patterns, then takes 1000 slices.
+// Stresses the allocator + String::push / indexOf / slice paths. The same
+// source runs under node/bun/perry as TypeScript (with a trailing `main()`).
 function runStringBenchmark(): number {
   const SIZE = 10000;
   let str = "";
@@ -39,5 +42,6 @@ function main(): void {
   }
   console.log(checksum);
 }
+
 main();
 export {};

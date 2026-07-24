@@ -1,4 +1,4 @@
-//! Number flavor inference: which `.ds` `number` locals are pure integers
+//! Number flavor inference: which `.ts` `number` locals are pure integers
 //! (`i64`) vs doubles (`f64`). Conservative — the default is `f64` (an ES
 //! `number` is an IEEE-754 double); a local is promoted to `i64` only when it
 //! is initialized with an integer-valued expression and every value later
@@ -28,7 +28,7 @@ use oxc_syntax::operator::{AssignmentOperator, BinaryOperator, UnaryOperator};
 use super::context::Ctx;
 use super::name_table::NameTable;
 
-/// The flavor of a `.ds` `number` local: ES double (`f64`) or pure integer
+/// The flavor of a `.ts` `number` local: ES double (`f64`) or pure integer
 /// (`i64`).
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum NumberFlavor {
@@ -85,7 +85,7 @@ fn binary_flavor(
         // ES division and `**` are always floating-point.
         BinaryOperator::Division | BinaryOperator::Exponential => NumberFlavor::F64,
         // Bitwise ops emit through `bitwise_expr`, which casts the result back
-        // to `f64` (a `.ds` `number`) — so the expression's flavor is `F64`,
+        // to `f64` (a `.ts` `number`) — so the expression's flavor is `F64`,
         // matching the emit. (Phase 2 may promote operands to `i64`.)
         BinaryOperator::BitwiseAnd
         | BinaryOperator::BitwiseOR

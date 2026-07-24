@@ -12,7 +12,7 @@ type names keep their `PascalCase`.
 
 | File           | Purpose                                             |
 | -------------- | --------------------------------------------------- |
-| `main.ds`      | The program source.                                 |
+| `main.ts`      | The program source.                                 |
 | `package.json` | Project manifest: npm fields + `dashscript` config. |
 
 ## Run
@@ -20,7 +20,7 @@ type names keep their `PascalCase`.
 From this directory:
 
 ```sh
-ds main.ds           # run the file directly (translate → compile cached → run)
+ds main.ts           # run the file directly (translate → compile cached → run)
 ```
 
 Output:
@@ -43,7 +43,7 @@ finished
 
 ## What it translates to
 
-`main.ds` maps to roughly:
+`main.ts` maps to roughly:
 
 ```rust
 struct Point {

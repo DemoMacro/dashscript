@@ -1,7 +1,7 @@
 //! `SymbolId` → Rust name assignment, with scope-aware disambiguation.
 //!
 //! This replaces the lossy `bindings::snake(name)` string conversion at the
-//! binding boundary. Two `.ds` bindings `N` and `n` are *distinct* `SymbolId`s
+//! binding boundary. Two `.ts` bindings `N` and `n` are *distinct* `SymbolId`s
 //! to oxc (they are different declarations in the same scope), but both
 //! snake-fold to `n` — producing a silent same-scope shadow in the emitted
 //! Rust. By keying on `SymbolId` we can give them distinct Rust names.

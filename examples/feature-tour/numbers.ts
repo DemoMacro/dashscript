@@ -3,9 +3,9 @@
 function main(): void {
   const pi = 3.14159;
   console.log("toFixed:", pi.toFixed(2));
-  console.log("toFixed0:", 42 .toFixed(0));
-  console.log("hex:", 255 .toString(16));
-  console.log("bin:", 10 .toString(2));
+  console.log("toFixed0:", (42).toFixed(0));
+  console.log("hex:", (255).toString(16));
+  console.log("bin:", (10).toString(2));
   console.log("isInteger:", Number.isInteger(7), Number.isInteger(7.5));
   console.log("isFinite:", Number.isFinite(5), Number.isFinite(Infinity));
   console.log("isNaN:", Number.isNaN(NaN), Number.isNaN(1));
@@ -14,3 +14,6 @@ function main(): void {
   console.log("max_safe:", Number.MAX_SAFE_INTEGER);
   console.log("epsilon:", Number.EPSILON);
 }
+
+main();
+export {};

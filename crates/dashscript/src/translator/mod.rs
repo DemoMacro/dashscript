@@ -4,7 +4,7 @@
 //! `types`, `expressions`, `bindings` — so each oxc node maps to a `syn` node
 //! one-to-one. The `syn` tree is the project's hub: the translator builds it
 //! (oxc → syn), `prettyplease` prints it, and the future `bindgen` parses
-//! Rust crates into the same `syn` tree (syn → .ds) — one AST, two
+//! Rust crates into the same `syn` tree (syn → .d.ts) — one AST, two
 //! directions. Parsing reuses `oxc_parser`; DashScript never parses itself.
 
 mod analysis;
@@ -138,7 +138,7 @@ pub struct RuntimeDeps {
 }
 
 impl RuntimeDeps {
-    /// An empty dep set — the common case (a plain `.ds` file links nothing).
+    /// An empty dep set — the common case (a plain `.ts` file links nothing).
     pub fn empty() -> Self {
         Self::default()
     }
@@ -206,7 +206,7 @@ impl RuntimeDeps {
         any.then_some(src)
     }
 
-    /// The `__ds_engine` compat module source — runs a `.ds` source under an
+    /// The `__ds_engine` compat module source — runs a `.ts` source under an
     /// embedded QuickJS engine — when this dep set flags `Engine`. `None`
     /// otherwise, so the caller writes nothing and pulls no engine dependency.
     pub fn engine_helper_module(&self) -> Option<&'static str> {
@@ -549,7 +549,7 @@ pub fn regex_split(pattern: &str, flags: &str, text: &str, limit: Option<usize>)
 /// The DashScript compat engine module, written to `src/__ds_engine.rs` and
 /// declared `mod __ds_engine;` at the crate root when a translated file uses ES
 /// dynamic reflection the static translator cannot lower. It runs the whole
-/// `.ds` source under an embedded QuickJS engine (`rquickjs`), with a
+/// `.ts` source under an embedded QuickJS engine (`rquickjs`), with a
 /// `console.log` wired to stdout. Number stringification uses the engine's own
 /// `String()` (ES `Number::toString`), so output matches Node for primitives.
 ///
@@ -559,18 +559,18 @@ pub fn regex_split(pattern: &str, flags: &str, text: &str, limit: Option<usize>)
 /// harness — so the helper text lives in the library rather than either
 /// consumer.
 ///
-/// Note: the engine evaluates the source as plain ECMAScript, so a `.ds` source
+/// Note: the engine evaluates the source as plain ECMAScript, so a `.ts` source
 /// with TypeScript type annotations is not yet handled on this path (today it
 /// serves the conformance oracle, whose test262 fixtures are annotation-free
-/// JS). Stripping annotations for real `.ds` sources is a follow-up.
-const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ds` source under an embedded QuickJS
+/// JS). Stripping annotations for real `.ts` sources is a follow-up.
+const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ts` source under an embedded QuickJS
 //! engine (`rquickjs`) when it uses ES dynamic reflection
 //! (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`, …) the static
 //! translator cannot lower to idiomatic Rust. Gated — only present when
 //! `RuntimeDeps::needs_engine`.
 use rquickjs::{Context, Ctx, Runtime};
 
-/// Run a `.ds` source under QuickJS with `console.log` wired to stdout, then
+/// Run a `.ts` source under QuickJS with `console.log` wired to stdout, then
 /// call `main()` (the fixture entry — the same `main();` the conformance
 /// harness appends for the Node oracle). `console.log` joins its arguments with
 /// spaces, stringified by the engine's own `String()` coercion — ES
@@ -619,7 +619,7 @@ pub fn run(source: &str) {
 "##;
 
 /// Strip TS type annotations from a program's top-level function declarations
-/// (a `.ds` source annotates `main`'s return; test262 fixtures wrap the file in
+/// (a `.ts` source annotates `main`'s return; test262 fixtures wrap the file in
 /// `function main(): void`) and regenerate the source via oxc codegen, so the
 /// embedded QuickJS engine evaluates plain ECMAScript rather than TypeScript.
 /// Shared by the engine lowering ([`Translator::translate_with_deps`]) and
@@ -634,7 +634,7 @@ fn engine_js_source(program: &mut oxc_ast::ast::Program<'_>) -> String {
     Codegen::new().build(&*program).code
 }
 
-/// Translates a TypeScript-flavored `.ds` program into Rust source.
+/// Translates a TypeScript-flavored `.ts` program into Rust source.
 #[derive(Default)]
 pub struct Translator;
 
@@ -645,7 +645,7 @@ impl Translator {
         Self
     }
 
-    /// Parse `.ds` source with oxc and translate the AST to Rust source.
+    /// Parse `.ts` source with oxc and translate the AST to Rust source.
     ///
     /// Convenience wrapper around [`Self::translate_with_deps`] that drops the
     /// runtime-dependency report — for callers (tests, LSP) that only want the
@@ -658,7 +658,7 @@ impl Translator {
         Ok(self.translate_with_deps(source)?.0)
     }
 
-    /// Parse `.ds` source, translate the AST to Rust source, and report the
+    /// Parse `.ts` source, translate the AST to Rust source, and report the
     /// runtime dependencies the generated code needs.
     ///
     /// The Rust text matches [`Self::translate`]; the second return value is the
@@ -743,7 +743,7 @@ impl Translator {
         // the `__ds` helper module, for ryu_js). Scanning the emitted text
         // (rather than threading a `RefCell<RuntimeDeps>` through every
         // expression) keeps the dep report a pure function of the output — the
-        // `__ds::` prefix is a DashScript-reserved namespace a `.ds` source
+        // `__ds::` prefix is a DashScript-reserved namespace a `.ts` source
         // cannot produce any other way, and `serde_json::` likewise only
         // appears via the `JSON` builtin.
         let rust = prettyplease::unparse(&file);
@@ -756,7 +756,7 @@ impl Translator {
         Ok((rust, deps))
     }
 
-    /// Check `.ds` source for translatability without emitting Rust.
+    /// Check `.ts` source for translatability without emitting Rust.
     ///
     /// Returns syntax errors from `oxc_parser` plus one diagnostic per
     /// top-level statement the translator cannot map. An empty `Vec` means the
@@ -788,9 +788,9 @@ impl Translator {
         }
     }
 
-    /// Format `.ds` source with `oxc_codegen` (pretty-print, 2-space indent,
+    /// Format `.ts` source with `oxc_codegen` (pretty-print, 2-space indent,
     /// not minified) — the same indentation style as prettier / `vp fmt`, so
-    /// `.ds` written by hand (TypeScript-style) is already formatted.
+    /// `.ts` written by hand (TypeScript-style) is already formatted.
     ///
     /// # Errors
     /// Returns an error string if `oxc_parser` reports syntax diagnostics — a
@@ -814,22 +814,22 @@ impl Translator {
             .code)
     }
 
-    /// The local `.ds` modules this file imports (`import { x } from "./other"`
+    /// The local `.ts` modules this file imports (`import { x } from "./other"`
     /// → `other`), for `ds build` to assemble one Rust module per dependency.
     #[must_use]
     pub fn imports(&self, source: &str) -> Vec<imports::ImportRef> {
         imports::collect_imports(source)
     }
 
-    /// The bare-crate imports in a `.ds` file (`import { X } from "crate"`),
-    /// each with its `.ds` byte span. Used by `ds lsp` to resolve
+    /// The bare-crate imports in a `.ts` file (`import { X } from "crate"`),
+    /// each with its `.ts` byte span. Used by `ds lsp` to resolve
     /// go-to-definition on an import specifier to the crate's `~/.cargo` source.
     #[must_use]
     pub fn crate_imports(&self, source: &str) -> Vec<imports::CrateImport> {
         imports::collect_crate_imports(source)
     }
 
-    /// The locally declarable names in a `.ds` file (`function`, `interface`,
+    /// The locally declarable names in a `.ts` file (`function`, `interface`,
     /// `type`, `export`, `import`), each with its binding byte span. Used by
     /// `ds lsp` for in-file go-to-definition (everything but crate imports).
     #[must_use]
@@ -837,7 +837,7 @@ impl Translator {
         imports::collect_declarations(source)
     }
 
-    /// Whether the `.ds` source declares a top-level `function main()` — the
+    /// Whether the `.ts` source declares a top-level `function main()` — the
     /// entry point a `[[bin]]` target needs. AST-level (not a substring scan),
     /// so a `main_loop` helper or a `"fn main"` string literal cannot trip it.
     #[must_use]
@@ -845,7 +845,7 @@ impl Translator {
         imports::has_main(source)
     }
 
-    /// Symbol-level analysis for one `.ds` file: every declaration's span,
+    /// Symbol-level analysis for one `.ts` file: every declaration's span,
     /// kind, and resolved references (read/write). Powers LSP find-references /
     /// rename with **symbol-level precision** — two same-named bindings in
     /// different scopes are distinct symbols, so renaming one never touches the

@@ -66,7 +66,7 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     // `d.year`/`d.month`/`d.day`/… on a `Temporal.PlainDate` local → the matching
     // `temporal_rs::PlainDate` accessor method (Rust accessors are methods, not
     // fields; ES Temporal calendar fields are properties). Numeric fields cast to
-    // `f64` (a `.ds` `number` is `f64`); `inLeapYear` is a bool, no cast.
+    // `f64` (a `.ts` `number` is `f64`); `inLeapYear` is a bool, no cast.
     if is_plain_date_local(&sm.object, ctx) {
         if let Some(m) = plain_date_method(field_name) {
             let method = syn::Ident::new(m, Span::call_site());
@@ -119,7 +119,7 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
 }
 
 /// `arr[i]` → `arr[i as usize]`; `m["k"]` on a `HashMap` →
-/// `m.get("k").copied().unwrap()`. A `.ds` index is `f64`; Rust indexes by
+/// `m.get("k").copied().unwrap()`. A `.ts` index is `f64`; Rust indexes by
 /// `usize`, so the Vec/array index is cast. A HashMap key is looked up with
 /// `.get` (typed: the key is assumed present, so `unwrap` panics if absent —
 /// matching the non-optional type).

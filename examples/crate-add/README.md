@@ -34,9 +34,9 @@ This:
 }
 ```
 
-## The source: `main.ds`
+## The source: `main.ts`
 
-[`main.ds`](./main.ds) imports the added crate's type and uses it — the same
+[`main.ts`](./main.ts) imports the added crate's type and uses it — the same
 `import { X } from "crate"` syntax as a local module import, lowered to
 `use crate::X`:
 
@@ -55,8 +55,8 @@ function main(): void {
 }
 ```
 
-`ds check main.ds` reports no issues (the crate import is translatable), and
-`ds build main.ds` compiles `adler` (resolved from `package.json`) into a
+`ds check main.ts` reports no issues (the crate import is translatable), and
+`ds build main.ts` compiles `adler` (resolved from `package.json`) into a
 native binary in `dist/` — reusing the source `ds add` already fetched.
 
 ## Build reuses cargo's cache (no re-download)
@@ -69,7 +69,7 @@ flow, mirroring `npm install` then `vp pack`.)
 
 ## Type information comes from source, not from generated stubs
 
-No `.ds` declaration files are generated. Type information for an added crate
+No `.ts` declaration files are generated. Type information for an added crate
 (hover, jump-to-definition, completion) comes from the crate's own source in
 `~/.cargo`, read directly by the DashScript language server — the same way
 rust-analyzer reads its dependencies rather than maintaining a parallel set of

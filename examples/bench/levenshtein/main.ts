@@ -55,5 +55,6 @@ function main(): void {
   }
   console.log(total);
 }
+
 main();
 export {};

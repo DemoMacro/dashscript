@@ -231,7 +231,7 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             parse_quote!(#recv.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(#sep))
         }
         // `.reduce(cb, init)` → `fold`; `.reduce(cb)` (no seed) → `reduce`,
-        // which yields `Option<T>` (an empty `.ds` array has no first element).
+        // which yields `Option<T>` (an empty `.ts` array has no first element).
         "reduce" => {
             let cb = callback_arg(args.first()?, ctx, false)?;
             match args.get(1) {

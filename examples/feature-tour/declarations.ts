@@ -11,35 +11,45 @@ interface Profile {
 // A union of string literals → a unit `enum`.
 type Status = "idle" | "running" | "done";
 // A discriminated union (a `kind` literal + data) → an enum with data variants.
-type Shape = {
-  kind: "circle";
-  radius: number;
-} | {
-  kind: "square";
-  side: number;
-};
+type Shape =
+  | {
+      kind: "circle";
+      radius: number;
+    }
+  | {
+      kind: "square";
+      side: number;
+    };
 function area(s: Shape): number {
   switch (s.kind) {
-    case "circle": return s.radius * s.radius;
-    case "square": return s.side * s.side;
+    case "circle":
+      return s.radius * s.radius;
+    case "square":
+      return s.side * s.side;
   }
 }
 function main(): void {
   const p: Point = {
     x: 3,
-    y: 4
+    y: 4,
   };
   console.log("point:", p.x, p.y);
   const partial: Profile = { name: "ada" };
   console.log("name:", partial.name);
   const full: Profile = {
     name: "ada",
-    nickname: "lovelace"
+    nickname: "lovelace",
   };
   console.log("nickname:", full.nickname!);
   const c: Shape = {
     kind: "circle",
-    radius: 2
+    radius: 2,
   };
   console.log("circle area:", area(c));
+  // A string-literal union (`"idle"` / `"running"` / `"done"`) → a unit enum.
+  const st: Status = "running";
+  console.log("status:", st);
 }
+
+main();
+export {};

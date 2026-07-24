@@ -116,7 +116,7 @@ fn missing_optionals(
 }
 
 /// `{ a: 1, b: 2 }` as a `HashMap` → `HashMap::from([("a".to_string(), 1_f64), …])`.
-/// Keys are the `.ds` property names, owned so the map outlives the literal.
+/// Keys are the `.ts` property names, owned so the map outlives the literal.
 fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
     let entries: Vec<Expr> = obj
         .properties

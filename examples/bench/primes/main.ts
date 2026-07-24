@@ -27,5 +27,6 @@ function main(): void {
   }
   console.log(count);
 }
+
 main();
 export {};

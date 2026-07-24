@@ -1,4 +1,4 @@
-//! Binding-name disambiguation: two `.ds` bindings that fold to one Rust
+//! Binding-name disambiguation: two `.ts` bindings that fold to one Rust
 //! snake-name (`N` and `n` both → `n`) get distinct Rust names, and the
 //! per-symbol keying means a mutation of one never leaks onto the other's
 //! `let mut` decision.

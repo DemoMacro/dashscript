@@ -21,3 +21,6 @@ function main(): void {
   const square = (n: number) => n * n;
   console.log("square:", square(9));
 }
+
+main();
+export {};

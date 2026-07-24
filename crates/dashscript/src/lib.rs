@@ -3,7 +3,7 @@
 //! Three responsibilities, no more:
 //! - [`translator`] — oxc AST → Rust source
 //! - [`package`]    — `package.json` → `Cargo.toml`
-//! - [`bindgen`]    — Rust crate → `.ds` type declaration
+//! - [`bindgen`]    — Rust crate → `.d.ts` type declaration
 //!
 //! Parsing reuses [oxc](https://oxc.rs/) (`oxc_parser`); `check` and `fmt` are
 //! built in-process on the parsed AST (`oxc_linter`/`oxc_formatter` are not on

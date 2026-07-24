@@ -10,7 +10,7 @@ dep into the root `node_modules`).
 workspace-demo/
   package.json          # { "workspaces": ["apps/*"] } — the workspace root
   apps/
-    greeter/             # a member: its own package.json + main.ds
+    greeter/             # a member: its own package.json + main.ts
     counter/             # another member
 ```
 

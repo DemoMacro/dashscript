@@ -11,5 +11,6 @@ function fib(n: number): number {
 function main(): void {
   console.log(fib(35));
 }
+
 main();
 export {};

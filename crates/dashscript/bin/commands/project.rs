@@ -58,7 +58,7 @@ pub(crate) fn translate_sources(
     Ok(deps)
 }
 
-/// Translate one `.ds` file to `src/<stem>.rs`, prefixing `mod <module>;` for
+/// Translate one `.ts` file to `src/<stem>.rs`, prefixing `mod <module>;` for
 /// each of its local imports (deduped). The imported files are translated
 /// separately by [`translate_project`]'s directory walk — this emits only the
 /// current file and the modules it declares.
@@ -91,7 +91,7 @@ fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<RuntimeDeps,
 /// pairs for `[[bin]]`, plus the `[lib]` entry path.
 type ProjectTargets = (Vec<(String, String)>, Option<String>);
 
-/// Translate every `.ds` under a package root into one multi-target crate at
+/// Translate every `.ts` under a package root into one multi-target crate at
 /// `project_dir/src/`: each file becomes `src/<stem>.rs` (prefixed with its
 /// `mod` declarations), and the package's `bin`/`lib` entries become the
 /// crate's `[[bin]]`/`[lib]` targets. Returns the resolved targets for
@@ -113,7 +113,7 @@ pub(crate) fn translate_project(
     clean_src_dir(&src_dir)?;
 
     let mut files = Vec::new();
-    walk_ds(root, &mut files);
+    walk_ts(root, &mut files);
     files.sort();
 
     let mut seen_stems: std::collections::HashMap<String, PathBuf> =
@@ -168,7 +168,7 @@ fn detect_bin_imports_bin(root: &Path, bins: &[(String, String)]) -> Result<(), 
                     if other != bin_name {
                         return Err(format!(
                             "dashscript: bin '{bin_name}' imports bin '{other}' (from {}); \
-                             move the shared code into a lib module (a .ds that is not a bin \
+                             move the shared code into a lib module (a .ts that is not a bin \
                              entry) — cargo forbids one bin from mod-ing another",
                             imp.source
                         )
@@ -196,9 +196,9 @@ fn clean_src_dir(src: &Path) -> std::io::Result<()> {
     Ok(())
 }
 
-/// Translate a `.ds` entry into a buildable Cargo project at `project_dir`.
+/// Translate a `.ts` entry into a buildable Cargo project at `project_dir`.
 ///
-/// Project mode (a package declares `bin` or `lib`): every `.ds` under the
+/// Project mode (a package declares `bin` or `lib`): every `.ts` under the
 /// root becomes `src/<stem>.rs` in one crate, and the declared entries become
 /// `[[bin]]`/`[lib]` targets — so a project's entries share one cache and never
 /// overwrite each other. Otherwise (a lone file, or a package with no declared
@@ -290,19 +290,19 @@ fn inject_helper_module(
     Ok(())
 }
 
-/// Resolve a relative `.ds` import (`"./other"` or `"./other.ds"`) against the
+/// Resolve a relative `.ts` import (`"./other"` or `"./other.ts"`) against the
 /// importing file's directory. Errors clearly when no matching file exists.
 pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf, Box<dyn Error>> {
-    let candidate = if source.ends_with(".ds") {
+    let candidate = if source.ends_with(".ts") {
         base.join(source)
     } else {
-        base.join(format!("{source}.ds"))
+        base.join(format!("{source}.ts"))
     };
     if candidate.exists() {
         return Ok(candidate);
     }
     Err(format!(
-        "dashscript: import '{source}' does not resolve to a .ds file (tried {})",
+        "dashscript: import '{source}' does not resolve to a .ts file (tried {})",
         candidate.display()
     )
     .into())
@@ -326,10 +326,10 @@ pub(crate) fn resolve_package(src_path: &Path) -> String {
     .to_cargo_toml()
 }
 
-/// The cache directory for a `.ds` entry file, Deno-style: walk up from the
+/// The cache directory for a `.ts` entry file, Deno-style: walk up from the
 /// file for a `package.json`; found → in-project `.cache/dash/<project>/` —
 /// **one per project** (keyed by project name, not the entry stem, so two
-/// `main.ds` files in different projects don't collide and one project's
+/// `main.ts` files in different projects don't collide and one project's
 /// entries share a cache); not found (a lone file) → global
 /// `~/.cache/dash/<hash>/`. The `dash` segment mirrors the global cache root,
 /// so DashScript owns one namespace under `.cache/`. `run`, `build`, and
@@ -347,7 +347,7 @@ pub(crate) fn cache_project_dir(src_path: &Path) -> PathBuf {
     global_cache_dir(src_path)
 }
 
-/// Walk up from the `.ds` file's directory for the nearest `package.json`,
+/// Walk up from the `.ts` file's directory for the nearest `package.json`,
 /// returning its directory (the project root) if one exists.
 pub(crate) fn find_package_root(src_path: &Path) -> Option<PathBuf> {
     let dir = src_path.parent()?;
@@ -360,7 +360,7 @@ pub(crate) fn find_package_root(src_path: &Path) -> Option<PathBuf> {
 }
 
 /// Find the nearest `package.json` walking up from the **cwd** (whereas
-/// [`find_package_root`] starts from a `.ds` file's directory). Used by
+/// [`find_package_root`] starts from a `.ts` file's directory). Used by
 /// cwd-based commands (`install`, `add`, `remove`, `run`) so they work from a
 /// subdirectory — mirroring pnpm/cargo, which find the workspace root from any
 /// nested dir. Falls back to the cwd when no package is found, so callers
@@ -377,22 +377,22 @@ pub(crate) fn package_root() -> PathBuf {
     PathBuf::from(".")
 }
 
-/// Collect every `.ds` file under the current project (the nearest
+/// Collect every `.ts` file under the current project (the nearest
 /// `package.json` walking up, else the cwd), skipping generated/vendored
 /// directories (`target`, `.cache`, `dist`, `node_modules`, `.git`). Used by
 /// `ds lint` / `ds check` / `ds fmt` with no argument — the way `vp check` and
 /// `oxlint` check the whole project when given no target. Sorted for stable
 /// output.
-pub(crate) fn collect_ds_files() -> Vec<PathBuf> {
+pub(crate) fn collect_ts_files() -> Vec<PathBuf> {
     let root = package_root();
     let mut out = Vec::new();
-    walk_ds(&root, &mut out);
+    walk_ts(&root, &mut out);
     out.sort();
     out
 }
 
-/// Recursive worker for [`collect_ds_files`].
-fn walk_ds(dir: &Path, out: &mut Vec<PathBuf>) {
+/// Recursive worker for [`collect_ts_files`].
+fn walk_ts(dir: &Path, out: &mut Vec<PathBuf>) {
     let Ok(entries) = fs::read_dir(dir) else {
         return;
     };
@@ -404,14 +404,14 @@ fn walk_ds(dir: &Path, out: &mut Vec<PathBuf>) {
                     continue;
                 }
             }
-            walk_ds(&path, out);
-        } else if path.extension().and_then(|e| e.to_str()) == Some("ds") {
+            walk_ts(&path, out);
+        } else if path.extension().and_then(|e| e.to_str()) == Some("ts") {
             out.push(path);
         }
     }
 }
 
-/// The global fallback cache for a lone `.ds` file (no `package.json` found
+/// The global fallback cache for a lone `.ts` file (no `package.json` found
 /// walking up): `~/.cache/dash/<hash(canonical_path)>/`, keyed by the file's
 /// canonical path so the same file reuses it across runs.
 pub(crate) fn global_cache_dir(src_path: &Path) -> PathBuf {
@@ -430,7 +430,7 @@ pub(crate) fn global_cache_dir(src_path: &Path) -> PathBuf {
     }
 }
 
-/// The file stem of a path as an owned `String` ("main.ds" → "main").
+/// The file stem of a path as an owned `String` ("main.ts" → "main").
 pub(crate) fn stem_of(path: &Path) -> String {
     path.file_stem()
         .and_then(|s| s.to_str())
@@ -461,7 +461,7 @@ pub(crate) fn project_name(src_path: &Path) -> String {
 
 /// Resolve the project entry file for a file-less `ds build`: the first
 /// declared `bin` (the project builds every bin; any one anchors the lookup),
-/// else `main.ds` in the cwd.
+/// else `main.ts` in the cwd.
 pub(crate) fn resolve_entry() -> Result<String, Box<dyn Error>> {
     if let Ok(package) = read_package(Path::new("package.json")) {
         if let Some((_, bin_path)) = package.bin_entries().into_iter().next() {
@@ -470,10 +470,10 @@ pub(crate) fn resolve_entry() -> Result<String, Box<dyn Error>> {
             }
         }
     }
-    if Path::new("main.ds").exists() {
-        return Ok("main.ds".to_string());
+    if Path::new("main.ts").exists() {
+        return Ok("main.ts".to_string());
     }
-    Err("ds build: no entry file (pass <file.ds>, set package.json bin, or add main.ds)".into())
+    Err("ds build: no entry file (pass <file.ts>, set package.json bin, or add main.ts)".into())
 }
 
 /// The build target for `src_path`: the `--target` override, else the
@@ -559,10 +559,10 @@ mod tests {
         write(
             root,
             "package.json",
-            r#"{ "name": "app", "bin": { "a": "a.ds", "b": "b.ds" } }"#,
+            r#"{ "name": "app", "bin": { "a": "a.ts", "b": "b.ts" } }"#,
         );
-        write(root, "a.ds", "function main() { console.log(1); }");
-        write(root, "b.ds", "function main() { console.log(2); }");
+        write(root, "a.ts", "function main() { console.log(1); }");
+        write(root, "b.ts", "function main() { console.log(2); }");
 
         let out = tmp.path().join("out");
         let ((bins, lib), _deps) = translate_project(root, &package_at(root), &out).unwrap();
@@ -576,7 +576,7 @@ mod tests {
 
     #[test]
     fn translate_project_detects_stem_collision() {
-        // MVP flattens every .ds to src/<stem>.rs; two files with the same stem
+        // MVP flattens every .ts to src/<stem>.rs; two files with the same stem
         // would clobber each other, so the translation refuses.
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
@@ -584,11 +584,11 @@ mod tests {
         write(
             root,
             "package.json",
-            r#"{ "name": "app", "bin": "main.ds" }"#,
+            r#"{ "name": "app", "bin": "main.ts" }"#,
         );
-        write(root, "main.ds", "function main() {}");
-        write(root, "dup.ds", "function helper() {}");
-        write(&root.join("sub"), "dup.ds", "function other() {}");
+        write(root, "main.ts", "function main() {}");
+        write(root, "dup.ts", "function helper() {}");
+        write(&root.join("sub"), "dup.ts", "function other() {}");
 
         let out = tmp.path().join("out");
         let err = translate_project(root, &package_at(root), &out).unwrap_err();
@@ -606,14 +606,14 @@ mod tests {
         write(
             root,
             "package.json",
-            r#"{ "name": "app", "bin": { "a": "a.ds", "b": "b.ds" } }"#,
+            r#"{ "name": "app", "bin": { "a": "a.ts", "b": "b.ts" } }"#,
         );
         write(
             root,
-            "a.ds",
+            "a.ts",
             "import { x } from \"./b\";\nfunction main() {}",
         );
-        write(root, "b.ds", "export function x() {}\nfunction main() {}");
+        write(root, "b.ts", "export function x() {}\nfunction main() {}");
 
         let out = tmp.path().join("out");
         let err = translate_project(root, &package_at(root), &out).unwrap_err();

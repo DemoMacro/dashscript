@@ -24,7 +24,7 @@ pub struct SymbolTable {
 
 #[derive(Debug, Clone)]
 pub struct SymbolEntry {
-    /// The bound name as written in `.ds` (e.g. `foo`, `Point`).
+    /// The bound name as written in `.ts` (e.g. `foo`, `Point`).
     pub name: String,
     /// Byte span of the declaration's binding identifier.
     pub span: Span,
@@ -49,7 +49,7 @@ pub enum SymbolKind {
     Other,
 }
 
-/// Build a symbol table for one `.ds` file. An empty result means the file
+/// Build a symbol table for one `.ts` file. An empty result means the file
 /// failed to parse (syntax errors) — the caller degrades gracefully.
 #[must_use]
 pub fn analyze_symbols(source: &str) -> SymbolTable {

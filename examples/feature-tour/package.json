@@ -2,17 +2,17 @@
   "name": "feature-tour",
   "version": "0.0.0",
   "bin": {
-    "arrays": "arrays.ds",
-    "classes": "classes.ds",
-    "control-flow": "control-flow.ds",
-    "declarations": "declarations.ds",
-    "destructuring": "destructuring.ds",
-    "functions": "functions.ds",
-    "globals": "globals.ds",
-    "math": "math.ds",
-    "numbers": "numbers.ds",
-    "operators": "operators.ds",
-    "records": "records.ds",
-    "strings": "strings.ds"
+    "arrays": "arrays.ts",
+    "classes": "classes.ts",
+    "control-flow": "control-flow.ts",
+    "declarations": "declarations.ts",
+    "destructuring": "destructuring.ts",
+    "functions": "functions.ts",
+    "globals": "globals.ts",
+    "math": "math.ts",
+    "numbers": "numbers.ts",
+    "operators": "operators.ts",
+    "records": "records.ts",
+    "strings": "strings.ts"
   }
 }

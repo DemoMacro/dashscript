@@ -297,13 +297,13 @@ impl Default for Package {
     }
 }
 
-/// The `src/<stem>.rs` path for a `.ts`/`.ds` entry, flattening any directory
+/// The `src/<stem>.rs` path for a `.ts` entry, flattening any directory
 /// prefix to a single `src/` level (MVP: a crate root, no sub-modules yet).
 /// The stem is the file name without extension — `main.ts`, `./main.ts`, and
 /// `src/main.ts` all map to `src/main.rs`.
 fn src_to_rust_path(src_path: &str) -> String {
     let stem = src_path.rsplit(['/', '\\']).next().unwrap_or(src_path);
-    let stem = stem.trim_end_matches(".ds").trim_end_matches(".ts");
+    let stem = stem.trim_end_matches(".ts");
     format!("src/{stem}.rs")
 }
 

@@ -1,5 +1,5 @@
 {
-  "_comment": "Auto-extracted from translator/tests/*.rs by scripts/extract-tests.mjs. DO NOT edit by hand. Each entry is a verified-translatable .ds snippet; the conformance runner cargo-checks it. No `expect` — status is recorded informationally.",
+  "_comment": "Auto-extracted from translator/tests/*.rs by scripts/extract-tests.mjs. DO NOT edit by hand. Each entry is a verified-translatable .ts snippet; the conformance runner cargo-checks it. No `expect` — status is recorded informationally.",
   "features": [
     {
       "id": "arrays.translates_array_literal_to_vec_macro",

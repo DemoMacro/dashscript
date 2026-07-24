@@ -8,3 +8,6 @@ function greet(name: string): string {
 function main(): void {
   console.log(greet("from greeter"));
 }
+
+main();
+export {};

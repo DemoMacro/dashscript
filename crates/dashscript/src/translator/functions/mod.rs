@@ -51,7 +51,7 @@ pub fn translate_statement(
             .into_iter()
             .collect(),
         // `export function/interface/type/class` lowers the declaration(s) and
-        // marks each `pub` so another `.ds` module can `import` it. Re-export
+        // marks each `pub` so another `.ts` module can `import` it. Re-export
         // lists (`export { x } from "…"`) have no declaration and yield `[]`.
         Statement::ExportNamedDeclaration(exp) => {
             let Some(decl) = exp.declaration.as_ref() else {
@@ -444,7 +444,7 @@ pub(in crate::translator) fn translate_stmt(
 /// message), and the `finally` body appended after the match. DashScript emits
 /// `[profile.*] panic = "unwind"` in the `Cargo.toml` it generates (see
 /// `package.rs`), so unwinding is guaranteed and `catch_unwind` reliably catches
-/// a `.ds` `throw` (which lowers to `panic!`) — this is sound *because*
+/// a `.ts` `throw` (which lowers to `panic!`) — this is sound *because*
 /// DashScript owns the Cargo.toml, not despite it.
 ///
 /// Control flow out of the try body (`return`/`break`/`continue`) cannot cross
@@ -541,7 +541,7 @@ fn control_flow_in(stmts: &[Statement]) -> bool {
 }
 
 /// `throw new Error("msg")` / `throw "msg"` → `panic!("msg")`; any other
-/// `throw expr` → `panic!("{}", expr)` (Rust has no `throw`; `.ds` errors are
+/// `throw expr` → `panic!("{}", expr)` (Rust has no `throw`; `.ts` errors are
 /// treated as unrecoverable panics, since there is no `try`/`catch` yet).
 fn throw_stmt(
     arg: &Expression,

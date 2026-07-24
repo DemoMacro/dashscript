@@ -16,7 +16,7 @@ use super::super::flavor::NumberFlavor;
 
 /// Global conversion functions called as plain identifiers: `String(x)` →
 /// `format!("{}", x)`; `parseInt(s)`/`parseFloat(s)` → `s.trim().parse::<f64>()`
-/// (`.ds` `number` is `f64`, so both share one parse path). Returns `None` for
+/// (`.ts` `number` is `f64`, so both share one parse path). Returns `None` for
 /// any other name (falls through to a plain call).
 pub(in crate::translator) fn global_function(
     id: &IdentifierReference,

@@ -1,5 +1,5 @@
-//! `.ds` module imports. A relative import (`import { x } from "./other"`)
-//! resolves to a local `.ds` file, so `ds build` emits one Rust module per
+//! `.ts` module imports. A relative import (`import { x } from "./other"`)
+//! resolves to a local `.ts` file, so `ds build` emits one Rust module per
 //! dependency (the matching `mod` declarations and `use` aliases). A *bare*
 //! specifier (`import { X } from "serde"`) is a crate added via `ds add`: it is
 //! not a local file (so it is excluded from module assembly below) but still
@@ -15,7 +15,7 @@ use syn::Ident;
 
 use super::{bindings, semantic::SymbolKind};
 
-/// A `.ds` import of a local module: the Rust module name (`other`) and the
+/// A `.ts` import of a local module: the Rust module name (`other`) and the
 /// original source string (`"./other"`).
 #[derive(Debug, Clone)]
 pub struct ImportRef {
@@ -25,7 +25,7 @@ pub struct ImportRef {
     pub source: String,
 }
 
-/// The local modules a `.ds` file imports, in source order. Used by `ds build`
+/// The local modules a `.ts` file imports, in source order. Used by `ds build`
 /// to emit one `src/<module>.rs` per dependency.
 pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
     let allocator = Allocator::default();
@@ -38,7 +38,7 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
                 return None;
             };
             // A bare specifier is a crate (provided by cargo via `ds add`), not
-            // a local `.ds` file — only relative imports are assembled into
+            // a local `.ts` file — only relative imports are assembled into
             // `mod` decls.
             if !imp.source.value.starts_with('.') {
                 return None;
@@ -59,7 +59,7 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
 pub(crate) fn module_ident(source: &str) -> Option<Ident> {
     if source.starts_with('.') {
         let stem = source.rsplit(['/', '\\']).next()?;
-        let stem = stem.trim_end_matches(".ds").trim_end_matches(".ts");
+        let stem = stem.trim_end_matches(".ts");
         if stem.is_empty() || stem == "." || stem == ".." {
             return None;
         }
@@ -92,18 +92,18 @@ pub(crate) fn named_local(spec: &ImportDeclarationSpecifier) -> Option<Ident> {
 
 /// One symbol brought in by a bare-crate import (`import { X } from "crate"`),
 /// in the form the translator emits in the Rust `use` clause, plus the byte
-/// span of the local binding in the `.ds` source — so the language server can
+/// span of the local binding in the `.ts` source — so the language server can
 /// map a cursor position onto the symbol.
 #[derive(Debug, Clone)]
 pub struct CrateImportSymbol {
     /// The symbol name as it appears in the emitted `use crate::NAME;`
     /// (PascalCase types kept; values snake_cased — same rule as `named_local`).
     pub name: String,
-    /// The `.ds` byte span of the local binding, for cursor hit-testing.
+    /// The `.ts` byte span of the local binding, for cursor hit-testing.
     pub span: Span,
 }
 
-/// A bare-crate import (`import { X } from "serde"`) — not a local `.ds` file
+/// A bare-crate import (`import { X } from "serde"`) — not a local `.ts` file
 /// but a crate fetched via `ds add`. The module ident is hyphen-normalized
 /// (`cfg-if` → `cfg_if`); each symbol name matches what the translator writes
 /// in the `use` clause.
@@ -111,15 +111,15 @@ pub struct CrateImportSymbol {
 pub struct CrateImport {
     /// The crate module ident (`serde`, `cfg_if`) used as the `use` path.
     pub module: String,
-    /// The symbols imported from this crate, with their `.ds` byte spans.
+    /// The symbols imported from this crate, with their `.ts` byte spans.
     pub symbols: Vec<CrateImportSymbol>,
-    /// The `.ds` byte span of the import source string (`"adler"`), for
+    /// The `.ts` byte span of the import source string (`"adler"`), for
     /// cursor hit-testing on the crate name (go-to-definition → crate root).
     pub source_span: Span,
 }
 
-/// The bare-crate imports in a `.ds` file (`import { X } from "crate"`), with
-/// each symbol's `.ds` byte span. Used by `ds lsp` to resolve a
+/// The bare-crate imports in a `.ts` file (`import { X } from "crate"`), with
+/// each symbol's `.ts` byte span. Used by `ds lsp` to resolve a
 /// go-to-definition request on an import specifier to the crate's source.
 pub(crate) fn collect_crate_imports(source: &str) -> Vec<CrateImport> {
     let allocator = Allocator::default();
@@ -165,12 +165,12 @@ pub(crate) fn collect_crate_imports(source: &str) -> Vec<CrateImport> {
 /// A locally declarable name — `function`, `interface`, `type`, an `export`ed
 /// form, or an `import` binding — with the byte span of its binding. Used by
 /// `ds lsp` for in-file go-to-definition (the rust-analyzer backend handles
-/// crate imports; this handles everything declared inside the `.ds` file).
+/// crate imports; this handles everything declared inside the `.ts` file).
 #[derive(Debug, Clone)]
 pub struct LocalSymbol {
-    /// The bound name as written in `.ds` (e.g. `foo`, `Point`).
+    /// The bound name as written in `.ts` (e.g. `foo`, `Point`).
     pub name: String,
-    /// The `.ds` byte span of the binding identifier.
+    /// The `.ts` byte span of the binding identifier.
     pub span: Span,
     /// What the symbol declares — drives the document-symbol icon and hover.
     pub kind: SymbolKind,
@@ -183,7 +183,7 @@ pub struct LocalSymbol {
     pub decl_span: Option<Span>,
 }
 
-/// A function's signature as written in `.ds` — parameter names, their type
+/// A function's signature as written in `.ts` — parameter names, their type
 /// annotation (verbatim source slice, e.g. `number`, `string[]`), and the
 /// return type. Powers LSP signature help and hover for user functions.
 #[derive(Debug, Clone)]
@@ -223,7 +223,7 @@ fn render_param(p: &ParamInfo) -> String {
     }
 }
 
-/// Whether the `.ds` source declares a top-level `function main()` — the
+/// Whether the `.ts` source declares a top-level `function main()` — the
 /// entry point a `[[bin]]` target compiles. Used by `ds build`/`ds run` (a bin
 /// must have `main`) and the conformance harness. AST-level, so a `main_loop`
 /// helper or a `"fn main"` string literal never trips a substring match.
@@ -249,7 +249,7 @@ fn is_named_main(id: &Option<BindingIdentifier>) -> bool {
     id.as_ref().is_some_and(|id| id.name.as_str() == "main")
 }
 
-/// Every declarable name in a `.ds` file with its binding span, kind, and (for
+/// Every declarable name in a `.ts` file with its binding span, kind, and (for
 /// functions) signature. Used by `ds lsp` for in-file go-to-definition,
 /// document symbols, hover, and signature help.
 pub(crate) fn collect_declarations(source: &str) -> Vec<LocalSymbol> {
