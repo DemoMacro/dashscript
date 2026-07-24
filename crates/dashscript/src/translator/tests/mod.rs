@@ -8,7 +8,6 @@ mod collections;
 mod console;
 mod control_flow;
 mod destructuring;
-mod fmt;
 mod globals;
 mod json;
 mod math;

@@ -1,7 +1,7 @@
 //! `ds` — the DashScript toolchain entry point.
 //!
 //! Wired: `<file.ts>` (run a file), `run <script>`, `build [--target]`, `add`,
-//! `remove`, `lint`, `check`, `fmt`, `install`, `cache clean`, `lsp`. Each
+//! `remove`, `lint`, `install`, `cache clean`, `lsp`. Each
 //! command lives in [`commands`] (one module per group); this file is just the
 //! dispatch, the help text, and a couple of small helpers.
 
@@ -63,25 +63,10 @@ fn main() -> ExitCode {
             Some(name) => report(deps::remove(&name)),
             None => usage_exit("usage: ds remove <crate|cargo:crate>"),
         },
-        // `ds check` is the composite (lint + format, like `vp check`) and the
-        // one you reach for most, so it leads. `--fix` writes the formatting
-        // fix instead of just reporting it. `lint` (translatability only) and
-        // `fmt` (format in place) are the focused variants. All three take an
-        // optional file — no argument runs over every `.ts` in the project.
-        Some("check") => {
-            let mut fix = false;
-            let mut file: Option<String> = None;
-            for a in args.by_ref() {
-                if a == "--fix" {
-                    fix = true;
-                } else if !a.starts_with('-') {
-                    file = Some(a);
-                } else {
-                    return usage_exit(&format!("ds check: unknown option '{a}'"));
-                }
-            }
-            report(check::check(file.as_deref(), fix))
-        }
+        // `ds lint` — translatability (DashScript's own check; general lint/fmt
+        // is the user's toolchain, e.g. vite-plus). Takes an optional file — no
+        // argument runs over every `.ts` in the project. `--json` emits
+        // structured diagnostics for the @dashscript/typescript-plugin.
         Some("lint") => {
             let mut json = false;
             let mut file: Option<String> = None;
@@ -96,7 +81,6 @@ fn main() -> ExitCode {
             }
             report(check::lint(file.as_deref(), json))
         }
-        Some("fmt") => report(check::fmt(args.next().as_deref())),
         // `ds install` = ensure package deps are fetched + a Cargo.lock exists
         // (like `pnpm install` / `vp install`). No node_modules equivalent —
         // cargo's `~/.cargo/registry` is the dependency store.
@@ -146,12 +130,10 @@ fn print_help() {
     println!("    --target rust        emit the translated Rust crate instead");
     println!("    --filter <name>      build one workspace member");
     println!();
-    println!("Check & format:");
-    println!("  check [<file>] [--fix]  Lint + format check (--fix writes fixes)");
+    println!("Check:");
     println!(
         "  lint [<file>] [--json]  Translatability check (--json emits structured diagnostics)"
     );
-    println!("  fmt [<file>]            Format .ts in place");
     println!();
     println!("Dependencies:");
     println!("  add <crate|file.rs>  Add a crate (cargo:<name>) or bindgen a local .rs");

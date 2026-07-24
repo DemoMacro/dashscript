@@ -27,7 +27,7 @@ pub mod types;
 use std::collections::BTreeSet;
 
 use oxc_allocator::Allocator;
-use oxc_codegen::{Codegen, CodegenOptions, IndentChar};
+use oxc_codegen::Codegen;
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
 use oxc_semantic::SemanticBuilder;
@@ -695,7 +695,7 @@ impl Translator {
         // `instanceof`, …) the static translator cannot lower is run whole
         // under an embedded QuickJS engine instead of being lowered to Rust.
         // The same `collect_unsupported` walk that flags these as
-        // `unsupported` in `ds check` here flips the file to the engine path —
+        // `unsupported` in `ds lint` here flips the file to the engine path —
         // a single source of truth for what the engine covers, so the lint and
         // the lowering cannot drift. Default `ds build` output stays pure Rust;
         // only a program that actually uses such a construct pulls the
@@ -786,32 +786,6 @@ impl Translator {
         } else {
             None
         }
-    }
-
-    /// Format `.ts` source with `oxc_codegen` (pretty-print, 2-space indent,
-    /// not minified) — the same indentation style as prettier / `vp fmt`, so
-    /// `.ts` written by hand (TypeScript-style) is already formatted.
-    ///
-    /// # Errors
-    /// Returns an error string if `oxc_parser` reports syntax diagnostics — a
-    /// file with syntax errors cannot be formatted.
-    pub fn format(&self, source: &str) -> Result<String, String> {
-        let allocator = Allocator::default();
-        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
-        if !ret.diagnostics.is_empty() {
-            return Err(format!(
-                "dashscript: oxc reported {} parse diagnostic(s) — fix syntax before formatting",
-                ret.diagnostics.len()
-            ));
-        }
-        Ok(Codegen::new()
-            .with_options(CodegenOptions {
-                indent_char: IndentChar::Space,
-                indent_width: 2,
-                ..CodegenOptions::default()
-            })
-            .build(&ret.program)
-            .code)
     }
 
     /// The local `.ts` modules this file imports (`import { x } from "./other"`

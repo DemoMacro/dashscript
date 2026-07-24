@@ -380,7 +380,7 @@ pub(crate) fn package_root() -> PathBuf {
 /// Collect every `.ts` file under the current project (the nearest
 /// `package.json` walking up, else the cwd), skipping generated/vendored
 /// directories (`target`, `.cache`, `dist`, `node_modules`, `.git`). Used by
-/// `ds lint` / `ds check` / `ds fmt` with no argument — the way `vp check` and
+/// `ds lint` with no argument — the way `vp check` and
 /// `oxlint` check the whole project when given no target. Sorted for stable
 /// output.
 pub(crate) fn collect_ts_files() -> Vec<PathBuf> {
