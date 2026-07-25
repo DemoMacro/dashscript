@@ -12,6 +12,47 @@ use std::{
 
 use dashscript::{FileRole, Package, RuntimeDeps, Translator};
 
+/// Translate one resolved dependency to the Rust source for `src/<module>.rs`,
+/// merging its runtime deps into `deps`. The `DepKind` picks the path: a `.ts`
+/// dep becomes a Rust module; a pure `.d.ts` yields its `interface`/`type`
+/// items; a `.js`/typed pair needs the engine (a later batch, raised honestly).
+fn translate_dep(
+    translator: &Translator,
+    dep_path: &Path,
+    kind: DepKind,
+    deps: &mut RuntimeDeps,
+) -> Result<String, Box<dyn Error>> {
+    match kind {
+        DepKind::Ts => {
+            let dep_src = fs::read_to_string(dep_path)
+                .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
+            let (rust, dep_deps) = translator
+                .translate_with_deps_as(&dep_src, FileRole::Module)
+                .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
+            deps.merge(&dep_deps);
+            Ok(rust)
+        }
+        DepKind::DtsOnly => {
+            let dep_src = fs::read_to_string(dep_path)
+                .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
+            Ok(translator.translate_dts(&dep_src))
+        }
+        DepKind::DtsWithJs { js_path } => Err(format!(
+            "dashscript: dependency '{}' is a typed JavaScript package (.d.ts + {}); the \
+             embedded engine is not yet wired for per-import FFI (a later batch)",
+            dep_path.display(),
+            js_path.display()
+        )
+        .into()),
+        DepKind::Js => Err(format!(
+            "dashscript: dependency '{}' is an untyped JavaScript package (.js); the embedded \
+             engine is not yet wired for per-import FFI (a later batch)",
+            dep_path.display()
+        )
+        .into()),
+    }
+}
+
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
 /// `project_dir/src/`. The caller writes `Cargo.toml`. Shared by a single-
@@ -35,13 +76,8 @@ pub(crate) fn translate_sources(
         if !seen.insert(imp.module.clone()) {
             continue; // dedupe repeated imports of the same module
         }
-        let dep_path = resolve_local_module(base, &imp.source)?;
-        let dep_src = fs::read_to_string(&dep_path)
-            .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
-        let (dep_rust, dep_deps) = translator
-            .translate_with_deps_as(&dep_src, FileRole::Module)
-            .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
-        deps.merge(&dep_deps);
+        let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+        let dep_rust = translate_dep(&translator, &dep_path, kind, &mut deps)?;
         fs::write(
             project_dir.join("src").join(format!("{}.rs", imp.module)),
             dep_rust,
@@ -84,13 +120,8 @@ fn translate_one_with_mods(
         // A bare (npm) import is outside the project tree; translate it here so
         // its `mod` decl resolves. A relative import is translated by the walk.
         if !imp.source.starts_with('.') {
-            let dep_path = resolve_local_module(base, &imp.source)?;
-            let dep_src = fs::read_to_string(&dep_path)
-                .map_err(|e| format!("cannot read {}: {e}", dep_path.display()))?;
-            let (dep_rust, dep_deps) = translator
-                .translate_with_deps_as(&dep_src, FileRole::Module)
-                .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
-            deps.merge(&dep_deps);
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            let dep_rust = translate_dep(&translator, &dep_path, kind, &mut deps)?;
             fs::write(
                 project_dir.join("src").join(format!("{}.rs", imp.module)),
                 dep_rust,
@@ -199,7 +230,7 @@ fn detect_circular_imports(files: &[PathBuf]) -> Result<(), Box<dyn Error>> {
         let base = f.parent().unwrap_or_else(|| Path::new(""));
         let key = f.canonicalize().unwrap_or_else(|_| f.clone());
         for imp in Translator::new().imports(&src) {
-            if let Ok(dep) = resolve_local_module(base, &imp.source) {
+            if let Ok((dep, _)) = resolve_local_module(base, &imp.source) {
                 let dep = dep.canonicalize().unwrap_or(dep);
                 if known.contains(&dep) {
                     graph.entry(key.clone()).or_default().push(dep);
@@ -288,7 +319,7 @@ fn detect_bin_imports_bin(root: &Path, bins: &[(String, String)]) -> Result<(), 
         };
         let base = file.parent().unwrap_or_else(|| Path::new(""));
         for imp in Translator::new().imports(&src) {
-            let Ok(dep) = resolve_local_module(base, &imp.source) else {
+            let Ok((dep, _)) = resolve_local_module(base, &imp.source) else {
                 continue; // a missing module surfaces at `cargo build`
             };
             if let Ok(canon) = dep.canonicalize() {
@@ -420,7 +451,61 @@ fn inject_helper_module(
 
 /// Resolve a relative `.ts` import (`"./other"` or `"./other.ts"`) against the
 /// importing file's directory. Errors clearly when no matching file exists.
-pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf, Box<dyn Error>> {
+/// What kind of file a resolved dependency is — decides how the build
+/// pipeline lowers it. A `.ts` dep translates as a Rust module (the existing
+/// path). A pure `.d.ts` (an `@types/*` package with no `.js`) carries types
+/// only — its `interface`/`type` declarations become Rust items, and a value
+/// import surfaces as a `cargo check` error honestly. A `.d.ts` with a sibling
+/// `.js`, or a `.js` with a `.d.ts`, is a typed package whose implementation
+/// runs under the embedded engine; a lone `.js` is untyped — both are a later
+/// batch (the engine is not yet wired for per-import FFI).
+#[derive(Clone, Debug)]
+pub(crate) enum DepKind {
+    Ts,
+    DtsOnly,
+    DtsWithJs { js_path: PathBuf },
+    Js,
+}
+
+/// The kind of a resolved entry path. `.d.ts` is detected by file name:
+/// `Path::extension` returns `"ts"` for `index.d.ts` (it takes the last
+/// `.`-segment), so the extension alone cannot tell `.d.ts` from `.ts`. A
+/// `.d.ts`/`.js` pair is a typed package — the `.js` is the implementation;
+/// a lone `.d.ts` is pure types; a lone `.js` is untyped.
+fn dep_kind_of(entry: &Path) -> DepKind {
+    let is_dts = entry
+        .file_name()
+        .is_some_and(|n| n.to_string_lossy().ends_with(".d.ts"));
+    if is_dts {
+        return match sibling_with_ext(entry, "js") {
+            Some(js_path) => DepKind::DtsWithJs { js_path },
+            None => DepKind::DtsOnly,
+        };
+    }
+    match entry.extension().and_then(|e| e.to_str()) {
+        Some("js") => match sibling_with_ext(entry, "d.ts") {
+            Some(_) => DepKind::DtsWithJs {
+                js_path: entry.to_path_buf(),
+            },
+            None => DepKind::Js,
+        },
+        _ => DepKind::Ts,
+    }
+}
+
+/// A sibling file with the same stem but a different extension: `index.d.ts`
+/// → `index.js`. Returns the path only when it exists. The stem is the first
+/// `.`-delimited segment, so `index.d.ts` and `foo.ts` both strip correctly.
+fn sibling_with_ext(entry: &Path, new_ext: &str) -> Option<PathBuf> {
+    let stem = entry.file_name()?.to_str()?.split('.').next()?;
+    let candidate = entry.with_file_name(format!("{stem}.{new_ext}"));
+    candidate.exists().then_some(candidate)
+}
+
+pub(crate) fn resolve_local_module(
+    base: &Path,
+    source: &str,
+) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
     // A bare specifier (`lodash`, `@scope/pkg`) is an npm import — resolve it
     // under `node_modules/` (Node's lookup walking up from the importing file).
     // A relative specifier (`./foo`) uses bundler-lenient local resolution.
@@ -436,7 +521,7 @@ pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf,
     let candidates: [PathBuf; 2] = [direct.with_extension("ts"), direct.join("index.ts")];
     for candidate in &candidates {
         if candidate.exists() {
-            return Ok(candidate.clone());
+            return Ok((candidate.clone(), DepKind::Ts));
         }
     }
     Err(format!(
@@ -456,7 +541,7 @@ pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf,
 /// resolves directly. The architecture's npm layering: a `.ts` entry
 /// translates as a module; a `.js` entry errors honestly (the embedded engine
 /// is not yet wired for imports).
-fn resolve_node_module(base: &Path, source: &str) -> Result<PathBuf, Box<dyn Error>> {
+fn resolve_node_module(base: &Path, source: &str) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
     let (pkg, sub) = match source.split_once('/') {
         Some((p, s)) => (p, Some(s)),
         None => (source, None),
@@ -482,7 +567,7 @@ fn resolve_node_entry(
     pkg_dir: &Path,
     pkg: &str,
     sub: Option<&str>,
-) -> Result<PathBuf, Box<dyn Error>> {
+) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
     if let Some(sub) = sub {
         let trimmed = sub.trim_end_matches(".ts");
         let candidates: [PathBuf; 2] = [
@@ -491,7 +576,7 @@ fn resolve_node_entry(
         ];
         for candidate in &candidates {
             if candidate.exists() {
-                return Ok(candidate.clone());
+                return Ok((candidate.clone(), DepKind::Ts));
             }
         }
         return Err(format!(
@@ -504,23 +589,19 @@ fn resolve_node_entry(
         )
         .into());
     }
-    let entry = node_package_entry(pkg_dir)?;
-    if entry.extension().is_some_and(|e| e == "ts") {
-        return Ok(entry);
-    }
-    Err(format!(
-        "dashscript: npm package '{pkg}' entry '{}' is not a .ts file — JS npm packages need the \
-         embedded engine, which is not yet wired for imports",
-        entry.display()
-    )
-    .into())
+    // A package root resolves via its `package.json`; the entry's kind (`.ts`
+    // source, pure `.d.ts` types, or a `.js`/`.d.ts`+`.js` engine pair) decides
+    // how the build pipeline lowers it — including the honest "engine not yet
+    // wired" error for `.js`/typed pairs, raised by the translate loop.
+    let (entry, kind) = node_package_entry(pkg_dir)?;
+    Ok((entry, kind))
 }
 
 /// The entry file an npm package's `package.json` points at, preferring a
 /// `.ts` source: scans `types`/`typings`/`main`/`module` for one that is `.ts`;
 /// otherwise returns the first that exists (a non-`.ts` entry errors upstream,
 /// the honest "JS needs the engine" path). Defaults to `index.ts`.
-fn node_package_entry(pkg_dir: &Path) -> Result<PathBuf, Box<dyn Error>> {
+fn node_package_entry(pkg_dir: &Path) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
     let json = fs::read_to_string(pkg_dir.join("package.json"))?;
     let value: serde_json::Value = serde_json::from_str(&json)?;
     let mut first_existing: Option<PathBuf> = None;
@@ -528,14 +609,19 @@ fn node_package_entry(pkg_dir: &Path) -> Result<PathBuf, Box<dyn Error>> {
         if let Some(s) = value.get(field).and_then(|v| v.as_str()) {
             let candidate = pkg_dir.join(s);
             if candidate.exists() {
+                // Prefer a `.ts` entry (which `Path::extension` also reports
+                // for `.d.ts`) — a source or declaration we can translate.
                 if candidate.extension().is_some_and(|e| e == "ts") {
-                    return Ok(candidate);
+                    let kind = dep_kind_of(&candidate);
+                    return Ok((candidate, kind));
                 }
                 first_existing.get_or_insert(candidate);
             }
         }
     }
-    Ok(first_existing.unwrap_or_else(|| pkg_dir.join("index.ts")))
+    let entry = first_existing.unwrap_or_else(|| pkg_dir.join("index.ts"));
+    let kind = dep_kind_of(&entry);
+    Ok((entry, kind))
 }
 
 /// Resolve the Cargo package for `src_path`: the `package.json` found walking
@@ -872,7 +958,7 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         write(root, "foo.ts", "export function foo() {}");
-        let resolved = resolve_local_module(root, "./foo").unwrap();
+        let (resolved, _) = resolve_local_module(root, "./foo").unwrap();
         assert_eq!(resolved, root.join("foo.ts"));
     }
 
@@ -882,7 +968,7 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         write(root, "foo.ts", "export function foo() {}");
-        let resolved = resolve_local_module(root, "./foo.ts").unwrap();
+        let (resolved, _) = resolve_local_module(root, "./foo.ts").unwrap();
         assert_eq!(resolved, root.join("foo.ts"));
     }
 
@@ -893,7 +979,7 @@ mod tests {
         let root = tmp.path();
         fs::create_dir_all(root.join("foo")).unwrap();
         write(&root.join("foo"), "index.ts", "export function foo() {}");
-        let resolved = resolve_local_module(root, "./foo").unwrap();
+        let (resolved, _) = resolve_local_module(root, "./foo").unwrap();
         assert_eq!(resolved, root.join("foo").join("index.ts"));
     }
 
@@ -905,7 +991,7 @@ mod tests {
         fs::create_dir_all(root.join("foo")).unwrap();
         write(root, "foo.ts", "export function direct() {}");
         write(&root.join("foo"), "index.ts", "export function barrel() {}");
-        let resolved = resolve_local_module(root, "./foo").unwrap();
+        let (resolved, _) = resolve_local_module(root, "./foo").unwrap();
         assert_eq!(resolved, root.join("foo.ts"));
     }
 
@@ -927,7 +1013,7 @@ mod tests {
             "index.ts",
             "export function foo(): number { return 1; }",
         );
-        let resolved = resolve_local_module(root, "my-pkg").unwrap();
+        let (resolved, _) = resolve_local_module(root, "my-pkg").unwrap();
         assert_eq!(resolved, pkg.join("index.ts"));
     }
 
@@ -940,15 +1026,16 @@ mod tests {
         let pkg = root.join("node_modules").join("my-pkg");
         fs::create_dir_all(&pkg).unwrap();
         write(&pkg, "util.ts", "export function u(): number { return 1; }");
-        let resolved = resolve_local_module(root, "my-pkg/util").unwrap();
+        let (resolved, _) = resolve_local_module(root, "my-pkg/util").unwrap();
         assert_eq!(resolved, pkg.join("util.ts"));
     }
 
     #[test]
-    fn resolve_node_module_js_entry_errors() {
-        // A package whose entry is `.js` (no `.ts` source) errors honestly —
-        // JS npm packages need the embedded engine, which is not yet wired for
-        // imports. This is the architecture's "JS engine" half, deferred.
+    fn resolve_node_module_js_entry_is_engine_dep() {
+        // A package whose entry is `.js` (no `.ts`/`.d.ts`) resolves to a `Js`
+        // kind — its implementation runs under the embedded engine. Resolve no
+        // longer errors on `.js`; the honest "engine not yet wired" message is
+        // raised by the translate loop, which knows the kind.
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         let pkg = root.join("node_modules").join("js-pkg");
@@ -959,11 +1046,11 @@ mod tests {
             r#"{ "name": "js-pkg", "main": "index.js" }"#,
         );
         write(&pkg, "index.js", "module.exports = {};");
-        let err = resolve_local_module(root, "js-pkg").unwrap_err();
-        let msg = err.to_string();
+        let (resolved, kind) = resolve_local_module(root, "js-pkg").unwrap();
+        assert_eq!(resolved, pkg.join("index.js"));
         assert!(
-            msg.contains("not a .ts file") && msg.contains("js-pkg"),
-            "js entry not surfaced: {msg}"
+            matches!(kind, DepKind::Js),
+            "js entry should be Js kind: {kind:?}"
         );
     }
 
@@ -987,7 +1074,7 @@ mod tests {
         );
         let nested = root.join("src").join("deep");
         fs::create_dir_all(&nested).unwrap();
-        let resolved = resolve_local_module(&nested, "shared").unwrap();
+        let (resolved, _) = resolve_local_module(&nested, "shared").unwrap();
         assert_eq!(resolved, pkg.join("index.ts"));
     }
 

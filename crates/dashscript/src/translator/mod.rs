@@ -14,6 +14,7 @@ mod check;
 mod class;
 pub mod context;
 pub mod declarations;
+pub mod dts;
 pub mod expressions;
 mod flavor;
 pub mod functions;
@@ -1105,6 +1106,16 @@ impl Translator {
     #[must_use]
     pub fn imports(&self, source: &str) -> Vec<imports::ImportRef> {
         imports::collect_imports(source)
+    }
+
+    /// Translate a `.d.ts` declaration source to a Rust module body — each
+    /// `interface`/`type` becomes a `pub` struct/alias. A pure `.d.ts` (an
+    /// `@types/*` package with no sibling `.js`) carries types only, so a
+    /// value import surfaces as a `cargo check` "cannot find function"
+    /// honestly. Used by `ds build` when a dependency resolves to a `.d.ts`.
+    #[must_use]
+    pub fn translate_dts(&self, source: &str) -> String {
+        dts::translate_dts(source)
     }
 
     /// The bare-crate imports in a `.ts` file (`import { X } from "crate"`),
