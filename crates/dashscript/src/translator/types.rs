@@ -106,7 +106,11 @@ fn union_type(u: &TSUnionType) -> Type {
     // is emitted by the registry pre-pass that scans every type position
     // (`registry::inline_union_enums`) — this only names the type.
     if let Some((name, _)) = super::declarations::scalar_union_enum(u) {
-        return parse_quote!(#name);
+        // `crate::`-prefixed so the enum resolves at the crate root whether the
+        // file is a lone entry (the enum lives in its own crate root) or a
+        // project module (the entry emits the enum; modules reference it). A
+        // bare name would name a distinct type per module (E0308).
+        return parse_quote!(crate::#name);
     }
     parse_quote!(_)
 }

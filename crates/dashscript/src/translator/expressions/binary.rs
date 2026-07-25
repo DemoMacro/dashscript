@@ -270,9 +270,9 @@ fn union_null_equality(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
     let local = bindings::snake(&id.name);
     let variant = proc_macro2::Ident::new(variant_tag, proc_macro2::Span::call_site());
     Some(if negate {
-        parse_quote!(!matches!(#local, #enum_ident::#variant))
+        parse_quote!(!matches!(#local, crate::#enum_ident::#variant))
     } else {
-        parse_quote!(matches!(#local, #enum_ident::#variant))
+        parse_quote!(matches!(#local, crate::#enum_ident::#variant))
     })
 }
 

@@ -960,19 +960,23 @@ impl Translator {
         // `fn main {}` when there are none — a Rust binary needs an entry).
         let mut items: Vec<syn::Item> = Vec::new();
         // Inline scalar-union enums (`__DsUnion…`) discovered by the registry
-        // pre-pass are emitted first, before any item that names them. Sorted
-        // by name for deterministic output. Each enum is followed by its
-        // `Display` impl so a union value interpolates into a `format!`/
-        // template literal the way ES `String(v)` renders it.
-        let mut union_enum_names: Vec<&syn::Ident> = registry.union_enums.keys().collect();
-        union_enum_names.sort();
-        items.extend(union_enum_names.into_iter().flat_map(|name| {
-            let e = &registry.union_enums[name];
-            [
-                syn::Item::Enum(e.clone()),
-                syn::Item::Impl(declarations::union_display_impl(e)),
-            ]
-        }));
+        // pre-pass are emitted first, before any item that names them. A
+        // `FileRole::Module` skips emission: the entry emits the enum at the
+        // crate root, and every reference is `crate::`-prefixed (`types` /
+        // `binary` / `object` / `unary`) so a module resolves to that one
+        // definition instead of its own (a per-module `enum __DsUnion…` would
+        // be a distinct nominal type → E0308 at any cross-module call).
+        if !matches!(role, FileRole::Module) {
+            let mut union_enum_names: Vec<&syn::Ident> = registry.union_enums.keys().collect();
+            union_enum_names.sort();
+            items.extend(union_enum_names.into_iter().flat_map(|name| {
+                let e = &registry.union_enums[name];
+                [
+                    syn::Item::Enum(e.clone()),
+                    syn::Item::Impl(declarations::union_display_impl(e)),
+                ]
+            }));
+        }
         let mut exec_stmts: Vec<&oxc_ast::ast::Statement> = Vec::new();
         for s in &program.body {
             // A promoted const-expr `const` lowers to a crate-level `const`

@@ -182,20 +182,20 @@ fn box_union_value(value: &Expression, enum_ident: &Ident, ctx: &Ctx<'_>) -> Exp
     match value {
         Expression::StringLiteral(s) => {
             let v = s.value.to_string();
-            parse_quote!(#enum_ident::Str(#v.to_string()))
+            parse_quote!(crate::#enum_ident::Str(#v.to_string()))
         }
         Expression::NumericLiteral(n) => {
             let v = super::literals::numeric_expr(n.value);
-            parse_quote!(#enum_ident::Num(#v))
+            parse_quote!(crate::#enum_ident::Num(#v))
         }
         Expression::BooleanLiteral(b) => {
             let v = b.value;
-            parse_quote!(#enum_ident::Bool(#v))
+            parse_quote!(crate::#enum_ident::Bool(#v))
         }
         Expression::Identifier(id) if id.name.as_str() == "undefined" => {
-            parse_quote!(#enum_ident::Undef)
+            parse_quote!(crate::#enum_ident::Undef)
         }
-        Expression::NullLiteral(_) => parse_quote!(#enum_ident::Null),
+        Expression::NullLiteral(_) => parse_quote!(crate::#enum_ident::Null),
         _ => super::translate_expr(value, ctx),
     }
 }

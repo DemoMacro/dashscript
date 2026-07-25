@@ -204,12 +204,12 @@ fn union_typeof_conditional(c: &ConditionalExpression, ctx: &Ctx<'_>) -> Option<
     let els = translate_expr(&c.alternate, ctx);
     Some(if negate {
         parse_quote!(match ::std::clone::Clone::clone(&#local) {
-            #enum_ident::#variant(#local) => ::std::string::ToString::to_string(&(#els)),
+            crate::#enum_ident::#variant(#local) => ::std::string::ToString::to_string(&(#els)),
             #local => ::std::string::ToString::to_string(&(#then)),
         })
     } else {
         parse_quote!(match ::std::clone::Clone::clone(&#local) {
-            #enum_ident::#variant(#local) => ::std::string::ToString::to_string(&(#then)),
+            crate::#enum_ident::#variant(#local) => ::std::string::ToString::to_string(&(#then)),
             #local => ::std::string::ToString::to_string(&(#els)),
         })
     })
