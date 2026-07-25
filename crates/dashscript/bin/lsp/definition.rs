@@ -88,7 +88,9 @@ impl Server {
 /// the emitted `use crate::X`.
 pub(super) fn locate_import(text: &str, pos: Position) -> Option<(String, Option<String>)> {
     let byte = text::position_to_byte(text, pos)?;
-    for imp in Translator::new().crate_imports(text) {
+    let imports = Translator::new().crate_imports(text);
+    // Precise: cursor inside an import's symbol span or source string.
+    for imp in &imports {
         // A specifier under the cursor → resolve that symbol.
         for sym in &imp.symbols {
             if byte >= sym.span.start as usize && byte <= sym.span.end as usize {
@@ -98,6 +100,20 @@ pub(super) fn locate_import(text: &str, pos: Position) -> Option<(String, Option
         // The import source string under the cursor → resolve the crate root.
         if byte >= imp.source_span.start as usize && byte <= imp.source_span.end as usize {
             return Some((imp.module.clone(), None));
+        }
+    }
+    // Fallback: a use-site word (type annotation, call, …) that names an
+    // imported crate symbol, or the crate itself → resolve to the crate too,
+    // so hover/go-to-def work outside the import statement.
+    let word = text::word_at(text, byte)?;
+    for imp in &imports {
+        if word == imp.module {
+            return Some((imp.module.clone(), None));
+        }
+        for sym in &imp.symbols {
+            if word == sym.name {
+                return Some((imp.module.clone(), Some(sym.name.clone())));
+            }
         }
     }
     None
@@ -211,5 +227,22 @@ mod tests {
                 character: 4
             }
         );
+    }
+
+    #[test]
+    fn locate_import_resolves_use_site_word() {
+        // A use site (the return-type annotation), not the import statement.
+        // `function f(): Adler32 {}` — `Adler32` begins at column 14.
+        let text = "import { Adler32 } from \"cargo:adler\";\nfunction f(): Adler32 {}\n";
+        let (module, symbol) = locate_import(
+            text,
+            Position {
+                line: 1,
+                character: 16,
+            },
+        )
+        .unwrap();
+        assert_eq!(module, "adler");
+        assert_eq!(symbol.as_deref(), Some("Adler32"));
     }
 }
