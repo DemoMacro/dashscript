@@ -9,7 +9,15 @@ use oxc_diagnostics::OxcDiagnostic;
 use super::text::byte_range;
 
 pub(super) fn publish_diagnostics(connection: &Connection, uri: &Uri, text: &str) {
-    let diagnostics = Translator::new()
+    // Only check DashScript source — a file that imports no `cargo:` crate is
+    // plain TypeScript (the VS Code extension's own sources, an ordinary npm
+    // project, …); reporting translatability on it would intrude on the TS/Node
+    // language server. `ds lint` still checks any file on request.
+    let translator = Translator::new();
+    if translator.crate_imports(text).is_empty() {
+        return;
+    }
+    let diagnostics = translator
         .check(text)
         .iter()
         .map(|diag| to_lsp_diagnostic(diag, text))
