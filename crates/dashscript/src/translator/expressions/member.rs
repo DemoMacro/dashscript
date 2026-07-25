@@ -89,12 +89,16 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             };
         }
     }
-    // `tags.a` on a `Record`/HashMap local → `tags.get("a").copied().unwrap()`
-    // (a TS `Record` static field access and `m["a"]` are the same lookup).
+    // `tags.a` on a `Record`/HashMap local → `tags.get("a").<copied|cloned>().unwrap()`
+    // (a TS `Record` static field access and `m["a"]` are the same lookup). A
+    // `Copy` value (f64/bool) copies out of the borrow; a non-`Copy` value (a
+    // union enum carrying a String) clones — `.copied()`'s `T: Copy` bound
+    // would otherwise fail.
     if is_hashmap_local(&sm.object, ctx) {
         let obj = translate_expr(&sm.object, ctx);
         let key = syn::LitStr::new(field_name, Span::call_site());
-        return parse_quote!(#obj.get(#key).copied().unwrap());
+        let access = hashmap_access_method(&sm.object, ctx);
+        return parse_quote!(#obj.get(#key).#access().unwrap());
     }
     // `Math.PI` / `Math.E` → the corresponding Rust constant.
     if builtins::is_ident(&sm.object, "Math") {
@@ -138,7 +142,8 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
     let obj = translate_expr(&cm.object, ctx);
     if is_hashmap_local(&cm.object, ctx) {
         let key = index_key(&cm.expression, ctx);
-        return parse_quote!(#obj.get(#key).copied().unwrap());
+        let access = hashmap_access_method(&cm.object, ctx);
+        return parse_quote!(#obj.get(#key).#access().unwrap());
     }
     // `m[i]` on a `let m = s.match(/pat/)` result → `captures[i]` (the whole
     // match at 0, the capture groups at 1..). Out-of-range or a non-
@@ -312,6 +317,39 @@ fn element_is_copy(path: &syn::Path) -> bool {
         return false;
     };
     types::type_path(elem).is_some_and(types::is_copy_path)
+}
+
+/// Whether the value type of a `HashMap<K, V>` is `Copy` (so a `.get` yields
+/// `Option<&V>` that can be `.copied()` rather than `.cloned()`). A non-
+/// `HashMap` or a non-`Copy` `V` (e.g. an inline scalar-union enum, which
+/// carries a `String`) returns `false`, selecting `.cloned()`.
+fn hashmap_value_is_copy(path: &syn::Path) -> bool {
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
+    if seg.ident != "HashMap" {
+        return false;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return false;
+    };
+    let Some(syn::GenericArgument::Type(v)) = args.args.iter().nth(1) else {
+        return false;
+    };
+    types::type_path(v).is_some_and(types::is_copy_path)
+}
+
+/// `copied` when `expr` is a `HashMap` local whose value is `Copy`, else
+/// `cloned` — the method name for `Option<&V>` → `Option<V>` after a `.get`.
+fn hashmap_access_method(expr: &Expression, ctx: &Ctx<'_>) -> syn::Ident {
+    let copy = match expr {
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name).is_some_and(hashmap_value_is_copy)
+        }
+        _ => false,
+    };
+    syn::Ident::new(if copy { "copied" } else { "cloned" }, Span::call_site())
 }
 
 /// True when `expr` is a local whose type is a `HashMap`.

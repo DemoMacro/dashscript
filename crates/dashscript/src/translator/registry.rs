@@ -13,13 +13,15 @@
 use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
-    Class, ClassElement, Function, MethodDefinitionKind, Statement, TSLiteral, TSSignature, TSType,
-    TSTypeAliasDeclaration, TSTypeLiteral,
+    Class, ClassElement, Declaration, Function, MethodDefinitionKind, Statement,
+    TSInterfaceDeclaration, TSLiteral, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeLiteral,
+    VariableDeclaration,
 };
-use syn::{Ident, Path};
+use syn::{parse_quote, Ident, ItemEnum, Path};
 
 use super::analysis;
 use super::bindings;
+use super::declarations;
 use super::name_table::NameTable;
 use super::types;
 
@@ -53,6 +55,13 @@ pub struct TypeRegistry {
     /// call `obj.m()` with `m` in this set marks the receiver `let mut` — the
     /// `&mut self` analogue of the built-in `MUTATORS` (`push`, `splice` …).
     pub mut_methods: HashSet<String>,
+    /// Inline all-scalar-keyword unions (`string | number | undefined`, the
+    /// XML-attribute / JSON-value shape) found in any type position, keyed by
+    /// the generated enum name (`__DsUnion…`). One definition per unique shape
+    /// (member order is canonicalized in `declarations::scalar_union_enum`);
+    /// `types::union_type` references the same name, and the translator emits
+    /// these definitions before the body items.
+    pub union_enums: HashMap<Ident, ItemEnum>,
 }
 
 impl TypeRegistry {
@@ -65,6 +74,7 @@ impl TypeRegistry {
             ref_params: HashMap::new(),
             structs: HashMap::new(),
             mut_methods: HashSet::new(),
+            union_enums: HashMap::new(),
         }
     }
 }
@@ -82,45 +92,154 @@ pub fn build_registry(statements: &[Statement], names: &NameTable) -> TypeRegist
     let mut registry = TypeRegistry::new();
     for stmt in statements {
         match stmt {
-            Statement::TSTypeAliasDeclaration(alias) => {
-                if let Some(variants) = discriminated_enum(alias) {
-                    registry.unions.insert(alias.id.name.to_string(), variants);
+            Statement::TSTypeAliasDeclaration(alias) => register_type_alias(alias, &mut registry),
+            Statement::TSInterfaceDeclaration(iface) => register_interface(iface, &mut registry),
+            Statement::FunctionDeclaration(func) => register_function(func, names, &mut registry),
+            Statement::ClassDeclaration(class) => register_class(class, names, &mut registry),
+            // A top-level `const r: Record<K, …|…> = …` annotation carries an
+            // inline scalar union — register it so the initializer's object
+            // literal can box its values into the enum variants.
+            Statement::VariableDeclaration(decl) => {
+                register_variable_declaration(decl, &mut registry)
+            }
+            // `export function f` / `export type T` is wrapped in
+            // `ExportNamedDeclaration { declaration }` — recurse the inner
+            // declaration so an exported function's inline-union parameter still
+            // gets its enum emitted (and its params/ref-flags registered).
+            Statement::ExportNamedDeclaration(exp) => match &exp.declaration {
+                Some(Declaration::FunctionDeclaration(func)) => {
+                    register_function(func, names, &mut registry)
                 }
-                if let Some(optionals) = struct_optional_fields_of_alias(alias) {
-                    if !optionals.is_empty() {
-                        registry
-                            .structs
-                            .insert(alias.id.name.to_string(), optionals);
-                    }
+                Some(Declaration::TSTypeAliasDeclaration(alias)) => {
+                    register_type_alias(alias, &mut registry)
                 }
-            }
-            Statement::TSInterfaceDeclaration(iface) => {
-                let optionals = collect_optionals(&iface.body.body);
-                if !optionals.is_empty() {
-                    registry
-                        .structs
-                        .insert(iface.id.name.to_string(), optionals);
+                Some(Declaration::ClassDeclaration(class)) => {
+                    register_class(class, names, &mut registry)
                 }
-            }
-            Statement::FunctionDeclaration(func) => {
-                let name = function_name(func);
-                registry
-                    .functions
-                    .insert(name.clone(), function_params(func));
-                registry
-                    .function_defaults
-                    .insert(name.clone(), function_default_flags(func));
-                registry
-                    .ref_params
-                    .insert(name, ref_param_flags(func, names));
-            }
-            Statement::ClassDeclaration(class) => {
-                collect_mut_methods(class, names, &mut registry.mut_methods);
-            }
+                Some(Declaration::TSInterfaceDeclaration(iface)) => {
+                    register_interface(iface, &mut registry)
+                }
+                Some(Declaration::VariableDeclaration(decl)) => {
+                    register_variable_declaration(decl, &mut registry)
+                }
+                _ => {}
+            },
             _ => {}
         }
     }
     registry
+}
+
+fn register_type_alias(alias: &TSTypeAliasDeclaration, registry: &mut TypeRegistry) {
+    if let Some(variants) = discriminated_enum(alias) {
+        registry.unions.insert(alias.id.name.to_string(), variants);
+    }
+    if let Some(optionals) = struct_optional_fields_of_alias(alias) {
+        if !optionals.is_empty() {
+            registry
+                .structs
+                .insert(alias.id.name.to_string(), optionals);
+        }
+    }
+    collect_unions_in_type(&alias.type_annotation, &mut registry.union_enums);
+}
+
+fn register_interface(iface: &TSInterfaceDeclaration, registry: &mut TypeRegistry) {
+    let optionals = collect_optionals(&iface.body.body);
+    if !optionals.is_empty() {
+        registry
+            .structs
+            .insert(iface.id.name.to_string(), optionals);
+    }
+    collect_unions_in_signatures(&iface.body.body, &mut registry.union_enums);
+}
+
+fn register_function(func: &Function, names: &NameTable, registry: &mut TypeRegistry) {
+    let name = function_name(func);
+    registry
+        .functions
+        .insert(name.clone(), function_params(func));
+    registry
+        .function_defaults
+        .insert(name.clone(), function_default_flags(func));
+    registry
+        .ref_params
+        .insert(name, ref_param_flags(func, names));
+    // An inline scalar union in a parameter type (e.g. `Record<string,
+    // string|number>`) needs its `__DsUnion…` enum emitted; recurse into every
+    // annotation so a union nested in a `Record` value type is found.
+    for fp in &func.params.items {
+        if let Some(ta) = fp.type_annotation.as_ref() {
+            collect_unions_in_type(&ta.type_annotation, &mut registry.union_enums);
+        }
+    }
+    if let Some(ta) = func.return_type.as_deref() {
+        collect_unions_in_type(&ta.type_annotation, &mut registry.union_enums);
+    }
+}
+
+/// A top-level `const`/`let`/`var` with a type annotation. An inline scalar
+/// union in the annotation (`const r: Record<K, string|number> = …`) needs its
+/// `__DsUnion…` enum registered (and emitted) so the initializer's object
+/// literal can box each value into the matching variant.
+fn register_variable_declaration(decl: &VariableDeclaration, registry: &mut TypeRegistry) {
+    for d in &decl.declarations {
+        if let Some(ta) = d.type_annotation.as_ref() {
+            collect_unions_in_type(&ta.type_annotation, &mut registry.union_enums);
+        }
+    }
+}
+
+fn register_class(class: &Class, names: &NameTable, registry: &mut TypeRegistry) {
+    collect_mut_methods(class, names, &mut registry.mut_methods);
+}
+
+/// Recursively collect every all-scalar-keyword union nested in a type
+/// annotation, registering a `__DsUnion…` enum definition for each unique
+/// shape. Descends into array elements, `Record`/`Array` type arguments,
+/// `readonly` operands, union members, and object-literal property types, so
+/// an inline union anywhere in a parameter/field/return type is found. The
+/// enum name and variants come from [`declarations::scalar_union_enum`], the
+/// single source of truth that `types::union_type` also reads.
+fn collect_unions_in_type(ty: &TSType, out: &mut HashMap<Ident, ItemEnum>) {
+    match ty {
+        TSType::TSUnionType(u) => {
+            if let Some((name, variants)) = declarations::scalar_union_enum(u) {
+                out.entry(name.clone()).or_insert_with(|| {
+                    parse_quote! {
+                        #[derive(Clone, Debug, PartialEq)]
+                        enum #name { #(#variants),* }
+                    }
+                });
+            }
+            for t in &u.types {
+                collect_unions_in_type(t, out);
+            }
+        }
+        TSType::TSArrayType(arr) => collect_unions_in_type(&arr.element_type, out),
+        TSType::TSTypeReference(r) => {
+            if let Some(args) = r.type_arguments.as_ref() {
+                for p in &args.params {
+                    collect_unions_in_type(p, out);
+                }
+            }
+        }
+        TSType::TSTypeOperatorType(op) => collect_unions_in_type(&op.type_annotation, out),
+        TSType::TSTypeLiteral(lit) => collect_unions_in_signatures(&lit.members, out),
+        _ => {}
+    }
+}
+
+/// Collect inline unions from each property type of an interface or
+/// object-literal type.
+fn collect_unions_in_signatures(members: &[TSSignature], out: &mut HashMap<Ident, ItemEnum>) {
+    for sig in members {
+        if let TSSignature::TSPropertySignature(ps) = sig {
+            if let Some(ta) = ps.type_annotation.as_ref() {
+                collect_unions_in_type(&ta.type_annotation, out);
+            }
+        }
+    }
 }
 
 /// Collect every `&mut self` instance method name across a class. A method is

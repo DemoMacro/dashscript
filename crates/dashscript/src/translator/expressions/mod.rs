@@ -158,6 +158,85 @@ fn literal_value(expr: &Expression) -> Option<f64> {
     }
 }
 
+/// Translate a condition operand (`if (cond)`, `while (cond)`, `cond ? a : b`)
+/// to a Rust `bool`. A bare collection/`Option` identifier lowers to an
+/// emptiness/`is_some` check (ES truthiness); `!x` flips to the negated form;
+/// anything else translates as a plain boolean expression. Shared by statement
+/// control flow (`functions::control_flow`) and the ternary (`unary`) so both
+/// apply the same truthiness rule.
+pub(in crate::translator) fn condition_expr(test: &Expression, ctx: &Ctx<'_>) -> Expr {
+    use oxc_syntax::operator::UnaryOperator;
+    if let Some(e) = truthiness(test, false, ctx) {
+        return e;
+    }
+    if let Expression::UnaryExpression(un) = test {
+        if matches!(un.operator, UnaryOperator::LogicalNot) {
+            if let Some(e) = truthiness(&un.argument, true, ctx) {
+                return e;
+            }
+        }
+    }
+    translate_expr(test, ctx)
+}
+
+/// The Rust boolean form of an ES truthiness test. A numeric literal folds to
+/// its compile-time truthiness (nonzero and non-NaN); a bare identifier of a
+/// number (`f64`/integer), collection (`Vec`/`String`), or `Option` type maps
+/// to the matching runtime check. `negated` selects the falsy side (`== 0`/
+/// `is_nan`/`is_empty`/`is_none`) vs the truthy side. Anything else returns
+/// `None` (the caller treats the expression as already boolean).
+fn truthiness(expr: &Expression, negated: bool, ctx: &Ctx<'_>) -> Option<Expr> {
+    // A numeric literal's ES truthiness is known at translate time, so a
+    // `while (1)` / `do { … } while (0)` folds to a Rust `bool` literal
+    // instead of emitting `!(1_f64)` (E0600: `!` on f64).
+    if let Expression::NumericLiteral(n) = expr {
+        let v = n.value;
+        let truthy = v != 0.0 && !v.is_nan();
+        let b = if negated { !truthy } else { truthy };
+        return Some(if b {
+            parse_quote!(true)
+        } else {
+            parse_quote!(false)
+        });
+    }
+    let Expression::Identifier(id) = expr else {
+        return None;
+    };
+    let ident = ctx.names().of_reference(id);
+    let last = ctx
+        .local_type(&ident.to_string())?
+        .segments
+        .last()?
+        .ident
+        .to_string();
+    match last.as_str() {
+        // ES `Boolean(f64)`: nonzero and non-NaN. NaN is falsy (`!NaN === true`),
+        // so the negated form ORs the two falsy cases.
+        "f64" => Some(if negated {
+            parse_quote!(#ident == 0.0 || #ident.is_nan())
+        } else {
+            parse_quote!(#ident != 0.0 && !#ident.is_nan())
+        }),
+        // Integer scalars have no NaN; truthiness is simply != 0.
+        "i64" | "i32" | "usize" | "u64" | "u32" | "u16" | "u8" | "i16" | "i8" => Some(if negated {
+            parse_quote!(#ident == 0)
+        } else {
+            parse_quote!(#ident != 0)
+        }),
+        "Vec" | "String" | "HashMap" | "HashSet" => Some(if negated {
+            parse_quote!(#ident.is_empty())
+        } else {
+            parse_quote!(!#ident.is_empty())
+        }),
+        "Option" => Some(if negated {
+            parse_quote!(#ident.is_none())
+        } else {
+            parse_quote!(#ident.is_some())
+        }),
+        _ => None,
+    }
+}
+
 /// Translate an expression to its `syn::Expr` form.
 ///
 /// Unmapped expressions fall back to `todo!()` so the generated Rust compiles

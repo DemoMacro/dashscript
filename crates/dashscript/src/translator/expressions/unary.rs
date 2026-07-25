@@ -2,9 +2,9 @@
 //! `-`/`!`/`~` → Rust unary; `cond ? a : b` → `if`; `x!` → `unwrap`.
 
 use oxc_ast::ast::{ConditionalExpression, Expression, TSNonNullExpression, UnaryExpression};
-use oxc_syntax::operator::UnaryOperator;
+use oxc_syntax::operator::{BinaryOperator, UnaryOperator};
 use proc_macro2::Span;
-use syn::{parse_quote, Expr, LitStr, UnOp};
+use syn::{parse_quote, Expr, Ident, LitStr, UnOp};
 
 use super::super::bindings;
 use super::super::builtins;
@@ -30,11 +30,24 @@ pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
             op: UnOp::Neg(Default::default()),
             expr: Box::new(arg),
         }),
-        UnaryOperator::LogicalNot => Expr::Unary(syn::ExprUnary {
-            attrs: Vec::new(),
-            op: UnOp::Not(Default::default()),
-            expr: Box::new(arg),
-        }),
+        UnaryOperator::LogicalNot => {
+            // `!x` where `x` is a collection/`Option`/number identifier lowers
+            // to the negated truthiness check (`x.is_empty()`/`is_none()`/`==
+            // 0`), not Rust's `!` — which is E0600 on `Vec`/`HashMap`/`Option`
+            // and wrong semantics on `f64`. This reaches inside an `||`/`&&`
+            // operand where the shared `condition_expr` only sees the whole
+            // logical expression. Falls back to `!arg` for an already-boolean
+            // operand (a comparison result, a `bool` local).
+            if let Some(e) = super::truthiness(&un.argument, true, ctx) {
+                e
+            } else {
+                Expr::Unary(syn::ExprUnary {
+                    attrs: Vec::new(),
+                    op: UnOp::Not(Default::default()),
+                    expr: Box::new(arg),
+                })
+            }
+        }
         // `~a` → `!ToInt32(a) as f64` (TS `~` is 32-bit bitwise NOT). The
         // operand casts via `bitwise_operand` (f64 → i64 → i32 for the JS
         // `ToInt32` wrap; i64 skips the hop); bound to a local so `as` never
@@ -160,11 +173,106 @@ fn type_of_expr(arg: &Expression) -> Expr {
 }
 
 /// `cond ? a : b` → `if cond { a } else { b }` — Rust's `if` is an expression.
+/// A `typeof v === "string" ? f(v) : v` ternary (where `v` is an inline
+/// scalar-union enum) lowers to a `match` that re-binds `v` to the variant's
+/// inner value in the matching arm, so the `then` branch sees `v` as the
+/// scalar (a `String`) and the `else` branch sees the whole enum.
 pub(super) fn conditional_expr(c: &ConditionalExpression, ctx: &Ctx<'_>) -> Expr {
-    let test = translate_expr(&c.test, ctx);
+    if let Some(expr) = union_typeof_conditional(c, ctx) {
+        return expr;
+    }
+    let test = super::condition_expr(&c.test, ctx);
     let then = translate_expr(&c.consequent, ctx);
     let els = translate_expr(&c.alternate, ctx);
     parse_quote!(if #test { #then } else { #els })
+}
+
+/// `typeof v === "string" ? then : els` (where `v` is an inline scalar-union
+/// enum local) → `match v.clone() { Enum::Str(v) => then.to_string(), v =>
+/// els.to_string() }`. The clone owns the scrutinee so the variant arm re-binds
+/// `v` to the inner scalar (so `then`, which uses `v` as a `String`,
+/// type-checks), and the catch-all keeps `v` as the enum. Both arms render via
+/// `to_string` (the enum through its `Display` impl) so the `match` is a single
+/// `String` — a `typeof` ternary almost always discriminates to stringify the
+/// value (escape/interpolate), so the `String` result is the common case; a
+/// numeric-context `typeof` ternary would surface as a `cargo check` error
+/// rather than silently miscompile. Returns `None` unless the test is exactly
+/// that shape over a union local, so a plain ternary falls through to `if`.
+fn union_typeof_conditional(c: &ConditionalExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    let (local, enum_ident, variant, negate) = typeof_union_test(&c.test, ctx)?;
+    let then = translate_expr(&c.consequent, ctx);
+    let els = translate_expr(&c.alternate, ctx);
+    Some(if negate {
+        parse_quote!(match ::std::clone::Clone::clone(&#local) {
+            #enum_ident::#variant(#local) => ::std::string::ToString::to_string(&(#els)),
+            #local => ::std::string::ToString::to_string(&(#then)),
+        })
+    } else {
+        parse_quote!(match ::std::clone::Clone::clone(&#local) {
+            #enum_ident::#variant(#local) => ::std::string::ToString::to_string(&(#then)),
+            #local => ::std::string::ToString::to_string(&(#els)),
+        })
+    })
+}
+
+/// Deconstruct a `typeof <id> === "<scalar>"` (or `!==`, or the sides swapped)
+/// test against an inline scalar-union enum local: the local's snake name, the
+/// enum ident, the matching variant (`Str`/`Num`/`Bool`), and whether the
+/// operator is negated. `None` for any other shape.
+fn typeof_union_test(test: &Expression, ctx: &Ctx<'_>) -> Option<(Ident, Ident, Ident, bool)> {
+    let Expression::BinaryExpression(bin) = test else {
+        return None;
+    };
+    let negate = match bin.operator {
+        BinaryOperator::Equality | BinaryOperator::StrictEquality => false,
+        BinaryOperator::Inequality | BinaryOperator::StrictInequality => true,
+        _ => return None,
+    };
+    let (id_name, scalar_str) = match (typeof_ident(&bin.left), str_literal(&bin.right)) {
+        (Some(n), Some(s)) => (n, s),
+        _ => match (typeof_ident(&bin.right), str_literal(&bin.left)) {
+            (Some(n), Some(s)) => (n, s),
+            _ => return None,
+        },
+    };
+    let variant_tag = match scalar_str.as_str() {
+        "string" => "Str",
+        "number" => "Num",
+        "boolean" => "Bool",
+        _ => return None,
+    };
+    let local = bindings::snake(&id_name);
+    let enum_ident = ctx
+        .local_type(&local.to_string())
+        .and_then(|p| p.segments.last().map(|s| s.ident.clone()))?;
+    let item = ctx.registry().union_enums.get(&enum_ident)?;
+    if !item.variants.iter().any(|v| v.ident == variant_tag) {
+        return None;
+    }
+    let variant = Ident::new(variant_tag, Span::call_site());
+    Some((local, enum_ident, variant, negate))
+}
+
+/// `typeof <id>` → that identifier's name, else `None`.
+fn typeof_ident(expr: &Expression) -> Option<String> {
+    let Expression::UnaryExpression(un) = expr else {
+        return None;
+    };
+    if !matches!(un.operator, UnaryOperator::Typeof) {
+        return None;
+    }
+    let Expression::Identifier(id) = &un.argument else {
+        return None;
+    };
+    Some(id.name.to_string())
+}
+
+/// A string-literal expression's value, else `None`.
+fn str_literal(expr: &Expression) -> Option<String> {
+    let Expression::StringLiteral(s) = expr else {
+        return None;
+    };
+    Some(s.value.to_string())
 }
 
 /// `x!` (TS non-null assertion) → `x.unwrap()`. The author asserts non-null, so

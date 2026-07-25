@@ -63,13 +63,17 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                         None => quote!(#target = #num_right),
                     }
                 }
-                // `s += "lit"` is string append (String has no AddAssign) → `push_str`.
+                // `s += <expr>` is string append (String has no AddAssign) → `push_str`.
+                // A literal RHS takes a `&str` directly; any other String-typed
+                // RHS (`format!(…)`, `slice + "lit"`) is appended by reference.
+                // Non-String targets (`i += 1`) keep numeric `+=`.
                 AssignmentOperator::Addition => match &a.right {
                     Expression::StringLiteral(s) => {
                         let lit =
                             syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
                         quote!(#target.push_str(#lit))
                     }
+                    _ if is_string_local(&a.left, ctx) => quote!(#target.push_str(&(#right))),
                     _ => quote!(#target += #num_right),
                 },
                 AssignmentOperator::Subtraction => quote!(#target -= #num_right),
@@ -266,6 +270,19 @@ fn is_ref_param_target(object: &Expression, ctx: &Ctx<'_>) -> bool {
     ctx.is_ref_param(&name)
 }
 
+/// Whether an assignment target is a `String`-typed local — so `+=` and
+/// `= self + lit` are string appends (`push_str`), not numeric addition. Only a
+/// bare identifier matches; a member target keeps the general lowering.
+fn is_string_local(target: &AssignmentTarget, ctx: &Ctx<'_>) -> bool {
+    let AssignmentTarget::AssignmentTargetIdentifier(id) = target else {
+        return false;
+    };
+    let rust_name = bindings::snake(id.name.as_str()).to_string();
+    ctx.local_type(&rust_name)
+        .and_then(|p| p.segments.last())
+        .is_some_and(|s| s.ident == "String")
+}
+
 /// `s = s + "lit"` / `s = "lit" + s` lowers to `s.push_str("lit")` — an
 /// amortized-O(1) in-place append — instead of rebuilding the string via
 /// `format!`. Only the self-plus-one-string-literal shape on a `String`-typed
@@ -283,12 +300,7 @@ fn self_plus_string_literal<'a>(
     // `push_str` needs a mutable owned `String`; restrict to `String`-typed
     // locals so a `&str` param keeps the familiar assignment error instead of a
     // confusing `push_str not found` one.
-    let rust_name = bindings::snake(name).to_string();
-    let is_string = ctx
-        .local_type(&rust_name)
-        .and_then(|p| p.segments.last())
-        .is_some_and(|s| s.ident == "String");
-    if !is_string {
+    if !is_string_local(left, ctx) {
         return None;
     }
     let bin = match right {

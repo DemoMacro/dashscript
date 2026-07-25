@@ -28,6 +28,12 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     if let Some(expr) = null_equality(bin, ctx) {
         return expr;
     }
+    // `v === undefined` / `v !== null` when `v` is an inline scalar-union enum
+    // local → `matches!(v, <Enum>::Undef)` / `!matches!(v, <Enum>::Null)` — the
+    // union's `Undef`/`Null` variant is the runtime tag, not Rust `None`.
+    if let Some(expr) = union_null_equality(bin, ctx) {
+        return expr;
+    }
     if matches!(bin.operator, BinaryOperator::Addition) && concat_is_string(bin, ctx) {
         return string_concat(bin, ctx);
     }
@@ -222,6 +228,52 @@ fn null_equality(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
 fn is_nullish(expr: &Expression) -> bool {
     matches!(expr, Expression::NullLiteral(_))
         || matches!(expr, Expression::Identifier(id) if id.name.as_str() == "undefined")
+}
+
+/// `v === undefined` / `v !== null` (or the mirror sides) when `v` is an inline
+/// scalar-union enum local → `matches!(v, <Enum>::Undef)` /
+/// `!matches!(v, <Enum>::Null)`. The union's `Undef`/`Null` variant is the
+/// runtime tag for an absent value (a plain Rust `==`/`!=` would not compile —
+/// the enum has no `None`, and the `undefined`/`null` literal lowers to one).
+/// Returns `None` unless the non-null side is exactly such a union local whose
+/// enum has the matching variant, so anything else falls through loudly.
+fn union_null_equality(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    let negate = match bin.operator {
+        BinaryOperator::Equality | BinaryOperator::StrictEquality => false,
+        BinaryOperator::Inequality | BinaryOperator::StrictInequality => true,
+        _ => return None,
+    };
+    let (left_n, right_n) = (is_nullish(&bin.left), is_nullish(&bin.right));
+    let (union_side, nullish) = if right_n {
+        (&bin.left, &bin.right)
+    } else if left_n {
+        (&bin.right, &bin.left)
+    } else {
+        return None;
+    };
+    let variant_tag = match nullish {
+        Expression::NullLiteral(_) => "Null",
+        Expression::Identifier(i) if i.name.as_str() == "undefined" => "Undef",
+        _ => return None,
+    };
+    let Expression::Identifier(id) = union_side else {
+        return None;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    let enum_ident = ctx
+        .local_type(&name)
+        .and_then(|p| p.segments.last().map(|s| &s.ident))?;
+    let item = ctx.registry().union_enums.get(enum_ident)?;
+    if !item.variants.iter().any(|v| v.ident == variant_tag) {
+        return None;
+    }
+    let local = bindings::snake(&id.name);
+    let variant = proc_macro2::Ident::new(variant_tag, proc_macro2::Span::call_site());
+    Some(if negate {
+        parse_quote!(!matches!(#local, #enum_ident::#variant))
+    } else {
+        parse_quote!(matches!(#local, #enum_ident::#variant))
+    })
 }
 
 /// True when a `+` chain is string concatenation: any leaf operand is a string

@@ -124,6 +124,19 @@ fn translates_string_union_to_enum() {
 }
 
 #[test]
+fn translates_scalar_union_to_enum() {
+    // `string | number | boolean | undefined` — the XML-attribute / JSON-value
+    // shape — becomes tuple+unit variants wrapping the scalar Rust types.
+    let src = "type AttrVal = string | number | boolean | undefined;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("enum AttrVal"), "got:\n{rust}");
+    assert!(rust.contains("Str(String)"), "got:\n{rust}");
+    assert!(rust.contains("Num(f64)"), "got:\n{rust}");
+    assert!(rust.contains("Bool(bool)"), "got:\n{rust}");
+    assert!(rust.contains("Undef"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_enum_variant_construction() {
     let src =
         "type Status = \"pending\" | \"done\"; function f(): void { let s: Status = \"done\"; }";
@@ -221,6 +234,33 @@ fn translates_record_to_hashmap_literal() {
     assert!(rust.contains("HashMap<String, f64>"), "got:\n{rust}");
     assert!(rust.contains("HashMap::from"), "got:\n{rust}");
     assert!(rust.contains("\"a\".to_string()"), "got:\n{rust}");
+}
+
+#[test]
+fn boxes_record_literal_values_into_union_enum() {
+    // A top-level `Record<K, scalar-union>` literal (the implicit-`main` shape a
+    // script uses) boxes each value into the matching variant of the generated
+    // enum, so the map matches a `HashMap<K, Enum>` parameter type. Mirrors the
+    // `attrs({ id, name, hidden })` XML-attribute shape that motivated scalar
+    // unions.
+    let src = "const r: Record<string, string | number | boolean | undefined> = { id: 1, name: \"foo\", ok: true, hidden: undefined };";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("::Num(1_f64)"),
+        "number value boxes into Num: got:\n{rust}"
+    );
+    assert!(
+        rust.contains("::Str(\"foo\".to_string())"),
+        "string value boxes into Str: got:\n{rust}"
+    );
+    assert!(
+        rust.contains("::Bool(true)"),
+        "boolean value boxes into Bool: got:\n{rust}"
+    );
+    assert!(
+        rust.contains("::Undef"),
+        "undefined value boxes into Undef: got:\n{rust}"
+    );
 }
 
 #[test]

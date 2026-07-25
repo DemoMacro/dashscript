@@ -5,7 +5,7 @@ use std::collections::HashSet;
 
 use oxc_ast::ast::{Expression, ObjectExpression, ObjectPropertyKind};
 use proc_macro2::Span;
-use syn::{parse_quote, Expr, Ident};
+use syn::{parse_quote, Expr, GenericArgument, Ident};
 
 use super::super::bindings;
 use super::super::context::Ctx;
@@ -27,11 +27,13 @@ pub(super) fn object_expr(
         // its values via `infer_literal_type`, so its field accesses route
         // through `is_hashmap_local`; a literal with no binding context still
         // produces a usable `HashMap` rather than `todo!()`.
-        return hashmap_literal(obj, ctx);
+        return hashmap_literal(obj, None, ctx);
     };
-    // `Record<K, V>` (a `HashMap`) → `HashMap::from([(key, value), …])`.
+    // `Record<K, V>` (a `HashMap`) → `HashMap::from([(key, value), …])`. A
+    // value type that is a scalar-union enum boxes each literal into its variant.
     if is_hashmap(path) {
-        return hashmap_literal(obj, ctx);
+        let val_ty = hashmap_value_path(path);
+        return hashmap_literal(obj, val_ty.as_ref(), ctx);
     }
     if let Some(expr) = variant_construct(obj, path, ctx) {
         return expr;
@@ -117,7 +119,17 @@ fn missing_optionals(
 
 /// `{ a: 1, b: 2 }` as a `HashMap` → `HashMap::from([("a".to_string(), 1_f64), …])`.
 /// Keys are the `.ts` property names, owned so the map outlives the literal.
-fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
+/// When `val_ty` is a registered scalar-union enum, each literal value is boxed
+/// into its variant so the map matches a `HashMap<K, Enum>` parameter type.
+fn hashmap_literal(obj: &ObjectExpression, val_ty: Option<&syn::Path>, ctx: &Ctx<'_>) -> Expr {
+    // A `Record<K, Union>` whose value type is a registered scalar-union enum
+    // boxes each literal value into its variant (`{id: 1}` → `Enum::Num(1.0)`);
+    // any other value type leaves the value unboxed (the common `HashMap<K, V>`
+    // case).
+    let union_ident = val_ty
+        .and_then(|p| p.segments.last())
+        .map(|s| s.ident.clone())
+        .filter(|id| ctx.registry().union_enums.contains_key(id));
     let entries: Vec<Expr> = obj
         .properties
         .iter()
@@ -125,7 +137,10 @@ fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
             let ObjectPropertyKind::ObjectProperty(op) = p else {
                 return None;
             };
-            let value = array_elem_expr(&op.value, ctx);
+            let value = match &union_ident {
+                Some(e) => box_union_value(&op.value, e, ctx),
+                None => array_elem_expr(&op.value, ctx),
+            };
             let key = if op.computed {
                 // `[k]: v` — a dynamic key (an expression, typically a String).
                 translate_expr(op.key.as_expression()?, ctx)
@@ -137,6 +152,52 @@ fn hashmap_literal(obj: &ObjectExpression, ctx: &Ctx<'_>) -> Expr {
         })
         .collect();
     parse_quote!(::std::collections::HashMap::from([#(#entries),*]))
+}
+
+/// The value-type path of a `HashMap<K, V>` (the 2nd type parameter), so a
+/// `Record<K, Union>` literal can box its values into the union enum. `None`
+/// for a non-`HashMap` or a value type that isn't a plain path.
+fn hashmap_value_path(path: &syn::Path) -> Option<syn::Path> {
+    let seg = path.segments.last()?;
+    if seg.ident != "HashMap" {
+        return None;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return None;
+    };
+    let mut it = args.args.iter().filter_map(|g| match g {
+        GenericArgument::Type(t) => types::type_path(t).cloned(),
+        _ => None,
+    });
+    let _key = it.next();
+    it.next()
+}
+
+/// Box a literal value into the matching variant of a scalar-union enum:
+/// `"foo"` → `Enum::Str("foo".to_string())`, `1` → `Enum::Num(1.0)`, `true` →
+/// `Enum::Bool(true)`, `undefined` → `Enum::Undef`, `null` → `Enum::Null`. A
+/// non-literal value (a variable, a call) is left as-is — boxing it needs a
+/// runtime discriminant and is out of scope; cargo check surfaces the mismatch.
+fn box_union_value(value: &Expression, enum_ident: &Ident, ctx: &Ctx<'_>) -> Expr {
+    match value {
+        Expression::StringLiteral(s) => {
+            let v = s.value.to_string();
+            parse_quote!(#enum_ident::Str(#v.to_string()))
+        }
+        Expression::NumericLiteral(n) => {
+            let v = super::literals::numeric_expr(n.value);
+            parse_quote!(#enum_ident::Num(#v))
+        }
+        Expression::BooleanLiteral(b) => {
+            let v = b.value;
+            parse_quote!(#enum_ident::Bool(#v))
+        }
+        Expression::Identifier(id) if id.name.as_str() == "undefined" => {
+            parse_quote!(#enum_ident::Undef)
+        }
+        Expression::NullLiteral(_) => parse_quote!(#enum_ident::Null),
+        _ => super::translate_expr(value, ctx),
+    }
 }
 
 /// `{ kind: "circle", radius: 2 }` → `Shape::Circle { radius: 2_f64 }` when `path`

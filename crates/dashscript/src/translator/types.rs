@@ -1,6 +1,9 @@
 //! `TSType` → `syn::Type` — the one-to-one mapping table.
 
-use oxc_ast::ast::{TSArrayType, TSType, TSTypeName, TSTypeReference, TSUnionType};
+use oxc_ast::ast::{
+    TSArrayType, TSType, TSTypeName, TSTypeOperator, TSTypeOperatorOperator, TSTypeReference,
+    TSUnionType,
+};
 use quote::format_ident;
 use syn::{parse_quote, Type};
 
@@ -17,6 +20,18 @@ pub fn translate_type(ty: &TSType) -> Type {
         TSType::TSArrayType(arr) => array_type(arr),
         TSType::TSUnionType(u) => union_type(u),
         TSType::TSTypeReference(r) => reference_type(r),
+        TSType::TSTypeOperatorType(op) => operator_type(op),
+        _ => parse_quote!(_),
+    }
+}
+
+/// `readonly T` (the `TSTypeOperator` form, e.g. `readonly string[]`) → `T`.
+/// `readonly` is a TS type-level immutability constraint; Rust has no separate
+/// immutable-collection type, so the inner type is the runtime shape.
+/// `keyof T` / `unique symbol` have no Rust analogue and fall back to `_`.
+fn operator_type(op: &TSTypeOperator) -> Type {
+    match op.operator {
+        TSTypeOperatorOperator::Readonly => translate_type(&op.type_annotation),
         _ => parse_quote!(_),
     }
 }
@@ -31,6 +46,12 @@ fn reference_type(r: &TSTypeReference) -> Type {
         return parse_quote!(_);
     };
     let name: &str = &id.name;
+    // `Readonly<T>` → `T` (a TS type-level constraint; the runtime shape is `T`).
+    if name == "Readonly" {
+        if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
+            return translate_type(inner);
+        }
+    }
     // `Array<T>` → `Vec<T>`; other named refs pass through (e.g. `Point`).
     if name == "Array" {
         if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
@@ -78,6 +99,14 @@ fn union_type(u: &TSUnionType) -> Type {
     if nullable && non_null.len() == 1 {
         let inner = translate_type(non_null[0]);
         return parse_quote!(Option<#inner>);
+    }
+    // An all-scalar-keyword union (the XML-attribute / JSON-value shape:
+    // `string | number | boolean | undefined`) becomes a generated `__DsUnion…`
+    // enum so the type is concrete rather than `_`. The enum definition itself
+    // is emitted by the registry pre-pass that scans every type position
+    // (`registry::inline_union_enums`) — this only names the type.
+    if let Some((name, _)) = super::declarations::scalar_union_enum(u) {
+        return parse_quote!(#name);
     }
     parse_quote!(_)
 }

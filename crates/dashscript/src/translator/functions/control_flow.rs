@@ -2,10 +2,9 @@
 //! `for`, plus the truthiness and Option-narrowing helpers they share.
 
 use oxc_ast::ast::{
-    ArrayExpression, DoWhileStatement, Expression, ForInStatement, ForOfStatement, ForStatement,
-    ForStatementLeft, IfStatement, Statement, WhileStatement,
+    ArrayExpression, BindingPattern, DoWhileStatement, Expression, ForInStatement, ForOfStatement,
+    ForStatement, ForStatementLeft, IfStatement, Statement, WhileStatement,
 };
-use oxc_syntax::operator::UnaryOperator;
 use quote::format_ident;
 use syn::{parse_quote, Block, Expr, Ident, Path, Stmt, Type};
 
@@ -53,7 +52,7 @@ pub(super) fn translate_if(
             None => parse_quote!(if let Some(#bind) = #ident_expr #then_block),
         };
     }
-    let cond = condition_expr(&stmt.test, locals, registry, narrow, names);
+    let cond = expressions::condition_expr(&stmt.test, &Ctx::new(locals, registry, narrow, names));
     let then_block = statement_block(
         &stmt.consequent,
         locals,
@@ -104,7 +103,7 @@ pub(super) fn translate_while(
     return_path: Option<&Path>,
     names: &NameTable<'_>,
 ) -> Stmt {
-    let cond = condition_expr(&stmt.test, locals, registry, narrow, names);
+    let cond = expressions::condition_expr(&stmt.test, &Ctx::new(locals, registry, narrow, names));
     let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
     parse_quote!(while #cond #body)
 }
@@ -120,99 +119,13 @@ pub(super) fn translate_do_while(
     names: &NameTable<'_>,
 ) -> Stmt {
     let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
-    let test = condition_expr(&stmt.test, locals, registry, narrow, names);
+    let test = expressions::condition_expr(&stmt.test, &Ctx::new(locals, registry, narrow, names));
     parse_quote!(loop {
         #body
         if !(#test) {
             break;
         }
     })
-}
-
-/// Translate an `if`/`while` test. A bare identifier of a `Vec`/`String` type
-/// maps to an emptiness check, and an `Option` maps to `is_some`; negation flips
-/// to `is_empty`/`is_none`. Anything else translates as a plain boolean expr.
-fn condition_expr(
-    test: &Expression,
-    locals: &Locals,
-    registry: &TypeRegistry,
-    narrow: &Narrow,
-    names: &NameTable<'_>,
-) -> Expr {
-    if let Some(expr) = truthiness(test, false, locals, names) {
-        return expr;
-    }
-    if let Expression::UnaryExpression(un) = test {
-        if matches!(un.operator, UnaryOperator::LogicalNot) {
-            if let Some(expr) = truthiness(&un.argument, true, locals, names) {
-                return expr;
-            }
-        }
-    }
-    expressions::translate_expr(test, &Ctx::new(locals, registry, narrow, names))
-}
-
-/// The Rust boolean form of an ES truthiness test. A numeric literal folds to
-/// its compile-time truthiness (nonzero and non-NaN); a bare identifier of a
-/// number (`f64`/integer), collection (`Vec`/`String`), or `Option` type maps
-/// to the matching runtime check. `negated` selects the falsy side (`== 0`/
-/// `is_nan`/`is_empty`/`is_none`) vs the truthy side. Anything else returns
-/// `None` (the caller treats the expression as already boolean).
-fn truthiness(
-    expr: &Expression,
-    negated: bool,
-    locals: &Locals,
-    names: &NameTable<'_>,
-) -> Option<Expr> {
-    // A numeric literal's ES truthiness is known at translate time, so a
-    // `while (1)` / `do { … } while (0)` folds to a Rust `bool` literal
-    // instead of emitting `!(1_f64)` (E0600: `!` on f64).
-    if let Expression::NumericLiteral(n) = expr {
-        let v = n.value;
-        let truthy = v != 0.0 && !v.is_nan();
-        let b = if negated { !truthy } else { truthy };
-        return Some(if b {
-            parse_quote!(true)
-        } else {
-            parse_quote!(false)
-        });
-    }
-    let Expression::Identifier(id) = expr else {
-        return None;
-    };
-    let ident = names.of_reference(id);
-    let last = locals
-        .get(&ident.to_string())?
-        .segments
-        .last()?
-        .ident
-        .to_string();
-    match last.as_str() {
-        // ES `Boolean(f64)`: nonzero and non-NaN. NaN is falsy (`!NaN === true`),
-        // so the negated form ORs the two falsy cases.
-        "f64" => Some(if negated {
-            parse_quote!(#ident == 0.0 || #ident.is_nan())
-        } else {
-            parse_quote!(#ident != 0.0 && !#ident.is_nan())
-        }),
-        // Integer scalars have no NaN; truthiness is simply != 0.
-        "i64" | "i32" | "usize" | "u64" | "u32" | "u16" | "u8" | "i16" | "i8" => Some(if negated {
-            parse_quote!(#ident == 0)
-        } else {
-            parse_quote!(#ident != 0)
-        }),
-        "Vec" | "String" => Some(if negated {
-            parse_quote!(#ident.is_empty())
-        } else {
-            parse_quote!(!#ident.is_empty())
-        }),
-        "Option" => Some(if negated {
-            parse_quote!(#ident.is_none())
-        } else {
-            parse_quote!(#ident.is_some())
-        }),
-        _ => None,
-    }
 }
 
 /// `for (const v of xs)` → `for &v in &xs { … }`.
@@ -229,6 +142,25 @@ pub(super) fn translate_for_of(
     return_path: Option<&Path>,
     names: &NameTable<'_>,
 ) -> Vec<Stmt> {
+    // `for (const [k, v] of Object.entries(record))` →
+    // `for (k, v) in record.clone().into_iter()`. The destructured bindings are
+    // typed to the record's HashMap K/V so a union-variant check on `v` (`v
+    // !== undefined`) lowers to `matches!`. Values iterate owned (cloned),
+    // mirroring the `Vec<(K, V)>` ES `Object.entries` allocates anyway — `v` is
+    // non-Copy (a union enum carrying a String), so `record.iter()`'s `&v`
+    // would leave every `v` use site a `&V` mismatch.
+    if let Some((k, v)) = for_of_array_pattern_bindings(&stmt.left) {
+        if let Some(arg) = object_entries_receiver(&stmt.right) {
+            if let Some((key_ty, val_ty)) = record_kv_types(arg, locals) {
+                locals.insert(k.to_string(), key_ty);
+                locals.insert(v.to_string(), val_ty);
+            }
+            let ctx = Ctx::new(&*locals, registry, narrow, names);
+            let record = expressions::translate_argument(arg, &ctx);
+            let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
+            return vec![parse_quote!(for (#k, #v) in #record.clone().into_iter() #body)];
+        }
+    }
     let Some(pat) = for_of_binding(&stmt.left, names) else {
         return vec![];
     };
@@ -346,7 +278,7 @@ pub(super) fn translate_for(
     let test = stmt
         .test
         .as_ref()
-        .map(|t| condition_expr(t, locals, registry, narrow, names))
+        .map(|t| expressions::condition_expr(t, &Ctx::new(locals, registry, narrow, names)))
         .unwrap_or_else(|| parse_quote!(true));
     let body = translate_stmt(&stmt.body, locals, registry, narrow, return_path, names);
     let update: Option<Stmt> = stmt.update.as_ref().map(|u| {
@@ -377,6 +309,78 @@ fn for_of_binding(left: &ForStatementLeft, names: &NameTable<'_>) -> Option<Iden
     };
     let d = decl.declarations.first()?;
     Some(names.of_pattern(&d.id))
+}
+
+/// `for (const [k, v] of …)` — the two-element ArrayPattern's binding idents,
+/// when the left is exactly `[id, id]`. `None` for any other shape (a single
+/// binding, a different count, a nested pattern).
+fn for_of_array_pattern_bindings(left: &ForStatementLeft) -> Option<(Ident, Ident)> {
+    let ForStatementLeft::VariableDeclaration(decl) = left else {
+        return None;
+    };
+    let d = decl.declarations.first()?;
+    let BindingPattern::ArrayPattern(arr) = &d.id else {
+        return None;
+    };
+    let key = binding_ident(arr.elements.first()?.as_ref()?)?;
+    let val = binding_ident(arr.elements.get(1)?.as_ref()?)?;
+    Some((key, val))
+}
+
+fn binding_ident(pat: &BindingPattern) -> Option<Ident> {
+    let BindingPattern::BindingIdentifier(id) = pat else {
+        return None;
+    };
+    Some(super::super::bindings::snake(id.name.as_str()))
+}
+
+/// The `(K, V)` type paths of a `Record`/`HashMap` argument, so a
+/// `for (const [k, v] of Object.entries(record))` destructure can register each
+/// binding's type — `v` must be typed as the value union for a `v !== undefined`
+/// check to lower to `matches!`. `None` when the argument is not a `HashMap`
+/// local (or its type parameters are not plain paths).
+fn record_kv_types(arg: &oxc_ast::ast::Argument<'_>, locals: &Locals) -> Option<(Path, Path)> {
+    let oxc_ast::ast::Argument::Identifier(id) = arg else {
+        return None;
+    };
+    let name = super::super::bindings::snake(id.name.as_str()).to_string();
+    let path = locals.get(&name)?;
+    let seg = path.segments.last()?;
+    if seg.ident != "HashMap" {
+        return None;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return None;
+    };
+    let mut it = args.args.iter().filter_map(|g| match g {
+        syn::GenericArgument::Type(t) => types::type_path(t).cloned(),
+        _ => None,
+    });
+    Some((it.next()?, it.next()?))
+}
+
+/// `Object.entries(record)` → the `record` argument, when `right` is exactly
+/// that call (`Object` / `entries` / one arg). `None` for anything else, so the
+/// generic for-of path handles ordinary iterables.
+fn object_entries_receiver<'a, 'b>(
+    right: &'b Expression<'a>,
+) -> Option<&'b oxc_ast::ast::Argument<'a>> {
+    let Expression::CallExpression(call) = right else {
+        return None;
+    };
+    let Expression::StaticMemberExpression(m) = &call.callee else {
+        return None;
+    };
+    if m.property.name.as_str() != "entries" {
+        return None;
+    }
+    let Expression::Identifier(id) = &m.object else {
+        return None;
+    };
+    if id.name.as_str() != "Object" {
+        return None;
+    }
+    call.arguments.first()
 }
 
 /// The element type of a homogeneous inline array literal — `[/pat/]` →
