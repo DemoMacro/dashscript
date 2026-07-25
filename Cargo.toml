@@ -27,6 +27,10 @@ oxc_syntax = "0.140"
 # Semantic analysis (scope tree + symbol table + reference resolution) — powers
 # LSP find-references/rename with symbol-level precision (no same-name collisions).
 oxc_semantic = "0.140"
+# Node module resolution (exports field / scoped packages / tsconfig paths) —
+# replaces hand-written resolve in project.rs. Separate repo from oxc core, so
+# its version is not synced to the 0.140 line.
+oxc_resolver = "11.24.2"
 
 # Rust source emission (translator) — pulled in when codegen lands.
 prettyplease = "0.2"

@@ -483,7 +483,7 @@ fn dep_kind_of(entry: &Path) -> DepKind {
         };
     }
     match entry.extension().and_then(|e| e.to_str()) {
-        Some("js") => match sibling_with_ext(entry, "d.ts") {
+        Some("js" | "mjs" | "cjs") => match sibling_with_ext(entry, "d.ts") {
             Some(_) => DepKind::DtsWithJs {
                 js_path: entry.to_path_buf(),
             },
@@ -502,126 +502,54 @@ fn sibling_with_ext(entry: &Path, new_ext: &str) -> Option<PathBuf> {
     candidate.exists().then_some(candidate)
 }
 
+/// The resolver shared across the build pipeline. Configured for a TypeScript
+/// project: `.ts`/`.d.ts` extensions first (DashScript lowers `.ts` to Rust),
+/// then the JS variants for npm packages; `package.json` field priority favors
+/// declarations (`types`/`typings`) and ESM (`module`) over legacy `main`; the
+/// `exports` field is read with ESM-import/types/default conditions — the
+/// modern npm shape (pure ESM + `.d.ts`). `module_type: true` computes whether
+/// a resolved `.js` is ESM or CommonJS, used when wiring the engine.
+fn ds_resolver() -> oxc_resolver::Resolver {
+    use oxc_resolver::{ResolveOptions, Resolver};
+    Resolver::new(ResolveOptions {
+        extensions: vec![
+            ".ts".into(),
+            ".tsx".into(),
+            ".d.ts".into(),
+            ".js".into(),
+            ".mjs".into(),
+            ".cjs".into(),
+        ],
+        main_fields: vec![
+            "types".into(),
+            "typings".into(),
+            "module".into(),
+            "main".into(),
+        ],
+        condition_names: vec!["import".into(), "types".into(), "default".into()],
+        main_files: vec!["index".into()],
+        module_type: true,
+        ..ResolveOptions::default()
+    })
+}
+
+/// Resolve an import specifier (relative `./foo` or bare `pkg`) to a file path
+/// and its [`DepKind`]. Delegates to `oxc_resolver` — the canonical Node
+/// resolution algorithm (webpack `enhanced-resolve` port), which handles
+/// `node_modules/` walk-up, `package.json` `exports`/`main`/`module`/`types`,
+/// scoped packages (`@scope/pkg`), and tsconfig paths — so DashScript reuses
+/// the standard resolver rather than hand-writing a subset. The `DepKind` is
+/// decided from the resolved path's extension and sibling files.
 pub(crate) fn resolve_local_module(
     base: &Path,
     source: &str,
 ) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
-    // A bare specifier (`lodash`, `@scope/pkg`) is an npm import — resolve it
-    // under `node_modules/` (Node's lookup walking up from the importing file).
-    // A relative specifier (`./foo`) uses bundler-lenient local resolution.
-    if !source.starts_with('.') {
-        return resolve_node_module(base, source);
-    }
-    // Bundler-lenient resolution (architecture-proposal decision 4): an
-    // extensionless `./foo` tries `foo.ts` first, then the `foo/index.ts`
-    // barrel — matching how tsc/bundlers resolve, so existing .ts projects
-    // compile unchanged. An explicit extension (`./foo.ts`) is honored as-is.
-    let trimmed = source.trim_end_matches(".ts");
-    let direct = base.join(trimmed);
-    let candidates: [PathBuf; 2] = [direct.with_extension("ts"), direct.join("index.ts")];
-    for candidate in &candidates {
-        if candidate.exists() {
-            return Ok((candidate.clone(), DepKind::Ts));
-        }
-    }
-    Err(format!(
-        "dashscript: import '{source}' does not resolve to a .ts file (tried {})",
-        candidates
-            .iter()
-            .map(|c| c.display().to_string())
-            .collect::<Vec<_>>()
-            .join(", ")
-    )
-    .into())
-}
-
-/// Resolve a bare npm specifier to a `.ts` file under `node_modules/`, walking
-/// up from `base` for the `node_modules/<pkg>` directory (Node resolution). A
-/// package root resolves via its `package.json`; a subpath (`pkg/sub`)
-/// resolves directly. The architecture's npm layering: a `.ts` entry
-/// translates as a module; a `.js` entry errors honestly (the embedded engine
-/// is not yet wired for imports).
-fn resolve_node_module(base: &Path, source: &str) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
-    let (pkg, sub) = match source.split_once('/') {
-        Some((p, s)) => (p, Some(s)),
-        None => (source, None),
-    };
-    for ancestor in base.ancestors() {
-        let pkg_dir = ancestor.join("node_modules").join(pkg);
-        if pkg_dir.is_dir() {
-            return resolve_node_entry(&pkg_dir, pkg, sub);
-        }
-    }
-    Err(format!(
-        "dashscript: npm import '{source}' did not resolve (no node_modules/{pkg} found walking up from {})",
-        base.display()
-    )
-    .into())
-}
-
-/// Resolve a located `node_modules/<pkg>` directory to its entry `.ts` file —
-/// a subpath directly, a package root via `package.json`. Returns the entry
-/// even when it is not `.ts`; the caller (the assembly loop) treats a non-`.ts`
-/// entry as an honest build error.
-fn resolve_node_entry(
-    pkg_dir: &Path,
-    pkg: &str,
-    sub: Option<&str>,
-) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
-    if let Some(sub) = sub {
-        let trimmed = sub.trim_end_matches(".ts");
-        let candidates: [PathBuf; 2] = [
-            pkg_dir.join(trimmed).with_extension("ts"),
-            pkg_dir.join(trimmed).join("index.ts"),
-        ];
-        for candidate in &candidates {
-            if candidate.exists() {
-                return Ok((candidate.clone(), DepKind::Ts));
-            }
-        }
-        return Err(format!(
-            "dashscript: npm import '{pkg}/{sub}' did not resolve to a .ts file (tried {})",
-            candidates
-                .iter()
-                .map(|c| c.display().to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
-        .into());
-    }
-    // A package root resolves via its `package.json`; the entry's kind (`.ts`
-    // source, pure `.d.ts` types, or a `.js`/`.d.ts`+`.js` engine pair) decides
-    // how the build pipeline lowers it — including the honest "engine not yet
-    // wired" error for `.js`/typed pairs, raised by the translate loop.
-    let (entry, kind) = node_package_entry(pkg_dir)?;
-    Ok((entry, kind))
-}
-
-/// The entry file an npm package's `package.json` points at, preferring a
-/// `.ts` source: scans `types`/`typings`/`main`/`module` for one that is `.ts`;
-/// otherwise returns the first that exists (a non-`.ts` entry errors upstream,
-/// the honest "JS needs the engine" path). Defaults to `index.ts`.
-fn node_package_entry(pkg_dir: &Path) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
-    let json = fs::read_to_string(pkg_dir.join("package.json"))?;
-    let value: serde_json::Value = serde_json::from_str(&json)?;
-    let mut first_existing: Option<PathBuf> = None;
-    for field in ["types", "typings", "main", "module"] {
-        if let Some(s) = value.get(field).and_then(|v| v.as_str()) {
-            let candidate = pkg_dir.join(s);
-            if candidate.exists() {
-                // Prefer a `.ts` entry (which `Path::extension` also reports
-                // for `.d.ts`) — a source or declaration we can translate.
-                if candidate.extension().is_some_and(|e| e == "ts") {
-                    let kind = dep_kind_of(&candidate);
-                    return Ok((candidate, kind));
-                }
-                first_existing.get_or_insert(candidate);
-            }
-        }
-    }
-    let entry = first_existing.unwrap_or_else(|| pkg_dir.join("index.ts"));
-    let kind = dep_kind_of(&entry);
-    Ok((entry, kind))
+    let resolution = ds_resolver()
+        .resolve(base, source)
+        .map_err(|e| format!("dashscript: import '{source}' did not resolve: {e}"))?;
+    let path = resolution.into_path_buf();
+    let kind = dep_kind_of(&path);
+    Ok((path, kind))
 }
 
 /// Resolve the Cargo package for `src_path`: the `package.json` found walking
@@ -1076,6 +1004,56 @@ mod tests {
         fs::create_dir_all(&nested).unwrap();
         let (resolved, _) = resolve_local_module(&nested, "shared").unwrap();
         assert_eq!(resolved, pkg.join("index.ts"));
+    }
+
+    #[test]
+    fn resolve_node_module_scoped_package() {
+        // A scoped package `@scope/pkg` resolves under
+        // `node_modules/@scope/pkg/`. The hand-written resolver split on the
+        // first `/` and mishandled scopes; oxc_resolver handles them natively.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("@scope").join("pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        write(
+            &pkg,
+            "package.json",
+            r#"{ "name": "@scope/pkg", "main": "index.ts" }"#,
+        );
+        write(
+            &pkg,
+            "index.ts",
+            "export function s(): number { return 1; }",
+        );
+        let (resolved, _) = resolve_local_module(root, "@scope/pkg").unwrap();
+        assert_eq!(resolved, pkg.join("index.ts"));
+    }
+
+    #[test]
+    fn resolve_node_module_exports_field_import_condition() {
+        // A modern package with an `exports` field: the `import` condition
+        // points at the ESM entry, `require` at the CJS one. oxc_resolver reads
+        // `exports` with the configured conditions — the hand-written resolver
+        // could not (it only scanned `main`/`module`/`types`).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("mod-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        write(
+            &pkg,
+            "package.json",
+            r#"{ "name": "mod-pkg", "exports": { ".": { "import": "./esm.mjs", "require": "./cjs.cjs" } } }"#,
+        );
+        write(&pkg, "esm.mjs", "export function x() { return 1; }");
+        write(&pkg, "cjs.cjs", "module.exports = {};");
+        let (resolved, kind) = resolve_local_module(root, "mod-pkg").unwrap();
+        // The `import` condition wins (configured `condition_names`), so the
+        // ESM entry resolves. `.mjs` is a JS engine dep (batch C wires ESM).
+        assert_eq!(resolved, pkg.join("esm.mjs"));
+        assert!(
+            matches!(kind, DepKind::Js),
+            ".mjs entry should be Js kind: {kind:?}"
+        );
     }
 
     #[test]
