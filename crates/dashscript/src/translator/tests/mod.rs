@@ -2,12 +2,14 @@
 mod arrays;
 mod bindings;
 mod check;
+mod cjs;
 mod classes;
 mod clone_move;
 mod collections;
 mod console;
 mod control_flow;
 mod destructuring;
+mod esm;
 mod globals;
 mod json;
 mod math;
