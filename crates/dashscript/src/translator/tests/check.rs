@@ -1,5 +1,5 @@
 // End-to-end tests for `Translator::check` — the translatability layer.
-use super::super::Translator;
+use super::super::{FileRole, Translator};
 
 #[test]
 fn check_passes_a_translatable_file() {
@@ -251,4 +251,37 @@ fn check_flags_string_raw() {
         diags.iter().any(|d| d.message.contains("String.raw")),
         "{diags:?}"
     );
+}
+
+#[test]
+fn check_as_module_flags_top_level_executable() {
+    // 模块角色（架构决策点 8）：模块只声明；顶层可执行语句（`console.log`）无
+    // 入口可入 → unsupported（而非静默丢弃副作用）。
+    let diags = Translator::new().check_as(
+        "export function f(): void {}\nconsole.log(1);",
+        FileRole::Module,
+    );
+    assert!(
+        diags
+            .iter()
+            .any(|d| d.message.contains("module file may only declare")),
+        "module top-level executable not flagged: {diags:?}"
+    );
+}
+
+#[test]
+fn check_as_module_passes_declarations_only() {
+    // 模块角色 + 纯声明 → 无诊断（声明是模块的本分）。
+    let diags = Translator::new().check_as(
+        "export function f(x: number): number { return x; }",
+        FileRole::Module,
+    );
+    assert!(diags.is_empty(), "module declarations flagged: {diags:?}");
+}
+
+#[test]
+fn check_as_bin_entry_allows_top_level_executable() {
+    // bin entry 放行顶层可执行语句（进隐式 `fn main`）—— 现状不变。
+    let diags = Translator::new().check_as("console.log(1);", FileRole::BinEntry);
+    assert!(diags.is_empty(), "bin entry executable flagged: {diags:?}");
 }

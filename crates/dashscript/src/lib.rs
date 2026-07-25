@@ -16,4 +16,4 @@ pub mod translator;
 
 pub use bindgen::Bindgen;
 pub use package::{CargoDepSpec, Package};
-pub use translator::{RuntimeDeps, Translator};
+pub use translator::{FileRole, RuntimeDeps, Translator};

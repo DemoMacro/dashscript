@@ -635,6 +635,28 @@ fn engine_js_source(program: &mut oxc_ast::ast::Program<'_>) -> String {
     Codegen::new().build(&*program).code
 }
 
+/// A `.ts` file's role in its project — the file-role distinction the
+/// architecture's implicit-`main` design hinges on (decision point 8). `ds
+/// build` sets it from the package manifest for each file it translates.
+///
+/// `BinEntry` (the default) lowers top-level executable statements into an
+/// implicit `fn main`, the way Node runs an entry script — so a lone file (no
+/// `package.json`) and a conformance fixture are always `BinEntry`. `Module`
+/// lowers declarations only and rejects top-level executable statements: a
+/// module declares an API, it does not run, so a `console.log` at the top of a
+/// module file has no entry to land in. The `translate`/`check` entry points
+/// default to `BinEntry`; `_as` variants take a role.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum FileRole {
+    /// A bin/lib entry — top-level executable statements collect into an
+    /// implicit `fn main` the translator always emits.
+    #[default]
+    BinEntry,
+    /// A module imported by an entry — declarations only; top-level executable
+    /// statements are rejected (a module declares, it does not execute).
+    Module,
+}
+
 /// Translates a TypeScript-flavored `.ts` program into Rust source.
 #[derive(Default)]
 pub struct Translator;
@@ -660,7 +682,9 @@ impl Translator {
     }
 
     /// Parse `.ts` source, translate the AST to Rust source, and report the
-    /// runtime dependencies the generated code needs.
+    /// runtime dependencies the generated code needs. Lowers as
+    /// [`FileRole::BinEntry`] — the default for a lone file (always run) and a
+    /// conformance fixture.
     ///
     /// The Rust text matches [`Self::translate`]; the second return value is the
     /// set of extra crates / helper modules the translated code references, so
@@ -670,6 +694,24 @@ impl Translator {
     /// # Errors
     /// Returns an error string if oxc reports parse diagnostics.
     pub fn translate_with_deps(&self, source: &str) -> Result<(String, RuntimeDeps), String> {
+        self.translate_with_deps_as(source, FileRole::BinEntry)
+    }
+
+    /// Parse `.ts` source, translate the AST to Rust source, report the runtime
+    /// dependencies, and lower according to `role`. [`FileRole::BinEntry`] emits
+    /// an implicit `fn main` collecting top-level executable statements;
+    /// [`FileRole::Module`] emits declarations only and rejects top-level
+    /// executable statements (a module declares an API, it does not run). `ds
+    /// build` passes `Module` for a file that is not a package entry.
+    ///
+    /// # Errors
+    /// Returns an error string if oxc reports parse diagnostics, or if `role`
+    /// is [`FileRole::Module`] and the file has top-level executable statements.
+    pub fn translate_with_deps_as(
+        &self,
+        source: &str,
+        role: FileRole,
+    ) -> Result<(String, RuntimeDeps), String> {
         let allocator = Allocator::default();
         let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
 
@@ -783,38 +825,58 @@ impl Translator {
         // executable subset. `return_path` is `None` — a top-level `return
         // expr;` cannot yield a value (binary `main` returns `()`); `check`
         // flags it unsupported.
-        let main_item: syn::Item = {
-            let mut locals = context::Locals::new();
-            let analysis = analysis::analyze(
-                &program.body,
-                &names,
-                &registry.mut_methods,
-                &registry.ref_params,
-            );
-            locals.mutated = analysis.mutated;
-            locals.member_mutated = analysis.member_mutated;
-            locals.use_counts = analysis.use_counts;
-            locals.number_flavors = flavor::infer(&program.body, &names);
-            let mut out: Vec<syn::Stmt> = exec_stmts
-                .into_iter()
-                .flat_map(|s| {
-                    functions::translate_stmt(
-                        s,
-                        &mut locals,
-                        &registry,
-                        &context::Narrow::default(),
-                        None,
+        match role {
+            FileRole::BinEntry => {
+                let main_item: syn::Item = {
+                    let mut locals = context::Locals::new();
+                    let analysis = analysis::analyze(
+                        &program.body,
                         &names,
-                    )
-                })
-                .collect();
-            functions::drop_trailing_return(&mut out);
-            let block: syn::Block = syn::parse_quote!({ #(#out)* });
-            syn::parse_quote! {
-                fn main() #block
+                        &registry.mut_methods,
+                        &registry.ref_params,
+                    );
+                    locals.mutated = analysis.mutated;
+                    locals.member_mutated = analysis.member_mutated;
+                    locals.use_counts = analysis.use_counts;
+                    locals.number_flavors = flavor::infer(&program.body, &names);
+                    let mut out: Vec<syn::Stmt> = exec_stmts
+                        .into_iter()
+                        .flat_map(|s| {
+                            functions::translate_stmt(
+                                s,
+                                &mut locals,
+                                &registry,
+                                &context::Narrow::default(),
+                                None,
+                                &names,
+                            )
+                        })
+                        .collect();
+                    functions::drop_trailing_return(&mut out);
+                    let block: syn::Block = syn::parse_quote!({ #(#out)* });
+                    syn::parse_quote! {
+                        fn main() #block
+                    }
+                };
+                items.push(main_item);
             }
-        };
-        items.push(main_item);
+            FileRole::Module => {
+                // 模块语义（架构决策点 8）：模块只声明，不执行。顶层可执行
+                // 语句无 `fn main` 可入（Node 的 module 只 export，不跑顶层
+                // 语句除非它是入口）—— 拒绝，而非静默丢弃它们的副作用。
+                if !exec_stmts.is_empty() {
+                    return Err(
+                        "a module file may only declare (function / class / interface / \
+                         type / import / export) — top-level executable statements have no \
+                         entry to run in; move them into a function, or make this file a \
+                         bin entry"
+                            .into(),
+                    );
+                }
+                // declarations-only：crate 内模块（src/<stem>.rs），无 `fn main`，
+                // 由 entry 经 `mod <stem>;` 引入。
+            }
+        }
         let file = syn::File {
             shebang: None,
             attrs: Vec::new(),
@@ -848,6 +910,14 @@ impl Translator {
     #[must_use]
     pub fn check(&self, source: &str) -> Vec<OxcDiagnostic> {
         check::check(source)
+    }
+
+    /// Role-aware translatability check — see [`Self::check`]. [`FileRole::Module`]
+    /// additionally flags top-level executable statements (a module declares,
+    /// it does not run).
+    #[must_use]
+    pub fn check_as(&self, source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
+        check::check_as(source, role)
     }
 
     /// The annotation-stripped ECMAScript the engine compat path would run,

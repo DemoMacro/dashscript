@@ -29,10 +29,10 @@ use oxc_ast::ast::{
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
 use oxc_semantic::SemanticBuilder;
-use oxc_span::{SourceType, Span};
+use oxc_span::{GetSpan, SourceType, Span};
 
 use super::name_table;
-use super::{analysis, functions, registry};
+use super::{analysis, functions, registry, FileRole};
 
 // The set of prototype borrows `is_borrow_call` whitelists depends on the
 // caller (`check` vs the engine detector). Rather than thread a `for_engine`
@@ -78,6 +78,15 @@ impl Drop for EngineScope {
 /// Rust (as far as DashScript can tell — `cargo check` is still the final
 /// arbiter).
 pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
+    check_as(source, FileRole::BinEntry)
+}
+
+/// Role-aware translatability check — see [`check`]. [`FileRole::Module`]
+/// additionally flags top-level executable statements: a module declares an
+/// API, it does not run, so a top-level `const`/expression/control-flow has no
+/// entry to land in. Declarations (function/class/interface/type/import/export)
+/// pass under either role.
+pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
     // Reset the non-string-var set for this program (a prior `check` on the
     // same thread must not leak bindings forward — see [`NON_STRING_VARS`]).
     NON_STRING_VARS.with(|s| s.borrow_mut().clear());
@@ -109,11 +118,22 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
             continue;
         }
         if functions::is_executable_top_level(stmt) {
-            // Pure-TS execution semantics: executable statements (a `const`,
-            // an expression, control flow, a throw) run in source order inside
-            // the implicit `fn main`, so they are legitimate top-level — not
-            // unmapped. Still walk for low-compatibility constructs inside.
-            collect_unsupported(stmt, &mut diagnostics);
+            if matches!(role, FileRole::Module) {
+                // 模块语义（架构决策点 8）：模块只声明，不执行。顶层可执行
+                // 语句无 `fn main` 可入（Node 的 module 只 export，不跑顶层
+                // 语句除非它是入口）—— 报 unsupported，而非静默丢弃副作用。
+                diagnostics.push(err(
+                    "a module file may only declare — top-level executable \
+                     statements need a bin entry (a module declares, it does not run)",
+                    stmt.span(),
+                ));
+            } else {
+                // Pure-TS execution semantics: executable statements (a `const`,
+                // an expression, control flow, a throw) run in source order inside
+                // the implicit `fn main`, so they are legitimate top-level — not
+                // unmapped. Still walk for low-compatibility constructs inside.
+                collect_unsupported(stmt, &mut diagnostics);
+            }
             continue;
         }
         if functions::translate_statement(stmt, &registry, &names).is_empty() {

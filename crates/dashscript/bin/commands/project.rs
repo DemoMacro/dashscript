@@ -10,7 +10,7 @@ use std::{
     process::{Command, ExitCode, ExitStatus},
 };
 
-use dashscript::{Package, RuntimeDeps, Translator};
+use dashscript::{FileRole, Package, RuntimeDeps, Translator};
 
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
@@ -63,11 +63,15 @@ pub(crate) fn translate_sources(
 /// separately by [`translate_project`]'s directory walk (it sits in the project
 /// tree); a bare (npm) import lives under `node_modules/` — which the walk
 /// skips — so it is resolved and translated here alongside the entry.
-fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<RuntimeDeps, Box<dyn Error>> {
+fn translate_one_with_mods(
+    ds: &Path,
+    project_dir: &Path,
+    role: FileRole,
+) -> Result<RuntimeDeps, Box<dyn Error>> {
     let translator = Translator::new();
     let src = fs::read_to_string(ds).map_err(|e| format!("cannot read {}: {e}", ds.display()))?;
     let (rust, mut deps) = translator
-        .translate_with_deps(&src)
+        .translate_with_deps_as(&src, role)
         .map_err(|e| format!("translate {}: {e}", ds.display()))?;
     let base = ds.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
@@ -130,6 +134,19 @@ pub(crate) fn translate_project(
     // between lone-file and project mode) so cargo never sees orphan modules.
     clean_src_dir(&src_dir)?;
 
+    let bins = package.bin_entries();
+    // package.json `main` → the crate's `[lib]` target (shared code bins `use`).
+    let lib = package.main.clone();
+    // 文件角色（架构决策点 8）：bin/lib entry 收顶层可执行语句进 `fn main`；
+    // 其余文件（被 import 的 module）只声明、不执行 —— `Module` 角色对其顶层
+    // 可执行语句报错（模块语义）。按 canonical 路径比对，使判定不受 import
+    // 写法或 `bin` 相对/绝对写法影响。
+    let entry_paths: std::collections::HashSet<PathBuf> = bins
+        .iter()
+        .filter_map(|(_, p)| root.join(p).canonicalize().ok())
+        .chain(lib.as_ref().and_then(|p| root.join(p).canonicalize().ok()))
+        .collect();
+
     let mut files = Vec::new();
     walk_ts(root, &mut files);
     files.sort();
@@ -148,13 +165,16 @@ pub(crate) fn translate_project(
             )
             .into());
         }
-        let file_deps = translate_one_with_mods(ds, project_dir)?;
+        let canon = ds.canonicalize().unwrap_or_else(|_| ds.clone());
+        let role = if entry_paths.contains(&canon) {
+            FileRole::BinEntry
+        } else {
+            FileRole::Module
+        };
+        let file_deps = translate_one_with_mods(ds, project_dir, role)?;
         deps.merge(&file_deps);
     }
 
-    let bins = package.bin_entries();
-    // package.json `main` → the crate's `[lib]` target (shared code bins `use`).
-    let lib = package.main.clone();
     detect_bin_imports_bin(root, &bins)?;
     detect_circular_imports(&files)?;
     Ok(((bins, lib), deps))
@@ -1045,5 +1065,39 @@ mod tests {
         assert!(msg.contains("circular import"), "got: {msg}");
         assert!(msg.contains("a.ts"), "got: {msg}");
         assert!(msg.contains("b.ts"), "got: {msg}");
+    }
+
+    #[test]
+    fn translate_project_module_file_has_no_main() {
+        // 文件角色（架构决策点 8）：bin entry 收顶层语句进 `fn main`；被 import
+        // 的 module 文件只声明、不执行 → 无 `fn main`（crate 内模块，由 entry 经
+        // `mod` 引入）。一个 bin import 一个辅助 module：
+        //   main.ts (bin)    → src/main.rs 有 `fn main`
+        //   util.ts  (module) → src/util.rs  无 `fn main`
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "package.json",
+            r#"{ "name": "app", "bin": "main.ts" }"#,
+        );
+        write(
+            root,
+            "main.ts",
+            "import { helper } from \"./util\";\nfunction main(): void { helper(); }",
+        );
+        write(root, "util.ts", "export function helper(): void {}");
+        let out = tmp.path().join("out");
+        translate_project(root, &package_at(root), &out).unwrap();
+        let main_rs = fs::read_to_string(out.join("src").join("main.rs")).unwrap();
+        let util_rs = fs::read_to_string(out.join("src").join("util.rs")).unwrap();
+        assert!(
+            main_rs.contains("fn main"),
+            "bin entry missing fn main: {main_rs}"
+        );
+        assert!(
+            !util_rs.contains("fn main"),
+            "module file should not have fn main: {util_rs}"
+        );
     }
 }

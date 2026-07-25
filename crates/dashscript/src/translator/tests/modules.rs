@@ -1,5 +1,5 @@
 // End-to-end tests for module declarations (export/import).
-use super::super::Translator;
+use super::super::{FileRole, Translator};
 
 #[test]
 fn exports_function_as_pub() {
@@ -540,4 +540,54 @@ fn top_level_main_call_passes_check() {
     // implicit `fn main`) — no longer a special-cased entry to skip.
     let diags = Translator::new().check("function main(): void { console.log(1); }\nmain();");
     assert!(diags.is_empty(), "top-level main() call flagged: {diags:?}");
+}
+
+#[test]
+fn translate_with_deps_module_emits_no_main() {
+    // 模块角色（架构决策点 8）：模块只声明，不执行 —— 无 `fn main`。一个导出
+    // 函数的模块文件翻译成 crate 内模块（src/<stem>.rs），由 entry 经 `mod` 引入。
+    let rust = Translator::new()
+        .translate_with_deps_as(
+            "export function helper(x: number): number { return x * 2; }",
+            FileRole::Module,
+        )
+        .expect("should translate")
+        .0;
+    assert!(!rust.contains("fn main"), "module emitted fn main: {rust}");
+    assert!(
+        rust.contains("pub fn helper"),
+        "module lost its declaration: {rust}"
+    );
+}
+
+#[test]
+fn translate_with_deps_bin_entry_emits_main_for_declarations_only() {
+    // bin entry 即使只有声明也生成空 `fn main`（cargo bin target 必需入口）。
+    let rust = Translator::new()
+        .translate_with_deps_as(
+            "function helper(x: number): number { return x * 2; }",
+            FileRole::BinEntry,
+        )
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("fn main"),
+        "bin entry missing fn main: {rust}"
+    );
+}
+
+#[test]
+fn translate_with_deps_module_rejects_top_level_executable() {
+    // 模块角色 + 顶层可执行语句（`console.log`）→ Err：模块不执行，顶层语句
+    // 无入口可入（Node 的 module 只 export，不跑顶层语句）。拒绝而非静默丢弃。
+    let err = Translator::new()
+        .translate_with_deps_as(
+            "export function helper(): void {}\nconsole.log(1);",
+            FileRole::Module,
+        )
+        .expect_err("module with top-level executable should error");
+    assert!(
+        err.contains("module file may only declare"),
+        "wrong error: {err}"
+    );
 }
