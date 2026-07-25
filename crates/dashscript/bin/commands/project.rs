@@ -14,8 +14,9 @@ use dashscript::{FileRole, Package, RuntimeDeps, Translator};
 
 /// Translate one resolved dependency to the Rust source for `src/<module>.rs`,
 /// merging its runtime deps into `deps`. The `DepKind` picks the path: a `.ts`
-/// dep becomes a Rust module; a pure `.d.ts` yields its `interface`/`type`
-/// items; a `.js`/typed pair needs the engine (a later batch, raised honestly).
+/// or untyped `.js` dep is transpiled as a Rust module (transpile-first); a
+/// pure `.d.ts` yields its `interface`/`type` items; a `.d.ts` + `.js` pair
+/// needs type injection (a later batch, raised honestly).
 fn translate_dep(
     translator: &Translator,
     dep_path: &Path,
@@ -23,7 +24,16 @@ fn translate_dep(
     deps: &mut RuntimeDeps,
 ) -> Result<String, Box<dyn Error>> {
     match kind {
-        DepKind::Ts => {
+        DepKind::Ts | DepKind::Js => {
+            // Transpile-first: a `.js` file is JS-flavored TypeScript, and the
+            // translator already handles untyped params (default `f64`) and
+            // literal type inference — so a pure-JS source that is a TS subset
+            // lowers to Rust the same way a `.ts` module does, no engine.
+            // Dynamic JS the table cannot lower (`typeof` / prototype / `eval`)
+            // surfaces as a `cargo check` error honestly; the engine fallback
+            // is a later batch for those. An ESM `.js` (`export function`)
+            // works; a CommonJS `.js` (`module.exports = …` — a top-level
+            // executable statement) is rejected by `FileRole::Module`.
             let dep_src = fs::read_to_string(dep_path)
                 .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
             let (rust, dep_deps) = translator
@@ -38,16 +48,10 @@ fn translate_dep(
             Ok(translator.translate_dts(&dep_src))
         }
         DepKind::DtsWithJs { js_path } => Err(format!(
-            "dashscript: dependency '{}' is a typed JavaScript package (.d.ts + {}); the \
-             embedded engine is not yet wired for per-import FFI (a later batch)",
+            "dashscript: dependency '{}' is a typed JavaScript package (.d.ts + {}); type \
+             injection from the `.d.ts` into the `.js` transpile is a later batch",
             dep_path.display(),
             js_path.display()
-        )
-        .into()),
-        DepKind::Js => Err(format!(
-            "dashscript: dependency '{}' is an untyped JavaScript package (.js); the embedded \
-             engine is not yet wired for per-import FFI (a later batch)",
-            dep_path.display()
         )
         .into()),
     }
@@ -452,13 +456,13 @@ fn inject_helper_module(
 /// Resolve a relative `.ts` import (`"./other"` or `"./other.ts"`) against the
 /// importing file's directory. Errors clearly when no matching file exists.
 /// What kind of file a resolved dependency is — decides how the build
-/// pipeline lowers it. A `.ts` dep translates as a Rust module (the existing
-/// path). A pure `.d.ts` (an `@types/*` package with no `.js`) carries types
-/// only — its `interface`/`type` declarations become Rust items, and a value
-/// import surfaces as a `cargo check` error honestly. A `.d.ts` with a sibling
-/// `.js`, or a `.js` with a `.d.ts`, is a typed package whose implementation
-/// runs under the embedded engine; a lone `.js` is untyped — both are a later
-/// batch (the engine is not yet wired for per-import FFI).
+/// pipeline lowers it. A `.ts` or `.js` dep is transpiled as a Rust module
+/// (transpile-first: a `.js` is JS-flavored TS, and the translator already
+/// handles untyped params and literal type inference). A pure `.d.ts` (an
+/// `@types/*` package with no `.js`) carries types only — its `interface`/
+/// `type` declarations become Rust items, and a value import surfaces as a
+/// `cargo check` error honestly. A `.d.ts` with a sibling `.js` is a typed
+/// package awaiting type injection (a later batch).
 #[derive(Clone, Debug)]
 pub(crate) enum DepKind {
     Ts,
@@ -959,11 +963,11 @@ mod tests {
     }
 
     #[test]
-    fn resolve_node_module_js_entry_is_engine_dep() {
+    fn resolve_node_module_js_entry_is_js_kind() {
         // A package whose entry is `.js` (no `.ts`/`.d.ts`) resolves to a `Js`
-        // kind — its implementation runs under the embedded engine. Resolve no
-        // longer errors on `.js`; the honest "engine not yet wired" message is
-        // raised by the translate loop, which knows the kind.
+        // kind. Resolve no longer errors on `.js`; the translate loop transpiles
+        // it first (a `.js` is JS-flavored TS) and falls back to the engine only
+        // for dynamic JS the table cannot lower.
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         let pkg = root.join("node_modules").join("js-pkg");
@@ -973,7 +977,7 @@ mod tests {
             "package.json",
             r#"{ "name": "js-pkg", "main": "index.js" }"#,
         );
-        write(&pkg, "index.js", "module.exports = {};");
+        write(&pkg, "index.js", "export function x() { return 1; }");
         let (resolved, kind) = resolve_local_module(root, "js-pkg").unwrap();
         assert_eq!(resolved, pkg.join("index.js"));
         assert!(
@@ -1048,7 +1052,9 @@ mod tests {
         write(&pkg, "cjs.cjs", "module.exports = {};");
         let (resolved, kind) = resolve_local_module(root, "mod-pkg").unwrap();
         // The `import` condition wins (configured `condition_names`), so the
-        // ESM entry resolves. `.mjs` is a JS engine dep (batch C wires ESM).
+        // ESM entry resolves. `.mjs` is a `Js` kind — transpiled first (ESM
+        // `export function` lowers like a `.ts` module); the CJS `.cjs` arm is
+        // reached only under a `require` condition.
         assert_eq!(resolved, pkg.join("esm.mjs"));
         assert!(
             matches!(kind, DepKind::Js),
