@@ -92,7 +92,15 @@ pub(crate) fn build_at(
     target_override: Option<&str>,
     dest_root: &Path,
 ) -> Result<ExitCode, Box<dyn Error>> {
-    let path = Path::new(entry);
+    // Absolute the entry so a relative `ds build main.ts` still resolves
+    // cross-directory imports: `Path::new("main.ts").parent()` is empty, which
+    // starves the resolver's base. Joining cwd (rather than canonicalize, which
+    // on Windows yields a `\\?\` verbatim path that leaks into cargo/dist
+    // output) keeps paths display-clean while making `parent()` correct.
+    let owned = std::env::current_dir()
+        .map(|cwd| cwd.join(entry))
+        .unwrap_or_else(|_| PathBuf::from(entry));
+    let path = owned.as_path();
     let src =
         fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     let name = project_name(path);
