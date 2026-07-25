@@ -200,6 +200,64 @@ fn namespace_member_access_passes_check() {
 }
 
 #[test]
+fn export_named_from_emits_pub_use() {
+    // `export { foo } from "./m"` → `pub use m::foo;` — a re-export surfaces
+    // another module's item on this module's public surface. prettyplease
+    // drops the braces for a single item.
+    let rust = Translator::new()
+        .translate("export { foo } from \"./other\";")
+        .expect("should translate");
+    assert!(rust.contains("pub use other::foo"), "got: {rust}");
+}
+
+#[test]
+fn export_named_from_groups_multiple() {
+    // Multiple re-exports group like imports: `pub use other::{foo, bar};`.
+    let rust = Translator::new()
+        .translate("export { foo, bar } from \"./other\";")
+        .expect("should translate");
+    assert!(rust.contains("pub use other::{foo, bar}"), "got: {rust}");
+}
+
+#[test]
+fn export_named_from_rename_emits_as() {
+    // `export { foo as bar } from "./m"` → `pub use m::foo as bar;` — the
+    // source path (`foo`) aliased to the exported name (`bar`).
+    let rust = Translator::new()
+        .translate("export { foo as bar } from \"./other\";")
+        .expect("should translate");
+    assert!(rust.contains("foo as bar"), "got: {rust}");
+}
+
+#[test]
+fn export_all_emits_pub_glob() {
+    // `export * from "./m"` → `pub use m::*;` — re-export every item.
+    let rust = Translator::new()
+        .translate("export * from \"./other\";")
+        .expect("should translate");
+    assert!(rust.contains("pub use other::*"), "got: {rust}");
+}
+
+#[test]
+fn export_all_as_namespace_emits_alias() {
+    // `export * as ns from "./m"` → `pub use m as ns;` — a namespace re-export;
+    // importers read its members as `ns::foo`.
+    let rust = Translator::new()
+        .translate("export * as ns from \"./other\";")
+        .expect("should translate");
+    assert!(rust.contains("pub use other as ns"), "got: {rust}");
+}
+
+#[test]
+fn export_re_exports_pass_check() {
+    // Re-exports are mapped constructs, so `check` must not flag them.
+    let diags = Translator::new().check(
+        "export { foo } from \"./a\";\nexport * from \"./b\";\nexport * as ns from \"./c\";",
+    );
+    assert!(diags.is_empty(), "re-export flagged: {diags:?}");
+}
+
+#[test]
 fn declarations_list_local_bindings() {
     let decls = Translator::new().declarations(
         "function foo() {}\ninterface Bar {}\ntype Baz = number\nimport { qux } from \"./other\";",

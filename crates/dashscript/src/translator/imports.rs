@@ -8,8 +8,8 @@
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    BindingIdentifier, BindingPattern, Declaration, Function, ImportDeclarationSpecifier,
-    ImportSpecifier, ModuleExportName, Statement,
+    BindingIdentifier, BindingPattern, Declaration, ExportSpecifier, Function,
+    ImportDeclarationSpecifier, ModuleExportName, Statement,
 };
 use oxc_parser::Parser;
 use oxc_span::{GetSpan, SourceType, Span};
@@ -112,39 +112,63 @@ fn casing_ident(name: &str) -> Ident {
 /// binding. When they match (no `as`), a bare name keeps the rendered output
 /// brace-free (`use other::foo`, not `use other::{foo as foo}`).
 pub(crate) fn named_use_tree(spec: &ImportDeclarationSpecifier) -> Option<syn::UseTree> {
-    use syn::UseTree;
     match spec {
         ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => None,
         ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => {
-            let local = casing_ident(&s.local.name);
-            Some(UseTree::Name(syn::UseName { ident: local }))
+            // A default import has no separate imported name — the local binding
+            // names the crate item directly, so a bare tree (path == alias).
+            Some(use_tree_from(&s.local.name, &s.local.name))
         }
         ImportDeclarationSpecifier::ImportSpecifier(s) => {
-            let local = casing_ident(&s.local.name);
-            let imported = imported_name(s)
-                .map(|n| casing_ident(&n))
-                .unwrap_or_else(|| local.clone());
-            if imported == local {
-                Some(UseTree::Name(syn::UseName { ident: local }))
-            } else {
-                Some(UseTree::Rename(syn::UseRename {
-                    ident: imported,
-                    as_token: Default::default(),
-                    rename: local,
-                }))
-            }
+            let imported = module_export_name_str(&s.imported);
+            Some(use_tree_from(&imported, &s.local.name))
         }
     }
 }
 
-/// The imported (source-module) name of a named import as a string — `foo` in
-/// `import { foo }` or `import { foo as bar }`. A string-literal re-export name
-/// is returned verbatim (rare on the DashScript surface).
-fn imported_name(spec: &ImportSpecifier) -> Option<String> {
-    match &spec.imported {
-        ModuleExportName::IdentifierName(id) => Some(id.name.to_string()),
-        ModuleExportName::IdentifierReference(id) => Some(id.name.to_string()),
-        ModuleExportName::StringLiteral(s) => Some(s.value.to_string()),
+/// One `use` tree for a named export specifier — `export { foo }` (bare) or
+/// `export { foo as bar }` (rename). The path segment is the `local` name (in
+/// the source module, or the local binding when there is no `from`); the alias
+/// is the `exported` name exposed to importers — the mirror of an import's
+/// `imported` → `local` pair.
+pub(crate) fn export_use_tree(spec: &ExportSpecifier) -> syn::UseTree {
+    let local = module_export_name_str(&spec.local);
+    let exported = module_export_name_str(&spec.exported);
+    use_tree_from(&local, &exported)
+}
+
+/// The Rust alias ident for an `export * as <name>` namespace re-export — the
+/// `name` a `pub use mod as <name>;` exposes, with the type-vs-value casing.
+pub(crate) fn export_alias_ident(name: &ModuleExportName) -> Ident {
+    casing_ident(&module_export_name_str(name))
+}
+
+/// A `ModuleExportName` as a plain string — the three oxc forms (an identifier
+/// name, an identifier reference, or a string literal) all carry a `.name` /
+/// `.value`. Shared by import and export specifier lowering.
+fn module_export_name_str(name: &ModuleExportName) -> String {
+    match name {
+        ModuleExportName::IdentifierName(id) => id.name.to_string(),
+        ModuleExportName::IdentifierReference(id) => id.name.to_string(),
+        ModuleExportName::StringLiteral(s) => s.value.to_string(),
+    }
+}
+
+/// A `use` tree from a (path, alias) name pair: a bare `name` when they match,
+/// else `path as alias`. Shared by import (`imported` → `local`) and export
+/// (`local` → `exported`) lowering — both names take the type-vs-value casing.
+fn use_tree_from(path: &str, alias: &str) -> syn::UseTree {
+    use syn::UseTree;
+    let path_ident = casing_ident(path);
+    let alias_ident = casing_ident(alias);
+    if path_ident == alias_ident {
+        UseTree::Name(syn::UseName { ident: alias_ident })
+    } else {
+        UseTree::Rename(syn::UseRename {
+            ident: path_ident,
+            as_token: Default::default(),
+            rename: alias_ident,
+        })
     }
 }
 

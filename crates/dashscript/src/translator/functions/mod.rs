@@ -51,17 +51,59 @@ pub fn translate_statement(
             .into_iter()
             .collect(),
         // `export function/interface/type/class` lowers the declaration(s) and
-        // marks each `pub` so another `.ts` module can `import` it. Re-export
-        // lists (`export { x } from "…"`) have no declaration and yield `[]`.
+        // marks each `pub` so another `.ts` module can `import` it. A re-export
+        // list (`export { foo } from "./m"` / `export { foo as bar } from …`)
+        // has no declaration: it lowers to `pub use m::foo;` / `pub use m::foo
+        // as bar;` — the source path aliased to the exported name. With no
+        // `from` (`export { foo }`) it re-exports a local binding (`pub use
+        // foo;`), the way `pub use` widens a module's public surface.
         Statement::ExportNamedDeclaration(exp) => {
-            let Some(decl) = exp.declaration.as_ref() else {
+            if let Some(decl) = exp.declaration.as_ref() {
+                let mut items = translate_exported_declaration(decl, registry, names);
+                for item in &mut items {
+                    make_pub(item);
+                }
+                return items;
+            }
+            if exp.specifiers.is_empty() {
+                return Vec::new();
+            }
+            let trees: Vec<syn::UseTree> = exp
+                .specifiers
+                .iter()
+                .map(super::imports::export_use_tree)
+                .collect();
+            match exp
+                .source
+                .as_ref()
+                .and_then(|s| super::imports::module_ident(&s.value))
+            {
+                Some(mod_ident) => {
+                    vec![syn::Item::Use(
+                        parse_quote!(pub use #mod_ident::{#(#trees),*};),
+                    )]
+                }
+                None => trees
+                    .into_iter()
+                    .map(|t| syn::Item::Use(parse_quote!(pub use #t;)))
+                    .collect(),
+            }
+        }
+        // `export * from "./m"` → `pub use m::*;`; `export * as ns from "./m"`
+        // → `pub use m as ns;` (a namespace re-export — importers read `ns::foo`).
+        // A bare-specifier source the translator cannot resolve yields nothing
+        // (and `check` flags it).
+        Statement::ExportAllDeclaration(decl) => {
+            let Some(mod_ident) = super::imports::module_ident(&decl.source.value) else {
                 return Vec::new();
             };
-            let mut items = translate_exported_declaration(decl, registry, names);
-            for item in &mut items {
-                make_pub(item);
+            match &decl.exported {
+                None => vec![syn::Item::Use(parse_quote!(pub use #mod_ident::*;))],
+                Some(name) => {
+                    let ns = super::imports::export_alias_ident(name);
+                    vec![syn::Item::Use(parse_quote!(pub use #mod_ident as #ns;))]
+                }
             }
-            items
         }
         // `import { foo, bar } from "./other"` → `use other::{foo, bar};`;
         // `import { x } from "cargo:serde"` → `use serde::{x}`. A bare
