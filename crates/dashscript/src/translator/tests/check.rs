@@ -285,3 +285,15 @@ fn check_as_bin_entry_allows_top_level_executable() {
     let diags = Translator::new().check_as("console.log(1);", FileRole::BinEntry);
     assert!(diags.is_empty(), "bin entry executable flagged: {diags:?}");
 }
+
+#[test]
+fn check_flags_await() {
+    // `await` needs an async runtime DashScript does not have (`fn main` is
+    // sync; decision point 1). Reported honestly rather than lowered to a
+    // run-time `todo!()` that panics.
+    let diags = Translator::new().check("async function f(): Promise<void> { await foo(); }");
+    assert!(
+        diags.iter().any(|d| d.message.contains("await")),
+        "await not flagged: {diags:?}"
+    );
+}

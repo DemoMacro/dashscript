@@ -742,6 +742,15 @@ fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         Expression::BigIntLiteral(b) => {
             out.push(err("`BigInt` literals are unsupported", b.span));
         }
+        // `await expr` — DashScript has no async runtime (decision point 1:
+        // MVP does not support `await`; `fn main` is sync). Reported as
+        // unsupported rather than lowered to a run-time `todo!()` that panics.
+        Expression::AwaitExpression(a) => {
+            out.push(err(
+                "`await` is unsupported (DashScript has no async runtime)",
+                a.span,
+            ));
+        }
         _ => {}
     }
 }
