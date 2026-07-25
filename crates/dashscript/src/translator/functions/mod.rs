@@ -926,7 +926,11 @@ fn translate_variable_declaration(
                             // value of `target`'s type, so an unannotated
                             // `let r = Object.assign(t, …)` records `t`'s type —
                             // letting `r.foo` route through `is_hashmap_local`
-                            // (HashMap field access). Otherwise a numeric
+                            // (HashMap field access). A `record[key]` index
+                            // access records the map's value type, so an
+                            // unannotated `const v = record[key]` carries the
+                            // union-enum type and `v !== undefined` routes
+                            // through `union_null_equality`. Otherwise a numeric
                             // expression (`-0`, arithmetic, a `Math` call, a
                             // known `f64` local) records as `f64` so number→
                             // string emit routes through `__ds::number_to_string`.
@@ -934,6 +938,7 @@ fn translate_variable_declaration(
                             let ctx = Ctx::new(&*locals, registry, narrow, names);
                             object_assign_type(init, &ctx)
                                 .or_else(|| match_result_type(init, &ctx))
+                                .or_else(|| index_access_type(init, &ctx))
                                 .or_else(|| {
                                     expressions::is_number_expr(init, &ctx)
                                         .then(|| parse_quote!(f64))
@@ -1091,6 +1096,37 @@ fn match_result_type(init: &Expression, ctx: &Ctx<'_>) -> Option<Type> {
         && matches!(c.arguments.first(), Some(Argument::RegExpLiteral(_)));
     let is_exec = sm.property.name.as_str() == "exec" && is_regex_receiver(&sm.object, ctx);
     (is_match || is_exec).then(|| parse_quote!(Option<crate::__ds::DsMatch>))
+}
+
+/// `record[key]` (a `HashMap` index access) records the map's value type, so an
+/// unannotated `const v = record[key]` carries the union-enum type — letting
+/// `v !== undefined` route through `union_null_equality` (`!matches!(v, Undef)`)
+/// instead of falling through to a wrong `!= None` (the enum has no `None`, so
+/// that path is an E0308). Only a `HashMap<K, V>` whose object is a typed local
+/// is recognized; the key expression is irrelevant (a `HashMap` lookup yields
+/// `V` for any present key).
+fn index_access_type(init: &Expression, ctx: &Ctx<'_>) -> Option<Type> {
+    let Expression::ComputedMemberExpression(cm) = init else {
+        return None;
+    };
+    let Expression::Identifier(id) = &cm.object else {
+        return None;
+    };
+    let path = ctx.local_type(&bindings::snake(&id.name).to_string())?;
+    let seg = path.segments.last()?;
+    if seg.ident != "HashMap" {
+        return None;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return None;
+    };
+    args.args
+        .iter()
+        .filter_map(|g| match g {
+            syn::GenericArgument::Type(t) => Some(t.clone()),
+            _ => None,
+        })
+        .nth(1)
 }
 
 /// Whether `obj` is a regex value `exec` can be called on — a `/pat/` literal
