@@ -13,7 +13,7 @@ mod assignment;
 mod binary;
 pub(in crate::translator) mod call;
 mod fmt_merge;
-mod literals;
+pub(in crate::translator) mod literals;
 mod logical;
 mod member;
 mod new;
@@ -659,6 +659,12 @@ fn is_arith_operator(op: &oxc_syntax::operator::BinaryOperator) -> bool {
 /// coercion routes through `__ds::number_to_string`. ES rendering applies to
 /// integers too, not just doubles.
 fn is_number_local(id: &IdentifierReference, ctx: &Ctx<'_>) -> bool {
+    // A top-level `const` promoted to a crate-level `const` item (escape
+    // promotion, A3) is an `f64` value, but it is not a per-body local — so
+    // consult the shared name table, not the body-local type map.
+    if ctx.names().is_number_const(id) {
+        return true;
+    }
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name).is_some_and(|p| {
         p.segments

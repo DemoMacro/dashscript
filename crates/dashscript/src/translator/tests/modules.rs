@@ -408,12 +408,102 @@ fn top_level_expression_statement_passes_check() {
 }
 
 #[test]
-fn top_level_function_referencing_top_level_var_is_unsupported() {
-    // A top-level `function` reading a top-level `const` would close over a
-    // `fn main` local — impossible for a Rust fn item. Flag it honestly rather
-    // than letting it fail `cargo check` as a partial.
-    let diags = Translator::new().check("const x: number = 5;\nfunction f(): number { return x; }");
+fn top_level_function_referencing_top_level_let_is_unsupported() {
+    // A top-level `function` reading a top-level `let` would close over an
+    // `fn main` local — impossible for a Rust fn item, and `let` is not
+    // const-promotable (only a `const` number/boolean literal is, A3). Flag it
+    // honestly rather than letting it fail `cargo check` as a partial.
+    let diags = Translator::new().check("let x: number = 5;\nfunction f(): number { return x; }");
     assert!(!diags.is_empty(), "escape not flagged: {diags:?}");
+}
+
+#[test]
+fn top_level_number_const_referenced_by_fn_promotes_to_const_item() {
+    // Escape promotion (A3): a top-level `const` number literal referenced from
+    // a top-level `function` is hoisted to a crate-level `const` item — it
+    // cannot stay in `fn main` (a Rust fn item cannot capture a `main` local).
+    // The item keeps the snake-case rust name so the reference resolves to it
+    // unchanged; `#[allow(non_upper_case_globals)]` silences the lowercase-const
+    // lint.
+    let rust = Translator::new()
+        .translate("const N = 5;\nfunction f(): number { return N; }")
+        .expect("should translate");
+    assert!(rust.contains("const n: f64"), "no const item: {rust}");
+    assert!(
+        rust.contains("#[allow(non_upper_case_globals)]"),
+        "no lint allow: {rust}"
+    );
+    // The initializer must NOT also appear as a `let` inside `fn main`.
+    assert!(
+        !rust.contains("let n"),
+        "promoted const leaked into main: {rust}"
+    );
+}
+
+#[test]
+fn top_level_bool_const_referenced_by_fn_promotes_to_const_item() {
+    // A `const` boolean literal escapes the same way → a crate-level `bool`
+    // `const` item.
+    let rust = Translator::new()
+        .translate("const B = true;\nfunction f(): boolean { return B; }")
+        .expect("should translate");
+    assert!(rust.contains("const b: bool"), "no bool const item: {rust}");
+    assert!(
+        !rust.contains("let b"),
+        "promoted bool leaked into main: {rust}"
+    );
+}
+
+#[test]
+fn promoted_number_const_passes_check() {
+    // A promoted const-expr `const` is a mapped construct (it lowers to a
+    // `const` item), so `check` must not flag it — otherwise valid escape code
+    // would be rejected by `ds lint`.
+    let diags = Translator::new().check("const N = 5;\nfunction f(): number { return N; }");
+    assert!(diags.is_empty(), "promoted const flagged: {diags:?}");
+}
+
+#[test]
+fn top_level_string_const_referenced_by_fn_still_unsupported() {
+    // A `const` string literal infers `String` (`"hi".to_string()`), which is
+    // not a Rust const-expression — so it is not const-promotable and stays
+    // `unsupported` when it escapes (a runtime/static promotion is a later
+    // batch).
+    let diags = Translator::new().check("const S = \"hi\";\nfunction f(): string { return S; }");
+    assert!(!diags.is_empty(), "string escape not flagged: {diags:?}");
+}
+
+#[test]
+fn non_escaped_top_level_const_stays_in_main() {
+    // Promotion happens only on escape (a function reading the binding). A
+    // top-level `const` read only at the top level stays a `let` inside `fn
+    // main` — it is not hoisted to a crate item.
+    let rust = Translator::new()
+        .translate("const N = 5;\nconsole.log(N);")
+        .expect("should translate");
+    assert!(
+        !rust.contains("const n"),
+        "non-escaped const hoisted: {rust}"
+    );
+    assert!(
+        rust.contains("let n"),
+        "top-level const not in main: {rust}"
+    );
+}
+
+#[test]
+fn promoted_number_const_readable_at_top_level() {
+    // A promoted numeric `const` is registered in the name table so a top-level
+    // read routes through `__ds::number_to_string` (ES Number rendering), the
+    // way a numeric local does — not left as a bare `f64` that `Display`s with
+    // the wrong format.
+    let rust = Translator::new()
+        .translate("const N = 5;\nfunction f(): number { return N; }\nconsole.log(N);")
+        .expect("should translate");
+    assert!(
+        rust.contains("number_to_string(n as f64)"),
+        "top-level read of promoted const not routed: {rust}"
+    );
 }
 
 #[test]

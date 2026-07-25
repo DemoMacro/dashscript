@@ -35,6 +35,14 @@ pub struct NameTable<'scoping> {
     /// same-named bindings in different scopes stay distinct, the way `map`
     /// does. Populated after `build` from the program's import specifiers.
     namespaces: HashSet<SymbolId>,
+    /// The `SymbolId`s of top-level `const` bindings promoted to crate-level
+    /// `const` items (escape promotion, A3) — a `const` number literal
+    /// referenced from a top-level function. A reference to one is an `f64`
+    /// value, so number→string emit must route it through
+    /// `__ds::number_to_string` the way it does a numeric local. Tracked
+    /// per-symbol so the promotion is visible in every body (`fn main` and each
+    /// function), not just the one that would have declared it as a local.
+    number_consts: HashSet<SymbolId>,
 }
 
 impl<'a> NameTable<'a> {
@@ -128,6 +136,25 @@ impl<'a> NameTable<'a> {
             }
         }
     }
+
+    /// Record a promoted top-level `const` binding (escape promotion, A3) so a
+    /// reference to it is recognized as an `f64` value — see [`Self::is_number_const`].
+    pub fn register_number_const(&mut self, sym: SymbolId) {
+        self.number_consts.insert(sym);
+    }
+
+    /// Whether `id` resolves to a top-level `const` promoted to a crate-level
+    /// `const` item (escape promotion, A3). Such a reference is an `f64` value
+    /// living in a `const` item, not a `fn main` local, so number→string emit
+    /// routes it through `__ds::number_to_string` (see `is_number_local`).
+    /// Returns `false` for any unresolved reference.
+    #[must_use]
+    pub fn is_number_const(&self, id: &IdentifierReference) -> bool {
+        let Some(sid) = self.symbol_of_reference(id) else {
+            return false;
+        };
+        self.number_consts.contains(&sid)
+    }
 }
 
 /// Build a name table for one file's symbols — see the module doc for the
@@ -184,5 +211,6 @@ pub fn build(scoping: &Scoping) -> NameTable<'_> {
         scoping,
         map,
         namespaces: HashSet::new(),
+        number_consts: HashSet::new(),
     }
 }

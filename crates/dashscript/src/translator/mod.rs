@@ -733,6 +733,24 @@ impl Translator {
         // First pass: collect discriminated-union enum shapes so later
         // expression translation can build variant constructors.
         let registry = registry::build_registry(&program.body, &names);
+        // Escape promotion (A3): a top-level `const` number/boolean literal
+        // referenced from a top-level `function` cannot stay in `fn main` (a
+        // Rust fn item cannot close over a `main` local), so it is hoisted to a
+        // crate-level `const` item. Register the numeric ones in the name table
+        // BEFORE any body is translated, so a function that appears before the
+        // const in source order still sees it as an `f64` value for number→
+        // string routing (Rust items are hoisted; ES top-level bindings are
+        // order-independent at the module level).
+        let promoted = functions::promoted_const_names(&program.body, &names, &registry);
+        for s in &program.body {
+            if let oxc_ast::ast::Statement::VariableDeclaration(v) = s {
+                if let Some((sym, name, kind)) = functions::promotable_const_info(v, &names) {
+                    if kind.is_number() && promoted.contains(&name) {
+                        names.register_number_const(sym);
+                    }
+                }
+            }
+        }
         // Pure-TS execution semantics: a top-level statement that *runs* in
         // source order (a `const`, an expression, control flow, a throw) does
         // not map to a Rust item — it belongs inside the entry point, the way
@@ -744,6 +762,14 @@ impl Translator {
         let mut items: Vec<syn::Item> = Vec::new();
         let mut exec_stmts: Vec<&oxc_ast::ast::Statement> = Vec::new();
         for s in &program.body {
+            // A promoted const-expr `const` lowers to a crate-level `const`
+            // item here (escape promotion, A3) — NOT collected into `fn main`,
+            // so a top-level function reading it resolves to the item, not a
+            // `main` local it cannot see.
+            if let Some(item) = functions::promoted_const_item(s, &promoted, &names) {
+                items.push(item);
+                continue;
+            }
             if functions::is_executable_top_level(s) {
                 exec_stmts.push(s);
             } else {

@@ -23,7 +23,7 @@ pub(in crate::translator) fn bool_expr(value: bool) -> Expr {
 /// (`vec![3, 1, 4].map(...)`). Consumers that need another integer type —
 /// `as usize` for indexing, `as i32` for bitwise, `as u32` for a radix — already
 /// cast, so anchoring is safe there too.
-pub(super) fn numeric_expr(value: f64) -> Expr {
+pub(in crate::translator) fn numeric_expr(value: f64) -> Expr {
     let s = if value.is_nan() {
         "f64::NAN".to_string()
     } else if value.is_infinite() {

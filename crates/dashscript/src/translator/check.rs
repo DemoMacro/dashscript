@@ -146,7 +146,14 @@ fn check_escape(
     registry: &registry::TypeRegistry,
     out: &mut Vec<OxcDiagnostic>,
 ) {
-    let top_level_vars: HashSet<String> = program_body
+    // A const-expr `const` number/boolean literal referenced from a top-level
+    // function is promoted to a crate-level `const` item (escape promotion,
+    // A3) — that escape is legal. Everything else (a `let`/`var`, a string, a
+    // runtime initializer) still cannot be captured by a Rust fn item, so it
+    // stays `unsupported`. `promoted_const_names` is the single source of truth
+    // the translator also uses, so `check` and emit agree on what is hoisted.
+    let promoted = functions::promoted_const_names(program_body, names, registry);
+    let flaggable: HashSet<String> = program_body
         .iter()
         .filter_map(|s| match s {
             Statement::VariableDeclaration(v) => Some(v),
@@ -157,8 +164,9 @@ fn check_escape(
             BindingPattern::BindingIdentifier(id) => Some(names.of_binding(id).to_string()),
             _ => None,
         })
+        .filter(|n| !promoted.contains(n))
         .collect();
-    if top_level_vars.is_empty() {
+    if flaggable.is_empty() {
         return;
     }
     for stmt in program_body {
@@ -172,14 +180,12 @@ fn check_escape(
             &registry.mut_methods,
             &registry.ref_params,
         );
-        if analysis
-            .use_counts
-            .keys()
-            .any(|k| top_level_vars.contains(k))
-        {
+        if analysis.use_counts.keys().any(|k| flaggable.contains(k)) {
             out.push(err(
-                "a top-level binding referenced from a function is not yet supported — \
-                 move the binding into the function, or call the function from the top level",
+                "a `let`/`var` or non-literal binding referenced from a top-level \
+                 function is not yet supported — use a `const` number/boolean \
+                 literal, move the binding into the function, or call the function \
+                 from the top level",
                 f.span,
             ));
         }
