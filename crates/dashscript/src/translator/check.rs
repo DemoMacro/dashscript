@@ -237,9 +237,10 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
             s.span,
         ),
         Statement::ExportNamedDeclaration(s) => err("module `export` is not supported yet", s.span),
-        Statement::ExportDefaultDeclaration(s) => {
-            err("module `export default` is not supported yet", s.span)
-        }
+        Statement::ExportDefaultDeclaration(s) => err(
+            "`export default <expression>` is not supported — use a default function or class",
+            s.span,
+        ),
         Statement::ExportAllDeclaration(s) => err("module `export *` is not supported yet", s.span),
         Statement::TSEnumDeclaration(s) => err(
             "TypeScript `enum` is not supported (use a union type instead)",

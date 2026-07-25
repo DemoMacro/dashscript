@@ -258,6 +258,37 @@ fn export_re_exports_pass_check() {
 }
 
 #[test]
+fn export_default_function_emits_pub_fn() {
+    // `export default function foo()` lowers the declaration `pub` — a default
+    // export is a public item like any named export (which file is "the entry"
+    // is a build-pipeline concern, not the translator's).
+    let rust = Translator::new()
+        .translate("export default function foo(): number { return 1; }")
+        .expect("should translate");
+    assert!(rust.contains("pub fn foo"), "got: {rust}");
+}
+
+#[test]
+fn export_default_class_emits_pub_struct() {
+    // `export default class Foo` lowers the `struct` (and its `impl`) as `pub`.
+    let rust = Translator::new()
+        .translate("export default class Foo { x: number; }")
+        .expect("should translate");
+    assert!(rust.contains("pub struct Foo"), "got: {rust}");
+}
+
+#[test]
+fn export_default_expression_is_unsupported() {
+    // `export default <expression>` names no item — Rust has no anonymous
+    // default value, so it stays unsupported (a default function/class works).
+    let diags = Translator::new().check("export default 42;");
+    assert!(
+        !diags.is_empty(),
+        "expression default not flagged: {diags:?}"
+    );
+}
+
+#[test]
 fn declarations_list_local_bindings() {
     let decls = Translator::new().declarations(
         "function foo() {}\ninterface Bar {}\ntype Baz = number\nimport { qux } from \"./other\";",

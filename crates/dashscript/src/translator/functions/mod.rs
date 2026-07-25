@@ -16,9 +16,9 @@ use destructure::{destructure_array, destructure_object};
 use switch::translate_switch;
 
 use oxc_ast::ast::{
-    Argument, BindingPattern, Declaration, Expression, FormalParameters, Function,
-    ObjectExpression, ObjectPropertyKind, Statement, TSType, TryStatement, VariableDeclaration,
-    VariableDeclarationKind,
+    Argument, BindingPattern, Declaration, ExportDefaultDeclarationKind, Expression,
+    FormalParameters, Function, ObjectExpression, ObjectPropertyKind, Statement, TSType,
+    TryStatement, VariableDeclaration, VariableDeclarationKind,
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
@@ -134,6 +134,18 @@ pub fn translate_statement(
             }
             out
         }
+        // `export default function foo()` / `export default class Foo` lowers
+        // the declaration as `pub` — a default export is a public item like any
+        // named export (which file is "the entry" is a build-pipeline concern).
+        // A default expression (`export default 42`) names no item and stays
+        // unsupported (the `_` arm): Rust has no anonymous default value.
+        Statement::ExportDefaultDeclaration(exp) => {
+            let mut items = translate_default_declaration(&exp.declaration, registry, names);
+            for item in &mut items {
+                make_pub(item);
+            }
+            items
+        }
         _ => Vec::new(),
     }
 }
@@ -186,6 +198,31 @@ fn translate_exported_declaration(
         Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias)
             .into_iter()
             .collect(),
+        _ => Vec::new(),
+    }
+}
+
+/// Translate the declaration of an `export default` (`export default
+/// function` / `export default class` / `export default interface`). A default
+/// expression (`export default 42`) names no item and yields `[]` — Rust has no
+/// anonymous default value. The item is marked `pub` by the caller.
+fn translate_default_declaration(
+    decl: &ExportDefaultDeclarationKind,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Vec<syn::Item> {
+    match decl {
+        ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
+            vec![syn::Item::Fn(translate_function(func, registry, names))]
+        }
+        ExportDefaultDeclarationKind::ClassDeclaration(class) => {
+            super::class::translate_class(class, registry, names)
+        }
+        ExportDefaultDeclarationKind::TSInterfaceDeclaration(iface) => {
+            vec![syn::Item::Struct(declarations::translate_interface(iface))]
+        }
+        // `export default <expression>` (a value, not a declaration) names no
+        // item — Rust has no anonymous default value, so it stays unsupported.
         _ => Vec::new(),
     }
 }
