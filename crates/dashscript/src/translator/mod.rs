@@ -570,11 +570,12 @@ const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ts`
 //! `RuntimeDeps::needs_engine`.
 use rquickjs::{Context, Ctx, Runtime};
 
-/// Run a `.ts` source under QuickJS with `console.log` wired to stdout, then
-/// call `main()` (the fixture entry — the same `main();` the conformance
-/// harness appends for the Node oracle). `console.log` joins its arguments with
-/// spaces, stringified by the engine's own `String()` coercion — ES
-/// `Number::toString` for numbers — so the output matches Node for primitives.
+/// Run a `.ts` source under QuickJS with `console.log` wired to stdout. The
+/// source is self-contained — it declares `main()` and calls it (pure-TS
+/// execution semantics: a declaration alone does not run), so a single eval
+/// runs the fixture. `console.log` joins its arguments with spaces, stringified
+/// by the engine's own `String()` coercion — ES `Number::toString` for numbers
+/// — so the output matches Node for primitives.
 pub fn run(source: &str) {
     use rquickjs::context::EvalOptions;
     let runtime = Runtime::new().expect("rquickjs Runtime");
@@ -609,9 +610,9 @@ pub fn run(source: &str) {
             } };"#,
             sloppy(),
         )?;
-        // Eval the source (defines `main`), then invoke it.
+        // Eval the source — it is self-contained (declares `main` and calls
+        // it, pure-TS execution semantics), so a single eval runs the fixture.
         ctx.eval_with_options::<(), _>(source, sloppy())?;
-        ctx.eval_with_options::<(), _>("main();", sloppy())?;
         Ok(())
     });
     result.expect("rquickjs eval");

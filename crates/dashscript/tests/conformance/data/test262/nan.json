@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.nan.15.1.1.1-0",
       "category": "nan",
       "source": "test262",
-      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(this, 'NaN');\n\nconsole.log(desc.writable);\nconsole.log(desc.enumerable);\nconsole.log(desc.configurable);\n}\n",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(this, 'NaN');\n\nconsole.log(desc.writable);\nconsole.log(desc.enumerable);\nconsole.log(desc.configurable);\n}\nmain();\n",
       "origin": "test/built-ins/NaN/15.1.1.1-0.js",
       "n_asserts": 3,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.nan.s15.1.1.1_a1",
       "category": "nan",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(NaN !== NaN);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(NaN !== NaN);\n}\nmain();\n",
       "origin": "test/built-ins/NaN/S15.1.1.1_A1.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.nan.s15.1.1.1_a2_t2",
       "category": "nan",
       "source": "test262",
-      "fixture": "function main(): void {\n// CHECK#1\nNaN = true;\nconsole.log(typeof(NaN));\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "fixture": "function main(): void {\n// CHECK#1\nNaN = true;\nconsole.log(typeof(NaN));\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/NaN/S15.1.1.1_A2_T2.js",
       "n_asserts": 1,
       "flags": ["noStrict"]
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.nan.s15.1.1.1_a3_t2",
       "category": "nan",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(delete NaN);\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "fixture": "function main(): void {\nconsole.log(delete NaN);\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/NaN/S15.1.1.1_A3_T2.js",
       "n_asserts": 1,
       "flags": ["noStrict"]
@@ -41,7 +41,7 @@
       "id": "test262.test.built-ins.nan.s15.1.1.1_a4",
       "category": "nan",
       "source": "test262",
-      "fixture": "function main(): void {\n// CHECK#1\nfor (var prop in this) {\n  console.log(prop);\n}\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "fixture": "function main(): void {\n// CHECK#1\nfor (var prop in this) {\n  console.log(prop);\n}\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/NaN/S15.1.1.1_A4.js",
       "n_asserts": 1,
       "flags": []

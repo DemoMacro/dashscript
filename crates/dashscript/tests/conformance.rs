@@ -309,7 +309,7 @@ fn engine_path_compiles_to_valid_rust_project() {
         deps.needs_engine(),
         "Object.defineProperty should flip needs_engine"
     );
-    write_project(&project, &rust, src, &deps);
+    write_project(&project, &rust, &deps);
     let (ok, err) = cargo(
         &project,
         &target_dir,
@@ -410,17 +410,12 @@ fn outcome(
     }
 }
 
-fn write_project(project: &Path, rust: &str, ds_source: &str, deps: &RuntimeDeps) {
-    // `cargo check` on a bin crate requires a `main` (E0601). Most translator-tests
-    // fixtures are bare declarations with no `main`, so synthesize an empty one
-    // when the `.ts` source has no `function main()`. Correctness fixtures declare
-    // their own, which lowers to `fn main` and is left untouched. AST-level
-    // (`has_main`), so a `"fn main"` string literal never trips a false positive.
-    let mut body = if Translator::new().has_main(ds_source) {
-        rust.to_string()
-    } else {
-        format!("{rust}\nfn main() {{}}\n")
-    };
+fn write_project(project: &Path, rust: &str, deps: &RuntimeDeps) {
+    // The translator always emits an implicit `fn main` (pure-TS execution
+    // semantics: top-level executable statements collect into it; a file with
+    // only declarations yields an empty `fn main {}`). The engine path emits
+    // its own `fn main { __ds_engine::run(src) }`. Either way, no synthesis.
+    let mut body = rust.to_string();
     let mut cargo_toml = MANIFEST.to_string();
     // A fixture that routes an `f64` through ES NumberToString emits a
     // `crate::__ds::number_to_string` call; the probe crate then needs the
@@ -556,9 +551,9 @@ fn node_available() -> bool {
         .unwrap_or(false)
 }
 
-/// Node oracle outcome for a test262 fixture. The fixture defines `main()` but
-/// never calls it (the extractor wraps asserts in a declaration); `ds` lowers
-/// that to `fn main` (the entry), so we append `main();` for Node to match.
+/// Node oracle outcome for a test262 fixture. The fixture is self-contained —
+/// it declares `function main()` and calls it (pure-TS execution semantics: a
+/// declaration alone does not run), so Node runs the fixture verbatim.
 enum NodeResult {
     Ok(String),
     Error(String),
@@ -566,9 +561,8 @@ enum NodeResult {
 }
 
 fn node_oracle(fixture: &str, work: &Path) -> NodeResult {
-    let source = format!("{fixture}\nmain();\n");
     let file = work.join("oracle.ts");
-    if fs::write(&file, &source).is_err() {
+    if fs::write(&file, fixture).is_err() {
         return NodeResult::Error("failed to write oracle.ts".into());
     }
     match Command::new("node").arg(&file).output() {
@@ -797,8 +791,9 @@ fn engine_eval(js_source: &str) -> Option<String> {
         })?;
         ctx.globals().set("__ds_print_line", print_line)?;
         ctx.eval_with_options::<(), _>(INSPECT_PRELUDE, sloppy())?;
+        // The fixture is self-contained (declares `main` and calls it, pure-TS
+        // execution semantics), so a single eval runs it — no separate call.
         ctx.eval_with_options::<(), _>(js_source, sloppy())?;
-        ctx.eval_with_options::<(), _>("main();", sloppy())?;
         Ok(())
     });
     result.ok()?;
@@ -922,7 +917,7 @@ fn run_test262(
             .join(" | ");
         return ("unsupported", msg, None);
     }
-    write_project(project, &rust, &raw.fixture, &deps);
+    write_project(project, &rust, &deps);
     let (ok, err) = cargo(
         project,
         target_dir,
@@ -965,7 +960,7 @@ fn run_fixture(
             Ok(r) => r,
             Err(e) => return outcome(raw, layer, "partial", e, None, None),
         };
-        write_project(project, &rust, &raw.fixture, &deps);
+        write_project(project, &rust, &deps);
         let (ok, err) = cargo(
             project,
             target_dir,
@@ -985,7 +980,7 @@ fn run_fixture(
     let correct = if status == "supported" {
         raw.expect_output.as_ref().map(|expected| {
             let (rust, deps) = translate_catch(&raw.fixture).unwrap_or_default();
-            write_project(project, &rust, &raw.fixture, &deps);
+            write_project(project, &rust, &deps);
             match cargo(project, target_dir, &["run", "--quiet"]) {
                 (true, stdout) => stdout.trim() == expected.trim(),
                 _ => false,

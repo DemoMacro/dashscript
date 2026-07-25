@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.symbol.asyncdispose.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.asyncDispose);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.asyncDispose);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/asyncDispose/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.symbol.asyncdispose.no-key",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol.keyFor(Symbol.asyncDispose));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Symbol.keyFor(Symbol.asyncDispose));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/asyncDispose/no-key.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.symbol.asynciterator.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.asyncIterator);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.asyncIterator);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/asyncIterator/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.symbol.auto-boxing-non-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.a = 0;\nconsole.log(sym.a);\n\nsym['a' + 'b'] = 0;\nconsole.log(sym['a' + 'b']);\n\nsym[62] = 0;\nconsole.log(sym[62]);\n}\n",
+      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.a = 0;\nconsole.log(sym.a);\n\nsym['a' + 'b'] = 0;\nconsole.log(sym['a' + 'b']);\n\nsym[62] = 0;\nconsole.log(sym[62]);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/auto-boxing-non-strict.js",
       "n_asserts": 3,
       "flags": ["noStrict"]
@@ -41,7 +41,7 @@
       "id": "test262.test.built-ins.symbol.auto-boxing-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  var sym = Symbol('66');\n  sym.a = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  var sym = Symbol('66');\n  sym['a' + 'b'] = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  var sym = Symbol('66');\n  sym[62] = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  var sym = Symbol('66');\n  sym.a = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  var sym = Symbol('66');\n  sym['a' + 'b'] = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  var sym = Symbol('66');\n  sym[62] = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/auto-boxing-strict.js",
       "n_asserts": 3,
       "flags": ["onlyStrict"]
@@ -50,7 +50,7 @@
       "id": "test262.test.built-ins.symbol.constructor",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Symbol('66')).constructor);\nconsole.log(Object.getPrototypeOf(Object(Symbol('66'))).constructor);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Symbol('66')).constructor);\nconsole.log(Object.getPrototypeOf(Object(Symbol('66'))).constructor);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/constructor.js",
       "n_asserts": 2,
       "flags": []
@@ -59,7 +59,7 @@
       "id": "test262.test.built-ins.symbol.desc-to-string-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('1');\n\ntry { (function() {\n  Symbol(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar s = Symbol('1');\n\ntry { (function() {\n  Symbol(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/desc-to-string-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -68,7 +68,7 @@
       "id": "test262.test.built-ins.symbol.desc-to-string",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar calls, val;\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: function() {\n    calls += 'toString';\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\ntry { (function() {\n  Symbol(val);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\ntry { (function() {\n  Symbol(val);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n}\n",
+      "fixture": "function main(): void {\nvar calls, val;\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: function() {\n    calls += 'toString';\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\ntry { (function() {\n  Symbol(val);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\ntry { (function() {\n  Symbol(val);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/desc-to-string.js",
       "n_asserts": 7,
       "flags": []
@@ -77,7 +77,7 @@
       "id": "test262.test.built-ins.symbol.dispose.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.dispose);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.dispose);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/dispose/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -86,7 +86,7 @@
       "id": "test262.test.built-ins.symbol.dispose.no-key",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol.keyFor(Symbol.asyncDispose));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Symbol.keyFor(Symbol.asyncDispose));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/dispose/no-key.js",
       "n_asserts": 1,
       "flags": []
@@ -95,7 +95,7 @@
       "id": "test262.test.built-ins.symbol.for.create-value",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(typeof canonical);\nconsole.log(canonical);\nconsole.log(canonical);\n}\n",
+      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(typeof canonical);\nconsole.log(canonical);\nconsole.log(canonical);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/create-value.js",
       "n_asserts": 3,
       "flags": []
@@ -104,7 +104,7 @@
       "id": "test262.test.built-ins.symbol.for.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nconsole.log(Symbol.for);\nconsole.log(parent);\nconsole.log(Symbol.for('child'));\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nconsole.log(Symbol.for);\nconsole.log(parent);\nconsole.log(Symbol.for('child'));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/cross-realm.js",
       "n_asserts": 3,
       "flags": []
@@ -113,7 +113,7 @@
       "id": "test262.test.built-ins.symbol.for.description",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar symbol = Symbol.for({toString: function() { return 'test262'; }});\n\nconsole.log(symbol.description);\n}\n",
+      "fixture": "function main(): void {\nvar symbol = Symbol.for({toString: function() { return 'test262'; }});\n\nconsole.log(symbol.description);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/description.js",
       "n_asserts": 1,
       "flags": []
@@ -122,7 +122,7 @@
       "id": "test262.test.built-ins.symbol.for.retrieve-value",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(typeof canonical);\nconsole.log(canonical);\n}\n",
+      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(typeof canonical);\nconsole.log(canonical);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/retrieve-value.js",
       "n_asserts": 2,
       "flags": []
@@ -131,7 +131,7 @@
       "id": "test262.test.built-ins.symbol.hasinstance.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.hasInstance);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.hasInstance);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/hasInstance/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -140,7 +140,7 @@
       "id": "test262.test.built-ins.symbol.isconcatspreadable.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.isConcatSpreadable);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.isConcatSpreadable);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/isConcatSpreadable/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -149,7 +149,7 @@
       "id": "test262.test.built-ins.symbol.iterator.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.iterator);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.iterator);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/iterator/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -158,7 +158,7 @@
       "id": "test262.test.built-ins.symbol.keyfor.arg-non-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Symbol.keyFor);\n\ntry { (function() {\n  Symbol.keyFor(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor('1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor(arguments);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar subject = Object(Symbol('s'));\n\ntry { (function() {\n  Symbol.keyFor(subject);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Symbol.keyFor);\n\ntry { (function() {\n  Symbol.keyFor(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor('1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor(arguments);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar subject = Object(Symbol('s'));\n\ntry { (function() {\n  Symbol.keyFor(subject);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/arg-non-symbol.js",
       "n_asserts": 9,
       "flags": []
@@ -167,7 +167,7 @@
       "id": "test262.test.built-ins.symbol.keyfor.arg-symbol-registry-hit",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(Symbol.keyFor(canonical));\n}\n",
+      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(Symbol.keyFor(canonical));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/arg-symbol-registry-hit.js",
       "n_asserts": 1,
       "flags": []
@@ -176,7 +176,7 @@
       "id": "test262.test.built-ins.symbol.keyfor.arg-symbol-registry-miss",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar constructed = Symbol('Symbol.iterator');\nconsole.log(Symbol.keyFor(constructed));\n\nconsole.log(Symbol.keyFor(Symbol.iterator));\n}\n",
+      "fixture": "function main(): void {\nvar constructed = Symbol('Symbol.iterator');\nconsole.log(Symbol.keyFor(constructed));\n\nconsole.log(Symbol.keyFor(Symbol.iterator));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/arg-symbol-registry-miss.js",
       "n_asserts": 2,
       "flags": []
@@ -185,7 +185,7 @@
       "id": "test262.test.built-ins.symbol.keyfor.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nconsole.log(Symbol.keyFor);\nconsole.log(OSymbol.keyFor(parent));\nconsole.log(Symbol.keyFor(child));\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nconsole.log(Symbol.keyFor);\nconsole.log(OSymbol.keyFor(parent));\nconsole.log(Symbol.keyFor(child));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/cross-realm.js",
       "n_asserts": 3,
       "flags": []
@@ -194,7 +194,7 @@
       "id": "test262.test.built-ins.symbol.match.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.match);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.match);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/match/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -203,7 +203,7 @@
       "id": "test262.test.built-ins.symbol.matchall.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.matchAll);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.matchAll);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/matchAll/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -212,7 +212,7 @@
       "id": "test262.test.built-ins.symbol.prototype.description.description-symboldescriptivestring",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst symbol = Symbol('foo');\n\nconsole.log(symbol.description);\nconsole.log(symbol.toString());\n}\n",
+      "fixture": "function main(): void {\nconst symbol = Symbol('foo');\n\nconsole.log(symbol.description);\nconsole.log(symbol.toString());\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/description-symboldescriptivestring.js",
       "n_asserts": 2,
       "flags": []
@@ -221,7 +221,7 @@
       "id": "test262.test.built-ins.symbol.prototype.description.get",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst symbol = Symbol('test');\nconsole.log(symbol.description);\n\nconst empty = Symbol();\nconsole.log(empty.description);\n\nconst undef = Symbol(undefined);\nconsole.log(undef.description);\n\nconst emptyStr = Symbol('');\nconsole.log(emptyStr.description);\n}\n",
+      "fixture": "function main(): void {\nconst symbol = Symbol('test');\nconsole.log(symbol.description);\n\nconst empty = Symbol();\nconsole.log(empty.description);\n\nconst undef = Symbol(undefined);\nconsole.log(undef.description);\n\nconst emptyStr = Symbol('');\nconsole.log(emptyStr.description);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/get.js",
       "n_asserts": 4,
       "flags": []
@@ -230,7 +230,7 @@
       "id": "test262.test.built-ins.symbol.prototype.description.is-not-own-property",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol().hasOwnProperty('description'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Symbol().hasOwnProperty('description'));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/is-not-own-property.js",
       "n_asserts": 1,
       "flags": []
@@ -239,7 +239,7 @@
       "id": "test262.test.built-ins.symbol.prototype.description.this-val-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst getter = Object.getOwnPropertyDescriptor(\n  Symbol.prototype, 'description'\n).get;\n\nconst symbol = Symbol('test');\nconsole.log(getter.call(symbol));\nconsole.log(getter.call(Object(symbol)));\n\nconst empty = Symbol();\nconsole.log(getter.call(empty));\nconsole.log(getter.call(Object(empty)));\n\nconst undef = Symbol(undefined);\nconsole.log(getter.call(undef));\nconsole.log(getter.call(Object(undef)));\n\nconst emptyStr = Symbol('');\nconsole.log(getter.call(emptyStr));\nconsole.log(getter.call(Object(emptyStr)));\n}\n",
+      "fixture": "function main(): void {\nconst getter = Object.getOwnPropertyDescriptor(\n  Symbol.prototype, 'description'\n).get;\n\nconst symbol = Symbol('test');\nconsole.log(getter.call(symbol));\nconsole.log(getter.call(Object(symbol)));\n\nconst empty = Symbol();\nconsole.log(getter.call(empty));\nconsole.log(getter.call(Object(empty)));\n\nconst undef = Symbol(undefined);\nconsole.log(getter.call(undef));\nconsole.log(getter.call(Object(undef)));\n\nconst emptyStr = Symbol('');\nconsole.log(getter.call(emptyStr));\nconsole.log(getter.call(Object(emptyStr)));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/this-val-symbol.js",
       "n_asserts": 8,
       "flags": []
@@ -248,7 +248,7 @@
       "id": "test262.test.built-ins.symbol.prototype.description.wrapper",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst symbol = Object(Symbol('test'));\nconsole.log(symbol.description);\n\nconst empty = Object(Symbol());\nconsole.log(empty.description);\n\nconst undef = Object(Symbol(undefined));\nconsole.log(undef.description);\n\nconst emptyStr = Object(Symbol(''));\nconsole.log(emptyStr.description);\n}\n",
+      "fixture": "function main(): void {\nconst symbol = Object(Symbol('test'));\nconsole.log(symbol.description);\n\nconst empty = Object(Symbol());\nconsole.log(empty.description);\n\nconst undef = Object(Symbol(undefined));\nconsole.log(undef.description);\n\nconst emptyStr = Object(Symbol(''));\nconsole.log(emptyStr.description);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/wrapper.js",
       "n_asserts": 4,
       "flags": []
@@ -257,7 +257,7 @@
       "id": "test262.test.built-ins.symbol.prototype.intrinsic",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Symbol('66')));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Symbol('66')));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/intrinsic.js",
       "n_asserts": 1,
       "flags": []
@@ -266,7 +266,7 @@
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.redefined-symbol-wrapper-ordinary-toprimitive",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: null });\n\nconsole.log(Object(Symbol()) == \"Symbol()\");\ntry { (() => { +Object(Symbol()); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(`${Object(Symbol())}`);\n\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: undefined });\n\nconsole.log(Object(Symbol.iterator) == Symbol.iterator);\ntry { (() => { Object(Symbol()) <= \"\"; })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log({ \"Symbol()\": 1 }[Object(Symbol())]);\n}\n",
+      "fixture": "function main(): void {\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: null });\n\nconsole.log(Object(Symbol()) == \"Symbol()\");\ntry { (() => { +Object(Symbol()); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(`${Object(Symbol())}`);\n\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: undefined });\n\nconsole.log(Object(Symbol.iterator) == Symbol.iterator);\ntry { (() => { Object(Symbol()) <= \"\"; })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log({ \"Symbol()\": 1 }[Object(Symbol())]);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/redefined-symbol-wrapper-ordinary-toprimitive.js",
       "n_asserts": 6,
       "flags": []
@@ -275,7 +275,7 @@
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-non-obj",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Symbol.prototype[Symbol.toPrimitive]);\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(86);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Symbol.prototype[Symbol.toPrimitive]);\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(86);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-non-obj.js",
       "n_asserts": 6,
       "flags": []
@@ -284,7 +284,7 @@
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-obj-non-symbol-wrapper",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-obj-non-symbol-wrapper.js",
       "n_asserts": 1,
       "flags": []
@@ -293,7 +293,7 @@
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-obj-symbol-wrapper",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object(Symbol.toPrimitive)[Symbol.toPrimitive]());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object(Symbol.toPrimitive)[Symbol.toPrimitive]());\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-obj-symbol-wrapper.js",
       "n_asserts": 1,
       "flags": []
@@ -302,7 +302,7 @@
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol.toPrimitive[Symbol.toPrimitive]());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Symbol.toPrimitive[Symbol.toPrimitive]());\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -311,7 +311,7 @@
       "id": "test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-non-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.toString = 0;\nconsole.log(sym.toString());\n\nsym.valueOf = 0;\nconsole.log(sym);\n}\n",
+      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.toString = 0;\nconsole.log(sym.toString());\n\nsym.valueOf = 0;\nconsole.log(sym);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/toString-default-attributes-non-strict.js",
       "n_asserts": 2,
       "flags": ["noStrict"]
@@ -320,7 +320,7 @@
       "id": "test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol(\"66\");\n\ntry { (function() {\n  sym.toString = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  sym.valueOf = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar sym = Symbol(\"66\");\n\ntry { (function() {\n  sym.toString = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  sym.valueOf = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/toString-default-attributes-strict.js",
       "n_asserts": 2,
       "flags": ["onlyStrict"]
@@ -329,7 +329,7 @@
       "id": "test262.test.built-ins.symbol.prototype.tostring.tostring",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(String(Symbol('66')))\nconsole.log(Symbol('66').toString());\nconsole.log(Object(Symbol('66')).toString());\nconsole.log(Symbol.prototype.toString.call(Symbol('66')));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(String(Symbol('66')))\nconsole.log(Symbol('66').toString());\nconsole.log(Object(Symbol('66')).toString());\nconsole.log(Symbol.prototype.toString.call(Symbol('66')));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/toString.js",
       "n_asserts": 4,
       "flags": []
@@ -338,7 +338,7 @@
       "id": "test262.test.built-ins.symbol.prototype.tostring.undefined",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol().toString());\nconsole.log(Symbol(undefined).toString());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Symbol().toString());\nconsole.log(Symbol(undefined).toString());\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/undefined.js",
       "n_asserts": 2,
       "flags": []
@@ -347,7 +347,7 @@
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-non-obj",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\ntry { (function() {\n  valueOf.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\ntry { (function() {\n  valueOf.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-non-obj.js",
       "n_asserts": 4,
       "flags": []
@@ -356,7 +356,7 @@
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-obj-non-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\ntry { (function() {\n  valueOf.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(arguments);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\ntry { (function() {\n  valueOf.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(arguments);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-obj-non-symbol.js",
       "n_asserts": 3,
       "flags": []
@@ -365,7 +365,7 @@
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-obj-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar symbol = Symbol('s');\nvar symbolObject = Object(symbol);\n\nconsole.log(valueOf.call(symbolObject));\n}\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar symbol = Symbol('s');\nvar symbolObject = Object(symbol);\n\nconsole.log(valueOf.call(symbolObject));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-obj-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -374,7 +374,7 @@
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar subject = Symbol('s');\n\nconsole.log(valueOf.call(subject));\n}\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar subject = Symbol('s');\n\nconsole.log(valueOf.call(subject));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -383,7 +383,7 @@
       "id": "test262.test.built-ins.symbol.replace.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.replace);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.replace);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/replace/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -392,7 +392,7 @@
       "id": "test262.test.built-ins.symbol.search.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.search);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.search);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/search/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -401,7 +401,7 @@
       "id": "test262.test.built-ins.symbol.species.builtin-getter-name",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction getGetterName(obj, name) {\n  var getter = Object.getOwnPropertyDescriptor(obj, Symbol.species).get;\n  return getter && getter.name;\n}\n\nconsole.log(getGetterName(Array, Symbol.species));\nconsole.log(getGetterName(Map, Symbol.species));\nconsole.log(getGetterName(Promise, Symbol.species));\nconsole.log(getGetterName(RegExp, Symbol.species));\nconsole.log(getGetterName(Set, Symbol.species));\n}\n",
+      "fixture": "function main(): void {\nfunction getGetterName(obj, name) {\n  var getter = Object.getOwnPropertyDescriptor(obj, Symbol.species).get;\n  return getter && getter.name;\n}\n\nconsole.log(getGetterName(Array, Symbol.species));\nconsole.log(getGetterName(Map, Symbol.species));\nconsole.log(getGetterName(Promise, Symbol.species));\nconsole.log(getGetterName(RegExp, Symbol.species));\nconsole.log(getGetterName(Set, Symbol.species));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/species/builtin-getter-name.js",
       "n_asserts": 5,
       "flags": []
@@ -410,7 +410,7 @@
       "id": "test262.test.built-ins.symbol.species.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.species);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.species);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/species/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -419,7 +419,7 @@
       "id": "test262.test.built-ins.symbol.species.subclassing",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nclass MyRegExp extends RegExp {};\n\nconsole.log(MyRegExp[Symbol.species]);\n}\n",
+      "fixture": "function main(): void {\nclass MyRegExp extends RegExp {};\n\nconsole.log(MyRegExp[Symbol.species]);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/species/subclassing.js",
       "n_asserts": 1,
       "flags": []
@@ -428,7 +428,7 @@
       "id": "test262.test.built-ins.symbol.split.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.split);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.split);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/split/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -437,7 +437,7 @@
       "id": "test262.test.built-ins.symbol.toprimitive.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.split);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.split);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/toPrimitive/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -446,7 +446,7 @@
       "id": "test262.test.built-ins.symbol.tostringtag.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.toStringTag);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.toStringTag);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/toStringTag/cross-realm.js",
       "n_asserts": 1,
       "flags": []
@@ -455,7 +455,7 @@
       "id": "test262.test.built-ins.symbol.uniqueness",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol(''));\nconsole.log(Symbol());\nconsole.log(Symbol(null));\nconsole.log(Symbol('x'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Symbol(''));\nconsole.log(Symbol());\nconsole.log(Symbol(null));\nconsole.log(Symbol('x'));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/uniqueness.js",
       "n_asserts": 4,
       "flags": []
@@ -464,7 +464,7 @@
       "id": "test262.test.built-ins.symbol.unscopables.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.unscopables);\n}\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.unscopables);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/unscopables/cross-realm.js",
       "n_asserts": 1,
       "flags": []

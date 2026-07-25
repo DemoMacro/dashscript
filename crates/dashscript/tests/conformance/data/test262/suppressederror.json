@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.suppressederror.newtarget-is-undefined",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = SuppressedError();\n\nconsole.log(Object.getPrototypeOf(obj));\nconsole.log(obj instanceof SuppressedError);\n}\n",
+      "fixture": "function main(): void {\nvar obj = SuppressedError();\n\nconsole.log(Object.getPrototypeOf(obj));\nconsole.log(obj instanceof SuppressedError);\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/newtarget-is-undefined.js",
       "n_asserts": 2,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.suppressederror.proto",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError);\n\nconsole.log(proto);\n}\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError);\n\nconsole.log(proto);\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/proto.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.suppressederror.prototype.errors-absent-on-prototype",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"error\"));\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"suppressed\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"error\"));\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"suppressed\"));\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/prototype/errors-absent-on-prototype.js",
       "n_asserts": 2,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.suppressederror.prototype.proto",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError.prototype);\n\nconsole.log(proto);\n}\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError.prototype);\n\nconsole.log(proto);\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/prototype/proto.js",
       "n_asserts": 1,
       "flags": []

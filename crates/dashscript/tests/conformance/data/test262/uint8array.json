@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.uint8array.frombase64.illegal-characters",
       "category": "uint8array",
       "source": "test262",
-      "fixture": "function main(): void {\nvar illegal = [\n  'Zm.9v',\n  'Zm9v^',\n  'Zg==&',\n  'Z−==', // U+2212 'Minus Sign'\n  'Z＋==', // U+FF0B 'Fullwidth Plus Sign'\n  'Zg\\u00A0==', // nbsp\n  'Zg\\u2009==', // thin space\n  'Zg\\u2028==', // line separator\n];\nillegal.forEach(function(value) {\n  try { (function() {\n    Uint8Array.fromBase64(value)\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\n",
+      "fixture": "function main(): void {\nvar illegal = [\n  'Zm.9v',\n  'Zm9v^',\n  'Zg==&',\n  'Z−==', // U+2212 'Minus Sign'\n  'Z＋==', // U+FF0B 'Fullwidth Plus Sign'\n  'Zg\\u00A0==', // nbsp\n  'Zg\\u2009==', // thin space\n  'Zg\\u2028==', // line separator\n];\nillegal.forEach(function(value) {\n  try { (function() {\n    Uint8Array.fromBase64(value)\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\nmain();\n",
       "origin": "test/built-ins/Uint8Array/fromBase64/illegal-characters.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.uint8array.fromhex.illegal-characters",
       "category": "uint8array",
       "source": "test262",
-      "fixture": "function main(): void {\nvar illegal = [\n  'a.a',\n  'aa^',\n  'a a',\n  'a\\ta',\n  'a\\x0Aa',\n  'a\\x0Ca',\n  'a\\x0Da',\n  'a\\u00A0a', // nbsp\n  'a\\u2009a', // thin space\n  'a\\u2028a', // line separator\n];\nillegal.forEach(function(value) {\n  try { (function() {\n    Uint8Array.fromHex(value)\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\n",
+      "fixture": "function main(): void {\nvar illegal = [\n  'a.a',\n  'aa^',\n  'a a',\n  'a\\ta',\n  'a\\x0Aa',\n  'a\\x0Ca',\n  'a\\x0Da',\n  'a\\u00A0a', // nbsp\n  'a\\u2009a', // thin space\n  'a\\u2028a', // line separator\n];\nillegal.forEach(function(value) {\n  try { (function() {\n    Uint8Array.fromHex(value)\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\nmain();\n",
       "origin": "test/built-ins/Uint8Array/fromHex/illegal-characters.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.uint8array.fromhex.odd-length-input",
       "category": "uint8array",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Uint8Array.fromHex('a');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  Uint8Array.fromHex('a');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Uint8Array/fromHex/odd-length-input.js",
       "n_asserts": 1,
       "flags": []

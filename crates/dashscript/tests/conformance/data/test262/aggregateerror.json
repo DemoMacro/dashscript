@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.aggregateerror.newtarget-is-undefined",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = AggregateError([], '');\n\nconsole.log(Object.getPrototypeOf(obj));\nconsole.log(obj instanceof AggregateError);\n}\n",
+      "fixture": "function main(): void {\nvar obj = AggregateError([], '');\n\nconsole.log(Object.getPrototypeOf(obj));\nconsole.log(obj instanceof AggregateError);\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/newtarget-is-undefined.js",
       "n_asserts": 2,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.aggregateerror.proto",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError);\n\nconsole.log(proto);\n}\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError);\n\nconsole.log(proto);\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/proto.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.aggregateerror.prototype.errors-absent-on-prototype",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(AggregateError.prototype.hasOwnProperty(\"errors\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(AggregateError.prototype.hasOwnProperty(\"errors\"));\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/prototype/errors-absent-on-prototype.js",
       "n_asserts": 1,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.aggregateerror.prototype.proto",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError.prototype);\n\nconsole.log(proto);\n}\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError.prototype);\n\nconsole.log(proto);\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/prototype/proto.js",
       "n_asserts": 1,
       "flags": []

@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.eval.private-identifiers-not-empty",
       "category": "eval",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  let o = {};\n  eval(\"o.#f\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  let o = {};\n  eval(\"o.#f\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/eval/private-identifiers-not-empty.js",
       "n_asserts": 1,
       "flags": []

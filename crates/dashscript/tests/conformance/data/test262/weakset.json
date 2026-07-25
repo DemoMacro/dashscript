@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.weakset.constructor",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof WeakSet);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof WeakSet);\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/constructor.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.weakset.properties-of-the-weakset-prototype-object",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakSet.prototype));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakSet.prototype));\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/properties-of-the-weakset-prototype-object.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.weakset.prototype.constructor.weakset-prototype-constructor-intrinsic",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(WeakSet.prototype.constructor);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(WeakSet.prototype.constructor);\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/prototype/constructor/weakset-prototype-constructor-intrinsic.js",
       "n_asserts": 1,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.weakset.prototype-of-weakset",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakSet));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakSet));\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/prototype-of-weakset.js",
       "n_asserts": 1,
       "flags": []
@@ -41,7 +41,7 @@
       "id": "test262.test.built-ins.weakset.undefined-newtarget",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  WeakSet();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  WeakSet([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  WeakSet();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  WeakSet([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/undefined-newtarget.js",
       "n_asserts": 2,
       "flags": []

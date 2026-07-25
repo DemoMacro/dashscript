@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.abstractmodulesource.proto",
       "category": "abstractmodulesource",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof $262.AbstractModuleSource);\nconsole.log(Object.getPrototypeOf($262.AbstractModuleSource));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof $262.AbstractModuleSource);\nconsole.log(Object.getPrototypeOf($262.AbstractModuleSource));\n}\nmain();\n",
       "origin": "test/built-ins/AbstractModuleSource/proto.js",
       "n_asserts": 2,
       "flags": ["module"]
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.abstractmodulesource.prototype.proto",
       "category": "abstractmodulesource",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof $262.AbstractModuleSource);\nvar proto = Object.getPrototypeOf($262.AbstractModuleSource.prototype);\nconsole.log(proto);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof $262.AbstractModuleSource);\nvar proto = Object.getPrototypeOf($262.AbstractModuleSource.prototype);\nconsole.log(proto);\n}\nmain();\n",
       "origin": "test/built-ins/AbstractModuleSource/prototype/proto.js",
       "n_asserts": 2,
       "flags": ["module"]

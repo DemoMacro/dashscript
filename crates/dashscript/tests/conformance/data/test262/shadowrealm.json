@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.shadowrealm.extensibility",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(ShadowRealm));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(ShadowRealm));\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/extensibility.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.shadowrealm.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm));\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/proto.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype.evaluate));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype.evaluate));\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/prototype/evaluate/proto.js",
       "n_asserts": 1,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype.importValue));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype.importValue));\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/prototype/importValue/proto.js",
       "n_asserts": 1,
       "flags": []
@@ -41,7 +41,7 @@
       "id": "test262.test.built-ins.shadowrealm.prototype.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype));\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/prototype/proto.js",
       "n_asserts": 1,
       "flags": []

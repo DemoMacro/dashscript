@@ -242,7 +242,7 @@ function extract() {
         tally.reflect++;
         continue;
       }
-      const fixture = `function main(): void {\n${r.body.trim()}\n}\n`;
+      const fixture = `function main(): void {\n${r.body.trim()}\n}\nmain();\n`;
       const id = "test262." + rel.replace(/\.js$/, "").replace(/[/.]/g, ".").toLowerCase();
       if (seen.has(id)) continue;
       seen.add(id);

@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.boolean.prototype.constructor.s15.6.4.1_a1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean.prototype.constructor);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean.prototype.constructor);\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/constructor/S15.6.4.1_A1.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean.prototype);\n\nconsole.log(Boolean.prototype == false);\n\ndelete Boolean.prototype.toString;\n\nconsole.log(Boolean.prototype.toString());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Boolean.prototype);\n\nconsole.log(Boolean.prototype == false);\n\ndelete Boolean.prototype.toString;\n\nconsole.log(Boolean.prototype.toString());\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/S15.6.3.1_A1.js",
       "n_asserts": 3,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a4",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nfor (x in Boolean) {\n  console.log(x);\n}\n\nconsole.log(!Boolean.propertyIsEnumerable('prototype'));\n}\n",
+      "fixture": "function main(): void {\nfor (x in Boolean) {\n  console.log(x);\n}\n\nconsole.log(!Boolean.propertyIsEnumerable('prototype'));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/S15.6.3.1_A4.js",
       "n_asserts": 2,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.boolean.prototype.s15.6.4_a2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.isPrototypeOf(Boolean.prototype));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.prototype.isPrototypeOf(Boolean.prototype));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/S15.6.4_A2.js",
       "n_asserts": 1,
       "flags": []
@@ -41,7 +41,7 @@
       "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t5",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => {\n  var s1 = {\n    x: 1\n  };\n  s1.toString = Boolean.prototype.toString;\n  s1.toString();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  var s2 = {\n    x: 1\n  };\n  s2.myToString = Boolean.prototype.toString;\n  s2.myToString();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (() => {\n  var s1 = {\n    x: 1\n  };\n  s1.toString = Boolean.prototype.toString;\n  s1.toString();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  var s2 = {\n    x: 1\n  };\n  s2.myToString = Boolean.prototype.toString;\n  s2.myToString();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A2_T5.js",
       "n_asserts": 2,
       "flags": []
@@ -50,7 +50,7 @@
       "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t5",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => {\n  var s1 = {\n    x: 1\n  };\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  var s2 = {\n    x: 1\n  };\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (() => {\n  var s1 = {\n    x: 1\n  };\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  var s2 = {\n    x: 1\n  };\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A2_T5.js",
       "n_asserts": 2,
       "flags": []
@@ -59,7 +59,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean(0));\nconsole.log(Boolean(0));\nconsole.log(typeof Boolean(-1));\nconsole.log(Boolean(-1));\n\nconsole.log(typeof Boolean(-Infinity));\n\nconsole.log(Boolean(-Infinity));\nconsole.log(typeof Boolean(NaN));\nconsole.log(Boolean(NaN));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Boolean(0));\nconsole.log(Boolean(0));\nconsole.log(typeof Boolean(-1));\nconsole.log(Boolean(-1));\n\nconsole.log(typeof Boolean(-Infinity));\n\nconsole.log(Boolean(-Infinity));\nconsole.log(typeof Boolean(NaN));\nconsole.log(Boolean(NaN));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T2.js",
       "n_asserts": 8,
       "flags": []
@@ -68,7 +68,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean(\"0\"));\nconsole.log(Boolean(\"0\"));\nconsole.log(typeof Boolean(\"-1\"));\nconsole.log(Boolean(\"-1\"));\nconsole.log(typeof Boolean(\"1\"));\nconsole.log(Boolean(\"1\"));\n\nconsole.log(typeof Boolean(\"false\"));\n\nconsole.log(Boolean(\"false\"));\n\nconsole.log(typeof Boolean(\"true\"));\n\nconsole.log(Boolean(\"true\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Boolean(\"0\"));\nconsole.log(Boolean(\"0\"));\nconsole.log(typeof Boolean(\"-1\"));\nconsole.log(Boolean(\"-1\"));\nconsole.log(typeof Boolean(\"1\"));\nconsole.log(Boolean(\"1\"));\n\nconsole.log(typeof Boolean(\"false\"));\n\nconsole.log(Boolean(\"false\"));\n\nconsole.log(typeof Boolean(\"true\"));\n\nconsole.log(Boolean(\"true\"));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T3.js",
       "n_asserts": 10,
       "flags": []
@@ -77,7 +77,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t4",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean(undefined));\n\nconsole.log(Boolean(undefined));\n\nconsole.log(typeof Boolean(void 0));\n\nconsole.log(Boolean(void 0));\n\nconsole.log(typeof Boolean(function() {}()));\n\nconsole.log(Boolean(function() {}()));\nconsole.log(typeof Boolean(null));\nconsole.log(Boolean(null));\nconsole.log(typeof Boolean(x));\nconsole.log(Boolean(x));\nvar x;\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Boolean(undefined));\n\nconsole.log(Boolean(undefined));\n\nconsole.log(typeof Boolean(void 0));\n\nconsole.log(Boolean(void 0));\n\nconsole.log(typeof Boolean(function() {}()));\n\nconsole.log(Boolean(function() {}()));\nconsole.log(typeof Boolean(null));\nconsole.log(Boolean(null));\nconsole.log(typeof Boolean(x));\nconsole.log(Boolean(x));\nvar x;\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T4.js",
       "n_asserts": 10,
       "flags": []
@@ -86,7 +86,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t5",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nvar x;\n\nconsole.log(typeof Boolean(x = 0));\nconsole.log(Boolean(x = 0));\nconsole.log(typeof Boolean(x = 1));\nconsole.log(Boolean(x = 1));\n\nconsole.log(typeof Boolean(x = false));\n\nconsole.log(Boolean(x = false));\n\nconsole.log(typeof Boolean(x = true));\n\nconsole.log(Boolean(x = true));\n\nconsole.log(typeof Boolean(x = null));\n\nconsole.log(Boolean(x = null));\n}\n",
+      "fixture": "function main(): void {\nvar x;\n\nconsole.log(typeof Boolean(x = 0));\nconsole.log(Boolean(x = 0));\nconsole.log(typeof Boolean(x = 1));\nconsole.log(Boolean(x = 1));\n\nconsole.log(typeof Boolean(x = false));\n\nconsole.log(Boolean(x = false));\n\nconsole.log(typeof Boolean(x = true));\n\nconsole.log(Boolean(x = true));\n\nconsole.log(typeof Boolean(x = null));\n\nconsole.log(Boolean(x = null));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T5.js",
       "n_asserts": 10,
       "flags": []
@@ -95,7 +95,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean());\nconsole.log(Boolean());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Boolean());\nconsole.log(Boolean());\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A2.js",
       "n_asserts": 2,
       "flags": []
@@ -104,7 +104,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.3_a1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean.hasOwnProperty(\"prototype\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean.hasOwnProperty(\"prototype\"));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.3_A1.js",
       "n_asserts": 1,
       "flags": []
@@ -113,7 +113,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.3_a2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Boolean));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Boolean));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.3_A2.js",
       "n_asserts": 1,
       "flags": []
@@ -122,7 +122,7 @@
       "id": "test262.test.built-ins.boolean.s15.6.3_a3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean.hasOwnProperty(\"length\"));\nconsole.log(Boolean.length);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean.hasOwnProperty(\"length\"));\nconsole.log(Boolean.length);\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.3_A3.js",
       "n_asserts": 2,
       "flags": []
@@ -131,7 +131,7 @@
       "id": "test262.test.built-ins.boolean.s9.2_a1_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(undefined));\nconsole.log(Boolean(void 0));\nconsole.log(Boolean(eval(\"var x\")));\nconsole.log(Boolean());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean(undefined));\nconsole.log(Boolean(void 0));\nconsole.log(Boolean(eval(\"var x\")));\nconsole.log(Boolean());\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A1_T1.js",
       "n_asserts": 4,
       "flags": []
@@ -140,7 +140,7 @@
       "id": "test262.test.built-ins.boolean.s9.2_a2_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(null));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean(null));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A2_T1.js",
       "n_asserts": 1,
       "flags": []
@@ -149,7 +149,7 @@
       "id": "test262.test.built-ins.boolean.s9.2_a3_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(true));\nconsole.log(Boolean(false));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean(true));\nconsole.log(Boolean(false));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A3_T1.js",
       "n_asserts": 2,
       "flags": []
@@ -158,7 +158,7 @@
       "id": "test262.test.built-ins.boolean.s9.2_a4_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(+0));\nconsole.log(Boolean(-0));\nconsole.log(Boolean(Number.NaN));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean(+0));\nconsole.log(Boolean(-0));\nconsole.log(Boolean(Number.NaN));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A4_T1.js",
       "n_asserts": 3,
       "flags": []
@@ -167,7 +167,7 @@
       "id": "test262.test.built-ins.boolean.s9.2_a4_t3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(Number.POSITIVE_INFINITY));\nconsole.log(Boolean(Number.NEGATIVE_INFINITY));\nconsole.log(Boolean(Number.MAX_VALUE));\nconsole.log(Boolean(Number.MIN_VALUE));\nconsole.log(Boolean(13));\nconsole.log(Boolean(-13));\nconsole.log(Boolean(1.3));\nconsole.log(Boolean(-1.3));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean(Number.POSITIVE_INFINITY));\nconsole.log(Boolean(Number.NEGATIVE_INFINITY));\nconsole.log(Boolean(Number.MAX_VALUE));\nconsole.log(Boolean(Number.MIN_VALUE));\nconsole.log(Boolean(13));\nconsole.log(Boolean(-13));\nconsole.log(Boolean(1.3));\nconsole.log(Boolean(-1.3));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A4_T3.js",
       "n_asserts": 8,
       "flags": []
@@ -176,7 +176,7 @@
       "id": "test262.test.built-ins.boolean.s9.2_a5_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(\"\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean(\"\"));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A5_T1.js",
       "n_asserts": 1,
       "flags": []
@@ -185,7 +185,7 @@
       "id": "test262.test.built-ins.boolean.s9.2_a5_t3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(\" \"));\nconsole.log(Boolean(\"Nonempty String\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Boolean(\" \"));\nconsole.log(Boolean(\"Nonempty String\"));\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A5_T3.js",
       "n_asserts": 2,
       "flags": []
@@ -194,7 +194,7 @@
       "id": "test262.test.built-ins.boolean.symbol-coercion",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol();\n\nconsole.log(Boolean(sym).valueOf());\n}\n",
+      "fixture": "function main(): void {\nvar sym = Symbol();\n\nconsole.log(Boolean(sym).valueOf());\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/symbol-coercion.js",
       "n_asserts": 1,
       "flags": []

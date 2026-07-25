@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.asynciteratorprototype.symbol.asyncdispose.is-function",
       "category": "asynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nasync function* generator() {}\nconst AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(generator.prototype))\n\nconsole.log(typeof AsyncIteratorPrototype[Symbol.asyncDispose]);\n}\n",
+      "fixture": "function main(): void {\nasync function* generator() {}\nconst AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(generator.prototype))\n\nconsole.log(typeof AsyncIteratorPrototype[Symbol.asyncDispose]);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncIteratorPrototype/Symbol.asyncDispose/is-function.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.asynciteratorprototype.symbol.asyncdispose.return-val",
       "category": "asynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nasync function* generator() {}\nconst AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(generator.prototype))\n\nconsole.log(AsyncIteratorPrototype[Symbol.asyncDispose]() instanceof Promise);\n}\n",
+      "fixture": "function main(): void {\nasync function* generator() {}\nconst AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(generator.prototype))\n\nconsole.log(AsyncIteratorPrototype[Symbol.asyncDispose]() instanceof Promise);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncIteratorPrototype/Symbol.asyncDispose/return-val.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.asynciteratorprototype.symbol.asynciterator.return-val",
       "category": "asynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nasync function* generator() {}\nconst AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(generator.prototype))\nconst getAsyncIterator = AsyncIteratorPrototype[Symbol.asyncIterator];\n\nconst thisValues = [\n    {},\n    Symbol(),\n    4,\n    4n,\n    true,\n    undefined,\n    null,\n];\n\nfor (const thisValue of thisValues) {\n    console.log(getAsyncIterator.call(thisValue));\n}\n}\n",
+      "fixture": "function main(): void {\nasync function* generator() {}\nconst AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(generator.prototype))\nconst getAsyncIterator = AsyncIteratorPrototype[Symbol.asyncIterator];\n\nconst thisValues = [\n    {},\n    Symbol(),\n    4,\n    4n,\n    true,\n    undefined,\n    null,\n];\n\nfor (const thisValue of thisValues) {\n    console.log(getAsyncIterator.call(thisValue));\n}\n}\nmain();\n",
       "origin": "test/built-ins/AsyncIteratorPrototype/Symbol.asyncIterator/return-val.js",
       "n_asserts": 1,
       "flags": []

@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.weakmap.constructor",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof WeakMap);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof WeakMap);\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/constructor.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.weakmap.properties-of-the-weakmap-prototype-object",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakMap.prototype));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakMap.prototype));\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/properties-of-the-weakmap-prototype-object.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.weakmap.prototype-of-weakmap",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakMap));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakMap));\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/prototype-of-weakmap.js",
       "n_asserts": 1,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.weakmap.undefined-newtarget",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  WeakMap();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  WeakMap([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n  WeakMap();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  WeakMap([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/undefined-newtarget.js",
       "n_asserts": 2,
       "flags": []

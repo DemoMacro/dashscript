@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.undefined.15.1.1.3-0",
       "category": "undefined",
       "source": "test262",
-      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(this, 'undefined');\n\nconsole.log(desc.writable);\nconsole.log(desc.enumerable);\nconsole.log(desc.configurable);\n}\n",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(this, 'undefined');\n\nconsole.log(desc.writable);\nconsole.log(desc.enumerable);\nconsole.log(desc.configurable);\n}\nmain();\n",
       "origin": "test/built-ins/undefined/15.1.1.3-0.js",
       "n_asserts": 3,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.undefined.15.1.1.3-1",
       "category": "undefined",
       "source": "test262",
-      "fixture": "function main(): void {\nundefined = 5;\nconsole.log(typeof undefined);\n\nvar nosuchproperty;\nconsole.log(nosuchproperty);\n}\n",
+      "fixture": "function main(): void {\nundefined = 5;\nconsole.log(typeof undefined);\n\nvar nosuchproperty;\nconsole.log(nosuchproperty);\n}\nmain();\n",
       "origin": "test/built-ins/undefined/15.1.1.3-1.js",
       "n_asserts": 2,
       "flags": ["noStrict"]
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.undefined.15.1.1.3-2",
       "category": "undefined",
       "source": "test262",
-      "fixture": "function main(): void {\nvar global = this;\n\ntry { (function() {\n  global[\"undefined\"] = 5; // Should throw a TypeError as per 8.12.5\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(global[\"undefined\"]);\nconsole.log(undefined);\n}\n",
+      "fixture": "function main(): void {\nvar global = this;\n\ntry { (function() {\n  global[\"undefined\"] = 5; // Should throw a TypeError as per 8.12.5\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(global[\"undefined\"]);\nconsole.log(undefined);\n}\nmain();\n",
       "origin": "test/built-ins/undefined/15.1.1.3-2.js",
       "n_asserts": 3,
       "flags": ["onlyStrict"]
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.undefined.15.1.1.3-3",
       "category": "undefined",
       "source": "test262",
-      "fixture": "function main(): void {\nvar newProperty = undefined = 42;\n\nconsole.log(newProperty);\n}\n",
+      "fixture": "function main(): void {\nvar newProperty = undefined = 42;\n\nconsole.log(newProperty);\n}\nmain();\n",
       "origin": "test/built-ins/undefined/15.1.1.3-3.js",
       "n_asserts": 1,
       "flags": ["noStrict"]

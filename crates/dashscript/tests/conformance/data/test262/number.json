@@ -5,7 +5,7 @@
       "id": "test262.test.built-ins.number.15.7.3-1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Number));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Number));\n}\nmain();\n",
       "origin": "test/built-ins/Number/15.7.3-1.js",
       "n_asserts": 1,
       "flags": []
@@ -14,7 +14,7 @@
       "id": "test262.test.built-ins.number.15.7.3-2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nvar p = Object.getPrototypeOf(Number);\n\nconsole.log(p);\n}\n",
+      "fixture": "function main(): void {\nvar p = Object.getPrototypeOf(Number);\n\nconsole.log(p);\n}\nmain();\n",
       "origin": "test/built-ins/Number/15.7.3-2.js",
       "n_asserts": 1,
       "flags": []
@@ -23,7 +23,7 @@
       "id": "test262.test.built-ins.number.isfinite.finite-numbers",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isFinite(-10));\nconsole.log(Number.isFinite(-0));\nconsole.log(Number.isFinite(0));\nconsole.log(Number.isFinite(10));\nconsole.log(Number.isFinite(1e10));\nconsole.log(Number.isFinite(10.10));\nconsole.log(Number.isFinite(9007199254740991));\nconsole.log(Number.isFinite(-9007199254740991));\nconsole.log(Number.isFinite(Number.MAX_VALUE));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isFinite(-10));\nconsole.log(Number.isFinite(-0));\nconsole.log(Number.isFinite(0));\nconsole.log(Number.isFinite(10));\nconsole.log(Number.isFinite(1e10));\nconsole.log(Number.isFinite(10.10));\nconsole.log(Number.isFinite(9007199254740991));\nconsole.log(Number.isFinite(-9007199254740991));\nconsole.log(Number.isFinite(Number.MAX_VALUE));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isFinite/finite-numbers.js",
       "n_asserts": 9,
       "flags": []
@@ -32,7 +32,7 @@
       "id": "test262.test.built-ins.number.isfinite.infinity",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isFinite(Infinity));\nconsole.log(Number.isFinite(-Infinity));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isFinite(Infinity));\nconsole.log(Number.isFinite(-Infinity));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isFinite/infinity.js",
       "n_asserts": 2,
       "flags": []
@@ -41,7 +41,7 @@
       "id": "test262.test.built-ins.number.isfinite.nan",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isFinite(NaN));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isFinite(NaN));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isFinite/nan.js",
       "n_asserts": 1,
       "flags": []
@@ -50,7 +50,7 @@
       "id": "test262.test.built-ins.number.isinteger.infinity",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isInteger(Infinity));\nconsole.log(Number.isInteger(-Infinity));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isInteger(Infinity));\nconsole.log(Number.isInteger(-Infinity));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isInteger/infinity.js",
       "n_asserts": 2,
       "flags": []
@@ -59,7 +59,7 @@
       "id": "test262.test.built-ins.number.isinteger.integers",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isInteger(478));\nconsole.log(Number.isInteger(-0));\nconsole.log(Number.isInteger(0));\nconsole.log(Number.isInteger(-1));\nconsole.log(Number.isInteger(9007199254740991));\nconsole.log(Number.isInteger(-9007199254740991));\nconsole.log(Number.isInteger(9007199254740992));\nconsole.log(Number.isInteger(-9007199254740992));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isInteger(478));\nconsole.log(Number.isInteger(-0));\nconsole.log(Number.isInteger(0));\nconsole.log(Number.isInteger(-1));\nconsole.log(Number.isInteger(9007199254740991));\nconsole.log(Number.isInteger(-9007199254740991));\nconsole.log(Number.isInteger(9007199254740992));\nconsole.log(Number.isInteger(-9007199254740992));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isInteger/integers.js",
       "n_asserts": 8,
       "flags": []
@@ -68,7 +68,7 @@
       "id": "test262.test.built-ins.number.isinteger.nan",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isInteger(NaN));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isInteger(NaN));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isInteger/nan.js",
       "n_asserts": 1,
       "flags": []
@@ -77,7 +77,7 @@
       "id": "test262.test.built-ins.number.isinteger.non-integers",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isInteger(6.75));\nconsole.log(Number.isInteger(0.000001));\nconsole.log(Number.isInteger(-0.000001));\nconsole.log(Number.isInteger(11e-1));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isInteger(6.75));\nconsole.log(Number.isInteger(0.000001));\nconsole.log(Number.isInteger(-0.000001));\nconsole.log(Number.isInteger(11e-1));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isInteger/non-integers.js",
       "n_asserts": 4,
       "flags": []
@@ -86,7 +86,7 @@
       "id": "test262.test.built-ins.number.isnan.nan",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isNaN(NaN));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isNaN(NaN));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isNaN/nan.js",
       "n_asserts": 1,
       "flags": []
@@ -95,7 +95,7 @@
       "id": "test262.test.built-ins.number.isnan.not-nan",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isNaN(0));\nconsole.log(Number.isNaN(-0));\nconsole.log(Number.isNaN(1));\nconsole.log(Number.isNaN(-1));\nconsole.log(Number.isNaN(1.1));\nconsole.log(Number.isNaN(1e10));\nconsole.log(Number.isNaN(Infinity));\nconsole.log(Number.isNaN(-Infinity));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isNaN(0));\nconsole.log(Number.isNaN(-0));\nconsole.log(Number.isNaN(1));\nconsole.log(Number.isNaN(-1));\nconsole.log(Number.isNaN(1.1));\nconsole.log(Number.isNaN(1e10));\nconsole.log(Number.isNaN(Infinity));\nconsole.log(Number.isNaN(-Infinity));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isNaN/not-nan.js",
       "n_asserts": 8,
       "flags": []
@@ -104,7 +104,7 @@
       "id": "test262.test.built-ins.number.issafeinteger.infinity",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(Infinity));\nconsole.log(Number.isSafeInteger(-Infinity));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(Infinity));\nconsole.log(Number.isSafeInteger(-Infinity));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isSafeInteger/infinity.js",
       "n_asserts": 2,
       "flags": []
@@ -113,7 +113,7 @@
       "id": "test262.test.built-ins.number.issafeinteger.nan",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(NaN));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(NaN));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isSafeInteger/nan.js",
       "n_asserts": 1,
       "flags": []
@@ -122,7 +122,7 @@
       "id": "test262.test.built-ins.number.issafeinteger.not-integer",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(1.1));\nconsole.log(Number.isSafeInteger(0.000001));\nconsole.log(Number.isSafeInteger(-0.000001));\nconsole.log(Number.isSafeInteger(11e-1));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(1.1));\nconsole.log(Number.isSafeInteger(0.000001));\nconsole.log(Number.isSafeInteger(-0.000001));\nconsole.log(Number.isSafeInteger(11e-1));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isSafeInteger/not-integer.js",
       "n_asserts": 4,
       "flags": []
@@ -131,7 +131,7 @@
       "id": "test262.test.built-ins.number.issafeinteger.not-safe-integer",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(9007199254740992));\nconsole.log(Number.isSafeInteger(-9007199254740992));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(9007199254740992));\nconsole.log(Number.isSafeInteger(-9007199254740992));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isSafeInteger/not-safe-integer.js",
       "n_asserts": 2,
       "flags": []
@@ -140,7 +140,7 @@
       "id": "test262.test.built-ins.number.issafeinteger.safe-integers",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(1));\nconsole.log(Number.isSafeInteger(-0));\nconsole.log(Number.isSafeInteger(0));\nconsole.log(Number.isSafeInteger(-1));\nconsole.log(Number.isSafeInteger(9007199254740991));\nconsole.log(Number.isSafeInteger(-9007199254740991));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.isSafeInteger(1));\nconsole.log(Number.isSafeInteger(-0));\nconsole.log(Number.isSafeInteger(0));\nconsole.log(Number.isSafeInteger(-1));\nconsole.log(Number.isSafeInteger(9007199254740991));\nconsole.log(Number.isSafeInteger(-9007199254740991));\n}\nmain();\n",
       "origin": "test/built-ins/Number/isSafeInteger/safe-integers.js",
       "n_asserts": 6,
       "flags": []
@@ -149,7 +149,7 @@
       "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a4",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfor (var x in Number) {\n  console.log(x);\n}\n\nconsole.log(!Number.propertyIsEnumerable('MAX_VALUE'));\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "fixture": "function main(): void {\nfor (var x in Number) {\n  console.log(x);\n}\n\nconsole.log(!Number.propertyIsEnumerable('MAX_VALUE'));\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/Number/MAX_VALUE/S15.7.3.2_A4.js",
       "n_asserts": 2,
       "flags": []
@@ -158,7 +158,7 @@
       "id": "test262.test.built-ins.number.max_value.value",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Number.MAX_VALUE);\nconsole.log(Number.MAX_VALUE > 0);\n\nconsole.log(Number.MAX_VALUE > Number.MAX_SAFE_INTEGER);\nconsole.log(Number.MAX_VALUE < Infinity);\n\nconsole.log(Number.MAX_VALUE * 2);\nconsole.log(Number.MAX_VALUE);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Number.MAX_VALUE);\nconsole.log(Number.MAX_VALUE > 0);\n\nconsole.log(Number.MAX_VALUE > Number.MAX_SAFE_INTEGER);\nconsole.log(Number.MAX_VALUE < Infinity);\n\nconsole.log(Number.MAX_VALUE * 2);\nconsole.log(Number.MAX_VALUE);\n}\nmain();\n",
       "origin": "test/built-ins/Number/MAX_VALUE/value.js",
       "n_asserts": 6,
       "flags": []
@@ -167,7 +167,7 @@
       "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a4",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfor (var x in Number) {\n  console.log(x);\n}\n\nconsole.log(!Number.propertyIsEnumerable('MIN_VALUE'));\n\n// TODO: Convert to verifyProperty() format.\n}\n",
+      "fixture": "function main(): void {\nfor (var x in Number) {\n  console.log(x);\n}\n\nconsole.log(!Number.propertyIsEnumerable('MIN_VALUE'));\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/Number/MIN_VALUE/S15.7.3.3_A4.js",
       "n_asserts": 2,
       "flags": []
@@ -176,7 +176,7 @@
       "id": "test262.test.built-ins.number.min_value.value",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Number.MIN_VALUE);\nconsole.log(Number.MIN_VALUE > 0);\n\nconsole.log(Number.MIN_VALUE < Number.EPSILON)\n\nconsole.log(Number.MIN_VALUE / 2);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Number.MIN_VALUE);\nconsole.log(Number.MIN_VALUE > 0);\n\nconsole.log(Number.MIN_VALUE < Number.EPSILON)\n\nconsole.log(Number.MIN_VALUE / 2);\n}\nmain();\n",
       "origin": "test/built-ins/Number/MIN_VALUE/value.js",
       "n_asserts": 4,
       "flags": []
@@ -185,7 +185,7 @@
       "id": "test262.test.built-ins.number.negative_infinity.s15.7.3.5_a1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(isFinite(Number.NEGATIVE_INFINITY));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(isFinite(Number.NEGATIVE_INFINITY));\n}\nmain();\n",
       "origin": "test/built-ins/Number/NEGATIVE_INFINITY/S15.7.3.5_A1.js",
       "n_asserts": 1,
       "flags": []
@@ -194,7 +194,7 @@
       "id": "test262.test.built-ins.number.negative_infinity.value",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.NEGATIVE_INFINITY);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.NEGATIVE_INFINITY);\n}\nmain();\n",
       "origin": "test/built-ins/Number/NEGATIVE_INFINITY/value.js",
       "n_asserts": 1,
       "flags": []
@@ -203,7 +203,7 @@
       "id": "test262.test.built-ins.number.positive_infinity.s15.7.3.6_a1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(isFinite(Number.POSITIVE_INFINITY));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(isFinite(Number.POSITIVE_INFINITY));\n}\nmain();\n",
       "origin": "test/built-ins/Number/POSITIVE_INFINITY/S15.7.3.6_A1.js",
       "n_asserts": 1,
       "flags": []
@@ -212,7 +212,7 @@
       "id": "test262.test.built-ins.number.positive_infinity.value",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.POSITIVE_INFINITY);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.POSITIVE_INFINITY);\n}\nmain();\n",
       "origin": "test/built-ins/Number/POSITIVE_INFINITY/value.js",
       "n_asserts": 1,
       "flags": []
@@ -221,7 +221,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Number.prototype);\n\ndelete Number.prototype.toString;\n\nconsole.log(Number.prototype.toString());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Number.prototype);\n\ndelete Number.prototype.toString;\n\nconsole.log(Number.prototype.toString());\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.3.1_A2_T1.js",
       "n_asserts": 2,
       "flags": []
@@ -230,7 +230,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Number.prototype);\n\nNumber.prototype.toString = Object.prototype.toString;\n\nconsole.log(Number.prototype.toString());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Number.prototype);\n\nNumber.prototype.toString = Object.prototype.toString;\n\nconsole.log(Number.prototype.toString());\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.3.1_A2_T2.js",
       "n_asserts": 2,
       "flags": []
@@ -239,7 +239,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a3",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype == 0);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype == 0);\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.3.1_A3.js",
       "n_asserts": 1,
       "flags": []
@@ -248,7 +248,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Number.prototype);\n\nconsole.log(Number.prototype == 0);\n\ndelete Number.prototype.toString;\n\nconsole.log(Number.prototype.toString());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Number.prototype);\n\nconsole.log(Number.prototype == 0);\n\ndelete Number.prototype.toString;\n\nconsole.log(Number.prototype.toString());\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A1.js",
       "n_asserts": 3,
       "flags": []
@@ -257,7 +257,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.isPrototypeOf(Number.prototype));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Object.prototype.isPrototypeOf(Number.prototype));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A2.js",
       "n_asserts": 1,
       "flags": []
@@ -266,7 +266,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"constructor\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"constructor\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A3.1.js",
       "n_asserts": 1,
       "flags": []
@@ -275,7 +275,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toString\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toString\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A3.2.js",
       "n_asserts": 1,
       "flags": []
@@ -284,7 +284,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.3",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toLocaleString\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toLocaleString\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A3.3.js",
       "n_asserts": 1,
       "flags": []
@@ -293,7 +293,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.4",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"valueOf\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"valueOf\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A3.4.js",
       "n_asserts": 1,
       "flags": []
@@ -302,7 +302,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.5",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toFixed\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toFixed\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A3.5.js",
       "n_asserts": 1,
       "flags": []
@@ -311,7 +311,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.6",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toExponential\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toExponential\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A3.6.js",
       "n_asserts": 1,
       "flags": []
@@ -320,7 +320,7 @@
       "id": "test262.test.built-ins.number.prototype.s15.7.4_a3.7",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toPrecision\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.hasOwnProperty(\"toPrecision\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/S15.7.4_A3.7.js",
       "n_asserts": 1,
       "flags": []
@@ -329,7 +329,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.range",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((3).toExponential(0));\ntry { (() => (3).toExponential(-1))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log((3).toExponential(100));\ntry { (() => (3).toExponential(101))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log((3).toExponential(0));\ntry { (() => (3).toExponential(-1))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log((3).toExponential(100));\ntry { (() => (3).toExponential(101))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/range.js",
       "n_asserts": 4,
       "flags": []
@@ -338,7 +338,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.return-abrupt-tointeger-fractiondigits-symbol",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nvar fd = Symbol(\"1\");\n\ntry { (function() {\n  NaN.toExponential(fd);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar fd = Symbol(\"1\");\n\ntry { (function() {\n  NaN.toExponential(fd);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/return-abrupt-tointeger-fractiondigits-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -347,7 +347,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.return-values",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((123.456).toExponential(0));\nconsole.log((123.456).toExponential(1));\nconsole.log((123.456).toExponential(2));\nconsole.log((123.456).toExponential(3));\nconsole.log((123.456).toExponential(4));\nconsole.log((123.456).toExponential(5));\nconsole.log((123.456).toExponential(6));\nconsole.log((123.456).toExponential(7));\nconsole.log((123.456).toExponential(17));\nconsole.log((123.456).toExponential(20));\n\nconsole.log((-123.456).toExponential(0));\nconsole.log((-123.456).toExponential(1));\nconsole.log((-123.456).toExponential(2));\nconsole.log((-123.456).toExponential(3));\nconsole.log((-123.456).toExponential(4));\nconsole.log((-123.456).toExponential(5));\nconsole.log((-123.456).toExponential(6));\nconsole.log((-123.456).toExponential(7));\nconsole.log((-123.456).toExponential(17));\nconsole.log((-123.456).toExponential(20));\n\nconsole.log((0.0001).toExponential(0));\nconsole.log((0.0001).toExponential(1));\nconsole.log((0.0001).toExponential(2));\nconsole.log((0.0001).toExponential(3));\nconsole.log((0.0001).toExponential(4));\nconsole.log((0.0001).toExponential(16));\nconsole.log((0.0001).toExponential(17));\nconsole.log((0.0001).toExponential(18));\nconsole.log((0.0001).toExponential(19));\nconsole.log((0.0001).toExponential(20));\n\nconsole.log((0.9999).toExponential(0));\nconsole.log((0.9999).toExponential(1));\nconsole.log((0.9999).toExponential(2));\nconsole.log((0.9999).toExponential(3));\nconsole.log((0.9999).toExponential(4));\nconsole.log((0.9999).toExponential(16));\nconsole.log((0.9999).toExponential(17));\nconsole.log((0.9999).toExponential(18));\nconsole.log((0.9999).toExponential(19));\nconsole.log((0.9999).toExponential(20));\n\nconsole.log((25).toExponential(0));\nconsole.log((12345).toExponential(3));\n}\n",
+      "fixture": "function main(): void {\nconsole.log((123.456).toExponential(0));\nconsole.log((123.456).toExponential(1));\nconsole.log((123.456).toExponential(2));\nconsole.log((123.456).toExponential(3));\nconsole.log((123.456).toExponential(4));\nconsole.log((123.456).toExponential(5));\nconsole.log((123.456).toExponential(6));\nconsole.log((123.456).toExponential(7));\nconsole.log((123.456).toExponential(17));\nconsole.log((123.456).toExponential(20));\n\nconsole.log((-123.456).toExponential(0));\nconsole.log((-123.456).toExponential(1));\nconsole.log((-123.456).toExponential(2));\nconsole.log((-123.456).toExponential(3));\nconsole.log((-123.456).toExponential(4));\nconsole.log((-123.456).toExponential(5));\nconsole.log((-123.456).toExponential(6));\nconsole.log((-123.456).toExponential(7));\nconsole.log((-123.456).toExponential(17));\nconsole.log((-123.456).toExponential(20));\n\nconsole.log((0.0001).toExponential(0));\nconsole.log((0.0001).toExponential(1));\nconsole.log((0.0001).toExponential(2));\nconsole.log((0.0001).toExponential(3));\nconsole.log((0.0001).toExponential(4));\nconsole.log((0.0001).toExponential(16));\nconsole.log((0.0001).toExponential(17));\nconsole.log((0.0001).toExponential(18));\nconsole.log((0.0001).toExponential(19));\nconsole.log((0.0001).toExponential(20));\n\nconsole.log((0.9999).toExponential(0));\nconsole.log((0.9999).toExponential(1));\nconsole.log((0.9999).toExponential(2));\nconsole.log((0.9999).toExponential(3));\nconsole.log((0.9999).toExponential(4));\nconsole.log((0.9999).toExponential(16));\nconsole.log((0.9999).toExponential(17));\nconsole.log((0.9999).toExponential(18));\nconsole.log((0.9999).toExponential(19));\nconsole.log((0.9999).toExponential(20));\n\nconsole.log((25).toExponential(0));\nconsole.log((12345).toExponential(3));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/return-values.js",
       "n_asserts": 42,
       "flags": []
@@ -356,7 +356,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.this-is-0-fractiondigits-is-0",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.toExponential(0));\n\nconsole.log((0).toExponential(0));\nconsole.log((-0).toExponential(0));\n\nconsole.log((0).toExponential(-0));\nconsole.log((-0).toExponential(-0));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.toExponential(0));\n\nconsole.log((0).toExponential(0));\nconsole.log((-0).toExponential(0));\n\nconsole.log((0).toExponential(-0));\nconsole.log((-0).toExponential(-0));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/this-is-0-fractiondigits-is-0.js",
       "n_asserts": 5,
       "flags": []
@@ -365,7 +365,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.this-is-0-fractiondigits-is-not-0",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((0).toExponential(1));\nconsole.log((0).toExponential(2));\nconsole.log((0).toExponential(7));\nconsole.log((0).toExponential(20));\n\nconsole.log((-0).toExponential(1));\nconsole.log((-0).toExponential(2));\nconsole.log((-0).toExponential(7));\nconsole.log((-0).toExponential(20));\n\nconsole.log((0.0).toExponential(4));\nconsole.log((-0.0).toExponential(4));\n}\n",
+      "fixture": "function main(): void {\nconsole.log((0).toExponential(1));\nconsole.log((0).toExponential(2));\nconsole.log((0).toExponential(7));\nconsole.log((0).toExponential(20));\n\nconsole.log((-0).toExponential(1));\nconsole.log((-0).toExponential(2));\nconsole.log((-0).toExponential(7));\nconsole.log((-0).toExponential(20));\n\nconsole.log((0.0).toExponential(4));\nconsole.log((-0.0).toExponential(4));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/this-is-0-fractiondigits-is-not-0.js",
       "n_asserts": 10,
       "flags": []
@@ -374,7 +374,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.this-type-not-number-or-number-object",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toExponential = Number.prototype.toExponential;\n\ntry { (function() {\n  toExponential.call({}, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(\"1\", 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(Number, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(true, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(false, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(null, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(undefined, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(Symbol(\"1\"), 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call([], 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toExponential = Number.prototype.toExponential;\n\ntry { (function() {\n  toExponential.call({}, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(\"1\", 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(Number, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(true, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(false, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(null, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(undefined, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call(Symbol(\"1\"), 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toExponential.call([], 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/this-type-not-number-or-number-object.js",
       "n_asserts": 9,
       "flags": []
@@ -383,7 +383,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.tointeger-fractiondigits",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((123.456).toExponential(0.1));\nconsole.log((123.456).toExponential(-0.1));\nconsole.log((123.456).toExponential(0.9));\nconsole.log((123.456).toExponential(-0.9));\n\nconsole.log((123.456).toExponential(false));\nconsole.log((123.456).toExponential(true));\n\nconsole.log((123.456).toExponential(NaN));\nconsole.log((123.456).toExponential(null));\n\nconsole.log((123.456).toExponential(\"2\"));\nconsole.log((123.456).toExponential(\"\"));\n\nconsole.log((123.456).toExponential([]));\nconsole.log((123.456).toExponential([2]));\n\nconsole.log((0).toExponential(undefined));\nconsole.log((0).toExponential());\n}\n",
+      "fixture": "function main(): void {\nconsole.log((123.456).toExponential(0.1));\nconsole.log((123.456).toExponential(-0.1));\nconsole.log((123.456).toExponential(0.9));\nconsole.log((123.456).toExponential(-0.9));\n\nconsole.log((123.456).toExponential(false));\nconsole.log((123.456).toExponential(true));\n\nconsole.log((123.456).toExponential(NaN));\nconsole.log((123.456).toExponential(null));\n\nconsole.log((123.456).toExponential(\"2\"));\nconsole.log((123.456).toExponential(\"\"));\n\nconsole.log((123.456).toExponential([]));\nconsole.log((123.456).toExponential([2]));\n\nconsole.log((0).toExponential(undefined));\nconsole.log((0).toExponential());\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/tointeger-fractiondigits.js",
       "n_asserts": 14,
       "flags": []
@@ -392,7 +392,7 @@
       "id": "test262.test.built-ins.number.prototype.toexponential.undefined-fractiondigits",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((123.456).toExponential(undefined));\nconsole.log((123.456).toExponential());\nconsole.log((123.456).toExponential(0));\n\nconsole.log((1.1e-32).toExponential(undefined));\nconsole.log((1.1e-32).toExponential());\nconsole.log((1.1e-32).toExponential(0));\n\nconsole.log((100).toExponential(undefined));\nconsole.log((100).toExponential());\nconsole.log((100).toExponential(0));\n}\n",
+      "fixture": "function main(): void {\nconsole.log((123.456).toExponential(undefined));\nconsole.log((123.456).toExponential());\nconsole.log((123.456).toExponential(0));\n\nconsole.log((1.1e-32).toExponential(undefined));\nconsole.log((1.1e-32).toExponential());\nconsole.log((1.1e-32).toExponential(0));\n\nconsole.log((100).toExponential(undefined));\nconsole.log((100).toExponential());\nconsole.log((100).toExponential(0));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toExponential/undefined-fractiondigits.js",
       "n_asserts": 9,
       "flags": []
@@ -401,7 +401,7 @@
       "id": "test262.test.built-ins.number.prototype.tofixed.exactness",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\n// Test from a note in the specification\nconsole.log((1000000000000000128).toString());\nconsole.log((1000000000000000128).toFixed(0));\n}\n",
+      "fixture": "function main(): void {\n// Test from a note in the specification\nconsole.log((1000000000000000128).toString());\nconsole.log((1000000000000000128).toFixed(0));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toFixed/exactness.js",
       "n_asserts": 2,
       "flags": []
@@ -410,7 +410,7 @@
       "id": "test262.test.built-ins.number.prototype.tofixed.range",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((3).toFixed(-0));\ntry { (() => (3).toFixed(-1))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log((3).toFixed(100));\ntry { (() => (3).toFixed(101))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log((3).toFixed(-0));\ntry { (() => (3).toFixed(-1))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log((3).toFixed(100));\ntry { (() => (3).toFixed(101))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toFixed/range.js",
       "n_asserts": 4,
       "flags": []
@@ -419,7 +419,7 @@
       "id": "test262.test.built-ins.number.prototype.tofixed.return-type",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof(123.456).toFixed());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof(123.456).toFixed());\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toFixed/return-type.js",
       "n_asserts": 1,
       "flags": []
@@ -428,7 +428,7 @@
       "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a2_t01",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.toFixed.hasOwnProperty(\"length\"));\n\nconsole.log(Number.prototype.toFixed.length);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.toFixed.hasOwnProperty(\"length\"));\n\nconsole.log(Number.prototype.toFixed.length);\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toFixed/S15.7.4.5_A2_T01.js",
       "n_asserts": 2,
       "flags": []
@@ -437,7 +437,7 @@
       "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-bigint",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    (0).toFixed(0n)\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n    (0).toFixed(0n)\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toFixed/toFixed-tonumber-throws-typeerror-bigint.js",
       "n_asserts": 1,
       "flags": []
@@ -446,7 +446,7 @@
       "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-symbol",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    (0).toFixed(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n    (0).toFixed(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toFixed/toFixed-tonumber-throws-typeerror-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -455,7 +455,7 @@
       "id": "test262.test.built-ins.number.prototype.tofixed.tofixed-tonumber-throws-typeerror-toprimitive",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    Number.prototype.toFixed.call(0, {valueOf: undefined, toString: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\n",
+      "fixture": "function main(): void {\ntry { (function() {\n    Number.prototype.toFixed.call(0, {valueOf: undefined, toString: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toFixed/toFixed-tonumber-throws-typeerror-toprimitive.js",
       "n_asserts": 1,
       "flags": []
@@ -464,7 +464,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.precision-cannot-be-coerced-to-a-number-in-range",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toPrecision = Number.prototype.toPrecision;\n\ntry { (function() {\n  toPrecision.call(1, function() {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(1, NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(1, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toPrecision = Number.prototype.toPrecision;\n\ntry { (function() {\n  toPrecision.call(1, function() {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(1, NaN);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(1, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/precision-cannot-be-coerced-to-a-number-in-range.js",
       "n_asserts": 3,
       "flags": []
@@ -473,7 +473,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.range",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((3).toPrecision(1));\ntry { (() => (3).toPrecision(0))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => (3).toPrecision(-10))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log((3).toPrecision(100));\ntry { (() => (3).toPrecision(101))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nconsole.log((3).toPrecision(1));\ntry { (() => (3).toPrecision(0))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => (3).toPrecision(-10))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log((3).toPrecision(100));\ntry { (() => (3).toPrecision(101))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/range.js",
       "n_asserts": 5,
       "flags": []
@@ -482,7 +482,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.return-abrupt-tointeger-precision-symbol",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nvar p = Symbol(\"1\");\n\ntry { (function() {\n  Number.prototype.toPrecision(p);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar p = Symbol(\"1\");\n\ntry { (function() {\n  Number.prototype.toPrecision(p);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/return-abrupt-tointeger-precision-symbol.js",
       "n_asserts": 1,
       "flags": []
@@ -491,7 +491,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.return-values",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((7).toPrecision(1));\nconsole.log((7).toPrecision(2));\nconsole.log((7).toPrecision(3));\nconsole.log((7).toPrecision(19));\nconsole.log((7).toPrecision(20));\nconsole.log((7).toPrecision(21));\n\nconsole.log((-7).toPrecision(1));\nconsole.log((-7).toPrecision(2));\nconsole.log((-7).toPrecision(3));\nconsole.log((-7).toPrecision(19));\nconsole.log((-7).toPrecision(20));\nconsole.log((-7).toPrecision(21));\n\nconsole.log((10).toPrecision(2));\nconsole.log((11).toPrecision(2));\nconsole.log((17).toPrecision(2));\nconsole.log((19).toPrecision(2));\nconsole.log((20).toPrecision(2));\n\nconsole.log((-10).toPrecision(2));\nconsole.log((-11).toPrecision(2));\nconsole.log((-17).toPrecision(2));\nconsole.log((-19).toPrecision(2));\nconsole.log((-20).toPrecision(2));\n\nconsole.log((42).toPrecision(2));\nconsole.log((-42).toPrecision(2));\n\nconsole.log((100).toPrecision(3));\nconsole.log((100).toPrecision(7));\nconsole.log((1000).toPrecision(7));\nconsole.log((10000).toPrecision(7));\nconsole.log((100000).toPrecision(7));\n\nconsole.log((0.000001).toPrecision(1));\nconsole.log((0.000001).toPrecision(2));\nconsole.log((0.000001).toPrecision(3));\n}\n",
+      "fixture": "function main(): void {\nconsole.log((7).toPrecision(1));\nconsole.log((7).toPrecision(2));\nconsole.log((7).toPrecision(3));\nconsole.log((7).toPrecision(19));\nconsole.log((7).toPrecision(20));\nconsole.log((7).toPrecision(21));\n\nconsole.log((-7).toPrecision(1));\nconsole.log((-7).toPrecision(2));\nconsole.log((-7).toPrecision(3));\nconsole.log((-7).toPrecision(19));\nconsole.log((-7).toPrecision(20));\nconsole.log((-7).toPrecision(21));\n\nconsole.log((10).toPrecision(2));\nconsole.log((11).toPrecision(2));\nconsole.log((17).toPrecision(2));\nconsole.log((19).toPrecision(2));\nconsole.log((20).toPrecision(2));\n\nconsole.log((-10).toPrecision(2));\nconsole.log((-11).toPrecision(2));\nconsole.log((-17).toPrecision(2));\nconsole.log((-19).toPrecision(2));\nconsole.log((-20).toPrecision(2));\n\nconsole.log((42).toPrecision(2));\nconsole.log((-42).toPrecision(2));\n\nconsole.log((100).toPrecision(3));\nconsole.log((100).toPrecision(7));\nconsole.log((1000).toPrecision(7));\nconsole.log((10000).toPrecision(7));\nconsole.log((100000).toPrecision(7));\n\nconsole.log((0.000001).toPrecision(1));\nconsole.log((0.000001).toPrecision(2));\nconsole.log((0.000001).toPrecision(3));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/return-values.js",
       "n_asserts": 32,
       "flags": []
@@ -500,7 +500,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.this-is-0-precision-is-1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.prototype.toPrecision(1));\n\nconsole.log((-0).toPrecision(1));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.prototype.toPrecision(1));\n\nconsole.log((-0).toPrecision(1));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/this-is-0-precision-is-1.js",
       "n_asserts": 2,
       "flags": []
@@ -509,7 +509,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.this-is-0-precision-is-gter-than-1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((0).toPrecision(2));\n\nconsole.log((0).toPrecision(7));\n\nconsole.log((0).toPrecision(21));\n\nconsole.log((-0).toPrecision(2));\n\nconsole.log((-0).toPrecision(7));\n\nconsole.log((-0).toPrecision(21));\n}\n",
+      "fixture": "function main(): void {\nconsole.log((0).toPrecision(2));\n\nconsole.log((0).toPrecision(7));\n\nconsole.log((0).toPrecision(21));\n\nconsole.log((-0).toPrecision(2));\n\nconsole.log((-0).toPrecision(7));\n\nconsole.log((-0).toPrecision(21));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/this-is-0-precision-is-gter-than-1.js",
       "n_asserts": 6,
       "flags": []
@@ -518,7 +518,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.this-type-not-number-or-number-object",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nvar toPrecision = Number.prototype.toPrecision;\n\ntry { (function() {\n  toPrecision.call({}, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(\"1\", 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(Number, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(true, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(false, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(null, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(undefined, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(Symbol(\"1\"), 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call([], 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\nvar toPrecision = Number.prototype.toPrecision;\n\ntry { (function() {\n  toPrecision.call({}, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(\"1\", 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(Number, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(true, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(false, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(null, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(undefined, 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call(Symbol(\"1\"), 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  toPrecision.call([], 1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/this-type-not-number-or-number-object.js",
       "n_asserts": 9,
       "flags": []
@@ -527,7 +527,7 @@
       "id": "test262.test.built-ins.number.prototype.toprecision.tointeger-precision",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((123.456).toPrecision(1.1));\nconsole.log((123.456).toPrecision(1.9));\n\nconsole.log((123.456).toPrecision(true));\n\nconsole.log((123.456).toPrecision(\"2\"));\n\nconsole.log((123.456).toPrecision([2]));\n}\n",
+      "fixture": "function main(): void {\nconsole.log((123.456).toPrecision(1.1));\nconsole.log((123.456).toPrecision(1.9));\n\nconsole.log((123.456).toPrecision(true));\n\nconsole.log((123.456).toPrecision(\"2\"));\n\nconsole.log((123.456).toPrecision([2]));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toPrecision/tointeger-precision.js",
       "n_asserts": 5,
       "flags": []
@@ -536,7 +536,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.a-z",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfor (let radix = 11; radix <= 36; radix++) {\n  for (let i = 10; i < radix; i++) {\n    console.log(i.toString(radix));\n  }\n}\n}\n",
+      "fixture": "function main(): void {\nfor (let radix = 11; radix <= 36; radix++) {\n  for (let i = 10; i < radix; i++) {\n    console.log(i.toString(radix));\n  }\n}\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/a-z.js",
       "n_asserts": 1,
       "flags": []
@@ -545,7 +545,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-default-radix",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString());\nconsole.log(1..toString());\nconsole.log(NaN.toString());\nconsole.log(Infinity.toString());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString());\nconsole.log(1..toString());\nconsole.log(NaN.toString());\nconsole.log(Infinity.toString());\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-default-radix.js",
       "n_asserts": 4,
       "flags": []
@@ -554,7 +554,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => {\n  0..toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  1..toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  NaN.toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  Infinity.toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (() => {\n  0..toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  1..toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  NaN.toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  Infinity.toString(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-1.js",
       "n_asserts": 4,
       "flags": []
@@ -563,7 +563,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-10",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(10));\nconsole.log(1..toString(10));\nconsole.log(NaN.toString(10));\nconsole.log(Infinity.toString(10));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(10));\nconsole.log(1..toString(10));\nconsole.log(NaN.toString(10));\nconsole.log(Infinity.toString(10));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-10.js",
       "n_asserts": 4,
       "flags": []
@@ -572,7 +572,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-11",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(11));\nconsole.log(1..toString(11));\nconsole.log(NaN.toString(11));\nconsole.log(Infinity.toString(11));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(11));\nconsole.log(1..toString(11));\nconsole.log(NaN.toString(11));\nconsole.log(Infinity.toString(11));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-11.js",
       "n_asserts": 4,
       "flags": []
@@ -581,7 +581,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-12",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(12));\nconsole.log(1..toString(12));\nconsole.log(NaN.toString(12));\nconsole.log(Infinity.toString(12));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(12));\nconsole.log(1..toString(12));\nconsole.log(NaN.toString(12));\nconsole.log(Infinity.toString(12));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-12.js",
       "n_asserts": 4,
       "flags": []
@@ -590,7 +590,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-13",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(13));\nconsole.log(1..toString(13));\nconsole.log(NaN.toString(13));\nconsole.log(Infinity.toString(13));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(13));\nconsole.log(1..toString(13));\nconsole.log(NaN.toString(13));\nconsole.log(Infinity.toString(13));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-13.js",
       "n_asserts": 4,
       "flags": []
@@ -599,7 +599,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-14",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(14));\nconsole.log(1..toString(14));\nconsole.log(NaN.toString(14));\nconsole.log(Infinity.toString(14));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(14));\nconsole.log(1..toString(14));\nconsole.log(NaN.toString(14));\nconsole.log(Infinity.toString(14));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-14.js",
       "n_asserts": 4,
       "flags": []
@@ -608,7 +608,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-15",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(15));\nconsole.log(1..toString(15));\nconsole.log(NaN.toString(15));\nconsole.log(Infinity.toString(15));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(15));\nconsole.log(1..toString(15));\nconsole.log(NaN.toString(15));\nconsole.log(Infinity.toString(15));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-15.js",
       "n_asserts": 4,
       "flags": []
@@ -617,7 +617,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-16",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(16));\nconsole.log(1..toString(16));\nconsole.log(NaN.toString(16));\nconsole.log(Infinity.toString(16));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(16));\nconsole.log(1..toString(16));\nconsole.log(NaN.toString(16));\nconsole.log(Infinity.toString(16));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-16.js",
       "n_asserts": 4,
       "flags": []
@@ -626,7 +626,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-17",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(17));\nconsole.log(1..toString(17));\nconsole.log(NaN.toString(17));\nconsole.log(Infinity.toString(17));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(17));\nconsole.log(1..toString(17));\nconsole.log(NaN.toString(17));\nconsole.log(Infinity.toString(17));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-17.js",
       "n_asserts": 4,
       "flags": []
@@ -635,7 +635,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-18",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(18));\nconsole.log(1..toString(18));\nconsole.log(NaN.toString(18));\nconsole.log(Infinity.toString(18));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(18));\nconsole.log(1..toString(18));\nconsole.log(NaN.toString(18));\nconsole.log(Infinity.toString(18));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-18.js",
       "n_asserts": 4,
       "flags": []
@@ -644,7 +644,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-19",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(19));\nconsole.log(1..toString(19));\nconsole.log(NaN.toString(19));\nconsole.log(Infinity.toString(19));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(19));\nconsole.log(1..toString(19));\nconsole.log(NaN.toString(19));\nconsole.log(Infinity.toString(19));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-19.js",
       "n_asserts": 4,
       "flags": []
@@ -653,7 +653,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(2));\nconsole.log(1..toString(2));\nconsole.log(NaN.toString(2));\nconsole.log(Infinity.toString(2));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(2));\nconsole.log(1..toString(2));\nconsole.log(NaN.toString(2));\nconsole.log(Infinity.toString(2));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-2.js",
       "n_asserts": 4,
       "flags": []
@@ -662,7 +662,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-20",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(20));\nconsole.log(1..toString(20));\nconsole.log(NaN.toString(20));\nconsole.log(Infinity.toString(20));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(20));\nconsole.log(1..toString(20));\nconsole.log(NaN.toString(20));\nconsole.log(Infinity.toString(20));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-20.js",
       "n_asserts": 4,
       "flags": []
@@ -671,7 +671,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-21",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(21));\nconsole.log(1..toString(21));\nconsole.log(NaN.toString(21));\nconsole.log(Infinity.toString(21));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(21));\nconsole.log(1..toString(21));\nconsole.log(NaN.toString(21));\nconsole.log(Infinity.toString(21));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-21.js",
       "n_asserts": 4,
       "flags": []
@@ -680,7 +680,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-22",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(22));\nconsole.log(1..toString(22));\nconsole.log(NaN.toString(22));\nconsole.log(Infinity.toString(22));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(22));\nconsole.log(1..toString(22));\nconsole.log(NaN.toString(22));\nconsole.log(Infinity.toString(22));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-22.js",
       "n_asserts": 4,
       "flags": []
@@ -689,7 +689,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-23",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(23));\nconsole.log(1..toString(23));\nconsole.log(NaN.toString(23));\nconsole.log(Infinity.toString(23));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(23));\nconsole.log(1..toString(23));\nconsole.log(NaN.toString(23));\nconsole.log(Infinity.toString(23));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-23.js",
       "n_asserts": 4,
       "flags": []
@@ -698,7 +698,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-24",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(24));\nconsole.log(1..toString(24));\nconsole.log(NaN.toString(24));\nconsole.log(Infinity.toString(24));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(24));\nconsole.log(1..toString(24));\nconsole.log(NaN.toString(24));\nconsole.log(Infinity.toString(24));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-24.js",
       "n_asserts": 4,
       "flags": []
@@ -707,7 +707,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-25",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(25));\nconsole.log(1..toString(25));\nconsole.log(NaN.toString(25));\nconsole.log(Infinity.toString(25));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(25));\nconsole.log(1..toString(25));\nconsole.log(NaN.toString(25));\nconsole.log(Infinity.toString(25));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-25.js",
       "n_asserts": 4,
       "flags": []
@@ -716,7 +716,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-26",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(26));\nconsole.log(1..toString(26));\nconsole.log(NaN.toString(26));\nconsole.log(Infinity.toString(26));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(26));\nconsole.log(1..toString(26));\nconsole.log(NaN.toString(26));\nconsole.log(Infinity.toString(26));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-26.js",
       "n_asserts": 4,
       "flags": []
@@ -725,7 +725,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-27",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(27));\nconsole.log(1..toString(27));\nconsole.log(NaN.toString(27));\nconsole.log(Infinity.toString(27));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(27));\nconsole.log(1..toString(27));\nconsole.log(NaN.toString(27));\nconsole.log(Infinity.toString(27));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-27.js",
       "n_asserts": 4,
       "flags": []
@@ -734,7 +734,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-28",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(28));\nconsole.log(1..toString(28));\nconsole.log(NaN.toString(28));\nconsole.log(Infinity.toString(28));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(28));\nconsole.log(1..toString(28));\nconsole.log(NaN.toString(28));\nconsole.log(Infinity.toString(28));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-28.js",
       "n_asserts": 4,
       "flags": []
@@ -743,7 +743,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-29",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(29));\nconsole.log(1..toString(29));\nconsole.log(NaN.toString(29));\nconsole.log(Infinity.toString(29));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(29));\nconsole.log(1..toString(29));\nconsole.log(NaN.toString(29));\nconsole.log(Infinity.toString(29));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-29.js",
       "n_asserts": 4,
       "flags": []
@@ -752,7 +752,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-3",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(3));\nconsole.log(1..toString(3));\nconsole.log(NaN.toString(3));\nconsole.log(Infinity.toString(3));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(3));\nconsole.log(1..toString(3));\nconsole.log(NaN.toString(3));\nconsole.log(Infinity.toString(3));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-3.js",
       "n_asserts": 4,
       "flags": []
@@ -761,7 +761,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-30",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(30));\nconsole.log(1..toString(30));\nconsole.log(NaN.toString(30));\nconsole.log(Infinity.toString(30));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(30));\nconsole.log(1..toString(30));\nconsole.log(NaN.toString(30));\nconsole.log(Infinity.toString(30));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-30.js",
       "n_asserts": 4,
       "flags": []
@@ -770,7 +770,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-31",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(31));\nconsole.log(1..toString(31));\nconsole.log(NaN.toString(31));\nconsole.log(Infinity.toString(31));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(31));\nconsole.log(1..toString(31));\nconsole.log(NaN.toString(31));\nconsole.log(Infinity.toString(31));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-31.js",
       "n_asserts": 4,
       "flags": []
@@ -779,7 +779,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-32",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(32));\nconsole.log(1..toString(32));\nconsole.log(NaN.toString(32));\nconsole.log(Infinity.toString(32));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(32));\nconsole.log(1..toString(32));\nconsole.log(NaN.toString(32));\nconsole.log(Infinity.toString(32));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-32.js",
       "n_asserts": 4,
       "flags": []
@@ -788,7 +788,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-33",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(33));\nconsole.log(1..toString(33));\nconsole.log(NaN.toString(33));\nconsole.log(Infinity.toString(33));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(33));\nconsole.log(1..toString(33));\nconsole.log(NaN.toString(33));\nconsole.log(Infinity.toString(33));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-33.js",
       "n_asserts": 4,
       "flags": []
@@ -797,7 +797,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-34",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(34));\nconsole.log(1..toString(34));\nconsole.log(NaN.toString(34));\nconsole.log(Infinity.toString(34));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(34));\nconsole.log(1..toString(34));\nconsole.log(NaN.toString(34));\nconsole.log(Infinity.toString(34));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-34.js",
       "n_asserts": 4,
       "flags": []
@@ -806,7 +806,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-35",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(35));\nconsole.log(1..toString(35));\nconsole.log(NaN.toString(35));\nconsole.log(Infinity.toString(35));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(35));\nconsole.log(1..toString(35));\nconsole.log(NaN.toString(35));\nconsole.log(Infinity.toString(35));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-35.js",
       "n_asserts": 4,
       "flags": []
@@ -815,7 +815,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-36",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(36));\nconsole.log(1..toString(36));\nconsole.log(NaN.toString(36));\nconsole.log(Infinity.toString(36));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(36));\nconsole.log(1..toString(36));\nconsole.log(NaN.toString(36));\nconsole.log(Infinity.toString(36));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-36.js",
       "n_asserts": 4,
       "flags": []
@@ -824,7 +824,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-37",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => {\n  0..toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  1..toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  NaN.toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  Infinity.toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n",
+      "fixture": "function main(): void {\ntry { (() => {\n  0..toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  1..toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  NaN.toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => {\n  Infinity.toString(37);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-37.js",
       "n_asserts": 4,
       "flags": []
@@ -833,7 +833,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-4",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(4));\nconsole.log(1..toString(4));\nconsole.log(NaN.toString(4));\nconsole.log(Infinity.toString(4));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(4));\nconsole.log(1..toString(4));\nconsole.log(NaN.toString(4));\nconsole.log(Infinity.toString(4));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-4.js",
       "n_asserts": 4,
       "flags": []
@@ -842,7 +842,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-5",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(5));\nconsole.log(1..toString(5));\nconsole.log(NaN.toString(5));\nconsole.log(Infinity.toString(5));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(5));\nconsole.log(1..toString(5));\nconsole.log(NaN.toString(5));\nconsole.log(Infinity.toString(5));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-5.js",
       "n_asserts": 4,
       "flags": []
@@ -851,7 +851,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-6",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(6));\nconsole.log(1..toString(6));\nconsole.log(NaN.toString(6));\nconsole.log(Infinity.toString(6));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(6));\nconsole.log(1..toString(6));\nconsole.log(NaN.toString(6));\nconsole.log(Infinity.toString(6));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-6.js",
       "n_asserts": 4,
       "flags": []
@@ -860,7 +860,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-7",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(7));\nconsole.log(1..toString(7));\nconsole.log(NaN.toString(7));\nconsole.log(Infinity.toString(7));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(7));\nconsole.log(1..toString(7));\nconsole.log(NaN.toString(7));\nconsole.log(Infinity.toString(7));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-7.js",
       "n_asserts": 4,
       "flags": []
@@ -869,7 +869,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-8",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(8));\nconsole.log(1..toString(8));\nconsole.log(NaN.toString(8));\nconsole.log(Infinity.toString(8));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(8));\nconsole.log(1..toString(8));\nconsole.log(NaN.toString(8));\nconsole.log(Infinity.toString(8));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-8.js",
       "n_asserts": 4,
       "flags": []
@@ -878,7 +878,7 @@
       "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-9",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(0..toString(9));\nconsole.log(1..toString(9));\nconsole.log(NaN.toString(9));\nconsole.log(Infinity.toString(9));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(0..toString(9));\nconsole.log(1..toString(9));\nconsole.log(NaN.toString(9));\nconsole.log(Infinity.toString(9));\n}\nmain();\n",
       "origin": "test/built-ins/Number/prototype/toString/numeric-literal-tostring-radix-9.js",
       "n_asserts": 4,
       "flags": []
@@ -887,7 +887,7 @@
       "id": "test262.test.built-ins.number.s15.7.1.1_a2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Number());\nconsole.log(Number());\n}\n",
+      "fixture": "function main(): void {\nconsole.log(typeof Number());\nconsole.log(Number());\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.1.1_A2.js",
       "n_asserts": 2,
       "flags": []
@@ -896,7 +896,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"prototype\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"prototype\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A1.js",
       "n_asserts": 1,
       "flags": []
@@ -905,7 +905,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"MAX_VALUE\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"MAX_VALUE\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A2.js",
       "n_asserts": 1,
       "flags": []
@@ -914,7 +914,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a3",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"MIN_VALUE\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"MIN_VALUE\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A3.js",
       "n_asserts": 1,
       "flags": []
@@ -923,7 +923,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a4",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"NaN\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"NaN\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A4.js",
       "n_asserts": 1,
       "flags": []
@@ -932,7 +932,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a5",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"NEGATIVE_INFINITY\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"NEGATIVE_INFINITY\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A5.js",
       "n_asserts": 1,
       "flags": []
@@ -941,7 +941,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a6",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"POSITIVE_INFINITY\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"POSITIVE_INFINITY\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A6.js",
       "n_asserts": 1,
       "flags": []
@@ -950,7 +950,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a7",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Number));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Number));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A7.js",
       "n_asserts": 1,
       "flags": []
@@ -959,7 +959,7 @@
       "id": "test262.test.built-ins.number.s15.7.3_a8",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"length\"));\nconsole.log(Number.length);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number.hasOwnProperty(\"length\"));\nconsole.log(Number.length);\n}\nmain();\n",
       "origin": "test/built-ins/Number/S15.7.3_A8.js",
       "n_asserts": 2,
       "flags": []
@@ -968,7 +968,7 @@
       "id": "test262.test.built-ins.number.s9.1_a1_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\n// CHECK#1\nvar object = {\n  valueOf: function() {\n    return \"1\"\n  },\n  toString: function() {\n    return 0\n  }\n};\n\nconsole.log(Number(object));\n\n// CHECK#2\nvar object = {\n  valueOf: function() {\n    return {}\n  },\n  toString: function() {\n    return \"0\"\n  }\n};\n\nconsole.log(Number(object));\n}\n",
+      "fixture": "function main(): void {\n// CHECK#1\nvar object = {\n  valueOf: function() {\n    return \"1\"\n  },\n  toString: function() {\n    return 0\n  }\n};\n\nconsole.log(Number(object));\n\n// CHECK#2\nvar object = {\n  valueOf: function() {\n    return {}\n  },\n  toString: function() {\n    return \"0\"\n  }\n};\n\nconsole.log(Number(object));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.1_A1_T1.js",
       "n_asserts": 2,
       "flags": []
@@ -977,7 +977,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A1.js",
       "n_asserts": 1,
       "flags": []
@@ -986,7 +986,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a10",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+('12345')*1e-5);\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+('12345')*1e-5);\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A10.js",
       "n_asserts": 1,
       "flags": []
@@ -995,7 +995,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a11",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+('12345')*1e1);\n\nconsole.log(Number(\".12345e-3\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+('12345')*1e1);\n\nconsole.log(Number(\".12345e-3\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A11.js",
       "n_asserts": 2,
       "flags": []
@@ -1004,7 +1004,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a12",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"12345e6\"));\nconsole.log(Number(\"12345e-6\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"12345e6\"));\nconsole.log(Number(\"12345e-6\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A12.js",
       "n_asserts": 2,
       "flags": []
@@ -1013,7 +1013,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a13",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+(\"12\"));\n\nconsole.log(Number(\"123\"));\n\nconsole.log(Number(\"1234\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+(\"12\"));\n\nconsole.log(Number(\"123\"));\n\nconsole.log(Number(\"1234\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A13.js",
       "n_asserts": 3,
       "flags": []
@@ -1022,7 +1022,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a14",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"+1234567890\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"+1234567890\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A14.js",
       "n_asserts": 1,
       "flags": []
@@ -1031,7 +1031,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a15",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+(\"-1234567890\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+(\"-1234567890\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A15.js",
       "n_asserts": 1,
       "flags": []
@@ -1040,7 +1040,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a16",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0\"));\nconsole.log(+(\"0x0\"));\nconsole.log(Number(\"0X0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0\"));\nconsole.log(+(\"0x0\"));\nconsole.log(Number(\"0X0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A16.js",
       "n_asserts": 3,
       "flags": []
@@ -1049,7 +1049,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a17",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1\"));\nconsole.log(Number(\"0x1\"));\nconsole.log(+(\"0X1\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1\"));\nconsole.log(Number(\"0x1\"));\nconsole.log(+(\"0X1\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A17.js",
       "n_asserts": 3,
       "flags": []
@@ -1058,7 +1058,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a18",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+(\"2\"));\nconsole.log(Number(\"0x2\"));\nconsole.log(Number(\"0X2\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+(\"2\"));\nconsole.log(Number(\"0x2\"));\nconsole.log(Number(\"0X2\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A18.js",
       "n_asserts": 3,
       "flags": []
@@ -1067,7 +1067,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a19",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"3\"));\nconsole.log(+(\"0x3\"));\nconsole.log(Number(\"0X3\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"3\"));\nconsole.log(+(\"0x3\"));\nconsole.log(Number(\"0X3\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A19.js",
       "n_asserts": 3,
       "flags": []
@@ -1076,7 +1076,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(Number(\" \"));\nconsole.log(Number(\"\\t\"));\nconsole.log(Number(\"\\r\"));\nconsole.log(Number(\"\\n\"));\nconsole.log(Number(\"\\f\"));\nconsole.log(Number(\"\\u0009\"));\nconsole.log(Number(\"\\u000A\"));\nconsole.log(Number(\"\\u000B\"));\nconsole.log(Number(\"\\u000C\"));\nconsole.log(Number(\"\\u000D\"));\nconsole.log(Number(\"\\u00A0\"));\nconsole.log(Number(\"\\u0020\"));\nconsole.log(Number(\"\\u2028\"));\nconsole.log(Number(\"\\u2029\"));\nconsole.log(Number(\"\\u1680\"));\nconsole.log(Number(\"\\u2000\"));\nconsole.log(Number(\"\\u2001\"));\nconsole.log(Number(\"\\u2002\"));\nconsole.log(Number(\"\\u2003\"));\nconsole.log(Number(\"\\u2004\"));\nconsole.log(Number(\"\\u2005\"));\nconsole.log(Number(\"\\u2006\"));\nconsole.log(Number(\"\\u2007\"));\nconsole.log(Number(\"\\u2008\"));\nconsole.log(Number(\"\\u2009\"));\nconsole.log(Number(\"\\u200A\"));\nconsole.log(Number(\"\\u202F\"));\nconsole.log(Number(\"\\u205F\"));\nconsole.log(Number(\"\\u3000\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(Number(\" \"));\nconsole.log(Number(\"\\t\"));\nconsole.log(Number(\"\\r\"));\nconsole.log(Number(\"\\n\"));\nconsole.log(Number(\"\\f\"));\nconsole.log(Number(\"\\u0009\"));\nconsole.log(Number(\"\\u000A\"));\nconsole.log(Number(\"\\u000B\"));\nconsole.log(Number(\"\\u000C\"));\nconsole.log(Number(\"\\u000D\"));\nconsole.log(Number(\"\\u00A0\"));\nconsole.log(Number(\"\\u0020\"));\nconsole.log(Number(\"\\u2028\"));\nconsole.log(Number(\"\\u2029\"));\nconsole.log(Number(\"\\u1680\"));\nconsole.log(Number(\"\\u2000\"));\nconsole.log(Number(\"\\u2001\"));\nconsole.log(Number(\"\\u2002\"));\nconsole.log(Number(\"\\u2003\"));\nconsole.log(Number(\"\\u2004\"));\nconsole.log(Number(\"\\u2005\"));\nconsole.log(Number(\"\\u2006\"));\nconsole.log(Number(\"\\u2007\"));\nconsole.log(Number(\"\\u2008\"));\nconsole.log(Number(\"\\u2009\"));\nconsole.log(Number(\"\\u200A\"));\nconsole.log(Number(\"\\u202F\"));\nconsole.log(Number(\"\\u205F\"));\nconsole.log(Number(\"\\u3000\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A2.js",
       "n_asserts": 30,
       "flags": []
@@ -1085,7 +1085,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a20",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"4\"));\nconsole.log(Number(\"0x4\"));\nconsole.log(+(\"0X4\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"4\"));\nconsole.log(Number(\"0x4\"));\nconsole.log(+(\"0X4\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A20.js",
       "n_asserts": 3,
       "flags": []
@@ -1094,7 +1094,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a21",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+(\"5\"));\nconsole.log(Number(\"0x5\"));\nconsole.log(Number(\"0X5\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+(\"5\"));\nconsole.log(Number(\"0x5\"));\nconsole.log(Number(\"0X5\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A21.js",
       "n_asserts": 3,
       "flags": []
@@ -1103,7 +1103,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a22",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"6\"));\nconsole.log(+(\"0x6\"));\nconsole.log(Number(\"0X6\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"6\"));\nconsole.log(+(\"0x6\"));\nconsole.log(Number(\"0X6\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A22.js",
       "n_asserts": 3,
       "flags": []
@@ -1112,7 +1112,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a23",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"7\"));\nconsole.log(Number(\"0x7\"));\nconsole.log(+(\"0X7\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"7\"));\nconsole.log(Number(\"0x7\"));\nconsole.log(+(\"0X7\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A23.js",
       "n_asserts": 3,
       "flags": []
@@ -1121,7 +1121,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a24",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+(\"8\"));\nconsole.log(Number(\"0x8\"));\nconsole.log(Number(\"0X8\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+(\"8\"));\nconsole.log(Number(\"0x8\"));\nconsole.log(Number(\"0X8\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A24.js",
       "n_asserts": 3,
       "flags": []
@@ -1130,7 +1130,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a25",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"9\"));\nconsole.log(+(\"0x9\"));\nconsole.log(Number(\"0X9\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"9\"));\nconsole.log(+(\"0x9\"));\nconsole.log(Number(\"0X9\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A25.js",
       "n_asserts": 3,
       "flags": []
@@ -1139,7 +1139,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a26",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0xa\"));\nconsole.log(Number(\"0xA\"));\nconsole.log(Number(\"0Xa\"));\nconsole.log(+(\"0XA\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0xa\"));\nconsole.log(Number(\"0xA\"));\nconsole.log(Number(\"0Xa\"));\nconsole.log(+(\"0XA\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A26.js",
       "n_asserts": 4,
       "flags": []
@@ -1148,7 +1148,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a27",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0xb\"));\nconsole.log(Number(\"0xB\"));\nconsole.log(+(\"0Xb\"));\nconsole.log(Number(\"0XB\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0xb\"));\nconsole.log(Number(\"0xB\"));\nconsole.log(+(\"0Xb\"));\nconsole.log(Number(\"0XB\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A27.js",
       "n_asserts": 4,
       "flags": []
@@ -1157,7 +1157,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a28",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0xc\"));\nconsole.log(+(\"0xC\"));\nconsole.log(Number(\"0Xc\"));\nconsole.log(Number(\"0XC\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0xc\"));\nconsole.log(+(\"0xC\"));\nconsole.log(Number(\"0Xc\"));\nconsole.log(Number(\"0XC\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A28.js",
       "n_asserts": 4,
       "flags": []
@@ -1166,7 +1166,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a29",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(+(\"0xd\"));\nconsole.log(Number(\"0xD\"));\nconsole.log(Number(\"0Xd\"));\nconsole.log(Number(\"0XD\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(+(\"0xd\"));\nconsole.log(Number(\"0xD\"));\nconsole.log(Number(\"0Xd\"));\nconsole.log(Number(\"0XD\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A29.js",
       "n_asserts": 4,
       "flags": []
@@ -1175,7 +1175,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a2_u180e",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number('\\u180E'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number('\\u180E'));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A2_U180E.js",
       "n_asserts": 1,
       "flags": []
@@ -1184,7 +1184,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a30",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0xe\"));\nconsole.log(Number(\"0xE\"));\nconsole.log(Number(\"0Xe\"));\nconsole.log(+(\"0XE\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0xe\"));\nconsole.log(Number(\"0xE\"));\nconsole.log(Number(\"0Xe\"));\nconsole.log(+(\"0XE\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A30.js",
       "n_asserts": 4,
       "flags": []
@@ -1193,7 +1193,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a31",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0xf\"));\nconsole.log(Number(\"0xF\"));\nconsole.log(+(\"0Xf\"));\nconsole.log(Number(\"0XF\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0xf\"));\nconsole.log(Number(\"0xF\"));\nconsole.log(+(\"0Xf\"));\nconsole.log(Number(\"0XF\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A31.js",
       "n_asserts": 4,
       "flags": []
@@ -1202,7 +1202,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a32",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1234567890.1234567890\"));\n\nconsole.log(Number(\"1234567890.1234567890\"));\n\nconsole.log(+(\"1234567890.1234567890\"));\n\nconsole.log(Number(\"0.12345678901234567890\"));\n\nconsole.log(Number(\"00.12345678901234567890\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1234567890.1234567890\"));\n\nconsole.log(Number(\"1234567890.1234567890\"));\n\nconsole.log(+(\"1234567890.1234567890\"));\n\nconsole.log(Number(\"0.12345678901234567890\"));\n\nconsole.log(Number(\"00.12345678901234567890\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A32.js",
       "n_asserts": 5,
       "flags": []
@@ -1211,7 +1211,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a3_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000A\\u000D\\u2028\\u2029\\u000B\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u30001234567890\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(+(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000Infinity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000-Infinity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000A\\u000D\\u2028\\u2029\\u000B\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u30001234567890\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(+(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000Infinity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n\nconsole.log(Number(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000-Infinity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A3_T1.js",
       "n_asserts": 4,
       "flags": []
@@ -1220,7 +1220,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a3_t1_u180e",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\n// CHECK#1\nconsole.log(Number('\\u180E'));\n\n// CHECK#2\nconsole.log(Number('\\u180E1234567890\\u180E'));\n\n// CHECK#3\nconsole.log(Number('\\u180EInfinity\\u180E'));\n\n// CHECK#4\nconsole.log(Number('\\u180E-Infinity\\u180E'));\n}\n",
+      "fixture": "function main(): void {\n// CHECK#1\nconsole.log(Number('\\u180E'));\n\n// CHECK#2\nconsole.log(Number('\\u180E1234567890\\u180E'));\n\n// CHECK#3\nconsole.log(Number('\\u180EInfinity\\u180E'));\n\n// CHECK#4\nconsole.log(Number('\\u180E-Infinity\\u180E'));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A3_T1_U180E.js",
       "n_asserts": 4,
       "flags": []
@@ -1229,7 +1229,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a3_t2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\nconsole.log(Number(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\", \"\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n\nconsole.log(+(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000A\\u000D\\u2028\\u2029\\u000B12345\", \"67890\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n\nconsole.log(Number(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029Infi\", \"nity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n\nconsole.log(Number(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029-Infi\", \"nity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n}\n",
+      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\nconsole.log(Number(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\", \"\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n\nconsole.log(+(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000A\\u000D\\u2028\\u2029\\u000B12345\", \"67890\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n\nconsole.log(Number(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029Infi\", \"nity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n\nconsole.log(Number(dynaString(\"\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029-Infi\", \"nity\\u0009\\u000C\\u0020\\u00A0\\u000B\\u000A\\u000D\\u2028\\u2029\\u1680\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\")));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A3_T2.js",
       "n_asserts": 4,
       "flags": []
@@ -1238,7 +1238,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a3_t2_u180e",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\n// CHECK#1\nconsole.log(Number(dynaString(\"\", \"\\u180E\")));\n\n// CHECK#2\nconsole.log(+(dynaString(\"12345\", \"67890\\u180E\")));\n\n// CHECK#3\nconsole.log(Number(dynaString(\"Infi\", \"nity\\u180E\")));\n\n// CHECK#4\nconsole.log(Number(dynaString(\"-Infi\", \"nity\\u180E\")));\n}\n",
+      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\n// CHECK#1\nconsole.log(Number(dynaString(\"\", \"\\u180E\")));\n\n// CHECK#2\nconsole.log(+(dynaString(\"12345\", \"67890\\u180E\")));\n\n// CHECK#3\nconsole.log(Number(dynaString(\"Infi\", \"nity\\u180E\")));\n\n// CHECK#4\nconsole.log(Number(dynaString(\"-Infi\", \"nity\\u180E\")));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A3_T2_U180E.js",
       "n_asserts": 4,
       "flags": []
@@ -1247,7 +1247,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a4_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"+0\"));\n\nconsole.log(Number(\"+Infinity\"));\n\nconsole.log(Number(\"+1234.5678\"));\n\nconsole.log(Number(\"+1234.5678e90\"));\n\nconsole.log(Number(\"+1234.5678E90\"));\n\nconsole.log(Number(\"+1234.5678e-90\"));\n\nconsole.log(Number(\"+1234.5678E-90\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"+0\"));\n\nconsole.log(Number(\"+Infinity\"));\n\nconsole.log(Number(\"+1234.5678\"));\n\nconsole.log(Number(\"+1234.5678e90\"));\n\nconsole.log(Number(\"+1234.5678E90\"));\n\nconsole.log(Number(\"+1234.5678e-90\"));\n\nconsole.log(Number(\"+1234.5678E-90\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A4_T1.js",
       "n_asserts": 7,
       "flags": []
@@ -1256,7 +1256,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a4_t2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\nconsole.log(Number(dynaString(\"+\", \"0\")));\n\nconsole.log(Number(dynaString(\"+Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678e90\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678E90\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678e-90\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678E-90\")));\n}\n",
+      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\nconsole.log(Number(dynaString(\"+\", \"0\")));\n\nconsole.log(Number(dynaString(\"+Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678e90\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678E90\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678e-90\")));\n\nconsole.log(Number(dynaString(\"+1234.\", \"5678E-90\")));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A4_T2.js",
       "n_asserts": 7,
       "flags": []
@@ -1265,7 +1265,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a5_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"-0\"));\nconsole.log(Number(\"-Infinity\"));\n\nconsole.log(Number(\"-1234567890\"));\n\nconsole.log(Number(\"-1234.5678\"));\n\nconsole.log(Number(\"-1234.5678e90\"));\n\nconsole.log(Number(\"-1234.5678E90\"));\n\nconsole.log(Number(\"-1234.5678e-90\"));\n\nconsole.log(Number(\"-1234.5678E-90\"));\n\nconsole.log(Number(\"-Infinity\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"-0\"));\nconsole.log(Number(\"-Infinity\"));\n\nconsole.log(Number(\"-1234567890\"));\n\nconsole.log(Number(\"-1234.5678\"));\n\nconsole.log(Number(\"-1234.5678e90\"));\n\nconsole.log(Number(\"-1234.5678E90\"));\n\nconsole.log(Number(\"-1234.5678e-90\"));\n\nconsole.log(Number(\"-1234.5678E-90\"));\n\nconsole.log(Number(\"-Infinity\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A5_T1.js",
       "n_asserts": 9,
       "flags": []
@@ -1274,7 +1274,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a5_t2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1\"));\nconsole.log(Number(\"+1\"));\nconsole.log(Number(\"-1\"));\nconsole.log(Number(\"2\"));\nconsole.log(Number(\"+2\"));\nconsole.log(Number(\"-2\"));\nconsole.log(Number(\"3\"));\nconsole.log(Number(\"+3\"));\nconsole.log(Number(\"-3\"));\nconsole.log(Number(\"4\"));\nconsole.log(Number(\"+4\"));\nconsole.log(Number(\"-4\"));\nconsole.log(Number(\"5\"));\nconsole.log(Number(\"+5\"));\nconsole.log(Number(\"-5\"));\nconsole.log(Number(\"6\"));\nconsole.log(Number(\"+6\"));\nconsole.log(Number(\"-6\"));\nconsole.log(Number(\"7\"));\nconsole.log(Number(\"+7\"));\nconsole.log(Number(\"-7\"));\nconsole.log(Number(\"8\"));\nconsole.log(Number(\"+8\"));\nconsole.log(Number(\"-8\"));\nconsole.log(Number(\"9\"));\nconsole.log(Number(\"+9\"));\nconsole.log(Number(\"-9\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1\"));\nconsole.log(Number(\"+1\"));\nconsole.log(Number(\"-1\"));\nconsole.log(Number(\"2\"));\nconsole.log(Number(\"+2\"));\nconsole.log(Number(\"-2\"));\nconsole.log(Number(\"3\"));\nconsole.log(Number(\"+3\"));\nconsole.log(Number(\"-3\"));\nconsole.log(Number(\"4\"));\nconsole.log(Number(\"+4\"));\nconsole.log(Number(\"-4\"));\nconsole.log(Number(\"5\"));\nconsole.log(Number(\"+5\"));\nconsole.log(Number(\"-5\"));\nconsole.log(Number(\"6\"));\nconsole.log(Number(\"+6\"));\nconsole.log(Number(\"-6\"));\nconsole.log(Number(\"7\"));\nconsole.log(Number(\"+7\"));\nconsole.log(Number(\"-7\"));\nconsole.log(Number(\"8\"));\nconsole.log(Number(\"+8\"));\nconsole.log(Number(\"-8\"));\nconsole.log(Number(\"9\"));\nconsole.log(Number(\"+9\"));\nconsole.log(Number(\"-9\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A5_T2.js",
       "n_asserts": 27,
       "flags": []
@@ -1283,7 +1283,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a5_t3",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\nconsole.log(Number(dynaString(\"-\", \"0\")));\n\nconsole.log(Number(dynaString(\"-Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"-12345\", \"67890\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678e90\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678E90\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678e-90\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678E-90\")));\n\nconsole.log(Number(dynaString(\"-Infi\", \"nity\")));\n}\n",
+      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\nconsole.log(Number(dynaString(\"-\", \"0\")));\n\nconsole.log(Number(dynaString(\"-Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"-12345\", \"67890\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678e90\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678E90\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678e-90\")));\n\nconsole.log(Number(dynaString(\"-1234.\", \"5678E-90\")));\n\nconsole.log(Number(dynaString(\"-Infi\", \"nity\")));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A5_T3.js",
       "n_asserts": 9,
       "flags": []
@@ -1292,7 +1292,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a6_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"Infinity\"));\nconsole.log(Number(\"Infinity\"));\nconsole.log(Number(\"Infinity\"));\n\nconsole.log(Number(\"Infinity\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"Infinity\"));\nconsole.log(Number(\"Infinity\"));\nconsole.log(Number(\"Infinity\"));\n\nconsole.log(Number(\"Infinity\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A6_T1.js",
       "n_asserts": 4,
       "flags": []
@@ -1301,7 +1301,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a6_t2",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n}\n",
+      "fixture": "function main(): void {\nfunction dynaString(s1, s2) {\n  return String(s1) + String(s2);\n}\n\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n\nconsole.log(Number(dynaString(\"Infi\", \"nity\")));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A6_T2.js",
       "n_asserts": 4,
       "flags": []
@@ -1310,7 +1310,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a7",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1234.5678\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1234.5678\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A7.js",
       "n_asserts": 1,
       "flags": []
@@ -1319,7 +1319,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a8",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1234e5\"));\nconsole.log(Number(\"1234.e5\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1234e5\"));\nconsole.log(Number(\"1234.e5\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A8.js",
       "n_asserts": 2,
       "flags": []
@@ -1328,7 +1328,7 @@
       "id": "test262.test.built-ins.number.s9.3.1_a9",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log((Number(\"1234\") + (Number(\"5678\") * 1e-4)) * 1e9);\n\nconsole.log((Number(\"1234\") + (Number(\"5678\") * 1e-4)) * 1e-9);\n}\n",
+      "fixture": "function main(): void {\nconsole.log((Number(\"1234\") + (Number(\"5678\") * 1e-4)) * 1e9);\n\nconsole.log((Number(\"1234\") + (Number(\"5678\") * 1e-4)) * 1e-9);\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3.1_A9.js",
       "n_asserts": 2,
       "flags": []
@@ -1337,7 +1337,7 @@
       "id": "test262.test.built-ins.number.s9.3_a1_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(undefined));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(undefined));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3_A1_T1.js",
       "n_asserts": 1,
       "flags": []
@@ -1346,7 +1346,7 @@
       "id": "test262.test.built-ins.number.s9.3_a2_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(null));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(null));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3_A2_T1.js",
       "n_asserts": 1,
       "flags": []
@@ -1355,7 +1355,7 @@
       "id": "test262.test.built-ins.number.s9.3_a3_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(false));\nconsole.log(Number(true));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(false));\nconsole.log(Number(true));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3_A3_T1.js",
       "n_asserts": 2,
       "flags": []
@@ -1364,7 +1364,7 @@
       "id": "test262.test.built-ins.number.s9.3_a4.1_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(13));\nconsole.log(Number(-13));\nconsole.log(Number(1.3));\nconsole.log(Number(-1.3));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(13));\nconsole.log(Number(-13));\nconsole.log(Number(1.3));\nconsole.log(Number(-1.3));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3_A4.1_T1.js",
       "n_asserts": 4,
       "flags": []
@@ -1373,7 +1373,7 @@
       "id": "test262.test.built-ins.number.s9.3_a4.2_t1",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\n// CHECK#1\nconsole.log(Number(NaN));\n\nconsole.log(Number(+0));\nconsole.log(Number(-0));\n\nconsole.log(Number(Number.POSITIVE_INFINITY));\n\nconsole.log(Number(Number.NEGATIVE_INFINITY));\n\nconsole.log(Number(Number.MAX_VALUE));\nconsole.log(Number(Number.MIN_VALUE));\n}\n",
+      "fixture": "function main(): void {\n// CHECK#1\nconsole.log(Number(NaN));\n\nconsole.log(Number(+0));\nconsole.log(Number(-0));\n\nconsole.log(Number(Number.POSITIVE_INFINITY));\n\nconsole.log(Number(Number.NEGATIVE_INFINITY));\n\nconsole.log(Number(Number.MAX_VALUE));\nconsole.log(Number(Number.MIN_VALUE));\n}\nmain();\n",
       "origin": "test/built-ins/Number/S9.3_A4.2_T1.js",
       "n_asserts": 7,
       "flags": []
@@ -1382,7 +1382,7 @@
       "id": "test262.test.built-ins.number.string-binary-literal-invalid",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number('0b2'));\nconsole.log(Number('00b0'));\nconsole.log(Number('0b'));\nconsole.log(Number('+0b1'));\nconsole.log(Number('-0b1'));\nconsole.log(Number('0b1.01'));\nconsole.log(Number('0b1e10'));\nconsole.log(Number('0b1e-10'));\nconsole.log(Number('0b1e+10'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number('0b2'));\nconsole.log(Number('00b0'));\nconsole.log(Number('0b'));\nconsole.log(Number('+0b1'));\nconsole.log(Number('-0b1'));\nconsole.log(Number('0b1.01'));\nconsole.log(Number('0b1e10'));\nconsole.log(Number('0b1e-10'));\nconsole.log(Number('0b1e+10'));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-binary-literal-invalid.js",
       "n_asserts": 9,
       "flags": []
@@ -1391,7 +1391,7 @@
       "id": "test262.test.built-ins.number.string-binary-literal",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number('0b0'));\nconsole.log(Number('0B0'));\nconsole.log(Number('0b00'));\nconsole.log(Number('0B00'));\n\nconsole.log(Number('0b1'));\nconsole.log(Number('0B1'));\nconsole.log(Number('0b01'));\nconsole.log(Number('0B01'));\n\nconsole.log(Number('0b10'));\nconsole.log(Number('0B10'));\nconsole.log(Number('0b010'));\nconsole.log(Number('0B010'));\n\nconsole.log(Number('0b11'));\nconsole.log(Number('0B11'));\nconsole.log(Number('0b011'));\nconsole.log(Number('0B011'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number('0b0'));\nconsole.log(Number('0B0'));\nconsole.log(Number('0b00'));\nconsole.log(Number('0B00'));\n\nconsole.log(Number('0b1'));\nconsole.log(Number('0B1'));\nconsole.log(Number('0b01'));\nconsole.log(Number('0B01'));\n\nconsole.log(Number('0b10'));\nconsole.log(Number('0B10'));\nconsole.log(Number('0b010'));\nconsole.log(Number('0B010'));\n\nconsole.log(Number('0b11'));\nconsole.log(Number('0B11'));\nconsole.log(Number('0b011'));\nconsole.log(Number('0B011'));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-binary-literal.js",
       "n_asserts": 16,
       "flags": []
@@ -1400,7 +1400,7 @@
       "id": "test262.test.built-ins.number.string-hex-literal-invalid",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number('0xG'));\nconsole.log(Number('00x0'));\nconsole.log(Number('0x'));\nconsole.log(Number('+0x10'));\nconsole.log(Number('-0x10'));\nconsole.log(Number('0x10.01'));\nconsole.log(Number('0x1e-10'));\nconsole.log(Number('0x1e+10'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number('0xG'));\nconsole.log(Number('00x0'));\nconsole.log(Number('0x'));\nconsole.log(Number('+0x10'));\nconsole.log(Number('-0x10'));\nconsole.log(Number('0x10.01'));\nconsole.log(Number('0x1e-10'));\nconsole.log(Number('0x1e+10'));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-hex-literal-invalid.js",
       "n_asserts": 8,
       "flags": []
@@ -1409,7 +1409,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bd-nsl-bd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0b0_1\"));\nconsole.log(Number(\"0B0_1\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0b0_1\"));\nconsole.log(Number(\"0B0_1\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-bil-bd-nsl-bd.js",
       "n_asserts": 2,
       "flags": []
@@ -1418,7 +1418,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bd-nsl-bds",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0b0_10\"));\nconsole.log(Number(\"0B0_10\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0b0_10\"));\nconsole.log(Number(\"0B0_10\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-bil-bd-nsl-bds.js",
       "n_asserts": 2,
       "flags": []
@@ -1427,7 +1427,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bds-nsl-bd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0b01_0\"));\nconsole.log(Number(\"0B01_0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0b01_0\"));\nconsole.log(Number(\"0B01_0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-bil-bds-nsl-bd.js",
       "n_asserts": 2,
       "flags": []
@@ -1436,7 +1436,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-bil-bds-nsl-bds",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0b01_00\"));\nconsole.log(Number(\"0B01_00\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0b01_00\"));\nconsole.log(Number(\"0B01_00\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-bil-bds-nsl-bds.js",
       "n_asserts": 2,
       "flags": []
@@ -1445,7 +1445,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dd-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e-1_0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e-1_0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dd-nsl-dd.js",
       "n_asserts": 1,
       "flags": []
@@ -1454,7 +1454,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dds-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e-10_0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e-10_0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dds-nsl-dd.js",
       "n_asserts": 1,
       "flags": []
@@ -1463,7 +1463,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dd-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e+1_0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e+1_0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dd-nsl-dd.js",
       "n_asserts": 1,
       "flags": []
@@ -1472,7 +1472,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dds-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e+10_0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1.0e+10_0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dds-nsl-dd.js",
       "n_asserts": 1,
       "flags": []
@@ -1481,7 +1481,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dd-nsl-dd-one-of",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1_0\"));\nconsole.log(Number(\"1_1\"));\nconsole.log(Number(\"1_2\"));\nconsole.log(Number(\"1_3\"));\nconsole.log(Number(\"1_4\"));\nconsole.log(Number(\"1_5\"));\nconsole.log(Number(\"1_6\"));\nconsole.log(Number(\"1_7\"));\nconsole.log(Number(\"1_8\"));\nconsole.log(Number(\"1_9\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1_0\"));\nconsole.log(Number(\"1_1\"));\nconsole.log(Number(\"1_2\"));\nconsole.log(Number(\"1_3\"));\nconsole.log(Number(\"1_4\"));\nconsole.log(Number(\"1_5\"));\nconsole.log(Number(\"1_6\"));\nconsole.log(Number(\"1_7\"));\nconsole.log(Number(\"1_8\"));\nconsole.log(Number(\"1_9\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dd-nsl-dd-one-of.js",
       "n_asserts": 10,
       "flags": []
@@ -1490,7 +1490,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dds-dot-dd-nsl-dd-ep-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"10.00_01e2\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"10.00_01e2\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dds-dot-dd-nsl-dd-ep-dd.js",
       "n_asserts": 1,
       "flags": []
@@ -1499,7 +1499,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dds-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"123456789_0\"));\nconsole.log(Number(\"123456789_1\"));\nconsole.log(Number(\"123456789_2\"));\nconsole.log(Number(\"123456789_3\"));\nconsole.log(Number(\"123456789_4\"));\nconsole.log(Number(\"123456789_5\"));\nconsole.log(Number(\"123456789_6\"));\nconsole.log(Number(\"123456789_7\"));\nconsole.log(Number(\"123456789_8\"));\nconsole.log(Number(\"123456789_9\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"123456789_0\"));\nconsole.log(Number(\"123456789_1\"));\nconsole.log(Number(\"123456789_2\"));\nconsole.log(Number(\"123456789_3\"));\nconsole.log(Number(\"123456789_4\"));\nconsole.log(Number(\"123456789_5\"));\nconsole.log(Number(\"123456789_6\"));\nconsole.log(Number(\"123456789_7\"));\nconsole.log(Number(\"123456789_8\"));\nconsole.log(Number(\"123456789_9\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dds-nsl-dd.js",
       "n_asserts": 10,
       "flags": []
@@ -1508,7 +1508,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dd-nsl-dd-ep",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\".0_1e2\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\".0_1e2\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dot-dd-nsl-dd-ep.js",
       "n_asserts": 1,
       "flags": []
@@ -1517,7 +1517,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dd-nsl-dds-ep",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\".1_01e2\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\".1_01e2\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dot-dd-nsl-dds-ep.js",
       "n_asserts": 1,
       "flags": []
@@ -1526,7 +1526,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dds-nsl-dd-ep",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\".10_1e2\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\".10_1e2\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dot-dds-nsl-dd-ep.js",
       "n_asserts": 1,
       "flags": []
@@ -1535,7 +1535,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-dot-dds-nsl-dds-ep",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\".00_01e2\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\".00_01e2\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-dot-dds-nsl-dds-ep.js",
       "n_asserts": 1,
       "flags": []
@@ -1544,7 +1544,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hd-nsl-hd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0x0_1\"));\nconsole.log(Number(\"0X0_1\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0x0_1\"));\nconsole.log(Number(\"0X0_1\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-hil-hd-nsl-hd.js",
       "n_asserts": 2,
       "flags": []
@@ -1553,7 +1553,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hd-nsl-hds",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0x0_10\"));\nconsole.log(Number(\"0X0_10\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0x0_10\"));\nconsole.log(Number(\"0X0_10\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-hil-hd-nsl-hds.js",
       "n_asserts": 2,
       "flags": []
@@ -1562,7 +1562,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hds-nsl-hd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0x01_0\"));\nconsole.log(Number(\"0X01_0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0x01_0\"));\nconsole.log(Number(\"0X01_0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-hil-hds-nsl-hd.js",
       "n_asserts": 2,
       "flags": []
@@ -1571,7 +1571,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-hds-nsl-hds",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0x01_00\"));\nconsole.log(Number(\"0X01_00\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0x01_00\"));\nconsole.log(Number(\"0X01_00\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-hil-hds-nsl-hds.js",
       "n_asserts": 2,
       "flags": []
@@ -1580,7 +1580,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-hil-od-nsl-od-one-of",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0x0_0\"));\nconsole.log(Number(\"0x1_1\"));\nconsole.log(Number(\"0x2_2\"));\nconsole.log(Number(\"0x3_3\"));\nconsole.log(Number(\"0x4_4\"));\nconsole.log(Number(\"0x5_5\"));\nconsole.log(Number(\"0x6_6\"));\nconsole.log(Number(\"0x7_7\"));\nconsole.log(Number(\"0x8_8\"));\nconsole.log(Number(\"0x9_9\"));\nconsole.log(Number(\"0xa_a\"));\nconsole.log(Number(\"0xb_b\"));\nconsole.log(Number(\"0xc_c\"));\nconsole.log(Number(\"0xd_d\"));\nconsole.log(Number(\"0xe_e\"));\nconsole.log(Number(\"0xf_f\"));\nconsole.log(Number(\"0xA_A\"));\nconsole.log(Number(\"0xB_B\"));\nconsole.log(Number(\"0xC_C\"));\nconsole.log(Number(\"0xD_D\"));\nconsole.log(Number(\"0xE_E\"));\nconsole.log(Number(\"0xF_F\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0x0_0\"));\nconsole.log(Number(\"0x1_1\"));\nconsole.log(Number(\"0x2_2\"));\nconsole.log(Number(\"0x3_3\"));\nconsole.log(Number(\"0x4_4\"));\nconsole.log(Number(\"0x5_5\"));\nconsole.log(Number(\"0x6_6\"));\nconsole.log(Number(\"0x7_7\"));\nconsole.log(Number(\"0x8_8\"));\nconsole.log(Number(\"0x9_9\"));\nconsole.log(Number(\"0xa_a\"));\nconsole.log(Number(\"0xb_b\"));\nconsole.log(Number(\"0xc_c\"));\nconsole.log(Number(\"0xd_d\"));\nconsole.log(Number(\"0xe_e\"));\nconsole.log(Number(\"0xf_f\"));\nconsole.log(Number(\"0xA_A\"));\nconsole.log(Number(\"0xB_B\"));\nconsole.log(Number(\"0xC_C\"));\nconsole.log(Number(\"0xD_D\"));\nconsole.log(Number(\"0xE_E\"));\nconsole.log(Number(\"0xF_F\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-hil-od-nsl-od-one-of.js",
       "n_asserts": 22,
       "flags": []
@@ -1589,7 +1589,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd-one-of",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1_0\"));\nconsole.log(Number(\"1_1\"));\nconsole.log(Number(\"2_2\"));\nconsole.log(Number(\"3_3\"));\nconsole.log(Number(\"4_4\"));\nconsole.log(Number(\"5_5\"));\nconsole.log(Number(\"6_6\"));\nconsole.log(Number(\"7_7\"));\nconsole.log(Number(\"8_8\"));\nconsole.log(Number(\"9_9\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1_0\"));\nconsole.log(Number(\"1_1\"));\nconsole.log(Number(\"2_2\"));\nconsole.log(Number(\"3_3\"));\nconsole.log(Number(\"4_4\"));\nconsole.log(Number(\"5_5\"));\nconsole.log(Number(\"6_6\"));\nconsole.log(Number(\"7_7\"));\nconsole.log(Number(\"8_8\"));\nconsole.log(Number(\"9_9\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-nzd-nsl-dd-one-of.js",
       "n_asserts": 10,
       "flags": []
@@ -1598,7 +1598,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1_1\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1_1\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-nzd-nsl-dd.js",
       "n_asserts": 1,
       "flags": []
@@ -1607,7 +1607,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-nzd-nsl-dds",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"1_0123456789\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"1_0123456789\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-nzd-nsl-dds.js",
       "n_asserts": 1,
       "flags": []
@@ -1616,7 +1616,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od-one-of",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0o0_0\"));\nconsole.log(Number(\"0o1_1\"));\nconsole.log(Number(\"0o2_2\"));\nconsole.log(Number(\"0o3_3\"));\nconsole.log(Number(\"0o4_4\"));\nconsole.log(Number(\"0o5_5\"));\nconsole.log(Number(\"0o6_6\"));\nconsole.log(Number(\"0o7_7\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0o0_0\"));\nconsole.log(Number(\"0o1_1\"));\nconsole.log(Number(\"0o2_2\"));\nconsole.log(Number(\"0o3_3\"));\nconsole.log(Number(\"0o4_4\"));\nconsole.log(Number(\"0o5_5\"));\nconsole.log(Number(\"0o6_6\"));\nconsole.log(Number(\"0o7_7\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-oil-od-nsl-od-one-of.js",
       "n_asserts": 8,
       "flags": []
@@ -1625,7 +1625,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-od",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0o0_1\"));\nconsole.log(Number(\"0O0_1\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0o0_1\"));\nconsole.log(Number(\"0O0_1\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-oil-od-nsl-od.js",
       "n_asserts": 2,
       "flags": []
@@ -1634,7 +1634,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-od-nsl-ods",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0o0_10\"));\nconsole.log(Number(\"0O0_10\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0o0_10\"));\nconsole.log(Number(\"0O0_10\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-oil-od-nsl-ods.js",
       "n_asserts": 2,
       "flags": []
@@ -1643,7 +1643,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-ods-nsl-od",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0o01_0\"));\nconsole.log(Number(\"0O01_0\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0o01_0\"));\nconsole.log(Number(\"0O01_0\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-oil-ods-nsl-od.js",
       "n_asserts": 2,
       "flags": []
@@ -1652,7 +1652,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-oil-ods-nsl-ods",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"0o01_00\"));\nconsole.log(Number(\"0O01_00\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"0o01_00\"));\nconsole.log(Number(\"0O01_00\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-oil-ods-nsl-ods.js",
       "n_asserts": 2,
       "flags": []
@@ -1661,7 +1661,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-sign-minus-dds-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"-123456789_0\"));\nconsole.log(Number(\"-123456789_1\"));\nconsole.log(Number(\"-123456789_2\"));\nconsole.log(Number(\"-123456789_3\"));\nconsole.log(Number(\"-123456789_4\"));\nconsole.log(Number(\"-123456789_5\"));\nconsole.log(Number(\"-123456789_6\"));\nconsole.log(Number(\"-123456789_7\"));\nconsole.log(Number(\"-123456789_8\"));\nconsole.log(Number(\"-123456789_9\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"-123456789_0\"));\nconsole.log(Number(\"-123456789_1\"));\nconsole.log(Number(\"-123456789_2\"));\nconsole.log(Number(\"-123456789_3\"));\nconsole.log(Number(\"-123456789_4\"));\nconsole.log(Number(\"-123456789_5\"));\nconsole.log(Number(\"-123456789_6\"));\nconsole.log(Number(\"-123456789_7\"));\nconsole.log(Number(\"-123456789_8\"));\nconsole.log(Number(\"-123456789_9\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-sign-minus-dds-nsl-dd.js",
       "n_asserts": 10,
       "flags": []
@@ -1670,7 +1670,7 @@
       "id": "test262.test.built-ins.number.string-numeric-separator-literal-sign-plus-dds-nsl-dd",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number(\"+123456789_0\"));\nconsole.log(Number(\"+123456789_1\"));\nconsole.log(Number(\"+123456789_2\"));\nconsole.log(Number(\"+123456789_3\"));\nconsole.log(Number(\"+123456789_4\"));\nconsole.log(Number(\"+123456789_5\"));\nconsole.log(Number(\"+123456789_6\"));\nconsole.log(Number(\"+123456789_7\"));\nconsole.log(Number(\"+123456789_8\"));\nconsole.log(Number(\"+123456789_9\"));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number(\"+123456789_0\"));\nconsole.log(Number(\"+123456789_1\"));\nconsole.log(Number(\"+123456789_2\"));\nconsole.log(Number(\"+123456789_3\"));\nconsole.log(Number(\"+123456789_4\"));\nconsole.log(Number(\"+123456789_5\"));\nconsole.log(Number(\"+123456789_6\"));\nconsole.log(Number(\"+123456789_7\"));\nconsole.log(Number(\"+123456789_8\"));\nconsole.log(Number(\"+123456789_9\"));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-numeric-separator-literal-sign-plus-dds-nsl-dd.js",
       "n_asserts": 10,
       "flags": []
@@ -1679,7 +1679,7 @@
       "id": "test262.test.built-ins.number.string-octal-literal-invald",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number('0o8'));\nconsole.log(Number('00o0'));\nconsole.log(Number('0o'));\nconsole.log(Number('+0o10'));\nconsole.log(Number('-0o10'));\nconsole.log(Number('0o10.01'));\nconsole.log(Number('0o1e10'));\nconsole.log(Number('0o1e-10'));\nconsole.log(Number('0o1e+10'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number('0o8'));\nconsole.log(Number('00o0'));\nconsole.log(Number('0o'));\nconsole.log(Number('+0o10'));\nconsole.log(Number('-0o10'));\nconsole.log(Number('0o10.01'));\nconsole.log(Number('0o1e10'));\nconsole.log(Number('0o1e-10'));\nconsole.log(Number('0o1e+10'));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-octal-literal-invald.js",
       "n_asserts": 9,
       "flags": []
@@ -1688,7 +1688,7 @@
       "id": "test262.test.built-ins.number.string-octal-literal",
       "category": "number",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Number('0o0'));\nconsole.log(Number('0O0'));\nconsole.log(Number('0o00'));\nconsole.log(Number('0O00'));\n\nconsole.log(Number('0o1'));\nconsole.log(Number('0O1'));\nconsole.log(Number('0o01'));\nconsole.log(Number('0O01'));\n\nconsole.log(Number('0o7'));\nconsole.log(Number('0O7'));\nconsole.log(Number('0o07'));\nconsole.log(Number('0O07'));\n\nconsole.log(Number('0o10'));\nconsole.log(Number('0O10'));\nconsole.log(Number('0o010'));\nconsole.log(Number('0O010'));\n\nconsole.log(Number('0o11'));\nconsole.log(Number('0O11'));\nconsole.log(Number('0o011'));\nconsole.log(Number('0O011'));\n\nconsole.log(Number('0o77'));\nconsole.log(Number('0O77'));\nconsole.log(Number('0o077'));\nconsole.log(Number('0O077'));\n}\n",
+      "fixture": "function main(): void {\nconsole.log(Number('0o0'));\nconsole.log(Number('0O0'));\nconsole.log(Number('0o00'));\nconsole.log(Number('0O00'));\n\nconsole.log(Number('0o1'));\nconsole.log(Number('0O1'));\nconsole.log(Number('0o01'));\nconsole.log(Number('0O01'));\n\nconsole.log(Number('0o7'));\nconsole.log(Number('0O7'));\nconsole.log(Number('0o07'));\nconsole.log(Number('0O07'));\n\nconsole.log(Number('0o10'));\nconsole.log(Number('0O10'));\nconsole.log(Number('0o010'));\nconsole.log(Number('0O010'));\n\nconsole.log(Number('0o11'));\nconsole.log(Number('0O11'));\nconsole.log(Number('0o011'));\nconsole.log(Number('0O011'));\n\nconsole.log(Number('0o77'));\nconsole.log(Number('0O77'));\nconsole.log(Number('0o077'));\nconsole.log(Number('0O077'));\n}\nmain();\n",
       "origin": "test/built-ins/Number/string-octal-literal.js",
       "n_asserts": 24,
       "flags": []
