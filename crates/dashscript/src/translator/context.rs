@@ -166,6 +166,16 @@ impl<'a> Ctx<'a> {
         self.names
     }
 
+    /// The type registry. A block-body arrow (`(x) => { … }`) translates its
+    /// statements via [`super::functions::translate_body`], which needs the
+    /// registry (mut-method / ref-param tables) the same way a named `fn` does —
+    /// so the expression layer reaches it through `Ctx` rather than a parallel
+    /// parameter threaded through every `translate_expr` call site.
+    #[must_use]
+    pub fn registry(&self) -> &'a TypeRegistry {
+        self.registry
+    }
+
     /// The type path of a local binding named `name`, if it is known.
     #[must_use]
     pub fn local_type(&self, name: &str) -> Option<&'a Path> {

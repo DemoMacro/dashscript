@@ -36,7 +36,7 @@ use oxc_ast::ast::{
 use proc_macro2::Span;
 use syn::{parse_quote, Expr, Pat, Type};
 
-use super::context::Ctx;
+use super::context::{Ctx, Narrow};
 use super::{bindings, types};
 
 /// Translate `expr` and cast it to number-flavor `to`. A numeric literal is
@@ -495,12 +495,32 @@ pub(in crate::translator) fn arrow_expr(
             }
         })
         .collect();
-    let body = if arrow.expression {
+    // An expression-body arrow (`() => expr`) lowers its single expression
+    // inline. A block-body arrow (`() => { … }`) is a function body in
+    // everything but syntax: its statements translate via `translate_body`
+    // with the same per-body `Locals` a named `fn` gets (params registered,
+    // mutations + number flavors analyzed), built once in `body_locals` — the
+    // shared source of truth, so an arrow body and an `fn` body never diverge.
+    let body: Expr = if arrow.expression {
         single_expression_body(&arrow.body)
             .map(|e| translate_expr(e, ctx))
             .unwrap_or_else(|| parse_quote!(::core::todo!()))
     } else {
-        parse_quote!(::core::todo!())
+        let mut locals = super::functions::body_locals(
+            &arrow.params,
+            Some(&*arrow.body),
+            ctx.registry(),
+            ctx.names(),
+        );
+        let block = super::functions::translate_body(
+            &arrow.body.statements[..],
+            &mut locals,
+            ctx.registry(),
+            &Narrow::default(),
+            None,
+            ctx.names(),
+        );
+        parse_quote!(#block)
     };
     parse_quote!(|#(#params),*| #body)
 }

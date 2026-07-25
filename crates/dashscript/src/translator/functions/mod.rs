@@ -385,45 +385,11 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
         .id
         .as_ref()
         .map_or_else(|| format_ident!("__ds_main"), |id| names.of_binding(id));
-    let mut locals = Locals::new();
-    for fp in &func.params.items {
-        register_local(
-            &mut locals,
-            &fp.pattern,
-            fp.type_annotation.as_deref(),
-            names,
-        );
-    }
-    // Mutations analysis runs before parameter emission so a reassigned parameter
-    // — including via `??=`/`||=`/`&&=` — is declared `mut`. TS params reassign;
-    // Rust params are immutable by default.
-    if let Some(body) = func.body.as_deref() {
-        let analysis = super::analysis::analyze(
-            &body.statements,
-            names,
-            &registry.mut_methods,
-            &registry.ref_params,
-        );
-        // Reference parameters: member-mutated but not rebound. Computed before
-        // moving `analysis.{mutated, member_mutated}` into locals below.
-        locals.ref_params = func
-            .params
-            .items
-            .iter()
-            .filter_map(|fp| {
-                let name = names.of_pattern(&fp.pattern).to_string();
-                (analysis.member_mutated.contains(&name) && !analysis.mutated.contains(&name))
-                    .then_some(name)
-            })
-            .collect();
-        locals.mutated = analysis.mutated;
-        locals.member_mutated = analysis.member_mutated;
-        locals.use_counts = analysis.use_counts;
-        // Number-flavor inference (i64 vs f64): which `number` locals hold
-        // only pure integers. Conservative — a `: number` annotation or any
-        // fractional / division / `Math.*` value forces `F64` in `flavor::infer`.
-        locals.number_flavors = super::flavor::infer(&body.statements, names);
-    }
+    // A named `fn` and a block-body arrow set up their body `Locals` the same
+    // way — register params, run mutation analysis, infer number flavors — so
+    // both go through [`body_locals`] (the single source of truth for "how a
+    // function body's locals are built").
+    let mut locals = body_locals(&func.params, func.body.as_deref(), registry, names);
     let inputs = translate_params(&func.params, &locals, names);
     // `void` / `undefined` map to an omitted return type (Rust infers `()`).
     let output = func
@@ -553,6 +519,62 @@ pub(in crate::translator) fn register_local(
     let Some(path) = path_of(&ty) else { return };
     let name = names.of_pattern(pattern);
     locals.insert(name.to_string(), path);
+}
+
+/// Build the per-body [`Locals`] for a function or a block-body arrow: register
+/// each parameter's declared type, then — when a body is present — run mutation
+/// analysis (so a reassigned `let` or param becomes `mut`) and number-flavor
+/// inference (so a pure-integer counter becomes `i64`). The single source of
+/// truth shared by [`translate_function`] and `arrow_expr`; a block-body arrow
+/// `(x) => { … }` is a function body in everything but syntax, so its locals are
+/// built identically. `body` is `None` only for an ambient (body-less) function
+/// declaration, which keeps its params but gathers no analysis.
+pub(in crate::translator) fn body_locals(
+    params: &oxc_ast::ast::FormalParameters,
+    body: Option<&oxc_ast::ast::FunctionBody>,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Locals {
+    let mut locals = Locals::new();
+    for fp in &params.items {
+        register_local(
+            &mut locals,
+            &fp.pattern,
+            fp.type_annotation.as_deref(),
+            names,
+        );
+    }
+    let Some(body) = body else {
+        return locals;
+    };
+    // Mutations analysis runs before parameter emission so a reassigned
+    // parameter — including via `??=`/`||=`/`&&=` — is declared `mut`. TS params
+    // reassign; Rust params are immutable by default.
+    let analysis = super::analysis::analyze(
+        &body.statements,
+        names,
+        &registry.mut_methods,
+        &registry.ref_params,
+    );
+    // Reference parameters: member-mutated but not rebound. Computed before
+    // moving `analysis.{mutated, member_mutated}` into locals below.
+    locals.ref_params = params
+        .items
+        .iter()
+        .filter_map(|fp| {
+            let name = names.of_pattern(&fp.pattern).to_string();
+            (analysis.member_mutated.contains(&name) && !analysis.mutated.contains(&name))
+                .then_some(name)
+        })
+        .collect();
+    locals.mutated = analysis.mutated;
+    locals.member_mutated = analysis.member_mutated;
+    locals.use_counts = analysis.use_counts;
+    // Number-flavor inference (i64 vs f64): which `number` locals hold only
+    // pure integers. Conservative — a `: number` annotation or any fractional /
+    // division / `Math.*` value forces `F64` in `flavor::infer`.
+    locals.number_flavors = super::flavor::infer(&body.statements, names);
+    locals
 }
 
 pub(in crate::translator) fn translate_body(
