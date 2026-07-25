@@ -66,7 +66,7 @@ impl Server {
     }
 
     /// Resolve an in-file reference to a local declaration — a function, type,
-    /// interface, or import binding — in the same `.ds` document.
+    /// interface, or import binding — in the same `.ts` document.
     fn definition_local(&self, uri: &Uri, text: &str, pos: Position) -> Option<Value> {
         let byte = text::position_to_byte(text, pos)?;
         let word = text::word_at(text, byte)?;

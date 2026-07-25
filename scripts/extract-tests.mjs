@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Extracts every `.ds` fixture from `crates/dashscript/src/translator/tests/*.rs`
+// Extracts every `.ts` fixture from `crates/dashscript/src/translator/tests/*.rs`
 // into `tests/conformance/data/tests-fixtures.json` — zero hand-written fixtures.
 //
 // Each `#[test]` there has a `let src = "..."` that is a verified-translatable
-// `.ds` snippet. The conformance runner cargo-checks each one (translator/tests
+// `.ts` snippet. The conformance runner cargo-checks each one (translator/tests
 // only asserts the translated Rust *contains* a substring — it never compiles
 // it), recording supported/partial/unsupported informationally. No `expect` is
 // emitted, so the run reports the current state without asserting it.
@@ -74,7 +74,7 @@ for (const f of files) {
 
 const doc = {
   _comment:
-    "Auto-extracted from translator/tests/*.rs by scripts/extract-tests.mjs. DO NOT edit by hand. Each entry is a verified-translatable .ds snippet; the conformance runner cargo-checks it. No `expect` — status is recorded informationally.",
+    "Auto-extracted from translator/tests/*.rs by scripts/extract-tests.mjs. DO NOT edit by hand. Each entry is a verified-translatable .ts snippet; the conformance runner cargo-checks it. No `expect` — status is recorded informationally.",
   features: fixtures,
 };
 writeFileSync(out, `${JSON.stringify(doc, null, 2)}\n`);

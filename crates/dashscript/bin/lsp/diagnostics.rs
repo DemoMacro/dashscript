@@ -1,4 +1,4 @@
-//! Translatability diagnostics: run `Translator::check` on a `.ds` document
+//! Translatability diagnostics: run `Translator::check` on a `.ts` document
 //! and publish the result as LSP diagnostics.
 
 use dashscript::Translator;

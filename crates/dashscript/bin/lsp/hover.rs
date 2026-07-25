@@ -2,7 +2,7 @@
 //! returns the type/doc markdown resolved from the crate's `~/.cargo` source.
 //! In-file (TS) symbols are left to the editor's TS LSP — `on_hover` returns
 //! `None` unless the cursor is on a `cargo:` import, so VS Code falls back to
-//! the TS LSP hover for everything else. This preserves the `.ds`-era
+//! the TS LSP hover for everything else. This preserves the
 //! zero-stub model: no `.d.ts`, crate types come straight from RA.
 
 use lsp_types::HoverParams;

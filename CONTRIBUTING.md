@@ -2,7 +2,7 @@
 
 Thanks for contributing! This guide covers the **workflow** for contributing and the **coding standards** that keep DashScript consistent.
 
-> DashScript compiles a TypeScript-flavored language (`.ds`) to native binaries via Rust: a Rust core (reusing oxc for parse/lint/format) plus a thin TypeScript CLI/npm surface.
+> DashScript compiles a TypeScript-flavored language (`.ts`) to native binaries via Rust: a Rust core (reusing oxc for parse/lint/format) plus a thin TypeScript CLI/npm surface.
 
 ## Development Setup
 
@@ -17,19 +17,27 @@ For the Rust core, `cargo build` / `cargo test` / `cargo clippy` apply to `crate
 
 Prerequisites: **Node.js 18+**, **pnpm 9+**, **Rust stable** (to build DashScript itself — the toolchain it ships to end users is separate and DashScript-managed).
 
-### Editor support — `.ds` in VS Code
+### Editor support — `.ts` in VS Code
 
-Syntax highlight, diagnostics, completions, go-to-definition, document symbols, hover, signature help, find references, and rename ship as a VS Code extension (`packages/vscode`) backed by the `ds lsp` server. After `pnpm install`:
+Editor support is a thin bridge over VS Code's built-in TypeScript server. The `packages/vscode` extension starts the shared `ds lsp` for what the native TS server cannot do (crate go-to-definition + translatability diagnostics), and the `@dashscript/typescript-plugin` handles `cargo:` imports. Syntax highlighting, completions, hover, signature help, document symbols, find references, and rename all come from VS Code's native TypeScript. After `pnpm install`:
 
 1. Put `ds` on your PATH: `cargo install --path crates/dashscript`.
-2. (Optional, for crate go-to-definition) Put `rust-analyzer` on your PATH: `rustup component add rust-analyzer`.
+2. (Required for crate go-to-definition) Put `rust-analyzer` on your PATH: `rustup component add rust-analyzer`.
 3. Build and install the extension:
    ```bash
    pnpm --filter dashscript-vscode package
    code --install-extension packages/vscode/dashscript-vscode-*.vsix
    ```
+4. Load the TypeScript plugin from the workspace — VS Code's bundled TS can't resolve a workspace plugin ([microsoft/vscode#232406](https://github.com/microsoft/vscode/issues/232406)), so pin the workspace TS once in `.vscode/settings.json`:
+   ```json
+   {
+     "js/ts.tsdk.path": "node_modules/typescript/lib",
+     "js/ts.tsdk.promptToUseWorkspaceVersion": true
+   }
+   ```
+   and declare the plugin in `tsconfig.json`: `"compilerOptions": { "plugins": [{ "name": "@dashscript/typescript-plugin" }] }`. Accept the "Use Workspace Version" prompt once.
 
-After install, opening any `.ds` file gives TS-based syntax highlight, real-time `ds check` diagnostics, completions, go-to-definition (in-file symbols and crate names via the rust-analyzer backend), a document-symbol outline, hover, signature help, find references, and rename. Find-references and rename are symbol-level — two same-named bindings in different scopes are never confused.
+After install, opening any `.ts` file gives native TS syntax highlight, completions, hover, references, and rename; `cargo:` imports resolve via the plugin (no TS2307, go-to-definition into `~/.cargo` source); and `ds check` translatability diagnostics surface inline.
 
 ## Contribution Workflow
 
@@ -78,15 +86,15 @@ packages/
 - ESM (`"type": "module"`), `strict` mode, no implicit `any`.
 - `vp check` (Oxlint + Oxfmt) is the source of truth for TS style.
 
-### DashScript source (`.ds`)
+### DashScript source (`.ts`)
 
-TypeScript-flavored surface. The mapping table is still growing — when adding `.ds` fixtures, follow TS conventions and keep samples minimal. Do not invent syntax the translator cannot yet map.
+TypeScript-flavored surface. The mapping table is still growing — when adding `.ts` fixtures, follow TS conventions and keep samples minimal. Do not invent syntax the translator cannot yet map.
 
 ### DashScript package (`package.json`)
 
 - Put Rust crate deps under **`dashscript.cargo.dependencies`** with bare crate names (`"serde": "1.0"` or `{ "version": "1.0", "features": [...] }`) — the same name `ds add cargo:<crate>` records (the `cargo:` prefix is optional). npm `dependencies` stay JS deps (→ `node_modules`) and never reach Cargo.toml.
 - Set `dashscript.target` to the output shape (`bin` default — native binary; `rust` — translated crate; `wasm`/`napi` planned); `--target` overrides it on `ds build`.
-- Declare executables under `bin` (package.json `bin` → cargo `[[bin]]`): a project is **one crate** — the whole directory's `.ds` files translate into `src/<stem>.rs`, and only the `bin`/`main` entries become cargo targets. `main` → `[lib]`; `dashscript.cargo.devDependencies` → `[dev-dependencies]`. A workspace root's shared metadata/deps inherit via `[workspace.package]`/`[workspace.dependencies]` (member `field.workspace = true`).
+- Declare executables under `bin` (package.json `bin` → cargo `[[bin]]`): a project is **one crate** — the whole directory's `.ts` files translate into `src/<stem>.rs`, and only the `bin`/`main` entries become cargo targets. `main` → `[lib]`; `dashscript.cargo.devDependencies` → `[dev-dependencies]`. A workspace root's shared metadata/deps inherit via `[workspace.package]`/`[workspace.dependencies]` (member `field.workspace = true`).
 - The package must round-trip cleanly: every `dashscript.cargo` dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
 
 ## Conformance / Support Matrix
@@ -141,19 +149,19 @@ Most changes fall into one of three shapes:
 
 | Change                     | Where                                    | Pattern                                                                                                                                                                       |
 | -------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **New AST → Rust mapping** | `translator/`                            | Add one rule for the AST node kind; add a `.ds` fixture; run `ds build --target rust` and `cargo check` the emitted Rust. Unmapped nodes must error, not silently miscompile. |
+| **New AST → Rust mapping** | `translator/`                            | Add one rule for the AST node kind; add a `.ts` fixture; run `ds build --target rust` and `cargo check` the emitted Rust. Unmapped nodes must error, not silently miscompile. |
 | **New package field**      | `package.rs`                             | Extend the `package.json` reader and the `Cargo.toml` emitter together; keep npm and `dashscript.cargo` deps separate; normalize versions.                                    |
-| **New bindgen target**     | `bindgen/`                               | Map a Rust construct (e.g. `struct`, `enum`, `trait`) to its `.ds` declaration so editor types stay correct.                                                                  |
+| **New bindgen target**     | `bindgen/`                               | Map a Rust construct (e.g. `struct`, `enum`, `trait`) to its `.d.ts` declaration so editor types stay correct.                                                                |
 | **New `ds` subcommand**    | `crates/dashscript` `bin/` + npm package | Wire a thin command to an existing core module; no logic in the CLI layer.                                                                                                    |
 
-Rule of thumb: **a new front-end construct must be mappable end-to-end** — a `.ds` feature that the translator cannot yet lower should fail loudly with a diagnostic, not produce Rust that won't compile.
+Rule of thumb: **a new front-end construct must be mappable end-to-end** — a `.ts` feature that the translator cannot yet lower should fail loudly with a diagnostic, not produce Rust that won't compile.
 
 ## Pull Request Checklist
 
 - [ ] `vp check` passes
 - [ ] `pnpm build` succeeds for the changed package
 - [ ] `cargo test` + `cargo clippy` pass for the core crate
-- [ ] Any new AST mapping has a `.ds` fixture whose emitted Rust (`ds build --target rust`) passes `cargo check`
+- [ ] Any new AST mapping has a `.ts` fixture whose emitted Rust (`ds build --target rust`) passes `cargo check`
 - [ ] Naming & patterns follow the standards above
 - [ ] Changes are minimal and focused — match existing style
 - [ ] No translation logic added to `bin/` or the npm package (it belongs in the library, `src/`)

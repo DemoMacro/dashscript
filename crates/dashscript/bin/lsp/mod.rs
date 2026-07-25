@@ -8,7 +8,7 @@
 //! - [`hover`] crate type/doc hover — the same `cargo:` symbol is forwarded to
 //!   rust-analyzer, which returns the type markdown from the crate source.
 //!   Non-`cargo:` (TS) symbols return `None`, so VS Code falls back to its TS
-//!   LSP hover: the `.ds`-era zero-stub model — no `.d.ts`, types from RA.
+//!   LSP hover: the zero-stub model — no `.d.ts`, types from RA.
 //! - [`diagnostics`] translatability diagnostics (`Translator::check`).
 //!
 //! The TS-side features the old server grew (completion/references/
@@ -79,7 +79,7 @@ fn server_capabilities() -> ServerCapabilities {
 
 struct Server {
     conn: Connection,
-    /// uri string → latest `.ds` text. String keys sidestep `Uri`'s interior
+    /// uri string → latest `.ts` text. String keys sidestep `Uri`'s interior
     /// mutability (which trips clippy::mutable_key_type in a HashMap).
     docs: HashMap<String, String>,
     ra_path: String,
@@ -162,7 +162,7 @@ impl Server {
         }
     }
 
-    /// Emit the `.ds` text to a cache Cargo project and tell rust-analyzer
+    /// Emit the `.ts` text to a cache Cargo project and tell rust-analyzer
     /// about the resulting Rust file (`src/<stem>.rs` in project mode,
     /// `src/main.rs` for a lone file). Errors are swallowed — diagnostics and
     /// go-to-definition degrade gracefully when emission or the backend fails.

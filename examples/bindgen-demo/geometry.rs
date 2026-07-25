@@ -1,4 +1,4 @@
-// A Rust source file whose public surface becomes a `.ds` declaration via
+// A Rust source file whose public surface becomes a `.d.ts` declaration via
 // `ds add`. Run:  ds add examples/bindgen-demo/geometry.rs
 
 pub struct Point {

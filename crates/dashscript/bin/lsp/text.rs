@@ -46,8 +46,8 @@ pub(super) fn is_ident_byte(b: u8) -> bool {
     b.is_ascii_alphanumeric() || b == b'_'
 }
 
-/// An LSP `Position` (0-based line/character) → a `.ds` byte offset. The
-/// character column is counted in Unicode scalars; `.ds` sources are ASCII
+/// An LSP `Position` (0-based line/character) → a `.ts` byte offset. The
+/// character column is counted in Unicode scalars; `.ts` sources are ASCII
 /// where this matters, so it agrees with the UTF-16 the protocol specifies.
 pub(super) fn position_to_byte(text: &str, pos: Position) -> Option<usize> {
     let mut line = 0u32;
@@ -89,7 +89,7 @@ pub(super) fn uri_to_path(uri: &Uri) -> Option<PathBuf> {
     url::Url::parse(uri.as_str()).ok()?.to_file_path().ok()
 }
 
-/// The cache Rust file for a `.ds` source: `src/<stem>.rs` (project mode — one
+/// The cache Rust file for a `.ts` source: `src/<stem>.rs` (project mode — one
 /// Rust file per bin) when present, else `src/main.rs` (lone-file mode). Lets
 /// the language server point rust-analyzer at the right file in either mode.
 pub(super) fn rust_file_for(cache: &Path, src_path: &Path) -> PathBuf {
@@ -123,7 +123,7 @@ mod tests {
         std::fs::create_dir_all(cache.join("src")).unwrap();
         std::fs::write(cache.join("src").join("numbers.rs"), "").unwrap();
         assert_eq!(
-            rust_file_for(cache, Path::new("numbers.ds")),
+            rust_file_for(cache, Path::new("numbers.ts")),
             cache.join("src").join("numbers.rs")
         );
     }
@@ -135,7 +135,7 @@ mod tests {
         std::fs::create_dir_all(cache.join("src")).unwrap();
         // No src/<stem>.rs → lone-file mode picks src/main.rs.
         assert_eq!(
-            rust_file_for(cache, Path::new("numbers.ds")),
+            rust_file_for(cache, Path::new("numbers.ts")),
             cache.join("src").join("main.rs")
         );
     }
