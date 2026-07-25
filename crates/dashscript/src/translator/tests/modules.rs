@@ -544,8 +544,9 @@ fn top_level_main_call_passes_check() {
 
 #[test]
 fn translate_with_deps_module_emits_no_main() {
-    // 模块角色（架构决策点 8）：模块只声明，不执行 —— 无 `fn main`。一个导出
-    // 函数的模块文件翻译成 crate 内模块（src/<stem>.rs），由 entry 经 `mod` 引入。
+    // Module role (arch decision point 8): a module only declares, never
+    // executes — no `fn main`. A module file exporting a function translates to
+    // a crate-internal module (src/<stem>.rs), brought in by the entry via `mod`.
     let rust = Translator::new()
         .translate_with_deps_as(
             "export function helper(x: number): number { return x * 2; }",
@@ -562,7 +563,8 @@ fn translate_with_deps_module_emits_no_main() {
 
 #[test]
 fn translate_with_deps_bin_entry_emits_main_for_declarations_only() {
-    // bin entry 即使只有声明也生成空 `fn main`（cargo bin target 必需入口）。
+    // A bin entry emits an empty `fn main` even when it is declarations-only
+    // (a cargo bin target requires an entry).
     let rust = Translator::new()
         .translate_with_deps_as(
             "function helper(x: number): number { return x * 2; }",
@@ -578,8 +580,10 @@ fn translate_with_deps_bin_entry_emits_main_for_declarations_only() {
 
 #[test]
 fn translate_with_deps_module_rejects_top_level_executable() {
-    // 模块角色 + 顶层可执行语句（`console.log`）→ Err：模块不执行，顶层语句
-    // 无入口可入（Node 的 module 只 export，不跑顶层语句）。拒绝而非静默丢弃。
+    // Module role + a top-level executable statement (`console.log`) → Err: a
+    // module does not execute, and top-level statements have no entry to run in
+    // (a Node module only exports; it does not run top-level statements). Reject
+    // rather than silently drop.
     let err = Translator::new()
         .translate_with_deps_as(
             "export function helper(): void {}\nconsole.log(1);",
@@ -589,5 +593,90 @@ fn translate_with_deps_module_rejects_top_level_executable() {
     assert!(
         err.contains("module file may only declare"),
         "wrong error: {err}"
+    );
+}
+
+#[test]
+fn new_worker_emits_isolate_spawn() {
+    // Direction D (D1): `new Worker(handler)` lowers to `__ds::Worker::new(handler)`
+    // — an isolate thread runs the handler, fed by the main thread via postMessage.
+    // `postMessage` goes through the generic member-name mapping (snake_case →
+    // post_message); the runtime flags RuntimeDep::Worker.
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(
+            "const w = new Worker((msg: number): void => { console.log(msg); });\n\
+             w.postMessage(42);",
+        )
+        .expect("should translate");
+    assert!(
+        rust.contains("__ds::Worker::new"),
+        "worker spawn not emitted: {rust}"
+    );
+    assert!(
+        rust.contains("w.post_message"),
+        "postMessage not snake_cased to post_message: {rust}"
+    );
+    assert!(deps.needs_worker(), "worker runtime dep not flagged");
+}
+
+#[test]
+fn new_worker_with_reply_emits_bidirectional_spawn() {
+    // Direction D (D2): a handler with a second `reply` parameter →
+    // `new_with_reply` (bidirectional). The worker replies via `reply.send(v)`;
+    // main blocks on `recv()`. The arch's D2 mapping of `worker.on('message')`
+    // ← `mpsc::Receiver::recv()` (synchronous fn main, no event loop).
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(
+            "const w = new Worker((msg: number, reply: unknown): void => {\n\
+             \x20    reply.send(msg * 2);\n\
+             \x20});\n\
+             w.postMessage(21);\n\
+             const r: number = w.recv();\n\
+             console.log(r);",
+        )
+        .expect("should translate");
+    assert!(
+        rust.contains("__ds::Worker::new_with_reply"),
+        "bidirectional spawn not emitted: {rust}"
+    );
+    assert!(rust.contains("reply.send"), "reply.send not mapped: {rust}");
+    assert!(rust.contains("w.recv()"), "recv not emitted: {rust}");
+    assert!(deps.needs_worker(), "worker runtime dep not flagged");
+}
+
+#[test]
+fn new_worker_one_arg_handler_stays_d1() {
+    // A one-argument handler stays on the D1 one-way `new` (not mis-promoted to
+    // new_with_reply).
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps("const w = new Worker((msg: number): void => { console.log(msg); });")
+        .expect("should translate");
+    assert!(
+        rust.contains("__ds::Worker::new(") && !rust.contains("new_with_reply"),
+        "one-arg handler should stay D1 new: {rust}"
+    );
+}
+
+#[test]
+fn new_worker_reply_turbofish_anchors_message_type() {
+    // Direction D (D2): the handler's first-param type annotation (`: number`)
+    // → turbofish `new_with_reply::<f64, _>`. The worker deserializes each
+    // message to A, but the closure body alone cannot pin A (the generic
+    // `reply.send(msg * 2)` does not anchor `msg`'s type), so the annotation is
+    // the anchor — avoids E0283.
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(
+            "const w = new Worker((msg: number, reply: unknown): void => {\n\
+             \x20    reply.send(msg * 2);\n\
+             \x20});",
+        )
+        .expect("should translate");
+    // prettyplease expands the turbofish across multiple lines (`::<\n    f64,\n    _,\n>`),
+    // so whitespace is normalized before asserting `new_with_reply::<f64,_>`
+    // to avoid indent sensitivity.
+    let flat: String = rust.chars().filter(|c| !c.is_whitespace()).collect();
+    assert!(
+        flat.contains("new_with_reply::<f64"),
+        "turbofish not anchoring message type f64: {rust}"
     );
 }

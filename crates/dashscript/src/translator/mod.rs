@@ -64,18 +64,26 @@ pub enum RuntimeDep {
     /// implementation of ECMAScript Temporal). Routes through `temporal_rs::`
     /// directly; no `__ds` helper slice.
     Temporal,
+    /// A Web Worker–style isolate (Direction D, D1): `new Worker(handler)` spawns a
+    /// thread running `handler` for each message the main thread sends via
+    /// `postMessage`. Pure Rust stack — no JS engine in the worker (decision
+    /// point 10 MVP); messages cross the thread boundary as JSON (`serde_json`),
+    /// so any `Serialize`/`DeserializeOwned` value works. Routes through
+    /// `__ds::Worker`; reuses `serde_json` (no separate crate).
+    Worker,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 6] = [
+    const ALL: [RuntimeDep; 7] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
         RuntimeDep::ArrayHelper,
         RuntimeDep::Regress,
         RuntimeDep::Temporal,
+        RuntimeDep::Worker,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -88,27 +96,38 @@ impl RuntimeDep {
             RuntimeDep::ArrayHelper => Some("__ds::array_set"),
             RuntimeDep::Regress => Some("__ds::regex"),
             RuntimeDep::Temporal => Some("temporal_rs::"),
+            RuntimeDep::Worker => Some("__ds::Worker"),
             RuntimeDep::Engine => None,
         }
     }
 
-    /// The cargo dependency `(<pkg>, <req>)` to append, if this dep needs a
-    /// crate. `None` for `ArrayHelper` (pure `std`).
-    fn cargo(self) -> Option<(&'static str, &'static str)> {
+    /// The cargo dependencies to append, if this dep needs any crate(s). A slice
+    /// because one runtime dep can pull more than one crate (`Worker` needs both
+    /// `serde` — the trait bounds `Serialize`/`DeserializeOwned` — and
+    /// `serde_json` for the actual marshal). `append_dep` is idempotent, so an
+    /// overlap with another dep (or a user-declared `cargo:serde_json`) is a
+    /// no-op, not a duplicate. `None` for `ArrayHelper` (pure `std`).
+    fn cargo(self) -> Option<&'static [(&'static str, &'static str)]> {
         match self {
             // The crates.io package is `ryu-js` (hyphen); Rust exposes it as
             // `ryu_js` (underscore) in `use`, so the Cargo.toml key uses the
             // package name.
-            RuntimeDep::RyuJs => Some(("ryu-js", "\"1.0\"")),
-            RuntimeDep::SerdeJson => Some(("serde_json", "\"1\"")),
+            RuntimeDep::RyuJs => Some(&[("ryu-js", "\"1.0\"")]),
+            RuntimeDep::SerdeJson => Some(&[("serde_json", "\"1\"")]),
             // `rquickjs` bundles QuickJS-NG C sources (compiled via `cc`), so
             // it is only emitted for programs that opt into the engine path.
-            RuntimeDep::Engine => Some(("rquickjs", "\"0.12\"")),
-            RuntimeDep::Regress => Some(("regress", "\"0.11\"")),
+            RuntimeDep::Engine => Some(&[("rquickjs", "\"0.12\"")]),
+            RuntimeDep::Regress => Some(&[("regress", "\"0.11\"")]),
             // `temporal_rs` (boa-dev/temporal-rs) — the Rust implementation of
             // ECMAScript Temporal. Default features embed time-zone data
             // (`compiled_data`) so `Temporal.Now`/`ZonedDateTime` work standalone.
-            RuntimeDep::Temporal => Some(("temporal_rs", "\"0.2\"")),
+            RuntimeDep::Temporal => Some(&[("temporal_rs", "\"0.2\"")]),
+            // `Worker` marshals messages as JSON. The handler's message type is
+            // bounded `serde::Serialize`/`DeserializeOwned` (the trait, for
+            // type-safe `from_value`/`to_value`), so `serde` is needed alongside
+            // `serde_json` — the default crate exposes the traits (no `derive`
+            // feature: the helper bounds generic params, it does not derive).
+            RuntimeDep::Worker => Some(&[("serde", "\"1\""), ("serde_json", "\"1\"")]),
             RuntimeDep::ArrayHelper => None,
         }
     }
@@ -120,6 +139,7 @@ impl RuntimeDep {
             RuntimeDep::ArrayHelper => Some(ARRAY_HELPER),
             RuntimeDep::Regress => Some(REGRESS_HELPERS),
             RuntimeDep::SerdeJson | RuntimeDep::Engine | RuntimeDep::Temporal => None,
+            RuntimeDep::Worker => Some(WORKER_HELPER),
         }
     }
 }
@@ -178,6 +198,10 @@ impl RuntimeDeps {
     pub fn needs_temporal(&self) -> bool {
         self.has(RuntimeDep::Temporal)
     }
+    /// A `new Worker(handler)` spawns a worker thread (Direction D).
+    pub fn needs_worker(&self) -> bool {
+        self.has(RuntimeDep::Worker)
+    }
 
     /// Union another dep set into this one — a project links a runtime dep if
     /// any of its translated files does.
@@ -222,8 +246,10 @@ impl RuntimeDeps {
     pub fn apply_to_cargo_toml(&self, cargo_toml: &mut String) {
         for d in RuntimeDep::ALL {
             if self.has(d) {
-                if let Some((pkg, req)) = d.cargo() {
-                    append_dep(cargo_toml, pkg, req);
+                if let Some(deps) = d.cargo() {
+                    for &(pkg, req) in deps {
+                        append_dep(cargo_toml, pkg, req);
+                    }
                 }
             }
         }
@@ -291,6 +317,136 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
     } else {
         arr.resize(idx + 1, T::default());
         arr[idx] = v;
+    }
+}
+";
+
+/// ES Web Worker–style isolate (Direction D, D1). `new Worker(handler)` spawns a
+/// thread that runs `handler(msg)` for each message the main thread sends via
+/// `post_message`. Messages cross the thread boundary as JSON (serde), so any
+/// `Serialize`/`DeserializeOwned` value works; the handler runs on the worker
+/// thread, so its stdout (`console.log`) shares the process's. Pure Rust stack
+/// — no JS engine in the worker (decision point 10 MVP). `Drop` closes the
+/// channel (ending the worker's receive loop) then joins the thread, so a
+/// posted message is guaranteed processed before the process exits.
+///
+/// D2 bidirectional: a handler with a second `reply` parameter
+/// (`new Worker((msg, reply) => { reply.send(v); })`) spawns via
+/// `new_with_reply`, which gives the worker a `Reply` sink on a second
+/// (worker→main) channel; main reads it with `recv` (the arch's D2 mapping of
+/// `worker.on('message')` to a blocking `mpsc::Receiver::recv`). A one-arg
+/// handler stays on the D1 one-way `new`. File-based `new Worker('./w.ts')`
+/// (worker-entry translation + build-time dep scan) is a later batch that
+/// reuses this runtime.
+const WORKER_HELPER: &str = "\
+use std::sync::mpsc::{channel, Receiver, Sender};
+use std::thread::{spawn, JoinHandle};
+
+/// A reply sink the worker calls to send a message back to main (D2). The
+/// handler's second parameter binds to this; `send` serializes and posts on the
+/// worker→main channel, which main reads via [`Worker::recv`]. Named `send` so
+/// DashScript `reply.send(v)` maps through the generic member-expr path.
+pub struct Reply {
+    tx: Sender<serde_json::Value>,
+}
+
+impl Reply {
+    /// Post a reply to main (serialized to JSON). A serialize failure or a
+    /// closed channel is silently dropped (the worker is an isolate, MVP).
+    #[inline]
+    pub fn send<A: serde::Serialize>(&self, msg: A) {
+        if let Ok(val) = serde_json::to_value(&msg) {
+            let _ = self.tx.send(val);
+        }
+    }
+}
+
+/// A Web Worker–style isolate: a spawned thread running a message handler, fed
+/// by a main→worker mpsc channel (D1), and optionally a worker→main reply
+/// channel (D2). The sender, reply receiver, and handle are `Option`s so `Drop`
+/// can take them — close the channel, then join.
+pub struct Worker {
+    tx: Option<Sender<serde_json::Value>>,
+    reply_rx: Option<Receiver<serde_json::Value>>,
+    handle: Option<JoinHandle<()>>,
+}
+
+impl Worker {
+    /// D1 one-way: spawn a worker that invokes `handler(msg)` for each message
+    /// received. `A` is the message type (deserialized from JSON).
+    pub fn new<A, F>(handler: F) -> Self
+    where
+        A: serde::de::DeserializeOwned,
+        F: Fn(A) + Send + 'static,
+    {
+        let (tx, rx) = channel::<serde_json::Value>();
+        let handle = spawn(move || {
+            for msg in rx.iter() {
+                if let Ok(a) = serde_json::from_value::<A>(msg) {
+                    handler(a);
+                }
+            }
+        });
+        Worker { tx: Some(tx), reply_rx: None, handle: Some(handle) }
+    }
+
+    /// D2 bidirectional: spawn a worker that invokes `handler(msg, reply)`. The
+    /// handler calls `reply.send(v)` to post a reply main reads via [`recv`].
+    /// `Reply` is cloned per message (its `Sender` is `Clone`).
+    pub fn new_with_reply<A, F>(handler: F) -> Self
+    where
+        A: serde::de::DeserializeOwned,
+        F: Fn(A, Reply) + Send + 'static,
+    {
+        let (tx, rx) = channel::<serde_json::Value>();
+        let (reply_tx, reply_rx) = channel::<serde_json::Value>();
+        let handle = spawn(move || {
+            for msg in rx.iter() {
+                if let Ok(a) = serde_json::from_value::<A>(msg) {
+                    handler(a, Reply { tx: reply_tx.clone() });
+                }
+            }
+        });
+        Worker { tx: Some(tx), reply_rx: Some(reply_rx), handle: Some(handle) }
+    }
+
+    /// Send a message to the worker (main → worker). ES `postMessage`. A
+    /// serialize failure or a closed channel is silently dropped — the worker
+    /// is an isolate, so the sender does not learn of delivery (MVP).
+    #[inline]
+    pub fn post_message<A: serde::Serialize>(&self, msg: A) {
+        if let (Some(tx), Ok(val)) = (&self.tx, serde_json::to_value(&msg)) {
+            let _ = tx.send(val);
+        }
+    }
+
+    /// Block for one reply from the worker (worker → main). The arch's D2
+    /// mapping of `worker.on('message')` to a blocking `mpsc::Receiver::recv`
+    /// (DashScript's `fn main` is synchronous — no event loop). Panics if this
+    /// is a one-way (D1) worker with no reply channel, or the worker closed
+    /// without replying. `B` is inferred from the call's context — annotate the
+    /// binding (`const r: number = w.recv()`) when Rust cannot infer it.
+    pub fn recv<B: serde::de::DeserializeOwned>(&self) -> B {
+        let rx = self
+            .reply_rx
+            .as_ref()
+            .expect(\"Worker::recv on a one-way (D1) worker — use new_with_reply\");
+        let msg = rx.recv().expect(\"worker closed without replying\");
+        serde_json::from_value::<B>(msg).expect(\"reply failed to deserialize\")
+    }
+}
+
+impl Drop for Worker {
+    fn drop(&mut self) {
+        // Close the sender first so the worker's `rx.iter()` ends, then join so
+        // a posted message is guaranteed processed before the process exits. A
+        // handler panic surfaces via `join`'s `Err` (re-panic, matching a worker
+        // that throws uncaught). `reply_rx` drops with the Worker — pending
+        // un-received replies are lost (main didn't recv them).
+        drop(self.tx.take());
+        if let Some(handle) = self.handle.take() {
+            let _ = handle.join();
+        }
     }
 }
 ";
@@ -861,9 +1017,11 @@ impl Translator {
                 items.push(main_item);
             }
             FileRole::Module => {
-                // 模块语义（架构决策点 8）：模块只声明，不执行。顶层可执行
-                // 语句无 `fn main` 可入（Node 的 module 只 export，不跑顶层
-                // 语句除非它是入口）—— 拒绝，而非静默丢弃它们的副作用。
+                // Module semantics (arch decision point 8): a module only
+                // declares, never executes. Top-level executable statements have
+                // no `fn main` to run in (a Node module only exports; it does
+                // not run top-level statements unless it is an entry) — reject,
+                // rather than silently dropping their side effects.
                 if !exec_stmts.is_empty() {
                     return Err(
                         "a module file may only declare (function / class / interface / \
@@ -873,8 +1031,8 @@ impl Translator {
                             .into(),
                     );
                 }
-                // declarations-only：crate 内模块（src/<stem>.rs），无 `fn main`，
-                // 由 entry 经 `mod <stem>;` 引入。
+                // declarations-only: a crate-internal module (src/<stem>.rs)
+                // with no `fn main`, brought in by the entry via `mod <stem>;`.
             }
         }
         let file = syn::File {

@@ -1,10 +1,11 @@
 //! `new Foo(args)` → `Foo::new(args)`.
-use oxc_ast::ast::{Expression, NewExpression};
+use oxc_ast::ast::{Argument, Expression, NewExpression};
 use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
 use super::super::builtins;
 use super::super::context::Ctx;
+use super::super::types;
 use super::array_elem_arg;
 
 /// `new Foo(args)` → `Foo::new(args)`. Only an identifier callee (a user class)
@@ -24,6 +25,18 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 return e;
             }
         }
+        // `new Worker(handler)` — a Web Worker isolate (Direction D, D1): spawns a
+        // thread running `handler` for each message received. Lowered before
+        // the generic `Foo::new` path (which would emit `Worker::new` — E0425,
+        // `Worker` is the runtime type, not a user class). File-based
+        // `new Worker('./w.ts')` (worker-entry translation + build-time dep
+        // scan) is a later batch reusing this runtime.
+        if id.name.as_str() == "Worker" {
+            if let Some(arg) = n.arguments.first() {
+                let handler = array_elem_arg(arg, ctx);
+                return worker_ctor(arg, handler);
+            }
+        }
     }
     let Some(name) = class_name(&n.callee) else {
         return parse_quote!(::core::todo!());
@@ -40,6 +53,40 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
     // where `i` is an `i64` counter) is site-cast via `array_elem_arg`.
     let args: Vec<Expr> = n.arguments.iter().map(|a| array_elem_arg(a, ctx)).collect();
     parse_quote!(#name::new(#(#args),*))
+}
+
+/// `new Worker(handler)` constructor selection (Direction D).
+///
+/// - D1 one-way: a 1-arg handler `(msg) => { … }` → `Worker::new`.
+/// - D2 bidirectional: a 2-arg handler `(msg, reply) => { reply.send(v); }` →
+///   `Worker::new_with_reply`, so the worker can reply and main reads it via
+///   `recv`.
+///
+/// The first param's type annotation is threaded through as a turbofish
+/// `new_with_reply::<A, _>`: the worker deserializes each incoming message to
+/// `A`, but the closure body alone may not pin `A` (e.g. `reply.send(msg * 2)`
+/// — the generic `send` does not anchor `msg`'s type), so the `: number`
+/// annotation is the anchor. An untyped 2-arg handler falls back to
+/// `new_with_reply` and surfaces at `cargo check` if `A` stays ambiguous. Only
+/// an inline arrow's arity is inspected; a named-function handler (an
+/// identifier) defaults to one-way.
+fn worker_ctor(arg: &Argument, handler: Expr) -> Expr {
+    let Argument::ArrowFunctionExpression(a) = arg else {
+        return parse_quote!(crate::__ds::Worker::new(#handler));
+    };
+    if a.params.items.len() < 2 {
+        return parse_quote!(crate::__ds::Worker::new(#handler));
+    }
+    let msg_ty = a
+        .params
+        .items
+        .first()
+        .and_then(|p| p.type_annotation.as_deref())
+        .map(|ta| types::translate_type(&ta.type_annotation));
+    match msg_ty {
+        Some(ty) => parse_quote!(crate::__ds::Worker::new_with_reply::<#ty, _>(#handler)),
+        None => parse_quote!(crate::__ds::Worker::new_with_reply(#handler)),
+    }
 }
 
 /// The class type name when `callee` is a plain identifier (`Foo`).
