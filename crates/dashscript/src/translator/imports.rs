@@ -227,10 +227,16 @@ fn render_param(p: &ParamInfo) -> String {
     }
 }
 
-/// Whether the `.ts` source declares a top-level `function main()` — the
-/// entry point a `[[bin]]` target compiles. Used by `ds build`/`ds run` (a bin
-/// must have `main`) and the conformance harness. AST-level, so a `main_loop`
-/// helper or a `"fn main"` string literal never trips a substring match.
+/// Whether the `.ts` source declares a top-level `function main()`.
+///
+/// Under pure-TS execution semantics, `function main` is an ordinary
+/// declaration — it is renamed `__ds_main` and does **not** itself become the
+/// cargo entry. The translator always emits an implicit `fn main` that collects
+/// the file's top-level executable statements (empty for a declarations-only
+/// file). This predicate therefore no longer decides whether a binary entry
+/// exists; it only reports whether a binding literally named `main` was
+/// declared, for callers that still want that signal. AST-level, so a
+/// `main_loop` helper or a `"fn main"` string literal never trips a match.
 pub(crate) fn has_main(source: &str) -> bool {
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();

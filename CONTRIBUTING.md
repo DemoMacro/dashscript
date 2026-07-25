@@ -90,6 +90,8 @@ packages/
 
 TypeScript-flavored surface. The mapping table is still growing — when adding `.ts` fixtures, follow TS conventions and keep samples minimal. Do not invent syntax the translator cannot yet map.
 
+**Execution model — pure-TS semantics.** A `.ts` file runs like a Node script: top-level declarations (`function`/`class`/`interface`/`type`/`import`/`export`) become Rust items and do **not** execute; top-level executable statements (`const`/`let`, expression statements, control flow, `throw`) run in source order, collected into an implicit `fn main` the translator emits. A file with only declarations emits an empty `fn main` (the way Node runs a script that defines functions but never calls them). `function main` is therefore an ordinary declaration — it is renamed `__ds_main` so it cannot collide with the cargo entry; to run it, call it explicitly at the top level (`main();`). A top-level binding referenced from inside a `function` would close over an `fn main` local (impossible for a Rust fn item) and is flagged `unsupported` — move the binding into the function, or call the function from the top level.
+
 ### DashScript package (`package.json`)
 
 - Put Rust crate deps under **`dashscript.cargo.dependencies`** with bare crate names (`"serde": "1.0"` or `{ "version": "1.0", "features": [...] }`) — the same name `ds add cargo:<crate>` records (the `cargo:` prefix is optional). npm `dependencies` stay JS deps (→ `node_modules`) and never reach Cargo.toml.
@@ -123,14 +125,14 @@ DASH_TEST262_CATEGORIES=math,number,string,array,object,json cargo test -p dashs
 
 Each run rewrites `tests/conformance/matrix/` — one `test262-<cat>.{md,json}` per run category, plus `translator-tests.{md,json}`, `correctness.{md,json}`, and a `README.md` index (the project's ECMAScript-conformance scorecard). Only `correctness.json` entries are asserted; the others are recorded informationally — the partials they surface are the actionable output.
 
-**Adding a correctness case** — append to `data/correctness.json` (the fixture must declare `function main()`):
+**Adding a correctness case** — append to `data/correctness.json`. The fixture must declare `function main()` **and call it** (`main();` at the end), because under pure-TS semantics a declaration alone does not run:
 
 ```json
 {
   "id": "correctness.array_join",
   "category": "correctness",
   "source": "manual",
-  "fixture": "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs.join(\"-\")); }",
+  "fixture": "function main(): void { const xs: number[] = [1, 2, 3]; console.log(xs.join(\"-\")); }\nmain();",
   "expect": "supported",
   "expect_output": "1-2-3",
   "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"

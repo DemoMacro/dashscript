@@ -863,9 +863,14 @@ impl Translator {
         imports::collect_declarations(source)
     }
 
-    /// Whether the `.ts` source declares a top-level `function main()` — the
-    /// entry point a `[[bin]]` target needs. AST-level (not a substring scan),
-    /// so a `main_loop` helper or a `"fn main"` string literal cannot trip it.
+    /// Whether the `.ts` source declares a top-level `function main()`.
+    ///
+    /// Under pure-TS execution semantics, `function main` is an ordinary
+    /// declaration (renamed `__ds_main`); the translator always emits an
+    /// implicit `fn main`. So this reports only whether a binding named `main`
+    /// was declared — it no longer gates the binary entry. AST-level (not a
+    /// substring scan), so `main_loop` or a `"fn main"` string literal cannot
+    /// trip it.
     #[must_use]
     pub fn has_main(&self, source: &str) -> bool {
         imports::has_main(source)
