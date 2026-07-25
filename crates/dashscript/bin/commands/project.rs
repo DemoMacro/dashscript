@@ -59,20 +59,38 @@ pub(crate) fn translate_sources(
 }
 
 /// Translate one `.ts` file to `src/<stem>.rs`, prefixing `mod <module>;` for
-/// each of its local imports (deduped). The imported files are translated
-/// separately by [`translate_project`]'s directory walk — this emits only the
-/// current file and the modules it declares.
+/// each of its imports (deduped). A relative import's file is translated
+/// separately by [`translate_project`]'s directory walk (it sits in the project
+/// tree); a bare (npm) import lives under `node_modules/` — which the walk
+/// skips — so it is resolved and translated here alongside the entry.
 fn translate_one_with_mods(ds: &Path, project_dir: &Path) -> Result<RuntimeDeps, Box<dyn Error>> {
     let translator = Translator::new();
     let src = fs::read_to_string(ds).map_err(|e| format!("cannot read {}: {e}", ds.display()))?;
-    let (rust, deps) = translator
+    let (rust, mut deps) = translator
         .translate_with_deps(&src)
         .map_err(|e| format!("translate {}: {e}", ds.display()))?;
+    let base = ds.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
     for imp in translator.imports(&src) {
-        if seen.insert(imp.module.clone()) {
-            mod_decls.push_str(&format!("mod {};\n", imp.module));
+        if !seen.insert(imp.module.clone()) {
+            continue;
+        }
+        mod_decls.push_str(&format!("mod {};\n", imp.module));
+        // A bare (npm) import is outside the project tree; translate it here so
+        // its `mod` decl resolves. A relative import is translated by the walk.
+        if !imp.source.starts_with('.') {
+            let dep_path = resolve_local_module(base, &imp.source)?;
+            let dep_src = fs::read_to_string(&dep_path)
+                .map_err(|e| format!("cannot read {}: {e}", dep_path.display()))?;
+            let (dep_rust, dep_deps) = translator
+                .translate_with_deps(&dep_src)
+                .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
+            deps.merge(&dep_deps);
+            fs::write(
+                project_dir.join("src").join(format!("{}.rs", imp.module)),
+                dep_rust,
+            )?;
         }
     }
     let body = if mod_decls.is_empty() {
@@ -383,6 +401,12 @@ fn inject_helper_module(
 /// Resolve a relative `.ts` import (`"./other"` or `"./other.ts"`) against the
 /// importing file's directory. Errors clearly when no matching file exists.
 pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf, Box<dyn Error>> {
+    // A bare specifier (`lodash`, `@scope/pkg`) is an npm import — resolve it
+    // under `node_modules/` (Node's lookup walking up from the importing file).
+    // A relative specifier (`./foo`) uses bundler-lenient local resolution.
+    if !source.starts_with('.') {
+        return resolve_node_module(base, source);
+    }
     // Bundler-lenient resolution (architecture-proposal decision 4): an
     // extensionless `./foo` tries `foo.ts` first, then the `foo/index.ts`
     // barrel — matching how tsc/bundlers resolve, so existing .ts projects
@@ -404,6 +428,94 @@ pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf,
             .join(", ")
     )
     .into())
+}
+
+/// Resolve a bare npm specifier to a `.ts` file under `node_modules/`, walking
+/// up from `base` for the `node_modules/<pkg>` directory (Node resolution). A
+/// package root resolves via its `package.json`; a subpath (`pkg/sub`)
+/// resolves directly. The architecture's npm layering: a `.ts` entry
+/// translates as a module; a `.js` entry errors honestly (the embedded engine
+/// is not yet wired for imports).
+fn resolve_node_module(base: &Path, source: &str) -> Result<PathBuf, Box<dyn Error>> {
+    let (pkg, sub) = match source.split_once('/') {
+        Some((p, s)) => (p, Some(s)),
+        None => (source, None),
+    };
+    for ancestor in base.ancestors() {
+        let pkg_dir = ancestor.join("node_modules").join(pkg);
+        if pkg_dir.is_dir() {
+            return resolve_node_entry(&pkg_dir, pkg, sub);
+        }
+    }
+    Err(format!(
+        "dashscript: npm import '{source}' did not resolve (no node_modules/{pkg} found walking up from {})",
+        base.display()
+    )
+    .into())
+}
+
+/// Resolve a located `node_modules/<pkg>` directory to its entry `.ts` file —
+/// a subpath directly, a package root via `package.json`. Returns the entry
+/// even when it is not `.ts`; the caller (the assembly loop) treats a non-`.ts`
+/// entry as an honest build error.
+fn resolve_node_entry(
+    pkg_dir: &Path,
+    pkg: &str,
+    sub: Option<&str>,
+) -> Result<PathBuf, Box<dyn Error>> {
+    if let Some(sub) = sub {
+        let trimmed = sub.trim_end_matches(".ts");
+        let candidates: [PathBuf; 2] = [
+            pkg_dir.join(trimmed).with_extension("ts"),
+            pkg_dir.join(trimmed).join("index.ts"),
+        ];
+        for candidate in &candidates {
+            if candidate.exists() {
+                return Ok(candidate.clone());
+            }
+        }
+        return Err(format!(
+            "dashscript: npm import '{pkg}/{sub}' did not resolve to a .ts file (tried {})",
+            candidates
+                .iter()
+                .map(|c| c.display().to_string())
+                .collect::<Vec<_>>()
+                .join(", ")
+        )
+        .into());
+    }
+    let entry = node_package_entry(pkg_dir)?;
+    if entry.extension().is_some_and(|e| e == "ts") {
+        return Ok(entry);
+    }
+    Err(format!(
+        "dashscript: npm package '{pkg}' entry '{}' is not a .ts file — JS npm packages need the \
+         embedded engine, which is not yet wired for imports",
+        entry.display()
+    )
+    .into())
+}
+
+/// The entry file an npm package's `package.json` points at, preferring a
+/// `.ts` source: scans `types`/`typings`/`main`/`module` for one that is `.ts`;
+/// otherwise returns the first that exists (a non-`.ts` entry errors upstream,
+/// the honest "JS needs the engine" path). Defaults to `index.ts`.
+fn node_package_entry(pkg_dir: &Path) -> Result<PathBuf, Box<dyn Error>> {
+    let json = fs::read_to_string(pkg_dir.join("package.json"))?;
+    let value: serde_json::Value = serde_json::from_str(&json)?;
+    let mut first_existing: Option<PathBuf> = None;
+    for field in ["types", "typings", "main", "module"] {
+        if let Some(s) = value.get(field).and_then(|v| v.as_str()) {
+            let candidate = pkg_dir.join(s);
+            if candidate.exists() {
+                if candidate.extension().is_some_and(|e| e == "ts") {
+                    return Ok(candidate);
+                }
+                first_existing.get_or_insert(candidate);
+            }
+        }
+    }
+    Ok(first_existing.unwrap_or_else(|| pkg_dir.join("index.ts")))
 }
 
 /// Resolve the Cargo package for `src_path`: the `package.json` found walking
@@ -775,6 +887,88 @@ mod tests {
         write(&root.join("foo"), "index.ts", "export function barrel() {}");
         let resolved = resolve_local_module(root, "./foo").unwrap();
         assert_eq!(resolved, root.join("foo.ts"));
+    }
+
+    #[test]
+    fn resolve_node_module_package_root_via_main() {
+        // A bare `my-pkg` resolves under `node_modules/my-pkg/`, its entry from
+        // `package.json` `main`. A `.ts` entry translates.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("my-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        write(
+            &pkg,
+            "package.json",
+            r#"{ "name": "my-pkg", "main": "index.ts" }"#,
+        );
+        write(
+            &pkg,
+            "index.ts",
+            "export function foo(): number { return 1; }",
+        );
+        let resolved = resolve_local_module(root, "my-pkg").unwrap();
+        assert_eq!(resolved, pkg.join("index.ts"));
+    }
+
+    #[test]
+    fn resolve_node_module_subpath_direct_file() {
+        // A bare subpath `my-pkg/util` resolves directly to `util.ts` under the
+        // package dir (no `package.json` consultation).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("my-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        write(&pkg, "util.ts", "export function u(): number { return 1; }");
+        let resolved = resolve_local_module(root, "my-pkg/util").unwrap();
+        assert_eq!(resolved, pkg.join("util.ts"));
+    }
+
+    #[test]
+    fn resolve_node_module_js_entry_errors() {
+        // A package whose entry is `.js` (no `.ts` source) errors honestly —
+        // JS npm packages need the embedded engine, which is not yet wired for
+        // imports. This is the architecture's "JS engine" half, deferred.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("js-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        write(
+            &pkg,
+            "package.json",
+            r#"{ "name": "js-pkg", "main": "index.js" }"#,
+        );
+        write(&pkg, "index.js", "module.exports = {};");
+        let err = resolve_local_module(root, "js-pkg").unwrap_err();
+        let msg = err.to_string();
+        assert!(
+            msg.contains("not a .ts file") && msg.contains("js-pkg"),
+            "js entry not surfaced: {msg}"
+        );
+    }
+
+    #[test]
+    fn resolve_node_module_walks_up_for_node_modules() {
+        // Node resolution walks up for `node_modules/`: a package imported from
+        // a nested source dir resolves to the project-root `node_modules/`.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("shared");
+        fs::create_dir_all(&pkg).unwrap();
+        write(
+            &pkg,
+            "package.json",
+            r#"{ "name": "shared", "main": "index.ts" }"#,
+        );
+        write(
+            &pkg,
+            "index.ts",
+            "export function s(): number { return 1; }",
+        );
+        let nested = root.join("src").join("deep");
+        fs::create_dir_all(&nested).unwrap();
+        let resolved = resolve_local_module(&nested, "shared").unwrap();
+        assert_eq!(resolved, pkg.join("index.ts"));
     }
 
     #[test]

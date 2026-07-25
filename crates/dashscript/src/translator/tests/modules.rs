@@ -71,19 +71,46 @@ fn collect_skips_cargo_import() {
 }
 
 #[test]
-fn bare_import_is_unsupported() {
-    // A bare specifier (`lodash`) has no resolver — DashScript supports only
-    // `cargo:` and relative imports. The translator emits no `use`, and
-    // `check` flags it as unsupported.
+fn bare_import_emits_use_for_npm_resolution() {
+    // A bare specifier (`lodash`) is an npm import — the translator emits
+    // `use lodash::x;` and `check` passes. Resolution is the build pipeline's
+    // job (the third correctness layer); whether it lowers depends on the
+    // target. `ds build` resolves `lodash` under `node_modules/`: a `.ts`
+    // entry translates, a `.js` entry errors honestly.
     let rust = Translator::new()
         .translate("import { x } from \"lodash\";")
         .expect("should translate");
     assert!(
-        !rust.contains("use lodash"),
-        "bare import emitted a use: {rust}"
+        rust.contains("use lodash::x"),
+        "bare import emitted no use: {rust}"
     );
     let diags = Translator::new().check("import { x } from \"lodash\";");
-    assert!(!diags.is_empty(), "bare import not flagged by check");
+    assert!(diags.is_empty(), "bare import flagged by check: {diags:?}");
+}
+
+#[test]
+fn bare_import_normalizes_scope_and_hyphen() {
+    // `@scope/pkg-name` → `scope_pkg_name`: a valid Rust module ident (`@` and
+    // `-` are illegal in a `use` path). The leading `@` of a scoped package is
+    // dropped; hyphens and the scope separator fold to `_`.
+    let rust = Translator::new()
+        .translate("import { x } from \"@scope/pkg-name\";")
+        .expect("should translate");
+    assert!(
+        rust.contains("use scope_pkg_name::x"),
+        "scope/hyphen not normalized: {rust}"
+    );
+}
+
+#[test]
+fn collect_includes_bare_import() {
+    // A bare specifier is assembled into a `mod` decl (resolved via
+    // `node_modules`), the way a relative import is — unlike a `cargo:`
+    // import, which names a Rust crate and is excluded from assembly.
+    let imports = Translator::new().imports("import { foo } from \"my-pkg\";");
+    assert_eq!(imports.len(), 1);
+    assert_eq!(imports[0].module, "my_pkg");
+    assert_eq!(imports[0].source, "my-pkg");
 }
 
 #[test]

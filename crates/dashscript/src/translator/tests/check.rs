@@ -15,12 +15,13 @@ fn check_passes_a_basic_class() {
 }
 
 #[test]
-fn check_flags_unsupported_import() {
-    // A namespace import (`import * as ns`) is not mapped yet — only named and
-    // default imports lower to a `use`.
+fn check_passes_namespace_and_bare_import() {
+    // A namespace import (`import * as ns`) lowers to `use m as ns;`, and a
+    // bare specifier (`"m"`) resolves via `node_modules` — both mapped
+    // constructs, so `check` passes (resolution is the build pipeline's layer,
+    // not translatability).
     let diags = Translator::new().check("import * as ns from \"m\";");
-    assert_eq!(diags.len(), 1);
-    assert!(diags[0].message.contains("import"));
+    assert!(diags.is_empty(), "namespace/bare import flagged: {diags:?}");
 }
 
 #[test]

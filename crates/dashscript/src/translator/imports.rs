@@ -39,10 +39,11 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
             let Statement::ImportDeclaration(imp) = stmt else {
                 return None;
             };
-            // Only relative imports are local `.ts` files assembled into
-            // `mod` decls — `cargo:` names a crate, a bare specifier is an
-            // unsupported npm import.
-            if !imp.source.value.starts_with('.') {
+            // A relative import (`./other`) resolves to a local `.ts` file; a
+            // bare specifier (`lodash`) resolves to `node_modules/<pkg>` — both
+            // are assembled into `mod` decls. A `cargo:` import names a Rust
+            // crate (no assembled module), so it is excluded.
+            if imp.source.value.starts_with("cargo:") {
                 return None;
             }
             let module = module_ident(&imp.source.value)?.to_string();
@@ -59,8 +60,14 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
 /// - `cargo:adler` → the crate's module ident (`adler`; `cfg-if` → `cfg_if` —
 ///   a `use` path may not contain a hyphen).
 /// - `./other` → the local file stem (`other`).
-/// - a bare specifier (`lodash`) → `None`: an npm import DashScript has no
-///   resolver for — `check` reports it, the translator emits nothing.
+/// - a bare specifier (`lodash`, `my-pkg`, `@scope/pkg`) → an npm module ident
+///   (`lodash`, `my_pkg`, `scope_pkg`). The translator emits
+///   `use <ident>::foo;`; `ds build` resolves it to `node_modules/<pkg>` — a
+///   `.ts` entry translates as a module, a `.js` entry errors honestly (engine
+///   integration is deferred). Resolution is a build-pipeline concern, so
+///   `check` (pure, no filesystem) passes a bare import rather than flagging
+///   it: whether it lowers to valid Rust depends on the target, the third
+///   layer of the correctness chain.
 pub(crate) fn module_ident(source: &str) -> Option<Ident> {
     if let Some(rest) = source.strip_prefix("cargo:") {
         Some(bindings::crate_mod(rest))
@@ -72,8 +79,29 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
         }
         Some(bindings::snake(stem))
     } else {
-        None
+        Some(bare_module_ident(source))
     }
+}
+
+/// A bare npm specifier (`lodash`, `my-pkg`, `@scope/pkg/sub`) → one valid
+/// Rust module ident. Drop a leading `@` (scoped package) and map every
+/// non-`[A-Za-z0-9_]` character (path separators, hyphens, dots) to `_`, so
+/// `format_ident!` cannot panic on an exotic package name. `my-pkg/sub` →
+/// `my_pkg_sub`; the flattened name keeps distinct subpaths distinct in the
+/// common case.
+fn bare_module_ident(source: &str) -> Ident {
+    let stripped = source.trim_start_matches('@');
+    let sanitized: String = stripped
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || c == '_' {
+                c
+            } else {
+                '_'
+            }
+        })
+        .collect();
+    bindings::crate_mod(&sanitized)
 }
 
 /// The local binding of a named or default import — `import { foo }` and

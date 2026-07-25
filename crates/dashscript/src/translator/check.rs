@@ -238,8 +238,9 @@ fn is_module_marker(stmt: &Statement) -> bool {
 fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
     match stmt {
         Statement::ImportDeclaration(s) => err(
-            "bare module import is not supported — use `cargo:<crate>` for a \
-             Rust crate or `./<file>` for a local module",
+            "this module import could not be resolved — use `cargo:<crate>` \
+             for a Rust crate, `./<file>` for a local module, or a bare npm \
+             package name resolved via `node_modules`",
             s.span,
         ),
         Statement::ExportNamedDeclaration(s) => err("module `export` is not supported yet", s.span),
