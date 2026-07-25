@@ -726,11 +726,62 @@ impl Translator {
         // First pass: collect discriminated-union enum shapes so later
         // expression translation can build variant constructors.
         let registry = registry::build_registry(&program.body, &names);
-        let items = program
-            .body
-            .iter()
-            .flat_map(|s| functions::translate_statement(s, &registry, &names))
-            .collect();
+        // Pure-TS execution semantics: a top-level statement that *runs* in
+        // source order (a `const`, an expression, control flow, a throw) does
+        // not map to a Rust item — it belongs inside the entry point, the way
+        // Node runs a script's top-level statements immediately. Declarations
+        // (`function` / `class` / `interface` / `type` / `import` / `export`)
+        // still lower to Rust items. Split the body: declarations → items;
+        // executable statements → one implicit `fn main` body (or an empty
+        // `fn main {}` when there are none — a Rust binary needs an entry).
+        let mut items: Vec<syn::Item> = Vec::new();
+        let mut exec_stmts: Vec<&oxc_ast::ast::Statement> = Vec::new();
+        for s in &program.body {
+            if functions::is_executable_top_level(s) {
+                exec_stmts.push(s);
+            } else {
+                items.extend(functions::translate_statement(s, &registry, &names));
+            }
+        }
+        // The implicit entry analyzes the top-level executable statements the
+        // same way a function body is analyzed (mutations, member mutations, use
+        // counts, number flavor). Declaration statements are no-ops in the
+        // walk, so passing the full `program.body` slice is equivalent to the
+        // executable subset. `return_path` is `None` — a top-level `return
+        // expr;` cannot yield a value (binary `main` returns `()`); `check`
+        // flags it unsupported.
+        let main_item: syn::Item = {
+            let mut locals = context::Locals::new();
+            let analysis = analysis::analyze(
+                &program.body,
+                &names,
+                &registry.mut_methods,
+                &registry.ref_params,
+            );
+            locals.mutated = analysis.mutated;
+            locals.member_mutated = analysis.member_mutated;
+            locals.use_counts = analysis.use_counts;
+            locals.number_flavors = flavor::infer(&program.body, &names);
+            let mut out: Vec<syn::Stmt> = exec_stmts
+                .into_iter()
+                .flat_map(|s| {
+                    functions::translate_stmt(
+                        s,
+                        &mut locals,
+                        &registry,
+                        &context::Narrow::default(),
+                        None,
+                        &names,
+                    )
+                })
+                .collect();
+            functions::drop_trailing_return(&mut out);
+            let block: syn::Block = syn::parse_quote!({ #(#out)* });
+            syn::parse_quote! {
+                fn main() #block
+            }
+        };
+        items.push(main_item);
         let file = syn::File {
             shebang: None,
             attrs: Vec::new(),

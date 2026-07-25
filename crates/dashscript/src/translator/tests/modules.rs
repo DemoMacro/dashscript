@@ -176,3 +176,52 @@ fn top_level_function_main_renames_to_ds_main() {
         .expect("should translate");
     assert!(rust.contains("fn __ds_main"), "got: {rust}");
 }
+
+#[test]
+fn top_level_executable_collected_into_implicit_main() {
+    // Pure-TS execution semantics: a top-level `const` and expression statement
+    // run in source order, so they land inside the implicit `fn main` the
+    // translator emits — not as Rust items. `function greet` is a declaration,
+    // so it stays a top-level `fn`.
+    let rust = Translator::new()
+        .translate(
+            "function greet(n: string): string { return n; }\nconst m = greet(\"hi\");\nconsole.log(m);",
+        )
+        .expect("should translate");
+    assert!(rust.contains("fn greet"), "decl stayed an item: {rust}");
+    assert!(rust.contains("fn main()"), "implicit main emitted: {rust}");
+    assert!(
+        rust.contains("let m"),
+        "top-level const collected into main body: {rust}"
+    );
+}
+
+#[test]
+fn declaration_only_program_emits_empty_fn_main() {
+    // A file with only declarations (no executable statements) still needs a
+    // binary entry point, so the translator emits an empty `fn main {}` — the
+    // way Node runs a script that defines functions but never calls them.
+    let rust = Translator::new()
+        .translate("function helper(): number { return 1; }")
+        .expect("should translate");
+    assert!(rust.contains("fn helper"), "decl stayed an item: {rust}");
+    assert!(
+        rust.contains("fn main()"),
+        "empty implicit main emitted: {rust}"
+    );
+}
+
+#[test]
+fn top_level_main_call_invokes_renamed_ds_main() {
+    // `function main` is renamed `__ds_main`; a top-level `main()` call (the
+    // explicit way to run it under pure-TS semantics) lands in the implicit
+    // `fn main` body as a `__ds_main()` call.
+    let rust = Translator::new()
+        .translate("function main(): void { console.log(1); }\nmain();")
+        .expect("should translate");
+    assert!(rust.contains("fn __ds_main"), "main renamed: {rust}");
+    assert!(
+        rust.contains("__ds_main();"),
+        "call site followed rename: {rust}"
+    );
+}

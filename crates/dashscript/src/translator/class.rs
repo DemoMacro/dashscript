@@ -312,8 +312,9 @@ fn build_method(
 
     let narrow = Narrow::in_method(format_ident!("self"));
     let return_path = func.return_type.as_deref().and_then(return_path_of);
+    let body_stmts: &[Statement] = func.body.as_deref().map_or(&[], |b| &b.statements[..]);
     let block = translate_body(
-        func.body.as_deref(),
+        body_stmts,
         &mut locals,
         registry,
         &narrow,

@@ -16,7 +16,7 @@ use destructure::{destructure_array, destructure_object};
 use switch::translate_switch;
 
 use oxc_ast::ast::{
-    Argument, BindingPattern, Declaration, Expression, FormalParameters, Function, FunctionBody,
+    Argument, BindingPattern, Declaration, Expression, FormalParameters, Function,
     ObjectExpression, ObjectPropertyKind, Statement, TSType, TryStatement, VariableDeclaration,
     VariableDeclarationKind,
 };
@@ -86,6 +86,33 @@ pub fn translate_statement(
         }
         _ => Vec::new(),
     }
+}
+
+/// Whether a top-level statement is *executable* — it runs in source order,
+/// the way Node runs a script's top-level statements immediately — rather than
+/// a declaration hoisted to a Rust item. Pure-TS execution semantics: a
+/// `function` / `class` / `interface` / `type` / `import` / `export` declaration
+/// does not run; only executable statements do. The translator collects these
+/// into the implicit `fn main` it emits, so a file with only declarations
+/// yields an empty `fn main {}` (like a Node script that defines functions but
+/// never calls them). Shared with `check`, which treats them as legitimate
+/// top-level statements rather than unmapped.
+pub(in crate::translator) fn is_executable_top_level(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::ExpressionStatement(_)
+            | Statement::VariableDeclaration(_)
+            | Statement::IfStatement(_)
+            | Statement::WhileStatement(_)
+            | Statement::DoWhileStatement(_)
+            | Statement::ForStatement(_)
+            | Statement::ForOfStatement(_)
+            | Statement::ForInStatement(_)
+            | Statement::SwitchStatement(_)
+            | Statement::TryStatement(_)
+            | Statement::ThrowStatement(_)
+            | Statement::BlockStatement(_)
+    )
 }
 
 /// Translate the inner declaration of an `export` (`export function` /
@@ -203,8 +230,9 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
             Some(parse_quote!(let #name = #name.unwrap_or(#default);))
         })
         .collect();
+    let body_stmts: &[Statement] = func.body.as_deref().map_or(&[], |b| &b.statements[..]);
     let mut block = translate_body(
-        func.body.as_deref(),
+        body_stmts,
         &mut locals,
         registry,
         &Narrow::default(),
@@ -302,32 +330,28 @@ pub(in crate::translator) fn register_local(
 }
 
 pub(in crate::translator) fn translate_body(
-    body: Option<&FunctionBody>,
+    stmts: &[Statement],
     locals: &mut Locals,
     registry: &TypeRegistry,
     narrow: &Narrow,
     return_path: Option<&Path>,
     names: &NameTable<'_>,
 ) -> Block {
-    let mut stmts: Vec<Stmt> = body
-        .map(|b| {
-            b.statements
-                .iter()
-                .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
-                .collect()
-        })
-        .unwrap_or_default();
+    let mut out: Vec<Stmt> = stmts
+        .iter()
+        .flat_map(|s| translate_stmt(s, locals, registry, narrow, return_path, names))
+        .collect();
     // A trailing `return expr;` is the block's implicit value — emit it as a
     // bare trailing expression (no `return`, no `;`) for idiomatic Rust and to
     // keep clippy::needless_return quiet. A bare `return;` (void) stays as-is.
-    drop_trailing_return(&mut stmts);
-    parse_quote!({ #(#stmts)* })
+    drop_trailing_return(&mut out);
+    parse_quote!({ #(#out)* })
 }
 
 /// Replace a trailing `return expr;` with a bare `expr` (no `return`, no `;`)
 /// so the block's value is the expression — idiomatic Rust, and keeps
 /// clippy::needless_return quiet. A bare `return;` (void) is left untouched.
-fn drop_trailing_return(stmts: &mut [Stmt]) {
+pub(in crate::translator) fn drop_trailing_return(stmts: &mut [Stmt]) {
     let trailing_value = match stmts.last() {
         Some(Stmt::Expr(Expr::Return(ret), _)) => ret.expr.clone(),
         _ => None,
