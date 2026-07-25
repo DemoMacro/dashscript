@@ -64,6 +64,9 @@
       }
     }
   },
+  "activationEvents": [
+    "onLanguage:typescript"
+  ],
   "engines": {
     "vscode": "^1.125.0"
   }
