@@ -293,17 +293,25 @@ fn inject_helper_module(
 /// Resolve a relative `.ts` import (`"./other"` or `"./other.ts"`) against the
 /// importing file's directory. Errors clearly when no matching file exists.
 pub(crate) fn resolve_local_module(base: &Path, source: &str) -> Result<PathBuf, Box<dyn Error>> {
-    let candidate = if source.ends_with(".ts") {
-        base.join(source)
-    } else {
-        base.join(format!("{source}.ts"))
-    };
-    if candidate.exists() {
-        return Ok(candidate);
+    // Bundler-lenient resolution (architecture-proposal decision 4): an
+    // extensionless `./foo` tries `foo.ts` first, then the `foo/index.ts`
+    // barrel — matching how tsc/bundlers resolve, so existing .ts projects
+    // compile unchanged. An explicit extension (`./foo.ts`) is honored as-is.
+    let trimmed = source.trim_end_matches(".ts");
+    let direct = base.join(trimmed);
+    let candidates: [PathBuf; 2] = [direct.with_extension("ts"), direct.join("index.ts")];
+    for candidate in &candidates {
+        if candidate.exists() {
+            return Ok(candidate.clone());
+        }
     }
     Err(format!(
         "dashscript: import '{source}' does not resolve to a .ts file (tried {})",
-        candidate.display()
+        candidates
+            .iter()
+            .map(|c| c.display().to_string())
+            .collect::<Vec<_>>()
+            .join(", ")
     )
     .into())
 }
@@ -432,6 +440,21 @@ pub(crate) fn global_cache_dir(src_path: &Path) -> PathBuf {
 
 /// The file stem of a path as an owned `String` ("main.ts" → "main").
 pub(crate) fn stem_of(path: &Path) -> String {
+    // An index.ts in a subdirectory is a bundler barrel (architecture-proposal
+    // decision 4): foo/index.ts names its module after the parent dir
+    // (crate::foo), so `import { x } from "./foo"` lands on `mod foo; src/foo.rs`.
+    // A root index.ts keeps its own stem — it is an entry, not a barrel.
+    if path.file_name().and_then(|n| n.to_str()) == Some("index.ts") {
+        if let Some(dir) = path
+            .parent()
+            .and_then(|p| p.file_name())
+            .and_then(|n| n.to_str())
+        {
+            if !dir.is_empty() {
+                return dir.to_string();
+            }
+        }
+    }
     path.file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("dash")
@@ -619,5 +642,90 @@ mod tests {
         let err = translate_project(root, &package_at(root), &out).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("bin 'a' imports bin 'b'"), "got: {msg}");
+    }
+
+    #[test]
+    fn resolve_local_module_finds_bare_stem() {
+        // `./foo` resolves to `foo.ts` (extensionless, bundler-style).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(root, "foo.ts", "export function foo() {}");
+        let resolved = resolve_local_module(root, "./foo").unwrap();
+        assert_eq!(resolved, root.join("foo.ts"));
+    }
+
+    #[test]
+    fn resolve_local_module_honors_explicit_extension() {
+        // An explicit `./foo.ts` is honored as-is.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(root, "foo.ts", "export function foo() {}");
+        let resolved = resolve_local_module(root, "./foo.ts").unwrap();
+        assert_eq!(resolved, root.join("foo.ts"));
+    }
+
+    #[test]
+    fn resolve_local_module_falls_back_to_index_barrel() {
+        // No `foo.ts` → fall back to `foo/index.ts` (bundler barrel).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        fs::create_dir_all(root.join("foo")).unwrap();
+        write(&root.join("foo"), "index.ts", "export function foo() {}");
+        let resolved = resolve_local_module(root, "./foo").unwrap();
+        assert_eq!(resolved, root.join("foo").join("index.ts"));
+    }
+
+    #[test]
+    fn resolve_local_module_prefers_direct_file_over_barrel() {
+        // `foo.ts` wins over `foo/index.ts` (bundler order).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        fs::create_dir_all(root.join("foo")).unwrap();
+        write(root, "foo.ts", "export function direct() {}");
+        write(&root.join("foo"), "index.ts", "export function barrel() {}");
+        let resolved = resolve_local_module(root, "./foo").unwrap();
+        assert_eq!(resolved, root.join("foo.ts"));
+    }
+
+    #[test]
+    fn stem_of_index_in_subdir_is_parent_dir() {
+        // foo/index.ts is a barrel → module name "foo" (the parent dir).
+        assert_eq!(stem_of(Path::new("foo/index.ts")), "foo");
+    }
+
+    #[test]
+    fn stem_of_root_index_keeps_own_stem() {
+        // A root index.ts is an entry, not a barrel — keeps stem "index".
+        assert_eq!(stem_of(Path::new("index.ts")), "index");
+    }
+
+    #[test]
+    fn translate_project_emits_barrel_module() {
+        // entry imports "./foo" → foo/index.ts → src/foo.rs (project mode),
+        // so `mod foo;` resolves. The barrel must not emit src/index.rs.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        fs::create_dir_all(root.join("foo")).unwrap();
+        write(
+            root,
+            "package.json",
+            r#"{ "name": "app", "bin": "main.ts" }"#,
+        );
+        write(
+            root,
+            "main.ts",
+            "import { foo } from \"./foo\";\nfunction main() { foo(); }",
+        );
+        write(&root.join("foo"), "index.ts", "export function foo() {}");
+        let out = tmp.path().join("out");
+        translate_project(root, &package_at(root), &out).unwrap();
+        assert!(
+            out.join("src").join("foo.rs").exists(),
+            "barrel src/foo.rs missing"
+        );
+        assert!(
+            !out.join("src").join("index.rs").exists(),
+            "barrel should not emit src/index.rs"
+        );
     }
 }
