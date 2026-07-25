@@ -39,7 +39,7 @@ pub(crate) fn translate_sources(
         let dep_src = fs::read_to_string(&dep_path)
             .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
         let (dep_rust, dep_deps) = translator
-            .translate_with_deps(&dep_src)
+            .translate_with_deps_as(&dep_src, FileRole::Module)
             .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
         deps.merge(&dep_deps);
         fs::write(
@@ -88,7 +88,7 @@ fn translate_one_with_mods(
             let dep_src = fs::read_to_string(&dep_path)
                 .map_err(|e| format!("cannot read {}: {e}", dep_path.display()))?;
             let (dep_rust, dep_deps) = translator
-                .translate_with_deps(&dep_src)
+                .translate_with_deps_as(&dep_src, FileRole::Module)
                 .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
             deps.merge(&dep_deps);
             fs::write(
