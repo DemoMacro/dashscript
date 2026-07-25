@@ -164,3 +164,15 @@ fn has_main_ignores_string_literal() {
     // reason `has_main` walks the AST rather than scanning the source text.
     assert!(!Translator::new().has_main("const s = \"fn main\";"));
 }
+
+#[test]
+fn top_level_function_main_renames_to_ds_main() {
+    // Pure-TS execution semantics: `function main` is an ordinary declaration,
+    // not the cargo entry. Rename the root scope's `main` to `__ds_main` so the
+    // implicit `fn main` the translator emits cannot collide with it. The
+    // rename lives in `NameTable`, so every call site follows automatically.
+    let rust = Translator::new()
+        .translate("function main(): void { console.log(1); }")
+        .expect("should translate");
+    assert!(rust.contains("fn __ds_main"), "got: {rust}");
+}

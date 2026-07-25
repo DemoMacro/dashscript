@@ -126,5 +126,17 @@ pub fn build(scoping: &Scoping) -> NameTable<'_> {
             }
         }
     }
+    // A top-level `function main` would collide with the implicit cargo
+    // `fn main` the translator emits (pure-TS execution semantics: a
+    // function declaration is not an entry point). Rename the root scope's
+    // `main` binding to `__ds_main` — the definition and every call site
+    // pick this up via `of_binding` / `of_reference`. Nested `main` (a
+    // local function inside another function) is left untouched.
+    let root = scoping.root_scope_id();
+    for sid in scoping.symbol_ids() {
+        if scoping.symbol_scope_id(sid) == root && scoping.symbol_name(sid) == "main" {
+            map.insert(sid, Ident::new("__ds_main", proc_macro2::Span::call_site()));
+        }
+    }
     NameTable { scoping, map }
 }

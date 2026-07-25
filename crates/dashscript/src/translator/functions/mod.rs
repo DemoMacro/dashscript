@@ -131,7 +131,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
     let name = func
         .id
         .as_ref()
-        .map_or_else(|| format_ident!("main"), bindings::ident_of);
+        .map_or_else(|| format_ident!("__ds_main"), |id| names.of_binding(id));
     let mut locals = Locals::new();
     for fp in &func.params.items {
         register_local(
