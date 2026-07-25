@@ -689,7 +689,7 @@ impl Translator {
         // `snake(name)` string fold.
         let program = allocator.alloc(ret.program);
         let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
-        let names = name_table::build(sret.semantic.scoping());
+        let mut names = name_table::build(sret.semantic.scoping());
 
         // Engine-gated compat path: a source using ES dynamic reflection
         // (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`,
@@ -723,6 +723,12 @@ impl Translator {
             deps.insert(RuntimeDep::Engine);
             return Ok((rust, deps));
         }
+
+        // Record the file's namespace-import bindings (`import * as ns`) so a
+        // reference to `ns` is recognized as a module-path prefix (`ns.foo` →
+        // `ns::foo`) rather than a field access. The engine path returns above,
+        // so this only runs for the statically-lowered Rust path.
+        names.register_namespaces(&program.body);
 
         // First pass: collect discriminated-union enum shapes so later
         // expression translation can build variant constructors.

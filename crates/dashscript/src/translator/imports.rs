@@ -8,7 +8,8 @@
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    BindingIdentifier, BindingPattern, Declaration, Function, ImportDeclarationSpecifier, Statement,
+    BindingIdentifier, BindingPattern, Declaration, Function, ImportDeclarationSpecifier,
+    ImportSpecifier, ModuleExportName, Statement,
 };
 use oxc_parser::Parser;
 use oxc_span::{GetSpan, SourceType, Span};
@@ -87,12 +88,77 @@ pub(crate) fn named_local(spec: &ImportDeclarationSpecifier) -> Option<Ident> {
         ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => &s.local,
         ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => return None,
     };
-    let name: &str = &local.name;
+    Some(casing_ident(&local.name))
+}
+
+/// Type-vs-value casing for an import name: an uppercase-first name (an
+/// interface/type alias) keeps PascalCase; otherwise snake_cased (a function or
+/// value). The same rule applies to both the imported name (what the source
+/// module exports) and the local binding — a Rust `use` of a type is a type, a
+/// `use` of a value is a value.
+fn casing_ident(name: &str) -> Ident {
     if name.chars().next().is_some_and(char::is_uppercase) {
-        Some(bindings::type_ident(name))
+        bindings::type_ident(name)
     } else {
-        Some(bindings::ident_of(local))
+        bindings::snake(name)
     }
+}
+
+/// One `use` tree for a named or default import — a bare `foo`, or
+/// `foo as fooA` when the local binding renames the imported item. A namespace
+/// import (`import * as ns`) returns `None` here: it has no in-group form and
+/// is emitted as its own `use mod as ns;` item. The path segment is the
+/// imported name (what the source module exports); the alias is the local
+/// binding. When they match (no `as`), a bare name keeps the rendered output
+/// brace-free (`use other::foo`, not `use other::{foo as foo}`).
+pub(crate) fn named_use_tree(spec: &ImportDeclarationSpecifier) -> Option<syn::UseTree> {
+    use syn::UseTree;
+    match spec {
+        ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => None,
+        ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => {
+            let local = casing_ident(&s.local.name);
+            Some(UseTree::Name(syn::UseName { ident: local }))
+        }
+        ImportDeclarationSpecifier::ImportSpecifier(s) => {
+            let local = casing_ident(&s.local.name);
+            let imported = imported_name(s)
+                .map(|n| casing_ident(&n))
+                .unwrap_or_else(|| local.clone());
+            if imported == local {
+                Some(UseTree::Name(syn::UseName { ident: local }))
+            } else {
+                Some(UseTree::Rename(syn::UseRename {
+                    ident: imported,
+                    as_token: Default::default(),
+                    rename: local,
+                }))
+            }
+        }
+    }
+}
+
+/// The imported (source-module) name of a named import as a string — `foo` in
+/// `import { foo }` or `import { foo as bar }`. A string-literal re-export name
+/// is returned verbatim (rare on the DashScript surface).
+fn imported_name(spec: &ImportSpecifier) -> Option<String> {
+    match &spec.imported {
+        ModuleExportName::IdentifierName(id) => Some(id.name.to_string()),
+        ModuleExportName::IdentifierReference(id) => Some(id.name.to_string()),
+        ModuleExportName::StringLiteral(s) => Some(s.value.to_string()),
+    }
+}
+
+/// The local alias of a namespace import (`import * as ns`) — snake_cased, the
+/// name the body uses as a module-path prefix (`ns.foo` → `ns::foo`). `None`
+/// when the specifiers hold no namespace import.
+pub(crate) fn namespace_local(specs: &[ImportDeclarationSpecifier]) -> Option<Ident> {
+    specs.iter().find_map(|spec| {
+        if let ImportDeclarationSpecifier::ImportNamespaceSpecifier(ns) = spec {
+            Some(bindings::snake(&ns.local.name))
+        } else {
+            None
+        }
+    })
 }
 
 /// One symbol brought in by a `cargo:` import (`import { X } from "cargo:crate"`),

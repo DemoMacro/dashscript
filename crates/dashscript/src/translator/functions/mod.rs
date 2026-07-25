@@ -66,8 +66,10 @@ pub fn translate_statement(
         // `import { foo, bar } from "./other"` → `use other::{foo, bar};`;
         // `import { x } from "cargo:serde"` → `use serde::{x}`. A bare
         // specifier (`"lodash"`) has no resolver → `module_ident` returns
-        // `None` → emits nothing, and `check` flags it unsupported. A
-        // default/namespace import has no named specifier and yields `[]`.
+        // `None` → emits nothing, and `check` flags it unsupported. A rename
+        // (`import { foo as fooA }`) lowers to `use other::foo as fooA;`; a
+        // namespace import (`import * as ns`) lowers to its own
+        // `use other as ns;` (a module-path alias, not a group leaf).
         Statement::ImportDeclaration(imp) => {
             let Some(mod_ident) = super::imports::module_ident(&imp.source.value) else {
                 return Vec::new();
@@ -75,14 +77,20 @@ pub fn translate_statement(
             let Some(specifiers) = imp.specifiers.as_ref() else {
                 return Vec::new();
             };
-            let names: Vec<Ident> = specifiers
+            let mut out: Vec<syn::Item> = Vec::new();
+            // Named / default imports → `use other::{foo, bar as baz};`
+            // (prettyplease drops the braces for a single item).
+            let trees: Vec<syn::UseTree> = specifiers
                 .iter()
-                .filter_map(super::imports::named_local)
+                .filter_map(super::imports::named_use_tree)
                 .collect();
-            if names.is_empty() {
-                return Vec::new();
+            if !trees.is_empty() {
+                out.push(syn::Item::Use(parse_quote!(use #mod_ident::{#(#trees),*};)));
             }
-            vec![syn::Item::Use(parse_quote!(use #mod_ident::{#(#names),*};))]
+            if let Some(ns_ident) = super::imports::namespace_local(specifiers) {
+                out.push(syn::Item::Use(parse_quote!(use #mod_ident as #ns_ident;)));
+            }
+            out
         }
         _ => Vec::new(),
     }

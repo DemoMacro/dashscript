@@ -15,7 +15,7 @@
 //! different Rust blocks, where shadowing is legal, so they keep their base
 //! name.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{BindingIdentifier, BindingPattern, IdentifierReference};
 use oxc_semantic::{ScopeId, Scoping, SymbolId};
@@ -29,6 +29,12 @@ use super::bindings;
 pub struct NameTable<'scoping> {
     scoping: &'scoping Scoping,
     map: HashMap<SymbolId, Ident>,
+    /// The `SymbolId`s bound by a namespace import (`import * as ns`). A
+    /// reference to such a binding is a *module path prefix*, not a value:
+    /// `ns.foo` lowers to `ns::foo`. Tracked per-symbol (scope-aware) so two
+    /// same-named bindings in different scopes stay distinct, the way `map`
+    /// does. Populated after `build` from the program's import specifiers.
+    namespaces: HashSet<SymbolId>,
 }
 
 impl<'a> NameTable<'a> {
@@ -86,6 +92,42 @@ impl<'a> NameTable<'a> {
             _ => None,
         }
     }
+
+    /// Whether `id` resolves to a namespace-import binding (`import * as ns`).
+    /// A reference to such a binding is a module-path prefix: `ns.foo` lowers to
+    /// `ns::foo`, not a field access. Returns `false` for any unresolved
+    /// reference (a host global, or a binding oxc did not bind).
+    #[must_use]
+    pub fn is_namespace(&self, id: &IdentifierReference) -> bool {
+        let Some(sid) = self.symbol_of_reference(id) else {
+            return false;
+        };
+        self.namespaces.contains(&sid)
+    }
+
+    /// Record the namespace-import bindings in a program (`import * as ns`).
+    /// Walked from the parsed statements after `build` (the import specifiers
+    /// carry the `BindingIdentifier` whose `symbol_id` cell `SemanticBuilder`
+    /// filled). A namespace import is module-scoped, so its binding has a
+    /// `SymbolId` like any other declaration.
+    pub fn register_namespaces(&mut self, body: &[oxc_ast::ast::Statement]) {
+        use oxc_ast::ast::{ImportDeclarationSpecifier, Statement};
+        for stmt in body {
+            let Statement::ImportDeclaration(imp) = stmt else {
+                continue;
+            };
+            let Some(specs) = imp.specifiers.as_ref() else {
+                continue;
+            };
+            for spec in specs {
+                if let ImportDeclarationSpecifier::ImportNamespaceSpecifier(ns) = spec {
+                    if let Some(sid) = ns.local.symbol_id.get() {
+                        self.namespaces.insert(sid);
+                    }
+                }
+            }
+        }
+    }
 }
 
 /// Build a name table for one file's symbols — see the module doc for the
@@ -138,5 +180,9 @@ pub fn build(scoping: &Scoping) -> NameTable<'_> {
             map.insert(sid, Ident::new("__ds_main", proc_macro2::Span::call_site()));
         }
     }
-    NameTable { scoping, map }
+    NameTable {
+        scoping,
+        map,
+        namespaces: HashSet::new(),
+    }
 }

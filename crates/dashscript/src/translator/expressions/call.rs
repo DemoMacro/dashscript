@@ -180,6 +180,24 @@ fn is_match_local(id: &IdentifierReference, ctx: &Ctx<'_>) -> bool {
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
 pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
+    // `ns.foo(…)` where `ns` is a namespace import → the free function
+    // `ns::foo(…)`. Guarded before any builtin / method dispatch so a member
+    // name that collides with a mapped method (`ns.push`) is not mis-routed to a
+    // Vec method by name alone. The callee path reuses `member_expr`'s namespace
+    // branch via `translate_expr`, so read and call forms share one lowering.
+    if let Expression::StaticMemberExpression(sm) = &call.callee {
+        if let Expression::Identifier(id) = &sm.object {
+            if ctx.names().is_namespace(id) {
+                let callee = translate_expr(&call.callee, ctx);
+                let args: Vec<Expr> = call
+                    .arguments
+                    .iter()
+                    .map(|a| translate_argument(a, ctx))
+                    .collect();
+                return parse_quote!(#callee(#(#args),*));
+            }
+        }
+    }
     if let Some(macro_name) = builtins::console_method(&call.callee) {
         // String-literal args fold into the format string as literal text
         // (labels); every other arg is a `{}` placeholder. This emits

@@ -31,6 +31,17 @@ pub(super) fn chain_expr(elem: &oxc_ast::ast::ChainElement, ctx: &Ctx<'_>) -> Ex
 /// `p.x` → field access. (A `console.log` callee is intercepted earlier.)
 pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     let field_name: &str = &sm.property.name;
+    // `ns.foo` where `ns` is a namespace import (`import * as ns from "./m"`)
+    // → the module path `ns::foo`, not a field access. A namespace alias is a
+    // Rust `use m as ns;`, so its members are path segments. Checked first so no
+    // later `.length`/`.size`/HashMap/Math arm intercepts a path prefix.
+    if let Expression::Identifier(id) = &sm.object {
+        if ctx.names().is_namespace(id) {
+            let ns = ctx.names().of_reference(id);
+            let field = bindings::snake(field_name);
+            return parse_quote!(#ns::#field);
+        }
+    }
     // `m.size` on a Map/Set (HashMap/HashSet) → `.len()` — a property, not a
     // key lookup. Checked before the `is_hashmap_local` arm below, which would
     // otherwise lower it to `m.get("size")`. A user struct with a `size` field

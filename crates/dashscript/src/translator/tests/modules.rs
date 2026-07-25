@@ -135,6 +135,71 @@ fn import_type_emits_type_use() {
 }
 
 #[test]
+fn import_namespace_emits_use_alias() {
+    // `import * as ns from "./other"` → `use other as ns;` — a module-path
+    // alias (not a group leaf). The body then reads members as the path
+    // `ns::foo`, the way a Rust `use other as ns;` exposes `ns::foo`.
+    let rust = Translator::new()
+        .translate("import * as ns from \"./other\";")
+        .expect("should translate");
+    assert!(rust.contains("use other as ns"), "got: {rust}");
+}
+
+#[test]
+fn import_namespace_member_call_is_path() {
+    // `ns.foo(1)` where `ns` is a namespace import → the free function
+    // `ns::foo(1)`. The callee reuses `member_expr`'s namespace branch, and the
+    // call is guarded before method dispatch so a name colliding with a mapped
+    // method is not mis-routed. Runs in the implicit `fn main`.
+    let rust = Translator::new()
+        .translate("import * as ns from \"./other\";\nns.foo(1);")
+        .expect("should translate");
+    assert!(rust.contains("ns::foo"), "got: {rust}");
+}
+
+#[test]
+fn import_namespace_member_read_is_path() {
+    // `ns.foo` (a read, not a call) → `ns::foo` via `member_expr`'s namespace
+    // branch. A `console.log` argument routes the member through `translate_expr`.
+    let rust = Translator::new()
+        .translate("import * as ns from \"./other\";\nconsole.log(ns.foo);")
+        .expect("should translate");
+    assert!(rust.contains("ns::foo"), "got: {rust}");
+}
+
+#[test]
+fn import_named_rename_emits_as() {
+    // `import { add as sum }` → `use other::add as sum;` — the imported name
+    // (`add`, the source-module path) aliased to the local binding (`sum`).
+    // Without this the translator would emit `use other::sum`, which cannot
+    // resolve (`sum` does not exist in `other`). A value alias keeps its
+    // snake_case form.
+    let rust = Translator::new()
+        .translate("import { add as sum } from \"./other\";")
+        .expect("should translate");
+    assert!(rust.contains("add as sum"), "got: {rust}");
+}
+
+#[test]
+fn import_type_rename_keeps_pascalcase() {
+    // `import { Point as P }` → `use geom::Point as P;` — both names are types,
+    // so PascalCase is kept (the same rule as a named type import).
+    let rust = Translator::new()
+        .translate("import { Point as P } from \"./geom\";")
+        .expect("should translate");
+    assert!(rust.contains("Point as P"), "got: {rust}");
+}
+
+#[test]
+fn namespace_member_access_passes_check() {
+    // `ns.foo(…)` on a namespace import is a mapped construct (module-path
+    // call), so `check` must not flag it unsupported — otherwise valid
+    // namespace code would be rejected by `ds lint` / the conformance harness.
+    let diags = Translator::new().check("import * as ns from \"./other\";\nns.foo(1);");
+    assert!(diags.is_empty(), "namespace access flagged: {diags:?}");
+}
+
+#[test]
 fn declarations_list_local_bindings() {
     let decls = Translator::new().declarations(
         "function foo() {}\ninterface Bar {}\ntype Baz = number\nimport { qux } from \"./other\";",
