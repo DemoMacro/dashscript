@@ -3,6 +3,10 @@ import { defineConfig } from "vite-plus";
 export default defineConfig({
   pack: {
     entry: ["src/index.ts"],
+    // tsserver loads language-service plugins via `require()`, which can't
+    // load an ESM module on VS Code's bundled Node (< 22). Emit CommonJS so
+    // the plugin actually loads and getSemanticDiagnostics runs.
+    format: "cjs",
     copy: [
       {
         // The single-source stdlib declaration lives in the translator crate

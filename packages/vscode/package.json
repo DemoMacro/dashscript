@@ -3,7 +3,7 @@
   "displayName": "DashScript",
   "version": "0.0.0",
   "private": true,
-  "description": "DashScript editor support — connects the shared ds lsp core (crate go-to-definition + translatability diagnostics) and activates the TypeScript plugin for local .rs bindgen.",
+  "description": "DashScript editor support — connects the shared ds lsp core (crate go-to-definition + translatability diagnostics) to .ts files. The @dashscript/typescript-plugin (local .rs bindgen + cargo: TS2307 suppression) loads via the project tsconfig, not bundled in this vsix.",
   "categories": [
     "Programming Languages"
   ],
@@ -36,18 +36,12 @@
     "vscode:prepublish": "vp pack",
     "package": "vsce package --no-dependencies"
   },
-  "dependencies": {
-    "@dashscript/typescript-plugin": "workspace:*"
-  },
   "devDependencies": {
     "@types/vscode": "^1.125.0",
     "@vscode/vsce": "^3.9.2",
     "vscode-languageclient": "^10.1.0"
   },
   "contributes": {
-    "typesServerPlugins": [
-      "@dashscript/typescript-plugin"
-    ],
     "configuration": {
       "title": "DashScript",
       "properties": {

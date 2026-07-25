@@ -1,10 +1,12 @@
 //! DashScript VS Code extension entry.
 //!
 //! Connects the shared `ds lsp` core (crate go-to-definition via rust-analyzer
-//! + translatability diagnostics) to `.ts` files over stdio, alongside the
-//! `@dashscript/typescript-plugin` (activated via `typesServerPlugins` in
-//! `package.json`) for local `.rs` bindgen and `.d.ts` → `.rs` jump. `.ts`
-//! uses VS Code's native TypeScript language — no custom grammar.
+//! + translatability diagnostics) to `.ts` files over stdio. The
+//! `@dashscript/typescript-plugin` (local `.rs` bindgen + `.d.ts` → `.rs`
+//! jump + `cargo:` TS2307 suppression) is loaded by tsserver via the project's
+//! own tsconfig `compilerOptions.plugins` — never bundled in this vsix, so it
+//! resolves from the workspace node_modules where the project installed it.
+//! `.ts` uses VS Code's native TypeScript language — no custom grammar.
 
 import { ExtensionContext, workspace } from "vscode";
 import {

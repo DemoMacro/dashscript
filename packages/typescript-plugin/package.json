@@ -26,10 +26,10 @@
     "dist"
   ],
   "type": "module",
-  "main": "dist/index.mjs",
+  "main": "dist/index.cjs",
   "exports": {
     ".": {
-      "default": "./dist/index.mjs"
+      "default": "./dist/index.cjs"
     },
     "./global": "./dist/global.d.ts"
   },
