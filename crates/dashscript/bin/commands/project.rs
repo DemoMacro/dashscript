@@ -16,7 +16,9 @@ use dashscript::{FileRole, Package, RuntimeDeps, Translator};
 /// merging its runtime deps into `deps`. The `DepKind` picks the path: a `.ts`
 /// or untyped `.js` dep is transpiled as a Rust module (transpile-first); a
 /// pure `.d.ts` yields its `interface`/`type` items; a `.d.ts` + `.js` pair
-/// needs type injection (a later batch, raised honestly).
+/// yields the `.d.ts` types plus the transpiled `.js` (the `.d.ts`'s value
+/// signatures are not yet injected into the `.js` — a non-numeric param stays
+/// `f64` and fails `cargo check` honestly).
 fn translate_dep(
     translator: &Translator,
     dep_path: &Path,
@@ -47,13 +49,29 @@ fn translate_dep(
                 .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
             Ok(translator.translate_dts(&dep_src))
         }
-        DepKind::DtsWithJs { js_path } => Err(format!(
-            "dashscript: dependency '{}' is a typed JavaScript package (.d.ts + {}); type \
-             injection from the `.d.ts` into the `.js` transpile is a later batch",
-            dep_path.display(),
-            js_path.display()
-        )
-        .into()),
+        DepKind::DtsWithJs { dts_path, js_path } => {
+            // A typed package: the `.d.ts` carries `interface`/`type`
+            // declarations (and the value signatures we do not yet inject);
+            // the `.js` is the implementation. Transpile the `.js` (batch C
+            // path — untyped params default to `f64`) and prepend the `.d.ts`'s
+            // type items so cross-module type imports resolve. `declare
+            // function` emits nothing — the `.js` provides the implementation,
+            // and signature type injection is a later enhancement.
+            let dts_src = fs::read_to_string(&dts_path)
+                .map_err(|e| format!("cannot read import {}: {e}", dts_path.display()))?;
+            let js_src = fs::read_to_string(&js_path)
+                .map_err(|e| format!("cannot read import {}: {e}", js_path.display()))?;
+            let dts_items = translator.translate_dts(&dts_src);
+            let (js_rust, dep_deps) = translator
+                .translate_with_deps_as(&js_src, FileRole::Module)
+                .map_err(|e| format!("translate {}: {e}", js_path.display()))?;
+            deps.merge(&dep_deps);
+            if dts_items.trim().is_empty() {
+                Ok(js_rust)
+            } else {
+                Ok(format!("{dts_items}\n{js_rust}"))
+            }
+        }
     }
 }
 
@@ -467,7 +485,7 @@ fn inject_helper_module(
 pub(crate) enum DepKind {
     Ts,
     DtsOnly,
-    DtsWithJs { js_path: PathBuf },
+    DtsWithJs { dts_path: PathBuf, js_path: PathBuf },
     Js,
 }
 
@@ -482,13 +500,17 @@ fn dep_kind_of(entry: &Path) -> DepKind {
         .is_some_and(|n| n.to_string_lossy().ends_with(".d.ts"));
     if is_dts {
         return match sibling_with_ext(entry, "js") {
-            Some(js_path) => DepKind::DtsWithJs { js_path },
+            Some(js_path) => DepKind::DtsWithJs {
+                dts_path: entry.to_path_buf(),
+                js_path,
+            },
             None => DepKind::DtsOnly,
         };
     }
     match entry.extension().and_then(|e| e.to_str()) {
         Some("js" | "mjs" | "cjs") => match sibling_with_ext(entry, "d.ts") {
-            Some(_) => DepKind::DtsWithJs {
+            Some(dts_path) => DepKind::DtsWithJs {
+                dts_path,
                 js_path: entry.to_path_buf(),
             },
             None => DepKind::Js,
@@ -984,6 +1006,39 @@ mod tests {
             matches!(kind, DepKind::Js),
             "js entry should be Js kind: {kind:?}"
         );
+    }
+
+    #[test]
+    fn resolve_node_module_dts_with_js_pair() {
+        // A package with both `.d.ts` and `.js` (a typed npm package) resolves
+        // to `DtsWithJs` — the `.d.ts` entry (the `types` field wins over
+        // `main`) carries its sibling `.js` as the implementation path. The
+        // translate loop then emits the `.d.ts` types alongside the transpiled
+        // `.js`.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("typed-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        write(
+            &pkg,
+            "package.json",
+            r#"{ "name": "typed-pkg", "main": "index.js", "types": "index.d.ts" }"#,
+        );
+        write(
+            &pkg,
+            "index.d.ts",
+            "export declare function f(a: number): number;",
+        );
+        write(&pkg, "index.js", "export function f(a) { return a; }");
+        let (resolved, kind) = resolve_local_module(root, "typed-pkg").unwrap();
+        assert_eq!(resolved, pkg.join("index.d.ts"));
+        match kind {
+            DepKind::DtsWithJs { dts_path, js_path } => {
+                assert_eq!(dts_path, pkg.join("index.d.ts"));
+                assert_eq!(js_path, pkg.join("index.js"));
+            }
+            other => panic!("expected DtsWithJs, got {other:?}"),
+        }
     }
 
     #[test]
