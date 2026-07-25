@@ -124,6 +124,17 @@ fn import_default_type_keeps_pascalcase() {
 }
 
 #[test]
+fn import_type_emits_type_use() {
+    // `import type { T } from "./geom"` is type-only (zero runtime) — it lowers
+    // to a type `use`, same as a named type import (the `type` keyword does not
+    // change the emit; a Rust `use` of a type is already zero-runtime).
+    let rust = Translator::new()
+        .translate("import type { Point } from \"./geom\";")
+        .expect("should translate");
+    assert!(rust.contains("use geom::Point"), "got: {rust}");
+}
+
+#[test]
 fn declarations_list_local_bindings() {
     let decls = Translator::new().declarations(
         "function foo() {}\ninterface Bar {}\ntype Baz = number\nimport { qux } from \"./other\";",

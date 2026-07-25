@@ -138,7 +138,97 @@ pub(crate) fn translate_project(
     // package.json `main` → the crate's `[lib]` target (shared code bins `use`).
     let lib = package.main.clone();
     detect_bin_imports_bin(root, &bins)?;
+    detect_circular_imports(&files)?;
     Ok(((bins, lib), deps))
+}
+
+/// Guard: detect circular imports. Rust forbids circular module dependencies
+/// (`mod a` → `mod b` → `mod a`), which cargo reports as a vague error; this
+/// surfaces the cycle explicitly with the files involved. Each file's imports
+/// are resolved to canonical paths so the graph holds regardless of how an
+/// import is written.
+fn detect_circular_imports(files: &[PathBuf]) -> Result<(), Box<dyn Error>> {
+    let known: Vec<PathBuf> = files
+        .iter()
+        .map(|p| p.canonicalize().unwrap_or_else(|_| p.clone()))
+        .collect();
+    let mut graph: std::collections::HashMap<PathBuf, Vec<PathBuf>> =
+        std::collections::HashMap::new();
+    for f in files {
+        let Ok(src) = fs::read_to_string(f) else {
+            continue;
+        };
+        let base = f.parent().unwrap_or_else(|| Path::new(""));
+        let key = f.canonicalize().unwrap_or_else(|_| f.clone());
+        for imp in Translator::new().imports(&src) {
+            if let Ok(dep) = resolve_local_module(base, &imp.source) {
+                let dep = dep.canonicalize().unwrap_or(dep);
+                if known.contains(&dep) {
+                    graph.entry(key.clone()).or_default().push(dep);
+                }
+            }
+        }
+    }
+    // DFS cycle detection (white=0 / gray=1 / black=2). A back edge to a gray
+    // node closes a cycle.
+    let mut color: std::collections::HashMap<PathBuf, u8> = std::collections::HashMap::new();
+    for start in graph.keys() {
+        if color.get(start).copied().unwrap_or(0) != 0 {
+            continue;
+        }
+        let mut stack: Vec<PathBuf> = Vec::new();
+        if let Some(cycle) = dfs_cycle(start, &graph, &mut color, &mut stack) {
+            let names: Vec<String> = cycle
+                .iter()
+                .map(|p| {
+                    p.file_name()
+                        .map(|n| n.to_string_lossy().into_owned())
+                        .unwrap_or_default()
+                })
+                .collect();
+            return Err(format!(
+                "dashscript: circular import detected — {}; refactor to break the cycle \
+                 (Rust forbids circular module dependencies)",
+                names.join(" → ")
+            )
+            .into());
+        }
+    }
+    Ok(())
+}
+
+/// DFS helper for [`detect_circular_imports`]: returns the cycle path when a
+/// back edge to a node already on the stack (gray) is found. Color: 0=white,
+/// 1=gray (on stack), 2=black (fully explored).
+fn dfs_cycle(
+    node: &Path,
+    graph: &std::collections::HashMap<PathBuf, Vec<PathBuf>>,
+    color: &mut std::collections::HashMap<PathBuf, u8>,
+    stack: &mut Vec<PathBuf>,
+) -> Option<Vec<PathBuf>> {
+    color.insert(node.to_path_buf(), 1);
+    stack.push(node.to_path_buf());
+    for dep in graph.get(node).into_iter().flatten() {
+        match color.get(dep).copied().unwrap_or(0) {
+            1 => {
+                // Back edge → cycle. Slice from the dep's first occurrence and
+                // close the loop for display.
+                let start = stack.iter().position(|n| n == dep).unwrap();
+                let mut cycle = stack[start..].to_vec();
+                cycle.push(dep.clone());
+                return Some(cycle);
+            }
+            0 => {
+                if let Some(found) = dfs_cycle(dep, graph, color, stack) {
+                    return Some(found);
+                }
+            }
+            _ => {}
+        }
+    }
+    stack.pop();
+    color.insert(node.to_path_buf(), 2);
+    None
 }
 
 /// Guard: no bin may import another bin. cargo forbids one `[[bin]]` from
@@ -727,5 +817,39 @@ mod tests {
             !out.join("src").join("index.rs").exists(),
             "barrel should not emit src/index.rs"
         );
+    }
+
+    #[test]
+    fn translate_project_detects_circular_import() {
+        // a → b → a: Rust forbids circular modules; the guard surfaces the cycle
+        // with the files involved instead of letting cargo report a vague error.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "package.json",
+            r#"{ "name": "app", "bin": "main.ts" }"#,
+        );
+        write(
+            root,
+            "main.ts",
+            "import { a } from \"./a\";\nfunction main() { a(); }",
+        );
+        write(
+            root,
+            "a.ts",
+            "import { b } from \"./b\";\nexport function a() { b(); }",
+        );
+        write(
+            root,
+            "b.ts",
+            "import { a } from \"./a\";\nexport function b() { a(); }",
+        );
+        let out = tmp.path().join("out");
+        let err = translate_project(root, &package_at(root), &out).unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("circular import"), "got: {msg}");
+        assert!(msg.contains("a.ts"), "got: {msg}");
+        assert!(msg.contains("b.ts"), "got: {msg}");
     }
 }
