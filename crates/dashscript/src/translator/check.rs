@@ -32,7 +32,7 @@ use oxc_semantic::SemanticBuilder;
 use oxc_span::{SourceType, Span};
 
 use super::name_table;
-use super::{functions, registry};
+use super::{analysis, functions, registry};
 
 // The set of prototype borrows `is_borrow_call` whitelists depends on the
 // caller (`check` vs the engine detector). Rather than thread a `for_engine`
@@ -108,13 +108,12 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
         if is_module_marker(stmt) {
             continue;
         }
-        // A top-level `main()` call is the standard TS/node entry pattern.
-        // DashScript already treats `function main` as the cargo entry (it
-        // lowers to `fn main`), so the explicit call is redundant and the
-        // translator emits nothing for it — but it lets the same `.ts` run
-        // unchanged under `node`/`bun`, so a bench ships one source, not two.
-        // Skip it so the empty translate below does not flag it as unmapped.
-        if is_entry_call(stmt) {
+        if functions::is_executable_top_level(stmt) {
+            // Pure-TS execution semantics: executable statements (a `const`,
+            // an expression, control flow, a throw) run in source order inside
+            // the implicit `fn main`, so they are legitimate top-level — not
+            // unmapped. Still walk for low-compatibility constructs inside.
+            collect_unsupported(stmt, &mut diagnostics);
             continue;
         }
         if functions::translate_statement(stmt, &registry, &names).is_empty() {
@@ -124,7 +123,67 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
         // [`collect_unsupported`].
         collect_unsupported(stmt, &mut diagnostics);
     }
+    // A top-level `function` reading a top-level `const`/`let` would close over
+    // a binding living in `fn main` — impossible for a Rust fn item. Hoisting
+    // top-level bindings to module items is a later batch; until then surface
+    // the escape honestly rather than letting it fail `cargo check` as a partial.
+    check_escape(&program.body, &names, &registry, &mut diagnostics);
     diagnostics
+}
+
+/// Flag a top-level `function` whose body reads a top-level `const`/`let`
+/// binding. Such a binding is collected into the implicit `fn main` (it runs in
+/// source order), so a function reading it would have to close over a `main`
+/// local — impossible for a Rust fn item. Hoisting top-level bindings to module
+/// items is a later batch; until then this surfaces the gap as `unsupported`
+/// rather than letting it fail `cargo check` as a partial. Keyed by the
+/// per-symbol Rust name (`analysis::analyze`'s key), so the rare shadow — a
+/// same-named local declared inside the function — can false-positive; the
+/// common case (no name clash) is sound.
+fn check_escape(
+    program_body: &[Statement],
+    names: &name_table::NameTable,
+    registry: &registry::TypeRegistry,
+    out: &mut Vec<OxcDiagnostic>,
+) {
+    let top_level_vars: HashSet<String> = program_body
+        .iter()
+        .filter_map(|s| match s {
+            Statement::VariableDeclaration(v) => Some(v),
+            _ => None,
+        })
+        .flat_map(|v| v.declarations.iter())
+        .filter_map(|d| match &d.id {
+            BindingPattern::BindingIdentifier(id) => Some(names.of_binding(id).to_string()),
+            _ => None,
+        })
+        .collect();
+    if top_level_vars.is_empty() {
+        return;
+    }
+    for stmt in program_body {
+        let Statement::FunctionDeclaration(f) = stmt else {
+            continue;
+        };
+        let Some(body) = &f.body else { continue };
+        let analysis = analysis::analyze(
+            &body.statements,
+            names,
+            &registry.mut_methods,
+            &registry.ref_params,
+        );
+        if analysis
+            .use_counts
+            .keys()
+            .any(|k| top_level_vars.contains(k))
+        {
+            out.push(err(
+                "a top-level binding referenced from a function is not yet supported — \
+                 move the binding into the function, or call the function from the top level",
+                f.span,
+            ));
+        }
+    }
 }
 
 /// True when the program body contains any ES dynamic/reflection construct the
@@ -169,24 +228,6 @@ fn is_module_marker(stmt: &Statement) -> bool {
     )
 }
 
-/// True for a top-level `main()` call — the standard TS/node entry pattern
-/// (`function main() { … }` + a trailing `main()` to run it). DashScript treats
-/// `function main` as the cargo entry (it lowers to `fn main`), so the explicit
-/// call is redundant for `ds` and the translator emits nothing for it — but it
-/// lets the same `.ts` run unchanged under `node`/`bun`, so a bench ships one
-/// source file, not two. Only a bare `main()` (no args) is matched; `main(argv)`
-/// or any other top-level expression stays unmapped.
-fn is_entry_call(stmt: &Statement) -> bool {
-    let Statement::ExpressionStatement(es) = stmt else {
-        return false;
-    };
-    let Expression::CallExpression(call) = &es.expression else {
-        return false;
-    };
-    matches!(&call.callee, Expression::Identifier(id) if id.name.as_str() == "main")
-        && call.arguments.is_empty()
-}
-
 /// A human message + span for a top-level statement the translator skips.
 fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
     match stmt {
@@ -202,15 +243,6 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
         Statement::ExportAllDeclaration(s) => err("module `export *` is not supported yet", s.span),
         Statement::TSEnumDeclaration(s) => err(
             "TypeScript `enum` is not supported (use a union type instead)",
-            s.span,
-        ),
-        Statement::ExpressionStatement(s) => err(
-            "a top-level expression is not allowed — only function/interface/type \
-             declarations may sit at module scope",
-            s.span,
-        ),
-        Statement::VariableDeclaration(s) => err(
-            "a top-level variable declaration is not allowed — move it into a function",
             s.span,
         ),
         _ => OxcDiagnostic::error("this top-level statement cannot be translated to Rust"),

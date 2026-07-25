@@ -225,3 +225,37 @@ fn top_level_main_call_invokes_renamed_ds_main() {
         "call site followed rename: {rust}"
     );
 }
+
+#[test]
+fn top_level_variable_declaration_passes_check() {
+    // Pure-TS execution semantics: a top-level `const` runs in the implicit
+    // `fn main`, so it is legitimate top-level — not an unmapped statement.
+    let diags = Translator::new().check("const x: number = 5;");
+    assert!(diags.is_empty(), "top-level const flagged: {diags:?}");
+}
+
+#[test]
+fn top_level_expression_statement_passes_check() {
+    // A top-level expression (a call, a side effect) runs in the implicit
+    // `fn main` — legitimate top-level under pure-TS semantics.
+    let diags = Translator::new().check("console.log(1);");
+    assert!(diags.is_empty(), "top-level expression flagged: {diags:?}");
+}
+
+#[test]
+fn top_level_function_referencing_top_level_var_is_unsupported() {
+    // A top-level `function` reading a top-level `const` would close over a
+    // `fn main` local — impossible for a Rust fn item. Flag it honestly rather
+    // than letting it fail `cargo check` as a partial.
+    let diags = Translator::new().check("const x: number = 5;\nfunction f(): number { return x; }");
+    assert!(!diags.is_empty(), "escape not flagged: {diags:?}");
+}
+
+#[test]
+fn top_level_main_call_passes_check() {
+    // `function main` is renamed `__ds_main`; a top-level `main()` call is now
+    // an ordinary executable statement (it invokes `__ds_main()` from the
+    // implicit `fn main`) — no longer a special-cased entry to skip.
+    let diags = Translator::new().check("function main(): void { console.log(1); }\nmain();");
+    assert!(diags.is_empty(), "top-level main() call flagged: {diags:?}");
+}
