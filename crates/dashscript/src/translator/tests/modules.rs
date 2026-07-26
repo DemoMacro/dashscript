@@ -680,3 +680,42 @@ fn new_worker_reply_turbofish_anchors_message_type() {
         "turbofish not anchoring message type f64: {rust}"
     );
 }
+
+#[test]
+fn export_const_arrow_lowers_to_pub_fn() {
+    // `export const name = (params): ret => expr` is a named function (the
+    // binding names it), so it lowers to a `pub fn` item — not dropped or left
+    // as an executable statement. An expression body becomes the block's
+    // trailing expression.
+    let rust = Translator::new()
+        .translate("export const isEmpty = (arr: number[]): boolean => arr.length === 0;")
+        .expect("should translate");
+    assert!(rust.contains("pub fn is_empty("), "no pub fn: {rust}");
+    assert!(rust.contains("-> bool"), "no bool return: {rust}");
+}
+
+#[test]
+fn export_const_generic_arrow_keeps_type_params() {
+    // `export const f = <T>(…) => …` keeps the generic `<T>` so a call site
+    // monomorphizes — the const-arrow lowering mirrors `translate_function`'s
+    // generic pass-through.
+    let rust = Translator::new()
+        .translate("export const firstOrDefault = <T>(arr: T[]): T => arr[0];")
+        .expect("should translate");
+    assert!(
+        rust.contains("pub fn first_or_default<T>("),
+        "generic lost: {rust}"
+    );
+}
+
+#[test]
+fn export_const_arrow_type_predicate_returns_bool() {
+    // A type predicate (`arg is X`) is a TS type guard; its runtime shape is
+    // `bool` (the narrowed type is a type-level fiction), so the fn returns
+    // `bool` regardless of the predicate's target.
+    let rust = Translator::new()
+        .translate("export const isStr = (s: unknown): s is string => typeof s === \"string\";")
+        .expect("should translate");
+    assert!(rust.contains("pub fn is_str("), "no pub fn: {rust}");
+    assert!(rust.contains("-> bool"), "predicate not bool: {rust}");
+}

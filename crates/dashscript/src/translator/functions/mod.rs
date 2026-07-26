@@ -16,9 +16,10 @@ use destructure::{destructure_array, destructure_object};
 use switch::translate_switch;
 
 use oxc_ast::ast::{
-    Argument, BindingPattern, Declaration, ExportDefaultDeclarationKind, Expression,
-    FormalParameters, Function, ObjectExpression, ObjectPropertyKind, Statement, TSType,
-    TryStatement, VariableDeclaration, VariableDeclarationKind,
+    Argument, ArrowFunctionExpression, BindingPattern, Declaration, ExportDefaultDeclarationKind,
+    Expression, FormalParameters, Function, FunctionBody, ObjectExpression, ObjectPropertyKind,
+    Statement, TSType, TSTypeAnnotation, TryStatement, VariableDeclaration,
+    VariableDeclarationKind,
 };
 use oxc_semantic::SymbolId;
 use proc_macro2::TokenStream;
@@ -361,6 +362,23 @@ fn translate_exported_declaration(
         }
         Declaration::TSInterfaceDeclaration(iface) => declarations::translate_interface(iface),
         Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
+        // `export const name = <T>(params): ret => body` — a const-bound arrow
+        // is a named function (the binding names it), so it lowers to a `fn`
+        // item. Only arrow initializers map; any other const value stays a
+        // top-level executable statement (the implicit-`main` path).
+        Declaration::VariableDeclaration(var) => var
+            .declarations
+            .iter()
+            .filter_map(|d| match d.init.as_ref()? {
+                Expression::ArrowFunctionExpression(arrow) => {
+                    let name = names.of_pattern(&d.id);
+                    Some(syn::Item::Fn(translate_const_arrow_to_fn(
+                        name, arrow, registry, names,
+                    )))
+                }
+                _ => None,
+            })
+            .collect(),
         _ => Vec::new(),
     }
 }
@@ -491,6 +509,113 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
         parse_quote! {
             fn #name<#(#generics),*>(#(#inputs),*) #output #block
         }
+    }
+}
+
+/// `export const name = <T>(params): ret => body` → a `fn name<T>(params) -> ret
+/// { body }`. The const binding names the function; the arrow supplies the
+/// generic type parameters, params, and return type. A type predicate
+/// (`arg is X`) returns `bool` — the runtime shape of a TS type guard. An
+/// expression body (`=> expr`) becomes the block's trailing expression; a block
+/// body (`=> { … }`) maps through [`translate_body`]. Mirrors
+/// [`translate_function`] so a const arrow compiles identically to a `function`
+/// declaration.
+fn translate_const_arrow_to_fn(
+    name: Ident,
+    arrow: &ArrowFunctionExpression,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> ItemFn {
+    let mut locals = body_locals(&arrow.params, Some(arrow.body.as_ref()), registry, names);
+    let inputs = translate_params(&arrow.params, &locals, names);
+    let output = arrow_return_type(arrow.return_type.as_deref());
+    let return_path = arrow.return_type.as_deref().and_then(return_path_of);
+    let block = if arrow.expression {
+        arrow_expression_block(
+            &arrow.body,
+            &locals,
+            registry,
+            &output,
+            return_path.as_ref(),
+            names,
+        )
+    } else {
+        translate_body(
+            &arrow.body.statements[..],
+            &mut locals,
+            registry,
+            &Narrow::default(),
+            return_path.as_ref(),
+            names,
+        )
+    };
+    let generics: Vec<Ident> = arrow
+        .type_parameters
+        .as_deref()
+        .map_or_else(Vec::new, |tp| {
+            tp.params
+                .iter()
+                .map(|p| bindings::type_ident(&p.name.name))
+                .collect()
+        });
+    if generics.is_empty() {
+        parse_quote! {
+            fn #name(#(#inputs),*) #output #block
+        }
+    } else {
+        parse_quote! {
+            fn #name<#(#generics),*>(#(#inputs),*) #output #block
+        }
+    }
+}
+
+/// An arrow's return type: `void`/`undefined` → omitted (Rust infers `()`); a
+/// type predicate (`arg is X`) → `bool` (a TS type guard narrows at runtime);
+/// anything else maps through [`types::translate_type`].
+fn arrow_return_type(rt: Option<&TSTypeAnnotation>) -> ReturnType {
+    rt.and_then(|ta| match &ta.type_annotation {
+        TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
+        TSType::TSTypePredicate(_) => Some(ReturnType::Type(
+            Default::default(),
+            Box::new(parse_quote!(bool)),
+        )),
+        ty => Some(ReturnType::Type(
+            Default::default(),
+            Box::new(types::translate_type(ty)),
+        )),
+    })
+    .unwrap_or(ReturnType::Default)
+}
+
+/// An arrow expression body `=> expr` (oxc stores it as a single
+/// `ExpressionStatement`) → `{ expr }` (the block's trailing expression) for a
+/// valued return, or `{ expr; }` (discarded) for `void`. The return-type path
+/// threads in so an object-literal body borrows its struct name.
+fn arrow_expression_block(
+    body: &FunctionBody,
+    locals: &Locals,
+    registry: &TypeRegistry,
+    output: &ReturnType,
+    return_path: Option<&Path>,
+    names: &NameTable<'_>,
+) -> Block {
+    let expr = body.statements.iter().find_map(|s| match s {
+        Statement::ExpressionStatement(es) => Some(&es.expression),
+        _ => None,
+    });
+    let Some(e) = expr else {
+        return parse_quote!({});
+    };
+    let ret_ty = return_path.map(|p| -> Type { parse_quote!(#p) });
+    let e = expressions::translate_init(
+        e,
+        ret_ty.as_ref(),
+        &Ctx::new(locals, registry, &Narrow::default(), names),
+    );
+    if matches!(output, ReturnType::Default) {
+        parse_quote!({ #e; })
+    } else {
+        parse_quote!({ #e })
     }
 }
 
