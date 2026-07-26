@@ -137,6 +137,47 @@ fn translates_scalar_union_to_enum() {
 }
 
 #[test]
+fn translates_tuple_to_rust_tuple() {
+    let src = "type Pair = [number, string];";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("type Pair = (f64, String)"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_tuple_rest_to_head_and_vec_tail() {
+    // `[T, ...T[]]` (NonEmptyArray) → `(T, Vec<T>)` — a fixed head then a Vec tail.
+    let src = "type NonEmpty = [number, ...number[]];";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("type NonEmpty = (f64, Vec<f64>)"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
+fn translates_tuple_rest_readonly_array_reference() {
+    // `...ReadonlyArray<T>` spells the rest array shape the reference way; the
+    // element unwraps the same as `...T[]`.
+    let src = "type NonEmpty = [number, ...ReadonlyArray<number>];";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("type NonEmpty = (f64, Vec<f64>)"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
+fn translates_function_type_to_fn_pointer() {
+    // `(a: number, b: string) => boolean` → `fn(f64, String) -> bool` (a fn pointer).
+    let src = "type Pred = (a: number, b: string) => boolean;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("type Pred = fn(f64, String) -> bool"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_enum_variant_construction() {
     let src =
         "type Status = \"pending\" | \"done\"; function f(): void { let s: Status = \"done\"; }";

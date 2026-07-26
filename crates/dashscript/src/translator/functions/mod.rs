@@ -48,11 +48,9 @@ pub fn translate_statement(
         }
         Statement::ClassDeclaration(class) => super::class::translate_class(class, registry, names),
         Statement::TSInterfaceDeclaration(iface) => {
-            vec![syn::Item::Struct(declarations::translate_interface(iface))]
+            declarations::translate_interface(iface)
         }
-        Statement::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias)
-            .into_iter()
-            .collect(),
+        Statement::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
         // `export function/interface/type/class` lowers the declaration(s) and
         // marks each `pub` so another `.ts` module can `import` it. A re-export
         // list (`export { foo } from "./m"` / `export { foo as bar } from …`)
@@ -149,7 +147,37 @@ pub fn translate_statement(
             }
             items
         }
-        _ => Vec::new(),
+        // Executable statements run in the implicit `fn main`, not as items
+        // (see `is_executable_top_level`); an empty item list is correct.
+        Statement::ExpressionStatement(_)
+        | Statement::VariableDeclaration(_)
+        | Statement::IfStatement(_)
+        | Statement::WhileStatement(_)
+        | Statement::DoWhileStatement(_)
+        | Statement::ForStatement(_)
+        | Statement::ForOfStatement(_)
+        | Statement::ForInStatement(_)
+        | Statement::SwitchStatement(_)
+        | Statement::TryStatement(_)
+        | Statement::ThrowStatement(_)
+        | Statement::BlockStatement(_)
+        | Statement::ReturnStatement(_)
+        | Statement::BreakStatement(_)
+        | Statement::ContinueStatement(_)
+        // No-op statements.
+        | Statement::EmptyStatement(_)
+        | Statement::DebuggerStatement(_)
+        // Unsupported statement kinds (`labeled:` / `with`, TS `enum`/`namespace`/
+        // `global`/`import =`/`export =`) — `check` flags these; explicit arms
+        // keep dispatch exhaustive (no `_` wildcard).
+        | Statement::LabeledStatement(_)
+        | Statement::WithStatement(_)
+        | Statement::TSEnumDeclaration(_)
+        | Statement::TSModuleDeclaration(_)
+        | Statement::TSGlobalDeclaration(_)
+        | Statement::TSImportEqualsDeclaration(_)
+        | Statement::TSExportAssignment(_)
+        | Statement::TSNamespaceExportDeclaration(_) => Vec::new(),
     }
 }
 
@@ -331,12 +359,8 @@ fn translate_exported_declaration(
         Declaration::ClassDeclaration(class) => {
             super::class::translate_class(class, registry, names)
         }
-        Declaration::TSInterfaceDeclaration(iface) => {
-            vec![syn::Item::Struct(declarations::translate_interface(iface))]
-        }
-        Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias)
-            .into_iter()
-            .collect(),
+        Declaration::TSInterfaceDeclaration(iface) => declarations::translate_interface(iface),
+        Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
         _ => Vec::new(),
     }
 }
@@ -358,7 +382,7 @@ fn translate_default_declaration(
             super::class::translate_class(class, registry, names)
         }
         ExportDefaultDeclarationKind::TSInterfaceDeclaration(iface) => {
-            vec![syn::Item::Struct(declarations::translate_interface(iface))]
+            declarations::translate_interface(iface)
         }
         // `export default <expression>` (a value, not a declaration) names no
         // item — Rust has no anonymous default value, so it stays unsupported.
@@ -500,8 +524,10 @@ pub(in crate::translator) fn translate_params(
                 .as_ref()
                 .map(|ta| types::translate_type(&ta.type_annotation))
                 .unwrap_or_else(|| parse_quote!(f64));
-            // A parameter with a default becomes `Option<T>` (callers pass None).
-            let ty = if fp.initializer.is_some() {
+            // An optional (`?:`) or default-initialized parameter is `Option<T>`
+            // — callers pass `None` for a missing/`undefined` argument, and the
+            // body sees the parameter as `Option<T>` (narrowed on truthiness).
+            let ty = if fp.optional || fp.initializer.is_some() {
                 parse_quote!(Option<#ty>)
             } else {
                 ty
@@ -558,6 +584,17 @@ pub(in crate::translator) fn body_locals(
             fp.type_annotation.as_deref(),
             names,
         );
+        // An optional (`?:`) or default-initialized parameter is `Option<T>` at
+        // the call site, so record it that way — `translate_params` emits the
+        // same `Option<T>` in the signature, and the body's narrowing/truthiness
+        // (`if (opt)`, `opt ? … : …`) queries `is_option` through this record.
+        if fp.optional || fp.initializer.is_some() {
+            let name = names.of_pattern(&fp.pattern).to_string();
+            match locals.get(&name).cloned() {
+                Some(inner) => locals.insert(name, parse_quote!(Option<#inner>)),
+                None => locals.insert(name, parse_quote!(Option<f64>)),
+            }
+        }
     }
     let Some(body) = body else {
         return locals;
@@ -724,7 +761,28 @@ pub(in crate::translator) fn translate_stmt(
         Statement::TryStatement(t) => {
             translate_try(t, locals, registry, narrow, return_path, names)
         }
-        _ => vec![],
+        // No-op statements — legal to drop (no runtime effect).
+        Statement::EmptyStatement(_) | Statement::DebuggerStatement(_) => vec![],
+        // Unsupported control flow (`labeled:` / `with`) — `check` flags these;
+        // the explicit arm keeps dispatch exhaustive (no `_` wildcard).
+        Statement::LabeledStatement(_) | Statement::WithStatement(_) => vec![],
+        // Top-level-only constructs — declarations and module declarations do
+        // not appear in a function body; a nested one stays unmapped (a nested
+        // function declaration is rarer and `check` flags it).
+        Statement::FunctionDeclaration(_)
+        | Statement::ClassDeclaration(_)
+        | Statement::TSTypeAliasDeclaration(_)
+        | Statement::TSInterfaceDeclaration(_)
+        | Statement::TSEnumDeclaration(_)
+        | Statement::TSModuleDeclaration(_)
+        | Statement::TSGlobalDeclaration(_)
+        | Statement::TSImportEqualsDeclaration(_)
+        | Statement::ImportDeclaration(_)
+        | Statement::ExportAllDeclaration(_)
+        | Statement::ExportDefaultDeclaration(_)
+        | Statement::ExportNamedDeclaration(_)
+        | Statement::TSExportAssignment(_)
+        | Statement::TSNamespaceExportDeclaration(_) => vec![],
     }
 }
 

@@ -61,13 +61,14 @@ pub fn translate_dts(source: &str) -> String {
 }
 
 fn push_interface(items: &mut Vec<Item>, iface: &TSInterfaceDeclaration) {
-    let mut item = Item::Struct(declarations::translate_interface(iface));
-    make_pub(&mut item);
-    items.push(item);
+    for mut item in declarations::translate_interface(iface) {
+        make_pub(&mut item);
+        items.push(item);
+    }
 }
 
 fn push_type_alias(items: &mut Vec<Item>, alias: &TSTypeAliasDeclaration) {
-    if let Some(mut item) = declarations::translate_type_alias(alias) {
+    for mut item in declarations::translate_type_alias(alias) {
         make_pub(&mut item);
         items.push(item);
     }
