@@ -231,13 +231,22 @@ fn collect_unions_in_type(ty: &TSType, out: &mut HashMap<Ident, ItemEnum>) {
 }
 
 /// Collect inline unions from each property type of an interface or
-/// object-literal type.
+/// object-literal type. A pure index-signature interface (`[key: string]: A |
+/// B`) lowers to a `HashMap` alias whose value type may itself be an inline
+/// union — that union's `__DsUnion…` enum must be collected too, or the alias
+/// references a `crate::__DsUnion…` the crate root never defines (E0425).
 fn collect_unions_in_signatures(members: &[TSSignature], out: &mut HashMap<Ident, ItemEnum>) {
     for sig in members {
-        if let TSSignature::TSPropertySignature(ps) = sig {
-            if let Some(ta) = ps.type_annotation.as_ref() {
-                collect_unions_in_type(&ta.type_annotation, out);
+        match sig {
+            TSSignature::TSPropertySignature(ps) => {
+                if let Some(ta) = ps.type_annotation.as_ref() {
+                    collect_unions_in_type(&ta.type_annotation, out);
+                }
             }
+            TSSignature::TSIndexSignature(idx) => {
+                collect_unions_in_type(&idx.type_annotation.type_annotation, out);
+            }
+            _ => {}
         }
     }
 }
