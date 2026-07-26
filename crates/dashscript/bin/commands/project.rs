@@ -79,8 +79,9 @@ fn translate_dep(
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
 /// `project_dir/src/`. The caller writes `Cargo.toml`. Shared by a single-
 /// package build ([`emit_cargo_project`]) and by workspace members (whose
-/// Cargo.toml the workspace root owns). v1: a single layer of imports — an
-/// imported module that itself imports is not followed.
+/// Cargo.toml the workspace root owns). Imports are followed transitively: an
+/// imported module that itself imports is lowered too (deduped by module name),
+/// so a multi-file package lowers fully rather than stopping at the first hop.
 pub(crate) fn translate_sources(
     src: &str,
     src_path: &Path,
@@ -94,23 +95,56 @@ pub(crate) fn translate_sources(
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
+    // The inline `__DsUnion…` enums the entry already emits at the crate root
+    // (it lowers as `BinEntry`). A dependency may name a union the entry never
+    // uses directly — its module references `crate::__DsUnion…`, but no
+    // definition reaches the crate root. So each dep's unions are collected
+    // too, and any the entry did not already emit are prepended to `main.rs`.
+    let mut emitted_enums: std::collections::HashSet<String> = translator
+        .union_enum_items(src)
+        .into_iter()
+        .map(|(name, _)| name)
+        .collect();
+    let mut extra_enum_text = String::new();
+    // Worklist of `(module, source_spec, base_dir)` — each popped dep is
+    // translated once, then its own imports extend the worklist. A cycle
+    // (a.ts ↔ b.ts) terminates: `seen` dedupes by module name, so the second
+    // edge to an already-translated module is a no-op.
+    let mut worklist: std::collections::VecDeque<(String, String, PathBuf)> =
+        std::collections::VecDeque::new();
     for imp in translator.imports(src) {
-        if !seen.insert(imp.module.clone()) {
-            continue; // dedupe repeated imports of the same module
+        if seen.insert(imp.module.clone()) {
+            worklist.push_back((imp.module, imp.source, base.to_path_buf()));
         }
-        let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+    }
+    while let Some((module, source, dir)) = worklist.pop_front() {
+        let (dep_path, kind) = resolve_local_module(&dir, &source)?;
         let dep_rust = translate_dep(&translator, &dep_path, kind, &mut deps)?;
         fs::write(
-            project_dir.join("src").join(format!("{}.rs", imp.module)),
+            project_dir.join("src").join(format!("{module}.rs")),
             dep_rust,
         )?;
-        mod_decls.push_str(&format!("mod {};\n", imp.module));
+        mod_decls.push_str(&format!("mod {module};\n"));
+        let dep_src = fs::read_to_string(&dep_path)
+            .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
+        for (name, text) in translator.union_enum_items(&dep_src) {
+            if emitted_enums.insert(name) {
+                extra_enum_text.push_str(&text);
+                extra_enum_text.push('\n');
+            }
+        }
+        let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in translator.imports(&dep_src) {
+            if seen.insert(imp.module.clone()) {
+                worklist.push_back((imp.module, imp.source, dep_base.to_path_buf()));
+            }
+        }
     }
 
-    let main = if mod_decls.is_empty() {
+    let main = if mod_decls.is_empty() && extra_enum_text.is_empty() {
         rust
     } else {
-        format!("{mod_decls}\n{rust}")
+        format!("{extra_enum_text}{mod_decls}\n{rust}")
     };
     fs::write(project_dir.join("src").join("main.rs"), main)?;
     Ok(deps)

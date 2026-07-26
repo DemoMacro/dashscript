@@ -1136,6 +1136,39 @@ impl Translator {
         dts::translate_dts(source)
     }
 
+    /// The inline scalar-union enums (`__DsUnion…`) a `.ts` file's type
+    /// positions introduce, each as `(name, rust_text)` where `rust_text` is
+    /// the enum plus its `Display` impl. `ds build` collects these across the
+    /// entry and every dependency so a multi-file package emits each enum once
+    /// at the crate root — a dependency's union that the entry never names
+    /// directly still resolves, rather than leaving the module pointing at a
+    /// missing `crate::__DsUnion…`.
+    #[must_use]
+    pub fn union_enum_items(&self, source: &str) -> Vec<(String, String)> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        let mut items: Vec<(String, String)> = registry
+            .union_enums
+            .into_values()
+            .map(|e| {
+                let name = e.ident.to_string();
+                let display = declarations::union_display_impl(&e);
+                let text = prettyplease::unparse(&syn::File {
+                    shebang: None,
+                    attrs: Vec::new(),
+                    items: vec![syn::Item::Enum(e), syn::Item::Impl(display)],
+                });
+                (name, text)
+            })
+            .collect();
+        items.sort_by(|a, b| a.0.cmp(&b.0));
+        items
+    }
+
     /// The bare-crate imports in a `.ts` file (`import { X } from "crate"`),
     /// each with its `.ts` byte span. Used by `ds lsp` to resolve
     /// go-to-definition on an import specifier to the crate's `~/.cargo` source.
