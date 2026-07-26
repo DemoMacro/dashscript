@@ -75,16 +75,14 @@ pub fn translate_statement(
                 .iter()
                 .map(super::imports::export_use_tree)
                 .collect();
-            match exp
-                .source
-                .as_ref()
-                .and_then(|s| super::imports::module_ident(&s.value))
-            {
-                Some(mod_ident) => {
-                    vec![syn::Item::Use(
-                        parse_quote!(pub use #mod_ident::{#(#trees),*};),
-                    )]
-                }
+            let source_path = exp.source.as_ref().and_then(|s| {
+                let mod_ident = super::imports::module_ident(&s.value)?;
+                Some(super::imports::mod_use_path(&s.value, &mod_ident))
+            });
+            match source_path {
+                Some(path) => vec![syn::Item::Use(
+                    parse_quote!(pub use #path::{#(#trees),*};),
+                )],
                 None => trees
                     .into_iter()
                     .map(|t| syn::Item::Use(parse_quote!(pub use #t;)))
@@ -99,11 +97,12 @@ pub fn translate_statement(
             let Some(mod_ident) = super::imports::module_ident(&decl.source.value) else {
                 return Vec::new();
             };
+            let path = super::imports::mod_use_path(&decl.source.value, &mod_ident);
             match &decl.exported {
-                None => vec![syn::Item::Use(parse_quote!(pub use #mod_ident::*;))],
+                None => vec![syn::Item::Use(parse_quote!(pub use #path::*;))],
                 Some(name) => {
                     let ns = super::imports::export_alias_ident(name);
-                    vec![syn::Item::Use(parse_quote!(pub use #mod_ident as #ns;))]
+                    vec![syn::Item::Use(parse_quote!(pub use #path as #ns;))]
                 }
             }
         }
@@ -118,21 +117,24 @@ pub fn translate_statement(
             let Some(mod_ident) = super::imports::module_ident(&imp.source.value) else {
                 return Vec::new();
             };
+            let path = super::imports::mod_use_path(&imp.source.value, &mod_ident);
             let Some(specifiers) = imp.specifiers.as_ref() else {
                 return Vec::new();
             };
             let mut out: Vec<syn::Item> = Vec::new();
             // Named / default imports → `use other::{foo, bar as baz};`
-            // (prettyplease drops the braces for a single item).
+            // (prettyplease drops the braces for a single item). A local module
+            // (`./other`) lowers to `crate::other` so the `use` resolves from a
+            // sibling module, not only the crate root.
             let trees: Vec<syn::UseTree> = specifiers
                 .iter()
                 .filter_map(super::imports::named_use_tree)
                 .collect();
             if !trees.is_empty() {
-                out.push(syn::Item::Use(parse_quote!(use #mod_ident::{#(#trees),*};)));
+                out.push(syn::Item::Use(parse_quote!(use #path::{#(#trees),*};)));
             }
             if let Some(ns_ident) = super::imports::namespace_local(specifiers) {
-                out.push(syn::Item::Use(parse_quote!(use #mod_ident as #ns_ident;)));
+                out.push(syn::Item::Use(parse_quote!(use #path as #ns_ident;)));
             }
             out
         }

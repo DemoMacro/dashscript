@@ -13,7 +13,7 @@ use oxc_ast::ast::{
 };
 use oxc_parser::Parser;
 use oxc_span::{GetSpan, SourceType, Span};
-use syn::Ident;
+use syn::{parse_quote, Ident};
 
 use super::{bindings, semantic::SymbolKind};
 
@@ -80,6 +80,27 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
         Some(bindings::snake(stem))
     } else {
         Some(bare_module_ident(source))
+    }
+}
+
+/// Whether an import source resolves to a module *inside this crate* — a
+/// relative `./m` import (the file's own `mod m;`). Such modules lower to
+/// `crate::m::…` so the `use` resolves from a sibling module too: under Rust
+/// 2018 path clarity a bare `use m::x` resolves at the crate root but not from
+/// a submodule, so `crate::m::x` is the form that works everywhere. A `cargo:`
+/// source or a bare npm specifier names something outside this crate (an extern
+/// crate / `node_modules`), so it stays a bare `use m::x`.
+pub(crate) fn is_local_module(source: &str) -> bool {
+    source.starts_with('.')
+}
+
+/// The `use` path for an import/export source: `crate::mod` for a local
+/// module, bare `mod` for a `cargo:` crate or npm bare specifier.
+pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
+    if is_local_module(source) {
+        parse_quote!(crate::#mod_ident)
+    } else {
+        parse_quote!(#mod_ident)
     }
 }
 

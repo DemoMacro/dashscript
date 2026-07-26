@@ -30,7 +30,7 @@ fn import_emits_use() {
     let rust = Translator::new()
         .translate("import { foo } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("use other::foo"), "got: {rust}");
+    assert!(rust.contains("use crate::other::foo"), "got: {rust}");
 }
 
 #[test]
@@ -38,7 +38,7 @@ fn import_groups_multiple_names() {
     let rust = Translator::new()
         .translate("import { foo, bar } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("use other::{foo, bar}"), "got: {rust}");
+    assert!(rust.contains("use crate::other::{foo, bar}"), "got: {rust}");
 }
 
 #[test]
@@ -128,7 +128,10 @@ fn import_keeps_type_name_pascalcase() {
     let rust = Translator::new()
         .translate("import { add, Point } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("use other::{add, Point}"), "got: {rust}");
+    assert!(
+        rust.contains("use crate::other::{add, Point}"),
+        "got: {rust}"
+    );
 }
 
 #[test]
@@ -158,7 +161,7 @@ fn import_type_emits_type_use() {
     let rust = Translator::new()
         .translate("import type { Point } from \"./geom\";")
         .expect("should translate");
-    assert!(rust.contains("use geom::Point"), "got: {rust}");
+    assert!(rust.contains("use crate::geom::Point"), "got: {rust}");
 }
 
 #[test]
@@ -169,7 +172,7 @@ fn import_namespace_emits_use_alias() {
     let rust = Translator::new()
         .translate("import * as ns from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("use other as ns"), "got: {rust}");
+    assert!(rust.contains("use crate::other as ns"), "got: {rust}");
 }
 
 #[test]
@@ -234,7 +237,7 @@ fn export_named_from_emits_pub_use() {
     let rust = Translator::new()
         .translate("export { foo } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("pub use other::foo"), "got: {rust}");
+    assert!(rust.contains("pub use crate::other::foo"), "got: {rust}");
 }
 
 #[test]
@@ -243,7 +246,10 @@ fn export_named_from_groups_multiple() {
     let rust = Translator::new()
         .translate("export { foo, bar } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("pub use other::{foo, bar}"), "got: {rust}");
+    assert!(
+        rust.contains("pub use crate::other::{foo, bar}"),
+        "got: {rust}"
+    );
 }
 
 #[test]
@@ -262,7 +268,7 @@ fn export_all_emits_pub_glob() {
     let rust = Translator::new()
         .translate("export * from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("pub use other::*"), "got: {rust}");
+    assert!(rust.contains("pub use crate::other::*"), "got: {rust}");
 }
 
 #[test]
@@ -272,7 +278,7 @@ fn export_all_as_namespace_emits_alias() {
     let rust = Translator::new()
         .translate("export * as ns from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("pub use other as ns"), "got: {rust}");
+    assert!(rust.contains("pub use crate::other as ns"), "got: {rust}");
 }
 
 #[test]
