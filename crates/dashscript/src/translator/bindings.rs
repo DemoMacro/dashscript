@@ -13,9 +13,24 @@ use syn::Ident;
 /// warning-free and consistent across definition, reference, and field access.
 pub fn snake(name: &str) -> Ident {
     let mut out = String::with_capacity(name.len() + 4);
-    for (i, c) in name.chars().enumerate() {
+    let chars: Vec<char> = name.chars().collect();
+    for (i, &c) in chars.iter().enumerate() {
         if c.is_ascii_uppercase() {
-            if i != 0 {
+            // Insert a word boundary before this uppercase unless it continues
+            // an acronym: `ENTITY_MAP` → `entity_map` (not `e_n_t_i_t_y_…`),
+            // `HTMLElement` → `html_element`. A boundary is needed when the
+            // previous char is lowercase/digit (camelCase: `defaultIndent`), or
+            // when an acronym tail meets a lowercase tail (`HTMLParser` →
+            // `html_parser`: the `L`→`P` edge splits because `a` follows).
+            let prev = if i > 0 { Some(chars[i - 1]) } else { None };
+            let next = chars.get(i + 1).copied();
+            let boundary = match (prev, next) {
+                (None, _) | (Some('_'), _) => false,
+                (Some(p), _) if p.is_ascii_lowercase() || p.is_ascii_digit() => true,
+                (Some(p), Some(nx)) if p.is_ascii_uppercase() && nx.is_ascii_lowercase() => true,
+                _ => false,
+            };
+            if boundary {
                 out.push('_');
             }
             out.push(c.to_ascii_lowercase());

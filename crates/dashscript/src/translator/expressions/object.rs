@@ -3,7 +3,7 @@
 
 use std::collections::HashSet;
 
-use oxc_ast::ast::{Expression, ObjectExpression, ObjectPropertyKind};
+use oxc_ast::ast::{Expression, ObjectExpression, ObjectPropertyKind, PropertyKey};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr, GenericArgument, Ident};
 
@@ -155,8 +155,18 @@ fn hashmap_literal(obj: &ObjectExpression, val_ty: Option<&syn::Path>, ctx: &Ctx
                 // `[k]: v` — a dynamic key (an expression, typically a String).
                 translate_expr(op.key.as_expression()?, ctx)
             } else {
-                let key_str = bindings::property_key_name(&op.key)?.to_string();
-                parse_quote!(#key_str.to_string())
+                // A string-literal key (`"&amp;": "&"`) keeps its literal value
+                // verbatim — `property_key_name` is for identifier keys only.
+                match &op.key {
+                    PropertyKey::StringLiteral(s) => {
+                        let v = s.value.to_string();
+                        parse_quote!(#v.to_string())
+                    }
+                    _ => {
+                        let key_str = bindings::property_key_name(&op.key)?.to_string();
+                        parse_quote!(#key_str.to_string())
+                    }
+                }
             };
             Some(parse_quote!((#key, #value)))
         })

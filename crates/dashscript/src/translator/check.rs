@@ -131,7 +131,11 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
                 } else {
                     false
                 };
-                if promotable {
+                // A non-const-expr `const` with an inferable type (an object, a
+                // regex) lowers to a lazy static (OnceLock + accessor fn), so a
+                // module may carry it too — no `fn main` needed.
+                let lazy_static = functions::lazy_static_candidate(stmt);
+                if promotable || lazy_static {
                     collect_unsupported(stmt, &mut diagnostics);
                 } else {
                     diagnostics.push(err(

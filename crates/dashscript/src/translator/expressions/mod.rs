@@ -586,7 +586,14 @@ fn ident_expr(id: &IdentifierReference, ctx: &Ctx<'_>) -> Expr {
         "Infinity" => parse_quote!(::std::f64::INFINITY),
         _ => {
             let ident = ctx.names().of_reference(id);
-            parse_quote!(#ident)
+            // A module-level non-const-expr `const` lowered to a lazy static is
+            // read through its accessor fn (`name()` → `&'static T`), not a
+            // bare identifier.
+            if ctx.names().is_lazy_static(id) {
+                parse_quote!(#ident())
+            } else {
+                parse_quote!(#ident)
+            }
         }
     }
 }

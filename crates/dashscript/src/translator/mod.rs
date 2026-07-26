@@ -958,6 +958,20 @@ impl Translator {
                 }
             }
         }
+        // Lazy static pre-pass: register module-level non-const-expr `const`
+        // bindings (an object, a regex, …) so a reference before the definition
+        // in source order still emits the accessor call — module bindings are
+        // hoisted. An entry file runs its executables in `fn main`, so a
+        // non-const-expr `const` there stays a local, not an accessor.
+        if matches!(role, FileRole::Module) {
+            for s in &program.body {
+                if functions::lazy_static_candidate(s) {
+                    if let Some(sym) = functions::lazy_static_sym(s, &names) {
+                        names.register_lazy_static(sym);
+                    }
+                }
+            }
+        }
         // Pure-TS execution semantics: a top-level statement that *runs* in
         // source order (a `const`, an expression, control flow, a throw) does
         // not map to a Rust item — it belongs inside the entry point, the way
@@ -994,6 +1008,16 @@ impl Translator {
             if let Some(item) = functions::promoted_const_item(s, &promoted, &names) {
                 items.push(item);
                 continue;
+            }
+            // A module-level non-const-expr `const` (an object, a regex, …)
+            // lowers to a lazy static (OnceLock + accessor fn) — see
+            // `lazy_static_items`. Only a module: an entry runs the binding in
+            // `fn main` as a plain local.
+            if matches!(role, FileRole::Module) {
+                if let Some(lazy_items) = functions::lazy_static_items(s, &names, &registry) {
+                    items.extend(lazy_items);
+                    continue;
+                }
             }
             if functions::is_executable_top_level(s) {
                 exec_stmts.push(s);

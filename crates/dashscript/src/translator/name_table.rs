@@ -43,6 +43,13 @@ pub struct NameTable<'scoping> {
     /// per-symbol so the promotion is visible in every body (`fn main` and each
     /// function), not just the one that would have declared it as a local.
     number_consts: HashSet<SymbolId>,
+    /// The `SymbolId`s of module-level `const` bindings lowered to lazy statics
+    /// (OnceLock + accessor fn) — a non-const-expr initializer (an object, a
+    /// regex, a `Map`/`Set`) constructs its value once at first use, not at
+    /// compile time. A reference to one emits the accessor call (`name()`),
+    /// which returns `&'static T`. Tracked per-symbol so the lowering is visible
+    /// in every body, like `number_consts`.
+    lazy_statics: HashSet<SymbolId>,
 }
 
 impl<'a> NameTable<'a> {
@@ -155,6 +162,25 @@ impl<'a> NameTable<'a> {
         };
         self.number_consts.contains(&sid)
     }
+
+    /// Record a module-level `const` binding lowered to a lazy static (OnceLock
+    /// + accessor fn) — see [`Self::is_lazy_static`].
+    pub fn register_lazy_static(&mut self, sym: SymbolId) {
+        self.lazy_statics.insert(sym);
+    }
+
+    /// Whether `id` resolves to a module-level `const` lowered to a lazy static
+    /// (OnceLock + accessor fn). Such a reference emits the accessor call
+    /// (`name()`) rather than a bare identifier — the value lives behind a
+    /// `OnceLock`, not as a `const` item. Returns `false` for any unresolved
+    /// reference.
+    #[must_use]
+    pub fn is_lazy_static(&self, id: &IdentifierReference) -> bool {
+        let Some(sid) = self.symbol_of_reference(id) else {
+            return false;
+        };
+        self.lazy_statics.contains(&sid)
+    }
 }
 
 /// Build a name table for one file's symbols — see the module doc for the
@@ -212,5 +238,6 @@ pub fn build(scoping: &Scoping) -> NameTable<'_> {
         map,
         namespaces: HashSet::new(),
         number_consts: HashSet::new(),
+        lazy_statics: HashSet::new(),
     }
 }
