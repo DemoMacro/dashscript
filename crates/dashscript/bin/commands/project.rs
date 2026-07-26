@@ -224,10 +224,12 @@ pub(crate) fn translate_project(
     let bins = package.bin_entries();
     // package.json `main` → the crate's `[lib]` target (shared code bins `use`).
     let lib = package.main.clone();
-    // 文件角色（架构决策点 8）：bin/lib entry 收顶层可执行语句进 `fn main`；
-    // 其余文件（被 import 的 module）只声明、不执行 —— `Module` 角色对其顶层
-    // 可执行语句报错（模块语义）。按 canonical 路径比对，使判定不受 import
-    // 写法或 `bin` 相对/绝对写法影响。
+    // File role (arch decision point 8): a bin/lib entry collects top-level
+    // executable statements into `fn main`; every other file (an imported
+    // module) only declares, never executes — the `Module` role errors on its
+    // top-level executable statements (module semantics). Compared by canonical
+    // path so the call/import form or a relative/absolute `bin` spelling does
+    // not affect the decision.
     let entry_paths: std::collections::HashSet<PathBuf> = bins
         .iter()
         .filter_map(|(_, p)| root.join(p).canonicalize().ok())
@@ -1229,11 +1231,12 @@ mod tests {
 
     #[test]
     fn translate_project_module_file_has_no_main() {
-        // 文件角色（架构决策点 8）：bin entry 收顶层语句进 `fn main`；被 import
-        // 的 module 文件只声明、不执行 → 无 `fn main`（crate 内模块，由 entry 经
-        // `mod` 引入）。一个 bin import 一个辅助 module：
-        //   main.ts (bin)    → src/main.rs 有 `fn main`
-        //   util.ts  (module) → src/util.rs  无 `fn main`
+        // File role (arch decision point 8): a bin entry collects top-level
+        // statements into `fn main`; an imported module file only declares,
+        // never executes → no `fn main` (a crate-internal module, brought in
+        // by the entry via `mod`). A bin importing one helper module:
+        //   main.ts (bin)    → src/main.rs has `fn main`
+        //   util.ts  (module) → src/util.rs  has no `fn main`
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         write(

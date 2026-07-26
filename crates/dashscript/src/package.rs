@@ -1,18 +1,20 @@
 //! `package.json` → `Cargo.toml`.
 //!
-//! DashScript 项目的唯一清单是 **`package.json`**（npm/pnpm 标准）。
-//! DashScript 最大化复用 package.json 官方字段（`name`/`version`/`bin`/
-//! `main`/`scripts`/`workspaces`/`dependencies`/`devDependencies`/...），
-//! 仅在 `dashscript` 命名空间下加两类特有配置：
-//! - `dashscript.target` — 输出形状（`bin` 默认 / `rust` / `wasm` / `napi`）
-//! - `dashscript.cargo.dependencies` / `.devDependencies` — Rust crate 依赖，
-//!   value 用 **Cargo.toml 语法**（`"serde":"1.0"` 或
-//!   `"serde":{"version":"1.0","features":["derive"]}`），emit Cargo.toml 时
-//!   JSON→TOML 零损失。
+//! The single manifest for a DashScript project is **`package.json`** (the
+//! npm/pnpm standard). DashScript reuses the official package.json fields
+//! verbatim (`name`/`version`/`bin`/`main`/`scripts`/`workspaces`/
+//! `dependencies`/`devDependencies`/...) and adds only two DashScript-specific
+//! keys under a `dashscript` namespace:
+//! - `dashscript.target` — output shape (`bin` default / `rust` / `wasm` / `napi`)
+//! - `dashscript.cargo.dependencies` / `.devDependencies` — Rust crate deps,
+//!   whose values use **Cargo.toml syntax** (`"serde":"1.0"` or
+//!   `"serde":{"version":"1.0","features":["derive"]}`), emitted to Cargo.toml
+//!   with zero JSON→TOML loss.
 //!
-//! `dependencies`/`devDependencies`（package.json 标准）是 **npm 包**
-//! （node_modules），**不进 Cargo.toml** —— DashScript 编译时分层处理
-//! （`.ts` 源码包翻译进 Rust / JS dist 路由 engine）。
+//! `dependencies`/`devDependencies` (the package.json standard fields) are
+//! **npm packages** (`node_modules`) and **never reach Cargo.toml** —
+//! DashScript layers them at build time (a `.ts` source package translates to
+//! Rust; a JS dist routes through the engine).
 
 use std::collections::BTreeMap;
 

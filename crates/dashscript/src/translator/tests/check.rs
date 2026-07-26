@@ -255,8 +255,9 @@ fn check_flags_string_raw() {
 
 #[test]
 fn check_as_module_flags_top_level_executable() {
-    // 模块角色（架构决策点 8）：模块只声明；顶层可执行语句（`console.log`）无
-    // 入口可入 → unsupported（而非静默丢弃副作用）。
+    // Module role (arch decision point 8): a module only declares; a top-level
+    // executable statement (`console.log`) has no entry to run in → unsupported
+    // (rather than silently dropping its side effect).
     let diags = Translator::new().check_as(
         "export function f(): void {}\nconsole.log(1);",
         FileRole::Module,
@@ -271,7 +272,7 @@ fn check_as_module_flags_top_level_executable() {
 
 #[test]
 fn check_as_module_passes_declarations_only() {
-    // 模块角色 + 纯声明 → 无诊断（声明是模块的本分）。
+    // Module role + declarations only → no diagnostics (declaring is a module's job).
     let diags = Translator::new().check_as(
         "export function f(x: number): number { return x; }",
         FileRole::Module,
@@ -281,7 +282,8 @@ fn check_as_module_passes_declarations_only() {
 
 #[test]
 fn check_as_bin_entry_allows_top_level_executable() {
-    // bin entry 放行顶层可执行语句（进隐式 `fn main`）—— 现状不变。
+    // A bin entry allows top-level executable statements (they go into the
+    // implicit `fn main`) — unchanged behavior.
     let diags = Translator::new().check_as("console.log(1);", FileRole::BinEntry);
     assert!(diags.is_empty(), "bin entry executable flagged: {diags:?}");
 }

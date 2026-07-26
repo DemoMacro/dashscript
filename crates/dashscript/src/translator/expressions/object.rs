@@ -72,10 +72,20 @@ pub(super) fn object_expr(
         })
         .collect();
     match base {
-        Some(b) => parse_quote!(#path { #(#fields),*, ..#b }),
+        Some(b) => {
+            if fields.is_empty() {
+                parse_quote!(#path { ..#b })
+            } else {
+                parse_quote!(#path { #(#fields),*, ..#b })
+            }
+        }
         None => {
             let extras = missing_optionals(path, &fields, ctx);
-            parse_quote!(#path { #(#fields),*, #(#extras),* })
+            // A single repetition avoids a dangling comma when both `fields`
+            // and `extras` are empty — `Element { , }` would not parse.
+            let mut all = fields;
+            all.extend(extras);
+            parse_quote!(#path { #(#all),* })
         }
     }
 }

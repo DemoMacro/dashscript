@@ -28,7 +28,11 @@ pub struct ImportRef {
 }
 
 /// The local modules a `.ts` file imports, in source order. Used by `ds build`
-/// to emit one `src/<module>.rs` per dependency.
+/// to emit one `src/<module>.rs` per dependency. A re-export (`export * from
+/// "./m"` / `export { x } from "./m"`) names the same dependency an `import`
+/// would, so it is collected too — otherwise a barrel `index.ts` that only
+/// re-exports would emit `pub use crate::m::*` with no `mod m;` and no
+/// `src/m.rs`, leaving every re-export unresolved (E0432).
 pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
@@ -36,20 +40,27 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
         .body
         .iter()
         .filter_map(|stmt| {
-            let Statement::ImportDeclaration(imp) = stmt else {
-                return None;
-            };
             // A relative import (`./other`) resolves to a local `.ts` file; a
             // bare specifier (`lodash`) resolves to `node_modules/<pkg>` — both
             // are assembled into `mod` decls. A `cargo:` import names a Rust
             // crate (no assembled module), so it is excluded.
-            if imp.source.value.starts_with("cargo:") {
+            let src: &str = match stmt {
+                Statement::ImportDeclaration(imp) => &imp.source.value,
+                Statement::ExportAllDeclaration(exp) => &exp.source.value,
+                Statement::ExportNamedDeclaration(exp) => {
+                    // `export { x } from "./m"` (a re-export) carries a source;
+                    // a local `export { x }` does not — only the former is a dep.
+                    &exp.source.as_ref()?.value
+                }
+                _ => return None,
+            };
+            if src.starts_with("cargo:") {
                 return None;
             }
-            let module = module_ident(&imp.source.value)?.to_string();
+            let module = module_ident(src)?.to_string();
             Some(ImportRef {
                 module,
-                source: imp.source.value.to_string(),
+                source: src.to_string(),
             })
         })
         .collect()

@@ -119,14 +119,27 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
         }
         if functions::is_executable_top_level(stmt) {
             if matches!(role, FileRole::Module) {
-                // 模块语义（架构决策点 8）：模块只声明，不执行。顶层可执行
-                // 语句无 `fn main` 可入（Node 的 module 只 export，不跑顶层
-                // 语句除非它是入口）—— 报 unsupported，而非静默丢弃副作用。
-                diagnostics.push(err(
-                    "a module file may only declare — top-level executable \
-                     statements need a bin entry (a module declares, it does not run)",
-                    stmt.span(),
-                ));
+                // Module semantics (arch decision point 8): a module only
+                // declares. But a const-expr `const` (number/boolean/string
+                // literal) lowers to a crate `const` item — no side effect, no
+                // `fn main` needed — so a module may carry it. Only a genuine
+                // side-effecting executable (a non-const-expr binding, an
+                // expression statement, control flow, a throw) is unsupported:
+                // it has no entry to run in.
+                let promotable = if let Statement::VariableDeclaration(v) = stmt {
+                    functions::promotable_const_info(v, &names).is_some()
+                } else {
+                    false
+                };
+                if promotable {
+                    collect_unsupported(stmt, &mut diagnostics);
+                } else {
+                    diagnostics.push(err(
+                        "a module file may only declare — top-level executable \
+                         statements need a bin entry (a module declares, it does not run)",
+                        stmt.span(),
+                    ));
+                }
             } else {
                 // Pure-TS execution semantics: executable statements (a `const`,
                 // an expression, control flow, a throw) run in source order inside

@@ -217,6 +217,7 @@ pub(in crate::translator) fn is_executable_top_level(stmt: &Statement) -> bool {
 pub(in crate::translator) enum ConstKind {
     Number,
     Bool,
+    Str,
 }
 
 impl ConstKind {
@@ -226,12 +227,14 @@ impl ConstKind {
 }
 
 /// The (symbol, rust-name, kind) of a top-level `const` binding whose
-/// initializer is a Rust const-expression literal (a `number` or `boolean`) — a
-/// candidate for escape promotion to a crate-level `const` item (A3). `None`
-/// for `let`/`var`, a multi-declarator declaration, destructuring, a missing
-/// initializer, or any non-literal initializer (a string needs `String` and is
-/// not const; a runtime value needs `static` + interior mutability — both
-/// deferred). Reused by `check` so the two agree on what is promotable.
+/// initializer is a Rust const-expression literal (a `number`, `boolean`, or
+/// `string`) — a candidate for escape promotion to a crate-level `const` item
+/// (A3). A string literal lowers to `&'static str`, which is a Rust const, so
+/// `const X = "    "` (a module-level format/indent constant) promotes just
+/// like a number. `None` for `let`/`var`, a multi-declarator declaration,
+/// destructuring, a missing initializer, or any non-literal initializer (a
+/// runtime value needs `static` + interior mutability — deferred). Reused by
+/// `check` so the two agree on what is promotable.
 pub(in crate::translator) fn promotable_const_info(
     decl: &VariableDeclaration,
     names: &NameTable<'_>,
@@ -249,6 +252,7 @@ pub(in crate::translator) fn promotable_const_info(
     let kind = match d.init.as_ref()? {
         Expression::NumericLiteral(_) => ConstKind::Number,
         Expression::BooleanLiteral(_) => ConstKind::Bool,
+        Expression::StringLiteral(_) => ConstKind::Str,
         _ => return None,
     };
     let sym = names.symbol_of_pattern(&d.id)?;
@@ -299,6 +303,25 @@ pub(in crate::translator) fn promoted_const_names(
     escaped
 }
 
+/// The rust names of *every* top-level const-expr `const` binding in the file,
+/// regardless of whether a function references it. A module file has no
+/// `fn main` to run a top-level binding in, so each const-expr `const` must
+/// promote to a crate item — there is no "escape" set to compute, unlike the
+/// entry path ([`promoted_const_names`]).
+pub(in crate::translator) fn all_promotable_const_names(
+    program_body: &[Statement],
+    names: &NameTable<'_>,
+) -> HashSet<String> {
+    program_body
+        .iter()
+        .filter_map(|s| match s {
+            Statement::VariableDeclaration(v) => Some(v),
+            _ => None,
+        })
+        .filter_map(|v| promotable_const_info(v, names).map(|(_, n, _)| n))
+        .collect()
+}
+
 /// Build the crate-level `const` item for a promoted top-level `const`
 /// declaration, if `stmt` is one whose rust name is in `promoted`. The item
 /// keeps the binding's snake-case rust name (lowercase) so every reference — in
@@ -339,6 +362,12 @@ pub(in crate::translator) fn promoted_const_item(
             parse_quote!(bool),
             expressions::literals::bool_expr(b.value),
         ),
+        // A string literal is `&'static str` — a Rust const, so a module-level
+        // `const INDENT = "    "` promotes to `const INDENT: &str = "    ";`.
+        Expression::StringLiteral(s) => {
+            let lit = proc_macro2::Literal::string(&s.value);
+            (parse_quote!(&'static str), parse_quote!(#lit))
+        }
         _ => return None,
     };
     Some(parse_quote! {

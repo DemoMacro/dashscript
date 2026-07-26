@@ -940,7 +940,15 @@ impl Translator {
         // const in source order still sees it as an `f64` value for number→
         // string routing (Rust items are hoisted; ES top-level bindings are
         // order-independent at the module level).
-        let promoted = functions::promoted_const_names(&program.body, &names, &registry);
+        //
+        // A module file has no `fn main`, so *every* const-expr `const` must
+        // promote to a crate item (there is no escape set to compute); the
+        // entry path promotes only the ones a function closes over.
+        let promoted = if matches!(role, FileRole::Module) {
+            functions::all_promotable_const_names(&program.body, &names)
+        } else {
+            functions::promoted_const_names(&program.body, &names, &registry)
+        };
         for s in &program.body {
             if let oxc_ast::ast::Statement::VariableDeclaration(v) = s {
                 if let Some((sym, name, kind)) = functions::promotable_const_info(v, &names) {

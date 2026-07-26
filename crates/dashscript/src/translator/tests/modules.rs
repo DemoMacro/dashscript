@@ -497,13 +497,19 @@ fn promoted_number_const_passes_check() {
 }
 
 #[test]
-fn top_level_string_const_referenced_by_fn_still_unsupported() {
-    // A `const` string literal infers `String` (`"hi".to_string()`), which is
-    // not a Rust const-expression — so it is not const-promotable and stays
-    // `unsupported` when it escapes (a runtime/static promotion is a later
-    // batch).
+fn top_level_string_const_referenced_by_fn_promotes() {
+    // A `const` string literal lowers to `&'static str` (a Rust const), so it
+    // promotes to a crate `const` item just like a number/boolean when a
+    // function escapes onto it — `check` must not flag it.
     let diags = Translator::new().check("const S = \"hi\";\nfunction f(): string { return S; }");
-    assert!(!diags.is_empty(), "string escape not flagged: {diags:?}");
+    assert!(diags.is_empty(), "promoted string const flagged: {diags:?}");
+    let rust = Translator::new()
+        .translate("const S = \"hi\";\nfunction f(): string { return S; }")
+        .unwrap();
+    assert!(
+        rust.contains("const s: &'static str") && rust.contains("\"hi\""),
+        "string const not promoted to a crate item: {rust}"
+    );
 }
 
 #[test]
