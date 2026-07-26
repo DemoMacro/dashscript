@@ -166,6 +166,20 @@ impl<'a> Ctx<'a> {
         self.names
     }
 
+    /// The body's locals table — so a caller can build a child [`Ctx`] (e.g. a
+    /// ternary `then` arm with an extra `Narrow`) over the same locals.
+    #[must_use]
+    pub fn locals(&self) -> &'a Locals {
+        self.locals
+    }
+
+    /// The active narrowing scope — so a caller can derive a child scope (e.g.
+    /// `with_option_some`) and build a child [`Ctx`] with it.
+    #[must_use]
+    pub fn narrow(&self) -> &'a Narrow {
+        self.narrow
+    }
+
     /// The type registry. A block-body arrow (`(x) => { … }`) translates its
     /// statements via [`super::functions::translate_body`], which needs the
     /// registry (mut-method / ref-param tables) the same way a named `fn` does —

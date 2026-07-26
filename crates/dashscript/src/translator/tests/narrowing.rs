@@ -11,7 +11,7 @@ fn translates_optional_chain_to_as_ref_map() {
 fn translates_optional_chain_coalesce_to_unwrap_or() {
     let src = "interface V { x: number } function f(): number { const v: V | null = null; return v?.x ?? -1; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("unwrap_or(-1_f64)"), "got:\n{rust}");
+    assert!(rust.contains("unwrap_or_else(|| -1_f64)"), "got:\n{rust}");
     assert!(rust.contains("__c.x"), "got:\n{rust}");
 }
 

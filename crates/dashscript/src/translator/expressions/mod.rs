@@ -30,11 +30,11 @@ pub(in crate::translator) use literals::{bool_expr, string_expr};
 pub(in crate::translator) use member::{is_hashmap_local, is_hashset_local};
 
 use oxc_ast::ast::{
-    Argument, ArrowFunctionExpression, Expression, FunctionBody, IdentifierReference, Statement,
-    TemplateLiteral,
+    Argument, ArrowFunctionExpression, Expression, FunctionBody, IdentifierReference,
+    SequenceExpression, Statement, TemplateLiteral,
 };
 use proc_macro2::Span;
-use syn::{parse_quote, Expr, Pat, Type};
+use syn::{parse_quote, Expr, Pat, Stmt, Type};
 
 use super::context::{Ctx, Narrow};
 use super::{bindings, types};
@@ -239,32 +239,46 @@ fn truthiness(expr: &Expression, negated: bool, ctx: &Ctx<'_>) -> Option<Expr> {
 
 /// Translate an expression to its `syn::Expr` form.
 ///
-/// Unmapped expressions fall back to `todo!()` so the generated Rust compiles
-/// but fails loudly at run time if reached.
+/// Every `Expression` variant is matched explicitly (no `_` wildcard): a future
+/// oxc variant lands as a `cargo check` error here rather than silently emitting
+/// `todo!()`. Mapped variants lower to Rust; unmapped ones (JSX, `super`,
+/// dynamic `import()`, `await`/`yield`, bigints, function/class/sequence
+/// expressions) lower to a `todo!()` placeholder that `check` flags as
+/// unsupported before emit.
 pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
     match expr {
+        // Literals & identifiers.
         Expression::StringLiteral(s) => literals::string_expr(s),
         Expression::NumericLiteral(n) => literals::numeric_expr(n.value),
         Expression::BooleanLiteral(b) => literals::bool_expr(b.value),
         Expression::NullLiteral(_) => parse_quote!(None),
+        Expression::RegExpLiteral(re) => regex_literal_expr(re),
         Expression::Identifier(id) => ident_or_undefined(id, ctx),
+        // Compound expressions.
         Expression::CallExpression(call) => call::translate_call(call, ctx),
         Expression::ArrayExpression(arr) => array::array_expr(arr, ctx),
+        Expression::ObjectExpression(obj) => object::object_expr(obj, None, ctx),
+        Expression::TemplateLiteral(t) => template_expr(t, ctx),
+        // Member access (the three `MemberExpression` variants oxc flattens in).
         Expression::StaticMemberExpression(sm) => member::member_expr(sm, ctx),
         Expression::ComputedMemberExpression(cm) => member::computed_member(cm, ctx),
-        Expression::TemplateLiteral(t) => template_expr(t, ctx),
+        Expression::PrivateFieldExpression(_) => unsupported_expr(),
+        // Operators.
         Expression::BinaryExpression(bin) => binary::binary_expr(bin, ctx),
         Expression::LogicalExpression(log) => logical::logical_expr(log, ctx),
         Expression::ConditionalExpression(c) => unary::conditional_expr(c, ctx),
         Expression::UnaryExpression(un) => unary::unary_expr(un, ctx),
         Expression::AssignmentExpression(a) => assignment::assignment_expr(a, ctx),
         Expression::UpdateExpression(u) => assignment::update_expr(u, ctx),
+        // TS type-layer constructs with no runtime effect — passthrough.
         Expression::TSNonNullExpression(nn) => unary::nonnull_expr(nn, ctx),
-        // A TS type assertion (`x as T` / `<T>x`) has no runtime effect — the
-        // inner expression is passed through unchanged.
         Expression::TSAsExpression(a) => translate_expr(&a.expression, ctx),
+        Expression::TSSatisfiesExpression(s) => translate_expr(&s.expression, ctx),
         Expression::TSTypeAssertion(t) => translate_expr(&t.expression, ctx),
+        Expression::TSInstantiationExpression(i) => translate_expr(&i.expression, ctx),
+        // Functions, sequences, references.
         Expression::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
+        Expression::SequenceExpression(s) => sequence_expr(s, ctx),
         // User-written parens are unwrapped; `prettyplease` re-adds any needed
         // for precedence (e.g. `(a + b) * c` round-trips correctly).
         Expression::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
@@ -273,9 +287,47 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         // outside a method → a `compile_error!`.
         Expression::ThisExpression(_) => super::context::this_expr(ctx),
         Expression::NewExpression(n) => new::new_expr(n, ctx),
-        Expression::RegExpLiteral(re) => regex_literal_expr(re),
-        _ => parse_quote!(::core::todo!()),
+        // Unsupported ES/TS constructs. `check` flags these before emit; these
+        // explicit arms (vs a `_` wildcard) keep dispatch exhaustive so a
+        // future oxc variant lands as a `cargo check` error, never silently.
+        Expression::Super(_)
+        | Expression::MetaProperty(_)
+        | Expression::ImportExpression(_)
+        | Expression::AwaitExpression(_)
+        | Expression::YieldExpression(_)
+        | Expression::PrivateInExpression(_)
+        | Expression::JSXElement(_)
+        | Expression::JSXFragment(_)
+        | Expression::V8IntrinsicExpression(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::FunctionExpression(_)
+        | Expression::ClassExpression(_)
+        | Expression::TaggedTemplateExpression(_) => unsupported_expr(),
     }
+}
+
+/// `a, b, c` → `{ a; b; c }` — a Rust block expression: each but the last is a
+/// statement, the last is the block's value, matching ES left-to-right
+/// evaluation and the sequence's value being the final expression.
+fn sequence_expr(s: &SequenceExpression, ctx: &Ctx<'_>) -> Expr {
+    let last = s.expressions.len() - 1;
+    let head: Vec<Stmt> = s.expressions[..last]
+        .iter()
+        .map(|e| {
+            let x = translate_expr(e, ctx);
+            parse_quote!(#x;)
+        })
+        .collect();
+    let tail = translate_expr(&s.expressions[last], ctx);
+    parse_quote!({ #(#head)* #tail })
+}
+
+/// A `todo!()` placeholder for an unmapped expression kind. `check` flags these
+/// as `unsupported` before emit, so reaching one at runtime is a translator/
+/// check mismatch (loud, not silent). Exists to keep [`translate_expr`]
+/// exhaustive without a `_` wildcard.
+fn unsupported_expr() -> Expr {
+    parse_quote!(::core::todo!())
 }
 
 /// `/pattern/flags` → a compiled `regress::Regex` via `__ds::regex`. The
@@ -401,7 +453,31 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         // binding. Fixes `Object.assign(target, { a: 2 })`, where the source
         // previously fell through to `todo!()`.
         Argument::ObjectExpression(obj) => object::object_expr(obj, None, ctx),
-        _ => parse_quote!(::core::todo!()),
+        Argument::AssignmentExpression(a) => assignment::assignment_expr(a, ctx),
+        Argument::UpdateExpression(u) => assignment::update_expr(u, ctx),
+        Argument::ChainExpression(c) => member::chain_expr(&c.expression, ctx),
+        // TS type-layer constructs with no runtime effect — passthrough.
+        Argument::TSSatisfiesExpression(s) => translate_expr(&s.expression, ctx),
+        Argument::TSInstantiationExpression(i) => translate_expr(&i.expression, ctx),
+        Argument::SequenceExpression(s) => sequence_expr(s, ctx),
+        // Unsupported ES/TS constructs — explicit arms keep dispatch exhaustive
+        // (no `_` wildcard), so a future oxc variant lands as a `cargo check`
+        // error rather than silent `todo!()`.
+        Argument::Super(_)
+        | Argument::MetaProperty(_)
+        | Argument::ImportExpression(_)
+        | Argument::AwaitExpression(_)
+        | Argument::YieldExpression(_)
+        | Argument::PrivateInExpression(_)
+        | Argument::PrivateFieldExpression(_)
+        | Argument::JSXElement(_)
+        | Argument::JSXFragment(_)
+        | Argument::V8IntrinsicExpression(_)
+        | Argument::BigIntLiteral(_)
+        | Argument::FunctionExpression(_)
+        | Argument::ClassExpression(_)
+        | Argument::TaggedTemplateExpression(_)
+        | Argument::SpreadElement(_) => unsupported_expr(),
     }
 }
 

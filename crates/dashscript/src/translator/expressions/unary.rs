@@ -181,10 +181,73 @@ pub(super) fn conditional_expr(c: &ConditionalExpression, ctx: &Ctx<'_>) -> Expr
     if let Some(expr) = union_typeof_conditional(c, ctx) {
         return expr;
     }
+    let then_nullish = is_nullish(&c.consequent);
+    let els_nullish = is_nullish(&c.alternate);
+    // `opt ? then : else` where `opt` is an `Option` local — narrow `opt` to
+    // its inner value in the `then` arm via `match opt.clone() { Some(opt) => … }`.
+    // Cloning (not moving) leaves the binding usable afterwards and works for
+    // non-`Copy` inners (`String`/`Vec`/`HashMap`) — the optional-parameter shape.
+    if let Some(name) = option_test_target(&c.test, ctx) {
+        let ident = Ident::new(&name, Span::call_site());
+        let child = ctx.narrow().with_option_some(name);
+        let child_ctx = Ctx::new(ctx.locals(), ctx.registry(), &child, ctx.names());
+        let then = translate_expr(&c.consequent, &child_ctx);
+        let els = translate_expr(&c.alternate, ctx);
+        // `opt ? value : undefined` (or reverse) → an `Option`: the value arm
+        // wraps in `Some`, the nullish arm is `None`. Otherwise both arms share
+        // the value type and emit as-is.
+        let (then_arm, els_arm) = match (then_nullish, els_nullish) {
+            (false, true) => (
+                parse_quote!(::std::option::Option::Some(#then)),
+                parse_quote!(::std::option::Option::None),
+            ),
+            (true, false) => (
+                parse_quote!(::std::option::Option::None),
+                parse_quote!(::std::option::Option::Some(#els)),
+            ),
+            _ => (then, els),
+        };
+        return parse_quote! {
+            match ::std::clone::Clone::clone(&#ident) {
+                ::std::option::Option::Some(#ident) => #then_arm,
+                ::std::option::Option::None => #els_arm,
+            }
+        };
+    }
     let test = super::condition_expr(&c.test, ctx);
     let then = translate_expr(&c.consequent, ctx);
     let els = translate_expr(&c.alternate, ctx);
+    // `cond ? value : undefined/null` (or reverse) — the value wraps in `Some`
+    // so the conditional is an `Option`, matching `T | undefined`.
+    if els_nullish && !then_nullish {
+        return parse_quote! {
+            if #test { ::std::option::Option::Some(#then) } else { ::std::option::Option::None }
+        };
+    }
+    if then_nullish && !els_nullish {
+        return parse_quote! {
+            if #test { ::std::option::Option::None } else { ::std::option::Option::Some(#els) }
+        };
+    }
     parse_quote!(if #test { #then } else { #els })
+}
+
+/// The snake-name of the identifier at the center of an `opt ? … : …` test,
+/// when that identifier is an `Option` local — the target of Option narrowing.
+/// `None` for any other test shape (so a plain ternary falls through to `if`).
+fn option_test_target(test: &Expression, ctx: &Ctx<'_>) -> Option<String> {
+    let Expression::Identifier(id) = test else {
+        return None;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.is_option(&name).then_some(name)
+}
+
+/// Whether `expr` is `undefined`/`null` — the nullish arm of a ternary whose
+/// other arm is a value, so the value wraps in `Some` to form an `Option`.
+fn is_nullish(e: &Expression) -> bool {
+    matches!(e, Expression::NullLiteral(_))
+        || matches!(e, Expression::Identifier(id) if id.name.as_str() == "undefined")
 }
 
 /// `typeof v === "string" ? then : els` (where `v` is an inline scalar-union

@@ -10,7 +10,6 @@ use syn::{parse_quote, BinOp, Expr, Ident};
 use super::super::bindings;
 use super::super::context::Ctx;
 use super::bool_expr;
-use super::option_local_name;
 use super::translate_expr;
 
 /// Method names whose result is a `bool` — `&&`/`||` short-circuit on these
@@ -71,22 +70,15 @@ pub(super) fn logical_expr(log: &LogicalExpression, ctx: &Ctx<'_>) -> Expr {
     }
 }
 
-/// `a ?? b`: when `a` is an `Option`-typed local, `a.unwrap_or_else(|| b)`; when
-/// `a` is non-nullable the result is just `a` (a `??` on a never-null value is a
-/// no-op).
+/// `a ?? b` — `a` is nullable (TS `??` only applies to nullish operands), so it
+/// is an `Option` at runtime and `b` is the default when `a` is `None`. Lowering
+/// uniformly to `unwrap_or_else` covers a recorded Option local, an optional-
+/// chain result, and a bare name whose type went unrecorded (e.g. `let x = cond
+/// ? v : undefined`, whose inferred Option type is not in the locals table).
 fn coalesce_expr(left: &Expression, right: &Expression, ctx: &Ctx<'_>) -> Expr {
+    let left_val = translate_expr(left, ctx);
     let right_val = translate_expr(right, ctx);
-    if let Some(name) = option_local_name(left, ctx) {
-        let ident = bindings::snake(name);
-        return parse_quote!(#ident.unwrap_or_else(|| #right_val));
-    }
-    // An optional-chain result is itself an `Option`, so the right side
-    // supplies the default via `unwrap_or`.
-    if matches!(left, Expression::ChainExpression(_)) {
-        let left_val = translate_expr(left, ctx);
-        return parse_quote!(#left_val.unwrap_or(#right_val));
-    }
-    translate_expr(left, ctx)
+    parse_quote!(#left_val.unwrap_or_else(|| #right_val))
 }
 
 /// A truthiness test for the block-local `__l`, picking the check by the

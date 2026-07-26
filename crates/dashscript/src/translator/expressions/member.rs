@@ -2,7 +2,7 @@
 
 use oxc_ast::ast::{ComputedMemberExpression, Expression, StaticMemberExpression};
 use proc_macro2::Span;
-use syn::{parse_quote, Expr};
+use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
 use super::super::builtins;
@@ -122,7 +122,13 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#field);
         }
     }
-    let obj = translate_expr(&sm.object, ctx);
+    // An `Option` local (non-narrowed) read by field — the author asserted
+    // non-null (a TS `if (opt)` guard, or an optional-parameter promise), so the
+    // receiver lowers to `name.as_ref().unwrap()` and the field sees the inner
+    // value. `Option` has no public fields, so an Option-typed receiver at a
+    // field access is always an inner-value read.
+    let obj =
+        option_unwrap_object(&sm.object, ctx).unwrap_or_else(|| translate_expr(&sm.object, ctx));
     // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a field).
     // TS `.length` is always a `number` → `f64`; `len()` returns `usize`, so cast.
     // Index/repeat sites that need `usize` cast the whole expression again.
@@ -131,6 +137,23 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     }
     let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)
+}
+
+/// If `e` is a bare identifier bound to an `Option<T>` local that is not
+/// narrowed to its inner value, emit `name.as_ref().unwrap()` — the author
+/// asserted non-null (a TS `if (opt)` guard or an optional-parameter promise),
+/// so a field or method access on the receiver reads the inner value. `None`
+/// for any other shape (so a plain receiver is translated normally).
+fn option_unwrap_object(e: &Expression, ctx: &Ctx<'_>) -> Option<Expr> {
+    let Expression::Identifier(id) = e else {
+        return None;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    if !ctx.is_option(&name) || ctx.is_narrowed_some(&name) {
+        return None;
+    }
+    let ident = Ident::new(&name, Span::call_site());
+    Some(parse_quote!(#ident.as_ref().unwrap()))
 }
 
 /// `arr[i]` → `arr[i as usize]`; `m["k"]` on a `HashMap` →

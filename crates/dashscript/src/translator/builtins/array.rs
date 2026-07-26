@@ -60,8 +60,12 @@ pub(in crate::translator) fn array_method_on(
     array_method_on_ident(&id.name, name, args, ctx)
 }
 
-/// Shared receiver guard: only a known-`Vec` local is lowered. Anything else
-/// (a non-Vec local, or — via [`array_method_on`] — a non-identifier/array-like
+/// Shared receiver guard: only a known-`Vec` local is lowered. An
+/// `Option<Vec<…>>` local (a TS optional array / `T[] | undefined`) is lowered
+/// too — the author asserted non-null at the call site (the way `member_expr`
+/// auto-unwraps an Option field access), so the inner Vec is borrowed into a
+/// temp via `.as_ref().unwrap()` before the method dispatches on it. Anything
+/// else (a non-Vec/Option local, or — via [`array_method_on`] — a non-identifier
 /// receiver) returns `None`.
 fn array_method_on_ident(
     recv_name: &str,
@@ -71,11 +75,36 @@ fn array_method_on_ident(
 ) -> Option<Expr> {
     let recv = bindings::snake(recv_name);
     let path = ctx.local_type(&recv.to_string())?;
-    let is_vec = path.segments.last().is_some_and(|s| s.ident == "Vec");
-    if !is_vec {
-        return None;
+    let last = path.segments.last()?;
+    match last.ident.to_string().as_str() {
+        "Vec" => array_method_impl(&recv, name, args, ctx),
+        "Option" if option_inner_is_vec(path) => {
+            let temp: Ident = parse_quote!(__ds_arr);
+            let body = array_method_impl(&temp, name, args, ctx)?;
+            Some(parse_quote!({ let #temp = #recv.as_ref().unwrap(); #body }))
+        }
+        _ => None,
     }
-    array_method_impl(&recv, name, args, ctx)
+}
+
+/// Whether a recorded type path is `Option<Vec<…>>` — the optional-array shape
+/// that [`array_method_on_ident`] lowers by unwrapping the inner Vec.
+fn option_inner_is_vec(path: &syn::Path) -> bool {
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
+    if seg.ident != "Option" {
+        return false;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return false;
+    };
+    args.args.iter().any(|arg| match arg {
+        syn::GenericArgument::Type(syn::Type::Path(tp)) => {
+            tp.path.segments.last().is_some_and(|s| s.ident == "Vec")
+        }
+        _ => false,
+    })
 }
 
 fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
