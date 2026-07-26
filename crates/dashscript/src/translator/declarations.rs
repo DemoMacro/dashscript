@@ -2,11 +2,11 @@
 
 use oxc_ast::ast::{
     TSInterfaceDeclaration, TSLiteral, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeName,
-    TSUnionType,
+    TSTypeParameterDeclaration, TSUnionType,
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
-use syn::{parse_quote, Arm, Ident, Item, ItemEnum, ItemImpl, Type};
+use syn::{parse_quote, Arm, Ident, Item, ItemEnum, ItemImpl, ItemStruct, Type};
 
 use super::{bindings, types};
 
@@ -67,6 +67,7 @@ fn index_signature_alias(name: &Ident, sigs: &[TSSignature]) -> Option<Item> {
 pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Vec<Item> {
     let name: &str = &alias.id.name;
     let name = bindings::type_ident(name);
+    let generics = type_param_idents(&alias.type_parameters);
     match &alias.type_annotation {
         TSType::TSTypeLiteral(lit) => {
             let parent = name.to_string();
@@ -77,24 +78,61 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Vec<Item> {
                 .filter_map(|sig| struct_field(sig, &parent, &mut anon))
                 .collect();
             let mut items = anon;
-            items.push(Item::Struct(
-                parse_quote! { #[derive(Clone)] struct #name { #(#fields)* } },
-            ));
+            let mut item: ItemStruct =
+                parse_quote! { #[derive(Clone)] struct #name { #(#fields)* } };
+            item.generics = make_generics(&generics);
+            items.push(Item::Struct(item));
             items
         }
         TSType::TSUnionType(u) => {
             // A union of string literals or named types becomes an `enum`;
             // anything else falls back to a type alias.
-            if let Some(item) = union_to_enum(&name, u) {
+            if let Some(mut item) = union_to_enum(&name, u) {
+                item.generics = make_generics(&generics);
                 return vec![Item::Enum(item)];
             }
             let ty = types::translate_type(&alias.type_annotation);
-            vec![parse_quote!(type #name = #ty;)]
+            vec![alias_item(&name, &generics, &ty)]
         }
         other => {
             let ty = types::translate_type(other);
-            vec![parse_quote!(type #name = #ty;)]
+            vec![alias_item(&name, &generics, &ty)]
         }
+    }
+}
+
+/// The Rust type-parameter idents of a TS `<T, U>` parameter list — reused by
+/// generic type aliases (and, later, interfaces). Constraints/defaults are
+/// dropped (no `where` clause); Rust monomorphizes each call site.
+fn type_param_idents(
+    tp: &Option<oxc_allocator::Box<'_, TSTypeParameterDeclaration>>,
+) -> Vec<Ident> {
+    tp.as_deref().map_or_else(Vec::new, |tp| {
+        tp.params
+            .iter()
+            .map(|p| bindings::type_ident(&p.name.name))
+            .collect()
+    })
+}
+
+/// A `syn::Generics` from a list of param idents — empty for a non-generic
+/// item, `<T, U>` otherwise. Built by parsing `<…>` so the `<`/`>` tokens and
+/// the param list come out correct without hand-building them.
+fn make_generics(gens: &[Ident]) -> syn::Generics {
+    if gens.is_empty() {
+        return syn::Generics::default();
+    }
+    parse_quote!(<#(#gens),*>)
+}
+
+/// `type Name = T;` (no generics) or `type Name<G, …> = T;`. A generic alias
+/// (`type NonEmptyArray<T> = readonly [T, ...ReadonlyArray<T>]`) keeps `<T>` so
+/// the body's `T` resolves — without it, `T` is an unresolved type (E0425).
+fn alias_item(name: &Ident, gens: &[Ident], ty: &Type) -> Item {
+    if gens.is_empty() {
+        parse_quote!(type #name = #ty;)
+    } else {
+        parse_quote!(type #name<#(#gens),*> = #ty;)
     }
 }
 

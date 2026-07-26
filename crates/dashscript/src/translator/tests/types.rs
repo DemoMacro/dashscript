@@ -394,3 +394,16 @@ fn translates_object_is_frozen_to_false() {
         "got:\n{rust}"
     );
 }
+
+#[test]
+fn translates_generic_type_alias_keeps_param() {
+    // `type NonEmptyArray<T> = [T, ...T[]]` → `type NonEmptyArray<T> = (T,
+    // Vec<T>)` — the `<T>` is kept so the body's `T` resolves instead of
+    // dangling (E0425). A non-generic alias is unchanged.
+    let src = "type NonEmptyArray<T> = [T, ...T[]];";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("type NonEmptyArray<T> = (T, Vec<T>)"),
+        "generic param lost: {rust}"
+    );
+}
