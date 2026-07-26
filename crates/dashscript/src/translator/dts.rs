@@ -61,7 +61,9 @@ pub fn translate_dts(source: &str) -> String {
 }
 
 fn push_interface(items: &mut Vec<Item>, iface: &TSInterfaceDeclaration) {
-    for mut item in declarations::translate_interface(iface) {
+    for mut item in
+        declarations::translate_interface(iface, &super::registry::TypeRegistry::default())
+    {
         make_pub(&mut item);
         items.push(item);
     }

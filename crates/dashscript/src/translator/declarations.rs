@@ -6,15 +6,17 @@ use oxc_ast::ast::{
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
+use std::collections::HashSet;
 use syn::{parse_quote, Arm, Ident, Item, ItemEnum, ItemImpl, ItemStruct, Type};
 
+use super::registry::TypeRegistry;
 use super::{bindings, types};
 
 /// `interface Point { x: number }` → `struct Point { pub x: f64 }`.
 ///
 /// Fields are `pub`: a TS interface describes a value's public shape, so the
 /// Rust struct exposes its fields to match.
-pub fn translate_interface(iface: &TSInterfaceDeclaration) -> Vec<Item> {
+pub fn translate_interface(iface: &TSInterfaceDeclaration, registry: &TypeRegistry) -> Vec<Item> {
     let name: &str = &iface.id.name;
     let name = bindings::type_ident(name);
     // A pure index-signature interface (`{ [key: string]: T }`) is a string-
@@ -31,17 +33,70 @@ pub fn translate_interface(iface: &TSInterfaceDeclaration) -> Vec<Item> {
     // (`parent?: Element`) wraps in `Box` so the struct is finite-sized.
     let parent = name.to_string();
     let mut anon = Vec::new();
-    let fields: Vec<TokenStream> = iface
+    let own_keys: HashSet<String> = iface
+        .body
+        .body
+        .iter()
+        .filter_map(|sig| {
+            let TSSignature::TSPropertySignature(ps) = sig else {
+                return None;
+            };
+            bindings::property_key_name(&ps.key).map(|k| k.to_string())
+        })
+        .collect();
+    let mut fields: Vec<TokenStream> = iface
         .body
         .body
         .iter()
         .filter_map(|sig| struct_field(sig, &parent, &mut anon))
         .collect();
+    // Flatten `extends A, B` parents' fields into this struct (Rust has no
+    // struct inheritance, so a parent's fields are merged verbatim). A field
+    // the child declares wins (ES override); a diamond or cycle is safe via the
+    // seen/visited sets.
+    let mut seen = own_keys;
+    let mut visited = HashSet::new();
+    for inherited in inherited_interface_fields(&iface.id.name, registry, &mut visited) {
+        if !seen.insert(inherited.name.clone()) {
+            continue;
+        }
+        let key = Ident::new(&inherited.name, proc_macro2::Span::call_site());
+        let inner = inherited.ty.clone();
+        let ty = if inherited.optional {
+            parse_quote!(Option<#inner>)
+        } else {
+            inner
+        };
+        fields.push(quote!(pub #key: #ty,));
+    }
     let mut items = anon;
     items.push(Item::Struct(
         parse_quote! { #[derive(Clone)] struct #name { #(#fields)* } },
     ));
     items
+}
+
+/// Recursively collect the own fields of every interface `name` extends
+/// (depth-first: a parent's parents first, then the parent itself). A `visited`
+/// set breaks a cycle (`A extends B, B extends A`); the caller dedupes by name.
+fn inherited_interface_fields(
+    name: &str,
+    registry: &TypeRegistry,
+    visited: &mut HashSet<String>,
+) -> Vec<super::registry::InterfaceField> {
+    if !visited.insert(name.to_string()) {
+        return Vec::new();
+    }
+    let mut out = Vec::new();
+    if let Some(parents) = registry.interface_extends.get(name) {
+        for parent in parents {
+            out.extend(inherited_interface_fields(parent, registry, visited));
+            if let Some(own) = registry.interface_own_fields.get(parent) {
+                out.extend(own.iter().cloned());
+            }
+        }
+    }
+    out
 }
 
 /// `interface X { [key: string]: T }` (a sole index signature, no property

@@ -13,11 +13,11 @@
 use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
-    Class, ClassElement, Declaration, Function, MethodDefinitionKind, Statement,
+    Class, ClassElement, Declaration, Expression, Function, MethodDefinitionKind, Statement,
     TSInterfaceDeclaration, TSLiteral, TSSignature, TSType, TSTypeAliasDeclaration, TSTypeLiteral,
     VariableDeclaration,
 };
-use syn::{parse_quote, Ident, ItemEnum, Path};
+use syn::{parse_quote, Ident, ItemEnum, Path, Type};
 
 use super::analysis;
 use super::bindings;
@@ -31,6 +31,18 @@ use super::types;
 pub struct VariantShape {
     pub name: Ident,
     pub fields: Vec<Ident>,
+}
+
+/// A field of an interface (or one it `extends`): the snake-case Rust name,
+/// the translated type, and whether it is optional (`?:`). Recorded in the
+/// first pass so `interface B extends A` flattens `A`'s fields into `B`'s
+/// struct — Rust has no struct inheritance, so the parent's fields are merged
+/// verbatim (ES override semantics: a child field of the same name wins).
+#[derive(Clone)]
+pub struct InterfaceField {
+    pub name: String,
+    pub ty: Type,
+    pub optional: bool,
 }
 
 /// Project-wide type info gathered in the first pass.
@@ -62,6 +74,12 @@ pub struct TypeRegistry {
     /// `types::union_type` references the same name, and the translator emits
     /// these definitions before the body items.
     pub union_enums: HashMap<Ident, ItemEnum>,
+    /// Interface name → the interfaces it `extends`. Used to flatten parent
+    /// fields into the child struct (Rust has no struct inheritance).
+    pub interface_extends: HashMap<String, Vec<String>>,
+    /// Interface name → its own declared fields (excluding inherited). The
+    /// translate pass merges these across the `extends` chain.
+    pub interface_own_fields: HashMap<String, Vec<InterfaceField>>,
 }
 
 impl TypeRegistry {
@@ -75,6 +93,8 @@ impl TypeRegistry {
             structs: HashMap::new(),
             mut_methods: HashSet::new(),
             union_enums: HashMap::new(),
+            interface_extends: HashMap::new(),
+            interface_own_fields: HashMap::new(),
         }
     }
 }
@@ -145,13 +165,52 @@ fn register_type_alias(alias: &TSTypeAliasDeclaration, registry: &mut TypeRegist
 }
 
 fn register_interface(iface: &TSInterfaceDeclaration, registry: &mut TypeRegistry) {
+    let name = iface.id.name.to_string();
+    let fields: Vec<InterfaceField> = iface
+        .body
+        .body
+        .iter()
+        .filter_map(|sig| {
+            let TSSignature::TSPropertySignature(ps) = sig else {
+                return None;
+            };
+            let key = bindings::property_key_name(&ps.key)?;
+            let ty = ps
+                .type_annotation
+                .as_ref()
+                .map(|ta| types::translate_type(&ta.type_annotation))
+                .unwrap_or_else(|| parse_quote!(_));
+            Some(InterfaceField {
+                name: key.to_string(),
+                ty,
+                optional: ps.optional,
+            })
+        })
+        .collect();
+    registry.interface_own_fields.insert(name.clone(), fields);
+    let extends: Vec<String> = iface
+        .extends
+        .iter()
+        .filter_map(|h| heritage_name(&h.expression))
+        .collect();
+    if !extends.is_empty() {
+        registry.interface_extends.insert(name.clone(), extends);
+    }
     let optionals = collect_optionals(&iface.body.body);
     if !optionals.is_empty() {
-        registry
-            .structs
-            .insert(iface.id.name.to_string(), optionals);
+        registry.structs.insert(name, optionals);
     }
     collect_unions_in_signatures(&iface.body.body, &mut registry.union_enums);
+}
+
+/// The name an `extends` clause references (the parent interface), if it is a
+/// plain identifier — `interface B extends A` → `Some("A")`. A non-identifier
+/// heritage (a computed/membership expression) is not a static parent.
+fn heritage_name(expr: &Expression) -> Option<String> {
+    match expr {
+        Expression::Identifier(id) => Some(id.name.to_string()),
+        _ => None,
+    }
 }
 
 fn register_function(func: &Function, names: &NameTable, registry: &mut TypeRegistry) {

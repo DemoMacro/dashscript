@@ -49,7 +49,7 @@ pub fn translate_statement(
         }
         Statement::ClassDeclaration(class) => super::class::translate_class(class, registry, names),
         Statement::TSInterfaceDeclaration(iface) => {
-            declarations::translate_interface(iface)
+            declarations::translate_interface(iface, registry)
         }
         Statement::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
         // `export function/interface/type/class` lowers the declaration(s) and
@@ -495,7 +495,9 @@ fn translate_exported_declaration(
         Declaration::ClassDeclaration(class) => {
             super::class::translate_class(class, registry, names)
         }
-        Declaration::TSInterfaceDeclaration(iface) => declarations::translate_interface(iface),
+        Declaration::TSInterfaceDeclaration(iface) => {
+            declarations::translate_interface(iface, registry)
+        }
         Declaration::TSTypeAliasDeclaration(alias) => declarations::translate_type_alias(alias),
         // `export const name = <T>(params): ret => body` — a const-bound arrow
         // is a named function (the binding names it), so it lowers to a `fn`
@@ -535,7 +537,7 @@ fn translate_default_declaration(
             super::class::translate_class(class, registry, names)
         }
         ExportDefaultDeclarationKind::TSInterfaceDeclaration(iface) => {
-            declarations::translate_interface(iface)
+            declarations::translate_interface(iface, registry)
         }
         // `export default <expression>` (a value, not a declaration) names no
         // item — Rust has no anonymous default value, so it stays unsupported.
