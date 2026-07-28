@@ -9,6 +9,7 @@ mod collections;
 mod console;
 mod control_flow;
 mod destructuring;
+mod enums;
 mod esm;
 mod globals;
 mod json;

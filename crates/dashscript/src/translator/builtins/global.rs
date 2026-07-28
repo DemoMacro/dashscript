@@ -169,9 +169,8 @@ fn ident_string_local(arg: &Argument, ctx: &Ctx<'_>) -> bool {
 /// when possible: a number (`0`/`NaN` → `false`, else `true`), a string
 /// (`!is_empty()`), `true`/`false` to itself. An identifier dispatches on its
 /// known type: a `Vec`/`HashMap`/`String` → `!is_empty()`, an `Option` →
-/// `is_some()`, a `bool` → itself, anything else (an `f64`) → `!= 0_f64`. An
-/// expression of unknown type falls back to `!= 0_f64` (TS `Boolean` is most
-/// often applied to numbers).
+/// `is_some()`, a `bool` → itself, a number → `!= 0`. An expression of unknown
+/// type falls back to `__ds::truthy` — the compiler picks the impl.
 fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
     match arg {
         Argument::BooleanLiteral(b) => bool_expr(b.value),
@@ -190,12 +189,16 @@ fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
                 Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#name.is_empty()),
                 Some("Option") => parse_quote!(#name.is_some()),
                 Some("bool") => parse_quote!(#name),
-                _ => parse_quote!(#name != 0_f64),
+                Some("f64") => parse_quote!(#name != 0_f64),
+                Some(
+                    "i64" | "i32" | "i16" | "i8" | "isize" | "usize" | "u64" | "u32" | "u16" | "u8",
+                ) => parse_quote!(#name != 0),
+                _ => parse_quote!(crate::__ds::truthy(&#name)),
             }
         }
         _ => {
             let e = translate_argument(arg, ctx);
-            parse_quote!(#e != 0_f64)
+            parse_quote!(crate::__ds::truthy(&#e))
         }
     }
 }

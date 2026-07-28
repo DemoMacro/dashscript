@@ -2,10 +2,12 @@
 
 use oxc_ast::ast::{
     TSArrayType, TSFunctionType, TSLiteralType, TSTupleElement, TSTupleType, TSType, TSTypeName,
-    TSTypeOperator, TSTypeOperatorOperator, TSTypeReference, TSUnionType,
+    TSTypeOperator, TSTypeOperatorOperator, TSTypeQueryExprName, TSTypeReference, TSUnionType,
 };
 use quote::format_ident;
 use syn::{parse_quote, Type};
+
+use super::registry::TypeRegistry;
 
 /// Map a TypeScript type annotation to its Rust equivalent as a `syn::Type`.
 ///
@@ -38,6 +40,16 @@ pub fn translate_type(ty: &TSType) -> Type {
         // `[number, string]` → `(f64, String)`; `[T, ...T[]]` (NonEmptyArray) →
         // `(T, Vec<T>)` — a leading run of fixed elements then a `Vec` tail.
         TSType::TSTupleType(t) => tuple_type(t),
+        // `{ x: number; y: string }` — an anonymous object-literal type lowers
+        // to a synthetic `__DsAnon_<hash>` struct (one definition per unique
+        // shape, emitted by the registry pre-pass; the crate-root definition is
+        // shared across modules so a `crate::`-prefixed reference resolves
+        // everywhere). A literal with an index signature or any non-property
+        // member is a map, not a struct — falls back to `_`.
+        TSType::TSTypeLiteral(lit) => match super::declarations::anon_struct_for_literal(lit) {
+            Some((name, _)) => parse_quote!(crate::#name),
+            None => parse_quote!(_),
+        },
         // `(T)` — parens are grouping only; the inner type is the shape.
         TSType::TSParenthesizedType(p) => translate_type(&p.type_annotation),
         // `` `Hello ${string}` `` — a template-literal type is a `String` at runtime.
@@ -66,13 +78,55 @@ pub fn translate_type(ty: &TSType) -> Type {
         | TSType::TSIntersectionType(_)
         | TSType::TSMappedType(_)
         | TSType::TSNamedTupleMember(_)
-        | TSType::TSTypeLiteral(_)
         | TSType::TSTypePredicate(_)
         | TSType::TSTypeQuery(_)
         | TSType::JSDocNullableType(_)
         | TSType::JSDocNonNullableType(_)
         | TSType::JSDocUnknownType(_) => parse_quote!(_),
     }
+}
+
+/// Translate a type that appears in a function signature (a parameter or
+/// return type), resolving the `ReturnType<typeof fn>` utility type to the
+/// named function's declared return type. Other types map through
+/// [`translate_type`] unchanged — a thin overlay so signature positions get
+/// `ReturnType` resolution without threading the registry through every
+/// `translate_type` call site. A `ReturnType` whose argument is not
+/// `typeof <identifier>`, or whose function is unknown or unannotated, falls
+/// back to `_` (the way an unannotated return would).
+pub fn translate_type_for_signature(ty: &TSType, registry: &TypeRegistry) -> Type {
+    if let Some(resolved) = return_type_of_query(ty, registry) {
+        return resolved;
+    }
+    translate_type(ty)
+}
+
+/// `ReturnType<typeof normalizeOptions>` → the return-type path of
+/// `normalizeOptions` from the registry, as a Rust type. `None` for any other
+/// shape (the caller falls back to [`translate_type`]).
+fn return_type_of_query(ty: &TSType, registry: &TypeRegistry) -> Option<Type> {
+    let TSType::TSTypeReference(r) = ty else {
+        return None;
+    };
+    let TSTypeName::IdentifierReference(id) = &r.type_name else {
+        return None;
+    };
+    if id.name.as_ref() != "ReturnType" {
+        return None;
+    }
+    let arg = r.type_arguments.as_ref()?.params.first()?;
+    let TSType::TSTypeQuery(q) = arg else {
+        return None;
+    };
+    let TSTypeQueryExprName::IdentifierReference(fn_id) = &q.expr_name else {
+        return None;
+    };
+    let ret_path = registry.function_returns.get(fn_id.name.as_ref())?;
+    Some(
+        ret_path
+            .clone()
+            .map_or_else(|| parse_quote!(_), |p| parse_quote!(#p)),
+    )
 }
 
 /// A TS literal type (`5` / `"x"` / `true`) → its scalar Rust type, the way the
@@ -261,6 +315,11 @@ fn union_type(u: &TSUnionType) -> Type {
         // file is a lone entry (the enum lives in its own crate root) or a
         // project module (the entry emits the enum; modules reference it). A
         // bare name would name a distinct type per module (E0308).
+        return parse_quote!(crate::#name);
+    }
+    // A mixed union (`boolean | string[]`, `string | { … }`) — each member
+    // independently lowers to a variant. Same `crate::` prefix rationale.
+    if let Some((name, _, _)) = super::declarations::inline_mixed_union_enum(u) {
         return parse_quote!(crate::#name);
     }
     parse_quote!(_)

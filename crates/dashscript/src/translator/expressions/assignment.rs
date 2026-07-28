@@ -10,7 +10,7 @@ use syn::{parse_quote, Expr, Ident};
 use super::super::bindings;
 use super::super::context::Ctx;
 use super::logical::assign_truthy;
-use super::member::is_hashmap_local;
+use super::member::{is_hashmap_local, static_member_is_optional_field};
 use super::{array_elem_expr, ident_expr, translate_expr};
 
 /// The lvalue kind of an assignment's left-hand side. A plain target is any
@@ -60,7 +60,19 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                             let lit_token = syn::LitStr::new(lit, proc_macro2::Span::call_site());
                             quote!(#target.push_str(#lit_token))
                         }
-                        None => quote!(#target = #num_right),
+                        None => {
+                            // `obj.opt_field = value` — the field is `Option<T>`
+                            // (a `?:` field), so wrap the RHS in `Some(..)`,
+                            // unless the RHS already yields `Option<T>` (reading
+                            // another optional field, or an `Option`-typed local).
+                            if assign_target_is_optional_field(&a.left, ctx)
+                                && !right_yields_option(&a.right, ctx)
+                            {
+                                quote!(#target = Some(#num_right))
+                            } else {
+                                quote!(#target = #num_right)
+                            }
+                        }
                     }
                 }
                 // `s += <expr>` is string append (String has no AddAssign) → `push_str`.
@@ -319,5 +331,33 @@ fn self_plus_string_literal<'a>(
             _ => None,
         },
         _ => None,
+    }
+}
+
+/// Whether an assignment target is `obj.opt_field` — `obj` a struct-typed
+/// local/param, `opt_field` a registered `?:` field — so the store must wrap
+/// the RHS in `Some(..)` (the field is `Option<T>` in Rust).
+fn assign_target_is_optional_field(left: &AssignmentTarget, ctx: &Ctx<'_>) -> bool {
+    let AssignmentTarget::StaticMemberExpression(sm) = left else {
+        return false;
+    };
+    let field = bindings::snake(&sm.property.name);
+    static_member_is_optional_field(&sm.object, &field, ctx)
+}
+
+/// Whether an RHS already yields `Option<T>` — a bare `Option`-typed local, or
+/// a read of another `obj.opt_field` — so an optional-field store must NOT wrap
+/// it again in `Some(..)` (that would give `Some(Option<T>)`).
+fn right_yields_option(right: &Expression, ctx: &Ctx<'_>) -> bool {
+    match right {
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.is_option(&name)
+        }
+        Expression::StaticMemberExpression(sm) => {
+            let field = bindings::snake(&sm.property.name);
+            static_member_is_optional_field(&sm.object, &field, ctx)
+        }
+        _ => false,
     }
 }

@@ -75,6 +75,54 @@ fn translate_dep(
     }
 }
 
+/// Walk the import graph from `src` and aggregate every `.ts`/`.d.ts` file's
+/// optional (`?:`) field names, so each file sees imported interfaces'
+/// optionals — a cross-file `opts?.field ?? d` needs to know `field` is
+/// optional, but each file builds its own `TypeRegistry`. Pure-`.js` deps (no
+/// type annotations) are skipped. This is the cross-file half of each file's
+/// per-file registry; the union is injected via `with_extra_optionals`.
+fn collect_package_optionals(
+    src: &str,
+    src_path: &Path,
+) -> Result<std::collections::HashMap<String, std::collections::HashSet<String>>, Box<dyn Error>> {
+    use std::collections::{HashMap, HashSet, VecDeque};
+    let collector = Translator::new();
+    let mut shared: HashMap<String, HashSet<String>> = collector
+        .collect_optionals(src)
+        .map_err(|e| format!("collect optionals {}: {e}", src_path.display()))?;
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    for imp in collector.imports(src) {
+        if seen.insert(imp.module.clone()) {
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            if !matches!(kind, DepKind::Js) {
+                worklist.push_back((imp.module, dep_path));
+            }
+        }
+    }
+    while let Some((_module, path)) = worklist.pop_front() {
+        let dep_src = fs::read_to_string(&path)
+            .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
+        for (k, v) in collector
+            .collect_optionals(&dep_src)
+            .map_err(|e| format!("collect optionals {}: {e}", path.display()))?
+        {
+            shared.entry(k).or_insert_with(|| v);
+        }
+        let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&dep_src) {
+            if seen.insert(imp.module.clone()) {
+                let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
+                if !matches!(kind, DepKind::Js) {
+                    worklist.push_back((imp.module, dep_path));
+                }
+            }
+        }
+    }
+    Ok(shared)
+}
+
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
 /// `project_dir/src/`. The caller writes `Cargo.toml`. Shared by a single-
@@ -87,7 +135,12 @@ pub(crate) fn translate_sources(
     src_path: &Path,
     project_dir: &Path,
 ) -> Result<RuntimeDeps, Box<dyn Error>> {
-    let translator = Translator::new();
+    // Aggregate optional (`?:`) field names across the whole import graph
+    // first, so every file — the entry and each dep — sees imported
+    // interfaces' optionals. A cross-file `opts?.field ?? d` needs to know
+    // `field` is optional, but each file builds its own `TypeRegistry`.
+    let shared_optionals = collect_package_optionals(src, src_path)?;
+    let translator = Translator::new().with_extra_optionals(shared_optionals);
     let (rust, mut deps) = translator
         .translate_with_deps(src)
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;

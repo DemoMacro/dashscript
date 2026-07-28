@@ -99,7 +99,7 @@ pub(super) fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
                 Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#l.is_empty()),
                 Some("Option") => parse_quote!(#l.is_some()),
                 Some("bool") => parse_quote!(#l),
-                _ => parse_quote!(#l != 0_f64),
+                _ => parse_quote!(crate::__ds::truthy(&#l)),
             }
         }
         Expression::CallExpression(call)
@@ -110,7 +110,7 @@ pub(super) fn truthy_cond(left: &Expression, ctx: &Ctx<'_>) -> Expr {
         }
         Expression::NumericLiteral(n) => bool_expr(n.value != 0_f64 && !n.value.is_nan()),
         Expression::BooleanLiteral(b) => bool_expr(b.value),
-        _ => parse_quote!(#l != 0_f64),
+        _ => parse_quote!(crate::__ds::truthy(&#l)),
     }
 }
 
@@ -173,8 +173,9 @@ pub(super) fn expr_is_bool(expr: &Expression, ctx: &Ctx<'_>) -> bool {
 }
 
 /// The truthiness test for an assignment target, picking the check by its
-/// declared type (an identifier local) — used by `||=`/`&&=`. Falls back to a
-/// numeric `!= 0_f64` when the type is unknown or the target isn't an identifier.
+/// declared type (an identifier local) — used by `||=`/`&&=`. Falls back to
+/// `__ds::truthy` when the type is unknown or the target isn't an identifier —
+/// the Rust compiler picks the `DsTruthy` impl by inferred type.
 pub(super) fn assign_truthy(left: &AssignmentTarget, target: &Expr, ctx: &Ctx<'_>) -> Expr {
     if let AssignmentTarget::AssignmentTargetIdentifier(id) = left {
         let name = bindings::snake(&id.name).to_string();
@@ -186,8 +187,8 @@ pub(super) fn assign_truthy(left: &AssignmentTarget, target: &Expr, ctx: &Ctx<'_
             Some("Vec") | Some("HashMap") | Some("String") => parse_quote!(!#target.is_empty()),
             Some("Option") => parse_quote!(#target.is_some()),
             Some("bool") => parse_quote!(#target),
-            _ => parse_quote!(#target != 0_f64),
+            _ => parse_quote!(crate::__ds::truthy(&#target)),
         };
     }
-    parse_quote!(#target != 0_f64)
+    parse_quote!(crate::__ds::truthy(&#target))
 }

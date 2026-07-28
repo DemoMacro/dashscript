@@ -150,6 +150,11 @@ pub fn translate_statement(
             }
             items
         }
+        // `enum Color { Red, Green }` → `pub mod Color { pub const Red: i64 =
+        // 0; pub const Green: i64 = 1; }` — a runtime object of named values,
+        // the way an ES enum works. A non-literal initializer yields nothing
+        // here and `check` flags the enum unsupported.
+        Statement::TSEnumDeclaration(decl) => declarations::translate_enum(decl).unwrap_or_default(),
         // Executable statements run in the implicit `fn main`, not as items
         // (see `is_executable_top_level`); an empty item list is correct.
         Statement::ExpressionStatement(_)
@@ -175,7 +180,6 @@ pub fn translate_statement(
         // keep dispatch exhaustive (no `_` wildcard).
         | Statement::LabeledStatement(_)
         | Statement::WithStatement(_)
-        | Statement::TSEnumDeclaration(_)
         | Statement::TSModuleDeclaration(_)
         | Statement::TSGlobalDeclaration(_)
         | Statement::TSImportEqualsDeclaration(_)
@@ -516,6 +520,9 @@ fn translate_exported_declaration(
                 _ => None,
             })
             .collect(),
+        Declaration::TSEnumDeclaration(decl) => {
+            declarations::translate_enum(decl).unwrap_or_default()
+        }
         _ => Vec::new(),
     }
 }
@@ -569,7 +576,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
     // both go through [`body_locals`] (the single source of truth for "how a
     // function body's locals are built").
     let mut locals = body_locals(&func.params, func.body.as_deref(), registry, names);
-    let inputs = translate_params(&func.params, &locals, names);
+    let inputs = translate_params(&func.params, &locals, registry, names);
     // `void` / `undefined` map to an omitted return type (Rust infers `()`).
     let output = func
         .return_type
@@ -578,7 +585,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
             TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
             ty => Some(ReturnType::Type(
                 Default::default(),
-                Box::new(types::translate_type(ty)),
+                Box::new(types::translate_type_for_signature(ty, registry)),
             )),
         })
         .or_else(|| {
@@ -664,7 +671,7 @@ fn translate_const_arrow_to_fn(
     names: &NameTable<'_>,
 ) -> ItemFn {
     let mut locals = body_locals(&arrow.params, Some(arrow.body.as_ref()), registry, names);
-    let inputs = translate_params(&arrow.params, &locals, names);
+    let inputs = translate_params(&arrow.params, &locals, registry, names);
     let output = arrow_return_type(arrow.return_type.as_deref());
     let return_path = arrow.return_type.as_deref().and_then(return_path_of);
     let block = if arrow.expression {
@@ -768,6 +775,7 @@ pub(in crate::translator) fn return_path_of(ta: &oxc_ast::ast::TSTypeAnnotation)
 pub(in crate::translator) fn translate_params(
     params: &FormalParameters,
     locals: &Locals,
+    registry: &TypeRegistry,
     names: &NameTable<'_>,
 ) -> Vec<FnArg> {
     params
@@ -784,7 +792,7 @@ pub(in crate::translator) fn translate_params(
             let ty = fp
                 .type_annotation
                 .as_ref()
-                .map(|ta| types::translate_type(&ta.type_annotation))
+                .map(|ta| types::translate_type_for_signature(&ta.type_annotation, registry))
                 .unwrap_or_else(|| parse_quote!(f64));
             // An optional (`?:`) or default-initialized parameter is `Option<T>`
             // — callers pass `None` for a missing/`undefined` argument, and the
@@ -888,7 +896,113 @@ pub(in crate::translator) fn body_locals(
     // pure integers. Conservative — a `: number` annotation or any fractional /
     // division / `Math.*` value forces `F64` in `flavor::infer`.
     locals.number_flavors = super::flavor::infer(&body.statements, names);
+    // Record each top-level `let`/`const` binding's type — an explicit
+    // annotation, else the return type of an initializing function call — so a
+    // later `obj.optional_field` access knows the field's struct type.
+    register_let_types(body, &mut locals, registry);
     locals
+}
+
+/// Scan a body's `let`/`const` declarations (recursing into nested blocks and
+/// control-flow bodies, the way `flavor::walk_stmt` does) and record each
+/// binding's type path into `locals`: an explicit annotation wins
+/// (`let x: T = …` → `T`), else the return type of an initializing bare-call
+/// (`let x = f()` → f's declared return type). Destructuring and member-call
+/// inits (`obj.method()`) are out of scope — a later batch. This closes the gap
+/// that an unannotated `let parent = peek(stack)` inside a `while` body left
+/// `parent`'s type unknown, so an optional-field store (`parent.elements = v`)
+/// could not be recognized as `Option<Vec<…>>`.
+fn register_let_types(
+    body: &oxc_ast::ast::FunctionBody,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+) {
+    for stmt in &body.statements {
+        register_let_walk(stmt, locals, registry);
+    }
+}
+
+/// Recursive statement walk for [`register_let_types`] — mirrors
+/// `flavor::walk_stmt`'s descent into every block-bearing statement so a `let`
+/// deep inside a `while`/`if`/`for` is reached.
+fn register_let_walk(stmt: &oxc_ast::ast::Statement, locals: &mut Locals, registry: &TypeRegistry) {
+    use oxc_ast::ast::{ForStatementInit, Statement};
+    match stmt {
+        Statement::BlockStatement(b) => {
+            for s in &b.body {
+                register_let_walk(s, locals, registry);
+            }
+        }
+        Statement::VariableDeclaration(v) => {
+            for d in &v.declarations {
+                register_declarator(d, locals, registry);
+            }
+        }
+        Statement::IfStatement(if_stmt) => {
+            register_let_walk(&if_stmt.consequent, locals, registry);
+            if let Some(alt) = &if_stmt.alternate {
+                register_let_walk(alt, locals, registry);
+            }
+        }
+        Statement::WhileStatement(w) => register_let_walk(&w.body, locals, registry),
+        Statement::DoWhileStatement(dw) => register_let_walk(&dw.body, locals, registry),
+        Statement::ForStatement(f) => {
+            if let Some(ForStatementInit::VariableDeclaration(v)) = &f.init {
+                for d in &v.declarations {
+                    register_declarator(d, locals, registry);
+                }
+            }
+            register_let_walk(&f.body, locals, registry);
+        }
+        Statement::ForOfStatement(fo) => register_let_walk(&fo.body, locals, registry),
+        Statement::ForInStatement(fi) => register_let_walk(&fi.body, locals, registry),
+        Statement::SwitchStatement(sw) => {
+            for c in &sw.cases {
+                for s in &c.consequent {
+                    register_let_walk(s, locals, registry);
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
+/// One `let`/`const` declarator's contribution to `locals` (see
+/// [`register_let_types`]). A non-binding-identifier pattern (destructuring) is
+/// skipped. Only an unannotated `let x = fn()` shape is inferred — an annotated
+/// binding or any other initializer is left to its existing lowering.
+fn register_declarator(
+    decl: &oxc_ast::ast::VariableDeclarator,
+    locals: &mut Locals,
+    registry: &TypeRegistry,
+) {
+    use oxc_ast::ast::{BindingPattern, Expression};
+    let BindingPattern::BindingIdentifier(id) = &decl.id else {
+        return;
+    };
+    let name = bindings::snake(id.name.as_str()).to_string();
+    if let Some(Expression::CallExpression(call)) = &decl.init {
+        if let Some(path) = callee_return_path(call, registry) {
+            locals.insert(name, path);
+        }
+    }
+}
+
+/// The declared return-type path of a `fn_name(…)` call's callee, when the
+/// callee is a bare identifier naming a function with an annotated return type.
+fn callee_return_path(
+    call: &oxc_ast::ast::CallExpression,
+    registry: &TypeRegistry,
+) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &call.callee else {
+        return None;
+    };
+    registry
+        .function_returns
+        .get(id.name.as_str())
+        .cloned()
+        .flatten()
 }
 
 pub(in crate::translator) fn translate_body(

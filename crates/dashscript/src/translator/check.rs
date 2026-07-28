@@ -287,7 +287,10 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
         ),
         Statement::ExportAllDeclaration(s) => err("module `export *` is not supported yet", s.span),
         Statement::TSEnumDeclaration(s) => err(
-            "TypeScript `enum` is not supported (use a union type instead)",
+            "this TypeScript `enum` has a member whose value is not a literal \
+             (a computed name or a non-literal initializer) — only \
+             literal-initialized or auto-incrementing numeric/string members \
+             are supported",
             s.span,
         ),
         _ => OxcDiagnostic::error("this top-level statement cannot be translated to Rust"),

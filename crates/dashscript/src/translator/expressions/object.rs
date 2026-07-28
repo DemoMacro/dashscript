@@ -4,7 +4,6 @@
 use std::collections::HashSet;
 
 use oxc_ast::ast::{Expression, ObjectExpression, ObjectPropertyKind, PropertyKey};
-use proc_macro2::Span;
 use syn::{parse_quote, Expr, GenericArgument, Ident};
 
 use super::super::bindings;
@@ -121,7 +120,11 @@ fn missing_optionals(
         .iter()
         .filter(|name| !present.contains(*name))
         .map(|name| {
-            let id = Ident::new(name.as_str(), Span::call_site());
+            // `name` is the stored snake-case field name; for a Rust keyword it
+            // is a raw-ident string (`r#type`). Strip the raw marker and
+            // re-derive via `snake` so the keyword is re-raw'd correctly.
+            let stripped = name.strip_prefix("r#").unwrap_or(name.as_str());
+            let id = bindings::snake(stripped);
             parse_quote!(#id: None)
         })
         .collect()

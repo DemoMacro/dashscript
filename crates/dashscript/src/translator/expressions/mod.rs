@@ -171,12 +171,51 @@ pub(in crate::translator) fn condition_expr(test: &Expression, ctx: &Ctx<'_>) ->
     }
     if let Expression::UnaryExpression(un) = test {
         if matches!(un.operator, UnaryOperator::LogicalNot) {
+            // `!x` → `!(condition(x))` — recurse so `!opts.indent` lowers to
+            // `!__ds::truthy(&opts.indent)` rather than E0600 (`!` on a String).
+            // The negated truthiness fast path (a bare identifier of known type)
+            // is tried first; falling through recurses so a member access inside
+            // `!` still gets `__ds::truthy`.
             if let Some(e) = truthiness(&un.argument, true, ctx) {
                 return e;
             }
+            let inner = condition_expr(&un.argument, ctx);
+            return parse_quote!(!(#inner));
         }
     }
+    if needs_truthy_wrapper(test) {
+        let e = translate_expr(test, ctx);
+        return parse_quote!(crate::__ds::truthy(&(#e)));
+    }
     translate_expr(test, ctx)
+}
+
+/// Whether `test` needs an `__ds::truthy(&expr)` wrapper in condition position.
+/// Returns `true` for anything not obviously a Rust `bool`: a bare identifier
+/// of unknown type (an `Element` value), a member access, a call, a cast, an
+/// arithmetic binary, logical `&&`/`||` (which lower to ES value semantics, not
+/// `bool`). Returns `false` only for what is already `bool` — a comparison
+/// operator (`==`/`!=`/`===`/`!==`/`<`/`<=`/`>`/`>=`) or a boolean literal.
+/// The Rust compiler then picks the `DsTruthy` impl by inferred type, so the
+/// translator needs no type inference (the root cause of the
+/// `let opts = normalize_options(…)` case — `opts` is `_`-typed to the translator).
+fn needs_truthy_wrapper(test: &Expression) -> bool {
+    use oxc_syntax::operator::BinaryOperator;
+    match test {
+        Expression::BinaryExpression(bin) => !matches!(
+            bin.operator,
+            BinaryOperator::Equality
+                | BinaryOperator::Inequality
+                | BinaryOperator::StrictEquality
+                | BinaryOperator::StrictInequality
+                | BinaryOperator::LessThan
+                | BinaryOperator::LessEqualThan
+                | BinaryOperator::GreaterThan
+                | BinaryOperator::GreaterEqualThan
+        ),
+        Expression::BooleanLiteral(_) => false,
+        _ => true,
+    }
 }
 
 /// The Rust boolean form of an ES truthiness test. A numeric literal folds to
@@ -233,7 +272,20 @@ fn truthiness(expr: &Expression, negated: bool, ctx: &Ctx<'_>) -> Option<Expr> {
         } else {
             parse_quote!(#ident.is_some())
         }),
-        _ => None,
+        // A bare `bool` is already a Rust `bool` — no conversion. The caller
+        // uses the expr as-is (`if b`, `b && c`) or applies `!` itself (`!b`),
+        // both of which typecheck without help.
+        "bool" => None,
+        // Any other identifier type (a user struct/enum, a union, an opaque
+        // type) is an ES object — always truthy. This avoids a `DsTruthy` impl
+        // per user type and matches ES: only the falsy primitives
+        // (`0`/`NaN`/`""`/`null`/`undefined`/`false`) are falsy; objects are
+        // always truthy.
+        _ => Some(if negated {
+            parse_quote!(false)
+        } else {
+            parse_quote!(true)
+        }),
     }
 }
 

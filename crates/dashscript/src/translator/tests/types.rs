@@ -137,10 +137,69 @@ fn translates_scalar_union_to_enum() {
 }
 
 #[test]
+fn translates_mixed_union_scalar_and_array_to_enum() {
+    // `boolean | string[]` — the `alwaysArray` shape — mixes a scalar and an
+    // array member; each lowers to its own variant (ts2rust tagged-union model).
+    let src = "type AlwaysArray = boolean | string[];";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("enum AlwaysArray"), "got:\n{rust}");
+    assert!(rust.contains("Bool(bool)"), "got:\n{rust}");
+    assert!(rust.contains("ArrayOfStr(Vec<String>)"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_mixed_union_with_inline_object_to_enum() {
+    // `boolean | { encoding?: string }` — a scalar plus an inline-object
+    // member; the object becomes a tuple variant wrapping a `__DsAnon_<hash>`
+    // struct (the duplicate pattern), emitted before the enum.
+    let src = "type Decl = boolean | { encoding?: string; standalone?: string };";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("enum Decl"), "got:\n{rust}");
+    assert!(rust.contains("Bool(bool)"), "got:\n{rust}");
+    assert!(
+        rust.contains("__DsAnon_"),
+        "anon struct emitted, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("EncodingStandalone("),
+        "tuple variant, got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_tuple_to_rust_tuple() {
     let src = "type Pair = [number, string];";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("type Pair = (f64, String)"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_complex_mixed_union_like_xml_desc() {
+    // The office-open/xml `XmlDesc` shape: inline-object members, a type ref,
+    // and an array-of-type-ref — a real XML/JSON-library union. Every member
+    // lowers to its own variant; objects without a discriminant become tuple
+    // variants wrapping a `__DsAnon_<hash>` struct.
+    let src = r#"
+        type XmlAttrs = { [key: string]: string | number };
+        type XmlAtom = string | number | boolean | null;
+        type XmlDescArray = { [index: number]: { _attr: XmlAttrs } };
+        export type XmlDesc =
+          | { _attr: XmlAttrs }
+          | { _cdata: string }
+          | { _attr: XmlAttrs; _cdata: string }
+          | XmlAtom
+          | XmlAtom[]
+          | XmlDescArray;
+    "#;
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("enum XmlDesc"),
+        "XmlDesc should be enum, got:\n{rust}"
+    );
+    assert!(rust.contains("Attr("), "got:\n{rust}");
+    assert!(rust.contains("Cdata("), "got:\n{rust}");
+    assert!(rust.contains("XmlAtom(XmlAtom)"), "got:\n{rust}");
+    assert!(rust.contains("ArrayOfXmlAtom"), "got:\n{rust}");
 }
 
 #[test]
@@ -405,5 +464,22 @@ fn translates_generic_type_alias_keeps_param() {
     assert!(
         rust.contains("type NonEmptyArray<T> = (T, Vec<T>)"),
         "generic param lost: {rust}"
+    );
+}
+
+#[test]
+fn resolves_return_type_typeof_query_in_param() {
+    // `ReturnType<typeof fn>` (a TS utility type) resolves to the named
+    // function's declared return type, so a parameter typed with it gets the
+    // function's return shape rather than `_` (which would surface as E0308).
+    let src = "\
+interface Options { indent: number; }
+function normalizeOptions(o: Options): Options { return o; }
+function writeElement(opts: ReturnType<typeof normalizeOptions>): void {}
+";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("fn write_element(opts: Options)"),
+        "ReturnType<typeof fn> not resolved: {rust}"
     );
 }

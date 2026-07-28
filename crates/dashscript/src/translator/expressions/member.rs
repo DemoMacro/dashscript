@@ -14,18 +14,97 @@ use super::translate_expr;
 
 /// Optional chaining `a?.field` → `a.as_ref().map(|__c| __c.field)`. The
 /// receiver is an `Option`; the access maps over a reference and yields
-/// another `Option`. Only a single optional field access is handled; indexed
-/// access, optional calls, and chained `a?.b?.c` fall back to `todo!()`.
+/// another `Option`. When the field is itself optional (`?:` → `Option<T>`),
+/// `map` would nest (`Option<Option<T>>`) and a following `?? default`
+/// (`unwrap_or_else`) would mistype — `and_then` flattens the nesting so
+/// `opt?.field ?? d` lowers to `opt.and_then(|c| c.field.clone()).unwrap_or(d)`.
+/// Only a single optional field access is handled; indexed access, optional
+/// calls, and chained `a?.b?.c` fall back to `todo!()`.
 pub(super) fn chain_expr(elem: &oxc_ast::ast::ChainElement, ctx: &Ctx<'_>) -> Expr {
     use oxc_ast::ast::ChainElement;
     match elem {
         ChainElement::StaticMemberExpression(sm) => {
             let obj = translate_expr(&sm.object, ctx);
             let field = bindings::snake(&sm.property.name);
-            parse_quote!(#obj.as_ref().map(|__c| __c.#field))
+            // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a
+            // field), mirroring the non-chain path; `len()` returns `usize` so
+            // cast to `f64` (TS `.length` is always a `number`).
+            if field == "length" {
+                let c = Ident::new("__c", Span::call_site());
+                return parse_quote!(#obj.as_ref().map(|#c| (#c.len() as f64)));
+            }
+            if receiver_field_is_optional(&sm.object, &field, ctx) {
+                parse_quote!(#obj.as_ref().and_then(|__c| __c.#field.clone()))
+            } else {
+                parse_quote!(#obj.as_ref().map(|__c| __c.#field))
+            }
         }
         _ => parse_quote!(::core::todo!()),
     }
+}
+
+/// Whether `obj.field` (snake-cased `field`) reads an optional (`?:`) field of
+/// the struct inside `obj`'s `Option<…>` type — the case where `?.field` needs
+/// `and_then` rather than `map` to avoid a nested `Option`. `obj` must be a
+/// plain identifier whose recorded local type is `Option<Struct>`, and `Struct`
+/// must register `field` as optional.
+fn receiver_field_is_optional(obj: &Expression, field: &Ident, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = obj else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    let Some(ty) = ctx.local_type(&name) else {
+        return false;
+    };
+    let Some(inner) = option_inner_last_ident(ty) else {
+        return false;
+    };
+    ctx.struct_optionals(&inner)
+        .is_some_and(|s| s.contains(field.to_string().as_str()))
+}
+
+/// Whether `obj.field` is a direct read of an optional (`?:`) field — `obj` is
+/// a struct-typed local/param and `field` is registered optional for that
+/// struct. Unlike [`receiver_field_is_optional`] (a field nested inside an
+/// `Option<Struct>`, reached via `obj?.field`), here `obj` itself is the
+/// struct, so `field`'s Rust type is `Option<T>`: a store wraps `Some(..)`, a
+/// read yields `Option<T>`. Used by assignment (`obj.opt = v` →
+/// `obj.opt = Some(v)`) and by detecting an RHS that already yields `Option<T>`.
+pub(super) fn static_member_is_optional_field(
+    obj: &Expression,
+    field: &Ident,
+    ctx: &Ctx<'_>,
+) -> bool {
+    let Expression::Identifier(id) = obj else {
+        return false;
+    };
+    let obj_name = bindings::snake(&id.name).to_string();
+    let Some(ty) = ctx.local_type(&obj_name) else {
+        return false;
+    };
+    let Some(seg) = ty.segments.last() else {
+        return false;
+    };
+    ctx.struct_optionals(&seg.ident.to_string())
+        .is_some_and(|s| s.contains(field.to_string().as_str()))
+}
+
+/// The last path segment inside an `Option<…>` type path (`Option<X>` → `X`),
+/// when the path is a single `Option` segment with one generic type argument.
+fn option_inner_last_ident(path: &syn::Path) -> Option<String> {
+    let seg = path.segments.last()?;
+    if seg.ident != "Option" {
+        return None;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return None;
+    };
+    args.args.iter().find_map(|arg| match arg {
+        syn::GenericArgument::Type(syn::Type::Path(tp)) => {
+            tp.path.segments.last().map(|s| s.ident.to_string())
+        }
+        _ => None,
+    })
 }
 
 /// `p.x` → field access. (A `console.log` callee is intercepted earlier.)
@@ -40,6 +119,20 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             let ns = ctx.names().of_reference(id);
             let field = bindings::snake(field_name);
             return parse_quote!(#ns::#field);
+        }
+    }
+    // `Color.Red` where `Color` is a TS enum → `Color::Red`, a path constant
+    // in the enum's module (an ES enum lowers to `mod Color { pub const Red:
+    // i64 = 0; … }`). Read right after the namespace-import arm and before the
+    // HashMap/struct arms so an enum member access does not fall through to a
+    // struct field. The member keeps its TS spelling (`Red`), matching the
+    // const name `translate_enum` emitted.
+    if let Expression::Identifier(id) = &sm.object {
+        let obj_name = id.name.to_string();
+        if ctx.registry().enums.contains(&obj_name) {
+            let ns = bindings::type_ident(&obj_name);
+            let member = bindings::type_ident(field_name);
+            return parse_quote!(#ns::#member);
         }
     }
     // `m.size` on a Map/Set (HashMap/HashSet) → `.len()` — a property, not a
@@ -133,6 +226,19 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     // TS `.length` is always a `number` → `f64`; `len()` returns `usize`, so cast.
     // Index/repeat sites that need `usize` cast the whole expression again.
     if field_name == "length" {
+        // `.length` on an optional Vec field (`parent.elements.length`) — the
+        // field is `Option<Vec<..>>`, and `Option::len()` is private (nightly);
+        // map the inner `Vec`'s length, defaulting to `0` when `None` (the ES
+        // code path that reaches here has already asserted the field non-null).
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            let inner_field = bindings::snake(&inner.property.name);
+            if static_member_is_optional_field(&inner.object, &inner_field, ctx) {
+                let inner_obj = translate_expr(&inner.object, ctx);
+                return parse_quote!(
+                    (#inner_obj.#inner_field.as_ref().map(|__c| __c.len() as f64).unwrap_or(0_f64))
+                );
+            }
+        }
         return parse_quote!((#obj.len() as f64));
     }
     let field = bindings::snake(field_name);

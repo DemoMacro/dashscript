@@ -25,7 +25,7 @@ pub mod registry;
 pub mod semantic;
 pub mod types;
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashMap, HashSet};
 
 use oxc_allocator::Allocator;
 use oxc_codegen::Codegen;
@@ -72,12 +72,19 @@ pub enum RuntimeDep {
     /// so any `Serialize`/`DeserializeOwned` value works. Routes through
     /// `__ds::Worker`; reuses `serde_json` (no separate crate).
     Worker,
+    /// ES truthiness for a value used in condition position (`if (x)`, `while
+    /// (x)`). The translator emits `__ds::truthy(&expr)` for any non-boolean
+    /// condition whose truthiness it cannot lower without a type checker (a
+    /// member access like `opts.indent`, a numeric cast, a call); the Rust
+    /// compiler picks the matching `DsTruthy` impl by inferred type. Pure `std`
+    /// — no cargo dep. Routes through `__ds::truthy`.
+    Truthy,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 7] = [
+    const ALL: [RuntimeDep; 8] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -85,6 +92,7 @@ impl RuntimeDep {
         RuntimeDep::Regress,
         RuntimeDep::Temporal,
         RuntimeDep::Worker,
+        RuntimeDep::Truthy,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -98,6 +106,7 @@ impl RuntimeDep {
             RuntimeDep::Regress => Some("__ds::regex"),
             RuntimeDep::Temporal => Some("temporal_rs::"),
             RuntimeDep::Worker => Some("__ds::Worker"),
+            RuntimeDep::Truthy => Some("__ds::truthy"),
             RuntimeDep::Engine => None,
         }
     }
@@ -130,6 +139,7 @@ impl RuntimeDep {
             // feature: the helper bounds generic params, it does not derive).
             RuntimeDep::Worker => Some(&[("serde", "\"1\""), ("serde_json", "\"1\"")]),
             RuntimeDep::ArrayHelper => None,
+            RuntimeDep::Truthy => None,
         }
     }
 
@@ -141,6 +151,7 @@ impl RuntimeDep {
             RuntimeDep::Regress => Some(REGRESS_HELPERS),
             RuntimeDep::SerdeJson | RuntimeDep::Engine | RuntimeDep::Temporal => None,
             RuntimeDep::Worker => Some(WORKER_HELPER),
+            RuntimeDep::Truthy => Some(TRUTHY_HELPER),
         }
     }
 }
@@ -275,6 +286,21 @@ fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str) {
     }
 }
 
+/// A `DsTruthy` impl for a user struct/enum — ES objects are always truthy, so
+/// the impl is `true` regardless of the type. Emitted for every user type in a
+/// file that lowered an `__ds::truthy` call, so a member access on a user-type
+/// field in a condition (`if (opts.config)`) resolves instead of E0277.
+fn ds_truthy_impl(name: &syn::Ident) -> syn::Item {
+    syn::parse_quote! {
+        impl crate::__ds::DsTruthy for #name {
+            #[inline]
+            fn ds_truthy(&self) -> bool {
+                true
+            }
+        }
+    }
+}
+
 /// The DashScript runtime helper module, written to `src/__ds.rs` and declared
 /// `mod __ds;` at each crate root when a translated file references it. The
 /// single source for the `__ds` helpers — consumed by both `ds build` (bin) and
@@ -318,6 +344,97 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
     } else {
         arr.resize(idx + 1, T::default());
         arr[idx] = v;
+    }
+}
+";
+
+/// ES truthiness for a value used in condition position. The translator emits
+/// `__ds::truthy(&expr)` for a non-boolean condition (member access like
+/// `opts.indent`, a numeric cast, a call) it cannot lower without a type
+/// checker; the Rust compiler picks the matching impl by inferred type. ES
+/// falsiness: `0`, `NaN`, `""`, `null`/`undefined` (`None`); everything else is
+/// truthy — including empty arrays/objects (an ES quirk vs Python). Pure `std`.
+const TRUTHY_HELPER: &str = "\
+pub trait DsTruthy {
+    fn ds_truthy(&self) -> bool;
+}
+
+/// Free-function form the translator emits (`__ds::truthy(&expr)`). The trait
+/// bound lives inside `__ds`, so call sites need no `use` of the trait — the
+/// compiler resolves the impl from the inferred type of the reference.
+#[inline]
+pub fn truthy<T: DsTruthy>(x: &T) -> bool {
+    x.ds_truthy()
+}
+
+impl DsTruthy for f64 {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        *self != 0.0 && !self.is_nan()
+    }
+}
+
+macro_rules! __ds_impl_truthy_int {
+    ($($t:ty),+ $(,)?) => {
+        $(
+            impl DsTruthy for $t {
+                #[inline]
+                fn ds_truthy(&self) -> bool {
+                    *self != 0
+                }
+            }
+        )+
+    };
+}
+
+__ds_impl_truthy_int!(i64, i32, i16, i8, isize, u64, u32, u16, u8, usize);
+
+impl DsTruthy for String {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        !self.is_empty()
+    }
+}
+
+impl DsTruthy for str {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        !self.is_empty()
+    }
+}
+
+impl<T> DsTruthy for Vec<T> {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        true
+    }
+}
+
+impl<K, V> DsTruthy for std::collections::HashMap<K, V> {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        true
+    }
+}
+
+impl<T> DsTruthy for std::collections::HashSet<T> {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        true
+    }
+}
+
+impl<T> DsTruthy for Option<T> {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        self.is_some()
+    }
+}
+
+impl DsTruthy for bool {
+    #[inline]
+    fn ds_truthy(&self) -> bool {
+        *self
     }
 }
 ";
@@ -815,14 +932,38 @@ pub enum FileRole {
 }
 
 /// Translates a TypeScript-flavored `.ts` program into Rust source.
+///
+/// Stateless except for `extra_optionals`: optional (`?:`) field names
+/// gathered from the *other* `.ts` files in a package, merged into each file's
+/// per-file `TypeRegistry`. A file translating `opts?.field ?? d` must know
+/// whether the imported struct's `field` is optional, but each file builds its
+/// own registry — so a package build aggregates optionals once
+/// ([`Self::collect_optionals`]) and injects them ([`Self::with_extra_optionals`]),
+/// making cross-file optional fields visible to optional-chaining.
 #[derive(Default)]
-pub struct Translator;
+pub struct Translator {
+    extra_optionals: HashMap<String, HashSet<String>>,
+}
 
 impl Translator {
     /// Create a translator with default options.
     #[must_use]
     pub fn new() -> Self {
-        Self
+        Self {
+            extra_optionals: HashMap::new(),
+        }
+    }
+
+    /// Inject optional (`?:`) field names collected from the rest of the
+    /// package, so a file sees imported interfaces' optional fields. Each
+    /// file's own optionals are collected via [`Self::collect_optionals`];
+    /// `ds build` aggregates them across the import graph and injects the
+    /// union here, so `opts?.field` lowers correctly even when `opts`'s type
+    /// is declared in another module.
+    #[must_use]
+    pub fn with_extra_optionals(mut self, optionals: HashMap<String, HashSet<String>>) -> Self {
+        self.extra_optionals = optionals;
+        self
     }
 
     /// Parse `.ts` source with oxc and translate the AST to Rust source.
@@ -931,7 +1072,16 @@ impl Translator {
 
         // First pass: collect discriminated-union enum shapes so later
         // expression translation can build variant constructors.
-        let registry = registry::build_registry(&program.body, &names);
+        let mut registry = registry::build_registry(&program.body, &names);
+        // Merge optional (`?:`) field names gathered from the rest of the
+        // package, so a file sees imported interfaces' optionals — a
+        // cross-file `opts?.field ?? d` needs to know `field` is optional.
+        for (name, fields) in &self.extra_optionals {
+            registry
+                .structs
+                .entry(name.clone())
+                .or_insert_with(|| fields.clone());
+        }
         // Escape promotion (A3): a top-level `const` number/boolean literal
         // referenced from a top-level `function` cannot stay in `fn main` (a
         // Rust fn item cannot close over a `main` local), so it is hoisted to a
@@ -998,6 +1148,13 @@ impl Translator {
                     syn::Item::Impl(declarations::union_display_impl(e)),
                 ]
             }));
+            let mut anon_names: Vec<&syn::Ident> = registry.anon_structs.keys().collect();
+            anon_names.sort();
+            items.extend(
+                anon_names
+                    .into_iter()
+                    .map(|name| syn::Item::Struct(registry.anon_structs[name].clone())),
+            );
         }
         let mut exec_stmts: Vec<&oxc_ast::ast::Statement> = Vec::new();
         for s in &program.body {
@@ -1101,13 +1258,48 @@ impl Translator {
         // `__ds::` prefix is a DashScript-reserved namespace a `.ts` source
         // cannot produce any other way, and `serde_json::` likewise only
         // appears via the `JSON` builtin.
-        let rust = prettyplease::unparse(&file);
+        // Probe the unparsed text for runtime-dep markers (a `.ts` source
+        // cannot emit `__ds::` / `serde_json::` any other way).
+        let probe = prettyplease::unparse(&file);
         let mut deps = RuntimeDeps::empty();
         for d in RuntimeDep::ALL {
-            if d.marker().is_some_and(|m| rust.contains(m)) {
+            if d.marker().is_some_and(|m| probe.contains(m)) {
                 deps.insert(d);
             }
         }
+        // A file that defines a user struct/enum forces the `Truthy` dep even
+        // if this file never tests truthiness itself: another module may call
+        // `__ds::truthy(&element)` on a type defined here (`types::Element`),
+        // and that call resolves only if this file ships the trait definition
+        // (in `__ds.rs`) and the per-type impl. `Truthy` is pure-std (no cargo
+        // dep), so forcing it adds no external dependency — at worst an unused
+        // impl warning on a struct no caller ever tests.
+        let has_user_type = file
+            .items
+            .iter()
+            .any(|item| matches!(item, syn::Item::Struct(_) | syn::Item::Enum(_)));
+        if has_user_type {
+            deps.insert(RuntimeDep::Truthy);
+        }
+        // If `__ds::truthy` is used, every user struct/enum in this file needs a
+        // `DsTruthy` impl — a member access on a user-type field
+        // (`if (opts.config)`) would otherwise be E0277. ES objects are always
+        // truthy, so the impl is `true`. Gated on the marker so a file that
+        // never tests truthiness adds no impls (and pulls no `__ds` module).
+        let mut file = file;
+        if deps.has(RuntimeDep::Truthy) {
+            let impls: Vec<syn::Item> = file
+                .items
+                .iter()
+                .filter_map(|item| match item {
+                    syn::Item::Struct(s) => Some(ds_truthy_impl(&s.ident)),
+                    syn::Item::Enum(e) => Some(ds_truthy_impl(&e.ident)),
+                    _ => None,
+                })
+                .collect();
+            file.items.extend(impls);
+        }
+        let rust = prettyplease::unparse(&file);
         Ok((rust, deps))
     }
 
@@ -1158,6 +1350,34 @@ impl Translator {
         imports::collect_imports(source)
     }
 
+    /// Collect this file's interface/type-alias optional (`?:`) field names,
+    /// for cross-file sharing via [`Self::with_extra_optionals`]. A package
+    /// build calls this on every `.ts` in the import graph, aggregates the
+    /// results, and injects the union — so a file translating `opts?.field`
+    /// sees an imported interface's optional fields even though each file
+    /// builds its own `TypeRegistry`.
+    ///
+    /// # Errors
+    /// Returns an error string if oxc reports parse diagnostics.
+    pub fn collect_optionals(
+        &self,
+        source: &str,
+    ) -> Result<HashMap<String, HashSet<String>>, String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Err(format!(
+                "dashscript: oxc reported {} parse diagnostic(s)",
+                ret.diagnostics.len()
+            ));
+        }
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        Ok(registry.structs.into_iter().collect())
+    }
+
     /// Translate a `.d.ts` declaration source to a Rust module body — each
     /// `interface`/`type` becomes a `pub` struct/alias. A pure `.d.ts` (an
     /// `@types/*` package with no sibling `.js`) carries types only, so a
@@ -1197,6 +1417,15 @@ impl Translator {
                 (name, text)
             })
             .collect();
+        items.extend(registry.anon_structs.into_values().map(|s| {
+            let name = s.ident.to_string();
+            let text = prettyplease::unparse(&syn::File {
+                shebang: None,
+                attrs: Vec::new(),
+                items: vec![syn::Item::Struct(s)],
+            });
+            (name, text)
+        }));
         items.sort_by(|a, b| a.0.cmp(&b.0));
         items
     }

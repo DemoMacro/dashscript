@@ -207,7 +207,7 @@ fn build_constructor(
                 names,
             );
         }
-        params = translate_params(&func.params, &locals, names);
+        params = translate_params(&func.params, &locals, registry, names);
         if let Some(body) = func.body.as_deref() {
             let analysis = super::analysis::analyze(
                 &body.statements,
@@ -308,7 +308,7 @@ fn build_method(
         locals.use_counts = analysis.use_counts;
         is_mut = analysis.mutates_this;
     }
-    let params = translate_params(&func.params, &locals, names);
+    let params = translate_params(&func.params, &locals, registry, names);
 
     let narrow = Narrow::in_method(format_ident!("self"));
     let return_path = func.return_type.as_deref().and_then(return_path_of);

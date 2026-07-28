@@ -16,6 +16,23 @@ fn translates_optional_chain_coalesce_to_unwrap_or() {
 }
 
 #[test]
+fn translates_optional_chain_on_optional_field_uses_and_then() {
+    // `a` is optional (`?:` → Option<bool>), so `opts?.a ?? false` must use
+    // `and_then` (which flattens) rather than `map` (which would nest
+    // Option<Option<bool>> and mistype at the `??`).
+    let src = "interface Opts { a?: boolean } function f(opts?: Opts): boolean { return opts?.a ?? false; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("and_then(|__c| __c.a.clone())"),
+        "expected and_then flatten, got:\n{rust}"
+    );
+    assert!(
+        !rust.contains(".map(|__c| __c.a)"),
+        "should not use map, got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_some_wrapping() {
     let src = "function main(): void { let x: number | null = 5; }";
     let rust = Translator::new().translate(src).expect("should translate");
@@ -109,4 +126,15 @@ fn translates_logical_or_assign() {
     let src = "function f(x: number): void { x ||= 5; }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("if !"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_member_access_truthiness_via_ds_truthy() {
+    // `if (o.indent)` where `indent` is a string field — the translator has no
+    // type checker (a `let opts = f(…)` binding is `_`-typed), so it emits
+    // `__ds::truthy(&o.indent)` and the Rust compiler picks the `String` impl.
+    // A bare `if o.indent` would be E0308 (expected bool, found String).
+    let src = "interface Opts { indent: string } function f(o: Opts): void { if (o.indent) { console.log(1); } }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__ds::truthy(&"), "got:\n{rust}");
 }

@@ -406,6 +406,28 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
             return expr;
         }
         if let Some(method) = builtins::map_method(&sm.property.name) {
+            // `obj.opt_field.push(..)` — the field is `Option<Vec<..>>`; route
+            // through `get_or_insert_with(Default::default)` so the method lands
+            // on the inner `Vec`. ES guarantees the field is non-undefined here
+            // (a prior `obj.opt_field = []`), so the insert is a no-op in
+            // practice; `get_or_insert_with` keeps it sound if not.
+            if let Expression::StaticMemberExpression(inner) = &sm.object {
+                let inner_field = bindings::snake(&inner.property.name);
+                if super::member::static_member_is_optional_field(&inner.object, &inner_field, ctx)
+                {
+                    let inner_obj = translate_expr(&inner.object, ctx);
+                    let args: Vec<Expr> = call
+                        .arguments
+                        .iter()
+                        .map(|a| array_elem_arg(a, ctx))
+                        .collect();
+                    return parse_quote!(
+                        #inner_obj.#inner_field
+                            .get_or_insert_with(::core::default::Default::default)
+                            .#method(#(#args),*)
+                    );
+                }
+            }
             let obj = translate_expr(&sm.object, ctx);
             // `push` (the only `map_method` name with an argument) writes into a
             // `Vec<f64>`, so a flavor-promoted `i64` arg is coerced to `f64`.

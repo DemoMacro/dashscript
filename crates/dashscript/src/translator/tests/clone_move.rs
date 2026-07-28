@@ -124,8 +124,8 @@ fn struct_and_enum_derive_clone() {
     let src = "interface V { x: number } type K = \"a\" | \"b\";";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.matches("#[derive(Clone)]").count() >= 2,
-        "both struct and enum derive Clone, got:\n{rust}"
+        rust.matches("#[derive(Clone, Debug, PartialEq)]").count() >= 2,
+        "both struct and enum derive Clone/Debug/PartialEq, got:\n{rust}"
     );
 }
 
