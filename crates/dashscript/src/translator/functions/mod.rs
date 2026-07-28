@@ -6,6 +6,8 @@
 
 mod control_flow;
 mod destructure;
+mod escape;
+mod lazy_static;
 mod switch;
 mod try_throw;
 
@@ -17,17 +19,23 @@ use destructure::{destructure_array, destructure_object};
 use switch::translate_switch;
 use try_throw::{throw_stmt, translate_try};
 
+// Re-exported so `functions::<name>` callers (check, translator::mod) are
+// unchanged after the escape/lazy_static split.
+pub(in crate::translator) use escape::{
+    all_promotable_const_names, promotable_const_info, promoted_const_item, promoted_const_names,
+};
+pub(in crate::translator) use lazy_static::{
+    lazy_static_candidate, lazy_static_items, lazy_static_sym,
+};
+
 use oxc_ast::ast::{
     Argument, ArrowFunctionExpression, BindingPattern, Declaration, ExportDefaultDeclarationKind,
     Expression, FormalParameters, Function, FunctionBody, ObjectExpression, ObjectPropertyKind,
     Statement, TSType, TSTypeAnnotation, VariableDeclaration, VariableDeclarationKind,
 };
-use oxc_semantic::SymbolId;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_quote, Block, Expr, FnArg, Ident, ItemFn, Path, ReturnType, Stmt, Type};
-
-use std::collections::HashSet;
 
 use super::context::{Ctx, Locals, Narrow};
 use super::name_table::NameTable;
@@ -214,275 +222,6 @@ pub(in crate::translator) fn is_executable_top_level(stmt: &Statement) -> bool {
             | Statement::ThrowStatement(_)
             | Statement::BlockStatement(_)
     )
-}
-
-/// The scalar kind a promoted `const` literal lowers to — see
-/// [`promotable_const_info`].
-#[derive(PartialEq, Eq, Clone, Copy)]
-pub(in crate::translator) enum ConstKind {
-    Number,
-    Bool,
-    Str,
-}
-
-impl ConstKind {
-    pub(in crate::translator) fn is_number(self) -> bool {
-        matches!(self, Self::Number)
-    }
-}
-
-/// The (symbol, rust-name, kind) of a top-level `const` binding whose
-/// initializer is a Rust const-expression literal (a `number`, `boolean`, or
-/// `string`) — a candidate for escape promotion to a crate-level `const` item
-/// (A3). A string literal lowers to `&'static str`, which is a Rust const, so
-/// `const X = "    "` (a module-level format/indent constant) promotes just
-/// like a number. `None` for `let`/`var`, a multi-declarator declaration,
-/// destructuring, a missing initializer, or any non-literal initializer (a
-/// runtime value needs `static` + interior mutability — deferred). Reused by
-/// `check` so the two agree on what is promotable.
-pub(in crate::translator) fn promotable_const_info(
-    decl: &VariableDeclaration,
-    names: &NameTable<'_>,
-) -> Option<(SymbolId, String, ConstKind)> {
-    if !matches!(decl.kind, VariableDeclarationKind::Const) {
-        return None;
-    }
-    if decl.declarations.len() != 1 {
-        return None;
-    }
-    let d = &decl.declarations[0];
-    let BindingPattern::BindingIdentifier(id) = &d.id else {
-        return None;
-    };
-    let kind = match d.init.as_ref()? {
-        Expression::NumericLiteral(_) => ConstKind::Number,
-        Expression::BooleanLiteral(_) => ConstKind::Bool,
-        Expression::StringLiteral(_) => ConstKind::Str,
-        _ => return None,
-    };
-    let sym = names.symbol_of_pattern(&d.id)?;
-    Some((sym, names.of_binding(id).to_string(), kind))
-}
-
-/// The rust names of top-level `const` bindings that are (a) const-expression
-/// literals and (b) referenced from at least one top-level `function` — the
-/// escape set promoted to crate-level `const` items (A3). Keyed by the same
-/// per-body rust name `analysis::analyze` records in `use_counts`, mirroring
-/// `check::check_escape`.
-pub(in crate::translator) fn promoted_const_names(
-    program_body: &[Statement],
-    names: &NameTable<'_>,
-    registry: &TypeRegistry,
-) -> HashSet<String> {
-    let candidates: HashSet<String> = program_body
-        .iter()
-        .filter_map(|s| match s {
-            Statement::VariableDeclaration(v) => Some(v),
-            _ => None,
-        })
-        .filter_map(|v| promotable_const_info(v, names).map(|(_, n, _)| n))
-        .collect();
-    if candidates.is_empty() {
-        return HashSet::new();
-    }
-    let mut escaped = HashSet::new();
-    for stmt in program_body {
-        let Statement::FunctionDeclaration(f) = stmt else {
-            continue;
-        };
-        let Some(body) = f.body.as_deref() else {
-            continue;
-        };
-        let analysis = super::analysis::analyze(
-            &body.statements,
-            names,
-            &registry.mut_methods,
-            &registry.ref_params,
-        );
-        for k in analysis.use_counts.keys() {
-            if candidates.contains(k) {
-                escaped.insert(k.clone());
-            }
-        }
-    }
-    escaped
-}
-
-/// The rust names of *every* top-level const-expr `const` binding in the file,
-/// regardless of whether a function references it. A module file has no
-/// `fn main` to run a top-level binding in, so each const-expr `const` must
-/// promote to a crate item — there is no "escape" set to compute, unlike the
-/// entry path ([`promoted_const_names`]).
-pub(in crate::translator) fn all_promotable_const_names(
-    program_body: &[Statement],
-    names: &NameTable<'_>,
-) -> HashSet<String> {
-    program_body
-        .iter()
-        .filter_map(|s| match s {
-            Statement::VariableDeclaration(v) => Some(v),
-            _ => None,
-        })
-        .filter_map(|v| promotable_const_info(v, names).map(|(_, n, _)| n))
-        .collect()
-}
-
-/// Build the crate-level `const` item for a promoted top-level `const`
-/// declaration, if `stmt` is one whose rust name is in `promoted`. The item
-/// keeps the binding's snake-case rust name (lowercase) so every reference — in
-/// `fn main` and in any function — resolves to it unchanged; the
-/// `#[allow(non_upper_case_globals)]` attribute silences the rustc lint for a
-/// lowercase `const` (the lint is the only reason a `const` is conventionally
-/// SCREAMING_SNAKE; the name itself is arbitrary, and matching the reference
-/// resolution avoids touching every call site).
-pub(in crate::translator) fn promoted_const_item(
-    stmt: &Statement,
-    promoted: &HashSet<String>,
-    names: &NameTable<'_>,
-) -> Option<syn::Item> {
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
-    if !matches!(decl.kind, VariableDeclarationKind::Const) {
-        return None;
-    }
-    if decl.declarations.len() != 1 {
-        return None;
-    }
-    let d = &decl.declarations[0];
-    let BindingPattern::BindingIdentifier(id) = &d.id else {
-        return None;
-    };
-    let name = names.of_binding(id);
-    if !promoted.contains(&name.to_string()) {
-        return None;
-    }
-    let init = d.init.as_ref()?;
-    let (ty, init_expr): (Type, Expr) = match init {
-        Expression::NumericLiteral(n) => (
-            parse_quote!(f64),
-            expressions::literals::numeric_expr(n.value),
-        ),
-        Expression::BooleanLiteral(b) => (
-            parse_quote!(bool),
-            expressions::literals::bool_expr(b.value),
-        ),
-        // A string literal is `&'static str` — a Rust const, so a module-level
-        // `const INDENT = "    "` promotes to `const INDENT: &str = "    ";`.
-        Expression::StringLiteral(s) => {
-            let lit = proc_macro2::Literal::string(&s.value);
-            (parse_quote!(&'static str), parse_quote!(#lit))
-        }
-        _ => return None,
-    };
-    Some(parse_quote! {
-        #[allow(non_upper_case_globals)]
-        const #name: #ty = #init_expr;
-    })
-}
-
-/// Whether `stmt` is a module-level `const` that lowers to a lazy static
-/// (OnceLock + accessor fn) — see [`lazy_static_items`]. A const-expression
-/// literal is NOT a candidate (escape promotion handles it): the value must
-/// construct at runtime (an object, a regex, a `Map`/`Set`, a call). Used by
-/// `check` (to pass it) and the translate pre-pass (to register its symbol)
-/// without the registry the emit path needs.
-pub(in crate::translator) fn lazy_static_candidate(stmt: &Statement) -> bool {
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return false;
-    };
-    if !matches!(decl.kind, VariableDeclarationKind::Const) {
-        return false;
-    }
-    if decl.declarations.len() != 1 {
-        return false;
-    }
-    let d = &decl.declarations[0];
-    if !matches!(d.id, BindingPattern::BindingIdentifier(_)) {
-        return false;
-    }
-    let Some(init) = d.init.as_ref() else {
-        return false;
-    };
-    if matches!(
-        init,
-        Expression::NumericLiteral(_)
-            | Expression::BooleanLiteral(_)
-            | Expression::StringLiteral(_)
-    ) {
-        return false;
-    }
-    // An inferable type: an explicit annotation on the declarator, or a regex
-    // literal (→ `regress::Regex`). Anything else without an annotation has no
-    // static type to put on the OnceLock — defer.
-    d.type_annotation.is_some() || matches!(init, Expression::RegExpLiteral(_))
-}
-
-/// The `SymbolId` of a lazy-static candidate's binding, for pre-pass
-/// registration so a reference before the definition in source order still
-/// emits the accessor call (module bindings are hoisted). `None` for an
-/// unbound symbol.
-pub(in crate::translator) fn lazy_static_sym(
-    stmt: &Statement,
-    names: &NameTable<'_>,
-) -> Option<SymbolId> {
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
-    let d = &decl.declarations[0];
-    names.symbol_of_pattern(&d.id)
-}
-
-/// Emit a lazy static (OnceLock + accessor fn) for a module-level `const` whose
-/// initializer is not a const-expression literal — see
-/// [`lazy_static_candidate`]. An ES module top-level `const` constructs its
-/// value once at first use; a Rust module has no `fn main` to run a `let` in,
-/// so the value lives behind a `static OnceLock` initialized lazily by a `fn
-/// name() -> &'static T`. The accessor keeps the snake-case binding name so
-/// every reference resolves to `name()` unchanged.
-pub(in crate::translator) fn lazy_static_items(
-    stmt: &Statement,
-    names: &NameTable<'_>,
-    registry: &TypeRegistry,
-) -> Option<Vec<syn::Item>> {
-    if !lazy_static_candidate(stmt) {
-        return None;
-    }
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
-    let d = &decl.declarations[0];
-    let BindingPattern::BindingIdentifier(id) = &d.id else {
-        return None;
-    };
-    let init = d.init.as_ref()?;
-    let name = names.of_binding(id);
-    let ty: Type = if let Some(ta) = d.type_annotation.as_ref() {
-        types::translate_type(&ta.type_annotation)
-    } else {
-        // A regex literal with no annotation — `regress::Regex`.
-        parse_quote!(regress::Regex)
-    };
-    // The initializer translates under a fresh empty-body context: a module
-    // top-level binding has no locals/narrowing, only the type registry and
-    // name table — enough for a literal or a constructor call.
-    let locals = Locals::new();
-    let narrow = Narrow::default();
-    let ctx = Ctx::new(&locals, registry, &narrow, names);
-    let init_expr = expressions::translate_expr(init, &ctx);
-    // SCREAMING_SNAKE for the OnceLock cell (rustc convention); the accessor
-    // keeps the snake name so references resolve to `name()` unchanged.
-    let cell = format_ident!("{}_CELL", name.to_string().to_uppercase());
-    Some(vec![
-        parse_quote! {
-            static #cell: ::std::sync::OnceLock<#ty> = ::std::sync::OnceLock::new();
-        },
-        parse_quote! {
-            pub fn #name() -> &'static #ty {
-                #cell.get_or_init(|| #init_expr)
-            }
-        },
-    ])
 }
 
 /// Translate the inner declaration of an `export` (`export function` /
