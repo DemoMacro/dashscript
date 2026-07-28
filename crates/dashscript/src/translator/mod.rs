@@ -12,6 +12,7 @@ pub mod bindings;
 mod builtins;
 mod check;
 mod class;
+mod classify;
 pub mod context;
 pub mod declarations;
 pub mod dts;
