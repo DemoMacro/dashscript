@@ -116,6 +116,7 @@ DashScript maps a TypeScript-flavored surface to Rust semantics, growing increme
 
 - **Language coverage** — the full Rust type/memory-safety model (ownership, borrowing, lifetimes, traits), with TypeScript as the _presentation_ only. Today: a safe TS→Rust subset (auto clone/borrow/narrowing bridge the gaps).
 - **Standard libraries** — ES built-ins (`Math`/`String`/`Array`/`Object`/`Number`, …), then the `node:` stdlib (`node:crypto`, `node:zlib`, `node:fs`, …) and Web APIs (`fetch`, DOM, …).
+- **Compatibility — degrade, don't reject** — a construct the static translator can't lower runs under an embedded QuickJS engine at the **function** granularity (inheriting full ECMAScript semantics) instead of failing, so existing TS/JS keeps working without a rewrite. This is also DashScript's path to **[WinterTC](https://wintertc.org)** (Ecma TC55) — the Minimum Common Web Platform API shared by Node, Deno, Bun, and Cloudflare Workers: the ECMAScript core via the engine, the Web APIs via Rust crates.
 - **More outputs** — `wasm` and `napi` targets (Rust compiled to WebAssembly / napi-rs), so `.ts` ships to the web and Node ecosystems.
 - **Developer experience** — `ds test`, editor/LSP integration, conformance fixtures.
 - **Self-hosting (north star)** — rewrite the toolchain in `.ts` itself, reaching `oxc` (and any Rust crate) through bindgen.
