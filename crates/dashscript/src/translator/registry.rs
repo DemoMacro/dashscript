@@ -6,16 +6,17 @@
 //! give `f({ x, y })` its struct name from `f`'s declared parameter type.
 //! `build_registry` walks top-level declarations once and records each
 //! discriminated-union enum's variants and each function's parameter types.
-//! The variant-extraction logic here mirrors `declarations::discriminated_variant`
-//! (which emits the enum); both read the same "string-literal property is the
-//! discriminant" rule.
+//! The "string-literal-typed property is the discriminant" rule lives in one
+//! place — `declarations::split_member_properties` — shared by
+//! `declarations::discriminated_variant` (emit) and `variant_of` below (the
+//! shape table), so the two cannot drift.
 
 use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
     Class, ClassElement, Declaration, Expression, Function, MethodDefinitionKind, Statement,
-    TSEnumDeclaration, TSInterfaceDeclaration, TSLiteral, TSSignature, TSType,
-    TSTypeAliasDeclaration, TSTypeLiteral, VariableDeclaration,
+    TSEnumDeclaration, TSInterfaceDeclaration, TSSignature, TSType, TSTypeAliasDeclaration,
+    TSTypeLiteral, VariableDeclaration,
 };
 use syn::{parse_quote, Ident, ItemEnum, ItemStruct, Path, Type};
 
@@ -503,28 +504,24 @@ fn discriminated_enum(alias: &TSTypeAliasDeclaration) -> Option<HashMap<String, 
 /// member. The string-literal-typed property is the discriminant; the rest are
 /// data fields. Returns `None` if there is no string-literal discriminant.
 fn variant_of(lit: &TSTypeLiteral) -> Option<(String, Ident, Vec<Ident>)> {
-    let mut kind_value: Option<String> = None;
-    let mut fields: Vec<Ident> = Vec::new();
-    for sig in &lit.members {
-        let TSSignature::TSPropertySignature(ps) = sig else {
-            continue;
-        };
-        let Some(key) = bindings::property_key_name(&ps.key) else {
-            continue;
-        };
-        let Some(ta) = ps.type_annotation.as_ref() else {
-            continue;
-        };
-        if let TSType::TSLiteralType(lt) = &ta.type_annotation {
-            if let TSLiteral::StringLiteral(s) = &lt.literal {
-                kind_value = Some(s.value.to_string());
-                continue;
-            }
-        }
-        fields.push(key);
-    }
-    let value = kind_value?;
+    let value = declarations::discriminant_value(lit)?;
     let name = bindings::pascal(&value);
+    let fields = lit
+        .members
+        .iter()
+        .filter_map(|sig| {
+            let TSSignature::TSPropertySignature(ps) = sig else {
+                return None;
+            };
+            let key = bindings::property_key_name(&ps.key)?;
+            ps.type_annotation.as_ref()?; // a field must carry a type annotation
+                                          // The discriminant property names the variant; it is not a field.
+            if declarations::discriminant_property_value(sig).is_some() {
+                return None;
+            }
+            Some(key)
+        })
+        .collect();
     Some((value, name, fields))
 }
 

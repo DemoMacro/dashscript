@@ -542,38 +542,71 @@ fn type_ref_variant(ty: &TSType) -> Option<syn::Variant> {
     Some(parse_quote!(#variant(#variant)))
 }
 
+/// The discriminant value of one object-literal property signature, when its
+/// *type* is a string literal — `kind: "circle"` → `"circle"`. `None` for a
+/// property without a nameable key, without a type annotation, or whose type is
+/// not a string literal. The single source of truth for "what counts as a
+/// discriminant", shared by [`discriminated_variant`] (emit) and
+/// `registry::variant_of` (the shape table), so the two cannot drift on the
+/// rule (the registry once mirrored it).
+pub(in crate::translator) fn discriminant_property_value(sig: &TSSignature<'_>) -> Option<String> {
+    let TSSignature::TSPropertySignature(ps) = sig else {
+        return None;
+    };
+    bindings::property_key_name(&ps.key)?; // a discriminant must carry a nameable key
+    let ta = ps.type_annotation.as_ref()?;
+    let TSType::TSLiteralType(lt) = &ta.type_annotation else {
+        return None;
+    };
+    let TSLiteral::StringLiteral(s) = &lt.literal else {
+        return None;
+    };
+    Some(s.value.to_string())
+}
+
+/// The discriminant value of a discriminated-union object-literal member — the
+/// value of its string-literal-typed property (`kind: "circle"` → `"circle"`),
+/// or `None` when it has none. When more than one property is string-literal-
+/// typed, the last wins (matching the original emit path's loop). See
+/// [`discriminant_property_value`] for the per-property rule.
+pub(in crate::translator) fn discriminant_value(lit: &TSTypeLiteral<'_>) -> Option<String> {
+    let mut value: Option<String> = None;
+    for sig in &lit.members {
+        if let Some(v) = discriminant_property_value(sig) {
+            value = Some(v);
+        }
+    }
+    value
+}
+
 /// `{ kind: "circle"; radius: number }` → `Circle { radius: f64 }` — a
-/// named-field variant of a discriminated union. The property whose *type* is
-/// a string literal is the discriminant: its value names the variant and is not
-/// emitted as a field. The remaining properties become the variant's named
-/// fields. Returns `None` when the literal has no string-literal discriminant.
+/// named-field variant of a discriminated union. The discriminant is the
+/// property whose *type* is a string literal (see [`discriminant_value`]); its
+/// value names the variant and is not emitted as a field. The remaining
+/// properties become the variant's named fields. Returns `None` when the
+/// literal has no string-literal discriminant.
 fn discriminated_variant(ty: &TSType) -> Option<syn::Variant> {
     let TSType::TSTypeLiteral(lit) = ty else {
         return None;
     };
-    let mut variant_name: Option<Ident> = None;
-    let mut fields: Vec<TokenStream> = Vec::new();
-    for sig in &lit.members {
-        let TSSignature::TSPropertySignature(ps) = sig else {
-            continue;
-        };
-        let Some(key) = bindings::property_key_name(&ps.key) else {
-            continue;
-        };
-        let Some(ta) = ps.type_annotation.as_ref() else {
-            continue;
-        };
-        // A string-literal-typed property is the discriminant → variant name.
-        if let TSType::TSLiteralType(lt) = &ta.type_annotation {
-            if let TSLiteral::StringLiteral(s) = &lt.literal {
-                variant_name = Some(bindings::pascal(&s.value));
-                continue;
+    let variant = bindings::pascal(&discriminant_value(lit)?);
+    let fields: Vec<TokenStream> = lit
+        .members
+        .iter()
+        .filter_map(|sig| {
+            // The discriminant property names the variant; it is not a field.
+            if discriminant_property_value(sig).is_some() {
+                return None;
             }
-        }
-        let field_ty = types::translate_type(&ta.type_annotation);
-        fields.push(quote!(#key: #field_ty));
-    }
-    let variant = variant_name?;
+            let TSSignature::TSPropertySignature(ps) = sig else {
+                return None;
+            };
+            let key = bindings::property_key_name(&ps.key)?;
+            let ta = ps.type_annotation.as_ref()?;
+            let field_ty = types::translate_type(&ta.type_annotation);
+            Some(quote!(#key: #field_ty))
+        })
+        .collect();
     Some(parse_quote!(#variant { #(#fields),* }))
 }
 
