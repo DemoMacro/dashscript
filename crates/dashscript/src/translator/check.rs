@@ -9,54 +9,54 @@
 //! is therefore not used for.
 //!
 //! A second pass walks the function body for **low-compatibility constructs**
-//! ([`collect_unsupported`]) — ECMAScript dynamic/reflection features
-//! (`instanceof`, `Symbol`/`Proxy`/`Reflect`, prototype reflection, `eval`,
-//! `delete`, `arguments`) that have no Rust mapping. The translator would
-//! otherwise lower them to broken Rust that fails `cargo check` (reported as
-//! `partial`); flagging them here reports them honestly as `unsupported`, so
-//! the conformance matrix reflects what DashScript can actually express rather
-//! than what merely parses.
+//! ([`collect_unsupported`]), classifying each expression via [`super::classify`]
+//! — the translator's single translatability table. A node the translator
+//! cannot statically lower maps to [`super::classify::Mapping::Reject`] (a hard
+//! `unsupported`) or [`super::classify::Mapping::DegradeEngine`] (the embedded
+//! QuickJS engine runs it). Flagging them here reports them honestly rather
+//! than letting the translator emit broken Rust that fails `cargo check`
+//! (reported as `partial`); the conformance matrix then reflects what
+//! DashScript can actually express rather than what merely parses.
 
 use std::borrow::Cow;
-use std::cell::{Cell, RefCell};
+use std::cell::Cell;
 use std::collections::HashSet;
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    Argument, AssignmentTarget, BinaryOperator, BindingPattern, CallExpression, Expression,
-    ForStatementInit, ObjectPropertyKind, PropertyKind, Statement, UnaryOperator,
+    AssignmentTarget, BindingPattern, Expression, ForStatementInit, ObjectPropertyKind, Statement,
+    UnaryOperator,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
 use oxc_semantic::SemanticBuilder;
 use oxc_span::{GetSpan, SourceType, Span};
 
+use super::classify::{self, ClassifyCtx, Mapping};
 use super::name_table;
 use super::{analysis, functions, registry, FileRole};
 
 // The set of prototype borrows `is_borrow_call` whitelists depends on the
 // caller (`check` vs the engine detector). Rather than thread a `for_engine`
-// bool through every recursive `collect_*` call (~30 sites), a thread-local
-// flag carries it: `program_uses_engine` sets it for the duration of its walk
+// bool through every recursive `collect_*` call, a thread-local flag carries
+// it: `program_uses_engine` sets it for the duration of its walk
 // (`EngineScope` resets it on drop — even on panic), `check` leaves it at the
 // default `false`. Per-thread, so the conformance harness's parallel workers
 // each carry their own.
 thread_local! {
     static FOR_ENGINE: Cell<bool> = const { Cell::new(false) };
-    /// True while `collect_unsupported` walks the body of a loop — a
-    /// `re.exec(…)` there needs the engine, because regress is stateless and
-    /// would re-find the same match every iteration (an infinite loop, killed
-    /// only by the harness timeout). Set by `collect_loop_body`.
-    static IN_LOOP: Cell<bool> = const { Cell::new(false) };
-    /// Names of variables in the current `check` walk whose initializer is a
-    /// plainly non-string literal (number/boolean/object/array). A later
-    /// `.test(x)` / `.exec(x)` on one routes to the engine: ES coerces the
-    /// argument via ToString, which regress (taking `&str`) cannot express;
-    /// without this the translator emits `x.as_str()` and fails cargo check
-    /// (E0599). Populated by `collect_unsupported`'s `VariableDeclaration`
-    /// arm; cleared at each `check` / `program_uses_engine` entry so the set
-    /// never leaks across programs on the same thread.
-    static NON_STRING_VARS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+}
+
+/// Traverse state threaded through the unsupported-construct walk — the bits a
+/// context-dependent classification reads: whether the current expression sits
+/// inside a loop (a looped `re.exec` needs the engine), and which locals are
+/// bound to plainly non-string literals (a `.test`/`.exec` on one needs the
+/// engine). Threading it explicitly (instead of the prior `IN_LOOP`/
+/// `NON_STRING_VARS` thread-locals) keeps the walk self-contained and
+/// parallel-safe without per-thread globals.
+struct WalkState {
+    in_loop: bool,
+    non_string_vars: HashSet<String>,
 }
 
 /// RAII guard: constructed to mark an engine-path detection in progress;
@@ -87,9 +87,6 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
 /// entry to land in. Declarations (function/class/interface/type/import/export)
 /// pass under either role.
 pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
-    // Reset the non-string-var set for this program (a prior `check` on the
-    // same thread must not leak bindings forward — see [`NON_STRING_VARS`]).
-    NON_STRING_VARS.with(|s| s.borrow_mut().clear());
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
 
@@ -108,6 +105,10 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
     // Layer 2 — translatability: the translator is the source of truth (its
     // `None` means "not mapped"); the match only adds a human message + span.
     let registry = registry::build_registry(&program.body, &names);
+    let mut state = WalkState {
+        in_loop: false,
+        non_string_vars: HashSet::new(),
+    };
     for stmt in &program.body {
         // `export {}` is a standard TS module marker (no declaration, no
         // specifiers): it makes the file a module so its declarations stay
@@ -136,7 +137,7 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
                 // module may carry it too — no `fn main` needed.
                 let lazy_static = functions::lazy_static_candidate(stmt);
                 if promotable || lazy_static {
-                    collect_unsupported(stmt, &mut diagnostics);
+                    collect_unsupported(stmt, &mut diagnostics, &mut state);
                 } else {
                     diagnostics.push(err(
                         "a module file may only declare — top-level executable \
@@ -149,7 +150,7 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
                 // an expression, control flow, a throw) run in source order inside
                 // the implicit `fn main`, so they are legitimate top-level — not
                 // unmapped. Still walk for low-compatibility constructs inside.
-                collect_unsupported(stmt, &mut diagnostics);
+                collect_unsupported(stmt, &mut diagnostics, &mut state);
             }
             continue;
         }
@@ -158,7 +159,7 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
         }
         // Low-compatibility constructs inside the body — see
         // [`collect_unsupported`].
-        collect_unsupported(stmt, &mut diagnostics);
+        collect_unsupported(stmt, &mut diagnostics, &mut state);
     }
     // A top-level `function` reading a top-level `const`/`let` would close over
     // a binding living in `fn main` — impossible for a Rust fn item. Hoisting
@@ -231,8 +232,9 @@ fn check_escape(
 
 /// True when the program body contains any ES dynamic/reflection construct the
 /// static translator cannot lower — the same walk as [`collect_unsupported`],
-/// returning whether any construct was found (not the diagnostics). The
-/// translator routes such a program through the embedded QuickJS engine
+/// which classifies each expression via [`super::classify`]. A `Reject` or
+/// `DegradeEngine` verdict means the engine must run the program; the
+/// translator routes it through the embedded QuickJS engine
 /// (`RuntimeDeps::needs_engine`) instead of static lowering, so a fixture that
 /// uses `Object.defineProperty`/`Reflect.*`/`Symbol`/`instanceof`/… runs
 /// correctly rather than failing `cargo check`.
@@ -249,11 +251,13 @@ pub(super) fn program_uses_engine(program: &oxc_ast::ast::Program) -> bool {
     // guard resets the flag on drop — even on panic.
     FOR_ENGINE.with(|c| c.set(true));
     let _scope = EngineScope;
-    // Reset the non-string-var set for this walk — see `check`.
-    NON_STRING_VARS.with(|s| s.borrow_mut().clear());
+    let mut state = WalkState {
+        in_loop: false,
+        non_string_vars: HashSet::new(),
+    };
     let mut diags = Vec::new();
     for stmt in &program.body {
-        collect_unsupported(stmt, &mut diags);
+        collect_unsupported(stmt, &mut diags, &mut state);
     }
     !diags.is_empty()
 }
@@ -298,13 +302,13 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
 }
 
 /// Walk a statement (and every expression nested inside it) collecting one
-/// diagnostic per low-compatibility construct — see [`unsupported_pattern`].
-/// Recurses through every statement/expression kind the translator itself
-/// walks (mirroring `analysis::walk_stmt`), so a construct buried in a loop,
-/// branch, or callback is still surfaced. Unfamiliar kinds fall through
-/// silently (a missed construct only means it stays `partial`, not a false
-/// `unsupported`).
-fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
+/// diagnostic per low-compatibility construct — each expression classified by
+/// [`super::classify`]. Recurses through every statement/expression kind the
+/// translator itself walks (mirroring `analysis::walk_stmt`), so a construct
+/// buried in a loop, branch, or callback is still surfaced. Unfamiliar kinds
+/// fall through silently (a missed construct only means it stays `partial`,
+/// not a false `unsupported`).
+fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &mut WalkState) {
     match stmt {
         Statement::FunctionDeclaration(f) => {
             if let Some(body) = &f.body {
@@ -322,24 +326,24 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
                             nested.span,
                         ));
                     }
-                    collect_unsupported(s, out);
+                    collect_unsupported(s, out, state);
                 }
             }
         }
-        Statement::BlockStatement(b) => collect_unsupported_stmts(&b.body, out),
+        Statement::BlockStatement(b) => collect_unsupported_stmts(&b.body, out, state),
         // `try { … } catch (e) { … }` — recurse the try block, the handler
         // body, and the optional `finally`, so a construct inside the handler
         // (`e.constructor.name`) or the try body is still surfaced.
         Statement::TryStatement(t) => {
-            collect_unsupported_stmts(&t.block.body, out);
+            collect_unsupported_stmts(&t.block.body, out, state);
             if let Some(handler) = &t.handler {
-                collect_unsupported_stmts(&handler.body.body, out);
+                collect_unsupported_stmts(&handler.body.body, out, state);
             }
             if let Some(fin) = &t.finalizer {
-                collect_unsupported_stmts(&fin.body, out);
+                collect_unsupported_stmts(&fin.body, out, state);
             }
         }
-        Statement::ExpressionStatement(es) => collect_expr(&es.expression, out),
+        Statement::ExpressionStatement(es) => collect_expr(&es.expression, out, state),
         Statement::VariableDeclaration(v) => {
             for d in &v.declarations {
                 if let Some(init) = &d.init {
@@ -358,58 +362,57 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
                             | Expression::ArrayExpression(_)
                     ) {
                         if let BindingPattern::BindingIdentifier(id) = &d.id {
-                            NON_STRING_VARS
-                                .with(|s| s.borrow_mut().insert(id.name.as_str().to_string()));
+                            state.non_string_vars.insert(id.name.as_str().to_string());
                         }
                     }
-                    collect_expr(init, out);
+                    collect_expr(init, out, state);
                 }
             }
         }
         Statement::IfStatement(if_stmt) => {
-            collect_expr(&if_stmt.test, out);
-            collect_unsupported(&if_stmt.consequent, out);
+            collect_expr(&if_stmt.test, out, state);
+            collect_unsupported(&if_stmt.consequent, out, state);
             if let Some(alt) = &if_stmt.alternate {
-                collect_unsupported(alt, out);
+                collect_unsupported(alt, out, state);
             }
         }
         Statement::WhileStatement(w) => {
-            collect_loop_expr(&w.test, out);
-            collect_loop_body(&w.body, out);
+            collect_loop_expr(&w.test, out, state);
+            collect_loop_body(&w.body, out, state);
         }
         Statement::DoWhileStatement(dw) => {
-            collect_loop_body(&dw.body, out);
-            collect_loop_expr(&dw.test, out);
+            collect_loop_body(&dw.body, out, state);
+            collect_loop_expr(&dw.test, out, state);
         }
         Statement::ForStatement(f) => {
             if let Some(ForStatementInit::VariableDeclaration(v)) = &f.init {
                 for d in &v.declarations {
                     if let Some(i) = &d.init {
-                        collect_expr(i, out);
+                        collect_expr(i, out, state);
                     }
                 }
             }
             if let Some(test) = &f.test {
-                collect_loop_expr(test, out);
+                collect_loop_expr(test, out, state);
             }
             if let Some(update) = &f.update {
-                collect_loop_expr(update, out);
+                collect_loop_expr(update, out, state);
             }
-            collect_loop_body(&f.body, out);
+            collect_loop_body(&f.body, out, state);
         }
-        Statement::ForOfStatement(fo) => collect_loop_body(&fo.body, out),
-        Statement::ForInStatement(fi) => collect_loop_body(&fi.body, out),
+        Statement::ForOfStatement(fo) => collect_loop_body(&fo.body, out, state),
+        Statement::ForInStatement(fi) => collect_loop_body(&fi.body, out, state),
         Statement::ReturnStatement(r) => {
             if let Some(arg) = &r.argument {
-                collect_expr(arg, out);
+                collect_expr(arg, out, state);
             }
         }
-        Statement::ThrowStatement(t) => collect_expr(&t.argument, out),
+        Statement::ThrowStatement(t) => collect_expr(&t.argument, out, state),
         Statement::SwitchStatement(sw) => {
-            collect_expr(&sw.discriminant, out);
+            collect_expr(&sw.discriminant, out, state);
             for c in &sw.cases {
                 for s in &c.consequent {
-                    collect_unsupported(s, out);
+                    collect_unsupported(s, out, state);
                 }
             }
         }
@@ -418,146 +421,118 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>) {
 }
 
 /// Walk an assignment's left-hand target so a reflection nested in the lvalue
-/// is surfaced — `obj[Symbol.X] = v` (the index holds a `Symbol` reference),
-/// `Array.prototype[k] = v`, or `Array.prototype.foo = v` (mutating a builtin's
-/// prototype). The receiver of a member target is recursed too, so a
-/// reflection buried there is not missed. A plain `xs[i] = v` / `obj.f = v`
-/// adds nothing (no reflection), so legitimate mutation stays supported.
-fn collect_assignment_target(target: &AssignmentTarget, out: &mut Vec<OxcDiagnostic>) {
+/// is surfaced — `obj[Symbol.X] = v`, `Array.prototype[k] = v`, or
+/// `Array.prototype.foo = v`. The target's own verdict (`prototype` mutation,
+/// a match-result field write, `<re>.lastIndex = …` write) comes from
+/// [`super::classify::classify_assignment_target`]; the receiver and index
+/// expressions are then recursed so a reflection buried there is not missed.
+/// A plain `xs[i] = v` / `obj.f = v` adds nothing (no reflection), so
+/// legitimate mutation stays supported.
+fn collect_assignment_target(
+    target: &AssignmentTarget,
+    out: &mut Vec<OxcDiagnostic>,
+    state: &mut WalkState,
+) {
     match target {
         AssignmentTarget::ComputedMemberExpression(cm) => {
-            if is_prototype_member(&cm.object) {
-                out.push(err("`prototype` mutation is unsupported", cm.span));
+            if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) =
+                classify::classify_assignment_target(target)
+            {
+                out.push(err(msg, cm.span));
             }
-            collect_expr(&cm.object, out);
-            collect_expr(&cm.expression, out);
+            collect_expr(&cm.object, out, state);
+            collect_expr(&cm.expression, out, state);
         }
         AssignmentTarget::StaticMemberExpression(sm) => {
-            if is_prototype_member(&sm.object) {
-                out.push(err("`prototype` mutation is unsupported", sm.span));
+            if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) =
+                classify::classify_assignment_target(target)
+            {
+                out.push(err(msg, sm.span));
             }
-            // `x.index = …` / `.input` / `.indices` / `.groups` — assigning an
-            // ES match-result field. It is read-only on a real match result
-            // (ES throws in strict mode), so an assignment is the test262
-            // idiom of stamping the property onto a plain Array
-            // (`["a"].index = 2`) — dynamic property mutation the static model
-            // cannot express. (A user struct field named `index` is rare and
-            // would surface honestly as unsupported, not silently mis-compile.)
-            if matches!(
-                sm.property.name.as_str(),
-                "index" | "input" | "indices" | "groups"
-            ) {
-                out.push(err(
-                    "match-result property assignment is unsupported",
-                    sm.span,
-                ));
-            }
-            // `<re>.lastIndex = …` (write) — same stateless-cursor reason as
-            // the read arm in `unsupported_pattern`; route to the engine.
-            if sm.property.name.as_str() == "lastIndex" {
-                out.push(err(
-                    "regex `.lastIndex` assignment needs the engine (regress is stateless)",
-                    sm.span,
-                ));
-            }
-            collect_expr(&sm.object, out);
+            collect_expr(&sm.object, out, state);
         }
         _ => {}
     }
 }
 
-/// True when `expr` is `<X>.prototype` — accessing (then mutating) a builtin's
-/// prototype, which DashScript's static model cannot express.
-fn is_prototype_member(expr: &Expression) -> bool {
-    matches!(
-        expr,
-        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "prototype"
-    )
-}
-
 /// Walk a slice of statements — the shared spine of [`collect_unsupported`]'s
 /// block-shaped arms (a BlockStatement, a function/arrow body, try/catch
 /// bodies).
-fn collect_unsupported_stmts(stmts: &[Statement], out: &mut Vec<OxcDiagnostic>) {
+fn collect_unsupported_stmts(
+    stmts: &[Statement],
+    out: &mut Vec<OxcDiagnostic>,
+    state: &mut WalkState,
+) {
     for s in stmts {
-        collect_unsupported(s, out);
+        collect_unsupported(s, out, state);
     }
 }
 
-/// Walk a loop body with [`IN_LOOP`] set, so a `re.exec(…)` inside (the
-/// test262 `do { m = re.exec(s); … } while (1)` idiom) routes to the engine —
-/// regress is stateless, so the loop would re-find the same match every
-/// iteration (an infinite loop the harness times out at 30s).
-fn collect_loop_body(body: &Statement, out: &mut Vec<OxcDiagnostic>) {
-    let prev = IN_LOOP.with(|c| c.replace(true));
-    collect_unsupported(body, out);
-    IN_LOOP.with(|c| c.set(prev));
+/// Walk a loop body with [`WalkState::in_loop`] set, so a `re.exec(…)` inside
+/// (the test262 `do { m = re.exec(s); … } while (1)` idiom) routes to the
+/// engine — regress is stateless, so the loop would re-find the same match
+/// every iteration (an infinite loop the harness times out at 30s).
+fn collect_loop_body(body: &Statement, out: &mut Vec<OxcDiagnostic>, state: &mut WalkState) {
+    let prev = state.in_loop;
+    state.in_loop = true;
+    collect_unsupported(body, out, state);
+    state.in_loop = prev;
 }
 
 /// Walk a loop's per-iteration expression (a `while`/`do-while` test, or a
-/// `for` test/update) with [`IN_LOOP`] set, so a `re.exec(…)` in the condition
-/// — `while (re.exec(s) !== null)` — routes to the engine like one in the body.
-/// (A `for` init is walked normally: it runs once, so a single `.exec` there
-/// stays on the regress path.)
-fn collect_loop_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
-    let prev = IN_LOOP.with(|c| c.replace(true));
-    collect_expr(expr, out);
-    IN_LOOP.with(|c| c.set(prev));
+/// `for` test/update) with [`WalkState::in_loop`] set, so a `re.exec(…)` in the
+/// condition — `while (re.exec(s) !== null)` — routes to the engine like one in
+/// the body. (A `for` init is walked normally: it runs once, so a single
+/// `.exec` there stays on the regress path.)
+fn collect_loop_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut WalkState) {
+    let prev = state.in_loop;
+    state.in_loop = true;
+    collect_expr(expr, out, state);
+    state.in_loop = prev;
 }
 
-/// Detect a low-compatibility pattern at `expr`, then recurse into its
-/// children. A `typeof` operand is **not** recursed: `typeof` has its own
-/// mapping (a global constructor → `"function"`), so `typeof Symbol`/
-/// `typeof Proxy` must stay supported rather than tripping the identifier
-/// rule.
-fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
-    unsupported_pattern(expr, out);
+/// Classify the expression at `expr` via [`super::classify`] (turning a
+/// non-`Mapped` verdict into a diagnostic), then recurse into its children. A
+/// `typeof` operand is **not** recursed: `typeof` has its own mapping (a global
+/// constructor → `"function"`), so `typeof Symbol`/`typeof Proxy` must stay
+/// supported rather than tripping the identifier rule.
+fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut WalkState) {
+    let ctx = ClassifyCtx {
+        in_loop: state.in_loop,
+        non_string_vars: &state.non_string_vars,
+    };
+    if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) = classify::classify_expr(expr, &ctx)
+    {
+        out.push(err(msg, expr.span()));
+    }
     match expr {
         Expression::UnaryExpression(u) => {
             if !matches!(u.operator, UnaryOperator::Typeof) {
-                collect_expr(&u.argument, out);
+                collect_expr(&u.argument, out, state);
             }
         }
         Expression::BinaryExpression(b) => {
-            collect_expr(&b.left, out);
-            collect_expr(&b.right, out);
+            collect_expr(&b.left, out, state);
+            collect_expr(&b.right, out, state);
         }
         Expression::LogicalExpression(l) => {
-            collect_expr(&l.left, out);
-            collect_expr(&l.right, out);
+            collect_expr(&l.left, out, state);
+            collect_expr(&l.right, out, state);
         }
         Expression::ConditionalExpression(c) => {
-            collect_expr(&c.test, out);
-            collect_expr(&c.consequent, out);
-            collect_expr(&c.alternate, out);
+            collect_expr(&c.test, out, state);
+            collect_expr(&c.consequent, out, state);
+            collect_expr(&c.alternate, out, state);
         }
         Expression::CallExpression(c) => {
-            // A `function` expression as the callee (an IIFE
-            // `(function(){…})()`) or as an argument (a callback
-            // `xs.find(function(kValue){…})`) has no static lowering —
-            // `translate_expr` lowers a `FunctionExpression` to `todo!()`, so
-            // the call site is `!` (never) and fails `cargo check` (E0618
-            // "expected function, found `!`"). Route to the engine, which runs
-            // the function verbatim. (`typeof function(){}` is not a call and
-            // stays mapped — it never reaches `translate_expr`.)
-            if is_function_expression(&c.callee)
-                || c.arguments
-                    .iter()
-                    .any(|a| a.as_expression().is_some_and(is_function_expression))
-            {
-                out.push(err(
-                    "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
-                    c.span,
-                ));
-            }
             // A global-object static call (`Math.floor(x)`, `Array.isArray(x)`,
             // `Object.keys(m)`, `JSON.parse(s)`) takes the global name only as
             // the call's receiver — not as a value reference. Don't recurse the
-            // callee (its receiver would otherwise trip the identifier rule
-            // below); recurse the arguments. Reflection methods
-            // (`Object.defineProperty`) are caught separately by `unsupported_call`.
+            // callee (its receiver would otherwise trip the identifier rule);
+            // recurse the arguments. A `function`-expression callee/argument is
+            // already flagged by `classify` above, so it is not re-checked here.
             if !is_global_object_callee(&c.callee) && !is_borrow_call(&c.callee) {
-                collect_expr(&c.callee, out);
+                collect_expr(&c.callee, out, state);
             }
             for arg in &c.arguments {
                 if let Some(e) = arg.as_expression() {
@@ -567,7 +542,7 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
                     // call above already resolved it — so skip the value-reference
                     // rule on it; these stay supported. Other args are scanned.
                     if !is_global_object_value(e) {
-                        collect_expr(e, out);
+                        collect_expr(e, out, state);
                     }
                 }
             }
@@ -577,11 +552,11 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         // (`new Map()`, `new Set()`) is mapped, so its receiver is skipped.
         Expression::NewExpression(n) => {
             if !is_global_object_callee(&n.callee) {
-                collect_expr(&n.callee, out);
+                collect_expr(&n.callee, out, state);
             }
             for arg in &n.arguments {
                 if let Some(e) = arg.as_expression() {
-                    collect_expr(e, out);
+                    collect_expr(e, out, state);
                 }
             }
         }
@@ -590,42 +565,42 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
         // oxc wraps even a concise body as a FunctionBody whose single statement
         // is an ExpressionStatement.
         Expression::ArrowFunctionExpression(a) => {
-            collect_unsupported_stmts(&a.body.statements, out);
+            collect_unsupported_stmts(&a.body.statements, out, state);
         }
         // `(function () { … })()` — a function expression's body is walked
         // too, so a reflection call inside an IIFE is flagged.
         Expression::FunctionExpression(f) => {
             if let Some(body) = &f.body {
-                collect_unsupported_stmts(&body.statements, out);
+                collect_unsupported_stmts(&body.statements, out, state);
             }
         }
         Expression::AssignmentExpression(a) => {
             // Recurse the lvalue too — `obj[Symbol.X] = v` / `Array.prototype[k]
             // = v` bury reflection in the assignment target.
-            collect_assignment_target(&a.left, out);
-            collect_expr(&a.right, out);
+            collect_assignment_target(&a.left, out, state);
+            collect_expr(&a.right, out, state);
         }
         Expression::ArrayExpression(arr) => {
             for el in &arr.elements {
                 if let Some(e) = el.as_expression() {
-                    collect_expr(e, out);
+                    collect_expr(e, out, state);
                 }
             }
         }
         Expression::ObjectExpression(o) => {
             for p in &o.properties {
                 if let ObjectPropertyKind::ObjectProperty(op) = p {
-                    collect_expr(&op.value, out);
+                    collect_expr(&op.value, out, state);
                 }
             }
         }
         Expression::TemplateLiteral(t) => {
             for e in &t.expressions {
-                collect_expr(e, out);
+                collect_expr(e, out, state);
             }
         }
-        Expression::ParenthesizedExpression(p) => collect_expr(&p.expression, out),
-        Expression::TSNonNullExpression(nn) => collect_expr(&nn.expression, out),
+        Expression::ParenthesizedExpression(p) => collect_expr(&p.expression, out, state),
+        Expression::TSNonNullExpression(nn) => collect_expr(&nn.expression, out, state),
         Expression::StaticMemberExpression(sm) => {
             // A mapped static read (`Math.PI`, `Number.MAX_VALUE`,
             // `Array.prototype`) takes a global receiver but is not a value
@@ -633,340 +608,21 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
             // rule). A method name or arity on a global receiver
             // (`Object.create`, `Math.floor.length`) is reflection: recurse so
             // the global name is reached and flagged. Arity `.length` is also
-            // caught directly by `unsupported_pattern`.
+            // caught directly by `classify`.
             if !is_static_value_read(expr) {
-                collect_expr(&sm.object, out);
+                collect_expr(&sm.object, out, state);
             }
         }
         Expression::ComputedMemberExpression(cm) => {
-            collect_expr(&cm.object, out);
-            collect_expr(&cm.expression, out);
+            collect_expr(&cm.object, out, state);
+            collect_expr(&cm.expression, out, state);
         }
         Expression::SequenceExpression(s) => {
             for e in &s.expressions {
-                collect_expr(e, out);
+                collect_expr(e, out, state);
             }
         }
         _ => {}
-    }
-}
-
-/// A single low-compatibility construct at `expr` → one diagnostic. These are
-/// ECMAScript dynamic/reflection features DashScript's static TS→Rust mapping
-/// cannot express; flagging them here (rather than letting the translator
-/// emit broken Rust) is what makes the conformance matrix honest about
-/// coverage. Reflection calls are delegated to [`unsupported_call`].
-fn unsupported_pattern(expr: &Expression, out: &mut Vec<OxcDiagnostic>) {
-    match expr {
-        // `x instanceof T` — a runtime type check with no static equivalent.
-        Expression::BinaryExpression(b) if matches!(b.operator, BinaryOperator::Instanceof) => {
-            out.push(err(
-                "`instanceof` has no DashScript mapping (static types; no runtime type check)",
-                b.span,
-            ));
-        }
-        // `delete x` — no Rust analogue.
-        Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Delete) => {
-            out.push(err("`delete` has no DashScript mapping", u.span));
-        }
-        // Reflection / metaprogramming globals, and `arguments`/`eval`.
-        Expression::Identifier(id) => match id.name.as_str() {
-            "Symbol" | "Proxy" | "WeakRef" | "FinalizationRegistry" => {
-                out.push(err(
-                    format!("`{}` (JS reflection) is unsupported", id.name),
-                    id.span,
-                ));
-            }
-            "arguments" => out.push(err("the `arguments` object is unsupported", id.span)),
-            "eval" => out.push(err("`eval` is unsupported", id.span)),
-            // The global object/constructor names DashScript models only as a
-            // static-call/new receiver (`Array.isArray(x)`, `new Map()`) or a
-            // type annotation (`Map<K,V>`) — never as a first-class value.
-            // Referencing one as a value (`Array.isArray`, `Array.isArray.length`,
-            // `var f = Object.keys`, `Math.prototype`) is reflection the static
-            // TS→Rust mapping cannot express; without this the translator would
-            // snake-case the name (`Array`→`array`) and emit broken Rust (E0425
-            // `partial`). The typeof/global-call paths short-circuit before
-            // reaching here, so legitimate uses stay supported.
-            name if is_global_object_name(name) => out.push(err(
-                format!(
-                    "`{name}` as a value is unsupported (use it only as a static-call/new \
-                     receiver or type annotation)"
-                ),
-                id.span,
-            )),
-            _ => {}
-        },
-        Expression::CallExpression(c) => unsupported_call(c, out),
-        // `.constructor` — prototype reflection.
-        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "constructor" => {
-            out.push(err("`.constructor` reflection is unsupported", sm.span));
-        }
-        // `<re>.lastIndex` (read) — the ES regex stateful cursor. regress is
-        // stateless (no `lastIndex` field, so this would be E0609), so route to
-        // the engine, whose exec/test advance `lastIndex` like ES.
-        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "lastIndex" => {
-            out.push(err(
-                "regex `.lastIndex` needs the engine (regress is stateless)",
-                sm.span,
-            ));
-        }
-        // `<Global>.<method>.length` — function arity reflection
-        // (`Math.floor.length`, `Object.create.length`). The static member read
-        // itself is mapped, but reading its `.length` (formal parameter count)
-        // is reflection the static mapping cannot express.
-        Expression::StaticMemberExpression(sm)
-            if sm.property.name.as_str() == "length" && is_global_method_chain(&sm.object) =>
-        {
-            out.push(err(
-                "`<builtin>.<method>.length` arity reflection is unsupported",
-                sm.span,
-            ));
-        }
-        // `<Global>.prototype.<method>` — a prototype method read as a value
-        // (`Object.prototype.toString`, `Array.prototype.concat`). The
-        // prototype itself is a mapped static read, but a method hanging off
-        // it (without a `.call`/`.apply`/`.bind` invocation) is reflection.
-        // Those borrows are skipped in collect_expr's CallExpression arm.
-        Expression::StaticMemberExpression(sm)
-            if sm.property.name.as_str() != "prototype"
-                && matches!(
-                    &sm.object,
-                    Expression::StaticMemberExpression(outer)
-                        if outer.property.name.as_str() == "prototype"
-                            && is_global_object_receiver(&outer.object)
-                ) =>
-        {
-            out.push(err(
-                "`<builtin>.prototype.<method>` reflection is unsupported",
-                sm.span,
-            ));
-        }
-        // `{ get x() { … } }` / `{ set x(v) { … } }` — accessor properties have
-        // no Rust struct/HashMap analogue (a field is a plain value, not a
-        // computed property), and a getter's side effect of adding an own key
-        // during enumeration has no static lowering.
-        Expression::ObjectExpression(o) => {
-            for p in &o.properties {
-                if let ObjectPropertyKind::ObjectProperty(op) = p {
-                    if matches!(op.kind, PropertyKind::Get | PropertyKind::Set) {
-                        out.push(err(
-                            "object accessor properties (get/set) are unsupported",
-                            op.span,
-                        ));
-                    }
-                }
-            }
-        }
-        // `123n` — BigInt literals (DashScript numbers are `f64`/`i64`).
-        Expression::BigIntLiteral(b) => {
-            out.push(err("`BigInt` literals are unsupported", b.span));
-        }
-        // `await expr` — DashScript has no async runtime (decision point 1:
-        // MVP does not support `await`; `fn main` is sync). Reported as
-        // unsupported rather than lowered to a run-time `todo!()` that panics.
-        Expression::AwaitExpression(a) => {
-            out.push(err(
-                "`await` is unsupported (DashScript has no async runtime)",
-                a.span,
-            ));
-        }
-        _ => {}
-    }
-}
-
-/// A reflection call — `Object.defineProperty`/`getOwnPropertyDescriptor`/…,
-/// `Reflect.*`, or an instance prototype reflection `x.hasOwnProperty`/
-/// `propertyIsEnumerable`/`isPrototypeOf`. `Object.keys`/`values`/`entries`/
-/// `is`/`freeze`/… are mapped and intentionally absent from the reflection
-/// list, so they must not trip this.
-fn unsupported_call(c: &CallExpression, out: &mut Vec<OxcDiagnostic>) {
-    let Expression::StaticMemberExpression(sm) = &c.callee else {
-        return;
-    };
-    let prop = sm.property.name.as_str();
-    // `<re>.exec(…)` inside a loop body — regress is stateless, so the loop
-    // would re-find the same match every iteration (an infinite loop, killed
-    // only by the harness timeout). The engine (rquickjs) advances `lastIndex`
-    // like ES, so a looped exec routes there. (`/pat/.exec(s)` once, outside a
-    // loop, stays on the regress path — it is a single `find`.)
-    if prop == "exec" && IN_LOOP.with(|c| c.get()) {
-        out.push(err(
-            "regex `.exec` inside a loop needs the engine (regress is stateless)",
-            sm.span,
-        ));
-    }
-    // `.test(x)` / `.exec(x)` where x is plainly not a string — ES coerces
-    // the argument via ToString, but regress takes `&str`, so a non-string
-    // argument lowers to `x.as_str()` and fails cargo check (E0599). Route
-    // to the engine, whose ToString matches ES. (The looped-exec case above
-    // already routes; this catches the once-per-call non-string argument.)
-    if matches!(prop, "test" | "exec") && regex_arg_needs_engine(&c.arguments) {
-        out.push(err(
-            "regex `.test`/`.exec` on a non-string needs the engine (ES ToString coercion)",
-            sm.span,
-        ));
-    }
-    // `.indexOf(x)` / `.lastIndexOf(x)` / `.includes(x)` where x is plainly not
-    // a number — ES uses SameValueZero (indexOf/lastIndexOf) / strict equality
-    // (includes), which distinguish `true` from `1` and `"1"` from `1`.
-    // DashScript's `Vec<f64>` search assumes a numeric needle, so a non-number
-    // needle lowers to `y == bool` (E0277) or `Vec::contains(&bool)` (E0308).
-    // Route to the engine, whose element comparison matches ES. (A numeric needle
-    // stays on the mapped path; a non-number *literal* or `undefined` triggers.)
-    if matches!(prop, "indexOf" | "lastIndexOf" | "includes")
-        && array_search_arg_needs_engine(&c.arguments)
-    {
-        out.push(err(
-            "`.indexOf`/`.lastIndexOf`/`.includes` on a non-number needs the engine (ES SameValueZero/strict equality)",
-            sm.span,
-        ));
-    }
-    // `s.toLocaleUpperCase(locale)` / `toLocaleLowerCase(locale)` — locale-aware
-    // casing. DashScript has no ICU locale table, so an explicit locale cannot
-    // be honored; the locale-less form lowers to the default casing (see
-    // `map_method`), but a locale argument is reported honestly as unsupported
-    // rather than silently dropped (which would be wrong for tr/el/lt/…).
-    if matches!(prop, "toLocaleUpperCase" | "toLocaleLowerCase") && !c.arguments.is_empty() {
-        out.push(err(
-            "locale-aware `toLocale*` with a locale argument is unsupported",
-            sm.span,
-        ));
-        return;
-    }
-    // Instance prototype reflection methods.
-    if matches!(
-        prop,
-        "hasOwnProperty" | "propertyIsEnumerable" | "isPrototypeOf"
-    ) {
-        out.push(err(
-            format!("`{prop}` (prototype reflection) is unsupported"),
-            sm.span,
-        ));
-        return;
-    }
-    if let Expression::Identifier(obj) = &sm.object {
-        // The `Object` static reflection surface — the names DashScript does
-        // NOT map. Everything else on `Object` that test262 probes (keys/
-        // values/entries/is/freeze/seal/assign/…) has a mapping.
-        let is_object_reflection = matches!(
-            prop,
-            "defineProperty"
-                | "getOwnPropertyDescriptor"
-                | "defineProperties"
-                | "create"
-                | "getPrototypeOf"
-                | "setPrototypeOf"
-                | "getOwnPropertyDescriptors"
-                | "getOwnPropertySymbols"
-        );
-        if obj.name.as_str() == "Object" && is_object_reflection {
-            out.push(err(
-                format!("`Object.{prop}` reflection is unsupported"),
-                sm.span,
-            ));
-        }
-        // The entire `Reflect` namespace is reflection.
-        if obj.name.as_str() == "Reflect" {
-            out.push(err("`Reflect` is unsupported", sm.span));
-        }
-        // `String.raw` — the tagged-template runtime form. DashScript has no
-        // tagged-template model, and `String.raw` builds from a `{ raw }`
-        // template object the static mapping cannot express. Without this the
-        // translator snake-cases `String` → `string` and emits broken Rust
-        // (E0425 `partial`).
-        if obj.name.as_str() == "String" && prop == "raw" {
-            out.push(err(
-                "`String.raw` (tagged template) is unsupported",
-                sm.span,
-            ));
-        }
-        // `JSON.<method>` other than parse/stringify (e.g. rawJSON/isRawJSON,
-        // ES2024) has no mapping — `json_static` inlines serde_json only for
-        // parse/stringify, so any other static method snake-cases `JSON`→
-        // `j_s_o_n` (E0425). Route to the engine, whose JSON matches ES.
-        if obj.name.as_str() == "JSON" && !matches!(prop, "parse" | "stringify") {
-            out.push(err(
-                format!("`JSON.{prop}` has no static mapping (only parse/stringify)"),
-                sm.span,
-            ));
-        }
-    }
-}
-
-/// True when a regex method's first argument is plainly not a string — either
-/// a non-string literal, or an identifier bound (in this walk) to one. See
-/// [`NON_STRING_VARS`]. Regress takes `&str`, so such an argument would lower
-/// to `x.as_str()` (E0599); the caller reports it so the fixture routes to the
-/// engine, whose ES ToString coercion handles number/boolean/object/… .
-fn regex_arg_needs_engine(args: &[Argument]) -> bool {
-    let Some(arg) = args.first().and_then(|a| a.as_expression()) else {
-        return false;
-    };
-    match arg {
-        // A plainly non-string literal (number/boolean/object/array/null).
-        Expression::NumericLiteral(_)
-        | Expression::BooleanLiteral(_)
-        | Expression::ObjectExpression(_)
-        | Expression::ArrayExpression(_)
-        | Expression::NullLiteral(_) => true,
-        // `void <expr>` evaluates to `undefined` → ToString "undefined".
-        Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Void) => true,
-        Expression::Identifier(id) => {
-            // `undefined` (the global) coerces the same way as `void 0`.
-            if id.name.as_str() == "undefined" {
-                return true;
-            }
-            // A variable bound (in this walk) to a non-string literal.
-            NON_STRING_VARS.with(|s| s.borrow().contains(id.name.as_str()))
-        }
-        _ => false,
-    }
-}
-
-/// True when an `.indexOf`/`.lastIndexOf`/`.includes` search element is plainly
-/// not a number — a non-number literal, or `undefined`. ES uses SameValueZero
-/// (indexOf/lastIndexOf) / strict equality (includes), which distinguish types,
-/// but DashScript's `Vec<f64>` search assumes a numeric needle, so a non-number
-/// would be a type error (E0277/E0308). The fixture routes to the engine, whose
-/// element comparison matches ES. (Mirrors [`regex_arg_needs_engine`] for the
-/// regex ToString case; this is the numeric complement.)
-fn array_search_arg_needs_engine(args: &[Argument]) -> bool {
-    let Some(arg) = args.first().and_then(|a| a.as_expression()) else {
-        return false;
-    };
-    match arg {
-        // A plainly non-number, non-string literal (boolean/object/array/null).
-        // A string needle is intentionally NOT routed: `"abc".indexOf("b")` is
-        // the normal string-search case, and only an array with a string needle
-        // is the E0308 (rarer) — routing every `string.indexOf` through the
-        // engine to catch it would regress the common path. bool/object/null
-        // needles route for both receivers: array (type mismatch) and string
-        // (ES ToString of bool/object differs from a naive cast).
-        Expression::BooleanLiteral(_)
-        | Expression::ObjectExpression(_)
-        | Expression::ArrayExpression(_)
-        | Expression::NullLiteral(_) => true,
-        Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Void) => true,
-        Expression::Identifier(id) if id.name.as_str() == "undefined" => true,
-        _ => false,
-    }
-}
-
-/// True when `expr` is a `function` expression, unwrapping the paren / TS
-/// wrappers oxc keeps around an IIFE callee `(function(){…})` or a typed
-/// callback. A `FunctionExpression` has no static lowering (`translate_expr`
-/// maps it to `todo!()`), so one used as a call callee (IIFE) or argument
-/// (callback) routes to the engine — see the `CallExpression` arm of
-/// `collect_expr`.
-fn is_function_expression(e: &Expression) -> bool {
-    match e {
-        Expression::FunctionExpression(_) => true,
-        Expression::ParenthesizedExpression(p) => is_function_expression(&p.expression),
-        Expression::TSAsExpression(a) => is_function_expression(&a.expression),
-        Expression::TSTypeAssertion(t) => is_function_expression(&t.expression),
-        Expression::TSNonNullExpression(n) => is_function_expression(&n.expression),
-        _ => false,
     }
 }
 
@@ -1053,16 +709,6 @@ fn is_global_object_receiver(expr: &Expression) -> bool {
     matches!(
         expr,
         Expression::Identifier(id) if super::globals::is_global_receiver(id.name.as_str())
-    )
-}
-
-/// True when `expr` is a `<Global>.<method>` chain (`Math.floor`,
-/// `Object.create`, `Number.isFinite`) — a static method read as a value,
-/// e.g. to then take its `.length` (arity reflection).
-fn is_global_method_chain(expr: &Expression) -> bool {
-    matches!(
-        expr,
-        Expression::StaticMemberExpression(sm) if is_global_object_receiver(&sm.object)
     )
 }
 
