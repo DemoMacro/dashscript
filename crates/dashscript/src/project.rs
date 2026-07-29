@@ -846,20 +846,122 @@ fn ds_resolver() -> oxc_resolver::Resolver {
     })
 }
 
+/// Resolve a workspace-local package import — a bare specifier (`@scope/pkg`
+/// or `@scope/pkg/sub`) whose `node_modules` entry is a symlink to a sibling
+/// package under the monorepo root — to that package's `src/` source, bypassing
+/// the `package.json` `exports`/`main` fields that point at the built `dist/`
+/// (which DashScript, a source translator, never consumes).
+///
+/// DashScript does **not** parse `pnpm-workspace.yaml` or `package.json`
+/// `workspaces`: that is the package manager's job. It trusts `node_modules`
+/// instead — every package manager (npm/yarn/pnpm/bun) materializes workspace
+/// deps as a symlink under `node_modules/<pkg>` after `install`. A symlink
+/// whose target is outside the pnpm virtual store (`node_modules/.pnpm/`) is a
+/// workspace-local source package; a `.pnpm`-store target (or a plain hoisted
+/// directory/file) is a registry package and is left to [`ds_resolver`].
+/// Returns `None` for relative/cargo specifiers and for registry packages.
+fn resolve_workspace_dep(base: &Path, source: &str) -> Option<(PathBuf, DepKind)> {
+    if source.starts_with('.') || source.starts_with("cargo:") {
+        return None;
+    }
+    let (pkg_root, subpath) = split_package_spec(source)?;
+    for ancestor in base.ancestors() {
+        let entry = ancestor.join("node_modules").join(&pkg_root);
+        let Ok(meta) = fs::symlink_metadata(&entry) else {
+            continue; // no node_modules/<pkg> at this layer; walk up
+        };
+        // Only a symlinked entry is a workspace-local package; a plain
+        // directory/file is a hoisted registry package (npm/yarn) — leave it to
+        // the standard resolver.
+        if !meta.is_symlink() {
+            return None;
+        }
+        let Ok(real) = fs::canonicalize(&entry) else {
+            return None;
+        };
+        // A pnpm-store package is also a symlink, but its target lives under
+        // `node_modules/.pnpm/`; a workspace-local target is the source dir.
+        if real.components().any(|c| c.as_os_str() == ".pnpm") {
+            return None;
+        }
+        return resolve_local_src(&real, subpath.as_deref()).map(|p| (p, DepKind::Ts));
+    }
+    None
+}
+
+/// Split a bare specifier into `(package_root, optional subpath)`. A scoped
+/// package is one unit: `@scope/pkg/sub` → `("@scope/pkg", Some("sub"))`; a
+/// plain package is the first segment: `pkg/sub` → `("pkg", Some("sub"))`.
+fn split_package_spec(source: &str) -> Option<(String, Option<String>)> {
+    if let Some(rest) = source.strip_prefix('@') {
+        let slash = rest.find('/')?;
+        let (scope, after) = rest.split_at(slash); // `after` starts with '/'
+        let after = &after[1..]; // pkg[/sub...]
+        return match after.find('/') {
+            Some(sub_idx) => {
+                let (pkg, sub) = after.split_at(sub_idx); // `sub` starts with '/'
+                Some((format!("@{scope}/{pkg}"), Some(sub[1..].to_string())))
+            }
+            None => Some((format!("@{scope}/{after}"), None)),
+        };
+    }
+    match source.find('/') {
+        Some(slash) => Some((
+            source[..slash].to_string(),
+            Some(source[slash + 1..].to_string()),
+        )),
+        None => Some((source.to_string(), None)),
+    }
+}
+
+/// Map a workspace-local package directory to its source entry under `src/`:
+/// barrel `@scope/pkg` → `src/index.ts`; subpath `@scope/pkg/chart` →
+/// `src/chart/index.ts` (directory barrel, tried first) or `src/chart.ts`.
+/// Returns `None` when no source entry exists (e.g. the package ships `dist/`
+/// only).
+fn resolve_local_src(pkg_dir: &Path, subpath: Option<&str>) -> Option<PathBuf> {
+    let src = pkg_dir.join("src");
+    let candidate = match subpath {
+        None => src.join("index.ts"),
+        Some(sub) => {
+            let dir_barrel = src.join(sub).join("index.ts");
+            if dir_barrel.exists() {
+                return Some(dir_barrel);
+            }
+            src.join(format!("{sub}.ts"))
+        }
+    };
+    candidate.exists().then_some(candidate)
+}
+
 /// Resolve an import specifier (relative `./foo` or bare `pkg`) to a file path
-/// and its [`DepKind`]. Delegates to `oxc_resolver` — the canonical Node
-/// resolution algorithm (webpack `enhanced-resolve` port), which handles
-/// `node_modules/` walk-up, `package.json` `exports`/`main`/`module`/`types`,
-/// scoped packages (`@scope/pkg`), and tsconfig paths — so DashScript reuses
-/// the standard resolver rather than hand-writing a subset. The `DepKind` is
-/// decided from the resolved path's extension and sibling files.
+/// and its [`DepKind`]. A workspace-local bare specifier (`@scope/pkg`,
+/// installed as a `node_modules` symlink to a sibling package) resolves to that
+/// package's `src/` via [`resolve_workspace_dep`], bypassing the `exports`/
+/// `main` fields that point at the unbuilt `dist/`. Every other specifier — a
+/// registry package, a relative path, or `cargo:` — delegates to `oxc_resolver`
+/// (the canonical Node resolution algorithm, webpack `enhanced-resolve` port):
+/// it handles `node_modules/` walk-up, `package.json` `exports`/`main`/
+/// `module`/`types`, scoped packages, and tsconfig paths — so DashScript
+/// reuses the standard resolver rather than hand-writing a subset. The
+/// `DepKind` is decided from the resolved path's extension and sibling files.
 pub fn resolve_local_module(
     base: &Path,
     source: &str,
 ) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
-    let resolution = ds_resolver()
-        .resolve(base, source)
-        .map_err(|e| format!("dashscript: import '{source}' did not resolve: {e}"))?;
+    if let Some(ws) = resolve_workspace_dep(base, source) {
+        return Ok(ws);
+    }
+    let resolution = ds_resolver().resolve(base, source).map_err(|e| {
+        let mut msg = format!("dashscript: import '{source}' did not resolve: {e}");
+        // A bare specifier that failed to resolve, with no `node_modules`
+        // anywhere up the tree, almost always means deps were not installed —
+        // point the user at `install` instead of leaving the raw resolver error.
+        if !source.starts_with('.') && !base.ancestors().any(|a| a.join("node_modules").is_dir()) {
+            msg.push_str(" (no node_modules found — run pnpm/npm/yarn/bun install first)");
+        }
+        msg
+    })?;
     let path = resolution.into_path_buf();
     let kind = dep_kind_of(&path);
     Ok((path, kind))
@@ -1124,6 +1226,30 @@ mod tests {
         read_package(&root.join("package.json")).unwrap()
     }
 
+    /// Create a directory symlink, cross-platform. Used by the workspace-dep
+    /// tests to model a pnpm/npm `node_modules/<pkg>` entry pointing at a
+    /// sibling package. Returns an error where symlinks are unsupported or
+    /// (Windows) without developer mode / admin — the caller treats that as a
+    /// skip, not a failure.
+    fn make_symlink(original: &Path, link: &Path) -> std::io::Result<()> {
+        #[cfg(unix)]
+        {
+            std::os::unix::fs::symlink(original, link)
+        }
+        #[cfg(windows)]
+        {
+            std::os::windows::fs::symlink_dir(original, link)
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
+            let _ = (original, link);
+            Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "symlinks unsupported on this platform",
+            ))
+        }
+    }
+
     #[test]
     fn translate_project_emits_per_file_bins() {
         let tmp = tempfile::tempdir().unwrap();
@@ -1292,6 +1418,81 @@ mod tests {
         assert!(
             matches!(kind, DepKind::Js),
             "js entry should be Js kind: {kind:?}"
+        );
+    }
+
+    #[test]
+    fn resolve_workspace_dep_follows_symlink_to_src() {
+        // A workspace-local package: `node_modules/@scope/b` symlinks to a
+        // sibling package dir; its `src/` source is resolved (bypassing
+        // `exports`/`main`, which would point at an unbuilt `dist/`).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg_b = root.join("packages").join("b");
+        fs::create_dir_all(pkg_b.join("src").join("sub")).unwrap();
+        write(&pkg_b.join("src"), "index.ts", "export function b() {}");
+        write(
+            &pkg_b.join("src").join("sub"),
+            "index.ts",
+            "export function sub() {}",
+        );
+        let scope_nm = root.join("node_modules").join("@scope");
+        fs::create_dir_all(&scope_nm).unwrap();
+        if make_symlink(&pkg_b, &scope_nm.join("b")).is_err() {
+            eprintln!(
+                "resolve_workspace_dep_follows_symlink_to_src: skipped (no symlink privilege)"
+            );
+            return;
+        }
+        // Resolve from a sibling package `packages/a/src` — the resolver walks
+        // up to the shared `node_modules`.
+        let base = root.join("packages").join("a").join("src");
+        fs::create_dir_all(&base).unwrap();
+        let (resolved, kind) = resolve_workspace_dep(&base, "@scope/b").expect("local pkg");
+        assert!(matches!(kind, DepKind::Ts), "got: {kind:?}");
+        assert_eq!(
+            fs::canonicalize(&resolved).unwrap(),
+            fs::canonicalize(pkg_b.join("src").join("index.ts")).unwrap()
+        );
+        // Subpath → `src/sub/index.ts` (directory barrel).
+        let (resolved, _) = resolve_workspace_dep(&base, "@scope/b/sub").expect("subpath");
+        assert_eq!(
+            fs::canonicalize(&resolved).unwrap(),
+            fs::canonicalize(pkg_b.join("src").join("sub").join("index.ts")).unwrap()
+        );
+        // Also reachable through the public `resolve_local_module`.
+        let (resolved, _) = resolve_local_module(&base, "@scope/b").unwrap();
+        assert_eq!(
+            fs::canonicalize(&resolved).unwrap(),
+            fs::canonicalize(pkg_b.join("src").join("index.ts")).unwrap()
+        );
+    }
+
+    #[test]
+    fn resolve_workspace_dep_ignores_pnpm_store() {
+        // A pnpm-store package is also a symlink, but its target is under
+        // `node_modules/.pnpm/` — it must NOT be treated as a local source
+        // package (it is a registry package; left to the standard resolver).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let store_pkg = root
+            .join("node_modules")
+            .join(".pnpm")
+            .join("reg@1.0.0")
+            .join("node_modules")
+            .join("reg");
+        fs::create_dir_all(store_pkg.join("src")).unwrap();
+        write(&store_pkg.join("src"), "index.ts", "export function r() {}");
+        let nm = root.join("node_modules").join("reg");
+        if make_symlink(&store_pkg, &nm).is_err() {
+            eprintln!("resolve_workspace_dep_ignores_pnpm_store: skipped (no symlink privilege)");
+            return;
+        }
+        let base = root.join("packages").join("a").join("src");
+        fs::create_dir_all(&base).unwrap();
+        assert!(
+            resolve_workspace_dep(&base, "reg").is_none(),
+            "a .pnpm-store symlink must not be treated as a local source package"
         );
     }
 
