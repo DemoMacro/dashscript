@@ -888,7 +888,10 @@ fn sibling_with_ext(entry: &Path, new_ext: &str) -> Option<PathBuf> {
 /// declarations (`types`/`typings`) and ESM (`module`) over legacy `main`; the
 /// `exports` field is read with ESM-import/types/default conditions — the
 /// modern npm shape (pure ESM + `.d.ts`). `module_type: true` computes whether
-/// a resolved `.js` is ESM or CommonJS, used when wiring the engine.
+/// a resolved `.js` is ESM or CommonJS, used when wiring the engine. tsconfig
+/// path aliases (`@alias/*`-style) are auto-discovered — the caller resolves
+/// via `resolve_file`, which walks up from the importer to find `tsconfig.json`;
+/// `symlinks: true` follows pnpm/npm `node_modules` links.
 fn ds_resolver() -> oxc_resolver::Resolver {
     use oxc_resolver::{ResolveOptions, Resolver};
     Resolver::new(ResolveOptions {
@@ -909,6 +912,8 @@ fn ds_resolver() -> oxc_resolver::Resolver {
         condition_names: vec!["import".into(), "types".into(), "default".into()],
         main_files: vec!["index".into()],
         module_type: true,
+        tsconfig: Some(oxc_resolver::TsconfigDiscovery::Auto),
+        symlinks: true,
         ..ResolveOptions::default()
     })
 }
@@ -1019,7 +1024,13 @@ pub fn resolve_local_module(
     if let Some(ws) = resolve_workspace_dep(base, source) {
         return Ok(ws);
     }
-    let resolution = ds_resolver().resolve(base, source).map_err(|e| {
+    // tsconfig path-alias discovery needs an importer *file*: `resolve_file`
+    // walks up from it to find `tsconfig.json` (Auto), whereas `resolve` (a
+    // directory) skips tsconfig. `base` is the importer's directory, so
+    // synthesize a file inside it — resolve_file uses only its parent (= base)
+    // for resolution and walks up for tsconfig; it never stats the name.
+    let resolved = ds_resolver().resolve_file(base.join("index.ts"), source);
+    let resolution = resolved.map_err(|e| {
         let mut msg = format!("dashscript: import '{source}' did not resolve: {e}");
         // A bare specifier that failed to resolve, with no `node_modules`
         // anywhere up the tree, almost always means deps were not installed —
