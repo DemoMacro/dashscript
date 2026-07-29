@@ -533,7 +533,8 @@ fn engine_fn_item(name: &Ident, ts_name: &str, func: &Function, names: &NameTabl
         ReturnType::Type(_, ret_ty) => parse_quote!({
             let __ds_args: Vec<serde_json::Value> = vec![#(#args),*];
             let __ds_ret = crate::__ds_engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args);
-            serde_json::from_value::<#ret_ty>(__ds_ret).unwrap_or_default()
+            serde_json::from_value::<#ret_ty>(__ds_ret)
+                .expect("engine return value did not deserialize to the declared return type")
         }),
     };
     if generics.is_empty() {
