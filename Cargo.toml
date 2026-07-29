@@ -17,16 +17,20 @@ categories = ["compilers", "development-tools"]
 dashscript = { path = "crates/dashscript" }
 
 # oxc — reused for parsing / lint / format. DashScript never reimplements these.
-oxc_allocator = "0.140"
-oxc_parser = "0.140"
-oxc_ast = "0.140"
-oxc_diagnostics = "0.140"
-oxc_codegen = "0.140"
-oxc_span = "0.140"
-oxc_syntax = "0.140"
+oxc_allocator = "0.142"
+oxc_parser = "0.142"
+oxc_ast = "0.142"
+oxc_diagnostics = "0.142"
+oxc_codegen = "0.142"
+oxc_span = "0.142"
+oxc_syntax = "0.142"
 # Semantic analysis (scope tree + symbol table + reference resolution) — powers
 # LSP find-references/rename with symbol-level precision (no same-name collisions).
-oxc_semantic = "0.140"
+oxc_semantic = "0.142"
+# TypeScript→JavaScript transform (strips type annotations, lowers enums/namespaces)
+# — powers the per-function engine degradation path: a dynamic function's body is
+# run under QuickJS as plain JS. Reused rather than hand-walking the AST to strip.
+oxc_transformer = "0.142"
 # Node module resolution (exports field / scoped packages / tsconfig paths) —
 # replaces hand-written resolve in project.rs. Separate repo from oxc core, so
 # its version is not synced to the 0.140 line.

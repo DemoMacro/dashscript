@@ -343,7 +343,8 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         // explicit arms (vs a `_` wildcard) keep dispatch exhaustive so a
         // future oxc variant lands as a `cargo check` error, never silently.
         Expression::Super(_)
-        | Expression::MetaProperty(_)
+        | Expression::ImportMeta(_)
+        | Expression::NewTarget(_)
         | Expression::ImportExpression(_)
         | Expression::AwaitExpression(_)
         | Expression::YieldExpression(_)
@@ -516,7 +517,8 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         // (no `_` wildcard), so a future oxc variant lands as a `cargo check`
         // error rather than silent `todo!()`.
         Argument::Super(_)
-        | Argument::MetaProperty(_)
+        | Argument::ImportMeta(_)
+        | Argument::NewTarget(_)
         | Argument::ImportExpression(_)
         | Argument::AwaitExpression(_)
         | Argument::YieldExpression(_)

@@ -804,3 +804,27 @@ fn arrow_callback_stays_mapped() {
         "an arrow callback must not pull the engine, got deps: {deps:?}"
     );
 }
+
+#[test]
+fn engine_source_strips_ts_type_annotations() {
+    // A construct with no static lowering (a `function` expression as a
+    // callback) flips the file to the engine path; the embedded QuickJS engine
+    // parses JS, not TS, so every TS type annotation must be stripped. oxc's
+    // transformer (preset-typescript) does the strip — return type, parameter
+    // types, and `let`/`const` type annotations all go.
+    let src = "function main(): void {\n  const r: number = [1, 2, 3].find(function (kValue: number): boolean { return kValue > 1; });\n  console.log(r);\n}";
+    let js = Translator::new().engine_source(src).expect("engine source");
+    assert!(js.contains(".find("), "got:\n{js}");
+    assert!(
+        !js.contains(": number"),
+        "param/var type not stripped: got:\n{js}"
+    );
+    assert!(
+        !js.contains(": boolean"),
+        "return type not stripped: got:\n{js}"
+    );
+    assert!(
+        !js.contains(": void"),
+        "main return type not stripped: got:\n{js}"
+    );
+}

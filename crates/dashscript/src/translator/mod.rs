@@ -1013,19 +1013,25 @@ pub fn run(source: &str) {
 }
 "##;
 
-/// Strip TS type annotations from a program's top-level function declarations
-/// (a `.ts` source annotates `main`'s return; test262 fixtures wrap the file in
-/// `function main(): void`) and regenerate the source via oxc codegen, so the
-/// embedded QuickJS engine evaluates plain ECMAScript rather than TypeScript.
-/// Shared by the engine lowering ([`Translator::translate_with_deps`]) and
-/// [`Translator::engine_source`] (the conformance harness's direct-eval path),
-/// so both run the exact same bytes.
-fn engine_js_source(program: &mut oxc_ast::ast::Program<'_>) -> String {
-    for stmt in &mut program.body {
-        if let oxc_ast::ast::Statement::FunctionDeclaration(f) = stmt {
-            f.return_type = None;
-        }
-    }
+/// Lower a `.ts` program to plain ECMAScript via oxc's transformer
+/// (preset-typescript): strip every type annotation and lower TS-only constructs
+/// (`enum`, `namespace`, `import =`/`export =`) so the embedded QuickJS engine —
+/// which parses JS, not TS — can evaluate it. The default `TransformOptions` runs
+/// only the TypeScript pass (no ES-version downgrade; target is ESNext), keeping
+/// modern syntax (for-of, arrow, class) as-is for QuickJS. Shared by the engine
+/// lowering ([`Translator::translate_with_deps`]) and [`Translator::engine_source`]
+/// (the conformance harness's direct-eval path), so both run the exact same bytes.
+fn engine_js_source<'a>(
+    program: &mut oxc_ast::ast::Program<'a>,
+    allocator: &'a oxc_allocator::Allocator,
+    scoping: oxc_semantic::Scoping,
+) -> String {
+    let transformer = oxc_transformer::Transformer::new(
+        allocator,
+        std::path::Path::new(""),
+        &oxc_transformer::TransformOptions::default(),
+    );
+    transformer.build_with_scoping(scoping, program);
     Codegen::new().build(&*program).code
 }
 
@@ -1149,7 +1155,8 @@ impl Translator {
         // `snake(name)` string fold.
         let program = allocator.alloc(ret.program);
         let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
-        let mut names = name_table::build(sret.semantic.scoping());
+        let scoping = sret.semantic.into_scoping();
+        let mut names = name_table::build(&scoping);
 
         // Engine-gated compat path: a source using ES dynamic reflection
         // (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`,
@@ -1167,7 +1174,7 @@ impl Translator {
             // does the strip + codegen and is shared with `engine_source`, so
             // the conformance harness can run the exact bytes the engine path
             // embeds without compiling a throwaway cargo project per fixture.
-            let js_source = engine_js_source(program);
+            let js_source = engine_js_source(program, &allocator, scoping);
             let src_lit = syn::LitStr::new(&js_source, proc_macro2::Span::call_site());
             let main_item: syn::Item = syn::parse_quote! {
                 fn main() {
@@ -1500,7 +1507,9 @@ impl Translator {
         }
         let program = allocator.alloc(ret.program);
         if check::program_uses_engine(program) {
-            Some(engine_js_source(program))
+            let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+            let scoping = sret.semantic.into_scoping();
+            Some(engine_js_source(program, &allocator, scoping))
         } else {
             None
         }
