@@ -401,7 +401,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
     // once per translate, so a function matched here skips body translation.
     if let Some(id) = &func.id {
         if is_dynamic_fn(id.name.as_str()) {
-            return engine_fn_item(&name, id.name.as_str(), func, names);
+            return engine_fn_item(&name, id.name.as_str(), func, registry, names);
         }
     }
     // A named `fn` and a block-body arrow set up their body `Locals` the same
@@ -472,7 +472,13 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
 /// annotation-stripped JS, eval'd per call so the function's helper
 /// dependencies are in scope (a dynamic function usually leans on other module
 /// functions; the engine defines all of them before the call).
-fn engine_fn_item(name: &Ident, ts_name: &str, func: &Function, names: &NameTable<'_>) -> ItemFn {
+fn engine_fn_item(
+    name: &Ident,
+    ts_name: &str,
+    func: &Function,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> ItemFn {
     // Degraded signature: a param/return type the static translator cannot
     // express (unknown/indexed access/…) becomes `serde_json::Value` — the
     // marshal type — so the signature is concrete rather than `_`. An
@@ -486,7 +492,7 @@ fn engine_fn_item(name: &Ident, ts_name: &str, func: &Function, names: &NameTabl
             let pname = names.of_pattern(&fp.pattern);
             let mut ty = fp.type_annotation.as_deref().map_or_else(
                 || parse_quote!(::serde_json::Value),
-                |ta| types::translate_type_degraded(&ta.type_annotation),
+                |ta| types::translate_type_degraded_for_signature(&ta.type_annotation, registry),
             );
             // An optional (`?:`) or default-initialized param is `Option<T>`,
             // mirroring translate_params — a static caller passes an
@@ -502,7 +508,7 @@ fn engine_fn_item(name: &Ident, ts_name: &str, func: &Function, names: &NameTabl
         .return_type
         .as_deref()
         .map_or(ReturnType::Default, |rt| {
-            let ty = types::translate_type_degraded(&rt.type_annotation);
+            let ty = types::translate_type_degraded_for_signature(&rt.type_annotation, registry);
             parse_quote!(-> #ty)
         });
     let generics: Vec<Ident> = func.type_parameters.as_deref().map_or_else(Vec::new, |tp| {

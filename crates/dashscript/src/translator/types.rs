@@ -215,6 +215,18 @@ pub fn translate_type_degraded(ty: &TSType) -> Type {
     translate_type(ty)
 }
 
+/// Like [`translate_type_degraded`], but for a signature position — resolve a
+/// `ReturnType<typeof fn>` utility type from the registry first (the way
+/// [`translate_type_for_signature`] does), so a degraded function whose param
+/// or return type is `ReturnType<typeof normalizeOptions>` keeps the concrete
+/// resolved type rather than emitting an unresolved `ReturnType` reference.
+pub fn translate_type_degraded_for_signature(ty: &TSType, registry: &TypeRegistry) -> Type {
+    if let Some(resolved) = return_type_of_query(ty, registry) {
+        return resolved;
+    }
+    translate_type_degraded(ty)
+}
+
 /// Replace every `_` (`Type::Infer`) leaf in a type with `serde_json::Value`,
 /// preserving the surrounding structure — `Vec<HashMap<String, _>>` becomes
 /// `Vec<HashMap<String, serde_json::Value>>`, not a flat `Value`. Used by
