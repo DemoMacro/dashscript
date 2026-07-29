@@ -34,7 +34,7 @@ use oxc_ast::ast::{
     SequenceExpression, Statement, TemplateLiteral,
 };
 use proc_macro2::Span;
-use syn::{parse_quote, Expr, Pat, Stmt, Type};
+use syn::{parse_quote, Expr, Ident, Pat, Stmt, Type};
 
 use super::context::{Ctx, Narrow};
 use super::{bindings, types};
@@ -536,13 +536,169 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
 }
 
 /// Translate a call argument; an object literal borrows its struct name from
-/// the callee's declared parameter type (when known). Other arguments fall
-/// through to [`translate_argument`].
+/// the callee's declared parameter type (when known). An optional-field read
+/// whose parameter type is the field's inner type unwraps
+/// (`f(obj.opt_field)` → `f(obj.opt_field.as_ref().unwrap().clone())`). Other
+/// arguments fall through to [`translate_argument`].
 pub fn translate_argument_init(arg: &Argument, hint: Option<&Type>, ctx: &Ctx<'_>) -> Expr {
     if let Argument::ObjectExpression(obj) = arg {
         return object::object_expr(obj, hint, ctx);
     }
+    if let Some(expr) = arg.as_expression() {
+        if let Some(unwrapped) = unwrap_optional_field_read(expr, hint, ctx) {
+            return unwrapped;
+        }
+    }
     translate_argument(arg, ctx)
+}
+
+/// Box a value into the matching variant of a union enum (a return type or a
+/// `let`/field's declared union). A scalar literal maps to its conventional
+/// variant — a string to `Str(..)`, a number to `Num(..)`, a boolean to
+/// `Bool(..)`, `undefined` to `Undef`, `null` to `Null` — but only when the
+/// enum actually has that variant (a named mixed union may spell them
+/// differently). A bare variable maps to the arm whose inner type matches the
+/// variable's declared type. Falls back to translating the value as-is when no
+/// arm matches, so cargo check surfaces the gap. The union analogue of
+/// [`object::box_union_value`] (a HashMap value literal), generalized to read
+/// the enum's actual variants so a named mixed union boxes to the right arm.
+fn box_to_union(value: &Expression, union_ident: &Ident, ctx: &Ctx<'_>) -> Expr {
+    let Some(item) = ctx.registry().union_enums.get(union_ident) else {
+        return translate_expr(value, ctx);
+    };
+    let has = |name: &str| item.variants.iter().any(|v| v.ident == name);
+    match value {
+        Expression::StringLiteral(s) if has("Str") => {
+            let v = literals::string_expr(s);
+            parse_quote!(crate::#union_ident::Str(#v))
+        }
+        Expression::NumericLiteral(n) if has("Num") => {
+            let v = literals::numeric_expr(n.value);
+            parse_quote!(crate::#union_ident::Num(#v))
+        }
+        Expression::BooleanLiteral(b) if has("Bool") => {
+            let v = b.value;
+            parse_quote!(crate::#union_ident::Bool(#v))
+        }
+        Expression::Identifier(id) if id.name.as_str() == "undefined" && has("Undef") => {
+            parse_quote!(crate::#union_ident::Undef)
+        }
+        Expression::NullLiteral(_) if has("Null") => parse_quote!(crate::#union_ident::Null),
+        Expression::Identifier(id) => {
+            let var = bindings::snake(&id.name);
+            box_variable_to_union(&var, union_ident, item, ctx)
+                .unwrap_or_else(|| translate_expr(value, ctx))
+        }
+        _ => translate_expr(value, ctx),
+    }
+}
+
+/// Box a variable into the union arm whose inner type matches the variable's
+/// declared type — `value: String` into `__DsUnionNumStr::Str(value)` when the
+/// enum has a `Str(String)` arm. Compares the arm's tuple-field type's last
+/// path segment to the variable's recorded type. `None` when the variable has
+/// no known type or no arm matches.
+fn box_variable_to_union(
+    var: &Ident,
+    union_ident: &Ident,
+    item: &syn::ItemEnum,
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let ty = ctx.local_type(&var.to_string())?;
+    let want = ty.segments.last()?.ident.to_string();
+    for v in &item.variants {
+        let syn::Fields::Unnamed(unnamed) = &v.fields else {
+            continue;
+        };
+        let Some(syn::Type::Path(tp)) = unnamed.unnamed.first().map(|f| &f.ty) else {
+            continue;
+        };
+        if tp.path.segments.last().is_some_and(|s| s.ident == want) {
+            let variant = &v.ident;
+            return Some(parse_quote!(crate::#union_ident::#variant(#var.clone())));
+        }
+    }
+    None
+}
+
+/// If `expr` is `obj.field` where `field` is an optional (`?:`) field of
+/// `obj`'s struct type and `ty_hint` is the field's inner (non-`Option`) type,
+/// emit a clone-and-unwrap read: TS `element.elements` (an optional field)
+/// flowing into a `Vec<Element>` parameter assumes the value present, so the
+/// read lowers to `element.elements.as_ref().unwrap().clone()`. `None` for any
+/// other shape (a non-field expr, a non-optional field, a hint that does not
+/// match the field's inner type), so a genuine `Option<T>` flow keeps its own
+/// translation. When the inner type is a union enum and `ty_hint` is `String`,
+/// the read unwraps then coerces via the union's `Display` impl (`element.text`
+/// → `…to_string()`). An `Option<Struct>` receiver (`element` where
+/// `element: Option<Element>`) unwraps the receiver first, then the field.
+fn unwrap_optional_field_read(
+    expr: &Expression,
+    ty_hint: Option<&Type>,
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let Expression::StaticMemberExpression(sm) = expr else {
+        return None;
+    };
+    let Expression::Identifier(obj_id) = &sm.object else {
+        return None;
+    };
+    let hint_path = ty_hint.and_then(types::type_path)?;
+    let hint_last = hint_path.segments.last()?.ident.to_string();
+    let obj_name = bindings::snake(&obj_id.name);
+    let obj_ty = ctx.local_type(&obj_name.to_string())?;
+    let last_seg = obj_ty.segments.last()?;
+    // `Option<Struct>` receiver (`element` where `element: Option<Element>`)
+    // unwraps to the inner `Struct`; a bare `Struct` receiver reads its field
+    // directly. Either way the field must be an optional `?:` field whose inner
+    // type matches `ty_hint`.
+    let (struct_name, obj_is_option) = if last_seg.ident == "Option" {
+        let syn::PathArguments::AngleBracketed(args) = &last_seg.arguments else {
+            return None;
+        };
+        let inner = args.args.iter().find_map(|a| match a {
+            syn::GenericArgument::Type(syn::Type::Path(tp)) => {
+                tp.path.segments.last().map(|s| s.ident.to_string())
+            }
+            _ => None,
+        })?;
+        (inner, true)
+    } else {
+        (last_seg.ident.to_string(), false)
+    };
+    let field = bindings::snake(&sm.property.name);
+    let inner = ctx.field_type(&struct_name, &field.to_string())?;
+    let inner_last = types::type_path(inner)?.segments.last()?.ident.to_string();
+    // Both paths below require an optional (`?:`) field — its Rust type is
+    // `Option<T>`. `struct_optionals` stores the original `.ts` field spelling,
+    // not the snake-cased Rust name, so look the property up by its source name.
+    if !ctx
+        .struct_optionals(&struct_name)
+        .is_some_and(|s| s.contains(sm.property.name.as_str()))
+    {
+        return None;
+    }
+    // Case 1: the field's inner type matches `ty_hint` → a plain unwrap.
+    if inner_last == hint_last {
+        if obj_is_option {
+            return Some(
+                parse_quote!((#obj_name.as_ref().unwrap().#field.as_ref().unwrap().clone())),
+            );
+        }
+        return Some(parse_quote!((#obj_name.#field.as_ref().unwrap().clone())));
+    }
+    // Case 2: the field's inner type is a union enum whose `Display` impl
+    // coerces to `String` — TS `element.text` (`string | number | boolean`)
+    // flowing into a `String` renders via `to_string()`.
+    if hint_last == "String" && ctx.is_union_enum(&inner_last) {
+        if obj_is_option {
+            return Some(
+                parse_quote!((#obj_name.as_ref().unwrap().#field.as_ref().unwrap().to_string())),
+            );
+        }
+        return Some(parse_quote!((#obj_name.#field.as_ref().unwrap().to_string())));
+    }
+    None
 }
 
 /// Translate an initializer; an object literal borrows its struct name from
@@ -550,6 +706,25 @@ pub fn translate_argument_init(arg: &Argument, hint: Option<&Type>, ctx: &Ctx<'_
 pub fn translate_init(expr: &Expression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) -> Expr {
     if let Expression::ObjectExpression(obj) = expr {
         return object::object_expr(obj, ty_hint, ctx);
+    }
+    // A value flowing into a union return/let type boxes into the matching
+    // variant (`return value` where `value: String` into
+    // `__DsUnionNumStr::Str`). `null`/`undefined` map to the `Null`/`Undef`
+    // unit variants here, ahead of the `Option<T>` `None` rule below.
+    if let Some(id) = ty_hint
+        .and_then(types::type_path)
+        .and_then(|p| p.segments.last())
+        .map(|s| &s.ident)
+        .filter(|id| ctx.registry().union_enums.contains_key(id))
+    {
+        return box_to_union(expr, id, ctx);
+    }
+    // An optional struct field read into its inner (non-`Option`) type unwraps
+    // — `write_elements(js.elements)` where `elements: Option<Vec<Element>>`
+    // lowers to `js.elements.as_ref().unwrap().clone()` (TS assumes the field
+    // present). A genuine `Option<T>` hint keeps the field as-is.
+    if let Some(unwrapped) = unwrap_optional_field_read(expr, ty_hint, ctx) {
+        return unwrapped;
     }
     // null / undefined map to `None` directly — never wrapped in `Some`.
     let nullish = matches!(expr, Expression::NullLiteral(_))

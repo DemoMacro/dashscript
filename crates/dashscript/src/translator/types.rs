@@ -44,11 +44,15 @@ pub fn translate_type(ty: &TSType) -> Type {
         // to a synthetic `__DsAnon_<hash>` struct (one definition per unique
         // shape, emitted by the registry pre-pass; the crate-root definition is
         // shared across modules so a `crate::`-prefixed reference resolves
-        // everywhere). A literal with an index signature or any non-property
-        // member is a map, not a struct — falls back to `_`.
+        // everywhere). A literal with a sole index signature (`{ [k: string]: T
+        // }`) is a map, not a struct — lowers to `HashMap<String, T>`. Anything
+        // else with no Rust analogue falls back to `_`.
         TSType::TSTypeLiteral(lit) => match super::declarations::anon_struct_for_literal(lit) {
             Some((name, _)) => parse_quote!(crate::#name),
-            None => parse_quote!(_),
+            None => match super::declarations::index_signature_type(lit) {
+                Some(ty) => ty,
+                None => parse_quote!(_),
+            },
         },
         // `(T)` — parens are grouping only; the inner type is the shape.
         TSType::TSParenthesizedType(p) => translate_type(&p.type_annotation),

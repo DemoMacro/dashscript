@@ -145,6 +145,32 @@ fn index_signature_alias(name: &Ident, sigs: &[TSSignature]) -> Option<Item> {
     Some(item)
 }
 
+/// An inline `{ [key: string]: T }` (sole index signature, no property
+/// signatures) → `HashMap<String, T>` — the inline analogue of
+/// [`index_signature_alias`] for an anonymous object literal in a type position
+/// (a union member, a parameter, a `type` alias body). `None` for mixed
+/// property + index signatures or multiple indices, so [`types::translate_type`]
+/// keeps its `_` fallback (a struct shape stays a struct).
+pub(in crate::translator) fn index_signature_type(lit: &TSTypeLiteral) -> Option<Type> {
+    if lit
+        .members
+        .iter()
+        .any(|m| matches!(m, TSSignature::TSPropertySignature(_)))
+    {
+        return None;
+    }
+    let mut idxs = lit.members.iter().filter_map(|m| match m {
+        TSSignature::TSIndexSignature(idx) => Some(idx),
+        _ => None,
+    });
+    let idx = idxs.next()?;
+    if idxs.next().is_some() {
+        return None;
+    }
+    let val = types::translate_type(&idx.type_annotation.type_annotation);
+    Some(parse_quote!(::std::collections::HashMap<String, #val>))
+}
+
 /// `type Point = { x: number }` → `struct`; `type Id = number` → `type Id = f64;`.
 /// Returns a `Vec<Item>`: an inline-object body may introduce anonymous
 /// helper structs (see [`translate_interface`]), emitted before the alias.
@@ -460,6 +486,14 @@ fn object_member_variant(
     let TSType::TSTypeLiteral(lit) = ty else {
         return None;
     };
+    // An index-signature-only literal (`{ [k: string]: V }`) is a map member,
+    // not a struct — lower to a `Map(HashMap<String, V>)` variant so a union
+    // like `{ [k: string]: V } | XmlDesc` names a concrete enum rather than
+    // degrading to `_` (an index signature has no named fields to build a
+    // struct variant from).
+    if let Some(hm) = index_signature_type(lit) {
+        return Some(("Map".to_string(), parse_quote!(Map(#hm))));
+    }
     // Structural typing: if this inline object's shape matches a named
     // object-literal `type` alias in scope, upgrade the member to that alias
     // (`{ indent?, declaration? }` → `XmlInputOptions`) so an inline member and

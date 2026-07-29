@@ -23,6 +23,7 @@ mod globals;
 pub mod imports;
 pub mod name_table;
 pub mod registry;
+pub use registry::InterfaceField;
 pub mod semantic;
 pub mod types;
 
@@ -1176,6 +1177,21 @@ pub enum FileRole {
 #[derive(Default)]
 pub struct Translator {
     extra_optionals: HashMap<String, HashSet<String>>,
+    /// Interface field signatures (name, translated type, optional flag) from
+    /// the *other* `.ts` files in a package — the field-type analogue of
+    /// `extra_optionals`. A file translating `obj.field` into the field's inner
+    /// type must know the imported interface's field type, but each file builds
+    /// its own registry, so a package build aggregates field signatures once
+    /// ([`Self::collect_fields`]) and injects them ([`Self::with_extra_fields`]).
+    extra_fields: HashMap<String, Vec<InterfaceField>>,
+    /// Inline scalar-union enums (`__DsUnion…`) from the *other* `.ts` files in
+    /// a package — the union-enum analogue of `extra_fields`. A file
+    /// translating an imported interface's union-typed field (`element.text`:
+    /// `string | number | boolean`) must recognize the union enum to coerce it
+    /// (`to_string()`), but each file builds its own registry, so a package
+    /// build aggregates union enums once ([`Self::collect_union_enums`]) and
+    /// injects them ([`Self::with_extra_union_enums`]).
+    extra_union_enums: HashMap<syn::Ident, syn::ItemEnum>,
 }
 
 impl Translator {
@@ -1184,6 +1200,8 @@ impl Translator {
     pub fn new() -> Self {
         Self {
             extra_optionals: HashMap::new(),
+            extra_fields: HashMap::new(),
+            extra_union_enums: HashMap::new(),
         }
     }
 
@@ -1196,6 +1214,31 @@ impl Translator {
     #[must_use]
     pub fn with_extra_optionals(mut self, optionals: HashMap<String, HashSet<String>>) -> Self {
         self.extra_optionals = optionals;
+        self
+    }
+
+    /// Inject interface field signatures collected from the rest of the
+    /// package, so a file sees imported interfaces' field types. The
+    /// field-type analogue of [`Self::with_extra_optionals`]: `ds build`
+    /// aggregates field signatures across the import graph and injects them
+    /// here, so an optional-field read `f(obj.opt_field)` lowers with the
+    /// imported interface's field type even when `obj`'s type is declared in
+    /// another module.
+    #[must_use]
+    pub fn with_extra_fields(mut self, fields: HashMap<String, Vec<InterfaceField>>) -> Self {
+        self.extra_fields = fields;
+        self
+    }
+
+    /// Inject inline union enums collected from the rest of the package, so a
+    /// file recognizes imported interfaces' union-typed fields. The union-enum
+    /// analogue of [`Self::with_extra_fields`]: `ds build` aggregates union
+    /// enums across the import graph and injects them here, so a union field
+    /// (`element.text`) coerces correctly even when the field's type is declared
+    /// in another module.
+    #[must_use]
+    pub fn with_extra_union_enums(mut self, unions: HashMap<syn::Ident, syn::ItemEnum>) -> Self {
+        self.extra_union_enums = unions;
         self
     }
 
@@ -1327,6 +1370,26 @@ impl Translator {
                 .structs
                 .entry(name.clone())
                 .or_insert_with(|| fields.clone());
+        }
+        // Merge interface field signatures from the rest of the package, so a
+        // file sees imported interfaces' field types — a cross-file
+        // `f(obj.opt_field)` into the field's inner type needs the field's type,
+        // but each file builds its own registry.
+        for (name, fields) in &self.extra_fields {
+            registry
+                .interface_own_fields
+                .entry(name.clone())
+                .or_insert_with(|| fields.clone());
+        }
+        // Merge inline union enums from the rest of the package, so a file
+        // recognizes imported interfaces' union-typed fields — a cross-file
+        // `return element.text` (a union) into a `String` coerces via the
+        // union's `Display` impl, but each file builds its own registry.
+        for (name, item) in &self.extra_union_enums {
+            registry
+                .union_enums
+                .entry(name.clone())
+                .or_insert_with(|| item.clone());
         }
         // Escape promotion (A3): a top-level `const` number/boolean literal
         // referenced from a top-level `function` cannot stay in `fn main` (a
@@ -1727,6 +1790,63 @@ impl Translator {
         Ok(registry.structs.into_iter().collect())
     }
 
+    /// Collect this file's interface field signatures (name, translated type,
+    /// optional flag), for cross-file sharing via [`Self::with_extra_fields`].
+    /// The field-type analogue of [`Self::collect_optionals`]: a package build
+    /// aggregates them across the import graph and injects the union, so a file
+    /// translating `obj.field` into the field's inner type sees an imported
+    /// interface's field type even though each file builds its own
+    /// `TypeRegistry`.
+    ///
+    /// # Errors
+    /// Returns an error string if oxc reports parse diagnostics.
+    pub fn collect_fields(
+        &self,
+        source: &str,
+    ) -> Result<HashMap<String, Vec<InterfaceField>>, String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Err(format!(
+                "dashscript: oxc reported {} parse diagnostic(s)",
+                ret.diagnostics.len()
+            ));
+        }
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        Ok(registry.interface_own_fields.into_iter().collect())
+    }
+
+    /// Collect this file's inline scalar-union enums (`__DsUnion…`), for
+    /// cross-file sharing via [`Self::with_extra_union_enums`]. The union-enum
+    /// analogue of [`Self::collect_fields`]: a package build aggregates them
+    /// across the import graph and injects them, so a file translating an
+    /// imported interface's union-typed field recognizes the union even though
+    /// each file builds its own `TypeRegistry`.
+    ///
+    /// # Errors
+    /// Returns an error string if oxc reports parse diagnostics.
+    pub fn collect_union_enums(
+        &self,
+        source: &str,
+    ) -> Result<HashMap<syn::Ident, syn::ItemEnum>, String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Err(format!(
+                "dashscript: oxc reported {} parse diagnostic(s)",
+                ret.diagnostics.len()
+            ));
+        }
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        Ok(registry.union_enums)
+    }
+
     /// Translate a `.d.ts` declaration source to a Rust module body — each
     /// `interface`/`type` becomes a `pub` struct/alias. A pure `.d.ts` (an
     /// `@types/*` package with no sibling `.js`) carries types only, so a
@@ -1751,7 +1871,18 @@ impl Translator {
         let program = allocator.alloc(ret.program);
         let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
         let names = name_table::build(sret.semantic.scoping());
-        let registry = registry::build_registry(&program.body, &names);
+        let mut registry = registry::build_registry(&program.body, &names);
+        // Merge inline union enums from the rest of the package, so this
+        // returns the same union set the entry actually emits at its crate root
+        // (`translate_with_deps` merges `extra_union_enums` into its registry
+        // too). Without this, a package build's dedup set would miss a dep's
+        // unions and re-prepend them, defining each twice (E0428).
+        for (name, item) in &self.extra_union_enums {
+            registry
+                .union_enums
+                .entry(name.clone())
+                .or_insert_with(|| item.clone());
+        }
         let mut items: Vec<(String, String)> = registry
             .union_enums
             .into_values()

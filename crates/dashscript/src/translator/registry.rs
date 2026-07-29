@@ -385,10 +385,21 @@ fn collect_inline_type_defs(ty: &TSType, registry: &mut TypeRegistry) {
             // found even when this literal itself has an index signature (and
             // so does not become a struct).
             for sig in &lit.members {
-                if let TSSignature::TSPropertySignature(ps) = sig {
-                    if let Some(ta) = ps.type_annotation.as_ref() {
-                        collect_inline_type_defs(&ta.type_annotation, registry);
+                match sig {
+                    TSSignature::TSPropertySignature(ps) => {
+                        if let Some(ta) = ps.type_annotation.as_ref() {
+                            collect_inline_type_defs(&ta.type_annotation, registry);
+                        }
                     }
+                    // An index signature's value type (`{ [k: string]: A | B }`)
+                    // may itself carry an inline union/anon-struct — collect it
+                    // too, or a `crate::__DsUnion…` it names is never emitted
+                    // (E0425). The property case above already recurses; this
+                    // closes the index-signature gap.
+                    TSSignature::TSIndexSignature(idx) => {
+                        collect_inline_type_defs(&idx.type_annotation.type_annotation, registry);
+                    }
+                    _ => {}
                 }
             }
         }

@@ -196,6 +196,22 @@ impl<'a> Ctx<'a> {
         self.locals.get(name)
     }
 
+    /// The translated type of a field of the interface/struct named
+    /// `struct_name`, looked up by its snake-cased Rust field name. The type is
+    /// the field's annotation as-translated — without the `Option<…>` wrapper
+    /// an optional `?:` field gets in the emitted struct (its `optional` flag on
+    /// [`super::registry::InterfaceField`] carries that separately). `None` when
+    /// the struct is unknown or the field is not one of its declared members.
+    #[must_use]
+    pub fn field_type(&self, struct_name: &str, field: &str) -> Option<&'a syn::Type> {
+        self.registry
+            .interface_own_fields
+            .get(struct_name)?
+            .iter()
+            .find(|f| super::bindings::snake(&f.name) == field)
+            .map(|f| &f.ty)
+    }
+
     /// The inferred number flavor (`f64` vs `i64`) of the numeric local named by
     /// `id`. `F64` for any unknown / unresolved reference (the conservative
     /// default — an ES `number` is a double unless every value bound to it is a
@@ -271,6 +287,15 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn struct_optionals(&self, type_name: &str) -> Option<&'a HashSet<String>> {
         self.registry.structs.get(type_name)
+    }
+
+    /// True when a `__DsUnion…` enum with this name was emitted at the crate
+    /// root. Such a union carries a `Display` impl, so a value of it coerces to
+    /// `String` via `to_string()` — used when an optional union field (`text?:
+    /// string | number | boolean`) flows into a `String` context.
+    #[must_use]
+    pub fn is_union_enum(&self, name: &str) -> bool {
+        self.registry.union_enums.keys().any(|k| k == name)
     }
 
     /// True when `scrut.field` (both snake-cased) is narrowed to an arm binding
