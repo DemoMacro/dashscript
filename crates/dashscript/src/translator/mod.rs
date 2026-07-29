@@ -1374,9 +1374,12 @@ impl Translator {
         // other function stays native Rust). The `__DS_MODULE_JS` const and the
         // serde derives are emitted below, after the items are collected.
         let per_function = !sites.dynamic_fns.is_empty();
-        if per_function {
-            functions::set_dynamic_fns(sites.dynamic_fns.clone());
-        }
+        // Always (re)set the thread-local dynamic-function set — even when
+        // empty. The conformance harness translates many fixtures in one
+        // thread; without a reset, a fixture that degrades its `main` leaves a
+        // stale set that rewrites the next fixture's `main` as an engine call,
+        // emitting `__ds_engine` references while `needs_engine` stays false.
+        functions::set_dynamic_fns(sites.dynamic_fns.clone());
 
         // Record the file's namespace-import bindings (`import * as ns`) so a
         // reference to `ns` is recognized as a module-path prefix (`ns.foo` →
