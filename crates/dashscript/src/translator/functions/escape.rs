@@ -31,20 +31,27 @@ impl ConstKind {
     }
 }
 
-/// The (symbol, rust-name, kind) of a top-level `const` binding whose
-/// initializer is a Rust const-expression literal (a `number`, `boolean`, or
-/// `string`) — a candidate for escape promotion to a crate-level `const` item
-/// (A3). A string literal lowers to `&'static str`, which is a Rust const, so
-/// `const X = "    "` (a module-level format/indent constant) promotes just
-/// like a number. `None` for `let`/`var`, a multi-declarator declaration,
+/// The (symbol, rust-name, kind) of a top-level `const` or non-mutated `let`
+/// binding whose initializer is a Rust const-expression literal (a `number`,
+/// `boolean`, or `string`) — a candidate for escape promotion to a crate-level
+/// `const` item (A3). A string literal lowers to `&'static str`, which is a
+/// Rust const, so `const X = "    "` (a module-level format/indent constant)
+/// promotes just like a number. A non-mutated `let` with a literal initializer
+/// promotes the same way (B3-1a): it is immutable in practice, so a `const`
+/// item is the zero-overhead lowering. `None` for `var`, a mutated `let` (it
+/// needs a `thread_local!` `RefCell`, B3-2), a multi-declarator declaration,
 /// destructuring, a missing initializer, or any non-literal initializer (a
-/// runtime value needs `static` + interior mutability — deferred). Reused by
-/// `check` so the two agree on what is promotable.
+/// runtime value needs `static` + interior mutability — `lazy_static`).
+/// Reused by `check` so the two agree on what is promotable.
 pub(in crate::translator) fn promotable_const_info(
     decl: &VariableDeclaration,
     names: &NameTable<'_>,
+    mutable_names: &HashSet<String>,
 ) -> Option<(SymbolId, String, ConstKind)> {
-    if !matches!(decl.kind, VariableDeclarationKind::Const) {
+    if !matches!(
+        decl.kind,
+        VariableDeclarationKind::Const | VariableDeclarationKind::Let
+    ) {
         return None;
     }
     if decl.declarations.len() != 1 {
@@ -61,18 +68,28 @@ pub(in crate::translator) fn promotable_const_info(
         _ => return None,
     };
     let sym = names.symbol_of_pattern(&d.id)?;
+    // A `let` must be non-mutated to lower to a `const` item — a mutated `let`
+    // needs a `thread_local!` `RefCell` (B3-2). A `const` is never mutated.
+    if matches!(decl.kind, VariableDeclarationKind::Let) {
+        let name = names.of_binding(id).to_string();
+        if mutable_names.contains(&name) {
+            return None;
+        }
+    }
     Some((sym, names.of_binding(id).to_string(), kind))
 }
 
-/// The rust names of top-level `const` bindings that are (a) const-expression
-/// literals and (b) referenced from at least one top-level `function` — the
-/// escape set promoted to crate-level `const` items (A3). Keyed by the same
-/// per-body rust name `analysis::analyze` records in `use_counts`, mirroring
+/// The rust names of top-level `const` or non-mutated `let` bindings that are
+/// (a) const-expression literals and (b) referenced from at least one top-level
+/// `function` — the escape set promoted to crate-level `const` items (A3,
+/// extended to non-mutated `let` in B3-1a). Keyed by the same per-body rust
+/// name `analysis::analyze` records in `use_counts`, mirroring
 /// `check::check_escape`.
 pub(in crate::translator) fn promoted_const_names(
     program_body: &[Statement],
     names: &NameTable<'_>,
     registry: &TypeRegistry,
+    mutable_names: &HashSet<String>,
 ) -> HashSet<String> {
     let candidates: HashSet<String> = program_body
         .iter()
@@ -80,7 +97,7 @@ pub(in crate::translator) fn promoted_const_names(
             Statement::VariableDeclaration(v) => Some(v),
             _ => None,
         })
-        .filter_map(|v| promotable_const_info(v, names).map(|(_, n, _)| n))
+        .filter_map(|v| promotable_const_info(v, names, mutable_names).map(|(_, n, _)| n))
         .collect();
     if candidates.is_empty() {
         return HashSet::new();
@@ -108,14 +125,15 @@ pub(in crate::translator) fn promoted_const_names(
     escaped
 }
 
-/// The rust names of *every* top-level const-expr `const` binding in the file,
-/// regardless of whether a function references it. A module file has no
-/// `fn main` to run a top-level binding in, so each const-expr `const` must
-/// promote to a crate item — there is no "escape" set to compute, unlike the
-/// entry path ([`promoted_const_names`]).
+/// The rust names of *every* top-level const-expr `const` or non-mutated `let`
+/// binding in the file, regardless of whether a function references it. A
+/// module file has no `fn main` to run a top-level binding in, so each
+/// const-expr `const`/`let` must promote to a crate item — there is no
+/// "escape" set to compute, unlike the entry path ([`promoted_const_names`]).
 pub(in crate::translator) fn all_promotable_const_names(
     program_body: &[Statement],
     names: &NameTable<'_>,
+    mutable_names: &HashSet<String>,
 ) -> HashSet<String> {
     program_body
         .iter()
@@ -123,18 +141,18 @@ pub(in crate::translator) fn all_promotable_const_names(
             Statement::VariableDeclaration(v) => Some(v),
             _ => None,
         })
-        .filter_map(|v| promotable_const_info(v, names).map(|(_, n, _)| n))
+        .filter_map(|v| promotable_const_info(v, names, mutable_names).map(|(_, n, _)| n))
         .collect()
 }
 
-/// Build the crate-level `const` item for a promoted top-level `const`
-/// declaration, if `stmt` is one whose rust name is in `promoted`. The item
-/// keeps the binding's snake-case rust name (lowercase) so every reference — in
-/// `fn main` and in any function — resolves to it unchanged; the
-/// `#[allow(non_upper_case_globals)]` attribute silences the rustc lint for a
-/// lowercase `const` (the lint is the only reason a `const` is conventionally
-/// SCREAMING_SNAKE; the name itself is arbitrary, and matching the reference
-/// resolution avoids touching every call site).
+/// Build the crate-level `const` item for a promoted top-level `const` or
+/// non-mutated `let` declaration, if `stmt` is one whose rust name is in
+/// `promoted`. The item keeps the binding's snake-case rust name (lowercase) so
+/// every reference — in `fn main` and in any function — resolves to it
+/// unchanged; the `#[allow(non_upper_case_globals)]` attribute silences the
+/// rustc lint for a lowercase `const` (the lint is the only reason a `const`
+/// is conventionally SCREAMING_SNAKE; the name itself is arbitrary, and
+/// matching the reference resolution avoids touching every call site).
 pub(in crate::translator) fn promoted_const_item(
     stmt: &Statement,
     promoted: &HashSet<String>,
@@ -143,7 +161,10 @@ pub(in crate::translator) fn promoted_const_item(
     let Statement::VariableDeclaration(decl) = stmt else {
         return None;
     };
-    if !matches!(decl.kind, VariableDeclarationKind::Const) {
+    if !matches!(
+        decl.kind,
+        VariableDeclarationKind::Const | VariableDeclarationKind::Let
+    ) {
         return None;
     }
     if decl.declarations.len() != 1 {

@@ -1340,14 +1340,23 @@ impl Translator {
         // A module file has no `fn main`, so *every* const-expr `const` must
         // promote to a crate item (there is no escape set to compute); the
         // entry path promotes only the ones a function closes over.
+        // Top-level `let` bindings mutated from a top-level function cannot
+        // lower to an immutable `OnceLock` (they need a `thread_local!`
+        // `RefCell`, B3-2) — both the const-item and lazy-static candidate
+        // checks exclude them. Computed first because the promoted set below
+        // and the lazy-static pre-pass both consult it.
+        let mutable_top_level =
+            functions::mutable_top_level_names(&program.body, &names, &registry);
         let promoted = if matches!(role, FileRole::Module) {
-            functions::all_promotable_const_names(&program.body, &names)
+            functions::all_promotable_const_names(&program.body, &names, &mutable_top_level)
         } else {
-            functions::promoted_const_names(&program.body, &names, &registry)
+            functions::promoted_const_names(&program.body, &names, &registry, &mutable_top_level)
         };
         for s in &program.body {
             if let oxc_ast::ast::Statement::VariableDeclaration(v) = s {
-                if let Some((sym, name, kind)) = functions::promotable_const_info(v, &names) {
+                if let Some((sym, name, kind)) =
+                    functions::promotable_const_info(v, &names, &mutable_top_level)
+                {
                     if kind.is_number() && promoted.contains(&name) {
                         names.register_number_const(sym);
                     }
@@ -1361,7 +1370,7 @@ impl Translator {
         // non-const-expr `const` there stays a local, not an accessor.
         if matches!(role, FileRole::Module) {
             for s in &program.body {
-                if functions::lazy_static_candidate(s) {
+                if functions::lazy_static_candidate(s, &mutable_top_level, &names) {
                     if let Some(sym) = functions::lazy_static_sym(s, &names) {
                         names.register_lazy_static(sym);
                     }
@@ -1417,7 +1426,9 @@ impl Translator {
             // `lazy_static_items`. Only a module: an entry runs the binding in
             // `fn main` as a plain local.
             if matches!(role, FileRole::Module) {
-                if let Some(lazy_items) = functions::lazy_static_items(s, &names, &registry) {
+                if let Some(lazy_items) =
+                    functions::lazy_static_items(s, &names, &registry, &mutable_top_level)
+                {
                     items.extend(lazy_items);
                     continue;
                 }

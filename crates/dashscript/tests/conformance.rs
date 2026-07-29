@@ -34,7 +34,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
-use dashscript::{RuntimeDeps, Translator};
+use dashscript::{FileRole, RuntimeDeps, Translator};
 use serde::{Deserialize, Serialize};
 use tempfile::TempDir;
 
@@ -349,6 +349,38 @@ fn per_function_path_compiles_to_valid_rust_project() {
     assert!(
         ok,
         "per-function path must compile to a valid cargo project: {err}\n--- emitted ---\n{rust}"
+    );
+}
+
+#[test]
+fn module_let_lazy_static_compiles_to_valid_rust_project() {
+    // B3-1a: a module-level non-mutated `let` (runtime initializer, here a
+    // `number[]`) referenced from a function lowers to a `static OnceLock<T>`
+    // + accessor fn — a module has no `fn main` to run a `let` in. cargo check
+    // confirms the accessor (`fn nums() -> &'static Vec<f64>`), the reference
+    // routing (`nums()[0]`), and the OnceLock cell all compile.
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let src =
+        "let nums: number[] = [1, 2, 3];\nexport function first(): number { return nums[0]; }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("translate module let source");
+    // A module emits declarations only (no `fn main` — arch decision point 8),
+    // but the probe crate is a bin target, so check needs an entry. A `fn main
+    // {}` stub satisfies it without touching the module items under test.
+    let rust = format!("{rust}\nfn main() {{}}\n");
+    write_project(&project, &rust, &deps);
+    let (ok, err) = cargo(
+        &project,
+        &target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    assert!(
+        ok,
+        "module let lazy-static path must compile: {err}\n--- emitted ---\n{rust}"
     );
 }
 

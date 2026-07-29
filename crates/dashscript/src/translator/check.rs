@@ -105,6 +105,10 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
     // Layer 2 — translatability: the translator is the source of truth (its
     // `None` means "not mapped"); the match only adds a human message + span.
     let registry = registry::build_registry(&program.body, &names);
+    // Top-level `let` bindings mutated from a top-level function cannot lower
+    // to an immutable `OnceLock` (they need a `thread_local!` `RefCell`, B3-2),
+    // so the lazy-static candidate check excludes them.
+    let mutable_top_level = functions::mutable_top_level_names(&program.body, &names, &registry);
     let mut state = WalkState {
         in_loop: false,
         non_string_vars: HashSet::new(),
@@ -128,14 +132,16 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
                 // expression statement, control flow, a throw) is unsupported:
                 // it has no entry to run in.
                 let promotable = if let Statement::VariableDeclaration(v) = stmt {
-                    functions::promotable_const_info(v, &names).is_some()
+                    functions::promotable_const_info(v, &names, &mutable_top_level).is_some()
                 } else {
                     false
                 };
-                // A non-const-expr `const` with an inferable type (an object, a
-                // regex) lowers to a lazy static (OnceLock + accessor fn), so a
-                // module may carry it too — no `fn main` needed.
-                let lazy_static = functions::lazy_static_candidate(stmt);
+                // A non-const-expr `const` or non-mutated `let` with an
+                // inferable type (an object, a regex) lowers to a lazy static
+                // (OnceLock + accessor fn), so a module may carry it too — no
+                // `fn main` needed.
+                let lazy_static =
+                    functions::lazy_static_candidate(stmt, &mutable_top_level, &names);
                 if promotable || lazy_static {
                     collect_unsupported(stmt, &mut diagnostics, &mut state);
                 } else {
@@ -162,10 +168,22 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
         collect_unsupported(stmt, &mut diagnostics, &mut state);
     }
     // A top-level `function` reading a top-level `const`/`let` would close over
-    // a binding living in `fn main` — impossible for a Rust fn item. Hoisting
-    // top-level bindings to module items is a later batch; until then surface
-    // the escape honestly rather than letting it fail `cargo check` as a partial.
-    check_escape(&program.body, &names, &registry, &mut diagnostics);
+    // a binding living in `fn main` — impossible for a Rust fn item. This is an
+    // entry-file concern only: a module file has no `fn main`, so every
+    // top-level binding lowers to a module item (a `const`, or a `OnceLock`
+    // accessor for a non-const-expr `const`/non-mutated `let`) a function may
+    // reference freely. Hoisting entry bindings to module items is a later
+    // batch (B3-1b/B3-2); until then surface the escape honestly rather than
+    // letting it fail `cargo check` as a partial.
+    if !matches!(role, FileRole::Module) {
+        check_escape(
+            &program.body,
+            &names,
+            &registry,
+            &mutable_top_level,
+            &mut diagnostics,
+        );
+    }
     diagnostics
 }
 
@@ -182,6 +200,7 @@ fn check_escape(
     program_body: &[Statement],
     names: &name_table::NameTable,
     registry: &registry::TypeRegistry,
+    mutable_names: &HashSet<String>,
     out: &mut Vec<OxcDiagnostic>,
 ) {
     // A const-expr `const` number/boolean literal referenced from a top-level
@@ -190,7 +209,7 @@ fn check_escape(
     // runtime initializer) still cannot be captured by a Rust fn item, so it
     // stays `unsupported`. `promoted_const_names` is the single source of truth
     // the translator also uses, so `check` and emit agree on what is hoisted.
-    let promoted = functions::promoted_const_names(program_body, names, registry);
+    let promoted = functions::promoted_const_names(program_body, names, registry, mutable_names);
     let flaggable: HashSet<String> = program_body
         .iter()
         .filter_map(|s| match s {
@@ -218,7 +237,17 @@ fn check_escape(
             &registry.mut_methods,
             &registry.ref_params,
         );
-        if analysis.use_counts.keys().any(|k| flaggable.contains(k)) {
+        // A read *or* a write (a rebind `n = …` or a member mutation `n.x =
+        // …`) of a flaggable binding from a function is an escape — both close
+        // over an `fn main` local. Use counts cover reads; `mutated`/
+        // `member_mutated` cover writes (the write-only case a read-only check
+        // would miss).
+        let mut escapes = analysis
+            .use_counts
+            .keys()
+            .chain(analysis.mutated.iter())
+            .chain(analysis.member_mutated.iter());
+        if escapes.any(|k| flaggable.contains(k)) {
             out.push(err(
                 "a `let`/`var` or non-literal binding referenced from a top-level \
                  function is not yet supported — use a `const` number/boolean \

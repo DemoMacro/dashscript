@@ -441,13 +441,16 @@ fn top_level_expression_statement_passes_check() {
 }
 
 #[test]
-fn top_level_function_referencing_top_level_let_is_unsupported() {
-    // A top-level `function` reading a top-level `let` would close over an
-    // `fn main` local — impossible for a Rust fn item, and `let` is not
-    // const-promotable (only a `const` number/boolean literal is, A3). Flag it
-    // honestly rather than letting it fail `cargo check` as a partial.
+fn top_level_function_referencing_non_mutated_let_promotes() {
+    // B3-1a: a top-level `function` reading a non-mutated top-level `let`
+    // (const-expression literal) promotes to a crate `const` item — previously
+    // `unsupported` (check_escape). Only a *mutated* `let` is still flagged
+    // (it needs a `thread_local!` `RefCell`, B3-2).
     let diags = Translator::new().check("let x: number = 5;\nfunction f(): number { return x; }");
-    assert!(!diags.is_empty(), "escape not flagged: {diags:?}");
+    assert!(
+        diags.is_empty(),
+        "non-mutated let escape flagged: {diags:?}"
+    );
 }
 
 #[test]
@@ -542,6 +545,95 @@ fn promoted_number_const_readable_at_top_level() {
     assert!(
         rust.contains("number_to_string(n as f64)"),
         "top-level read of promoted const not routed: {rust}"
+    );
+}
+
+#[test]
+fn module_non_mutated_let_literal_promotes_to_const_item() {
+    // B3-1a: a module-level non-mutated `let` whose initializer is a
+    // const-expression literal lowers to a crate `const` item, just like a
+    // `const` — a module has no `fn main` to run a `let` in, and an immutable
+    // literal is a Rust const. `check` must not flag it.
+    let src = "let config: number = 42;\nexport function get(): number { return config; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(
+        diags.is_empty(),
+        "non-mutated module let flagged: {diags:?}"
+    );
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("const config"),
+        "non-mutated let not promoted to const item: {rust}"
+    );
+    assert!(
+        !rust.contains("OnceLock"),
+        "literal let should not use OnceLock: {rust}"
+    );
+}
+
+#[test]
+fn module_non_mutated_let_runtime_init_emits_lazy_static() {
+    // B3-1a (lazy-static path): a module-level non-mutated `let` whose
+    // initializer is NOT a const-expression literal (here a `number[]`, which
+    // builds at runtime) lowers to a `static OnceLock<T>` + accessor `fn`, just
+    // like a `const` — a module has no `fn main` to run a `let` in, and the
+    // value is constructed once at first use. Previously a `let` here was
+    // rejected; only `const` qualified. (An object-literal initializer with an
+    // interface annotation hits the B5 type-propagation gap — the annotation
+    // does not yet steer the literal to the struct ctor — so this case uses a
+    // `number[]` init, whose Vec ctor matches the OnceLock type.)
+    let src =
+        "let nums: number[] = [1, 2, 3];\nexport function first(): number { return nums[0]; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(
+        diags.is_empty(),
+        "non-mutated let runtime init flagged: {diags:?}"
+    );
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("OnceLock") && rust.contains("get_or_init"),
+        "non-mutated let runtime init not lowered to lazy static: {rust}"
+    );
+    assert!(
+        rust.contains("fn nums()"),
+        "lazy-static accessor not emitted: {rust}"
+    );
+}
+
+#[test]
+fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
+    // B3-1a (entry path, via promotable relaxation): a top-level non-mutated
+    // `let` literal referenced from a function promotes to a crate `const` item
+    // — previously this was `unsupported` (check_escape). The promotable
+    // relaxation plus the check_escape flaggable exclusion make it legal.
+    let src = "let n: number = 5;\nfunction f(): number { return n; }";
+    let diags = Translator::new().check(src);
+    assert!(
+        diags.is_empty(),
+        "non-mutated let escape flagged: {diags:?}"
+    );
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("const n") && !rust.contains("let n"),
+        "non-mutated let not promoted: {rust}"
+    );
+}
+
+#[test]
+fn mutated_top_level_let_referenced_by_fn_still_unsupported() {
+    // A top-level `let` mutated from a function cannot lower to a `const` item
+    // or an immutable OnceLock — it needs a `thread_local!` `RefCell` (B3-2).
+    // Until then `check_escape` still flags it.
+    let diags = Translator::new().check("let n: number = 0;\nfunction f(): void { n = 1; }");
+    assert!(
+        !diags.is_empty(),
+        "mutated let escape not flagged: {diags:?}"
     );
 }
 
