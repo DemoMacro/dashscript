@@ -100,6 +100,14 @@ pub struct TypeRegistry {
     /// a non-literal initializer is not registered, so the access falls
     /// through to a struct field and surfaces at `cargo check`.
     pub enums: HashSet<String>,
+    /// Inline object-literal shape signature (sorted PascalCase-joined field
+    /// names — `declarations::object_member_tag`) → the name of a same-shape
+    /// `type` alias in the file (`{ indent?, declaration? }` →
+    /// `XmlInputOptions`). Published to the union-naming thread-local
+    /// (`declarations::set_shape_aliases`) before any union is named, so an
+    /// inline-object union member upgrades to the alias — unifying same-shape
+    /// unions (inline vs alias) to one enum (structural typing).
+    pub shape_aliases: HashMap<String, String>,
 }
 
 impl TypeRegistry {
@@ -118,6 +126,7 @@ impl TypeRegistry {
             interface_extends: HashMap::new(),
             interface_own_fields: HashMap::new(),
             enums: HashSet::new(),
+            shape_aliases: HashMap::new(),
         }
     }
 }
@@ -133,6 +142,25 @@ impl Default for TypeRegistry {
 #[must_use]
 pub fn build_registry(statements: &[Statement], names: &NameTable) -> TypeRegistry {
     let mut registry = TypeRegistry::new();
+    // First pass: map every object-literal `type` alias's shape signature to
+    // its name, and publish the map to the union-naming thread-local — before
+    // the main pass, so an inline-object union member that appears *before*
+    // the alias in source order still upgrades to it (ES top-level bindings
+    // are order-independent at the module level).
+    for stmt in statements {
+        let alias = match stmt {
+            Statement::TSTypeAliasDeclaration(a) => Some(a),
+            Statement::ExportNamedDeclaration(exp) => match &exp.declaration {
+                Some(Declaration::TSTypeAliasDeclaration(a)) => Some(a),
+                _ => None,
+            },
+            _ => None,
+        };
+        if let Some(alias) = alias {
+            register_shape_alias(alias, &mut registry);
+        }
+    }
+    declarations::set_shape_aliases(&registry.shape_aliases);
     for stmt in statements {
         match stmt {
             Statement::TSTypeAliasDeclaration(alias) => register_type_alias(alias, &mut registry),
@@ -187,6 +215,23 @@ fn register_type_alias(alias: &TSTypeAliasDeclaration, registry: &mut TypeRegist
         }
     }
     collect_inline_type_defs(&alias.type_annotation, registry);
+}
+
+/// Record an object-literal `type` alias's shape signature → name, so an
+/// inline-object union member of the same shape upgrades to this alias. Other
+/// alias shapes (a union, a scalar, an index signature) are skipped — only an
+/// object literal with named fields has a struct shape to match.
+fn register_shape_alias(alias: &TSTypeAliasDeclaration, registry: &mut TypeRegistry) {
+    let TSType::TSTypeLiteral(lit) = &alias.type_annotation else {
+        return;
+    };
+    let Some(sig) = declarations::object_member_tag(lit) else {
+        return;
+    };
+    registry
+        .shape_aliases
+        .entry(sig)
+        .or_insert_with(|| alias.id.name.to_string());
 }
 
 fn register_interface(iface: &TSInterfaceDeclaration, registry: &mut TypeRegistry) {

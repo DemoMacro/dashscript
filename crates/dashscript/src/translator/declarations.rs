@@ -136,8 +136,15 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Vec<Item> {
                 .filter_map(|sig| struct_field(sig, &parent, &mut anon))
                 .collect();
             let mut items = anon;
-            let mut item: ItemStruct =
-                parse_quote! { #[derive(Clone, Debug, PartialEq)] struct #name { #(#fields)* } };
+            // A struct a crate-root union enum references (its alias was
+            // upgraded to from an inline member) must be crate-visible, or the
+            // enum cannot name it across modules (E0425).
+            let vis: TokenStream = if alias_referenced_by_union(&name.to_string()) {
+                quote!(pub(crate))
+            } else {
+                quote!()
+            };
+            let mut item: ItemStruct = parse_quote! { #[derive(Clone, Debug, PartialEq)] #vis struct #name { #(#fields)* } };
             item.generics = make_generics(&generics);
             items.push(Item::Struct(item));
             items
@@ -369,6 +376,47 @@ fn array_element_tag(ty: &TSType) -> Option<String> {
     }
 }
 
+// Inline-object shape signatures that resolve to a named `type` alias in the
+// same file (`{ indent?, declaration? }` → `XmlInputOptions`). Set by the
+// registry pre-pass before any union is named. Thread-local because union
+// naming (`inline_mixed_union_enum`) runs both in the registry pre-pass and in
+// `types::union_type` — a pure function with no registry handle — so the table
+// is published here and read by both naming sites. It is file-scoped, owned
+// (`String` keys/values — no AST lifetime), and reset per file by
+// `set_shape_aliases`.
+thread_local! {
+    static SHAPE_ALIASES: std::cell::RefCell<std::collections::HashMap<String, String>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// Publish the file's inline-object → alias map before any union is named. The
+/// registry pre-pass calls this once after scanning the file's `type` aliases.
+pub(in crate::translator) fn set_shape_aliases(
+    aliases: &std::collections::HashMap<String, String>,
+) {
+    SHAPE_ALIASES.with(|m| {
+        let mut map = m.borrow_mut();
+        map.clear();
+        map.extend(aliases.iter().map(|(k, v)| (k.clone(), v.clone())));
+    });
+}
+
+/// The named alias for an inline-object shape signature, when a same-shape
+/// `type` alias is in scope — `None` when none matches (the member stays
+/// anonymous). Structural typing: the inline member upgrades to the alias so
+/// same-shape unions (inline vs alias) unify to one enum.
+fn shape_alias_for(sig: &str) -> Option<String> {
+    SHAPE_ALIASES.with(|m| m.borrow().get(sig).cloned())
+}
+
+/// Whether a named `type` alias is referenced by some union — an inline-object
+/// member of the same shape upgraded to it. The alias's struct must then be
+/// crate-visible, since the crate-root union enum references it: a module-
+/// private struct would be invisible to that enum (E0425).
+fn alias_referenced_by_union(name: &str) -> bool {
+    SHAPE_ALIASES.with(|m| m.borrow().values().any(|v| v == name))
+}
+
 /// An inline-object union member → its `(tag, variant)`. A literal carrying a
 /// string-literal discriminant becomes a named-field variant (`{ kind: "circle"
 /// }` → `Circle { .. }`); a plain literal becomes a tuple variant wrapping its
@@ -386,6 +434,17 @@ fn object_member_variant(
     let TSType::TSTypeLiteral(lit) = ty else {
         return None;
     };
+    // Structural typing: if this inline object's shape matches a named
+    // object-literal `type` alias in scope, upgrade the member to that alias
+    // (`{ indent?, declaration? }` → `XmlInputOptions`) so an inline member and
+    // its named alias unify to one enum variant — otherwise the same-shape
+    // union spelled inline vs via an alias emits two incompatible enums.
+    if let Some(sig) = object_member_tag(lit) {
+        if let Some(alias) = shape_alias_for(&sig) {
+            let variant = bindings::type_ident(&alias);
+            return Some((alias, parse_quote!(#variant(#variant))));
+        }
+    }
     let (struct_name, item) = anon_struct_for_literal(lit)?;
     let tag = object_member_tag(lit)?;
     let var_id = bindings::pascal(&tag);
@@ -395,8 +454,10 @@ fn object_member_variant(
 
 /// The variant tag of a plain inline-object member: the sorted field names,
 /// PascalCase-joined (`{ _attr: .. }` → `Attr`; `{ _attr; _cdata }` →
-/// `AttrCdata`) — readable and shape-distinct.
-fn object_member_tag(lit: &TSTypeLiteral) -> Option<String> {
+/// `AttrCdata`) — readable and shape-distinct. `pub` so the registry pre-pass
+/// can compute the same signature for an object-literal `type` alias body and
+/// map it to the alias name (structural typing → alias upgrade).
+pub(in crate::translator) fn object_member_tag(lit: &TSTypeLiteral) -> Option<String> {
     let mut names: Vec<String> = lit
         .members
         .iter()
