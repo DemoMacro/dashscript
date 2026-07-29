@@ -143,11 +143,12 @@ fn apply_to_cargo_toml_noop_when_not_needed() {
 
 #[test]
 fn dynamic_reflection_routes_through_engine() {
-    // `Object.defineProperty` is ES reflection the static translator cannot
-    // lower; the whole program runs under the embedded QuickJS engine instead.
-    // The body is never lowered, so an anonymous `{}` receiver is fine — the
-    // engine path short-circuits before `translate_statement`.
-    let src = "function main(): void {\n  const o = {};\n  Object.defineProperty(o, \"x\", { value: 1 });\n  console.log(o.x);\n}";
+    // `Object.defineProperty` at top level is ES reflection the static
+    // translator cannot lower, and it has no enclosing function to rewrite, so
+    // the whole program runs under the embedded QuickJS engine. Top level
+    // short-circuits before `translate_statement`, so an anonymous receiver is
+    // fine — the body is never lowered.
+    let src = "Object.defineProperty({}, \"x\", { value: 1 });\nconsole.log(\"ok\");\n";
     let (rust, deps) = Translator::new()
         .translate_with_deps(src)
         .expect("translate_with_deps");
@@ -162,6 +163,39 @@ fn dynamic_reflection_routes_through_engine() {
     assert!(
         !deps.needs_ryu_js(),
         "engine path emits no __ds::number_to_string"
+    );
+}
+
+#[test]
+fn per_function_reflection_keeps_signature_swaps_body() {
+    // A reflection construct inside a top-level `function` degrades only that
+    // function: its Rust signature stays (`fn reflect(...) -> String`) but its
+    // body becomes a `__ds_engine::call_fn` invocation. Every emitted
+    // struct/enum derives `Serialize`/`Deserialize` (the marshal boundary), and
+    // a `__DS_MODULE_JS` const carries the file's stripped JS.
+    let src = "interface Box { v: number }\nfunction reflect(b: Box): string {\n  Object.defineProperty(b, \"k\", { value: 1 });\n  return \"done\";\n}\nconst x: Box = { v: 2 };\nconsole.log(reflect(x));\n";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "per-function engine dep, got: {deps:?}"
+    );
+    assert!(
+        rust.contains("__ds_engine::call_fn"),
+        "degraded function body should call_fn, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("__DS_MODULE_JS"),
+        "module JS const should be emitted, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("serde::Serialize"),
+        "struct/enum should derive Serialize, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("fn reflect"),
+        "degraded function keeps its Rust signature, got:\n{rust}"
     );
 }
 

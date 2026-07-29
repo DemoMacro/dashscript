@@ -10,10 +10,36 @@ use quote::{format_ident, quote, ToTokens};
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashSet;
 use std::hash::{Hash, Hasher};
-use syn::{parse_quote, Arm, Ident, Item, ItemEnum, ItemImpl, ItemStruct, Type};
+use syn::{parse_quote, Arm, Ident, Item, ItemEnum, ItemImpl, ItemStruct, Meta, Type};
 
 use super::registry::TypeRegistry;
 use super::{bindings, types};
+
+/// Append `serde::Serialize`/`serde::Deserialize` to every emitted struct/enum's
+/// `#[derive(...)]`. Per-function engine degradation marshals argument/return
+/// values through `serde_json::Value`, so every user type crossing the
+/// `call_fn` boundary needs both. Idempotent (skips a derive list already
+/// carrying a serde derive) and ignores items with no `derive(...)` attribute.
+pub(in crate::translator) fn add_serde_derives(items: &mut [Item]) {
+    for item in items.iter_mut() {
+        let attrs = match item {
+            Item::Struct(s) => &mut s.attrs,
+            Item::Enum(e) => &mut e.attrs,
+            _ => continue,
+        };
+        for attr in attrs.iter_mut() {
+            // The existing `#[derive(Clone, Debug, PartialEq)]` token stream.
+            let prev = match &attr.meta {
+                Meta::List(ml) if attr.path().is_ident("derive") => ml.tokens.clone(),
+                _ => continue,
+            };
+            if prev.to_string().contains("Serialize") {
+                continue;
+            }
+            *attr = parse_quote!(#[derive(#prev, serde::Serialize, serde::Deserialize)]);
+        }
+    }
+}
 
 /// `interface Point { x: number }` → `struct Point { pub x: f64 }`.
 ///

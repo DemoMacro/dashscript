@@ -297,11 +297,14 @@ fn conformance_matrix() {
 /// Rust template, the `__ds_engine` module, or the dep wiring regresses.
 #[test]
 fn engine_path_compiles_to_valid_rust_project() {
+    // Top-level reflection → whole-program `run` path. The emitted crate is a
+    // single `fn main { __ds_engine::run(js) }`; cargo check confirms it (and
+    // the embedded `__ds_engine` helper) compile against rquickjs + serde_json.
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
     let target_dir = tmp.path().join("target");
     fs::create_dir_all(project.join("src")).expect("probe src");
-    let src = "function main(): void {\n  const o = {};\n  Object.defineProperty(o, \"x\", { value: 1 });\n  console.log(o.x);\n}";
+    let src = "Object.defineProperty({}, \"x\", { value: 1 });\nconsole.log(\"ok\");\n";
     let (rust, deps) = Translator::new()
         .translate_with_deps(src)
         .expect("translate reflection source");
@@ -318,6 +321,34 @@ fn engine_path_compiles_to_valid_rust_project() {
     assert!(
         ok,
         "engine path must compile to a valid cargo project: {err}"
+    );
+}
+
+#[test]
+fn per_function_path_compiles_to_valid_rust_project() {
+    // Reflection inside a top-level `function` → per-function degradation: the
+    // function keeps its Rust signature but its body is `call_fn`, the struct
+    // argument derives `Serialize`/`Deserialize`, and a `__DS_MODULE_JS` const
+    // carries the stripped JS. cargo check confirms the whole emitted crate
+    // compiles (the marshal boundary + the `__ds_engine` helper).
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let src = "interface Item { v: number }\nfunction reflect(b: Item): string {\n  Object.defineProperty(b, \"k\", { value: 1 });\n  return \"done\";\n}\nconst x: Item = { v: 2 };\nconsole.log(reflect(x));\n";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate per-function source");
+    assert!(deps.needs_engine(), "per-function reflection needs engine");
+    write_project(&project, &rust, &deps);
+    let (ok, err) = cargo(
+        &project,
+        &target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    assert!(
+        ok,
+        "per-function path must compile to a valid cargo project: {err}\n--- emitted ---\n{rust}"
     );
 }
 

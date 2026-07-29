@@ -139,7 +139,11 @@ impl RuntimeDep {
             // it is only emitted for programs that opt into the engine path.
             // `serde_json` is the per-function degradation marshal layer
             // (`call_fn` marshals args/return as `serde_json::Value`).
-            RuntimeDep::Engine => Some(&[("rquickjs", "\"0.12\""), ("serde_json", "\"1\"")]),
+            RuntimeDep::Engine => Some(&[
+                ("rquickjs", "\"0.12\""),
+                ("serde", "{ version = \"1\", features = [\"derive\"] }"),
+                ("serde_json", "\"1\""),
+            ]),
             RuntimeDep::Regress => Some(&[("regress", "\"0.11\"")]),
             // `temporal_rs` (boa-dev/temporal-rs) — the Rust implementation of
             // ECMAScript Temporal. Default features embed time-zone data
@@ -1261,22 +1265,26 @@ impl Translator {
         let scoping = sret.semantic.into_scoping();
         let mut names = name_table::build(&scoping);
 
-        // Engine-gated compat path: a source using ES dynamic reflection
-        // (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`,
-        // `instanceof`, …) the static translator cannot lower is run whole
-        // under an embedded QuickJS engine instead of being lowered to Rust.
-        // The same `collect_unsupported` walk that flags these as
-        // `unsupported` in `ds lint` here flips the file to the engine path —
-        // a single source of truth for what the engine covers, so the lint and
-        // the lowering cannot drift. Default `ds build` output stays pure Rust;
-        // only a program that actually uses such a construct pulls the
-        // `rquickjs` engine dep (and its C compile).
-        if check::program_uses_engine(program) {
-            // The engine evaluates ECMAScript, so strip the TS type annotations
-            // the source carries — QuickJS parses JS, not TS. `engine_js_source`
-            // does the strip + codegen and is shared with `engine_source`, so
-            // the conformance harness can run the exact bytes the engine path
-            // embeds without compiling a throwaway cargo project per fixture.
+        // Engine-gated compat path. A source using ES dynamic reflection the
+        // static translator cannot lower degrades to an embedded QuickJS engine
+        // instead of failing `cargo check`. Two granularities:
+        //   * a construct at top level (outside any function) has no function
+        //     boundary to rewrite, so the whole program runs under the engine
+        //     (`run(js_source)`) — the conformance-oracle path;
+        //   * a construct inside a top-level `function` degrades only that
+        //     function: its body becomes `__ds_engine::call_fn("name", …)`,
+        //     keeping the Rust signature, while every other function stays
+        //     native Rust. The rest of the file is lowered normally.
+        // `program_engine_sites` is the same `collect_unsupported` walk that
+        // flags these `unsupported` in `ds lint` — one source of truth for what
+        // the engine covers. Default `ds build` output stays pure Rust; only a
+        // program that actually uses such a construct pulls the `rquickjs` dep.
+        let sites = check::program_engine_sites(program);
+        if sites.top_level_dynamic {
+            // Whole-program `run`. The engine evaluates ECMAScript, so strip the
+            // TS type annotations — QuickJS parses JS, not TS. `engine_js_source`
+            // (shared with `engine_source`) lets the conformance harness run the
+            // exact bytes embedded here without compiling a throwaway project.
             let js_source = engine_js_source(program, &allocator, scoping);
             let src_lit = syn::LitStr::new(&js_source, proc_macro2::Span::call_site());
             let main_item: syn::Item = syn::parse_quote! {
@@ -1292,6 +1300,14 @@ impl Translator {
             let mut deps = RuntimeDeps::empty();
             deps.insert(RuntimeDep::Engine);
             return Ok((rust, deps));
+        }
+        // Per-function degradation: publish the dynamic-function set so
+        // `translate_function` swaps just those bodies for `call_fn` (every
+        // other function stays native Rust). The `__DS_MODULE_JS` const and the
+        // serde derives are emitted below, after the items are collected.
+        let per_function = !sites.dynamic_fns.is_empty();
+        if per_function {
+            functions::set_dynamic_fns(sites.dynamic_fns.clone());
         }
 
         // Record the file's namespace-import bindings (`import * as ns`) so a
@@ -1473,11 +1489,32 @@ impl Translator {
                 // with no `fn main`, brought in by the entry via `mod <stem>;`.
             }
         }
-        let file = syn::File {
+        // Per-function degradation: emit the file's annotation-stripped JS as a
+        // module-level const. `__ds_engine::call_fn` evals it before each
+        // degraded-function call so the function's module-scoped helpers are
+        // defined. `engine_js_source` strips the TS annotations (QuickJS parses
+        // JS). It consumes `scoping`/`program` (the static pass above is done),
+        // so it runs last among the item-emitting passes.
+        if per_function {
+            let module_js = engine_js_source(program, &allocator, scoping);
+            let js_lit = syn::LitStr::new(&module_js, proc_macro2::Span::call_site());
+            items.push(syn::parse_quote! {
+                /// The whole module's annotation-stripped JS — `__ds_engine::call_fn`
+                /// evals this before each degraded-function invocation so the
+                /// function's helper dependencies are in scope.
+                const __DS_MODULE_JS: &str = #js_lit;
+            });
+        }
+        let mut file = syn::File {
             shebang: None,
             attrs: Vec::new(),
             items,
         };
+        if per_function {
+            // Every emitted struct/enum derives `Serialize`/`Deserialize` so the
+            // `call_fn` argument/return values marshal across the QuickJS boundary.
+            declarations::add_serde_derives(&mut file.items);
+        }
         // An emit point that routes an `f64` through the ES NumberToString
         // helper writes a `crate::__ds::number_to_string` call into the Rust
         // text; a `JSON.parse`/`JSON.stringify` call inlines `serde_json::`.
@@ -1496,6 +1533,14 @@ impl Translator {
             if d.marker().is_some_and(|m| probe.contains(m)) {
                 deps.insert(d);
             }
+        }
+        // Per-function degradation pulls the engine runtime (`rquickjs` + the
+        // serde marshal layer) plus `serde` with `derive` (every struct/enum is
+        // `Serialize`/`Deserialize` in this mode). The marker probe does not
+        // catch this (no `serde_json::`/`__ds::` text is emitted by the static
+        // path), so it is inserted explicitly when the route is per-function.
+        if per_function {
+            deps.insert(RuntimeDep::Engine);
         }
         // A file that defines a user struct/enum forces the `Truthy` dep even
         // if this file never tests truthiness itself: another module may call

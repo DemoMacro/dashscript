@@ -37,12 +37,38 @@ use oxc_ast::ast::{
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
+use std::cell::RefCell;
+use std::collections::HashSet;
 use syn::{parse_quote, Block, Expr, FnArg, Ident, ItemFn, Path, ReturnType, Stmt, Type};
 
 use super::context::{Ctx, Locals, Narrow};
 use super::name_table::NameTable;
 use super::registry::TypeRegistry;
 use super::{bindings, declarations, expressions, types};
+
+thread_local! {
+    /// TS names of top-level functions whose body contains a low-compatibility
+    /// construct (per-function engine degradation sites). Set once by
+    /// `Translator::translate_with_deps_as` before any statement is translated;
+    /// `translate_function` reads it to swap such a function's body for a
+    /// `__ds_engine::call_fn` invocation that keeps the Rust signature.
+    static DYNAMIC_FNS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+}
+
+/// Record the file's per-function engine degradation sites (TS function names),
+/// replacing any previous set. Called once per `translate_with_deps_as`.
+pub(in crate::translator) fn set_dynamic_fns(fns: HashSet<String>) {
+    DYNAMIC_FNS.with(|c| {
+        let mut set = c.borrow_mut();
+        set.clear();
+        set.extend(fns);
+    });
+}
+
+/// Whether `ts_name` is a per-function engine degradation site this translate.
+fn is_dynamic_fn(ts_name: &str) -> bool {
+    DYNAMIC_FNS.with(|c| c.borrow().contains(ts_name))
+}
 
 /// Translate a top-level statement into a `syn::Item`, if mapped.
 ///
@@ -308,20 +334,13 @@ fn make_pub(item: &mut syn::Item) {
     }
 }
 
-fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTable<'_>) -> ItemFn {
-    let name = func
-        .id
-        .as_ref()
-        .map_or_else(|| format_ident!("__ds_main"), |id| names.of_binding(id));
-    // A named `fn` and a block-body arrow set up their body `Locals` the same
-    // way — register params, run mutation analysis, infer number flavors — so
-    // both go through [`body_locals`] (the single source of truth for "how a
-    // function body's locals are built").
-    let mut locals = body_locals(&func.params, func.body.as_deref(), registry, names);
-    let inputs = translate_params(&func.params, &locals, registry, names);
-    // `void` / `undefined` map to an omitted return type (Rust infers `()`).
-    let output = func
-        .return_type
+/// The Rust return type of a `function`: `void`/`undefined` → omitted (`()`);
+/// an annotated type → that type; an untyped body that returns a value → `f64`
+/// (mirroring the untyped-param-defaults-to-f64 rule so a plain numeric
+/// `add(a, b) { return a + b }` compiles). Shared by the static body and the
+/// per-function engine body, so both keep the same Rust signature.
+fn fn_output(func: &Function, registry: &TypeRegistry) -> ReturnType {
+    func.return_type
         .as_ref()
         .and_then(|ta| match &ta.type_annotation {
             TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
@@ -345,7 +364,31 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
                 .any(|s| matches!(s, Statement::ReturnStatement(ret) if ret.argument.is_some()))
                 .then(|| ReturnType::Type(Default::default(), parse_quote!(f64)))
         })
-        .unwrap_or(ReturnType::Default);
+        .unwrap_or(ReturnType::Default)
+}
+
+fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTable<'_>) -> ItemFn {
+    let name = func
+        .id
+        .as_ref()
+        .map_or_else(|| format_ident!("__ds_main"), |id| names.of_binding(id));
+    // Per-function engine degradation: a function whose body contains a
+    // construct the static translator cannot lower keeps its Rust signature but
+    // runs under QuickJS via `__ds_engine::call_fn`. The dynamic-fn set is set
+    // once per translate, so a function matched here skips body translation.
+    if let Some(id) = &func.id {
+        if is_dynamic_fn(id.name.as_str()) {
+            return engine_fn_item(&name, id.name.as_str(), func, registry, names);
+        }
+    }
+    // A named `fn` and a block-body arrow set up their body `Locals` the same
+    // way — register params, run mutation analysis, infer number flavors — so
+    // both go through [`body_locals`] (the single source of truth for "how a
+    // function body's locals are built").
+    let mut locals = body_locals(&func.params, func.body.as_deref(), registry, names);
+    let inputs = translate_params(&func.params, &locals, registry, names);
+    // `void` / `undefined` map to an omitted return type (Rust infers `()`).
+    let output = fn_output(func, registry);
     // The return-type path threads down to `return {…}` so the object literal
     // can borrow its struct name.
     let return_path = func.return_type.as_deref().and_then(return_path_of);
@@ -387,6 +430,66 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
             .map(|p| bindings::type_ident(&p.name.name))
             .collect()
     });
+    if generics.is_empty() {
+        parse_quote! {
+            fn #name(#(#inputs),*) #output #block
+        }
+    } else {
+        parse_quote! {
+            fn #name<#(#generics),*>(#(#inputs),*) #output #block
+        }
+    }
+}
+
+/// A per-function engine degradation site: keep the Rust signature (params,
+/// return type, generics) but replace the body with a `__ds_engine::call_fn`
+/// invocation. Each argument is marshaled to `serde_json::Value` (every emitted
+/// struct/enum derives `Serialize`/`Deserialize` in this mode), and a non-unit
+/// return is marshaled back. `__DS_MODULE_JS` is the whole module's
+/// annotation-stripped JS, eval'd per call so the function's helper
+/// dependencies are in scope (a dynamic function usually leans on other module
+/// functions; the engine defines all of them before the call).
+fn engine_fn_item(
+    name: &Ident,
+    ts_name: &str,
+    func: &Function,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> ItemFn {
+    let locals = body_locals(&func.params, None, registry, names);
+    let inputs = translate_params(&func.params, &locals, registry, names);
+    let output = fn_output(func, registry);
+    let generics: Vec<Ident> = func.type_parameters.as_deref().map_or_else(Vec::new, |tp| {
+        tp.params
+            .iter()
+            .map(|p| bindings::type_ident(&p.name.name))
+            .collect()
+    });
+    // Marshal each argument to `serde_json::Value` (Serialize is derived on
+    // every emitted struct/enum in per-function mode).
+    let args: Vec<Expr> = func
+        .params
+        .items
+        .iter()
+        .map(|fp| {
+            let pname = names.of_pattern(&fp.pattern);
+            parse_quote!(serde_json::to_value(&#pname).unwrap_or(serde_json::Value::Null))
+        })
+        .collect();
+    let ts_lit = syn::LitStr::new(ts_name, proc_macro2::Span::call_site());
+    // A unit/void return discards the engine's `Value`; a typed return
+    // deserializes it back to the signature's Rust type.
+    let block: Block = match &output {
+        ReturnType::Default => parse_quote!({
+            let __ds_args: Vec<serde_json::Value> = vec![#(#args),*];
+            let _ = crate::__ds_engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args);
+        }),
+        ReturnType::Type(_, ret_ty) => parse_quote!({
+            let __ds_args: Vec<serde_json::Value> = vec![#(#args),*];
+            let __ds_ret = crate::__ds_engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args);
+            serde_json::from_value::<#ret_ty>(__ds_ret).unwrap_or_default()
+        }),
+    };
     if generics.is_empty() {
         parse_quote! {
             fn #name(#(#inputs),*) #output #block

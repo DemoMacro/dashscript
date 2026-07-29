@@ -230,21 +230,27 @@ fn check_escape(
     }
 }
 
-/// True when the program body contains any ES dynamic/reflection construct the
-/// static translator cannot lower — the same walk as [`collect_unsupported`],
-/// which classifies each expression via [`super::classify`]. A `Reject` or
-/// `DegradeEngine` verdict means the engine must run the program; the
-/// translator routes it through the embedded QuickJS engine
-/// (`RuntimeDeps::needs_engine`) instead of static lowering, so a fixture that
-/// uses `Object.defineProperty`/`Reflect.*`/`Symbol`/`instanceof`/… runs
-/// correctly rather than failing `cargo check`.
-///
-/// Mirrors the unsupported-construct detection so the translator and `check`
-/// agree on what the engine path covers — no second list to drift. Parse
-/// errors are out of scope (a parse failure is fatal before this is called);
-/// unmapped top-level statements are too (top-level hoisting is a separate
-/// translator path, not an engine concern).
-pub(super) fn program_uses_engine(program: &oxc_ast::ast::Program) -> bool {
+/// Per-function engine degradation sites: which top-level functions contain a
+/// construct the static translator cannot lower (their bodies will run under
+/// QuickJS via `__ds_engine::call_fn`), and whether any dynamic construct sits
+/// at top level — outside any function — which still needs the whole-program
+/// `run` path (there is no function boundary to rewrite).
+#[derive(Default)]
+pub(super) struct EngineSites {
+    /// TS names of top-level `function` declarations whose body contains a
+    /// low-compatibility construct (a `DegradeEngine` classification).
+    pub dynamic_fns: HashSet<String>,
+    /// A dynamic construct at top level (not inside any function) — no function
+    /// boundary to rewrite, so the whole program falls back to `run`.
+    pub top_level_dynamic: bool,
+}
+
+/// Walk the program once and split the unsupported-construct diagnostics by
+/// where they land: inside a top-level function (a per-function degradation
+/// site) or outside one (whole-program fallback). The split reuses the exact
+/// same `collect_unsupported` walk that flags these as `unsupported` in
+/// `ds lint` — one source of truth for what the engine covers.
+pub(super) fn program_engine_sites(program: &oxc_ast::ast::Program) -> EngineSites {
     // For the duration of this walk, `is_borrow_call` whitelists every prototype
     // borrow the translator *attempts* (String + Array), so a borrow the
     // translator can lower is not needlessly stolen by the engine. The scope
@@ -256,10 +262,36 @@ pub(super) fn program_uses_engine(program: &oxc_ast::ast::Program) -> bool {
         non_string_vars: HashSet::new(),
     };
     let mut diags = Vec::new();
+    let mut sites = EngineSites::default();
     for stmt in &program.body {
+        // Record the diagnostic count before recursing into this statement;
+        // any new diagnostic it produces landed inside it. A function
+        // declaration that adds a diagnostic has the construct in its body
+        // (a per-function site); anything else that adds one has no function
+        // boundary to rewrite (whole-program fallback).
+        let before = diags.len();
         collect_unsupported(stmt, &mut diags, &mut state);
+        if diags.len() > before {
+            if let oxc_ast::ast::Statement::FunctionDeclaration(f) = stmt {
+                if let Some(id) = &f.id {
+                    sites.dynamic_fns.insert(id.name.as_str().to_string());
+                }
+            } else {
+                sites.top_level_dynamic = true;
+            }
+        }
     }
-    !diags.is_empty()
+    sites
+}
+
+/// True when the program needs the engine at all — either a per-function site
+/// or a top-level dynamic construct. This is the conformance-oracle gate: when
+/// it returns true, the whole program runs under QuickJS via `run`. The
+/// translator's own routing uses the richer [`program_engine_sites`] to pick
+/// per-function vs whole-program; this collapses that to a single bool.
+pub(super) fn program_uses_engine(program: &oxc_ast::ast::Program) -> bool {
+    let sites = program_engine_sites(program);
+    sites.top_level_dynamic || !sites.dynamic_fns.is_empty()
 }
 
 /// True for `export {}` — an empty named export (no declaration, no
