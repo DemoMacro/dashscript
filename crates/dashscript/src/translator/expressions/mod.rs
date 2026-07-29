@@ -772,7 +772,12 @@ fn template_expr(t: &TemplateLiteral, ctx: &Ctx<'_>) -> Expr {
                 let n = translate_number_to(e, super::flavor::NumberFlavor::F64, ctx);
                 parse_quote!(crate::__ds::number_to_string(#n))
             } else {
-                translated
+                // A non-number interpolation routes through `__ds::display` so an
+                // `Option` (ES `undefined`) renders as "undefined" and a user
+                // object as "[object Object]" — ES coercion, not Rust `Display`
+                // (which is E0277 on `Option`/user types). The `__ds::display`
+                // marker auto-flags the `Display` dep and its per-type impls.
+                parse_quote!(crate::__ds::display(&(#translated)))
             }
         })
         .collect();

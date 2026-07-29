@@ -84,6 +84,33 @@ fn array_helper_module_exposes_array_set_without_ryu_js() {
 }
 
 #[test]
+fn non_numeric_interpolation_routes_through_display_and_flags_dep() {
+    // `${true}` (a bool, not a number) routes through `__ds::display` (ES
+    // coercion: bool -> "true"), not Rust `Display`, and flags the `Display`
+    // dep so the `DsDisplay` trait ships in `__ds.rs`. An `Option`/user-type
+    // interpolation relies on the same path — without it `${opt}` is E0277
+    // (`Option: Display`).
+    let src = "function main(): void { console.log(`${true}`); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("__ds::display"),
+        "non-numeric interpolation should route through display, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Display),
+        "Display dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module()
+            .is_some_and(|s| s.contains("pub trait DsDisplay")),
+        "Display dep ships the DsDisplay trait, got helper: {:?}",
+        deps.helper_module()
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

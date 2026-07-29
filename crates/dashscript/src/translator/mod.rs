@@ -80,12 +80,20 @@ pub enum RuntimeDep {
     /// compiler picks the matching `DsTruthy` impl by inferred type. Pure `std`
     /// — no cargo dep. Routes through `__ds::truthy`.
     Truthy,
+    /// ES string rendering for a value interpolated into a template literal
+    /// (`${opts.field}`) or concatenated — the translator emits
+    /// `__ds::display(&expr)` for any non-numeric interpolation, and the Rust
+    /// compiler picks the matching `DsDisplay` impl by inferred type. ES
+    /// semantics: `undefined`/`null` (an `Option`'s `None`) → `"undefined"`,
+    /// a boolean → `"true"`/`"false"`, an array → elements joined by `,`, an
+    /// object → `"[object Object]"`. Pure `std` — no cargo dep.
+    Display,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 8] = [
+    const ALL: [RuntimeDep; 9] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -94,6 +102,7 @@ impl RuntimeDep {
         RuntimeDep::Temporal,
         RuntimeDep::Worker,
         RuntimeDep::Truthy,
+        RuntimeDep::Display,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -108,6 +117,7 @@ impl RuntimeDep {
             RuntimeDep::Temporal => Some("temporal_rs::"),
             RuntimeDep::Worker => Some("__ds::Worker"),
             RuntimeDep::Truthy => Some("__ds::truthy"),
+            RuntimeDep::Display => Some("__ds::display"),
             RuntimeDep::Engine => None,
         }
     }
@@ -141,6 +151,7 @@ impl RuntimeDep {
             RuntimeDep::Worker => Some(&[("serde", "\"1\""), ("serde_json", "\"1\"")]),
             RuntimeDep::ArrayHelper => None,
             RuntimeDep::Truthy => None,
+            RuntimeDep::Display => None,
         }
     }
 
@@ -153,6 +164,7 @@ impl RuntimeDep {
             RuntimeDep::SerdeJson | RuntimeDep::Engine | RuntimeDep::Temporal => None,
             RuntimeDep::Worker => Some(WORKER_HELPER),
             RuntimeDep::Truthy => Some(TRUTHY_HELPER),
+            RuntimeDep::Display => Some(DISPLAY_HELPER),
         }
     }
 }
@@ -302,6 +314,41 @@ fn ds_truthy_impl(name: &syn::Ident) -> syn::Item {
     }
 }
 
+/// A `DsDisplay` impl for a user type — emitted for every user struct/enum in a
+/// file that lowered a `__ds::display` call, so a template-literal
+/// interpolation or string concatenation of a user-type value (`${opts}`)
+/// resolves instead of E0277 (`T: Display`). ES rendering: an object is
+/// "[object Object]"; a union enum forwards to the translator-generated
+/// `Display` impl it already carries, so the active scalar variant renders.
+fn ds_display_impl(item: &syn::Item, display_types: &[String]) -> Option<syn::Item> {
+    let (name, body): (&syn::Ident, syn::Expr) = match item {
+        syn::Item::Struct(s) => (&s.ident, syn::parse_quote!("[object Object]".to_string())),
+        syn::Item::Enum(e) => {
+            // A union enum carries a translator-generated `Display` impl, so it
+            // forwards to `to_string` and the active scalar variant renders. A
+            // user enum without `Display` (e.g. a TS union type alias lowered
+            // to a named enum) falls back to ES "[object Object]".
+            if display_types.contains(&e.ident.to_string()) {
+                (
+                    &e.ident,
+                    syn::parse_quote!(::std::string::ToString::to_string(self)),
+                )
+            } else {
+                (&e.ident, syn::parse_quote!("[object Object]".to_string()))
+            }
+        }
+        _ => return None,
+    };
+    Some(syn::parse_quote! {
+        impl crate::__ds::DsDisplay for #name {
+            #[inline]
+            fn ds_display(&self) -> String {
+                #body
+            }
+        }
+    })
+}
+
 /// The DashScript runtime helper module, written to `src/__ds.rs` and declared
 /// `mod __ds;` at each crate root when a translated file references it. The
 /// single source for the `__ds` helpers — consumed by both `ds build` (bin) and
@@ -439,6 +486,78 @@ impl DsTruthy for bool {
     }
 }
 ";
+
+const DISPLAY_HELPER: &str = r#"
+pub trait DsDisplay {
+    fn ds_display(&self) -> String;
+}
+
+/// Free-function form the translator emits (`__ds::display(&expr)`) for a
+/// template-literal interpolation or concatenation. ES rendering: `None`
+/// (undefined/null) -> "undefined", a boolean -> "true"/"false", an array ->
+/// elements joined by ",", an object -> "[object Object]".
+#[inline]
+pub fn display<T: DsDisplay>(x: &T) -> String {
+    x.ds_display()
+}
+
+impl DsDisplay for String {
+    #[inline]
+    fn ds_display(&self) -> String {
+        self.clone()
+    }
+}
+
+impl DsDisplay for str {
+    #[inline]
+    fn ds_display(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl DsDisplay for bool {
+    #[inline]
+    fn ds_display(&self) -> String {
+        if *self { "true".to_string() } else { "false".to_string() }
+    }
+}
+
+impl DsDisplay for () {
+    #[inline]
+    fn ds_display(&self) -> String {
+        "undefined".to_string()
+    }
+}
+
+impl<T: DsDisplay> DsDisplay for Option<T> {
+    #[inline]
+    fn ds_display(&self) -> String {
+        match self {
+            Some(x) => x.ds_display(),
+            None => "undefined".to_string(),
+        }
+    }
+}
+
+impl<T: DsDisplay> DsDisplay for Vec<T> {
+    #[inline]
+    fn ds_display(&self) -> String {
+        let mut s = String::new();
+        for (i, x) in self.iter().enumerate() {
+            if i > 0 { s.push(','); }
+            s.push_str(&x.ds_display());
+        }
+        s
+    }
+}
+
+impl<K, V> DsDisplay for std::collections::HashMap<K, V> {
+    #[inline]
+    fn ds_display(&self) -> String {
+        "[object Object]".to_string()
+    }
+}
+"#;
 
 /// ES Web Worker–style isolate (Direction D, D1). `new Worker(handler)` spawns a
 /// thread that runs `handler(msg)` for each message the main thread sends via
@@ -1281,6 +1400,13 @@ impl Translator {
             .any(|item| matches!(item, syn::Item::Struct(_) | syn::Item::Enum(_)));
         if has_user_type {
             deps.insert(RuntimeDep::Truthy);
+            // A type defined here may be stringified (`__ds::display`) by a
+            // cross-module caller too — the same case as `DsTruthy` above.
+            // Forcing `Display` ships the per-type `DsDisplay` impl in this
+            // file (the trait lives in this crate's `__ds.rs`); pure-std, no
+            // cargo dep, so at worst an unused impl on a type no caller
+            // stringifies.
+            deps.insert(RuntimeDep::Display);
         }
         // If `__ds::truthy` is used, every user struct/enum in this file needs a
         // `DsTruthy` impl — a member access on a user-type field
@@ -1297,6 +1423,42 @@ impl Translator {
                     syn::Item::Enum(e) => Some(ds_truthy_impl(&e.ident)),
                     _ => None,
                 })
+                .collect();
+            file.items.extend(impls);
+        }
+        // If `__ds::display` is used (a non-number template interpolation or a
+        // string concatenation of a non-string), every user struct/enum in this
+        // file needs a `DsDisplay` impl — `${opts}` on a user-type field would
+        // otherwise be E0277. Gated on the marker so a file that never
+        // stringifies a user type adds no impls.
+        if deps.has(RuntimeDep::Display) {
+            // `to_string`-forwarding below needs the enum to carry `Display`, so
+            // collect which types this file already gives a `Display` impl (the
+            // translator emits one for every union enum) and pass the set in:
+            // those forward to `to_string`, anything else renders as
+            // "[object Object]".
+            let display_types: Vec<String> = file
+                .items
+                .iter()
+                .filter_map(|i| match i {
+                    syn::Item::Impl(imp) => {
+                        let (_, path, _) = imp.trait_.as_ref()?;
+                        let last = path.segments.last()?;
+                        if last.ident != "Display" {
+                            return None;
+                        }
+                        match imp.self_ty.as_ref() {
+                            syn::Type::Path(p) => Some(p.path.segments.last()?.ident.to_string()),
+                            _ => None,
+                        }
+                    }
+                    _ => None,
+                })
+                .collect();
+            let impls: Vec<syn::Item> = file
+                .items
+                .iter()
+                .filter_map(|item| ds_display_impl(item, &display_types))
                 .collect();
             file.items.extend(impls);
         }
@@ -1410,10 +1572,29 @@ impl Translator {
             .map(|e| {
                 let name = e.ident.to_string();
                 let display = declarations::union_display_impl(&e);
+                // A union enum lives at the crate root, where a cross-module
+                // caller may stringify it (`__ds::display(&union_value)`). It
+                // already carries a `Display` impl (above), so its `DsDisplay`
+                // forwards to `to_string` and the active scalar variant renders.
+                let ds_display: syn::ItemImpl = {
+                    let ident = &e.ident;
+                    syn::parse_quote! {
+                        impl crate::__ds::DsDisplay for #ident {
+                            #[inline]
+                            fn ds_display(&self) -> String {
+                                ::std::string::ToString::to_string(self)
+                            }
+                        }
+                    }
+                };
                 let text = prettyplease::unparse(&syn::File {
                     shebang: None,
                     attrs: Vec::new(),
-                    items: vec![syn::Item::Enum(e), syn::Item::Impl(display)],
+                    items: vec![
+                        syn::Item::Enum(e),
+                        syn::Item::Impl(display),
+                        syn::Item::Impl(ds_display),
+                    ],
                 });
                 (name, text)
             })
