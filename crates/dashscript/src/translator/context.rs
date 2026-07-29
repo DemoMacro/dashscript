@@ -212,6 +212,21 @@ impl<'a> Ctx<'a> {
             .map(|f| &f.ty)
     }
 
+    /// True when `field` (snake-cased Rust name) is an optional `?:` member of
+    /// the struct/interface named `struct_name` — the emitted field is then
+    /// `Option<…>`, so a member access `obj.field` reads an `Option` value (a
+    /// plain `==`/`!=` against a bare `T` would not compile).
+    #[must_use]
+    pub fn field_optional(&self, struct_name: &str, field: &str) -> bool {
+        self.registry
+            .interface_own_fields
+            .get(struct_name)
+            .is_some_and(|fs| {
+                fs.iter()
+                    .any(|f| super::bindings::snake(&f.name) == field && f.optional)
+            })
+    }
+
     /// The inferred number flavor (`f64` vs `i64`) of the numeric local named by
     /// `id`. `F64` for any unknown / unresolved reference (the conservative
     /// default — an ES `number` is a double unless every value bound to it is a
@@ -241,6 +256,16 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn is_option(&self, name: &str) -> bool {
         self.locals.get(name).is_some_and(is_option_path)
+    }
+
+    /// True when `ts_name` is a per-function engine-degradation site — such a
+    /// function marshals its arguments by value (`serde_json::Value`), so a
+    /// caller must not borrow one of its parameters in place (`&mut arg`):
+    /// the callee's signature is by-value, and the engine's mutation never
+    /// crosses back to the caller anyway.
+    #[must_use]
+    pub fn is_dynamic_fn(&self, ts_name: &str) -> bool {
+        super::functions::is_dynamic_fn(ts_name)
     }
 
     /// The variant shape for a `kind` value of a discriminated-union enum named

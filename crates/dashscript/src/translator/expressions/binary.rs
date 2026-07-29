@@ -1,6 +1,6 @@
 //! Binary operators: arithmetic, comparison, bitwise, `in`, and `+` string concat.
 
-use oxc_ast::ast::{BinaryExpression, Expression};
+use oxc_ast::ast::{BinaryExpression, ChainElement, Expression};
 use oxc_syntax::operator::BinaryOperator;
 use proc_macro2::Span;
 use syn::{parse_quote, parse_str, BinOp, Expr, Type};
@@ -57,6 +57,12 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     // local → `matches!(v, <Enum>::Undef)` / `!matches!(v, <Enum>::Null)` — the
     // union's `Undef`/`Null` variant is the runtime tag, not Rust `None`.
     if let Some(expr) = union_null_equality(bin, ctx) {
+        return expr;
+    }
+    // `obj.field == value` where `field` is an optional `?:` struct member —
+    // the field reads as `Option<T>`, so a bare `==`/`!=` against `T` would
+    // not compile. Lower to an `as_deref()`/`Some(…)` comparison.
+    if let Some(expr) = option_field_equality(bin, ctx) {
         return expr;
     }
     if matches!(bin.operator, BinaryOperator::Addition) && concat_is_string(bin, ctx) {
@@ -299,6 +305,76 @@ fn union_null_equality(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
     } else {
         parse_quote!(matches!(#local, crate::#enum_ident::#variant))
     })
+}
+
+/// `obj.field == value` / `!=` when `field` is an optional (`?:`) member of
+/// `obj`'s struct — the field reads as `Option<T>`, so a bare `==`/`!=`
+/// against a `T` would not compile. Lower to `obj.field.as_deref() ==
+/// Option::Some(value.as_str())` (a string field against a string value is the
+/// common case — `child.name == name`). Returns `None` unless one side is
+/// exactly such a field access and the other is a string identifier, so
+/// anything else falls through loudly to `cargo check`.
+fn option_field_equality(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    let negate = match bin.operator {
+        BinaryOperator::Equality | BinaryOperator::StrictEquality => false,
+        BinaryOperator::Inequality | BinaryOperator::StrictInequality => true,
+        _ => return None,
+    };
+    // One side is `obj.field` (a static/optional member access); the other is
+    // a bare identifier value.
+    let (member_side, value_side): (&Expression, &Expression) = match (&bin.left, &bin.right) {
+        (l, r) if is_member_access(l) && matches!(r, Expression::Identifier(_)) => (l, r),
+        (l, r) if is_member_access(r) && matches!(l, Expression::Identifier(_)) => (r, l),
+        _ => return None,
+    };
+    // Pull `(object identifier, property name)` out of the member access.
+    let (obj_id, prop) = match member_side {
+        Expression::StaticMemberExpression(sm) => {
+            let Expression::Identifier(id) = &sm.object else {
+                return None;
+            };
+            (id, &sm.property)
+        }
+        Expression::ChainExpression(c) => match &c.expression {
+            ChainElement::StaticMemberExpression(sm) => {
+                let Expression::Identifier(id) = &sm.object else {
+                    return None;
+                };
+                (id, &sm.property)
+            }
+            _ => return None,
+        },
+        _ => return None,
+    };
+    let obj_path = ctx.local_type(&bindings::snake(&obj_id.name).to_string())?;
+    let struct_name = obj_path.segments.last()?.ident.to_string();
+    if struct_name == "Option" {
+        return None;
+    }
+    let field = bindings::snake(prop.name.as_str()).to_string();
+    if !ctx.field_optional(&struct_name, &field) {
+        return None;
+    }
+    if !operand_is_string(value_side, ctx) {
+        return None;
+    }
+    let field_expr = translate_expr(member_side, ctx);
+    let value_expr = translate_expr(value_side, ctx);
+    Some(if negate {
+        parse_quote!((#field_expr.as_deref() != ::std::option::Option::Some(#value_expr.as_str())))
+    } else {
+        parse_quote!((#field_expr.as_deref() == ::std::option::Option::Some(#value_expr.as_str())))
+    })
+}
+
+/// True when `e` is a static member access (`obj.field`) or an optional-chain
+/// member (`obj?.field`) — the shapes whose field may be an optional `?:`
+/// struct member.
+fn is_member_access(e: &Expression) -> bool {
+    matches!(
+        e,
+        Expression::StaticMemberExpression(_) | Expression::ChainExpression(_)
+    )
 }
 
 /// True when a `+` chain is string concatenation: any leaf operand is a string

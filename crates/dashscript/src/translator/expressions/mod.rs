@@ -27,7 +27,7 @@ mod unary;
 pub(in crate::translator) use array::array_slice_expr;
 pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
-pub(in crate::translator) use member::{is_hashmap_local, is_hashset_local};
+pub(in crate::translator) use member::{is_hashmap_local, is_hashset_local, option_unwrap_object};
 pub(in crate::translator) use unary::typeof_operand_is_runtime;
 
 use oxc_ast::ast::{
@@ -37,8 +37,44 @@ use oxc_ast::ast::{
 use proc_macro2::Span;
 use syn::{parse_quote, Expr, Ident, Pat, Stmt, Type};
 
-use super::context::{Ctx, Narrow};
+use super::context::{is_option_path, Ctx, Narrow};
 use super::{bindings, types};
+
+/// Wrap `expr` in `Some(..)` when the target type is `Option<T>` but the value
+/// is a plain `T` — `.ts` implicitly widens `T` to `T | undefined` at a return
+/// or argument boundary, but Rust needs an explicit `Some`. Only a bare
+/// identifier qualifies, and only when its known type is a plain `T` or is
+/// unregistered (e.g. a `for`-of loop variable whose iterable was not an inline
+/// array literal, so its type was never recorded): both are non-`Option`
+/// values. An identifier already typed `Option<T>`, or any non-identifier
+/// expression (a field access, call, or literal), keeps its own spelling —
+/// `cargo check` backstops the rest so a wrong wrap fails loudly, not silently.
+pub(in crate::translator) fn implicit_some(
+    arg: &Expression,
+    expr: Expr,
+    target_ty: Option<&Type>,
+    ctx: &Ctx<'_>,
+) -> Expr {
+    let Some(ty) = target_ty else {
+        return expr;
+    };
+    let Type::Path(tp) = ty else {
+        return expr;
+    };
+    if !is_option_path(&tp.path) {
+        return expr;
+    }
+    if let Expression::Identifier(id) = arg {
+        // `undefined` / `null` lower to `None` (already an `Option` value), so
+        // wrapping would produce `Some(None)`; anything else whose type is not
+        // a known `Option<T>` is a plain `T` → wrap.
+        let is_none_literal = matches!(id.name.as_str(), "undefined" | "null");
+        if !is_none_literal && !ctx.is_option(&bindings::snake(&id.name).to_string()) {
+            return parse_quote!(::std::option::Option::Some(#expr));
+        }
+    }
+    expr
+}
 
 /// Translate `expr` and cast it to number-flavor `to`. A numeric literal is
 /// re-emitted at the target flavor (no cast); any other expression is

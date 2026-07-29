@@ -75,7 +75,7 @@ pub(in crate::translator) fn set_dynamic_fns(fns: HashSet<String>) {
 }
 
 /// Whether `ts_name` is a per-function engine degradation site this translate.
-fn is_dynamic_fn(ts_name: &str) -> bool {
+pub(in crate::translator) fn is_dynamic_fn(ts_name: &str) -> bool {
     DYNAMIC_FNS.with(|c| c.borrow().contains(ts_name))
 }
 
@@ -867,8 +867,10 @@ fn register_let_walk(stmt: &oxc_ast::ast::Statement, locals: &mut Locals, regist
 
 /// One `let`/`const` declarator's contribution to `locals` (see
 /// [`register_let_types`]). A non-binding-identifier pattern (destructuring) is
-/// skipped. Only an unannotated `let x = fn()` shape is inferred — an annotated
-/// binding or any other initializer is left to its existing lowering.
+/// skipped. An unannotated `let x = fn()` records the callee's return type, and
+/// a `let x = arr[i]` records the `Vec`'s element type — so a later
+/// `x.optional_field` access (and a union-widening call argument) resolves the
+/// field's struct. Any other initializer is left to its existing lowering.
 fn register_declarator(
     decl: &oxc_ast::ast::VariableDeclarator,
     locals: &mut Locals,
@@ -879,10 +881,62 @@ fn register_declarator(
         return;
     };
     let name = bindings::snake(id.name.as_str()).to_string();
-    if let Some(Expression::CallExpression(call)) = &decl.init {
-        if let Some(path) = callee_return_path(call, registry) {
-            locals.insert(name, path);
-        }
+    let path = match &decl.init {
+        Some(Expression::CallExpression(call)) => callee_return_path(call, registry),
+        Some(other) => vec_index_elem_path(other, locals),
+        None => return,
+    };
+    if let Some(path) = path {
+        locals.insert(name, path);
+    }
+}
+
+/// `arr[i]` where `arr` is a tracked `Vec<T>` (or `Option<Vec<T>>`) local → `T`,
+/// so an unannotated `let element = elements[i]` records `Element` and a later
+/// `element.text` access resolves its struct. Works on the source AST — the
+/// emitted `elements[i as usize].clone()` is plain `elements[i]` here, since the
+/// cast and `.clone()` are added only at emit time. Returns `None` for any other
+/// initializer shape.
+fn vec_index_elem_path(init: &oxc_ast::ast::Expression, locals: &Locals) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::ComputedMemberExpression(cm) = init else {
+        return None;
+    };
+    let Expression::Identifier(id) = &cm.object else {
+        return None;
+    };
+    let arr_path = locals.get(&bindings::snake(id.name.as_str()).to_string())?;
+    let outer = arr_path.segments.last()?;
+    // The `Vec<…>` segment: directly when `arr` is `Vec<T>`, or the inner type
+    // argument when `arr` is `Option<Vec<T>>` (an optional `T[] | undefined`).
+    let vec_seg = if outer.ident == "Vec" {
+        outer
+    } else if outer.ident == "Option" {
+        first_type_arg_seg(outer).filter(|s| s.ident == "Vec")?
+    } else {
+        return None;
+    };
+    // The element type `T` is the `Vec`'s first type-argument segment
+    // (`Element`, `__DsUnion…`); reconstruct a single-segment path from it.
+    let elem_ident = first_type_arg_seg(vec_seg)?.ident.clone();
+    Some(parse_quote!(#elem_ident))
+}
+
+/// The first `syn::PathSegment` inside a path segment's first generic type
+/// argument — `Vec<Element>` → the `Element` segment, `Option<Vec<T>>`'s
+/// `Option` → the `Vec<T>` segment. `None` when the segment has no generic type
+/// argument or it is not a plain path.
+fn first_type_arg_seg(seg: &syn::PathSegment) -> Option<&syn::PathSegment> {
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return None;
+    };
+    let first_ty = args.args.iter().find_map(|g| match g {
+        syn::GenericArgument::Type(t) => Some(t),
+        _ => None,
+    })?;
+    match first_ty {
+        syn::Type::Path(tp) => tp.path.segments.last(),
+        _ => None,
     }
 }
 
@@ -958,11 +1012,11 @@ pub(in crate::translator) fn translate_stmt(
                     // An object literal borrows the struct name from the return
                     // type; everything else translates as a plain expression.
                     let ret_ty = return_path.map(|p| -> Type { parse_quote!(#p) });
-                    let expr = expressions::translate_init(
-                        arg,
-                        ret_ty.as_ref(),
-                        &Ctx::new(&*locals, registry, narrow, names),
-                    );
+                    let ctx = Ctx::new(&*locals, registry, narrow, names);
+                    let expr = expressions::translate_init(arg, ret_ty.as_ref(), &ctx);
+                    // A `T` returned where the signature is `Option<T>` (`.ts`
+                    // `T | undefined`) needs an explicit `Some` in Rust.
+                    let expr = expressions::implicit_some(arg, expr, ret_ty.as_ref(), &ctx);
                     parse_quote!(return #expr;)
                 }
                 None => parse_quote!(return;),

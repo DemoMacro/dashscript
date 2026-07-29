@@ -7,7 +7,7 @@ use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
 use super::super::expressions::{
-    array_elem_arg, regex_lit_parts, translate_argument, translate_expr,
+    array_elem_arg, option_unwrap_object, regex_lit_parts, translate_argument, translate_expr,
 };
 use super::{str_method_arg, usize_arg};
 
@@ -20,7 +20,11 @@ fn str_receiver(obj: &Expression, ctx: &Ctx<'_>) -> Expr {
         let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
         parse_quote!(#lit)
     } else {
-        translate_expr(obj, ctx)
+        // An `Option<String>` receiver is treated as non-null (the TS type plus
+        // a `.method()` call imply a prior null guard) — unwrap so a `&self`
+        // str method lands on the inner `String`. A narrowed-some local keeps
+        // its own read form; anything else translates as-is.
+        option_unwrap_object(obj, ctx).unwrap_or_else(|| translate_expr(obj, ctx))
     }
 }
 

@@ -250,7 +250,7 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
 /// asserted non-null (a TS `if (opt)` guard or an optional-parameter promise),
 /// so a field or method access on the receiver reads the inner value. `None`
 /// for any other shape (so a plain receiver is translated normally).
-fn option_unwrap_object(e: &Expression, ctx: &Ctx<'_>) -> Option<Expr> {
+pub(in crate::translator) fn option_unwrap_object(e: &Expression, ctx: &Ctx<'_>) -> Option<Expr> {
     let Expression::Identifier(id) = e else {
         return None;
     };

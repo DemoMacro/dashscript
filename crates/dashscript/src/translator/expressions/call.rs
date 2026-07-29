@@ -5,7 +5,7 @@ use oxc_ast::ast::{
     Argument, CallExpression, Expression, IdentifierReference, StaticMemberExpression,
 };
 use proc_macro2::Span;
-use syn::{parse_quote, Expr, Type};
+use syn::{parse_quote, Arm, Expr, Ident, Type};
 
 use super::super::bindings;
 use super::super::builtins;
@@ -419,7 +419,7 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                     let args: Vec<Expr> = call
                         .arguments
                         .iter()
-                        .map(|a| array_elem_arg(a, ctx))
+                        .map(|a| clone_owned_local(a, array_elem_arg(a, ctx), ctx))
                         .collect();
                     return parse_quote!(
                         #inner_obj.#inner_field
@@ -434,7 +434,7 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
             let args: Vec<Expr> = call
                 .arguments
                 .iter()
-                .map(|a| array_elem_arg(a, ctx))
+                .map(|a| clone_owned_local(a, array_elem_arg(a, ctx), ctx))
                 .collect();
             return parse_quote!(#obj.#method(#(#args),*));
         }
@@ -454,7 +454,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     // of cloning, so the callee's `c[i] = v` is visible here (ES reference
     // semantics for arrays/objects).
     let ref_flags: Option<&[bool]> = match &call.callee {
-        Expression::Identifier(id) => ctx.function_ref_params(&id.name),
+        // An engine-degraded callee marshals its arguments by value, so none of
+        // its parameters is borrowed in place — `&mut arg` would mismatch the
+        // by-value signature (and the engine's mutation never crosses back).
+        Expression::Identifier(id) if !ctx.is_dynamic_fn(&id.name) => {
+            ctx.function_ref_params(&id.name)
+        }
         _ => None,
     };
     let mut args: Vec<Expr> = call
@@ -466,6 +471,13 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 .and_then(|h| h.get(i))
                 .and_then(|opt| opt.as_ref())
                 .map(|p| -> Type { parse_quote!(#p) });
+            // Widen an `Option<Small>` argument to a wider scalar-union parameter
+            // (`writeText(element.text)` where `text?: string | number | boolean`
+            // meets `text: … | null | undefined`). Returns `None` for any other
+            // argument, so the default path below is unchanged.
+            if let Some(widened) = widen_union_arg(a, hint_ty.as_ref(), ctx) {
+                return widened;
+            }
             // A `number` parameter is `f64` (Phase 1 keeps cross-function
             // flavor out of scope), so a flavor-promoted `i64` argument
             // (`compute(i)` where `i` is an `i64` counter) is site-cast to
@@ -487,13 +499,32 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
             let val = if ref_flags.is_some_and(|f| f.get(i) == Some(&true))
                 && matches!(a, Argument::Identifier(_))
             {
-                parse_quote!(&mut #val)
+                // The callee takes this parameter by `&mut`. If the argument is
+                // itself a `&mut` ref-param local (a recursive call forwarding
+                // an accumulator, e.g. `collect_deep(.., result)`), it is
+                // already the right type — pass it as-is so Rust reborrows,
+                // instead of layering a `&mut &mut` (or E0596 on a non-`mut`
+                // binding). An owned local still gets `&mut` to borrow in place.
+                if let Argument::Identifier(id) = a {
+                    if ctx.is_ref_param(&bindings::snake(&id.name).to_string()) {
+                        val
+                    } else {
+                        parse_quote!(&mut #val)
+                    }
+                } else {
+                    parse_quote!(&mut #val)
+                }
             } else {
                 clone_owned_local(a, val, ctx)
             };
-            // A supplied value for a defaulted parameter wraps in `Some`.
+            // A supplied value for a defaulted parameter wraps in `Some` (the
+            // parameter is `Option<T>` and a value was given). A non-defaulted
+            // `Option<T>` parameter passed a plain `T` (e.g. `find(child)` where
+            // the callee takes `Option<Element>`) also needs `Some`.
             if defaults.is_some_and(|d| d.get(i) == Some(&true)) {
                 parse_quote!(Some(#val))
+            } else if let Some(e) = a.as_expression() {
+                super::implicit_some(e, val, hint_ty.as_ref(), ctx)
             } else {
                 val
             }
@@ -515,21 +546,144 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
 /// A scalar is `Copy` (never cloned); a local read only here is moved, which
 /// is the idiomatic last use.
 fn clone_owned_local(arg: &Argument, val: Expr, ctx: &Ctx<'_>) -> Expr {
-    let Argument::Identifier(id) = arg else {
-        return val;
+    // A bare local passed by value: clone it when it is non-`Copy` and read
+    // again later (use count > 1), so a later read still sees a value.
+    if let Argument::Identifier(id) = arg {
+        if id.name.as_str() == "undefined" {
+            return val;
+        }
+        let name = bindings::snake(&id.name).to_string();
+        if ctx.use_count(&name) <= 1 {
+            return val;
+        }
+        return match ctx.local_type(&name) {
+            Some(ty) if types::is_copy_path(ty) => val,
+            Some(_) => parse_quote!(#val.clone()),
+            None => val,
+        };
+    }
+    // A `obj.field` field access passed by value: moving `field` out partially
+    // moves `obj`, so when `obj` is a reused local (use count > 1) and the field
+    // is non-`Copy`, clone the field to keep `obj` whole for its later reads.
+    if let Some(Expression::StaticMemberExpression(sm)) = arg.as_expression() {
+        if let Expression::Identifier(obj) = &sm.object {
+            let obj_name = bindings::snake(obj.name.as_str()).to_string();
+            if ctx.use_count(&obj_name) > 1 {
+                if let Some(struct_name) = ctx
+                    .local_type(&obj_name)
+                    .and_then(|p| p.segments.last())
+                    .map(|s| s.ident.to_string())
+                {
+                    let field = bindings::snake(sm.property.name.as_str()).to_string();
+                    let non_copy = ctx
+                        .field_type(&struct_name, &field)
+                        .and_then(types::type_path)
+                        .map(|p| !types::is_copy_path(p))
+                        .unwrap_or(true);
+                    if non_copy {
+                        return parse_quote!((#val).clone());
+                    }
+                }
+            }
+        }
+    }
+    val
+}
+
+/// Widen an `Option<Small>` argument into a wider scalar-union parameter `Big`
+/// whose variant set is a name-superset of `Small`'s. TS lets a narrower union
+/// flow into a wider one at a call boundary — `writeText(element.text)` where
+/// `text?: string | number | boolean` (an `Option<Small>`) meets `text:
+/// string | number | boolean | undefined | null` (a wider `Big`). Rust's nominal
+/// enums need an explicit `match` to convert; `None` (an absent optional field
+/// = `undefined`) lands on `Big`'s `Undef` variant, or `Null` when there is no
+/// `Undef`. Returns `None` for any non-matching argument so the caller keeps its
+/// default translation (cargo check backstops a real mismatch).
+fn widen_union_arg(arg: &Argument, param_ty: Option<&Type>, ctx: &Ctx<'_>) -> Option<Expr> {
+    use std::collections::HashSet;
+
+    // The parameter must be a scalar-union enum (`Big`).
+    let big_name = last_type_ident(param_ty?)?;
+    let big = ctx
+        .registry()
+        .union_enums
+        .get(&Ident::new(&big_name, Span::call_site()))?;
+    // The argument is `obj.field` where `field` is an optional scalar union —
+    // the emitted field is `Option<Small>`.
+    let sm = arg.as_expression().and_then(|e| match e {
+        Expression::StaticMemberExpression(sm) => Some(sm),
+        _ => None,
+    })?;
+    let Expression::Identifier(obj) = &sm.object else {
+        return None;
     };
-    if id.name.as_str() == "undefined" {
-        return val;
+    let obj_name = bindings::snake(obj.name.as_str()).to_string();
+    let struct_name = ctx
+        .local_type(&obj_name)?
+        .segments
+        .last()?
+        .ident
+        .to_string();
+    let field = bindings::snake(sm.property.name.as_str()).to_string();
+    if !ctx.field_optional(&struct_name, &field) {
+        return None;
     }
-    let name = bindings::snake(&id.name).to_string();
-    if ctx.use_count(&name) <= 1 {
-        return val;
+    let small_name = last_type_ident(ctx.field_type(&struct_name, &field)?)?;
+    if small_name == big_name {
+        return None;
     }
-    match ctx.local_type(&name) {
-        Some(ty) if types::is_copy_path(ty) => val,
-        Some(_) => parse_quote!(#val.clone()),
-        None => val,
+    let small = ctx
+        .registry()
+        .union_enums
+        .get(&Ident::new(&small_name, Span::call_site()))?;
+    // `Small`'s variants must be a name-subset of `Big`'s — each variant wraps
+    // one TS scalar keyword with a fixed Rust type, so a same-name variant
+    // carries the identical payload and the conversion is loss-free.
+    let big_names: HashSet<String> = big.variants.iter().map(|v| v.ident.to_string()).collect();
+    if !small
+        .variants
+        .iter()
+        .all(|v| big_names.contains(&v.ident.to_string()))
+    {
+        return None;
     }
+    // `None` (undefined) maps to `Big`'s `Undef`, else `Null`.
+    let none_name = big_names
+        .iter()
+        .find(|n| n.as_str() == "Undef")
+        .or_else(|| big_names.iter().find(|n| n.as_str() == "Null"))?;
+    let small_ident = Ident::new(&small_name, Span::call_site());
+    let big_ident = Ident::new(&big_name, Span::call_site());
+    let none_ident = Ident::new(none_name, Span::call_site());
+    let arg_expr = translate_expr(arg.as_expression()?, ctx);
+    let arms: Vec<Arm> = small
+        .variants
+        .iter()
+        .map(|v| {
+            let vid = &v.ident;
+            match &v.fields {
+                syn::Fields::Unnamed(_) => {
+                    parse_quote!(::std::option::Option::Some(crate::#small_ident::#vid(x)) => crate::#big_ident::#vid(x))
+                }
+                _ => parse_quote!(::std::option::Option::Some(crate::#small_ident::#vid) => crate::#big_ident::#vid),
+            }
+        })
+        .collect();
+    Some(parse_quote!(
+        match #arg_expr {
+            #(#arms,)*
+            None => crate::#big_ident::#none_ident,
+        }
+    ))
+}
+
+/// The last path-segment identifier of a `syn::Type` that is a plain path
+/// (`__DsUnion…`, an interface name), or `None` for any other shape.
+fn last_type_ident(ty: &Type) -> Option<String> {
+    types::type_path(ty)?
+        .segments
+        .last()
+        .map(|s| s.ident.to_string())
 }
 
 /// Detect `Builtin.prototype.<method>.call(...)` — the JS idiom of borrowing a

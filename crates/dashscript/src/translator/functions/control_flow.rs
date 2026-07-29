@@ -2,9 +2,11 @@
 //! `for`, plus the truthiness and Option-narrowing helpers they share.
 
 use oxc_ast::ast::{
-    ArrayExpression, BindingPattern, DoWhileStatement, Expression, ForInStatement, ForOfStatement,
-    ForStatement, ForStatementLeft, IfStatement, Statement, WhileStatement,
+    ArrayExpression, BindingPattern, ChainElement, DoWhileStatement, Expression, ForInStatement,
+    ForOfStatement, ForStatement, ForStatementLeft, IfStatement, Statement, StaticMemberExpression,
+    WhileStatement,
 };
+use oxc_syntax::operator::LogicalOperator;
 use quote::format_ident;
 use syn::{parse_quote, Block, Expr, Ident, Path, Stmt, Type};
 
@@ -12,7 +14,7 @@ use super::super::analysis;
 use super::super::context::{is_option_path, Ctx, Locals, Narrow};
 use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
-use super::super::{expressions, types};
+use super::super::{bindings, expressions, types};
 use super::{translate_stmt, translate_variable_declaration};
 
 pub(super) fn translate_if(
@@ -174,7 +176,7 @@ pub(super) fn translate_for_of(
     // moving a non-Copy out of a shared borrow is E0507.
     let arr_ty = match &stmt.right {
         Expression::ArrayExpression(arr) => for_of_element_type(arr),
-        _ => None,
+        other => iterable_element_type(other, locals, registry),
     };
     let is_copy = arr_ty
         .as_ref()
@@ -195,6 +197,18 @@ pub(super) fn translate_for_of(
         _ => None,
     };
     let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
+    // `for (const v of x ?? [])` over a non-Copy `Option<Vec<T>>` (e.g.
+    // `parent.elements` where `elements?: Element[]`) → `for v in
+    // x.iter().flatten().cloned()` (v: T owned). The `?? []` is redundant in
+    // Rust (None iterates empty), and this borrows the Option field in place —
+    // dodging the E0507 of `.unwrap_or_else` on a borrowed field — and yields
+    // owned values, so a later `result.push(v)` / `return v` needs no reference
+    // special-casing beyond the usual clone-on-extra-use.
+    if !is_copy {
+        if let Some(iter) = option_vec_flatten_iter(&stmt.right, locals, registry, narrow, names) {
+            return vec![parse_quote!(for #pat in #iter #body)];
+        }
+    }
     // A non-Copy element (Regex/String) iterates by reference (`for re in &…`,
     // `re: &T`); everything else — a Copy element (f64/bool) or an untyped
     // iterable (a `number[]` local) — destructures (`for &v in &…`, `v: T`),
@@ -414,6 +428,204 @@ fn for_of_element_type(arr: &ArrayExpression) -> Option<Type> {
         Some(parse_quote!(String))
     } else {
         None
+    }
+}
+
+/// The element type of a non-literal iterable expression — `parent.elements
+/// ?? []` iterates `Element`s when `elements: Option<Vec<Element>>`. Handles a
+/// nullish/fallback chain (the element type rides on the non-fallback side)
+/// and a struct field whose type is `Vec<T>` / `Option<Vec<T>>` → `T`. Returns
+/// `None` for anything else so the binding stays untyped.
+fn iterable_element_type(
+    expr: &Expression,
+    locals: &Locals,
+    registry: &TypeRegistry,
+) -> Option<Type> {
+    match expr {
+        // `x ?? []` / `x || []` — the right side is an empty fallback; the
+        // element type rides on the left (e.g. `parent.elements ?? []`).
+        Expression::LogicalExpression(l)
+            if matches!(l.operator, LogicalOperator::Coalesce | LogicalOperator::Or) =>
+        {
+            iterable_element_type(&l.left, locals, registry)
+        }
+        Expression::StaticMemberExpression(sm) => member_iter_element_type(sm, locals, registry),
+        Expression::ChainExpression(c) => match &c.expression {
+            ChainElement::StaticMemberExpression(sm) => {
+                member_iter_element_type(sm, locals, registry)
+            }
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+/// `obj.field` where `obj` is a known struct local (or `Option<Struct>`) and
+/// `field` is `Vec<T>` / `Option<Vec<T>>` → the element type `T`.
+fn member_iter_element_type(
+    sm: &StaticMemberExpression,
+    locals: &Locals,
+    registry: &TypeRegistry,
+) -> Option<Type> {
+    member_field_type(sm, locals, registry).and_then(|(ty, _)| vec_element_type(ty))
+}
+
+/// The translated type of `obj.field` plus whether it is an optional `?:`
+/// field — the registry stores the field type *without* the `Option<…>`
+/// wrapper the emitted struct adds for an optional field, carrying that on
+/// `InterfaceField.optional` instead. Shared lookup behind
+/// [`member_iter_element_type`] (wants the element `T`) and
+/// [`option_vec_flatten_iter`] (needs `optional` to pick `.iter().flatten()`
+/// vs `.iter()`).
+fn member_field_type<'a>(
+    sm: &StaticMemberExpression,
+    locals: &Locals,
+    registry: &'a TypeRegistry,
+) -> Option<(&'a Type, bool)> {
+    let Expression::Identifier(obj_id) = &sm.object else {
+        return None;
+    };
+    let obj_path = locals.get(&bindings::snake(obj_id.name.as_str()).to_string())?;
+    let struct_name = struct_name_of(obj_path)?;
+    let field = bindings::snake(sm.property.name.as_str()).to_string();
+    let f = registry
+        .interface_own_fields
+        .get(&struct_name)?
+        .iter()
+        .find(|f| bindings::snake(&f.name) == field)?;
+    Some((&f.ty, f.optional))
+}
+
+/// `for (const v of x ?? [])` / `x || []` where `x.field` is a non-Copy
+/// `Vec<T>` (e.g. `parent.elements` with `elements?: Element[]`) → an owned
+/// iterator yielding `T`, so the loop binds `v: T` by value. An optional field
+/// is emitted as `Option<Vec<T>>`, so `.iter().flatten()` walks the Vec behind
+/// the Option; a bare `Vec<T>` uses `.iter()` directly. Returns `None` for
+/// anything else so the generic `for &v in &…unwrap_or_else(…)` path handles
+/// the rest (and fails loudly via cargo check where it cannot).
+fn option_vec_flatten_iter(
+    expr: &Expression,
+    locals: &Locals,
+    registry: &TypeRegistry,
+    narrow: &Narrow,
+    names: &NameTable<'_>,
+) -> Option<Expr> {
+    let Expression::LogicalExpression(l) = expr else {
+        return None;
+    };
+    if !matches!(l.operator, LogicalOperator::Coalesce | LogicalOperator::Or) {
+        return None;
+    }
+    is_empty_array_expr(&l.right)?;
+    let (field_ty, optional) = iter_field_type(&l.left, locals, registry)?;
+    let elem = vec_element_type(field_ty)?;
+    if is_copy_type(&elem) {
+        return None;
+    }
+    let left = expressions::translate_expr(&l.left, &Ctx::new(locals, registry, narrow, names));
+    Some(if optional {
+        parse_quote!(#left.iter().flatten().cloned())
+    } else {
+        parse_quote!(#left.iter().cloned())
+    })
+}
+
+/// The translated field type of a member/chain iterable (`obj.field` or
+/// `obj?.field`) plus its `optional` flag, or `None` for any other shape.
+fn iter_field_type<'a>(
+    expr: &'a Expression,
+    locals: &Locals,
+    registry: &'a TypeRegistry,
+) -> Option<(&'a Type, bool)> {
+    match expr {
+        Expression::StaticMemberExpression(sm) => member_field_type(sm, locals, registry),
+        Expression::ChainExpression(c) => match &c.expression {
+            ChainElement::StaticMemberExpression(sm) => member_field_type(sm, locals, registry),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+/// `[]` (an empty array fallback) — matches the right side of `x ?? []`.
+fn is_empty_array_expr(expr: &Expression) -> Option<()> {
+    match expr {
+        Expression::ArrayExpression(a) if a.elements.is_empty() => Some(()),
+        _ => None,
+    }
+}
+
+/// True for a Copy scalar type (`f64`/`bool`) — those use the `for &v` path.
+fn is_copy_type(ty: &Type) -> bool {
+    let Type::Path(tp) = ty else {
+        return false;
+    };
+    tp.path
+        .segments
+        .last()
+        .is_some_and(|s| s.ident == "f64" || s.ident == "bool")
+}
+
+/// `Vec<T>` → `T` (after any `Option<…>` wrapper is stripped). `None` for a
+/// non-`Vec` type.
+fn vec_element_type(ty: &Type) -> Option<Type> {
+    let inner = strip_option(ty);
+    let Type::Path(tp) = inner else {
+        return None;
+    };
+    let seg = tp.path.segments.last()?;
+    if seg.ident != "Vec" {
+        return None;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return None;
+    };
+    args.args.iter().find_map(|g| match g {
+        syn::GenericArgument::Type(t) => Some(t.clone()),
+        _ => None,
+    })
+}
+
+/// `Option<T>` → `T`; any other type passes through unchanged.
+fn strip_option(ty: &Type) -> &Type {
+    let Type::Path(tp) = ty else {
+        return ty;
+    };
+    let Some(seg) = tp.path.segments.last() else {
+        return ty;
+    };
+    if seg.ident != "Option" {
+        return ty;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return ty;
+    };
+    args.args
+        .iter()
+        .find_map(|g| match g {
+            syn::GenericArgument::Type(t) => Some(t),
+            _ => None,
+        })
+        .unwrap_or(ty)
+}
+
+/// The struct name a path denotes, stripping an `Option<…>` wrapper —
+/// `Element` → `Element`, `Option<Element>` → `Element`. `None` when the path
+/// is not a plain struct or `Option<struct>`.
+fn struct_name_of(path: &Path) -> Option<String> {
+    let seg = path.segments.last()?;
+    if seg.ident == "Option" {
+        let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+            return None;
+        };
+        args.args.iter().find_map(|g| match g {
+            syn::GenericArgument::Type(Type::Path(t)) => {
+                t.path.segments.last().map(|s| s.ident.to_string())
+            }
+            _ => None,
+        })
+    } else {
+        Some(seg.ident.to_string())
     }
 }
 
