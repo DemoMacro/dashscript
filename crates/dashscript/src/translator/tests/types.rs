@@ -80,6 +80,15 @@ fn factory_singleton_infers_generic_return_type() {
 }
 
 #[test]
+fn interface_extends_keyword_field_name() {
+    // A parent interface field named `type` (a Rust keyword) flattens into the
+    // child struct as `r#type` (raw ident), not a panic on `Ident::new`.
+    let src = "interface A { type: string } interface B extends A {}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("r#type"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_interface_to_struct() {
     let src = "interface Point { x: number; y: number; }";
     let rust = Translator::new().translate(src).expect("should translate");

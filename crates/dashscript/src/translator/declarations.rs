@@ -138,7 +138,13 @@ pub fn translate_interface(iface: &TSInterfaceDeclaration, registry: &TypeRegist
         if !seen.insert(inherited.name.clone()) {
             continue;
         }
-        let key = Ident::new(&inherited.name, proc_macro2::Span::call_site());
+        // `inherited.name` is a bindings-snaked rust name; a keyword became a
+        // raw ident (`r#type`), whose string form `Ident::new` rejects — parse
+        // the `r#` prefix back into `Ident::new_raw`.
+        let key = match inherited.name.strip_prefix("r#") {
+            Some(rest) => Ident::new_raw(rest, proc_macro2::Span::call_site()),
+            None => Ident::new(&inherited.name, proc_macro2::Span::call_site()),
+        };
         let inner = inherited.ty.clone();
         let ty = if inherited.optional {
             parse_quote!(Option<#inner>)
