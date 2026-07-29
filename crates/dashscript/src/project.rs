@@ -255,6 +255,23 @@ pub fn translate_sources(
     }
     let _serde_guard = SerdeGuard;
 
+    // Bare workspace-member specifiers (`@scope/core`) resolve (via a
+    // node_modules symlink) to a local `src/`, so `ds build` translates them
+    // into a `mod` of this crate. Collect the import graph's such specifiers
+    // before the entry translates, so the entry and each recursive dep lower
+    // their `@scope/…` imports to `crate::mod` — not a bare `mod`, which Rust
+    // 2018 path clarity rejects from a submodule. Cleared on translate end.
+    let workspace_deps =
+        collect_workspace_deps(src, src_path.parent().unwrap_or_else(|| Path::new("")));
+    crate::translator::imports::set_workspace_deps(workspace_deps);
+    struct WorkspaceDepsGuard;
+    impl Drop for WorkspaceDepsGuard {
+        fn drop(&mut self) {
+            crate::translator::imports::clear_workspace_deps();
+        }
+    }
+    let _ws_guard = WorkspaceDepsGuard;
+
     // Aggregate optional (`?:`) field names across the whole import graph
     // first, so every file — the entry and each dep — sees imported
     // interfaces' optionals. A cross-file `opts?.field ?? d` needs to know
@@ -362,6 +379,56 @@ fn probe_sources_use_engine(probe: &Translator, src: &str, base: &Path) -> bool 
         }
     }
     false
+}
+
+/// Walk the import graph from `src` and collect every bare specifier that
+/// resolves to a workspace member (a `node_modules` symlink to a local `src/`),
+/// so the translator lowers those imports to `crate::mod` — they translate
+/// into a `mod` of this crate, just like a relative `./m`. Mirrors
+/// [`probe_sources_use_engine`]'s walk so it covers exactly the files that
+/// translate. Registry specifiers (`.pnpm` store, plain dirs) and `cargo:` /
+/// relative imports are not collected.
+fn collect_workspace_deps(src: &str, base: &Path) -> std::collections::HashSet<String> {
+    let probe = Translator::new();
+    let mut deps = std::collections::HashSet::new();
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut worklist: std::collections::VecDeque<(String, PathBuf)> =
+        std::collections::VecDeque::new();
+    for imp in probe.imports(src) {
+        record_workspace_dep(&imp.source, base, &mut deps);
+        if seen.insert(imp.module.clone()) {
+            worklist.push_back((imp.source, base.to_path_buf()));
+        }
+    }
+    while let Some((source, dir)) = worklist.pop_front() {
+        let Ok((dep_path, _)) = resolve_local_module(&dir, &source) else {
+            continue;
+        };
+        let Ok(dep_src) = fs::read_to_string(&dep_path) else {
+            continue;
+        };
+        let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in probe.imports(&dep_src) {
+            record_workspace_dep(&imp.source, dep_base, &mut deps);
+            if seen.insert(imp.module.clone()) {
+                worklist.push_back((imp.source, dep_base.to_path_buf()));
+            }
+        }
+    }
+    deps
+}
+
+/// Record `source` as a workspace dep when it is a bare specifier that
+/// [`resolve_workspace_dep`] maps to a local `src/`. Relative (`.`) and
+/// `cargo:` imports are skipped (the former is already local; the latter is an
+/// extern crate).
+fn record_workspace_dep(source: &str, base: &Path, deps: &mut std::collections::HashSet<String>) {
+    if !source.starts_with('.')
+        && !source.starts_with("cargo:")
+        && resolve_workspace_dep(base, source).is_some()
+    {
+        deps.insert(source.to_string());
+    }
 }
 
 /// Translate one `.ts` file to `src/<stem>.rs`, prefixing `mod <module>;` for

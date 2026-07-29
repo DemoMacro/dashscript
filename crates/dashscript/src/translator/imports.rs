@@ -17,6 +17,36 @@ use syn::{parse_quote, Ident};
 
 use super::{bindings, semantic::SymbolKind};
 
+thread_local! {
+    /// Bare specifiers of workspace members that resolve (via a `node_modules`
+    /// symlink to a local `src/`) into a `mod` of this crate. Like a relative
+    /// `./m` import, they lower to `crate::mod`, not a bare `mod`: under Rust
+    /// 2018 path clarity a bare `use mod::x` resolves at the crate root but not
+    /// from a submodule, so the `crate::` form works everywhere. Set once by
+    /// `project::translate_sources` before the entry translates, so the entry
+    /// and each recursive dep emit `crate::` paths; cleared when the translate
+    /// ends. Registry specifiers (`.pnpm` store, plain dirs) are not recorded.
+    static WORKSPACE_DEPS: std::cell::RefCell<std::collections::HashSet<String>> =
+        std::cell::RefCell::new(std::collections::HashSet::new());
+}
+
+/// Record the import graph's workspace-member specifiers (set once before the
+/// entry translates), so [`is_local_module`] routes them to `crate::mod`. See
+/// [`WORKSPACE_DEPS`].
+pub(crate) fn set_workspace_deps(deps: std::collections::HashSet<String>) {
+    WORKSPACE_DEPS.with(|c| {
+        let mut set = c.borrow_mut();
+        set.clear();
+        set.extend(deps);
+    });
+}
+
+/// Clear the workspace-dep set when a `translate_sources` run ends (success or
+/// error), so it does not leak into a later translate. See [`WORKSPACE_DEPS`].
+pub(crate) fn clear_workspace_deps() {
+    WORKSPACE_DEPS.with(|c| c.borrow_mut().clear());
+}
+
 /// A `.ts` import of a local module: the Rust module name (`other`) and the
 /// original source string (`"./other"`).
 #[derive(Debug, Clone)]
@@ -94,15 +124,17 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
     }
 }
 
-/// Whether an import source resolves to a module *inside this crate* — a
-/// relative `./m` import (the file's own `mod m;`). Such modules lower to
+/// Whether an import source resolves to a module *inside this crate*. Two
+/// families do: a relative `./m` import (the file's own `mod m;`), and a bare
+/// workspace-member specifier (`@scope/core`) that `ds build` translated into a
+/// `mod` of this crate (recorded in [`WORKSPACE_DEPS`]). Both lower to
 /// `crate::m::…` so the `use` resolves from a sibling module too: under Rust
 /// 2018 path clarity a bare `use m::x` resolves at the crate root but not from
 /// a submodule, so `crate::m::x` is the form that works everywhere. A `cargo:`
-/// source or a bare npm specifier names something outside this crate (an extern
-/// crate / `node_modules`), so it stays a bare `use m::x`.
+/// source or a registry npm specifier names something outside this crate (an
+/// extern crate / `node_modules`), so it stays a bare `use m::x`.
 pub(crate) fn is_local_module(source: &str) -> bool {
-    source.starts_with('.')
+    source.starts_with('.') || WORKSPACE_DEPS.with(|c| c.borrow().contains(source))
 }
 
 /// The `use` path for an import/export source: `crate::mod` for a local
@@ -618,5 +650,26 @@ mod tests {
         let decls = collect_declarations(src);
         let f = decls.iter().find(|d| d.name == "f").expect("f");
         assert_eq!(f.signature.as_ref().expect("sig").label(), "(): void");
+    }
+
+    #[test]
+    fn workspace_dep_resolves_as_local_crate_module() {
+        clear_workspace_deps();
+        let mut deps = std::collections::HashSet::new();
+        deps.insert("@scope/b".to_string());
+        set_workspace_deps(deps);
+        // A recorded workspace member lowers to a local crate module
+        // (crate::…); an unrecorded bare specifier stays a registry extern.
+        assert!(is_local_module("@scope/b"));
+        assert!(!is_local_module("@scope/reg"));
+        let ident = bare_module_ident("@scope/b");
+        let path = mod_use_path("@scope/b", &ident);
+        assert_eq!(
+            path.segments.first().expect("segments").ident.to_string(),
+            "crate"
+        );
+        clear_workspace_deps();
+        // After clear, the specifier is no longer local.
+        assert!(!is_local_module("@scope/b"));
     }
 }
