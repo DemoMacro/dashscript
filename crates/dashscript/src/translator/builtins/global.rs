@@ -105,8 +105,12 @@ pub(in crate::translator) fn to_number_expr(e: Expr) -> Expr {
     parse_quote!({
         // Bind the (possibly temporary) string first: `#e` may be
         // `"x".to_string()`, and `.trim()` would borrow a value freed at the
-        // end of that expression (E0716).
-        let __s = #e;
+        // end of that expression (E0716). Borrow rather than move so a `let n
+        // = Number(value)` does not consume `value` for later reads (the
+        // enclosing function's `String(n) === value` would otherwise be a
+        // borrow-of-moved). `let __s = &#e` extends a temporary's lifetime and
+        // borrows an lvalue, so both shapes compile.
+        let __s = &#e;
         let __t = __s.trim();
         if __t.is_empty() {
             0_f64

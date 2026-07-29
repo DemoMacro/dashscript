@@ -22,6 +22,31 @@ use super::translate_expr;
 /// We build `syn::Expr::Binary` directly (not `quote!` tokens) so `prettyplease`
 /// adds parentheses by precedence instead of emitting a redundant pair around
 /// every sub-expression.
+/// `String` instance methods whose result is a `String` — recognizing one as a
+/// `+` operand (alongside its string receiver) lets `(cond ? "a" : "") +
+/// spaces.repeat(n)` fold into `format!` instead of Rust's `+`, which does not
+/// apply to `String`.
+const STRING_RETURNING_METHODS: &[&str] = &[
+    "repeat",
+    "toString",
+    "toLowerCase",
+    "toUpperCase",
+    "trim",
+    "trimStart",
+    "trimEnd",
+    "replace",
+    "replaceAll",
+    "substring",
+    "substr",
+    "slice",
+    "padStart",
+    "padEnd",
+    "concat",
+    "normalize",
+    "toLocaleLowerCase",
+    "toLocaleUpperCase",
+];
+
 pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     // `x === null` / `x !== null` → `x.is_none()` / `x.is_some()` when `x` is an
     // Option-typed local; any other comparison returns `None` and falls through.
@@ -299,6 +324,22 @@ fn operand_is_string(expr: &Expression, ctx: &Ctx<'_>) -> bool {
             if matches!(inner.operator, BinaryOperator::Addition) =>
         {
             concat_is_string(inner, ctx)
+        }
+        // `(string_expr)` — parens carry no type change.
+        Expression::ParenthesizedExpression(p) => operand_is_string(&p.expression, ctx),
+        // `str.method(...)` where the receiver is a string and the method
+        // returns a string (repeat/toLowerCase/trim/…). Without this, `x +
+        // spaces.repeat(n)` falls through to Rust's `+`, which fails on
+        // `String`; the method call folds into `format!` as a `{}` leaf.
+        Expression::CallExpression(c) => {
+            if let Expression::StaticMemberExpression(sm) = &c.callee {
+                if STRING_RETURNING_METHODS.contains(&sm.property.name.as_str())
+                    && operand_is_string(&sm.object, ctx)
+                {
+                    return true;
+                }
+            }
+            false
         }
         _ => false,
     }

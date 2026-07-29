@@ -44,19 +44,33 @@ pub(super) fn logical_expr(log: &LogicalExpression, ctx: &Ctx<'_>) -> Expr {
     // is itself a bool). A value operand uses a truthiness block: TS `a || b`
     // returns `a` when truthy else `b`, so bind `a` once and branch.
     if expr_is_bool(&log.left, ctx) {
+        if expr_is_bool(&log.right, ctx) {
+            let left = translate_expr(&log.left, ctx);
+            let right = translate_expr(&log.right, ctx);
+            let op = match log.operator {
+                LogicalOperator::And => BinOp::And(Default::default()),
+                LogicalOperator::Or => BinOp::Or(Default::default()),
+                LogicalOperator::Coalesce => unreachable!(),
+            };
+            return Expr::Binary(syn::ExprBinary {
+                attrs: Vec::new(),
+                left: Box::new(left),
+                op,
+                right: Box::new(right),
+            });
+        }
+        // `bool && value` / `bool || value` — the left is a boolean, the right
+        // a value (e.g. `!firstLine && spaces`). TS types the result as
+        // `false | value`; the common use is a truthiness test, so lower to a
+        // bool — `left && truthy(right)` — rather than emitting `bool && String`,
+        // which fails to compile (Rust `&&` requires a bool on both sides).
         let left = translate_expr(&log.left, ctx);
         let right = translate_expr(&log.right, ctx);
-        let op = match log.operator {
-            LogicalOperator::And => BinOp::And(Default::default()),
-            LogicalOperator::Or => BinOp::Or(Default::default()),
+        return match log.operator {
+            LogicalOperator::And => parse_quote!((#left && crate::__ds::truthy(&(#right)))),
+            LogicalOperator::Or => parse_quote!((#left || crate::__ds::truthy(&(#right)))),
             LogicalOperator::Coalesce => unreachable!(),
         };
-        return Expr::Binary(syn::ExprBinary {
-            attrs: Vec::new(),
-            left: Box::new(left),
-            op,
-            right: Box::new(right),
-        });
     }
     let left = translate_expr(&log.left, ctx);
     let right = translate_expr(&log.right, ctx);

@@ -376,6 +376,15 @@ pub(super) fn nonnull_expr(nn: &TSNonNullExpression, ctx: &Ctx<'_>) -> Expr {
             return translate_expr(&nn.expression, ctx);
         }
     }
+    // `arr[i]!` — a non-null assertion on a computed index. `computed_member`
+    // already lowers a HashMap key to `.get(..).unwrap()` and a string index
+    // to `unwrap_or_default()`, and a Vec index yields the element `T` (not an
+    // `Option`) — so the assertion is redundant, and `.unwrap()` would call a
+    // method the element type does not have (e.g. `Element: unwrap`). Emit the
+    // index as-is.
+    if matches!(&nn.expression, Expression::ComputedMemberExpression(_)) {
+        return translate_expr(&nn.expression, ctx);
+    }
     let inner = translate_expr(&nn.expression, ctx);
     parse_quote!(#inner.unwrap())
 }
