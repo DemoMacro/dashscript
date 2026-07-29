@@ -119,57 +119,85 @@ fn type_of_expr(arg: &Expression) -> Expr {
         // Namespace objects (`Math`/`JSON`/`Reflect`/`Atomics`/`Intl`/`globalThis`)
         // are not — `typeof === "object"`; a user identifier also falls back to
         // "object" (a precise answer for a user symbol needs type inference).
-        Expression::Identifier(id) => match id.name.as_str() {
-            // Namespace objects — not callable, `typeof === "object"`.
-            "Math" | "JSON" | "Reflect" | "Atomics" | "Intl" | "globalThis" => "object",
-            // Global constructors — callable, `typeof === "function"`.
-            "Array"
-            | "Object"
-            | "String"
-            | "Number"
-            | "Boolean"
-            | "Symbol"
-            | "Function"
-            | "Date"
-            | "RegExp"
-            | "Error"
-            | "TypeError"
-            | "RangeError"
-            | "SyntaxError"
-            | "ReferenceError"
-            | "EvalError"
-            | "URIError"
-            | "AggregateError"
-            | "SuppressedError"
-            | "Promise"
-            | "Map"
-            | "Set"
-            | "WeakMap"
-            | "WeakSet"
-            | "WeakRef"
-            | "FinalizationRegistry"
-            | "ArrayBuffer"
-            | "SharedArrayBuffer"
-            | "DataView"
-            | "BigInt"
-            | "Proxy"
-            | "Int8Array"
-            | "Uint8Array"
-            | "Uint8ClampedArray"
-            | "Int16Array"
-            | "Uint16Array"
-            | "Int32Array"
-            | "Uint32Array"
-            | "Float32Array"
-            | "Float64Array"
-            | "BigInt64Array"
-            | "BigUint64Array" => "function",
-            _ => "object",
-        },
+        Expression::Identifier(id) => typeof_static_ident(&id.name).unwrap_or("object"),
         _ => "object",
     };
     let lit = LitStr::new(s, Span::call_site());
     parse_quote!(#lit.to_string())
+}
+
+/// Static `typeof` result for a bare global identifier, when it is one of the
+/// known namespace objects (`"object"`) or callable constructors
+/// (`"function"`). `None` for any user identifier — its `typeof` depends on
+/// the runtime value.
+fn typeof_static_ident(name: &str) -> Option<&'static str> {
+    match name {
+        "Math" | "JSON" | "Reflect" | "Atomics" | "Intl" | "globalThis" => Some("object"),
+        "Array"
+        | "Object"
+        | "String"
+        | "Number"
+        | "Boolean"
+        | "Symbol"
+        | "Function"
+        | "Date"
+        | "RegExp"
+        | "Error"
+        | "TypeError"
+        | "RangeError"
+        | "SyntaxError"
+        | "ReferenceError"
+        | "EvalError"
+        | "URIError"
+        | "AggregateError"
+        | "SuppressedError"
+        | "Promise"
+        | "Map"
+        | "Set"
+        | "WeakMap"
+        | "WeakSet"
+        | "WeakRef"
+        | "FinalizationRegistry"
+        | "ArrayBuffer"
+        | "SharedArrayBuffer"
+        | "DataView"
+        | "BigInt"
+        | "Proxy"
+        | "Int8Array"
+        | "Uint8Array"
+        | "Uint8ClampedArray"
+        | "Int16Array"
+        | "Uint16Array"
+        | "Int32Array"
+        | "Uint32Array"
+        | "Float32Array"
+        | "Float64Array"
+        | "BigInt64Array"
+        | "BigUint64Array" => Some("function"),
+        _ => None,
+    }
+}
+
+/// True when `typeof operand` cannot be resolved at translate time and needs
+/// the runtime value: any operand that is not a literal, a `Math`/`Number`
+/// member, a function expression, or one of the known global builtins. A user
+/// identifier, an arbitrary member access, or a call all fall here — the
+/// enclosing function degrades to the engine (see `check`).
+pub(in crate::translator) fn typeof_operand_is_runtime(arg: &Expression) -> bool {
+    match arg {
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::FunctionExpression(_)
+        | Expression::ArrowFunctionExpression(_) => false,
+        Expression::StaticMemberExpression(sm) => {
+            !(builtins::is_ident(&sm.object, "Math") || builtins::is_ident(&sm.object, "Number"))
+        }
+        Expression::Identifier(id) => typeof_static_ident(&id.name).is_none(),
+        // A user member access, call, sequence, … — the value's type is runtime.
+        _ => true,
+    }
 }
 
 /// `cond ? a : b` → `if cond { a } else { b }` — Rust's `if` is an expression.

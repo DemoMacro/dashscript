@@ -615,7 +615,18 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut Wal
     }
     match expr {
         Expression::UnaryExpression(u) => {
-            if !matches!(u.operator, UnaryOperator::Typeof) {
+            if matches!(u.operator, UnaryOperator::Typeof) {
+                // `typeof` resolves to a static type string only for literals
+                // and known globals; a runtime operand (user identifier, member
+                // access, call) needs the engine's runtime type string.
+                if super::expressions::typeof_operand_is_runtime(&u.argument) {
+                    out.push(err(
+                        "`typeof` of a runtime value (a user identifier, member access, or call) \
+                         has no static lowering — the function runs under the engine",
+                        u.span(),
+                    ));
+                }
+            } else {
                 collect_expr(&u.argument, out, state);
             }
         }

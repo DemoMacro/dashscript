@@ -28,6 +28,7 @@ pub(in crate::translator) use array::array_slice_expr;
 pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
 pub(in crate::translator) use member::{is_hashmap_local, is_hashset_local};
+pub(in crate::translator) use unary::typeof_operand_is_runtime;
 
 use oxc_ast::ast::{
     Argument, ArrowFunctionExpression, Expression, FunctionBody, IdentifierReference,
