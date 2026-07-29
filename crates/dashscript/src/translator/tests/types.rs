@@ -271,6 +271,19 @@ fn translates_type_union_to_tagged_enum() {
 }
 
 #[test]
+fn translates_record_union_member_to_hashmap_variant() {
+    // A `Record<K, V>` union member lowers to `Record(HashMap<K, V>)` — the
+    // type arguments resolve, rather than emitting the bare `Record` name.
+    let src = "type Bag = string | Record<string, number>;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("Record(::std::collections::HashMap<String, f64>)"),
+        "got:\n{rust}"
+    );
+    assert!(!rust.contains("Record(Record)"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_discriminated_union_to_field_variants() {
     let src =
         "type Shape = { kind: \"circle\"; radius: number } | { kind: \"square\"; side: number };";

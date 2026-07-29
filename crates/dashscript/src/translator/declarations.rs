@@ -600,6 +600,20 @@ fn type_ref_variant(ty: &TSType) -> Option<syn::Variant> {
     };
     let name: &str = &id.name;
     let variant = bindings::type_ident(name);
+    // `Record<K, V>` / `Map<K, V>` members carry a `HashMap<K, V>` payload —
+    // the bare `Record`/`Map` name has no Rust meaning, so resolve the type
+    // arguments the same way `types::translate_type` does. Without this the
+    // variant would read `Record(Record)`, an unresolved type name.
+    if matches!(name, "Record" | "Map") {
+        if let Some(args) = r.type_arguments.as_ref() {
+            let ps = &args.params;
+            if ps.len() == 2 {
+                let k_ty = types::translate_type(&ps[0]);
+                let v_ty = types::translate_type(&ps[1]);
+                return Some(parse_quote!(#variant(::std::collections::HashMap<#k_ty, #v_ty>)));
+            }
+        }
+    }
     Some(parse_quote!(#variant(#variant)))
 }
 
