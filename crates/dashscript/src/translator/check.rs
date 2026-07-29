@@ -24,8 +24,8 @@ use std::collections::HashSet;
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    AssignmentTarget, BindingPattern, Declaration, Expression, ForStatementInit, Function,
-    ObjectPropertyKind, Statement, UnaryOperator,
+    AssignmentTarget, BindingPattern, ChainElement, ChainExpression, Declaration, Expression,
+    ForStatementInit, Function, ObjectPropertyKind, Statement, UnaryOperator,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
@@ -730,7 +730,38 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut Wal
                 collect_expr(e, out, state);
             }
         }
+        Expression::ChainExpression(c) => {
+            // Optional chaining the translator can lower statically is a single
+            // `identifier?.field` (member.rs::chain_expr). Anything else — an
+            // optional call `?.method()`, an optional computed `?.[k]`, or a
+            // nested `a?.b?.c` — has no static lowering (it emits `todo!()` or a
+            // mistyped expression), so the function degrades to the engine.
+            if chain_needs_engine(c) {
+                out.push(err(
+                    "optional chaining beyond a single `?.field` (a `?.method()` call, \
+                     `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function \
+                     runs under the engine",
+                    c.span,
+                ));
+            } else if let ChainElement::StaticMemberExpression(sm) = &c.expression {
+                // `id?.field` — recurse the base so a construct in it still
+                // surfaces (the field name is not an expression).
+                collect_expr(&sm.object, out, state);
+            }
+        }
         _ => {}
+    }
+}
+
+/// Whether a `ChainExpression` is beyond the single `identifier?.field` form
+/// [`super::expressions::member::chain_expr`] lowers statically, and so degrades
+/// to the engine. A single optional static member on a plain identifier is the
+/// only handled shape; an optional call, an optional computed access, a nested
+/// chain, or a non-identifier base all need the engine.
+fn chain_needs_engine(c: &ChainExpression) -> bool {
+    match &c.expression {
+        ChainElement::StaticMemberExpression(sm) => !matches!(sm.object, Expression::Identifier(_)),
+        _ => true,
     }
 }
 
