@@ -159,6 +159,20 @@ pub fn pascal(name: &str) -> Ident {
             capitalize_next = true;
         }
     }
+    // A literal whose only alphanumerics start with a digit (`"3d"`, `"4th"`)
+    // would yield an ident that cannot start with one; a leading `_` keeps it
+    // valid — mirrors `snake`. An all-symbol/empty literal lands on the `Empty`
+    // fallback. PascalCase output is never a lowercase keyword, but `Self` is
+    // reserved — suffix `_`.
+    if out.is_empty() {
+        out.push_str("Empty");
+    }
+    if out.starts_with(|c: char| c.is_ascii_digit()) {
+        out.insert(0, '_');
+    }
+    if out == "Self" {
+        out.push('_');
+    }
     format_ident!("{}", out)
 }
 
@@ -182,5 +196,35 @@ pub fn property_key_name(key: &PropertyKey) -> Option<Ident> {
             Some(snake(name))
         }
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::pascal;
+
+    #[test]
+    fn pascal_digit_prefix_gets_underscore() {
+        // A leading digit is not a valid ident start; a `_` prefix keeps it valid.
+        assert_eq!(pascal("3d").to_string(), "_3d");
+        assert_eq!(pascal("4th").to_string(), "_4th");
+    }
+
+    #[test]
+    fn pascal_empty_or_symbols_fall_back() {
+        assert_eq!(pascal("").to_string(), "Empty");
+        assert_eq!(pascal("!!!").to_string(), "Empty");
+    }
+
+    #[test]
+    fn pascal_self_keyword_is_suffixed() {
+        // `Self` is reserved; `pascal("self")` lands on it.
+        assert_eq!(pascal("self").to_string(), "Self_");
+    }
+
+    #[test]
+    fn pascal_normal_still_pascalcase() {
+        assert_eq!(pascal("in_progress").to_string(), "InProgress");
+        assert_eq!(pascal("red").to_string(), "Red");
     }
 }
