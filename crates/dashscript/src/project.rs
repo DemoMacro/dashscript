@@ -1,7 +1,7 @@
-//! Shared helpers for the `ds` subcommands: package discovery, cache
-//! resolution, source translation, and cargo invocation. The command modules
-//! ([`super::build`], [`super::run`], [`super::deps`], [`super::check`],
-//! [`super::cache`]) build on these.
+//! Project-level packaging: translate a package's `.ts` into one multi-target
+//! Rust crate — source/module resolution, Cargo project emission, path & cache
+//! discovery, import-cycle guards, and cargo invocation. The `ds` subcommands
+//! (`build`, `run`, `deps`, `check`, `lsp`) are thin callers over this.
 
 use std::{
     error::Error,
@@ -10,7 +10,7 @@ use std::{
     process::{Command, ExitCode, ExitStatus},
 };
 
-use dashscript::{FileRole, Package, RuntimeDeps, Translator};
+use crate::{FileRole, Package, RuntimeDeps, Translator};
 
 /// Translate one resolved dependency to the Rust source for `src/<module>.rs`,
 /// merging its runtime deps into `deps`. The `DepKind` picks the path: a `.ts`
@@ -123,6 +123,104 @@ fn collect_package_optionals(
     Ok(shared)
 }
 
+/// Walk the import graph from `src` and aggregate every `.ts`/`.d.ts` file's
+/// interface field signatures (name, translated type, optional flag), so each
+/// file sees imported interfaces' field types — a cross-file unwrap
+/// (`f(obj.opt_field)` into the field's inner type) needs the field's type,
+/// but each file builds its own `TypeRegistry`. The field-type analogue of
+/// [`collect_package_optionals`]; the union is injected via `with_extra_fields`.
+fn collect_package_fields(
+    src: &str,
+    src_path: &Path,
+) -> Result<std::collections::HashMap<String, Vec<crate::translator::InterfaceField>>, Box<dyn Error>>
+{
+    use std::collections::{HashMap, HashSet, VecDeque};
+    let collector = Translator::new();
+    let mut shared: HashMap<String, Vec<crate::translator::InterfaceField>> = collector
+        .collect_fields(src)
+        .map_err(|e| format!("collect fields {}: {e}", src_path.display()))?;
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    for imp in collector.imports(src) {
+        if seen.insert(imp.module.clone()) {
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            if !matches!(kind, DepKind::Js) {
+                worklist.push_back((imp.module, dep_path));
+            }
+        }
+    }
+    while let Some((_module, path)) = worklist.pop_front() {
+        let dep_src = fs::read_to_string(&path)
+            .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
+        for (k, v) in collector
+            .collect_fields(&dep_src)
+            .map_err(|e| format!("collect fields {}: {e}", path.display()))?
+        {
+            shared.entry(k).or_insert_with(|| v);
+        }
+        let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&dep_src) {
+            if seen.insert(imp.module.clone()) {
+                let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
+                if !matches!(kind, DepKind::Js) {
+                    worklist.push_back((imp.module, dep_path));
+                }
+            }
+        }
+    }
+    Ok(shared)
+}
+
+/// Walk the import graph from `src` and aggregate every `.ts`/`.d.ts` file's
+/// inline scalar-union enums (`__DsUnion…`), so each file recognizes imported
+/// interfaces' union-typed fields — a cross-file `return element.text` (a
+/// union) into a `String` coerces via the union's `Display` impl, but each file
+/// builds its own `TypeRegistry`. The union-enum analogue of
+/// [`collect_package_fields`]; the union is injected via
+/// `with_extra_union_enums`.
+fn collect_package_union_enums(
+    src: &str,
+    src_path: &Path,
+) -> Result<std::collections::HashMap<syn::Ident, syn::ItemEnum>, Box<dyn Error>> {
+    use std::collections::{HashMap, HashSet, VecDeque};
+    let collector = Translator::new();
+    let mut shared: HashMap<syn::Ident, syn::ItemEnum> = collector
+        .collect_union_enums(src)
+        .map_err(|e| format!("collect unions {}: {e}", src_path.display()))?;
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    for imp in collector.imports(src) {
+        if seen.insert(imp.module.clone()) {
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            if !matches!(kind, DepKind::Js) {
+                worklist.push_back((imp.module, dep_path));
+            }
+        }
+    }
+    while let Some((_module, path)) = worklist.pop_front() {
+        let dep_src = fs::read_to_string(&path)
+            .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
+        for (k, v) in collector
+            .collect_union_enums(&dep_src)
+            .map_err(|e| format!("collect unions {}: {e}", path.display()))?
+        {
+            shared.entry(k).or_insert_with(|| v);
+        }
+        let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&dep_src) {
+            if seen.insert(imp.module.clone()) {
+                let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
+                if !matches!(kind, DepKind::Js) {
+                    worklist.push_back((imp.module, dep_path));
+                }
+            }
+        }
+    }
+    Ok(shared)
+}
+
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
 /// `project_dir/src/`. The caller writes `Cargo.toml`. Shared by a single-
@@ -130,7 +228,7 @@ fn collect_package_optionals(
 /// Cargo.toml the workspace root owns). Imports are followed transitively: an
 /// imported module that itself imports is lowered too (deduped by module name),
 /// so a multi-file package lowers fully rather than stopping at the first hop.
-pub(crate) fn translate_sources(
+pub fn translate_sources(
     src: &str,
     src_path: &Path,
     project_dir: &Path,
@@ -140,7 +238,12 @@ pub(crate) fn translate_sources(
     // interfaces' optionals. A cross-file `opts?.field ?? d` needs to know
     // `field` is optional, but each file builds its own `TypeRegistry`.
     let shared_optionals = collect_package_optionals(src, src_path)?;
-    let translator = Translator::new().with_extra_optionals(shared_optionals);
+    let shared_fields = collect_package_fields(src, src_path)?;
+    let shared_unions = collect_package_union_enums(src, src_path)?;
+    let translator = Translator::new()
+        .with_extra_optionals(shared_optionals)
+        .with_extra_fields(shared_fields)
+        .with_extra_union_enums(shared_unions);
     let (rust, mut deps) = translator
         .translate_with_deps(src)
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;
@@ -263,7 +366,7 @@ type ProjectTargets = (Vec<(String, String)>, Option<String>);
 /// `src/<stem>.rs` — nested directories are not yet modeled as sub-modules),
 /// and a bin importing another bin (cargo forbids it; shared code must go
 /// through `[lib]`).
-pub(crate) fn translate_project(
+pub fn translate_project(
     root: &Path,
     package: &Package,
     project_dir: &Path,
@@ -473,7 +576,7 @@ fn clean_src_dir(src: &Path) -> std::io::Result<()> {
 /// `[[bin]]`/`[lib]` targets — so a project's entries share one cache and never
 /// overwrite each other. Otherwise (a lone file, or a package with no declared
 /// targets): a minimal package + a single `src/main.rs`.
-pub(crate) fn emit_cargo_project(
+pub fn emit_cargo_project(
     src: &str,
     src_path: &Path,
     project_dir: &Path,
@@ -503,7 +606,7 @@ pub(crate) fn emit_cargo_project(
 /// entry's stem plus the lib stem, if any. The `__ds` helper is declared
 /// (`mod __ds;`) at each crate root so every translated file reaches it as
 /// `crate::__ds::…`.
-pub(crate) fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec<String> {
+pub fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec<String> {
     let mut stems: Vec<String> = bins
         .iter()
         .map(|(_, ds_path)| stem_of(Path::new(ds_path)))
@@ -517,7 +620,7 @@ pub(crate) fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec
 /// Write the runtime helper modules and declare them at each crate root, when
 /// the translated sources reference them: `__ds` (`ryu_js`) and `__ds_engine`
 /// (the `rquickjs` compat engine). A no-op when no runtime dep is set.
-pub(crate) fn apply_runtime_deps(
+pub fn apply_runtime_deps(
     project_dir: &Path,
     deps: &RuntimeDeps,
     root_stems: &[String],
@@ -571,7 +674,7 @@ fn inject_helper_module(
 /// `cargo check` error honestly. A `.d.ts` with a sibling `.js` is a typed
 /// package awaiting type injection (a later batch).
 #[derive(Clone, Debug)]
-pub(crate) enum DepKind {
+pub enum DepKind {
     Ts,
     DtsOnly,
     DtsWithJs { dts_path: PathBuf, js_path: PathBuf },
@@ -655,7 +758,7 @@ fn ds_resolver() -> oxc_resolver::Resolver {
 /// scoped packages (`@scope/pkg`), and tsconfig paths — so DashScript reuses
 /// the standard resolver rather than hand-writing a subset. The `DepKind` is
 /// decided from the resolved path's extension and sibling files.
-pub(crate) fn resolve_local_module(
+pub fn resolve_local_module(
     base: &Path,
     source: &str,
 ) -> Result<(PathBuf, DepKind), Box<dyn Error>> {
@@ -670,7 +773,7 @@ pub(crate) fn resolve_local_module(
 /// Resolve the Cargo package for `src_path`: the `package.json` found walking
 /// up from the file (Deno-style), otherwise a minimal package named after the
 /// project (`project_name`).
-pub(crate) fn resolve_package(src_path: &Path) -> String {
+pub fn resolve_package(src_path: &Path) -> String {
     if let Some(root) = find_package_root(src_path) {
         if let Ok(json) = fs::read_to_string(root.join("package.json")) {
             if let Ok(package) = Package::from_json(&json) {
@@ -696,7 +799,7 @@ pub(crate) fn resolve_package(src_path: &Path) -> String {
 /// incremental `target/` instead of recompiling std and every dependency from
 /// scratch. Falls back to a temp dir if no platform cache dir is resolvable,
 /// so a lone file always runs.
-pub(crate) fn cache_project_dir(src_path: &Path) -> PathBuf {
+pub fn cache_project_dir(src_path: &Path) -> PathBuf {
     if let Some(root) = find_package_root(src_path) {
         return root
             .join(".cache")
@@ -708,7 +811,7 @@ pub(crate) fn cache_project_dir(src_path: &Path) -> PathBuf {
 
 /// Walk up from the `.ts` file's directory for the nearest `package.json`,
 /// returning its directory (the project root) if one exists.
-pub(crate) fn find_package_root(src_path: &Path) -> Option<PathBuf> {
+pub fn find_package_root(src_path: &Path) -> Option<PathBuf> {
     let dir = src_path.parent()?;
     for ancestor in dir.ancestors() {
         if ancestor.join("package.json").exists() {
@@ -724,7 +827,7 @@ pub(crate) fn find_package_root(src_path: &Path) -> Option<PathBuf> {
 /// subdirectory — mirroring pnpm/cargo, which find the workspace root from any
 /// nested dir. Falls back to the cwd when no package is found, so callers
 /// report "no package.json here" instead of panicking.
-pub(crate) fn package_root() -> PathBuf {
+pub fn package_root() -> PathBuf {
     let Ok(cwd) = std::env::current_dir() else {
         return PathBuf::from(".");
     };
@@ -742,7 +845,7 @@ pub(crate) fn package_root() -> PathBuf {
 /// `ds lint` with no argument — the way `vp check` and
 /// `oxlint` check the whole project when given no target. Sorted for stable
 /// output.
-pub(crate) fn collect_ts_files() -> Vec<PathBuf> {
+pub fn collect_ts_files() -> Vec<PathBuf> {
     let root = package_root();
     let mut out = Vec::new();
     walk_ts(&root, &mut out);
@@ -773,7 +876,7 @@ fn walk_ts(dir: &Path, out: &mut Vec<PathBuf>) {
 /// The global fallback cache for a lone `.ts` file (no `package.json` found
 /// walking up): `~/.cache/dash/<hash(canonical_path)>/`, keyed by the file's
 /// canonical path so the same file reuses it across runs.
-pub(crate) fn global_cache_dir(src_path: &Path) -> PathBuf {
+pub fn global_cache_dir(src_path: &Path) -> PathBuf {
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};
 
@@ -790,7 +893,7 @@ pub(crate) fn global_cache_dir(src_path: &Path) -> PathBuf {
 }
 
 /// The file stem of a path as an owned `String` ("main.ts" → "main").
-pub(crate) fn stem_of(path: &Path) -> String {
+pub fn stem_of(path: &Path) -> String {
     // An index.ts in a subdirectory is a bundler barrel (architecture-proposal
     // decision 4): foo/index.ts names its module after the parent dir
     // (crate::foo), so `import { x } from "./foo"` lands on `mod foo; src/foo.rs`.
@@ -815,7 +918,7 @@ pub(crate) fn stem_of(path: &Path) -> String {
 /// The build output name: the `package.json` `name` if present, else the
 /// project directory name, else the file stem — never the bare stem when a
 /// project exists, so two entry files don't clobber `dist/<name>`.
-pub(crate) fn project_name(src_path: &Path) -> String {
+pub fn project_name(src_path: &Path) -> String {
     if let Some(root) = find_package_root(src_path) {
         if let Ok(json) = fs::read_to_string(root.join("package.json")) {
             if let Ok(package) = Package::from_json(&json) {
@@ -836,7 +939,7 @@ pub(crate) fn project_name(src_path: &Path) -> String {
 /// Resolve the project entry file for a file-less `ds build`: the first
 /// declared `bin` (the project builds every bin; any one anchors the lookup),
 /// else `main.ts` in the cwd.
-pub(crate) fn resolve_entry() -> Result<String, Box<dyn Error>> {
+pub fn resolve_entry() -> Result<String, Box<dyn Error>> {
     if let Ok(package) = read_package(Path::new("package.json")) {
         if let Some((_, bin_path)) = package.bin_entries().into_iter().next() {
             if Path::new(&bin_path).exists() {
@@ -852,7 +955,7 @@ pub(crate) fn resolve_entry() -> Result<String, Box<dyn Error>> {
 
 /// The build target for `src_path`: the `--target` override, else the
 /// `package.json` `target`, else `bin`.
-pub(crate) fn resolve_target(src_path: &Path, override_target: Option<&str>) -> String {
+pub fn resolve_target(src_path: &Path, override_target: Option<&str>) -> String {
     if let Some(t) = override_target {
         return t.to_string();
     }
@@ -867,14 +970,14 @@ pub(crate) fn resolve_target(src_path: &Path, override_target: Option<&str>) -> 
 }
 
 /// Read and parse a `package.json`.
-pub(crate) fn read_package(path: &Path) -> Result<Package, Box<dyn Error>> {
+pub fn read_package(path: &Path) -> Result<Package, Box<dyn Error>> {
     let json =
         fs::read_to_string(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
     Ok(Package::from_json(&json)?)
 }
 
 /// A package named after the current directory, with defaults.
-pub(crate) fn default_package() -> Package {
+pub fn default_package() -> Package {
     let name = std::env::current_dir()
         .ok()
         .and_then(|d| d.file_name().map(|n| n.to_string_lossy().into_owned()))
@@ -887,13 +990,13 @@ pub(crate) fn default_package() -> Package {
 
 /// Path to the cargo binary — the system `cargo` today; a DashScript-managed
 /// toolchain replaces this once the self-contained Rust layer lands.
-pub(crate) fn cargo_bin() -> &'static Path {
+pub fn cargo_bin() -> &'static Path {
     Path::new("cargo")
 }
 
 /// Invoke `cargo` with `args` inside `project`, inheriting stdio. Errors if
 /// cargo is not on PATH.
-pub(crate) fn invoke_cargo<const N: usize>(
+pub fn invoke_cargo<const N: usize>(
     project: &Path,
     args: [&str; N],
 ) -> Result<ExitStatus, Box<dyn Error>> {
@@ -905,7 +1008,7 @@ pub(crate) fn invoke_cargo<const N: usize>(
 }
 
 /// Map an [`ExitStatus`] to an [`ExitCode`].
-pub(crate) fn status_to_code(status: ExitStatus) -> ExitCode {
+pub fn status_to_code(status: ExitStatus) -> ExitCode {
     if status.success() {
         ExitCode::SUCCESS
     } else {

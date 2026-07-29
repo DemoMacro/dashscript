@@ -7,7 +7,7 @@ use std::{error::Error, fs, path::PathBuf, process::ExitCode};
 
 use dashscript::Translator;
 
-use super::project::collect_ts_files;
+use dashscript::project::collect_ts_files;
 
 /// Resolve the `.ts` targets for a lint command: a named file, or — with no
 /// argument — every `.ts` under the project root. Errors when no argument is

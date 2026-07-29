@@ -11,7 +11,7 @@ use std::{
 
 use dashscript::Package;
 
-use super::project::{
+use dashscript::project::{
     apply_runtime_deps, bin_lib_stems, cache_project_dir, default_package, emit_cargo_project,
     find_package_root, invoke_cargo, project_name, read_package, resolve_entry, resolve_target,
     status_to_code, translate_project,

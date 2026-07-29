@@ -7,7 +7,7 @@ use std::{
     process::{Command, ExitCode},
 };
 
-use super::project::{
+use dashscript::project::{
     cache_project_dir, default_package, emit_cargo_project, find_package_root, invoke_cargo,
     package_root, read_package, status_to_code,
 };

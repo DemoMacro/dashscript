@@ -173,7 +173,7 @@ impl Server {
         let Some(cache) = self.cache_dir(uri) else {
             return;
         };
-        if crate::commands::project::emit_cargo_project(text, &src_path, &cache).is_err() {
+        if dashscript::project::emit_cargo_project(text, &src_path, &cache).is_err() {
             return;
         }
         let main_rs = text::rust_file_for(&cache, &src_path);

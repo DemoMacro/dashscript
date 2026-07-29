@@ -5,7 +5,7 @@ use std::{error::Error, fs, path::Path, process::ExitCode};
 
 use dashscript::{fetch, Bindgen, CargoDepSpec};
 
-use super::project::{
+use dashscript::project::{
     cargo_bin, default_package, invoke_cargo, package_root, read_package, status_to_code,
 };
 
