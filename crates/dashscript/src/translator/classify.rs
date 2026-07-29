@@ -72,8 +72,23 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         // TS type-layer wrappers and user parens carry no runtime meaning —
         // classify the inner expression.
         Expression::ParenthesizedExpression(p) => classify_expr(&p.expression, ctx),
-        Expression::TSAsExpression(a) => classify_expr(&a.expression, ctx),
-        Expression::TSTypeAssertion(t) => classify_expr(&t.expression, ctx),
+        // `x as Record<…>` / `as { [k]: … }` — casting a value to a dynamic
+        // record to use string-keyed indexing. The cast type has no static
+        // Rust form (`unknown`/indexed/`Record<dyn>`/…), so the enclosing
+        // function degrades to the engine rather than silently mis-lowering
+        // the cast onto a struct (which is not string-indexable).
+        Expression::TSAsExpression(a) => {
+            if super::types::type_has_unmappable(&a.type_annotation) {
+                return degrade("cast to a type with no static Rust form needs the engine");
+            }
+            classify_expr(&a.expression, ctx)
+        }
+        Expression::TSTypeAssertion(t) => {
+            if super::types::type_has_unmappable(&t.type_annotation) {
+                return degrade("type assertion with no static Rust form needs the engine");
+            }
+            classify_expr(&t.expression, ctx)
+        }
         Expression::TSNonNullExpression(n) => classify_expr(&n.expression, ctx),
 
         // `x instanceof T` — a runtime type check with no static equivalent.
@@ -253,6 +268,25 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
     if matches!(prop, "test" | "exec") && regex_arg_needs_engine(&c.arguments, ctx) {
         return degrade(
             "regex `.test`/`.exec` on a non-string needs the engine (ES ToString coercion)",
+        );
+    }
+    // `.replace`/`.replaceAll` with a callback (regex-driven replacement) has
+    // no static lowering — regress exposes no per-match hook the callback could
+    // call, and the callback receives the match as a value (not `&str`). A
+    // plain-string/Pattern replacement stays on the static path.
+    if matches!(prop, "replace" | "replaceAll")
+        && c.arguments.iter().any(|a| {
+            a.as_expression().is_some_and(|e| {
+                matches!(
+                    e,
+                    Expression::ArrowFunctionExpression(_) | Expression::FunctionExpression(_)
+                )
+            })
+        })
+    {
+        return degrade(
+            "`.replace`/`.replaceAll` with a callback needs the engine (no static per-match \
+             lowering)",
         );
     }
     // `.indexOf(x)` / `.lastIndexOf(x)` / `.includes(x)` where x is plainly not
