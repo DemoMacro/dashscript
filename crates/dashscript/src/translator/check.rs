@@ -24,8 +24,8 @@ use std::collections::HashSet;
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    AssignmentTarget, BindingPattern, Expression, ForStatementInit, ObjectPropertyKind, Statement,
-    UnaryOperator,
+    AssignmentTarget, BindingPattern, Declaration, Expression, ForStatementInit, Function,
+    ObjectPropertyKind, Statement, UnaryOperator,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
@@ -286,6 +286,22 @@ pub(super) struct EngineSites {
     pub top_level_dynamic: bool,
 }
 
+/// A top-level `function` declaration a statement carries — a bare
+/// `function f() {}` or an `export function f() {}`. `None` for anything else
+/// (a non-function statement, an `export` of a class/variable/re-export). Used
+/// by the engine-site walk so an exported dynamic function degrades the same
+/// way a non-exported one does.
+fn top_level_function<'a>(stmt: &'a Statement<'a>) -> Option<&'a Function<'a>> {
+    match stmt {
+        Statement::FunctionDeclaration(f) => Some(&**f),
+        Statement::ExportNamedDeclaration(e) => match &e.declaration {
+            Some(Declaration::FunctionDeclaration(f)) => Some(&**f),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
 /// Walk the program once and split the unsupported-construct diagnostics by
 /// where they land: inside a top-level function (a per-function degradation
 /// site) or outside one (whole-program fallback). The split reuses the exact
@@ -312,8 +328,21 @@ pub(super) fn program_engine_sites(program: &oxc_ast::ast::Program) -> EngineSit
         // boundary to rewrite (whole-program fallback).
         let before = diags.len();
         collect_unsupported(stmt, &mut diags, &mut state);
-        if diags.len() > before {
-            if let oxc_ast::ast::Statement::FunctionDeclaration(f) = stmt {
+        let body_dynamic = diags.len() > before;
+        // A function whose signature carries a type the static translator
+        // cannot express (`unknown`/indexed access/…) degrades too — the `_`
+        // would fail cargo check at the signature, not the body.
+        // `classify_function_signature` is the type-driven trigger; the body
+        // construct walk above is the AST-driven one.
+        let sig_dynamic = match top_level_function(stmt) {
+            Some(f) => matches!(
+                classify::classify_function_signature(f),
+                Mapping::DegradeEngine(_)
+            ),
+            None => false,
+        };
+        if body_dynamic || sig_dynamic {
+            if let Some(f) = top_level_function(stmt) {
                 if let Some(id) = &f.id {
                     sites.dynamic_fns.insert(id.name.as_str().to_string());
                 }
@@ -382,27 +411,33 @@ fn unmapped_top_level(stmt: &Statement) -> OxcDiagnostic {
 /// fall through silently (a missed construct only means it stays `partial`,
 /// not a false `unsupported`).
 fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &mut WalkState) {
-    match stmt {
-        Statement::FunctionDeclaration(f) => {
-            if let Some(body) = &f.body {
-                for s in &body.statements {
-                    // A nested `function` declaration (the test262 `callbackfn`
-                    // convention) has no Rust mapping — a Rust `fn` item cannot
-                    // sit inside another fn body in a way the translator lowers,
-                    // so the declaration is dropped and the call site then fails
-                    // `cargo check` (E0425 partial). Flag it here so it is
-                    // reported as `unsupported` rather than as a partial.
-                    if let Statement::FunctionDeclaration(nested) = s {
-                        out.push(err(
-                            "nested function declaration is unsupported — move it to \
-                             module scope, or use an arrow function for a callback",
-                            nested.span,
-                        ));
-                    }
-                    collect_unsupported(s, out, state);
+    // A top-level `function` (bare or `export`ed) — recurse its body so a
+    // low-compatibility construct inside it surfaces, and flag a nested
+    // `function` declaration in it. (`program_engine_sites` reads this walk's
+    // diagnostic count to decide per-function degradation, so an exported
+    // dynamic function must add a diagnostic the same way a bare one does.)
+    if let Some(f) = top_level_function(stmt) {
+        if let Some(body) = &f.body {
+            for s in &body.statements {
+                // A nested `function` declaration (the test262 `callbackfn`
+                // convention) has no Rust mapping — a Rust `fn` item cannot
+                // sit inside another fn body in a way the translator lowers,
+                // so the declaration is dropped and the call site then fails
+                // `cargo check` (E0425 partial). Flag it here so it is
+                // reported as `unsupported` rather than as a partial.
+                if let Statement::FunctionDeclaration(nested) = s {
+                    out.push(err(
+                        "nested function declaration is unsupported — move it to \
+                         module scope, or use an arrow function for a callback",
+                        nested.span,
+                    ));
                 }
+                collect_unsupported(s, out, state);
             }
         }
+        return;
+    }
+    match stmt {
         Statement::BlockStatement(b) => collect_unsupported_stmts(&b.body, out, state),
         // `try { … } catch (e) { … }` — recurse the try block, the handler
         // body, and the optional `finally`, so a construct inside the handler

@@ -202,6 +202,38 @@ where
     }
 }
 
+/// Deserialize package.json `repository` accepting either a shorthand string
+/// or the full object form (`{ "type": "git", "url": "…" }`), yielding the URL
+/// (the object's `url` field). npm allows both shapes; only the URL reaches
+/// `Cargo.toml [package].repository`.
+fn deserialize_repository<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let opt = Option::<serde_json::Value>::deserialize(deserializer)?;
+    Ok(opt.and_then(|v| match v {
+        serde_json::Value::String(s) => Some(s),
+        serde_json::Value::Object(m) => m.get("url").and_then(|u| u.as_str()).map(String::from),
+        _ => None,
+    }))
+}
+
+/// Deserialize package.json `author` accepting either a shorthand string or
+/// the full object form (`{ "name": "…", "email": "…", "url": "…" }`),
+/// yielding the name. npm allows both shapes; the name is what
+/// `Cargo.toml [package].authors` carries.
+fn deserialize_author<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let opt = Option::<serde_json::Value>::deserialize(deserializer)?;
+    Ok(opt.and_then(|v| match v {
+        serde_json::Value::String(s) => Some(s),
+        serde_json::Value::Object(m) => m.get("name").and_then(|n| n.as_str()).map(String::from),
+        _ => None,
+    }))
+}
+
 /// A DashScript project = a standard **`package.json`** plus a `dashscript`
 /// namespace.
 ///
@@ -223,8 +255,13 @@ pub struct Package {
     /// SPDX license string → `Cargo.toml` `[package].license`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub license: Option<String>,
-    /// Source repository URL → `Cargo.toml` `[package].repository`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// Source repository URL → `Cargo.toml` `[package].repository`. Accepts
+    /// npm's shorthand string or the full `{ "url": "…" }` object form.
+    #[serde(
+        default,
+        deserialize_with = "deserialize_repository",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub repository: Option<String>,
     /// Project homepage URL → `Cargo.toml` `[package].homepage`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -232,8 +269,13 @@ pub struct Package {
     /// Discoverability keywords → `Cargo.toml` `[package].keywords`.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub keywords: Vec<String>,
-    /// Author → `Cargo.toml` `[package].authors`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// Author → `Cargo.toml` `[package].authors`. Accepts npm's shorthand
+    /// string or the full `{ "name": "…" }` object form (yields the name).
+    #[serde(
+        default,
+        deserialize_with = "deserialize_author",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub author: Option<String>,
     /// Executable entry points (npm `bin`, string | object) → Cargo `[[bin]]`
     /// targets. A single executable is `"bin": "main.ts"` (named after the
@@ -319,6 +361,14 @@ impl Package {
         serde_json::from_str(json)
     }
 
+    /// The package name as a legal cargo `[package].name`. npm scoped names
+    /// (`@scope/name`) carry an `@` and `/` that cargo forbids, so the `@` is
+    /// dropped and `/` becomes `-` (cargo maps `-` to `_` for the crate ident).
+    #[must_use]
+    pub fn cargo_name(&self) -> String {
+        self.name.trim_start_matches('@').replace('/', "-")
+    }
+
     /// The `[package]` + `[dependencies]` body — the shared core emitted for a
     /// single-package project ([`to_cargo_toml`]), a workspace member
     /// ([`to_member_toml`]), or a lone-file throwaway. No `[profile]` and no
@@ -329,7 +379,7 @@ impl Package {
     /// passes straight through to `[package]`.
     fn package_body(&self) -> String {
         let mut out = String::from("[package]\n");
-        out.push_str(&format!("name = {:?}\n", self.name));
+        out.push_str(&format!("name = {:?}\n", self.cargo_name()));
         out.push_str(&format!("version = {:?}\n", self.version));
         out.push_str("edition = \"2021\"\n");
         if let Some(desc) = &self.description {
@@ -444,7 +494,7 @@ impl Package {
         inherited_deps: &std::collections::BTreeSet<String>,
     ) -> String {
         let mut out = String::from("[package]\n");
-        out.push_str(&format!("name = {:?}\n", self.name));
+        out.push_str(&format!("name = {:?}\n", self.cargo_name()));
         out.push_str("version.workspace = true\n");
         out.push_str("edition.workspace = true\n");
         if let Some(desc) = &self.description {
@@ -594,6 +644,40 @@ impl Package {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn from_json_accepts_object_repository_and_author() {
+        // npm package.json allows `repository` and `author` as either a
+        // shorthand string or a full object. Both must parse (object → url/name).
+        let json = r#"{
+            "name": "demo",
+            "version": "1.0.0",
+            "repository": { "type": "git", "url": "https://example.com/repo.git" },
+            "author": { "name": "Demo Macro", "email": "abc@example.com" }
+        }"#;
+        let pkg = Package::from_json(json).expect("object-form repository/author must parse");
+        assert_eq!(
+            pkg.repository.as_deref(),
+            Some("https://example.com/repo.git")
+        );
+        assert_eq!(pkg.author.as_deref(), Some("Demo Macro"));
+    }
+
+    #[test]
+    fn from_json_accepts_string_repository_and_author() {
+        let json = r#"{
+            "name": "demo",
+            "version": "1.0.0",
+            "repository": "https://example.com/repo.git",
+            "author": "Demo Macro <abc@example.com>"
+        }"#;
+        let pkg = Package::from_json(json).expect("string-form repository/author must parse");
+        assert_eq!(
+            pkg.repository.as_deref(),
+            Some("https://example.com/repo.git")
+        );
+        assert_eq!(pkg.author.as_deref(), Some("Demo Macro <abc@example.com>"));
+    }
 
     #[test]
     fn add_cargo_dependency_inserts_and_reports_new() {

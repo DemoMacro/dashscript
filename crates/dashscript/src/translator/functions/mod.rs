@@ -38,7 +38,7 @@ use oxc_ast::ast::{
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::collections::HashSet;
 use syn::{parse_quote, Block, Expr, FnArg, Ident, ItemFn, Path, ReturnType, Stmt, Type};
 
@@ -54,6 +54,14 @@ thread_local! {
     /// `translate_function` reads it to swap such a function's body for a
     /// `__ds_engine::call_fn` invocation that keeps the Rust signature.
     static DYNAMIC_FNS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+    /// True when the project has at least one engine-degradation site in any
+    /// file. A degraded function marshals its arguments as `serde_json::Value`,
+    /// which needs `Serialize`/`Deserialize` on every type crossing the
+    /// boundary — including types defined in a *non-degraded* file (a union at
+    /// the crate root referenced by a degraded function's signature). The
+    /// project emitter sets this once after probing all files, so a file that
+    /// is not itself degraded still derives serde on its types.
+    static FORCE_SERDE_DERIVE: Cell<bool> = const { Cell::new(false) };
 }
 
 /// Record the file's per-function engine degradation sites (TS function names),
@@ -69,6 +77,20 @@ pub(in crate::translator) fn set_dynamic_fns(fns: HashSet<String>) {
 /// Whether `ts_name` is a per-function engine degradation site this translate.
 fn is_dynamic_fn(ts_name: &str) -> bool {
     DYNAMIC_FNS.with(|c| c.borrow().contains(ts_name))
+}
+
+/// Set whether the whole project has an engine-degradation site, so every
+/// file derives `Serialize`/`Deserialize` even one not itself degraded (its
+/// types may cross a degraded function's marshal boundary in another file).
+/// Set once by the project emitter before translating any file.
+pub(crate) fn set_force_serde_derive(b: bool) {
+    FORCE_SERDE_DERIVE.with(|c| c.set(b));
+}
+
+/// Whether the project has an engine-degradation site, so this file should
+/// derive `Serialize`/`Deserialize` even if it is not itself degraded.
+pub(in crate::translator) fn force_serde_derive() -> bool {
+    FORCE_SERDE_DERIVE.with(|c| c.get())
 }
 
 /// Translate a top-level statement into a `syn::Item`, if mapped.
@@ -379,7 +401,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
     // once per translate, so a function matched here skips body translation.
     if let Some(id) = &func.id {
         if is_dynamic_fn(id.name.as_str()) {
-            return engine_fn_item(&name, id.name.as_str(), func, registry, names);
+            return engine_fn_item(&name, id.name.as_str(), func, names);
         }
     }
     // A named `fn` and a block-body arrow set up their body `Locals` the same
@@ -450,16 +472,32 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
 /// annotation-stripped JS, eval'd per call so the function's helper
 /// dependencies are in scope (a dynamic function usually leans on other module
 /// functions; the engine defines all of them before the call).
-fn engine_fn_item(
-    name: &Ident,
-    ts_name: &str,
-    func: &Function,
-    registry: &TypeRegistry,
-    names: &NameTable<'_>,
-) -> ItemFn {
-    let locals = body_locals(&func.params, None, registry, names);
-    let inputs = translate_params(&func.params, &locals, registry, names);
-    let output = fn_output(func, registry);
+fn engine_fn_item(name: &Ident, ts_name: &str, func: &Function, names: &NameTable<'_>) -> ItemFn {
+    // Degraded signature: a param/return type the static translator cannot
+    // express (unknown/indexed access/…) becomes `serde_json::Value` — the
+    // marshal type — so the signature is concrete rather than `_`. An
+    // expressible type maps normally, so a degraded function mixing the two
+    // keeps the expressible params concrete.
+    let inputs: Vec<FnArg> = func
+        .params
+        .items
+        .iter()
+        .map(|fp| {
+            let pname = names.of_pattern(&fp.pattern);
+            let ty = fp.type_annotation.as_deref().map_or_else(
+                || parse_quote!(::serde_json::Value),
+                |ta| types::translate_type_degraded(&ta.type_annotation),
+            );
+            parse_quote!(#pname: #ty)
+        })
+        .collect();
+    let output: ReturnType = func
+        .return_type
+        .as_deref()
+        .map_or(ReturnType::Default, |rt| {
+            let ty = types::translate_type_degraded(&rt.type_annotation);
+            parse_quote!(-> #ty)
+        });
     let generics: Vec<Ident> = func.type_parameters.as_deref().map_or_else(Vec::new, |tp| {
         tp.params
             .iter()

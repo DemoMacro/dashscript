@@ -233,6 +233,28 @@ pub fn translate_sources(
     src_path: &Path,
     project_dir: &Path,
 ) -> Result<RuntimeDeps, Box<dyn Error>> {
+    // Probe whether any reachable file (entry + recursive imports) degrades to
+    // the engine, then hold the project-wide serde-derive flag for the whole
+    // translate. A degraded function marshals cross-file types through
+    // `serde_json::Value`, so every type it touches needs `Serialize`/
+    // `Deserialize` — including the union enums hoisted to the crate root below.
+    let probe = Translator::new();
+    let project_uses_engine = probe_sources_use_engine(
+        &probe,
+        src,
+        src_path.parent().unwrap_or_else(|| Path::new("")),
+    );
+    Translator::set_force_serde_derive(project_uses_engine);
+    // Reset the (thread-local) flag when this translate ends — success or
+    // error — so it does not leak into a later `translate` call.
+    struct SerdeGuard;
+    impl Drop for SerdeGuard {
+        fn drop(&mut self) {
+            Translator::set_force_serde_derive(false);
+        }
+    }
+    let _serde_guard = SerdeGuard;
+
     // Aggregate optional (`?:`) field names across the whole import graph
     // first, so every file — the entry and each dep — sees imported
     // interfaces' optionals. A cross-file `opts?.field ?? d` needs to know
@@ -304,6 +326,42 @@ pub fn translate_sources(
     };
     fs::write(project_dir.join("src").join("main.rs"), main)?;
     Ok(deps)
+}
+
+/// Probe whether any file reachable from `src` (itself + its recursive imports)
+/// degrades to the engine — mirrors [`translate_sources`]'s own import-graph
+/// walk so the probe covers exactly the files that will be translated. Returns
+/// true so the caller can set the project-wide serde-derive flag.
+fn probe_sources_use_engine(probe: &Translator, src: &str, base: &Path) -> bool {
+    if probe.uses_engine(src) {
+        return true;
+    }
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut worklist: std::collections::VecDeque<(String, PathBuf)> =
+        std::collections::VecDeque::new();
+    for imp in probe.imports(src) {
+        if seen.insert(imp.module.clone()) {
+            worklist.push_back((imp.source, base.to_path_buf()));
+        }
+    }
+    while let Some((source, dir)) = worklist.pop_front() {
+        let Ok((dep_path, _)) = resolve_local_module(&dir, &source) else {
+            continue;
+        };
+        let Ok(dep_src) = fs::read_to_string(&dep_path) else {
+            continue;
+        };
+        if probe.uses_engine(&dep_src) {
+            return true;
+        }
+        let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in probe.imports(&dep_src) {
+            if seen.insert(imp.module.clone()) {
+                worklist.push_back((imp.source, dep_base.to_path_buf()));
+            }
+        }
+    }
+    false
 }
 
 /// Translate one `.ts` file to `src/<stem>.rs`, prefixing `mod <module>;` for
@@ -395,6 +453,29 @@ pub fn translate_project(
     let mut files = Vec::new();
     walk_ts(root, &mut files);
     files.sort();
+
+    // Probe whether any file degrades to the engine. A degraded function
+    // marshals its arguments as `serde_json::Value`, which needs
+    // `Serialize`/`Deserialize` on every type crossing the boundary — including
+    // types a non-degraded file defines (a degraded function in another file
+    // may take or return them). If any file degrades, every file derives serde;
+    // set the project-level flag once here, read during each translate below.
+    let probe = Translator::new();
+    let project_uses_engine = files.iter().any(|ds| {
+        fs::read_to_string(ds)
+            .map(|src| probe.uses_engine(&src))
+            .unwrap_or(false)
+    });
+    Translator::set_force_serde_derive(project_uses_engine);
+    // Reset the (thread-local) flag when this project translate ends — success
+    // or error — so it does not leak into a later `translate` call.
+    struct SerdeGuard;
+    impl Drop for SerdeGuard {
+        fn drop(&mut self) {
+            Translator::set_force_serde_derive(false);
+        }
+    }
+    let _serde_guard = SerdeGuard;
 
     let mut seen_stems: std::collections::HashMap<String, PathBuf> =
         std::collections::HashMap::new();
@@ -583,7 +664,21 @@ pub fn emit_cargo_project(
 ) -> Result<(), Box<dyn Error>> {
     if let Some(root) = find_package_root(src_path) {
         if let Ok(package) = read_package(&root.join("package.json")) {
-            if package.bin.is_some() || package.main.is_some() {
+            // Project mode (directory walk) needs a DashScript source entry — a
+            // `bin`/`main` pointing at a `.ts` file. A package whose entries
+            // are JS build artifacts (e.g. `main: "dist/index.mjs"`) has no
+            // source entry to anchor the walk, so it falls back to lone-file
+            // mode below (the caller's `src_path` + its import graph).
+            let has_ts_entry = package.bin_entries().iter().any(|(_, p)| {
+                root.join(p)
+                    .extension()
+                    .is_some_and(|e| e.to_str() == Some("ts"))
+            }) || package.main.as_ref().is_some_and(|p| {
+                root.join(p)
+                    .extension()
+                    .is_some_and(|e| e.to_str() == Some("ts"))
+            });
+            if has_ts_entry {
                 let ((bins, lib), deps) = translate_project(&root, &package, project_dir)?;
                 let mut cargo_toml = package.to_cargo_toml_with_bins(&bins, lib.as_deref());
                 deps.apply_to_cargo_toml(&mut cargo_toml);
@@ -923,7 +1018,7 @@ pub fn project_name(src_path: &Path) -> String {
         if let Ok(json) = fs::read_to_string(root.join("package.json")) {
             if let Ok(package) = Package::from_json(&json) {
                 if !package.name.trim().is_empty() {
-                    return package.name;
+                    return package.cargo_name();
                 }
             }
         }

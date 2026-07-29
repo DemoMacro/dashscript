@@ -18,8 +18,8 @@ use std::borrow::Cow;
 use std::collections::HashSet;
 
 use oxc_ast::ast::{
-    Argument, AssignmentTarget, BinaryOperator, CallExpression, Expression, ObjectPropertyKind,
-    PropertyKind, UnaryOperator,
+    Argument, AssignmentTarget, BinaryOperator, CallExpression, Expression, Function,
+    ObjectPropertyKind, PropertyKind, UnaryOperator,
 };
 
 use super::globals::{is_global_receiver, is_static_only_global};
@@ -188,6 +188,36 @@ pub(super) fn classify_assignment_target(target: &AssignmentTarget) -> Mapping {
             Mapping::Mapped
         }
         _ => Mapping::Mapped,
+    }
+}
+
+/// Classify a function declaration's signature — its parameter and return
+/// type annotations. A signature that carries a type the static translator
+/// cannot express (`unknown`, `Record<string, unknown>`, an indexed access,
+/// …) cannot be statically typed: the param/return would be `_`, which cargo
+/// check rejects in a signature. The function therefore degrades to the engine
+/// — its body runs verbatim under QuickJS, and the untypable types marshal as
+/// `serde_json::Value`. This is the type-driven half of degradation; the
+/// AST-driven half (regex `.lastIndex`, a `Function` value, …) lives in
+/// [`classify_expr`].
+pub(in crate::translator) fn classify_function_signature(f: &Function) -> Mapping {
+    let unmappable_param = f.params.items.iter().any(|p| {
+        p.type_annotation
+            .as_deref()
+            .is_some_and(|ta| super::types::type_has_unmappable(&ta.type_annotation))
+    });
+    let unmappable_return = f
+        .return_type
+        .as_deref()
+        .is_some_and(|rt| super::types::type_has_unmappable(&rt.type_annotation));
+    if unmappable_param || unmappable_return {
+        degrade_owned(
+            "a parameter or return type has no static Rust type (`unknown`/indexed access/…) — \
+             the function runs under the engine"
+                .to_string(),
+        )
+    } else {
+        Mapping::Mapped
     }
 }
 
@@ -630,5 +660,92 @@ mod tests {
     fn maps_prototype_value_read() {
         // `Array.prototype` itself is a mapped static-value read, not reflection.
         assert!(classify_first_expr("Array.prototype").is_mapped());
+    }
+
+    fn classify_fn(src: &str) -> Mapping {
+        use oxc_allocator::Allocator;
+        use oxc_parser::Parser;
+        use oxc_span::SourceType;
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, src, SourceType::ts()).parse();
+        assert!(ret.diagnostics.is_empty(), "parse failed for {src:?}");
+        let program = allocator.alloc(ret.program);
+        for stmt in &program.body {
+            if let oxc_ast::ast::Statement::FunctionDeclaration(f) = stmt {
+                return classify_function_signature(f);
+            }
+        }
+        panic!("no function declaration in {src:?}");
+    }
+
+    #[test]
+    fn degrades_unknown_param() {
+        assert!(matches!(
+            classify_fn("function f(x: unknown): void {}"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn degrades_any_param() {
+        assert!(matches!(
+            classify_fn("function f(x: any): void {}"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn degrades_record_of_unknown() {
+        // `Record<string, unknown>` carries the untypable `unknown` in an
+        // argument — recurse finds it.
+        assert!(matches!(
+            classify_fn("function f(x: Record<string, unknown>): void {}"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn degrades_indexed_access_return() {
+        assert!(matches!(
+            classify_fn("type O = { a: number }; function f(): O[\"a\"] { return 1; }"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn maps_concrete_signature() {
+        assert!(matches!(
+            classify_fn("function f(x: number, y: string): boolean { return true; }"),
+            Mapping::Mapped
+        ));
+    }
+
+    #[test]
+    fn maps_union_of_concrete() {
+        // A union of concrete members is expressible (it lowers to an enum).
+        assert!(matches!(
+            classify_fn("function f(x: string | number): void {}"),
+            Mapping::Mapped
+        ));
+    }
+
+    #[test]
+    fn maps_nullable_union_param() {
+        // `string | null` → `Option<String>`; the `null` is a nullable marker,
+        // not unmappable — must not degrade.
+        assert!(matches!(
+            classify_fn("function f(x: string | null): void {}"),
+            Mapping::Mapped
+        ));
+    }
+
+    #[test]
+    fn maps_return_type_typeof_query_param() {
+        // `ReturnType<typeof g>` resolves in a signature position; the inner
+        // `typeof` query must not trip the unmappable check.
+        assert!(matches!(
+            classify_fn("function f(x: ReturnType<typeof g>): void {}"),
+            Mapping::Mapped
+        ));
     }
 }

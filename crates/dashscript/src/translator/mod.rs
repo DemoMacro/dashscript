@@ -1271,6 +1271,31 @@ impl Translator {
         self.translate_with_deps_as(source, FileRole::BinEntry)
     }
 
+    /// True when the source uses a construct that degrades to the engine — a
+    /// per-function site or a top-level dynamic construct. A project emitter
+    /// probes each file once (cheap parse + classify, no translation) to decide
+    /// whether the whole project needs cross-file serde derives. A parse error
+    /// reads as `false` (the later translate reports it properly).
+    #[must_use]
+    pub fn uses_engine(&self, source: &str) -> bool {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return false;
+        }
+        let program = allocator.alloc(ret.program);
+        check::program_uses_engine(program)
+    }
+
+    /// Set whether the whole project has an engine-degradation site, so every
+    /// translated file derives `Serialize`/`Deserialize` — a type defined in a
+    /// non-degraded file may cross a degraded function's marshal boundary in
+    /// another file, so its derives are needed project-wide. Set once by the
+    /// project emitter before translating any file.
+    pub fn set_force_serde_derive(b: bool) {
+        functions::set_force_serde_derive(b);
+    }
+
     /// Parse `.ts` source, translate the AST to Rust source, report the runtime
     /// dependencies, and lower according to `role`. [`FileRole::BinEntry`] emits
     /// an implicit `fn main` collecting top-level executable statements;
@@ -1602,9 +1627,12 @@ impl Translator {
             attrs: Vec::new(),
             items,
         };
-        if per_function {
+        if per_function || functions::force_serde_derive() {
             // Every emitted struct/enum derives `Serialize`/`Deserialize` so the
-            // `call_fn` argument/return values marshal across the QuickJS boundary.
+            // `call_fn` argument/return values marshal across the QuickJS
+            // boundary. The project-level flag covers a file that is not itself
+            // degraded but whose types a degraded function in another file
+            // marshals — its types need the derives too.
             declarations::add_serde_derives(&mut file.items);
         }
         // An emit point that routes an `f64` through the ES NumberToString
@@ -1883,6 +1911,12 @@ impl Translator {
                 .entry(name.clone())
                 .or_insert_with(|| item.clone());
         }
+        // When the project has an engine-degradation site, the union enums and
+        // anon structs hoisted here to the crate root (lone-file mode) may cross
+        // a degraded function's `call_fn` marshal boundary, so they need serde
+        // derives — the same project-wide flag `translate_with_deps` honors for
+        // a file's own items.
+        let force = functions::force_serde_derive();
         let mut items: Vec<(String, String)> = registry
             .union_enums
             .into_values()
@@ -1904,24 +1938,32 @@ impl Translator {
                         }
                     }
                 };
+                let mut ui = vec![
+                    syn::Item::Enum(e),
+                    syn::Item::Impl(display),
+                    syn::Item::Impl(ds_display),
+                ];
+                if force {
+                    declarations::add_serde_derives(&mut ui);
+                }
                 let text = prettyplease::unparse(&syn::File {
                     shebang: None,
                     attrs: Vec::new(),
-                    items: vec![
-                        syn::Item::Enum(e),
-                        syn::Item::Impl(display),
-                        syn::Item::Impl(ds_display),
-                    ],
+                    items: ui,
                 });
                 (name, text)
             })
             .collect();
         items.extend(registry.anon_structs.into_values().map(|s| {
             let name = s.ident.to_string();
+            let mut si = vec![syn::Item::Struct(s)];
+            if force {
+                declarations::add_serde_derives(&mut si);
+            }
             let text = prettyplease::unparse(&syn::File {
                 shebang: None,
                 attrs: Vec::new(),
-                items: vec![syn::Item::Struct(s)],
+                items: si,
             });
             (name, text)
         }));

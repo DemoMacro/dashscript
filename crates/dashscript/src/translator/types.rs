@@ -90,6 +90,127 @@ pub fn translate_type(ty: &TSType) -> Type {
     }
 }
 
+/// True when a `TSType` (recursively) has no static Rust lowering — the same
+/// variants [`translate_type`] falls back to `_` for (`unknown`/`any`/indexed
+/// access/conditional/mapped/infer/intersection/`typeof`-query/…). A function
+/// whose signature mentions one cannot be statically typed (a param or return
+/// would carry `_`, which cargo check rejects in a signature), so it degrades
+/// to the engine — see [`super::classify::classify_function_signature`].
+///
+/// Compound types recurse into their elements/arguments/members (so a
+/// `Record<string, unknown>` flags the `unknown` in its argument, and a union
+/// with one untypable member flags the whole union). A scalar or a
+/// template-literal type (which lowers to `String`) is expressible.
+///
+/// Keep in sync with the `parse_quote!(_)` arms of [`translate_type`]: a
+/// variant that lowers to `_` must read unmappable here, and vice versa.
+pub(in crate::translator) fn type_has_unmappable(ty: &TSType) -> bool {
+    use oxc_ast::ast::{TSLiteral, TSSignature};
+    match ty {
+        // The unmappable scalars and type-level computation — same set as
+        // translate_type's `_` arms.
+        TSType::TSNullKeyword(_)
+        | TSType::TSSymbolKeyword(_)
+        | TSType::TSBigIntKeyword(_)
+        | TSType::TSUnknownKeyword(_)
+        | TSType::TSAnyKeyword(_)
+        | TSType::TSIntrinsicKeyword(_)
+        | TSType::TSConditionalType(_)
+        | TSType::TSConstructorType(_)
+        | TSType::TSImportType(_)
+        | TSType::TSIndexedAccessType(_)
+        | TSType::TSInferType(_)
+        | TSType::TSIntersectionType(_)
+        | TSType::TSMappedType(_)
+        | TSType::TSNamedTupleMember(_)
+        | TSType::TSTypePredicate(_)
+        | TSType::TSTypeQuery(_)
+        | TSType::JSDocNullableType(_)
+        | TSType::JSDocNonNullableType(_)
+        | TSType::JSDocUnknownType(_) => true,
+        // Compound types recurse into their children.
+        TSType::TSArrayType(a) => type_has_unmappable(&a.element_type),
+        TSType::TSUnionType(u) => u.types.iter().any(|t| {
+            // `null`/`undefined` are nullable markers inside a union
+            // (`string | null` → `Option<String>`), not unmappable types — only
+            // a bare `null`/`undefined` type outside a union is (handled by the
+            // scalar arm above). Skip them so a nullable union stays
+            // expressible and is not needlessly degraded.
+            !matches!(t, TSType::TSNullKeyword(_) | TSType::TSUndefinedKeyword(_))
+                && type_has_unmappable(t)
+        }),
+        TSType::TSTypeOperatorType(op) => type_has_unmappable(&op.type_annotation),
+        TSType::TSParenthesizedType(p) => type_has_unmappable(&p.type_annotation),
+        // A named reference (`Record`, `Array`, a user type) carries an
+        // untypable shape in its type arguments (e.g. `Record<string,
+        // unknown>`) — recurse the arguments, not the bare name.
+        TSType::TSTypeReference(r) => {
+            // `ReturnType<typeof fn>` resolves to the named function's return
+            // type in a signature position (translate_type_for_signature), so
+            // treat it as expressible here — recursing its `typeof` argument
+            // would flag a `TSTypeQuery` and needlessly degrade the function.
+            // (A ReturnType whose target is unknown still lowers to `_` and
+            // surfaces as a cargo error at the use site.)
+            if let TSTypeName::IdentifierReference(id) = &r.type_name {
+                if id.name.as_ref() == "ReturnType" {
+                    return false;
+                }
+            }
+            r.type_arguments
+                .as_ref()
+                .is_some_and(|a| a.params.iter().any(type_has_unmappable))
+        }
+        TSType::TSFunctionType(f) => {
+            f.params.items.iter().any(|p| {
+                p.type_annotation
+                    .as_ref()
+                    .is_some_and(|ta| type_has_unmappable(&ta.type_annotation))
+            }) || type_has_unmappable(&f.return_type.type_annotation)
+        }
+        TSType::TSTupleType(t) => t.element_types.iter().any(|e| match e {
+            TSTupleElement::TSRestType(r) => type_has_unmappable(&r.type_annotation),
+            TSTupleElement::TSOptionalType(o) => type_has_unmappable(&o.type_annotation),
+            other => other.as_ts_type().is_some_and(type_has_unmappable),
+        }),
+        TSType::TSTypeLiteral(lit) => lit.members.iter().any(|m| match m {
+            TSSignature::TSIndexSignature(idx) => {
+                type_has_unmappable(&idx.type_annotation.type_annotation)
+            }
+            TSSignature::TSPropertySignature(prop) => prop
+                .type_annotation
+                .as_ref()
+                .is_some_and(|ta| type_has_unmappable(&ta.type_annotation)),
+            _ => false,
+        }),
+        // `123n` — a BigInt literal type lowers to `_`.
+        TSType::TSLiteralType(lit) => matches!(&lit.literal, TSLiteral::BigIntLiteral(_)),
+        // Expressible scalars and the template-literal type.
+        TSType::TSStringKeyword(_)
+        | TSType::TSNumberKeyword(_)
+        | TSType::TSBooleanKeyword(_)
+        | TSType::TSVoidKeyword(_)
+        | TSType::TSUndefinedKeyword(_)
+        | TSType::TSNeverKeyword(_)
+        | TSType::TSThisType(_)
+        | TSType::TSObjectKeyword(_)
+        | TSType::TSTemplateLiteralType(_) => false,
+    }
+}
+
+/// Map a type for a degraded (engine) function's signature. A type the static
+/// translator cannot express — anything [`type_has_unmappable`] flags — becomes
+/// `serde_json::Value`, the universal marshal type, so the engine-fallback
+/// signature is concrete rather than `_` (cargo check rejects `_` in a
+/// signature). An expressible type maps through [`translate_type`] unchanged, so
+/// a degraded function mixing expressible and untypable params keeps the
+/// expressible ones concrete.
+pub fn translate_type_degraded(ty: &TSType) -> Type {
+    if type_has_unmappable(ty) {
+        return parse_quote!(::serde_json::Value);
+    }
+    translate_type(ty)
+}
+
 /// Translate a type that appears in a function signature (a parameter or
 /// return type), resolving the `ReturnType<typeof fn>` utility type to the
 /// named function's declared return type. Other types map through

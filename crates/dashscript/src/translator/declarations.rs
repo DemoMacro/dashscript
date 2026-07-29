@@ -22,11 +22,27 @@ use super::{bindings, types};
 /// carrying a serde derive) and ignores items with no `derive(...)` attribute.
 pub(in crate::translator) fn add_serde_derives(items: &mut [Item]) {
     for item in items.iter_mut() {
+        // A struct/enum carrying a function-pointer field (a TS callback like
+        // `attribute_value_fn?: (...) => string`) cannot derive serde — a
+        // `fn(...)` pointer never implements Serialize/Deserialize. Such a
+        // value can never cross the `call_fn` marshal boundary anyway (QuickJS
+        // cannot marshal a Rust fn pointer), so it is skipped safely.
+        let has_fn_field = match item {
+            Item::Struct(s) => s.fields.iter().any(|f| type_contains_fn(&f.ty)),
+            Item::Enum(e) => e
+                .variants
+                .iter()
+                .any(|v| v.fields.iter().any(|f| type_contains_fn(&f.ty))),
+            _ => false,
+        };
         let attrs = match item {
             Item::Struct(s) => &mut s.attrs,
             Item::Enum(e) => &mut e.attrs,
             _ => continue,
         };
+        if has_fn_field {
+            continue;
+        }
         for attr in attrs.iter_mut() {
             // The existing `#[derive(Clone, Debug, PartialEq)]` token stream.
             let prev = match &attr.meta {
@@ -38,6 +54,29 @@ pub(in crate::translator) fn add_serde_derives(items: &mut [Item]) {
             }
             *attr = parse_quote!(#[derive(#prev, serde::Serialize, serde::Deserialize)]);
         }
+    }
+}
+
+/// True where a type mention contains a function pointer (`fn(...) -> ...`),
+/// recursing through the wrappers a TS callback lowers into — `Option<fn(...)>`,
+/// `Vec<fn(...)>`, `&fn(...)`, tuples, slices, arrays. Used to skip serde
+/// derives on a struct/enum that carries a callback field.
+fn type_contains_fn(ty: &Type) -> bool {
+    match ty {
+        Type::BareFn(_) => true,
+        Type::Paren(p) => type_contains_fn(&p.elem),
+        Type::Reference(r) => type_contains_fn(&r.elem),
+        Type::Slice(s) => type_contains_fn(&s.elem),
+        Type::Array(a) => type_contains_fn(&a.elem),
+        Type::Tuple(t) => t.elems.iter().any(type_contains_fn),
+        Type::Path(p) => p.path.segments.iter().any(|seg| match &seg.arguments {
+            syn::PathArguments::AngleBracketed(ab) => ab.args.iter().any(|arg| match arg {
+                syn::GenericArgument::Type(t) => type_contains_fn(t),
+                _ => false,
+            }),
+            _ => false,
+        }),
+        _ => false,
     }
 }
 
