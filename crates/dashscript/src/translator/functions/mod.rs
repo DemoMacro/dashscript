@@ -783,7 +783,7 @@ pub(in crate::translator) fn body_locals(
         .iter()
         .filter_map(|fp| {
             let name = names.of_pattern(&fp.pattern).to_string();
-            (analysis.member_mutated.contains(&name) && !analysis.mutated.contains(&name))
+            (analysis.member_mutated.contains(&name) && !analysis.reassigned.contains(&name))
                 .then_some(name)
         })
         .collect();
@@ -1102,7 +1102,13 @@ fn translate_variable_declaration(
                     let name_str = name.to_string();
                     let member_mut = locals.member_mutated.contains(&name_str);
                     let mutable = match decl.kind {
-                        VariableDeclarationKind::Const => member_mut,
+                        // `const` forbids a rebind, but a member mutation
+                        // (`xs.push`) or a borrow through a reference-parameter
+                        // call site (`f(&mut xs)`) still needs `let mut` for the
+                        // `&mut` borrow.
+                        VariableDeclarationKind::Const => {
+                            member_mut || locals.mutated.contains(&name_str)
+                        }
                         VariableDeclarationKind::Let | VariableDeclarationKind::Var => {
                             member_mut || locals.mutated.contains(&name_str)
                         }

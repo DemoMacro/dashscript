@@ -525,7 +525,7 @@ fn ref_param_flags(func: &Function, names: &NameTable) -> Vec<bool> {
         .iter()
         .map(|fp| {
             let name = names.of_pattern(&fp.pattern).to_string();
-            analysis.member_mutated.contains(&name) && !analysis.mutated.contains(&name)
+            analysis.member_mutated.contains(&name) && !analysis.reassigned.contains(&name)
         })
         .collect()
 }

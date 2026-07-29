@@ -50,6 +50,14 @@ const MUTATORS: &[&str] = &[
 #[derive(Default)]
 pub(super) struct Analysis {
     pub mutated: HashSet<String>,
+    /// Bindings that are *rebound* (`x = …`, `x++`) — a true reassignment,
+    /// distinct from a member-mutation or a borrow through a reference-parameter
+    /// call site. Only a rebind disqualifies a parameter from being a `&mut`
+    /// reference parameter: a rebind does not propagate to the caller, but a
+    /// member mutation (including one a recursive self-call borrows through a
+    /// `&mut` arg) does. `mutated` keeps the broader set so a caller's `let`
+    /// still becomes `let mut` when borrowed at a ref-param position.
+    pub reassigned: HashSet<String>,
     /// Bindings whose *member* is assigned/updated (e.g. `c[0] = v`,
     /// `o.x = 1`, `xs.push(v)`) — distinct from a plain rebind (`c = …`). A
     /// *parameter* in this set (and not in `mutated`) becomes a `&mut`
@@ -313,7 +321,9 @@ fn record_root(expr: &Expression, names: &NameTable, a: &mut Analysis) {
 }
 
 fn record_mutation(id: &IdentifierReference, names: &NameTable, a: &mut Analysis) {
-    a.mutated.insert(names.of_reference(id).to_string());
+    let name = names.of_reference(id).to_string();
+    a.mutated.insert(name.clone());
+    a.reassigned.insert(name);
 }
 
 fn count_name(id: &IdentifierReference, names: &NameTable, a: &mut Analysis) {
