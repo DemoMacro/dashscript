@@ -484,10 +484,17 @@ fn engine_fn_item(name: &Ident, ts_name: &str, func: &Function, names: &NameTabl
         .iter()
         .map(|fp| {
             let pname = names.of_pattern(&fp.pattern);
-            let ty = fp.type_annotation.as_deref().map_or_else(
+            let mut ty = fp.type_annotation.as_deref().map_or_else(
                 || parse_quote!(::serde_json::Value),
                 |ta| types::translate_type_degraded(&ta.type_annotation),
             );
+            // An optional (`?:`) or default-initialized param is `Option<T>`,
+            // mirroring translate_params — a static caller passes an
+            // `Option<Js2XmlOptions>` for an `options?` param, so the degraded
+            // signature must accept `Option<_>` or the call site mismatches.
+            if fp.optional || fp.initializer.is_some() {
+                ty = parse_quote!(Option<#ty>);
+            }
             parse_quote!(#pname: #ty)
         })
         .collect();

@@ -23,26 +23,36 @@ use super::{bindings, types};
 pub(in crate::translator) fn add_serde_derives(items: &mut [Item]) {
     for item in items.iter_mut() {
         // A struct/enum carrying a function-pointer field (a TS callback like
-        // `attribute_value_fn?: (...) => string`) cannot derive serde — a
-        // `fn(...)` pointer never implements Serialize/Deserialize. Such a
-        // value can never cross the `call_fn` marshal boundary anyway (QuickJS
-        // cannot marshal a Rust fn pointer), so it is skipped safely.
-        let has_fn_field = match item {
-            Item::Struct(s) => s.fields.iter().any(|f| type_contains_fn(&f.ty)),
-            Item::Enum(e) => e
-                .variants
-                .iter()
-                .any(|v| v.fields.iter().any(|f| type_contains_fn(&f.ty))),
-            _ => false,
-        };
+        // `attribute_value_fn?: (...) => string`) still derives serde: each
+        // `fn(...)` field is marked `#[serde(skip)]`, so it never serializes
+        // (its `Default` — `None` for `Option<fn(...)>` — substitutes). A
+        // callback cannot meaningfully cross the `call_fn` marshal boundary
+        // anyway (QuickJS cannot marshal a Rust fn pointer), and the field
+        // stays usable in static code (skip is serde-only).
+        match item {
+            Item::Struct(s) => {
+                for f in s.fields.iter_mut() {
+                    if type_contains_fn(&f.ty) {
+                        f.attrs.push(parse_quote!(#[serde(skip)]));
+                    }
+                }
+            }
+            Item::Enum(e) => {
+                for v in e.variants.iter_mut() {
+                    for f in v.fields.iter_mut() {
+                        if type_contains_fn(&f.ty) {
+                            f.attrs.push(parse_quote!(#[serde(skip)]));
+                        }
+                    }
+                }
+            }
+            _ => continue,
+        }
         let attrs = match item {
             Item::Struct(s) => &mut s.attrs,
             Item::Enum(e) => &mut e.attrs,
             _ => continue,
         };
-        if has_fn_field {
-            continue;
-        }
         for attr in attrs.iter_mut() {
             // The existing `#[derive(Clone, Debug, PartialEq)]` token stream.
             let prev = match &attr.meta {
