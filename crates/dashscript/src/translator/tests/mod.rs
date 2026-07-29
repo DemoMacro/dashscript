@@ -13,6 +13,7 @@ mod enums;
 mod esm;
 mod globals;
 mod json;
+mod marshal;
 mod math;
 mod modules;
 mod narrowing;

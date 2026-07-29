@@ -137,7 +137,9 @@ impl RuntimeDep {
             RuntimeDep::SerdeJson => Some(&[("serde_json", "\"1\"")]),
             // `rquickjs` bundles QuickJS-NG C sources (compiled via `cc`), so
             // it is only emitted for programs that opt into the engine path.
-            RuntimeDep::Engine => Some(&[("rquickjs", "\"0.12\"")]),
+            // `serde_json` is the per-function degradation marshal layer
+            // (`call_fn` marshals args/return as `serde_json::Value`).
+            RuntimeDep::Engine => Some(&[("rquickjs", "\"0.12\""), ("serde_json", "\"1\"")]),
             RuntimeDep::Regress => Some(&[("regress", "\"0.11\"")]),
             // `temporal_rs` (boa-dev/temporal-rs) — the Rust implementation of
             // ECMAScript Temporal. Default features embed time-zone data
@@ -942,10 +944,16 @@ pub fn regex_split(pattern: &str, flags: &str, text: &str, limit: Option<usize>)
 
 /// The DashScript compat engine module, written to `src/__ds_engine.rs` and
 /// declared `mod __ds_engine;` at the crate root when a translated file uses ES
-/// dynamic reflection the static translator cannot lower. It runs the whole
-/// `.ts` source under an embedded QuickJS engine (`rquickjs`), with a
-/// `console.log` wired to stdout. Number stringification uses the engine's own
-/// `String()` (ES `Number::toString`), so output matches Node for primitives.
+/// dynamic reflection the static translator cannot lower. Two entry points
+/// share one thread-local QuickJS `Runtime` (`rquickjs`):
+/// - `run(source)` — eval a self-contained source (the conformance oracle path;
+///   the source declares `main()` and calls it, pure-TS execution semantics).
+/// - `call_fn(name, body, args)` — the per-function degradation path: a dynamic
+///   function keeps its native Rust signature while its body runs under JS,
+///   with serde_json marshaling the args and return.
+///
+/// `console.log` is wired to stdout; number stringification uses the engine's
+/// own `String()` (ES `Number::toString`), so output matches Node for primitives.
 ///
 /// Gated: only emitted for `needs_engine` programs, so a plain `ds build` pulls
 /// no engine dependency (and no QuickJS C compile). The single source for the
@@ -953,63 +961,158 @@ pub fn regex_split(pattern: &str, flags: &str, text: &str, limit: Option<usize>)
 /// harness — so the helper text lives in the library rather than either
 /// consumer.
 ///
-/// Note: the engine evaluates the source as plain ECMAScript, so a `.ts` source
-/// with TypeScript type annotations is not yet handled on this path (today it
-/// serves the conformance oracle, whose test262 fixtures are annotation-free
-/// JS). Stripping annotations for real `.ts` sources is a follow-up.
-const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ts` source under an embedded QuickJS
-//! engine (`rquickjs`) when it uses ES dynamic reflection
-//! (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`, …) the static
-//! translator cannot lower to idiomatic Rust. Gated — only present when
-//! `RuntimeDeps::needs_engine`.
-use rquickjs::{Context, Ctx, Runtime};
+/// TypeScript type annotations are stripped first via oxc's transformer
+/// ([`engine_js_source`]), so a real `.ts` source — or a degraded function body
+/// — reaches QuickJS as plain ECMAScript.
+const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ts` source, or a single function's
+//! body, under an embedded QuickJS engine (`rquickjs`) when it uses ES dynamic
+//! reflection (`Object.defineProperty`, `Reflect.*`, `Symbol`, `Proxy`, typeof
+//! on a union, …) the static translator cannot lower to idiomatic Rust. Gated —
+//! only present when `RuntimeDeps::needs_engine`.
+//!
+//! Two entry points share one thread-local `Runtime` (rquickjs `Runtime` is
+//! `!Sync`, so a per-thread lazy runtime reuses the engine across calls instead
+//! of rebuilding it per invocation):
+//! - `run(source)` — eval a self-contained source (the conformance oracle path;
+//!   it declares `main()` and calls it, pure-TS execution semantics).
+//! - `call_fn(name, body, args)` — the per-function degradation path: a dynamic
+//!   function keeps its native Rust signature, but its body runs under JS.
+use rquickjs::context::EvalOptions;
+use rquickjs::{Array, Context, Ctx, FromJs, IntoJs, Object, Runtime, Type, Value};
 
-/// Run a `.ts` source under QuickJS with `console.log` wired to stdout. The
-/// source is self-contained — it declares `main()` and calls it (pure-TS
-/// execution semantics: a declaration alone does not run), so a single eval
-/// runs the fixture. `console.log` joins its arguments with spaces, stringified
-/// by the engine's own `String()` coercion — ES `Number::toString` for numbers
-/// — so the output matches Node for primitives.
+thread_local! {
+    static RUNTIME: Runtime = Runtime::new().expect("rquickjs Runtime");
+}
+
+/// Sloppy-mode eval options (strict=false): test262 fixtures and degraded
+/// function bodies use `this` at the top for property-attribute setup
+/// (`this.configurable = true`), where sloppy `this` is the global object.
+/// Node runs the oracle the same way (a plain script, not a strict module).
+fn sloppy() -> EvalOptions {
+    let mut o = EvalOptions::default();
+    o.strict = false;
+    o
+}
+
+/// Wire `console.log` to a native line printer. `console.log` joins its
+/// arguments with spaces, each stringified by the engine's own `String()`
+/// coercion (ES `Number::toString` for numbers), so output matches Node for
+/// primitives (a plain number prints `1e+21`, not Rust's `f64` Display spelling).
+fn wire_console(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    let print_line = rquickjs::Function::new(ctx.clone(), |s: String| {
+        println!("{s}");
+    })?;
+    ctx.globals().set("__ds_print_line", print_line)?;
+    ctx.eval_with_options::<(), _>(
+        r#"this.console = { log: function () {
+            for (var i = 0, out = []; i < arguments.length; i++) {
+                out.push(String(arguments[i]));
+            }
+            __ds_print_line(out.join(" "));
+        } };"#,
+        sloppy(),
+    )
+}
+
+/// serde_json::Value -> rquickjs Value (recursive). Numbers fall back to `NaN`
+/// (ES `Number` cannot losslessly hold an out-of-range integer).
+pub fn json_to_js<'js>(ctx: &Ctx<'js>, v: &serde_json::Value) -> rquickjs::Result<Value<'js>> {
+    match v {
+        serde_json::Value::Null => Ok(Value::new_null(ctx.clone())),
+        serde_json::Value::Bool(b) => Ok(Value::new_bool(ctx.clone(), *b)),
+        serde_json::Value::Number(n) => {
+            Ok(Value::new_float(ctx.clone(), n.as_f64().unwrap_or(f64::NAN)))
+        }
+        serde_json::Value::String(s) => s.as_str().into_js(ctx),
+        serde_json::Value::Array(arr) => {
+            let js_arr = Array::new(ctx.clone())?;
+            for (i, e) in arr.iter().enumerate() {
+                js_arr.set(i, json_to_js(ctx, e)?)?;
+            }
+            js_arr.into_js(ctx)
+        }
+        serde_json::Value::Object(obj) => {
+            let o = Object::new(ctx.clone())?;
+            for (k, val) in obj.iter() {
+                o.set(k.as_str(), json_to_js(ctx, val)?)?;
+            }
+            o.into_js(ctx)
+        }
+    }
+}
+
+/// rquickjs Value -> serde_json::Value (recursive). Symbols, BigInts, modules,
+/// and the void types collapse to `null` (the closest JSON representation).
+pub fn js_to_json<'js>(ctx: &Ctx<'js>, v: Value<'js>) -> rquickjs::Result<serde_json::Value> {
+    match v.type_of() {
+        Type::Uninitialized | Type::Undefined | Type::Null => Ok(serde_json::Value::Null),
+        Type::Bool => Ok(serde_json::Value::Bool(v.as_bool().unwrap())),
+        Type::Int | Type::Float => Ok(serde_json::json!(v.as_number().unwrap())),
+        Type::String => {
+            let s: String = FromJs::from_js(ctx, v)?;
+            Ok(serde_json::Value::String(s))
+        }
+        Type::Array => {
+            let arr: Array = Array::from_js(ctx, v)?;
+            let mut out = Vec::with_capacity(arr.len());
+            for i in 0..arr.len() {
+                let elem: Value = arr.get(i)?;
+                out.push(js_to_json(ctx, elem)?);
+            }
+            Ok(serde_json::Value::Array(out))
+        }
+        Type::Object | Type::Function | Type::Constructor | Type::Promise
+        | Type::Exception | Type::Proxy => {
+            let obj: Object = Object::from_js(ctx, v)?;
+            let mut map = serde_json::Map::new();
+            for kv in obj.props::<String, Value>() {
+                let (k, val) = kv?;
+                map.insert(k, js_to_json(ctx, val)?);
+            }
+            Ok(serde_json::Value::Object(map))
+        }
+        Type::Symbol | Type::BigInt | Type::Module | Type::Unknown => Ok(serde_json::Value::Null),
+    }
+}
+
+/// Run a self-contained `.ts` source under QuickJS with `console.log` wired to
+/// stdout. The source declares `main()` and calls it (pure-TS execution
+/// semantics), so a single eval runs the fixture.
 pub fn run(source: &str) {
-    use rquickjs::context::EvalOptions;
-    let runtime = Runtime::new().expect("rquickjs Runtime");
-    let ctx = Context::full(&runtime).expect("rquickjs Context");
-    // Sloppy-mode eval (strict=false): test262 fixtures use `this` at the top
-    // of `main` for property-attribute setup (`this.configurable = true`), the
-    // sloppy-mode `this`=global. Node runs the oracle the same way (a plain
-    // script, not a strict module); strict eval would make `this`=undefined
-    // and throw before the first console.log.
-    let sloppy = || {
-        let mut o = EvalOptions::default();
-        o.strict = false;
-        o
-    };
-    let result = ctx.with(|ctx: Ctx<'_>| -> rquickjs::Result<()> {
-        // A native line-print primitive; `console.log` (defined in JS below)
-        // joins its arguments with spaces and hands each finished line here.
-        let print_line = rquickjs::Function::new(ctx.clone(), |s: String| {
-            println!("{s}");
-        })?;
-        ctx.globals().set("__ds_print_line", print_line)?;
-        // Define `console.log` in JS so argument stringification uses the
-        // engine's own `String()` coercion (ES NumberToString for numbers),
-        // matching Node's `console.log` output for primitives. A plain number
-        // arg prints `1e+21` (not Rust's `f64` Display spelling).
-        ctx.eval_with_options::<(), _>(
-            r#"this.console = { log: function () {
-                for (var i = 0, out = []; i < arguments.length; i++) {
-                    out.push(String(arguments[i]));
-                }
-                __ds_print_line(out.join(" "));
-            } };"#,
-            sloppy(),
-        )?;
-        // Eval the source — it is self-contained (declares `main` and calls
-        // it, pure-TS execution semantics), so a single eval runs the fixture.
-        ctx.eval_with_options::<(), _>(source, sloppy())?;
-        Ok(())
+    let result = RUNTIME.with(|runtime| -> rquickjs::Result<()> {
+        let ctx = Context::full(runtime).expect("rquickjs Context");
+        ctx.with(|ctx: Ctx<'_>| {
+            wire_console(&ctx)?;
+            ctx.eval_with_options::<(), _>(source, sloppy())?;
+            Ok(())
+        })
     });
     result.expect("rquickjs eval");
+}
+
+/// The per-function degradation entry point: evaluate `body_js` (which defines
+/// `fn_name`), call it with serde_json-marshaled args, and marshal the return.
+/// `fn_name` is a DashScript-translated identifier (a known global defined by
+/// `body_js`), so the spread-call `fn_name(...__ds_call_args)` is safe. The
+/// function's native Rust signature stays; only its body runs JS.
+pub fn call_fn(fn_name: &str, body_js: &str, args: &[serde_json::Value]) -> serde_json::Value {
+    let result = RUNTIME.with(|runtime| -> rquickjs::Result<serde_json::Value> {
+        let ctx = Context::full(runtime).expect("rquickjs Context");
+        ctx.with(|ctx: Ctx<'_>| {
+            wire_console(&ctx)?;
+            ctx.eval_with_options::<(), _>(body_js, sloppy())?;
+            let js_args = Array::new(ctx.clone())?;
+            for (i, a) in args.iter().enumerate() {
+                js_args.set(i, json_to_js(&ctx, a)?)?;
+            }
+            ctx.globals().set("__ds_call_args", js_args)?;
+            let expr = format!("{fn_name}(...__ds_call_args)");
+            let ret: Value = ctx.eval_with_options::<Value, _>(expr, sloppy())?;
+            let _ = ctx.globals().remove("__ds_call_args");
+            js_to_json(&ctx, ret)
+        })
+    });
+    result.expect("rquickjs call_fn")
 }
 "##;
 
