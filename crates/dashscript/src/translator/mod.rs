@@ -1347,6 +1347,17 @@ impl Translator {
         // and the lazy-static pre-pass both consult it.
         let mutable_top_level =
             functions::mutable_top_level_names(&program.body, &names, &registry);
+        // Entry-file lazy-static hoist set (B3-1b): the non-const-expr
+        // `const`/non-mutated `let` candidates a top-level function references —
+        // these hoist to a `static OnceLock` + accessor so the function can see
+        // them (an unreferenced one stays an `fn main` local). A module hoists
+        // every candidate regardless, so it ignores this set.
+        let escaped_lazy = functions::escaped_lazy_static_names(
+            &program.body,
+            &names,
+            &registry,
+            &mutable_top_level,
+        );
         let promoted = if matches!(role, FileRole::Module) {
             functions::all_promotable_const_names(&program.body, &names, &mutable_top_level)
         } else {
@@ -1363,18 +1374,22 @@ impl Translator {
                 }
             }
         }
-        // Lazy static pre-pass: register module-level non-const-expr `const`
+        // Lazy static pre-pass: register hoisted non-const-expr `const`/let
         // bindings (an object, a regex, …) so a reference before the definition
-        // in source order still emits the accessor call — module bindings are
-        // hoisted. An entry file runs its executables in `fn main`, so a
-        // non-const-expr `const` there stays a local, not an accessor.
-        if matches!(role, FileRole::Module) {
-            for s in &program.body {
-                if functions::lazy_static_candidate(s, &mutable_top_level, &names) {
-                    if let Some(sym) = functions::lazy_static_sym(s, &names) {
-                        names.register_lazy_static(sym);
-                    }
-                }
+        // in source order still emits the accessor call. A module hoists every
+        // candidate (no `fn main`); an entry hoists only the ones a function
+        // references (B3-1b) — the rest stay `fn main` locals.
+        for s in &program.body {
+            if !functions::lazy_static_candidate(s, &mutable_top_level, &names) {
+                continue;
+            }
+            let Some(sym) = functions::lazy_static_sym(s, &names) else {
+                continue;
+            };
+            let hoist = matches!(role, FileRole::Module)
+                || functions::decl_name(s, &names).is_some_and(|n| escaped_lazy.contains(&n));
+            if hoist {
+                names.register_lazy_static(sym);
             }
         }
         // Pure-TS execution semantics: a top-level statement that *runs* in
@@ -1421,11 +1436,14 @@ impl Translator {
                 items.push(item);
                 continue;
             }
-            // A module-level non-const-expr `const` (an object, a regex, …)
-            // lowers to a lazy static (OnceLock + accessor fn) — see
-            // `lazy_static_items`. Only a module: an entry runs the binding in
-            // `fn main` as a plain local.
-            if matches!(role, FileRole::Module) {
+            // A module-level non-const-expr `const`/non-mutated `let` (an
+            // object, a regex, …) lowers to a lazy static (OnceLock + accessor
+            // fn) — see `lazy_static_items`. A module hoists every candidate;
+            // an entry hoists only the ones a function references (B3-1b) — the
+            // rest stay `fn main` locals (source-order, zero-cost).
+            let hoist_lazy = matches!(role, FileRole::Module)
+                || functions::decl_name(s, &names).is_some_and(|n| escaped_lazy.contains(&n));
+            if hoist_lazy {
                 if let Some(lazy_items) =
                     functions::lazy_static_items(s, &names, &registry, &mutable_top_level)
                 {

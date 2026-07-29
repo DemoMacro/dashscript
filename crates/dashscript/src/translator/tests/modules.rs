@@ -626,6 +626,39 @@ fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
 }
 
 #[test]
+fn entry_non_mutated_let_runtime_init_referenced_by_fn_hoists() {
+    // B3-1b: an entry-file non-mutated `let` (runtime initializer) referenced
+    // from a function hoists to a `static OnceLock<T>` + accessor, just like a
+    // module — previously `unsupported` (check_escape), since an entry left it
+    // as an `fn main` local a Rust fn item cannot close over.
+    let src = "let nums: number[] = [1, 2, 3];\nfunction first(): number { return nums[0]; }";
+    let diags = Translator::new().check(src);
+    assert!(
+        diags.is_empty(),
+        "entry non-mutated let escape flagged: {diags:?}"
+    );
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("OnceLock") && rust.contains("fn nums()"),
+        "entry non-mutated let not hoisted to lazy static: {rust}"
+    );
+}
+
+#[test]
+fn entry_non_mutated_let_runtime_init_unreferenced_stays_local() {
+    // B3-1b: an entry-file non-mutated `let` NOT referenced from any function
+    // stays a plain `fn main` local (source-order, zero-cost) — only the
+    // referenced ones hoist. The `console.log` reads it from `fn main` without a
+    // function closing over it, so no OnceLock is needed.
+    let src = "let nums: number[] = [1, 2, 3];\nconsole.log(nums[0]);";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("OnceLock"),
+        "unreferenced entry let hoisted unnecessarily: {rust}"
+    );
+}
+
+#[test]
 fn mutated_top_level_let_referenced_by_fn_still_unsupported() {
     // A top-level `let` mutated from a function cannot lower to a `const` item
     // or an immutable OnceLock — it needs a `thread_local!` `RefCell` (B3-2).

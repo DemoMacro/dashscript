@@ -384,6 +384,34 @@ fn module_let_lazy_static_compiles_to_valid_rust_project() {
     );
 }
 
+#[test]
+fn entry_let_lazy_static_compiles_to_valid_rust_project() {
+    // B3-1b: an entry-file non-mutated `let` (runtime initializer) referenced
+    // from a function hoists to a `static OnceLock<T>` + accessor — an entry
+    // otherwise leaves it as an `fn main` local a Rust fn item cannot close
+    // over. cargo check confirms the hoisted accessor, the function reading it,
+    // and the `fn main` calling the function all compile.
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let src =
+        "let nums: number[] = [1, 2, 3];\nfunction first(): number { return nums[0]; }\nconsole.log(first());";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate entry let source");
+    write_project(&project, &rust, &deps);
+    let (ok, err) = cargo(
+        &project,
+        &target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    assert!(
+        ok,
+        "entry let lazy-static path must compile: {err}\n--- emitted ---\n{rust}"
+    );
+}
+
 /// Strip host-local absolute paths from a captured tool diagnostic so the
 /// committed matrix never embeds a contributor's tempdir. Node/rustc emit the
 /// full path — `C:\Users\name\…\Temp\.tmpXXX\wN\work\oracle.ts` on Windows,

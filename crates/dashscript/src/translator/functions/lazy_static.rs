@@ -125,6 +125,70 @@ pub(in crate::translator) fn mutable_top_level_names(
     mutable
 }
 
+/// The rust name of a top-level `VariableDeclaration`'s binding (the first
+/// declarator), or `None` for any other statement / a non-identifier pattern.
+pub(in crate::translator) fn decl_name(stmt: &Statement, names: &NameTable<'_>) -> Option<String> {
+    let Statement::VariableDeclaration(decl) = stmt else {
+        return None;
+    };
+    let d = decl.declarations.first()?;
+    let BindingPattern::BindingIdentifier(id) = &d.id else {
+        return None;
+    };
+    Some(names.of_binding(id).to_string())
+}
+
+/// The rust names of top-level lazy-static candidates (a non-const-expr `const`
+/// or a non-mutated `let`, per [`lazy_static_candidate`]) that are referenced —
+/// read or written — from any top-level `function`. An entry file runs its
+/// executables in `fn main`, so an *unreferenced* binding stays a plain local
+/// (source-order, zero-cost); a *referenced* one cannot — a Rust fn item cannot
+/// close over an `fn main` local — so it hoists to a `static OnceLock` +
+/// accessor (B3-1b). A module file hoists every candidate regardless (no `fn
+/// main`), so this set is the entry-file filter only. Keyed by the per-symbol
+/// rust name `analysis::analyze` records, mirroring [`mutable_top_level_names`].
+pub(in crate::translator) fn escaped_lazy_static_names(
+    program_body: &[Statement],
+    names: &NameTable<'_>,
+    registry: &TypeRegistry,
+    mutable_names: &HashSet<String>,
+) -> HashSet<String> {
+    let candidates: HashSet<String> = program_body
+        .iter()
+        .filter(|s| lazy_static_candidate(s, mutable_names, names))
+        .filter_map(|s| decl_name(s, names))
+        .collect();
+    if candidates.is_empty() {
+        return HashSet::new();
+    }
+    let mut escaped = HashSet::new();
+    for stmt in program_body {
+        let Statement::FunctionDeclaration(f) = stmt else {
+            continue;
+        };
+        let Some(body) = f.body.as_deref() else {
+            continue;
+        };
+        let analysis = analysis::analyze(
+            &body.statements,
+            names,
+            &registry.mut_methods,
+            &registry.ref_params,
+        );
+        for k in analysis
+            .use_counts
+            .keys()
+            .chain(analysis.mutated.iter())
+            .chain(analysis.member_mutated.iter())
+        {
+            if candidates.contains(k) {
+                escaped.insert(k.clone());
+            }
+        }
+    }
+    escaped
+}
+
 /// The `SymbolId` of a lazy-static candidate's binding, for pre-pass
 /// registration so a reference before the definition in source order still
 /// emits the accessor call (module bindings are hoisted). `None` for an

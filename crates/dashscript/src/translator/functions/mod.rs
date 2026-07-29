@@ -27,7 +27,8 @@ pub(in crate::translator) use escape::{
     all_promotable_const_names, promotable_const_info, promoted_const_item, promoted_const_names,
 };
 pub(in crate::translator) use lazy_static::{
-    lazy_static_candidate, lazy_static_items, lazy_static_sym, mutable_top_level_names,
+    decl_name, escaped_lazy_static_names, lazy_static_candidate, lazy_static_items,
+    lazy_static_sym, mutable_top_level_names,
 };
 
 use oxc_ast::ast::{

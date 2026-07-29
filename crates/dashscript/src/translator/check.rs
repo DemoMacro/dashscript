@@ -176,11 +176,18 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
     // batch (B3-1b/B3-2); until then surface the escape honestly rather than
     // letting it fail `cargo check` as a partial.
     if !matches!(role, FileRole::Module) {
+        let escaped_lazy = functions::escaped_lazy_static_names(
+            &program.body,
+            &names,
+            &registry,
+            &mutable_top_level,
+        );
         check_escape(
             &program.body,
             &names,
             &registry,
             &mutable_top_level,
+            &escaped_lazy,
             &mut diagnostics,
         );
     }
@@ -201,6 +208,7 @@ fn check_escape(
     names: &name_table::NameTable,
     registry: &registry::TypeRegistry,
     mutable_names: &HashSet<String>,
+    escaped_lazy: &HashSet<String>,
     out: &mut Vec<OxcDiagnostic>,
 ) {
     // A const-expr `const` number/boolean literal referenced from a top-level
@@ -210,6 +218,10 @@ fn check_escape(
     // stays `unsupported`. `promoted_const_names` is the single source of truth
     // the translator also uses, so `check` and emit agree on what is hoisted.
     let promoted = functions::promoted_const_names(program_body, names, registry, mutable_names);
+    // A non-const-expr `const`/non-mutated `let` referenced from a top-level
+    // function hoists to a lazy static (OnceLock + accessor, B3-1b) — that
+    // escape is legal too. `escaped_lazy_static_names` is the single source of
+    // truth the translator also uses, so `check` and emit agree on what hoists.
     let flaggable: HashSet<String> = program_body
         .iter()
         .filter_map(|s| match s {
@@ -221,7 +233,7 @@ fn check_escape(
             BindingPattern::BindingIdentifier(id) => Some(names.of_binding(id).to_string()),
             _ => None,
         })
-        .filter(|n| !promoted.contains(n))
+        .filter(|n| !promoted.contains(n) && !escaped_lazy.contains(n))
         .collect();
     if flaggable.is_empty() {
         return;
