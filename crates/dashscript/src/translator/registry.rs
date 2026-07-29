@@ -14,9 +14,10 @@
 use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
-    Class, ClassElement, Declaration, Expression, Function, MethodDefinitionKind, Statement,
-    TSEnumDeclaration, TSInterfaceDeclaration, TSSignature, TSType, TSTypeAliasDeclaration,
-    TSTypeLiteral, VariableDeclaration,
+    BindingPattern, Class, ClassElement, Declaration, Expression, Function, MethodDefinitionKind,
+    Statement, TSEnumDeclaration, TSInterfaceDeclaration, TSSignature, TSType,
+    TSTypeAliasDeclaration, TSTypeAnnotation, TSTypeLiteral, TSTypeParameterDeclaration,
+    VariableDeclaration,
 };
 use syn::{parse_quote, Ident, ItemEnum, ItemStruct, Path, Type};
 
@@ -46,6 +47,16 @@ pub struct InterfaceField {
     pub optional: bool,
 }
 
+/// A function's or const-arrow's generic type params and declared return type,
+/// for cross-file inference of a module-global factory singleton
+/// (`const p = createFactory<T>(...)` → `OnceLock<Ret<T>>`). The return type
+/// keeps type-param idents (T) so a call's type args can instantiate it later.
+#[derive(Clone)]
+pub struct FnSignature {
+    pub type_params: Vec<String>,
+    pub return_type: Option<Type>,
+}
+
 /// Project-wide type info gathered in the first pass.
 pub struct TypeRegistry {
     /// Discriminated-union enums: type name → (`kind` value → variant shape).
@@ -66,6 +77,11 @@ pub struct TypeRegistry {
     /// `None` where the function has no return annotation (the query then
     /// falls back to `_`, the way an unannotated return would).
     pub function_returns: HashMap<String, Option<Path>>,
+    /// Function/const-arrow name (original `.ts` spelling) → its generic type
+    /// params + declared return type (syn::Type, type params preserved as
+    /// idents). Cross-file injected so a module-global factory singleton infers
+    /// its type from a callee defined in another file (`createFactory` in a dep).
+    pub function_signatures: HashMap<String, FnSignature>,
     /// Struct/interface name → its optional (`?:`) field names. A struct
     /// literal that omits one of these is filled with `None`.
     pub structs: HashMap<String, HashSet<String>>,
@@ -119,6 +135,7 @@ impl TypeRegistry {
             function_defaults: HashMap::new(),
             ref_params: HashMap::new(),
             function_returns: HashMap::new(),
+            function_signatures: HashMap::new(),
             structs: HashMap::new(),
             mut_methods: HashSet::new(),
             union_enums: HashMap::new(),
@@ -316,7 +333,14 @@ fn register_function(func: &Function, names: &NameTable, registry: &mut TypeRegi
         .insert(name.clone(), ref_param_flags(func, names));
     registry
         .function_returns
-        .insert(name, function_return_type(func));
+        .insert(name.clone(), function_return_type(func));
+    registry.function_signatures.insert(
+        name,
+        FnSignature {
+            type_params: generic_param_names(func.type_parameters.as_deref()),
+            return_type: func.return_type.as_deref().and_then(return_type_of),
+        },
+    );
     // An inline scalar union in a parameter type (e.g. `Record<string,
     // string|number>`) needs its `__DsUnion…` enum emitted; recurse into every
     // annotation so a union nested in a `Record` value type is found.
@@ -339,6 +363,26 @@ fn register_variable_declaration(decl: &VariableDeclaration, registry: &mut Type
         if let Some(ta) = d.type_annotation.as_ref() {
             collect_inline_type_defs(&ta.type_annotation, registry);
         }
+        // A const arrow (`export const f = <T>(x): R<T> => ..`) carries a
+        // signature for cross-file singleton inference — a module-global
+        // `const p = f<T>(...)` reads its type from this. Non-arrow inits (a
+        // value, another call) carry no signature to infer from.
+        let Some(init) = d.init.as_ref() else {
+            continue;
+        };
+        let Expression::ArrowFunctionExpression(arrow) = init else {
+            continue;
+        };
+        let BindingPattern::BindingIdentifier(id) = &d.id else {
+            continue;
+        };
+        registry.function_signatures.insert(
+            id.name.to_string(),
+            FnSignature {
+                type_params: generic_param_names(arrow.type_parameters.as_deref()),
+                return_type: arrow.return_type.as_deref().and_then(return_type_of),
+            },
+        );
     }
 }
 
@@ -498,6 +542,26 @@ fn function_return_type(func: &Function) -> Option<Path> {
     func.return_type
         .as_deref()
         .and_then(|ta| path_of_type(&ta.type_annotation))
+}
+
+/// The type-param names of a generic function/arrow (`<T, U>` → ["T", "U"]).
+/// Kept as idents so a call's type args can instantiate the return type.
+fn generic_param_names(tp: Option<&TSTypeParameterDeclaration>) -> Vec<String> {
+    tp.map_or_else(Vec::new, |tp| {
+        tp.params.iter().map(|p| p.name.name.to_string()).collect()
+    })
+}
+
+/// The declared return type (syn::Type) of a function/arrow annotation, or
+/// `None` when absent / void / undefined / a type predicate (which lowers to
+/// `bool`, not a data type worth inferring a singleton from).
+fn return_type_of(ta: &TSTypeAnnotation) -> Option<Type> {
+    match &ta.type_annotation {
+        TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) | TSType::TSTypePredicate(_) => {
+            None
+        }
+        ty => Some(types::translate_type(ty)),
+    }
 }
 
 /// Per-parameter "has a default initializer (`= …`)" flag.

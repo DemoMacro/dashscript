@@ -23,7 +23,7 @@ mod globals;
 pub mod imports;
 pub mod name_table;
 pub mod registry;
-pub use registry::InterfaceField;
+pub use registry::{FnSignature, InterfaceField};
 pub mod semantic;
 pub mod types;
 
@@ -1192,6 +1192,11 @@ pub struct Translator {
     /// build aggregates union enums once ([`Self::collect_union_enums`]) and
     /// injects them ([`Self::with_extra_union_enums`]).
     extra_union_enums: HashMap<syn::Ident, syn::ItemEnum>,
+    /// Function/const-arrow signatures from the rest of the package (see
+    /// [`Self::with_extra_function_signatures`]), merged into each file's
+    /// registry so a module-global factory singleton infers its type from a
+    /// callee defined in another file.
+    extra_function_signatures: HashMap<String, FnSignature>,
 }
 
 impl Translator {
@@ -1202,6 +1207,7 @@ impl Translator {
             extra_optionals: HashMap::new(),
             extra_fields: HashMap::new(),
             extra_union_enums: HashMap::new(),
+            extra_function_signatures: HashMap::new(),
         }
     }
 
@@ -1239,6 +1245,19 @@ impl Translator {
     #[must_use]
     pub fn with_extra_union_enums(mut self, unions: HashMap<syn::Ident, syn::ItemEnum>) -> Self {
         self.extra_union_enums = unions;
+        self
+    }
+
+    /// Inject function/const-arrow signatures collected from the rest of the
+    /// package, so a file infers a module-global factory singleton's type from
+    /// a callee defined in another file (`createFactory` in a dep). The
+    /// signature analogue of [`Self::with_extra_union_enums`].
+    #[must_use]
+    pub fn with_extra_function_signatures(
+        mut self,
+        signatures: HashMap<String, FnSignature>,
+    ) -> Self {
+        self.extra_function_signatures = signatures;
         self
     }
 
@@ -1418,6 +1437,15 @@ impl Translator {
                 .union_enums
                 .entry(name.clone())
                 .or_insert_with(|| item.clone());
+        }
+        // Merge function/const-arrow signatures from the rest of the package,
+        // so a module-global factory singleton (`const p = createFactory<T>(...)`)
+        // infers its type from a callee defined in another file.
+        for (name, sig) in &self.extra_function_signatures {
+            registry
+                .function_signatures
+                .entry(name.clone())
+                .or_insert_with(|| sig.clone());
         }
         // Escape promotion (A3): a top-level `const` number/boolean literal
         // referenced from a top-level `function` cannot stay in `fn main` (a
@@ -1876,6 +1904,35 @@ impl Translator {
         let names = name_table::build(sret.semantic.scoping());
         let registry = registry::build_registry(&program.body, &names);
         Ok(registry.union_enums)
+    }
+
+    /// Collect this file's function/const-arrow signatures (name, type params,
+    /// return type), for cross-file sharing via
+    /// [`Self::with_extra_function_signatures`]. The signature analogue of
+    /// [`Self::collect_union_enums`]: a package build aggregates them across
+    /// the import graph and injects them, so a module-global factory singleton
+    /// (`const p = createFactory<T>(...)`) infers its type from a callee in a
+    /// dep even though each file builds its own registry.
+    ///
+    /// # Errors
+    /// Returns an error string if oxc reports parse diagnostics.
+    pub fn collect_function_signatures(
+        &self,
+        source: &str,
+    ) -> Result<HashMap<String, FnSignature>, String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Err(format!(
+                "dashscript: oxc reported {} parse diagnostic(s)",
+                ret.diagnostics.len()
+            ));
+        }
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        Ok(registry.function_signatures)
     }
 
     /// Translate a `.d.ts` declaration source to a Rust module body — each

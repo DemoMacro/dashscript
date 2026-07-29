@@ -1,4 +1,5 @@
 use super::super::Translator;
+use quote::ToTokens;
 
 #[test]
 fn translates_a_typed_function_returning_a_string() {
@@ -14,6 +15,48 @@ fn translates_a_typed_function_returning_a_string() {
 #[test]
 fn reports_parse_diagnostics() {
     assert!(Translator::new().translate("function (").is_err());
+}
+
+#[test]
+fn collect_function_signatures_captures_generic_function_return_type() {
+    // A generic function's signature (type params + return type) is collected
+    // for cross-file sharing: a module-global factory singleton reads its type
+    // from a callee defined in another file.
+    let src = "function make<T>(x: T): Wrapper<T> { return x; }";
+    let sigs = Translator::new()
+        .collect_function_signatures(src)
+        .expect("should collect");
+    let make = sigs.get("make").expect("make signature collected");
+    assert_eq!(make.type_params, vec!["T".to_string()]);
+    let ret = make
+        .return_type
+        .as_ref()
+        .expect("return type present")
+        .to_token_stream()
+        .to_string();
+    assert!(ret.contains("Wrapper"), "got: {ret}");
+    assert!(ret.contains("T"), "got: {ret}");
+}
+
+#[test]
+fn collect_function_signatures_captures_const_arrow_return_type() {
+    // A const arrow (`const factory = <T>(x): Box<T> => ..`) carries the same
+    // signature — the module-global singleton's type comes from the arrow it
+    // assigns to.
+    let src = "const factory = <T>(x: T): Box<T> => x;";
+    let sigs = Translator::new()
+        .collect_function_signatures(src)
+        .expect("should collect");
+    let f = sigs.get("factory").expect("factory signature collected");
+    assert_eq!(f.type_params, vec!["T".to_string()]);
+    let ret = f
+        .return_type
+        .as_ref()
+        .expect("return type present")
+        .to_token_stream()
+        .to_string();
+    assert!(ret.contains("Box"), "got: {ret}");
+    assert!(ret.contains("T"), "got: {ret}");
 }
 
 #[test]

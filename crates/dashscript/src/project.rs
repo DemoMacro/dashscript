@@ -221,6 +221,54 @@ fn collect_package_union_enums(
     Ok(shared)
 }
 
+/// Walk the entry's import graph and aggregate every file's function/const-arrow
+/// signatures (name, type params, return type), the signature analogue of
+/// [`collect_package_union_enums`]. A module-global factory singleton
+/// (`const p = createFactory<T>(...)`) infers its type from a callee defined in
+/// another file — but each file builds its own `TypeRegistry`, so the package
+/// build shares them here via [`Translator::with_extra_function_signatures`].
+fn collect_package_function_signatures(
+    src: &str,
+    src_path: &Path,
+) -> Result<std::collections::HashMap<String, crate::translator::FnSignature>, Box<dyn Error>> {
+    use std::collections::{HashMap, HashSet, VecDeque};
+    let collector = Translator::new();
+    let mut shared: HashMap<String, crate::translator::FnSignature> = collector
+        .collect_function_signatures(src)
+        .map_err(|e| format!("collect signatures {}: {e}", src_path.display()))?;
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    for imp in collector.imports(src) {
+        if seen.insert(imp.module.clone()) {
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            if !matches!(kind, DepKind::Js) {
+                worklist.push_back((imp.module, dep_path));
+            }
+        }
+    }
+    while let Some((_module, path)) = worklist.pop_front() {
+        let dep_src = fs::read_to_string(&path)
+            .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
+        for (k, v) in collector
+            .collect_function_signatures(&dep_src)
+            .map_err(|e| format!("collect signatures {}: {e}", path.display()))?
+        {
+            shared.entry(k).or_insert_with(|| v);
+        }
+        let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&dep_src) {
+            if seen.insert(imp.module.clone()) {
+                let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
+                if !matches!(kind, DepKind::Js) {
+                    worklist.push_back((imp.module, dep_path));
+                }
+            }
+        }
+    }
+    Ok(shared)
+}
+
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
 /// `project_dir/src/`. The caller writes `Cargo.toml`. Shared by a single-
@@ -279,10 +327,12 @@ pub fn translate_sources(
     let shared_optionals = collect_package_optionals(src, src_path)?;
     let shared_fields = collect_package_fields(src, src_path)?;
     let shared_unions = collect_package_union_enums(src, src_path)?;
+    let shared_signatures = collect_package_function_signatures(src, src_path)?;
     let translator = Translator::new()
         .with_extra_optionals(shared_optionals)
         .with_extra_fields(shared_fields)
-        .with_extra_union_enums(shared_unions);
+        .with_extra_union_enums(shared_unions)
+        .with_extra_function_signatures(shared_signatures);
     let (rust, mut deps) = translator
         .translate_with_deps(src)
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;

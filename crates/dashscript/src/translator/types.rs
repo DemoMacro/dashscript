@@ -474,8 +474,21 @@ fn reference_type(r: &TSTypeReference) -> Type {
             return parse_quote!(::std::collections::HashSet<#inner_ty>);
         }
     }
+    // A named reference with type arguments (`Packer<TFile>`, `Promise<T>`)
+    // keeps its arguments — a generic return type is what cross-file singleton
+    // inference instantiates from. Readonly/Array/Record/Map/Set above already
+    // unwrapped their argument; any other generic ref passes through with its
+    // type arguments intact (previously dropped, which lost the generic shape).
+    // `type_has_unmappable` rejects a ref whose args contain an unmappable type
+    // (it degrades the function to the engine), so every arg reaching here is
+    // mappable and safe to recurse on.
     let ident = format_ident!("{}", name);
-    parse_quote!(#ident)
+    if let Some(args) = r.type_arguments.as_ref() {
+        let arg_types: Vec<Type> = args.params.iter().map(translate_type).collect();
+        parse_quote!(#ident<#(#arg_types),*>)
+    } else {
+        parse_quote!(#ident)
+    }
 }
 
 /// `T | null` / `T | undefined` → `Option<T>` (one non-null member); a real
