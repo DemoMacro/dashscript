@@ -5,10 +5,17 @@
 
 use std::collections::HashSet;
 
-use oxc_ast::ast::{BindingPattern, Expression, Statement, VariableDeclarationKind};
+use oxc_ast::ast::{
+    BindingPattern, CallExpression, Expression, Statement, TSTypeParameterInstantiation,
+    VariableDeclarationKind,
+};
 use oxc_semantic::SymbolId;
 use quote::format_ident;
-use syn::{parse_quote, Type};
+use syn::{
+    parse_quote,
+    visit_mut::{self, VisitMut},
+    Type,
+};
 
 use super::super::analysis;
 use super::super::context::{Ctx, Locals, Narrow};
@@ -58,10 +65,15 @@ pub(in crate::translator) fn lazy_static_candidate(
     ) {
         return false;
     }
-    // An inferable type: an explicit annotation on the declarator, or a regex
-    // literal (→ `regress::Regex`). Anything else without an annotation has no
-    // static type to put on the OnceLock — defer.
-    if d.type_annotation.is_none() && !matches!(init, Expression::RegExpLiteral(_)) {
+    // An inferable type: an explicit annotation, a regex literal (→
+    // `regress::Regex`), or a runtime factory call (`const p = createFactory<T>(...)`)
+    // whose return type is inferred from the callee's cross-file signature. Any
+    // other init without an annotation has no static type to put on the
+    // OnceLock — defer.
+    if d.type_annotation.is_none()
+        && !matches!(init, Expression::RegExpLiteral(_))
+        && !is_factory_call(init)
+    {
         return false;
     }
     // A `let` mutated anywhere cannot live behind an immutable OnceLock — it
@@ -231,6 +243,11 @@ pub(in crate::translator) fn lazy_static_items(
     let name = names.of_binding(id);
     let ty: Type = if let Some(ta) = d.type_annotation.as_ref() {
         types::translate_type(&ta.type_annotation)
+    } else if let Expression::CallExpression(call) = init {
+        // A factory call with no annotation — infer the return type from the
+        // callee's cross-file signature, instantiating its generic params with
+        // the call's type arguments (`createFactory<TFile>` ← `createFactory<Opts>`).
+        factory_call_return_type(call, registry).unwrap_or_else(|| parse_quote!(_))
     } else {
         // A regex literal with no annotation — `regress::Regex`.
         parse_quote!(regress::Regex)
@@ -255,4 +272,70 @@ pub(in crate::translator) fn lazy_static_items(
             }
         },
     ])
+}
+
+/// Whether `init` is a runtime factory call (`ident<args>(...)`) — its return
+/// type is inferred from the callee's cross-file signature, so a module-global
+/// singleton (`const p = createFactory<T>(...)`) lowers to a `OnceLock` even
+/// without an explicit annotation.
+fn is_factory_call(init: &Expression) -> bool {
+    matches!(
+        init,
+        Expression::CallExpression(call) if matches!(&call.callee, Expression::Identifier(_))
+    )
+}
+
+/// The instantiated return type of a factory call, looked up from the callee's
+/// cross-file signature (`registry.function_signatures`) with its generic type
+/// parameters substituted by the call's type arguments. `None` if the callee is
+/// not a known signature or its return type is absent/void.
+fn factory_call_return_type(call: &CallExpression, registry: &TypeRegistry) -> Option<Type> {
+    let Expression::Identifier(id) = &call.callee else {
+        return None;
+    };
+    let sig = registry.function_signatures.get(id.name.as_ref())?;
+    let ret = sig.return_type.clone()?;
+    let bindings = bind_type_params(&sig.type_params, call.type_arguments.as_deref());
+    Some(substitute_type(ret, &bindings))
+}
+
+/// Bind a signature's generic type parameters to a call's type arguments
+/// (`TFile` ← `WorkbookOptions`), keyed by parameter name.
+fn bind_type_params(
+    params: &[String],
+    args: Option<&TSTypeParameterInstantiation>,
+) -> std::collections::HashMap<String, Type> {
+    let mut bindings = std::collections::HashMap::new();
+    if let Some(args) = args {
+        for (param, arg) in params.iter().zip(args.params.iter()) {
+            bindings.insert(param.clone(), types::translate_type(arg));
+        }
+    }
+    bindings
+}
+
+/// Substitute a type's generic parameters per `bindings`: a single-segment path
+/// type whose ident is a bound param is replaced by the bound type
+/// (`Packer<TFile>` with `TFile → WorkbookOptions` → `Packer<WorkbookOptions>`).
+fn substitute_type(mut ty: Type, bindings: &std::collections::HashMap<String, Type>) -> Type {
+    visit_mut::visit_type_mut(&mut Subst { bindings }, &mut ty);
+    ty
+}
+
+struct Subst<'a> {
+    bindings: &'a std::collections::HashMap<String, Type>,
+}
+
+impl<'a> VisitMut for Subst<'a> {
+    fn visit_type_mut(&mut self, ty: &mut Type) {
+        if let Type::Path(tp) = ty {
+            if tp.path.segments.len() == 1 {
+                if let Some(repl) = self.bindings.get(&tp.path.segments[0].ident.to_string()) {
+                    *ty = repl.clone();
+                    return;
+                }
+            }
+        }
+        visit_mut::visit_type_mut(self, ty);
+    }
 }

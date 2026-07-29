@@ -40,6 +40,10 @@ pub(super) fn object_expr(
     // A `…v` spread records a struct-update base (`Struct { …, ..v }`); only an
     // identifier base is supported. If multiple spreads appear, the last wins.
     let optionals = optional_fields_for(path, ctx);
+    // A struct-literal expression cannot carry generic arguments — `Foo<T> { .. }`
+    // parses as `Foo < T > { .. }` (comparison). Use a bare path; the literal's
+    // type is inferred from context, so the args are redundant in the expression.
+    let bare_path = strip_generic_args(path);
     let mut base: Option<Expr> = None;
     let fields: Vec<syn::FieldValue> = obj
         .properties
@@ -73,9 +77,9 @@ pub(super) fn object_expr(
     match base {
         Some(b) => {
             if fields.is_empty() {
-                parse_quote!(#path { ..#b })
+                parse_quote!(#bare_path { ..#b })
             } else {
-                parse_quote!(#path { #(#fields),*, ..#b })
+                parse_quote!(#bare_path { #(#fields),*, ..#b })
             }
         }
         None => {
@@ -84,9 +88,21 @@ pub(super) fn object_expr(
             // and `extras` are empty — `Element { , }` would not parse.
             let mut all = fields;
             all.extend(extras);
-            parse_quote!(#path { #(#all),* })
+            parse_quote!(#bare_path { #(#all),* })
         }
     }
+}
+
+/// A copy of `path` with every segment's generic arguments stripped. A
+/// struct-literal expression cannot carry generic args (`Foo<T> { .. }` parses
+/// as comparison), so the literal uses this bare path while the full path still
+/// feeds the HashMap/variant checks above.
+fn strip_generic_args(path: &syn::Path) -> syn::Path {
+    let mut bare = path.clone();
+    for seg in &mut bare.segments {
+        seg.arguments = syn::PathArguments::None;
+    }
+    bare
 }
 
 /// The optional (`?:`) field names of the struct named by `path`, if any.

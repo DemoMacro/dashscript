@@ -60,6 +60,26 @@ fn collect_function_signatures_captures_const_arrow_return_type() {
 }
 
 #[test]
+fn factory_singleton_infers_generic_return_type() {
+    // A module-global factory singleton (`const p = make<T>(...)`) with no
+    // annotation infers its OnceLock type from the callee's signature,
+    // instantiating the generic param with the call's type argument
+    // (`make<TFile>` ← `make<number>` → `Wrapper<f64>`).
+    let src = "function make<T>(x: T): Wrapper<T> { return x; }\
+               const p = make<number>(42);\
+               function useP(): Wrapper<number> { return p; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("static P_CELL: ::std::sync::OnceLock<Wrapper<f64>>"),
+        "got:\n{rust}"
+    );
+    assert!(
+        rust.contains("fn p() -> &'static Wrapper<f64>"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_interface_to_struct() {
     let src = "interface Point { x: number; y: number; }";
     let rust = Translator::new().translate(src).expect("should translate");
