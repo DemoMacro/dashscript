@@ -200,6 +200,35 @@ fn per_function_reflection_keeps_signature_swaps_body() {
 }
 
 #[test]
+fn per_function_reflection_variants_degrade() {
+    // Every ES reflection construct `classify` rejects (Symbol / Reflect / the
+    // reflection namespace) degrades its enclosing top-level function to
+    // `call_fn` — the body runs under QuickJS, the Rust signature stays. This
+    // is the WinterTC compatibility path: a `.ts` function using reflection
+    // keeps working instead of failing `cargo check`.
+    for src in [
+        "function f(): number { const s = Symbol(\"x\"); return 1; }\nconsole.log(f());\n",
+        "function f(): number { return Reflect.has({}, \"x\") ? 1 : 0; }\nconsole.log(f());\n",
+    ] {
+        let (rust, deps) = Translator::new()
+            .translate_with_deps(src)
+            .unwrap_or_else(|_| panic!("translate src: {src}"));
+        assert!(
+            deps.needs_engine(),
+            "reflection should need engine, src: {src}, deps: {deps:?}"
+        );
+        assert!(
+            rust.contains("__ds_engine::call_fn"),
+            "reflection in a function should degrade to call_fn, src: {src}, got:\n{rust}"
+        );
+        assert!(
+            rust.contains("fn f"),
+            "degraded function keeps its signature, src: {src}, got:\n{rust}"
+        );
+    }
+}
+
+#[test]
 fn plain_source_stays_on_static_rust_path() {
     // No reflection → the static Rust lowering; no engine dep.
     let src = "function main(): void { console.log(1 + 2); }";
