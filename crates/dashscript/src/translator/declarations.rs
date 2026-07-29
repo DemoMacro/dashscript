@@ -250,11 +250,11 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Vec<Item> {
                 items.push(Item::Enum(item));
                 return items;
             }
-            let ty = types::translate_type(&alias.type_annotation);
+            let ty = types::translate_type_for_data(&alias.type_annotation);
             vec![alias_item(&name, &generics, &ty)]
         }
         other => {
-            let ty = types::translate_type(other);
+            let ty = types::translate_type_for_data(other);
             vec![alias_item(&name, &generics, &ty)]
         }
     }
@@ -288,10 +288,17 @@ fn make_generics(gens: &[Ident]) -> syn::Generics {
 /// (`type NonEmptyArray<T> = readonly [T, ...ReadonlyArray<T>]`) keeps `<T>` so
 /// the body's `T` resolves — without it, `T` is an unresolved type (E0425).
 fn alias_item(name: &Ident, gens: &[Ident], ty: &Type) -> Item {
-    if gens.is_empty() {
+    // Drop generic params the translated body never references — a generic
+    // alias whose body lowered to serde_json::Value (an unmappable
+    // conditional/utility type) would otherwise carry an unused param (E0392).
+    let used: Vec<&Ident> = gens
+        .iter()
+        .filter(|g| super::types::type_uses_ident(ty, &g.to_string()))
+        .collect();
+    if used.is_empty() {
         parse_quote!(type #name = #ty;)
     } else {
-        parse_quote!(type #name<#(#gens),*> = #ty;)
+        parse_quote!(type #name<#(#used),*> = #ty;)
     }
 }
 
@@ -437,7 +444,7 @@ fn member_to_variant(ty: &TSType, anons: &mut Vec<ItemStruct>) -> Option<(String
             Some((id.name.as_ref().to_string(), v))
         }
         TSType::TSArrayType(arr) => {
-            let inner_ty = types::translate_type(&arr.element_type);
+            let inner_ty = types::translate_type_for_data(&arr.element_type);
             let inner_tag = array_element_tag(&arr.element_type)?;
             let tag = format!("ArrayOf{inner_tag}");
             let id = bindings::pascal(&tag);
@@ -707,8 +714,8 @@ fn type_ref_variant(ty: &TSType) -> Option<syn::Variant> {
         if let Some(args) = r.type_arguments.as_ref() {
             let ps = &args.params;
             if ps.len() == 2 {
-                let k_ty = types::translate_type(&ps[0]);
-                let v_ty = types::translate_type(&ps[1]);
+                let k_ty = types::translate_type_for_data(&ps[0]);
+                let v_ty = types::translate_type_for_data(&ps[1]);
                 return Some(parse_quote!(#variant(::std::collections::HashMap<#k_ty, #v_ty>)));
             }
         }
@@ -777,7 +784,7 @@ fn discriminated_variant(ty: &TSType) -> Option<syn::Variant> {
             };
             let key = bindings::property_key_name(&ps.key)?;
             let ta = ps.type_annotation.as_ref()?;
-            let field_ty = types::translate_type(&ta.type_annotation);
+            let field_ty = types::translate_type_for_data(&ta.type_annotation);
             Some(quote!(#key: #field_ty))
         })
         .collect();
@@ -835,7 +842,7 @@ fn field_type(ty: &TSType, parent: &str, field: &str, anon: &mut Vec<Item>) -> T
             let inner = field_type(&arr.element_type, parent, field, anon);
             parse_quote!(Vec<#inner>)
         }
-        _ => types::translate_type(ty),
+        _ => types::translate_type_for_data(ty),
     }
 }
 
@@ -870,7 +877,7 @@ pub fn anon_struct_for_literal(lit: &TSTypeLiteral) -> Option<(Ident, ItemStruct
         // `translate_type` recurses: a nested inline-object field lowers through
         // this same function, so `{ outer: { inner: number } }` emits two structs
         // (the outer references the inner by its hash name).
-        let ty = types::translate_type(&ta.type_annotation);
+        let ty = types::translate_type_for_data(&ta.type_annotation);
         let ty = if ps.optional {
             parse_quote!(Option<#ty>)
         } else {

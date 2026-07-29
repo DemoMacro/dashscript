@@ -5,7 +5,11 @@ use oxc_ast::ast::{
     TSTypeOperator, TSTypeOperatorOperator, TSTypeQueryExprName, TSTypeReference, TSUnionType,
 };
 use quote::format_ident;
-use syn::{parse_quote, Type};
+use syn::{
+    parse_quote,
+    visit_mut::{self, VisitMut},
+    Type,
+};
 
 use super::registry::TypeRegistry;
 
@@ -209,6 +213,54 @@ pub fn translate_type_degraded(ty: &TSType) -> Type {
         return parse_quote!(::serde_json::Value);
     }
     translate_type(ty)
+}
+
+/// Replace every `_` (`Type::Infer`) leaf in a type with `serde_json::Value`,
+/// preserving the surrounding structure — `Vec<HashMap<String, _>>` becomes
+/// `Vec<HashMap<String, serde_json::Value>>`, not a flat `Value`. Used by
+/// [`translate_type_for_data`] for data-position types where `_` is illegal.
+struct InferToValue;
+impl visit_mut::VisitMut for InferToValue {
+    fn visit_type_mut(&mut self, ty: &mut Type) {
+        if let Type::Infer(_) = ty {
+            *ty = parse_quote!(::serde_json::Value);
+        }
+        visit_mut::visit_type_mut(self, ty);
+    }
+}
+
+/// Map a `TSType` for a **data position** — a struct field, an enum variant
+/// field, or a `type` alias body — where a `_` placeholder is illegal (cargo
+/// rejects `_` in an item signature with E0121). [`translate_type`] first, then
+/// every `_` leaf (from an unmappable `unknown`/`any`/conditional/… type)
+/// becomes the universal marshal type. Local-variable positions (`let x: _`)
+/// keep `_` so inference still works — this is the data-position overlay, not
+/// the default.
+pub fn translate_type_for_data(ty: &TSType) -> Type {
+    let mut t = translate_type(ty);
+    InferToValue.visit_type_mut(&mut t);
+    t
+}
+
+/// Whether `ident` appears as a path segment anywhere in `ty`. Used to drop a
+/// `type` alias generic param the translated body never references — a generic
+/// alias whose body lowered to `serde_json::Value` (an unmappable
+/// conditional/utility type, e.g. `type NonNullable<T> = T extends … ? … : T`)
+/// would otherwise carry an unused param (E0392).
+pub fn type_uses_ident(ty: &Type, ident: &str) -> bool {
+    struct Uses<'a>(&'a str, bool);
+    impl VisitMut for Uses<'_> {
+        fn visit_path_mut(&mut self, p: &mut syn::Path) {
+            if p.segments.iter().any(|s| s.ident == self.0) {
+                self.1 = true;
+            }
+            visit_mut::visit_path_mut(self, p);
+        }
+    }
+    let mut clone = ty.clone();
+    let mut u = Uses(ident, false);
+    u.visit_type_mut(&mut clone);
+    u.1
 }
 
 /// Translate a type that appears in a function signature (a parameter or

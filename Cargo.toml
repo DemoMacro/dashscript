@@ -43,6 +43,7 @@ syn = { version = "2", default-features = false, features = [
   "printing",
   "full",
   "clone-impls",
+  "visit-mut",
 ] }
 quote = "1"
 proc-macro2 = "1"

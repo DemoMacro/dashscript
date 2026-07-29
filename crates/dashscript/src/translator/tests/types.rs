@@ -496,3 +496,41 @@ function writeElement(opts: ReturnType<typeof normalizeOptions>): void {}
         "ReturnType<typeof fn> not resolved: {rust}"
     );
 }
+
+#[test]
+fn unmappable_field_type_becomes_serde_value_in_struct() {
+    // A struct field whose TS type has no Rust lowering (`unknown`) must not
+    // emit `_` (E0121 in a signature) — the data-position overlay replaces it
+    // with the universal marshal type, preserving the struct.
+    let src = "interface O { x: unknown; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("pub x: ::serde_json::Value"), "got:\n{rust}");
+    assert!(!rust.contains("pub x: _"), "got:\n{rust}");
+}
+
+#[test]
+fn unmappable_generic_alias_drops_unused_param() {
+    // A conditional type alias lowers to serde_json::Value; its generic param
+    // is then unused and must be dropped (E0392), not carried as `<T>`.
+    let src = "type NonNullable<T> = T extends null | undefined ? never : T;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("type NonNullable = ::serde_json::Value"),
+        "got:\n{rust}"
+    );
+    assert!(!rust.contains("NonNullable<"), "got:\n{rust}");
+}
+
+#[test]
+fn record_of_unknown_member_preserves_structure() {
+    // `Record<string, unknown>` as a union member keeps the HashMap wrapper and
+    // replaces only the unmappable value leaf — `HashMap<String, Value>`, not a
+    // flat `Value` and not `HashMap<String, _>`.
+    let src = "type R = Record<string, unknown> | string;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("HashMap<String, ::serde_json::Value>"),
+        "got:\n{rust}"
+    );
+    assert!(!rust.contains("HashMap<String, _>"), "got:\n{rust}");
+}
