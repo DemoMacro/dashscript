@@ -353,6 +353,45 @@ fn per_function_path_compiles_to_valid_rust_project() {
 }
 
 #[test]
+fn engine_loads_multi_file_js_module_graph() {
+    // B6-2: the engine's `Loader`/`Resolver` loads a multi-file ESM `.js`
+    // module graph (a.js imports b.js), `call_module_fn` lazily declares +
+    // evaluates it, and the return marshals back. The `bytes` export returns a
+    // `Uint8Array`, covering B6-1's `js_to_json` TypedArray arm end-to-end.
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let a_js = "import { double } from \"./b.js\";\nexport function f(x) { return double(x) + 1; }\nexport function bytes() { return new Uint8Array([1, 2, 3]); }\n";
+    let b_js = "export function double(x) { return x * 2; }\n";
+    let a_path = tmp.path().join("a.js");
+    let b_path = tmp.path().join("b.js");
+    fs::write(&a_path, a_js).expect("write a.js");
+    fs::write(&b_path, b_js).expect("write b.js");
+    // Pull the engine dep set (needs_engine) so write_project emits
+    // __ds_engine.rs + the rquickjs cargo line, without translating any .ts.
+    let (_, deps) = Translator::new()
+        .translate_with_deps(
+            "function r(){Object.defineProperty({},\"x\",{value:1});}\nconsole.log(r());",
+        )
+        .expect("translate probe for engine deps");
+    assert!(deps.needs_engine(), "probe must pull the engine dep set");
+    let main = format!(
+        "fn main() {{\n    __ds_engine::register_js_module(\"a.js\", {a:?});\n    __ds_engine::register_js_module(\"b.js\", {b:?});\n    let r = __ds_engine::call_module_fn(\"a.js\", \"f\", &[serde_json::json!(3)]);\n    println!(\"f={{}}\", r);\n    let bytes = __ds_engine::call_module_fn(\"a.js\", \"bytes\", &[]);\n    println!(\"bytes={{}}\", bytes);\n}}\n",
+        a = a_path.display().to_string(),
+        b = b_path.display().to_string(),
+    );
+    write_project(&project, &main, &deps);
+    let (ok, out) = cargo(&project, &target_dir, &["run", "--quiet"]);
+    assert!(ok, "engine module-load probe failed to run:\n{out}");
+    assert!(out.contains("f=7"), "f(3) = double(3) + 1 = 7; got:\n{out}");
+    assert!(
+        out.contains("bytes=[1,2,3]"),
+        "Uint8Array([1,2,3]) marshals as [1,2,3]; got:\n{out}"
+    );
+}
+
+#[test]
 fn module_let_lazy_static_compiles_to_valid_rust_project() {
     // B3-1a: a module-level non-mutated `let` (runtime initializer, here a
     // `number[]`) referenced from a function lowers to a `static OnceLock<T>`

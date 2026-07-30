@@ -988,11 +988,101 @@ const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ts`
 //!   it declares `main()` and calls it, pure-TS execution semantics).
 //! - `call_fn(name, body, args)` — the per-function degradation path: a dynamic
 //!   function keeps its native Rust signature, but its body runs under JS.
+//! - `call_module_fn(module, name, args)` — the npm-module degradation path: a
+//!   `.js` package the static translator cannot lower (class extends, …) runs
+//!   under JS as an ESM module graph, loaded via the `Loader`/`Resolver` below.
 use rquickjs::context::EvalOptions;
-use rquickjs::{Array, Context, Ctx, FromJs, IntoJs, Object, Runtime, TypedArray, Type, Value};
+use rquickjs::loader::{ImportAttributes, Loader, Resolver};
+use rquickjs::module::Declared;
+use rquickjs::{
+    Array, Context, Ctx, FromJs, IntoJs, Module, Object, Runtime, Type, Value,
+};
+use std::sync::Mutex;
+
+/// Build-time-resolved `.js` module table: ESM specifier → absolute file path.
+/// Populated by `register_js_module` calls the translator emits at the start of
+/// `fn main` (one per degraded `.js` module). The `Loader` reads source from
+/// here at runtime — node_modules resolution already happened at build time, so
+/// the engine never walks the filesystem to resolve an `import`.
+static JS_MODULES: Mutex<Vec<(String, String)>> = Mutex::new(Vec::new());
+
+/// Register a degraded `.js` module so the engine's `Loader` can find it. The
+/// translator emits one call per `.js` module that degrades to the engine.
+pub fn register_js_module(specifier: &str, path: &str) {
+    JS_MODULES
+        .lock()
+        .expect("JS_MODULES lock")
+        .push((specifier.to_string(), path.to_string()));
+}
+
+/// Read a registered module's source, or an error if it was never registered.
+fn source_of(name: &str) -> rquickjs::Result<String> {
+    let path = JS_MODULES
+        .lock()
+        .expect("JS_MODULES lock")
+        .iter()
+        .find(|(n, _)| n == name)
+        .map(|(_, p)| p.clone());
+    path.and_then(|p| std::fs::read_to_string(&p).ok())
+        .ok_or_else(|| rquickjs::Error::new_loading(name))
+}
+
+/// ESM import resolver: bare specifiers stay as-is (already resolved to a
+/// `JS_MODULES` key at build time); relative specifiers join onto the base
+/// module's directory (the rquickjs document algorithm).
+struct DsResolver;
+impl Resolver for DsResolver {
+    fn resolve<'js>(
+        &mut self,
+        _ctx: &Ctx<'js>,
+        base: &str,
+        name: &str,
+        _attributes: Option<ImportAttributes<'js>>,
+    ) -> rquickjs::Result<String> {
+        if !name.starts_with('.') {
+            Ok(name.to_string())
+        } else {
+            // The base's directory (everything before the last `/`), or "" when
+            // the base has no directory. Join the relative name (sans its `./`)
+            // onto it: `import "./b.js"` from `pkg/a.js` → `pkg/b.js`, from a
+            // bare `a.js` → `b.js`. Every result is a `JS_MODULES` key.
+            let base_dir = base.rsplitn(2, '/').nth(1).unwrap_or("");
+            let rel = name.strip_prefix("./").unwrap_or(name);
+            Ok(if base_dir.is_empty() {
+                rel.to_string()
+            } else {
+                format!("{base_dir}/{rel}")
+            })
+        }
+    }
+}
+
+/// ESM module loader: look the specifier up in `JS_MODULES`, read its file, and
+/// declare the module. rquickjs links and evaluates the dependency graph from
+/// here, calling `DsResolver`/`DsLoader` for each transitive `import`.
+struct DsLoader;
+impl Loader for DsLoader {
+    fn load<'js>(
+        &mut self,
+        ctx: &Ctx<'js>,
+        name: &str,
+        _attributes: Option<ImportAttributes<'js>>,
+    ) -> rquickjs::Result<Module<'js, Declared>> {
+        Module::declare(ctx.clone(), name, source_of(name)?)
+    }
+}
 
 thread_local! {
-    static RUNTIME: Runtime = Runtime::new().expect("rquickjs Runtime");
+    static RUNTIME: Runtime = {
+        let rt = Runtime::new().expect("rquickjs Runtime");
+        rt.set_loader(DsResolver, DsLoader);
+        rt
+    };
+    // A persistent per-thread Context so `__ds_modules` (and other globals the
+    // module-load path sets) survive across `call_module_fn` calls. A fresh
+    // `Context::full` per call gives each its own global object, so a namespace
+    // installed by one call is invisible to the next.
+    static CTX: Context = RUNTIME.with(|rt| Context::full(rt).expect("rquickjs Context"));
 }
 
 /// Sloppy-mode eval options (strict=false): test262 fixtures and degraded
@@ -1058,7 +1148,17 @@ pub fn js_to_json<'js>(ctx: &Ctx<'js>, v: Value<'js>) -> rquickjs::Result<serde_
     match v.type_of() {
         Type::Uninitialized | Type::Undefined | Type::Null => Ok(serde_json::Value::Null),
         Type::Bool => Ok(serde_json::Value::Bool(v.as_bool().unwrap())),
-        Type::Int | Type::Float => Ok(serde_json::json!(v.as_number().unwrap())),
+        Type::Int | Type::Float => {
+            let n = v.as_number().unwrap();
+            // Integral floats normalize to integers so a byte (a Uint8Array
+            // element 97.0) marshals as `97` — matching JS `JSON.stringify`
+            // and letting a Rust `Vec<u8>` deserialize a crypto result.
+            if n.fract() == 0.0 && n.abs() <= 9_007_199_254_740_992.0 {
+                Ok(serde_json::json!(n as i64))
+            } else {
+                Ok(serde_json::json!(n))
+            }
+        }
         Type::String => {
             let s: String = FromJs::from_js(ctx, v)?;
             Ok(serde_json::Value::String(s))
@@ -1073,7 +1173,28 @@ pub fn js_to_json<'js>(ctx: &Ctx<'js>, v: Value<'js>) -> rquickjs::Result<serde_
             Ok(serde_json::Value::Array(out))
         }
         Type::Object | Type::Function | Type::Constructor | Type::Promise
-        | Type::Exception | Type::Proxy => {
+        | Type::Exception
+        | Type::Proxy => {
+            // A TypedArray (Uint8Array, …) tags as `Type::Object`, but its
+            // indexed elements would marshal as `{"0":..,"1":..}`. Detect it
+            // (duck-typed `length` + `byteLength`) and coerce to a plain Array
+            // via `Array.from` first, so a crypto result (sha1 returns a
+            // Uint8Array) marshals as a byte array, not a broken object.
+            ctx.globals().set("__ds_mta", v.clone())?;
+            let is_ta: bool = ctx
+                .eval_with_options::<bool, _>(
+                    "(function(){ try { return typeof __ds_mta.length === 'number' && typeof \
+                     __ds_mta.byteLength === 'number'; } catch(e){ return false; } })()",
+                    sloppy(),
+                )
+                .unwrap_or(false);
+            if is_ta {
+                let arr: Value =
+                    ctx.eval_with_options::<Value, _>("Array.from(__ds_mta)", sloppy())?;
+                let _ = ctx.globals().remove("__ds_mta");
+                return js_to_json(ctx, arr);
+            }
+            let _ = ctx.globals().remove("__ds_mta");
             let obj: Object = Object::from_js(ctx, v)?;
             let mut map = serde_json::Map::new();
             for kv in obj.props::<String, Value>() {
@@ -1082,18 +1203,9 @@ pub fn js_to_json<'js>(ctx: &Ctx<'js>, v: Value<'js>) -> rquickjs::Result<serde_
             }
             Ok(serde_json::Value::Object(map))
         }
-        Type::Symbol | Type::BigInt | Type::Module => Ok(serde_json::Value::Null),
-        // A TypedArray instance (Uint8Array, …) reports as `Type::Unknown` —
-        // QuickJS tags it as neither a plain object nor an array. Marshal it as
-        // a JSON array of bytes so a crypto result (sha1 returns a Uint8Array)
-        // does not silently collapse to null. Other Unknown values stay null.
-        Type::Unknown => match TypedArray::<u8>::from_value(v.clone()) {
-            Ok(ta) => Ok(ta
-                .as_bytes()
-                .and_then(|bytes| serde_json::to_value(bytes).ok())
-                .unwrap_or(serde_json::Value::Null)),
-            Err(_) => Ok(serde_json::Value::Null),
-        },
+        Type::Symbol | Type::BigInt | Type::Module | Type::Unknown => {
+            Ok(serde_json::Value::Null)
+        }
     }
 }
 
@@ -1135,6 +1247,77 @@ pub fn call_fn(fn_name: &str, body_js: &str, args: &[serde_json::Value]) -> serd
         })
     });
     result.expect("rquickjs call_fn")
+}
+
+/// Lazily declare, evaluate, and cache a `.js` module's namespace. Called
+/// before every `call_module_fn` so a degraded `.js` module (and its
+/// transitive `import`s) loads on first use. The namespace lands in
+/// `globalThis.__ds_modules[specifier]` for the spread-call in `call_module_fn`.
+fn ensure_module_installed(ctx: &Ctx<'_>, specifier: &str) -> rquickjs::Result<()> {
+    // The thread-local CTX persists `__ds_modules` across calls, so guard a
+    // re-declare by checking the namespace already lives in THIS ctx's globals.
+    let installed: bool = ctx
+        .eval_with_options::<bool, _>(
+            format!("!!(this.__ds_modules && this.__ds_modules['{specifier}'])"),
+            sloppy(),
+        )
+        .unwrap_or(false);
+    if installed {
+        return Ok(());
+    }
+    let module = Module::declare(ctx.clone(), specifier, source_of(specifier)?)?;
+    let (module, _promise) = module.eval()?;
+    let ns = module.namespace()?;
+    ctx.globals().set("__ds_tmp_install", ns)?;
+    ctx.eval_with_options::<(), _>(
+        format!(
+            "this.__ds_modules = this.__ds_modules || {{}};\nthis.__ds_modules['{specifier}'] = \
+             this.__ds_tmp_install;",
+        ),
+        sloppy(),
+    )?;
+    let _ = ctx.globals().remove("__ds_tmp_install");
+    Ok(())
+}
+
+/// Eagerly install a `.js` module's namespace (optional pre-load before the
+/// first `call_module_fn`). Most callers rely on `call_module_fn`'s lazy
+/// install; this is for warming the engine up front.
+pub fn install_module(specifier: &str) {
+    let result = CTX.with(|ctx| -> rquickjs::Result<()> {
+        ctx.with(|ctx: Ctx<'_>| {
+            wire_console(&ctx)?;
+            ensure_module_installed(&ctx, specifier)
+        })
+    });
+    result.expect("rquickjs install_module");
+}
+
+/// Call an exported function of a degraded `.js` module: lazily install the
+/// module (and its dependency graph), marshal args via serde_json, spread-call
+/// the export, and marshal the return. The caller keeps its native Rust
+/// signature — only the body runs JS under the engine.
+pub fn call_module_fn(
+    module_key: &str,
+    fn_name: &str,
+    args: &[serde_json::Value],
+) -> serde_json::Value {
+    let result = CTX.with(|ctx| -> rquickjs::Result<serde_json::Value> {
+        ctx.with(|ctx: Ctx<'_>| {
+            wire_console(&ctx)?;
+            ensure_module_installed(&ctx, module_key)?;
+            let js_args = Array::new(ctx.clone())?;
+            for (i, a) in args.iter().enumerate() {
+                js_args.set(i, json_to_js(&ctx, a)?)?;
+            }
+            ctx.globals().set("__ds_call_args", js_args)?;
+            let expr = format!("__ds_modules['{module_key}'].{fn_name}(...__ds_call_args)");
+            let ret: Value = ctx.eval_with_options::<Value, _>(expr, sloppy())?;
+            let _ = ctx.globals().remove("__ds_call_args");
+            js_to_json(&ctx, ret)
+        })
+    });
+    result.unwrap_or_else(|e| panic!("rquickjs call_module_fn({module_key}.{fn_name}): {e:?}"))
 }
 "##;
 
