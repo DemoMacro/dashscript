@@ -153,6 +153,37 @@ fn string_concat_singleton_infers_string_type() {
 }
 
 #[test]
+fn typed_assertion_singleton_uses_assertion_type() {
+    // A module-global `const X = expr as T` whose only type clue is the
+    // assertion lowers to a OnceLock<T> — the assertion's type feeds the cell,
+    // and the init translates as the inner `expr` (the assertion is stripped).
+    let src = "const X = { a: 1 } as Record<string, number>;\
+               function read(): number { const ref = X; return 0; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains(
+            "static X_CELL: ::std::sync::OnceLock<::std::collections::HashMap<String, f64>>"
+        ),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
+fn map_ctor_singleton_infers_hashmap_type() {
+    // A module-global `new Map<K, V>()` (no entries) lowers to a
+    // OnceLock<HashMap<K, V>> — K, V from the type args, init `HashMap::new()`.
+    let src = "const CACHE = new Map<string, number>();\
+               function read(): number { const ref = CACHE; return 0; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains(
+            "static CACHE_CELL: ::std::sync::OnceLock<::std::collections::HashMap<String, f64>>"
+        ),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn const_arrow_lowers_to_fn_item() {
     // A module-level const arrow (`const f = () => …`) is a declaration that
     // lowers to a `fn` item, not an executable statement — so it never lands in

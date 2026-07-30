@@ -80,6 +80,7 @@ pub(in crate::translator) fn lazy_static_candidate(
         && !is_inferable_new(init)
         && !is_inferable_object(init)
         && !is_inferable_binary(init)
+        && !is_typed_assertion(init)
     {
         return false;
     }
@@ -250,6 +251,13 @@ pub(in crate::translator) fn lazy_static_items(
     let name = names.of_binding(id);
     let ty: Type = if let Some(ta) = d.type_annotation.as_ref() {
         types::translate_type(&ta.type_annotation)
+    } else if let Expression::TSAsExpression(as_expr) = init {
+        // `const X = expr as T` — the `as T` assertion is the type to put on
+        // the OnceLock. The init translates as the inner `expr` (the assertion
+        // is stripped, see `translate_expr`), so only the type feeds the cell.
+        types::translate_type(&as_expr.type_annotation)
+    } else if let Expression::TSTypeAssertion(t) = init {
+        types::translate_type(&t.type_annotation)
     } else if let Expression::CallExpression(call) = init {
         // A factory or method call with no annotation — infer the return type:
         // an identifier factory call resolves via its cross-file signature
@@ -416,6 +424,19 @@ fn object_literal_value_type(obj: &ObjectExpression) -> Option<Type> {
     })
 }
 
+/// Whether `init` is a TS type assertion (`expr as T` or `<T>expr`) — so a
+/// module-global binding whose only type clue is the assertion lowers to a
+/// OnceLock<T> with `T` from the assertion. The init translates as the inner
+/// expression (the assertion is stripped, see `translate_expr`); the assertion's
+/// type is the cell type, so a `const X = Object.fromEntries(…) as Record<…>`
+/// singleton gets a concrete `HashMap<…>` type from the assertion.
+fn is_typed_assertion(init: &Expression) -> bool {
+    matches!(
+        init,
+        Expression::TSAsExpression(_) | Expression::TSTypeAssertion(_)
+    )
+}
+
 /// Whether `init` is a `+` chain that is string concatenation — so a
 /// module-global string-built constant (`const XML = '<a>' + NS + '</a>'`)
 /// lowers to a `OnceLock<String>` even without an annotation. A `+` chain is
@@ -461,15 +482,43 @@ fn new_collection_return_type(new: &NewExpression) -> Option<Type> {
     let Expression::Identifier(id) = &new.callee else {
         return None;
     };
-    if id.name.as_str() != "Set" {
-        return None;
+    match id.name.as_str() {
+        "Set" => {
+            // `new Set([literal])` → HashSet<T> (T from the first array element);
+            // `new Set<T>()` → HashSet<T> (T from the single type argument).
+            if let Some(elem) = set_array_elem_type(new) {
+                return Some(parse_quote!(::std::collections::HashSet<#elem>));
+            }
+            let mut args = new_type_args(new)?.into_iter();
+            let elem = args.next()?;
+            Some(parse_quote!(::std::collections::HashSet<#elem>))
+        }
+        "Map" => {
+            // `new Map<K, V>()` → HashMap<K, V> (K, V from the two type args).
+            let mut args = new_type_args(new)?.into_iter();
+            let key = args.next()?;
+            let val = args.next()?;
+            Some(parse_quote!(::std::collections::HashMap<#key, #val>))
+        }
+        _ => None,
     }
+}
+
+/// The element type of a `new Set([literal array])` argument, inferred from the
+/// first array element, or `None` for a non-array-arg shape.
+fn set_array_elem_type(new: &NewExpression) -> Option<Type> {
     let arr = new.arguments.first()?.as_expression()?;
     let Expression::ArrayExpression(arr) = arr else {
         return None;
     };
-    let elem = array_literal_elem_type(arr)?;
-    Some(parse_quote!(::std::collections::HashSet<#elem>))
+    array_literal_elem_type(arr)
+}
+
+/// The translated type arguments of a `new` expression's type-parameter list
+/// (`new Map<K, V>()`), or `None` if it has no type arguments.
+fn new_type_args(new: &NewExpression) -> Option<Vec<Type>> {
+    let ta = new.type_arguments.as_deref()?;
+    Some(ta.params.iter().map(types::translate_type).collect())
 }
 
 /// The scalar element type of a literal array — taken from its first element
