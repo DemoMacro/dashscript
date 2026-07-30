@@ -38,6 +38,16 @@ fn translate_dep(
             // executable statement) is rejected by `FileRole::Module`.
             let dep_src = fs::read_to_string(dep_path)
                 .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
+            // A `.js` module whose class `extends` another (e.g. a crypto
+            // package's `class _SHA1 extends HashMD`) cannot lower statically,
+            // so it degrades wholesale to the engine — stub fns forward to
+            // QuickJS instead of the static translator emitting a
+            // `compile_error!`. `.ts` deps keep the per-function/whole-program
+            // degradation path (their classes may extend too, but a `.ts` dep
+            // is a workspace source, not an npm package).
+            if matches!(kind, DepKind::Js) && translator.js_module_needs_engine(&dep_src) {
+                return degrade_js_module(translator, dep_path, &dep_src, deps);
+            }
             let (rust, dep_deps) = translator
                 .translate_with_deps_as(&dep_src, FileRole::Module)
                 .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
@@ -57,10 +67,17 @@ fn translate_dep(
             // type items so cross-module type imports resolve. `declare
             // function` emits nothing — the `.js` provides the implementation,
             // and signature type injection is a later enhancement.
-            let dts_src = fs::read_to_string(&dts_path)
-                .map_err(|e| format!("cannot read import {}: {e}", dts_path.display()))?;
             let js_src = fs::read_to_string(&js_path)
                 .map_err(|e| format!("cannot read import {}: {e}", js_path.display()))?;
+            // Same wholesale degradation as a bare `.js`: a class `extends`
+            // lowers to engine stubs. The `.d.ts` value signatures are not yet
+            // wired into the stubs (a later batch); they would otherwise carry
+            // the param/return types.
+            if translator.js_module_needs_engine(&js_src) {
+                return degrade_js_module(translator, &js_path, &js_src, deps);
+            }
+            let dts_src = fs::read_to_string(&dts_path)
+                .map_err(|e| format!("cannot read import {}: {e}", dts_path.display()))?;
             let dts_items = translator.translate_dts(&dts_src);
             let (js_rust, dep_deps) = translator
                 .translate_with_deps_as(&js_src, FileRole::Module)
@@ -73,6 +90,47 @@ fn translate_dep(
             }
         }
     }
+}
+
+/// Lower a `.js`/`.mjs`/`.cjs` module that degrades wholesale to the engine —
+/// it declares a class `extends` the static translator cannot lower. Flag the
+/// engine runtime dep (so `__ds_engine.rs` is emitted), and emit one stub `fn`
+/// per `export function`: each registers the module under its absolute path
+/// (the engine's `Loader` reads source from `JS_MODULES`, and `DsResolver`
+/// joins relative imports onto the base path), then forwards the call to
+/// `__ds_engine::call_module_fn`, marshaling every value as `serde_json::Value`.
+/// TypedArray params/returns and `.d.ts`-derived signatures land in a later
+/// batch; for now the stub is `Value` end to end.
+fn degrade_js_module(
+    translator: &Translator,
+    js_path: &Path,
+    js_src: &str,
+    deps: &mut RuntimeDeps,
+) -> Result<String, Box<dyn Error>> {
+    deps.insert(crate::translator::RuntimeDep::Engine);
+    let specifier = js_path.to_string_lossy().replace('\\', "/");
+    let path_lit = format!("{specifier:?}");
+    let mut out = String::from(
+        "//! Degraded to the embedded QuickJS engine: a class `extends` here has \
+         no static lowering. Each exported function forwards to the engine.\n\n",
+    );
+    for (name, nparams) in translator.js_export_fns(js_src) {
+        let params = (0..nparams)
+            .map(|i| format!("__ds_p{i}: serde_json::Value"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let args = (0..nparams)
+            .map(|i| format!("__ds_p{i}"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let fn_lit = format!("{name:?}");
+        out.push_str(&format!(
+            "pub fn {name}({params}) -> serde_json::Value {{\n    \
+             crate::__ds_engine::register_js_module({path_lit}, {path_lit});\n    \
+             crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, &[{args}])\n}}\n\n",
+        ));
+    }
+    Ok(out)
 }
 
 /// Walk the import graph from `src` and aggregate every `.ts`/`.d.ts` file's
@@ -534,10 +592,16 @@ fn translate_one_with_mods(
             continue;
         }
         mod_decls.push_str(&format!("mod {};\n", imp.module));
-        // A bare (npm) import is outside the project tree; translate it here so
-        // its `mod` decl resolves. A relative import is translated by the walk.
-        if !imp.source.starts_with('.') {
-            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+        // A relative `.ts` dep is scanned + translated by `walk_ts`; everything
+        // else (a bare npm import, or a relative `.js`/`.d.ts` dep `walk_ts`
+        // skips) is translated here so its `mod` decl resolves. An unresolved
+        // import is left for `walk_ts` or cargo to surface.
+        let (dep_path, kind) = match resolve_local_module(base, &imp.source) {
+            Ok(v) => v,
+            Err(_) => continue,
+        };
+        let scanned_by_walk = imp.source.starts_with('.') && matches!(kind, DepKind::Ts);
+        if !scanned_by_walk {
             let dep_rust = translate_dep(&translator, &dep_path, kind, &mut deps)?;
             fs::write(
                 project_dir.join("src").join(format!("{}.rs", imp.module)),
@@ -915,7 +979,7 @@ fn inject_helper_module(
 /// `type` declarations become Rust items, and a value import surfaces as a
 /// `cargo check` error honestly. A `.d.ts` with a sibling `.js` is a typed
 /// package awaiting type injection (a later batch).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum DepKind {
     Ts,
     DtsOnly,
@@ -1485,6 +1549,109 @@ mod tests {
         write(root, "foo.ts", "export function foo() {}");
         let (resolved, _) = resolve_local_module(root, "./foo").unwrap();
         assert_eq!(resolved, root.join("foo.ts"));
+    }
+
+    #[test]
+    fn translate_dep_degrades_js_class_extends() {
+        // A `.js` module whose class `extends` another cannot lower statically,
+        // so translate_dep emits engine-forwarding stub fns and flags the
+        // engine runtime dep — instead of the static translator's
+        // `compile_error!`.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "dep.js",
+            "class A extends B {}\nexport function f(x) { return x; }",
+        );
+        let translator = Translator::new();
+        let mut deps = RuntimeDeps::empty();
+        let rust = translate_dep(&translator, &root.join("dep.js"), DepKind::Js, &mut deps)
+            .expect("a class-extends .js degrades");
+        assert!(rust.contains("pub fn f"), "stub fn emitted: {rust}");
+        assert!(
+            rust.contains("call_module_fn"),
+            "stub forwards to the engine: {rust}"
+        );
+        assert!(
+            !rust.contains("compile_error"),
+            "no static compile_error leaked: {rust}"
+        );
+        assert!(deps.needs_engine(), "engine runtime dep flagged");
+    }
+
+    #[test]
+    fn translate_dep_keeps_static_js_without_extends() {
+        // A `.js` module without `extends` stays on the static path (no stub).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "dep.js",
+            "export function add(a, b) { return a + b; }",
+        );
+        let translator = Translator::new();
+        let mut deps = RuntimeDeps::empty();
+        let rust = translate_dep(&translator, &root.join("dep.js"), DepKind::Js, &mut deps)
+            .expect("a plain .js transpiles");
+        assert!(
+            !rust.contains("call_module_fn"),
+            "no engine stub for a static .js: {rust}"
+        );
+        assert!(!deps.needs_engine());
+    }
+
+    #[test]
+    fn emit_cargo_project_degrades_js_dep_with_class_extends() {
+        // End-to-end: an entry importing a `.js` dep with a class `extends`
+        // emits engine-forwarding stubs for that dep and the `__ds_engine`
+        // helper module (the stubs call into it), flagged via the engine
+        // runtime dep on the emitted Cargo.toml.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "package.json",
+            r#"{ "name": "probe", "bin": "main.ts" }"#,
+        );
+        write(
+            root,
+            "main.ts",
+            "import { f } from \"./dep.js\";\nfunction main() { console.log(f(3)); }",
+        );
+        write(
+            root,
+            "dep.js",
+            "class A extends B {}\nexport function f(x) { return x + 1; }",
+        );
+        let out = tmp.path().join("out");
+        let main_path = root.join("main.ts");
+        let src = fs::read_to_string(&main_path).unwrap();
+        emit_cargo_project(&src, &main_path, &out).unwrap();
+        let mut stub = String::new();
+        for entry in fs::read_dir(out.join("src")).unwrap() {
+            let p = entry.unwrap().path();
+            if p.extension().and_then(|e| e.to_str()) == Some("rs") {
+                let body = fs::read_to_string(&p).unwrap();
+                if body.contains("crate::__ds_engine::call_module_fn") {
+                    stub = body;
+                }
+            }
+        }
+        assert!(stub.contains("pub fn f"), "stub fn emitted: {stub}");
+        assert!(
+            stub.contains("register_js_module"),
+            "stub registers its module: {stub}"
+        );
+        assert!(
+            out.join("src").join("__ds_engine.rs").exists(),
+            "__ds_engine helper emitted"
+        );
+        let cargo = fs::read_to_string(out.join("Cargo.toml")).unwrap();
+        assert!(
+            cargo.contains("rquickjs") || cargo.contains("rquickjs-sys"),
+            "engine crate dep on Cargo.toml: {cargo}"
+        );
     }
 
     #[test]

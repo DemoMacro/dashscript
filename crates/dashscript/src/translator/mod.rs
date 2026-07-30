@@ -1008,11 +1008,13 @@ static JS_MODULES: Mutex<Vec<(String, String)>> = Mutex::new(Vec::new());
 
 /// Register a degraded `.js` module so the engine's `Loader` can find it. The
 /// translator emits one call per `.js` module that degrades to the engine.
+/// Idempotent — a stub `fn` re-registers on every call, so a module imported
+/// through several stubs registers once.
 pub fn register_js_module(specifier: &str, path: &str) {
-    JS_MODULES
-        .lock()
-        .expect("JS_MODULES lock")
-        .push((specifier.to_string(), path.to_string()));
+    let mut v = JS_MODULES.lock().expect("JS_MODULES lock");
+    if !v.iter().any(|(s, _)| s == specifier) {
+        v.push((specifier.to_string(), path.to_string()));
+    }
 }
 
 /// Read a registered module's source, or an error if it was never registered.
@@ -1504,6 +1506,68 @@ impl Translator {
         }
         let program = allocator.alloc(ret.program);
         check::program_uses_engine(program)
+    }
+
+    /// True when `source` (a `.js`/`.mjs`/`.cjs` module) declares a class the
+    /// static translator cannot lower — a class with a `super_class`
+    /// (`extends`). Such a module degrades wholesale to the engine: its
+    /// exports become stub fns that call into QuickJS, which runs the real
+    /// prototype chain. Only top-level classes are scanned (an npm package's
+    /// classes are top-level `export`s); a parse error reads as `false` (the
+    /// later translate reports it properly).
+    #[must_use]
+    pub fn js_module_needs_engine(&self, source: &str) -> bool {
+        use oxc_ast::ast::{Declaration, ExportDefaultDeclarationKind, Statement};
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return false;
+        }
+        let program = allocator.alloc(ret.program);
+        let needs_engine = |class: &oxc_ast::ast::Class<'_>| {
+            matches!(
+                classify::classify_class(class),
+                classify::Mapping::DegradeEngine(_)
+            )
+        };
+        program.body.iter().any(|stmt| match stmt {
+            Statement::ClassDeclaration(class) => needs_engine(class),
+            Statement::ExportNamedDeclaration(exp) => matches!(
+                &exp.declaration,
+                Some(Declaration::ClassDeclaration(class)) if needs_engine(class)
+            ),
+            Statement::ExportDefaultDeclaration(exp) => matches!(
+                &exp.declaration,
+                ExportDefaultDeclarationKind::ClassDeclaration(class) if needs_engine(class)
+            ),
+            _ => false,
+        })
+    }
+
+    /// The `(name, param_count)` of each `export function` in a `.js`/`.mjs`/
+    /// `.cjs` module — the surface a degraded module's stub fns expose. A
+    /// degraded module (one with a class `extends`) emits one stub per exported
+    /// function, each forwarding to the engine. A parse error yields none.
+    #[must_use]
+    pub fn js_export_fns(&self, source: &str) -> Vec<(String, usize)> {
+        use oxc_ast::ast::{Declaration, Statement};
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Vec::new();
+        }
+        let program = allocator.alloc(ret.program);
+        let mut out = Vec::new();
+        for stmt in &program.body {
+            if let Statement::ExportNamedDeclaration(exp) = stmt {
+                if let Some(Declaration::FunctionDeclaration(f)) = &exp.declaration {
+                    if let Some(id) = &f.id {
+                        out.push((id.name.to_string(), f.params.items.len()));
+                    }
+                }
+            }
+        }
+        out
     }
 
     /// Set whether the whole project has an engine-degradation site, so every

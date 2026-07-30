@@ -53,3 +53,30 @@ fn untyped_js_homogeneous_array_transpiles() {
     assert!(rust.contains("let xs: Vec<f64>"), "got: {rust}");
     assert!(rust.contains("xs.len() as f64"), "got: {rust}");
 }
+
+#[test]
+fn js_module_with_class_extends_needs_engine() {
+    // A class `extends` (e.g. a crypto package's `class _SHA1 extends HashMD`)
+    // has no static lowering, so the whole module degrades to the engine.
+    let js = "class A extends B {}\nexport function f(x) { return x; }";
+    assert!(Translator::new().js_module_needs_engine(js));
+    // An `export class … extends` (the npm-package shape) also degrades.
+    assert!(Translator::new().js_module_needs_engine("export class A extends B {}"));
+}
+
+#[test]
+fn js_module_without_extends_stays_static() {
+    // No class, or a constructor+methods-only class, stays on the static path.
+    assert!(!Translator::new().js_module_needs_engine("export function f(x) { return x; }"));
+    assert!(!Translator::new().js_module_needs_engine("export class A { constructor() {} m() {} }"));
+}
+
+#[test]
+fn js_export_fns_lists_named_exports() {
+    // The stub emitter reads each `export function`'s name + arity.
+    let js =
+        "export function sha1(d) { return d; }\nexport function bytesToHex(b, c) { return b; }";
+    let fns = Translator::new().js_export_fns(js);
+    assert!(fns.contains(&("sha1".to_string(), 1)), "got: {fns:?}");
+    assert!(fns.contains(&("bytesToHex".to_string(), 2)), "got: {fns:?}");
+}

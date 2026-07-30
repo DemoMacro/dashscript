@@ -18,7 +18,7 @@ use std::borrow::Cow;
 use std::collections::HashSet;
 
 use oxc_ast::ast::{
-    Argument, AssignmentTarget, BinaryOperator, CallExpression, Expression, Function,
+    Argument, AssignmentTarget, BinaryOperator, CallExpression, Class, Expression, Function,
     ObjectPropertyKind, PropertyKind, UnaryOperator,
 };
 
@@ -234,6 +234,21 @@ pub(in crate::translator) fn classify_function_signature(f: &Function) -> Mappin
     } else {
         Mapping::Mapped
     }
+}
+
+/// Classify a class declaration/expression. A class with a `super_class`
+/// (`extends`) cannot lower statically — DashScript models composition, not
+/// inheritance, so `class B extends A` reaches the static translator only as a
+/// `compile_error!` (see `class::translate_class`). A `.js`/`.mjs`/`.cjs`
+/// module whose class extends another (e.g. `class _SHA1 extends HashMD`) must
+/// therefore degrade wholesale to the engine, where QuickJS runs the real
+/// prototype chain. A single-base class with only a constructor and methods
+/// stays `Mapped` (the #130-132 lowering).
+pub(in crate::translator) fn classify_class(class: &Class) -> Mapping {
+    if class.super_class.is_some() {
+        return degrade("class `extends` needs the engine (no static inheritance lowering)");
+    }
+    Mapping::Mapped
 }
 
 /// Classify a call expression: reflection methods reject; a `Function` value
@@ -710,6 +725,37 @@ mod tests {
             }
         }
         panic!("no function declaration in {src:?}");
+    }
+
+    fn classify_class_decl(src: &str) -> Mapping {
+        use oxc_allocator::Allocator;
+        use oxc_parser::Parser;
+        use oxc_span::SourceType;
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, src, SourceType::ts()).parse();
+        assert!(ret.diagnostics.is_empty(), "parse failed for {src:?}");
+        let program = allocator.alloc(ret.program);
+        for stmt in &program.body {
+            if let oxc_ast::ast::Statement::ClassDeclaration(class) = stmt {
+                return classify_class(class);
+            }
+        }
+        panic!("no class declaration in {src:?}");
+    }
+
+    #[test]
+    fn degrades_class_extends() {
+        // `class B extends A` has no static lowering (composition only) → engine.
+        assert!(matches!(
+            classify_class_decl("class A extends B {}"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn maps_plain_class() {
+        // A constructor + methods class stays on the static path (#130-132).
+        assert!(classify_class_decl("class A { constructor() {} m() {} }").is_mapped());
     }
 
     #[test]
