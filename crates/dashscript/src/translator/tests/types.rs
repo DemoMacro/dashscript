@@ -117,6 +117,42 @@ fn set_literal_singleton_infers_hashset_type() {
 }
 
 #[test]
+fn object_literal_singleton_infers_hashmap_type() {
+    // A module-global object literal with no annotation whose properties share
+    // one scalar kind lowers to a OnceLock<HashMap<String, V>> — V inferred from
+    // the uniform property value kind (`{ flag: true, on: true }` → bool) — and
+    // the initializer is `HashMap::from([...])`, the anonymous-object mapping.
+    let src = "const OPTS = { flag: true, on: true };\
+               function read(): boolean { const alias = OPTS; return true; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains(
+            "static OPTS_CELL: ::std::sync::OnceLock<::std::collections::HashMap<String, bool>>"
+        ),
+        "got:\n{rust}"
+    );
+    assert!(
+        rust.contains("::std::collections::HashMap::from(["),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
+fn string_concat_singleton_infers_string_type() {
+    // A module-global `+` chain with a string-literal leaf lowers to a
+    // OnceLock<String> — the init translates to `format!(...)` (Rust's `+` does
+    // not apply to `String`), so the cell holds a `String`.
+    let src = "const NS = \"http://x\";\
+               const XML = '<a>' + NS + '</a>';\
+               function read(): string { const ref = XML; return ref; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("static XML_CELL: ::std::sync::OnceLock<String>"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn const_arrow_lowers_to_fn_item() {
     // A module-level const arrow (`const f = () => …`) is a declaration that
     // lowers to a `fn` item, not an executable statement — so it never lands in

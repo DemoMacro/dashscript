@@ -6,8 +6,9 @@
 use std::collections::HashSet;
 
 use oxc_ast::ast::{
-    ArrayExpression, ArrayExpressionElement, BindingPattern, CallExpression, Expression,
-    NewExpression, Statement, TSTypeParameterInstantiation, VariableDeclarationKind,
+    ArrayExpression, ArrayExpressionElement, BinaryExpression, BinaryOperator, BindingPattern,
+    CallExpression, Expression, NewExpression, ObjectExpression, ObjectPropertyKind, Statement,
+    TSTypeParameterInstantiation, VariableDeclarationKind,
 };
 use oxc_semantic::SymbolId;
 use quote::format_ident;
@@ -67,14 +68,18 @@ pub(in crate::translator) fn lazy_static_candidate(
     }
     // An inferable type: an explicit annotation, a regex literal (→
     // `regress::Regex`), a runtime factory call (`const p = createFactory<T>(...)`)
-    // whose return type is inferred from the callee's cross-file signature, or a
+    // whose return type is inferred from the callee's cross-file signature, a
     // collection constructor (`const s = new Set([…])`) whose element type is
-    // inferred from the literal. Any other init without an annotation has no
-    // static type to put on the OnceLock — defer.
+    // inferred from the literal, or an options/config object literal
+    // (`const opts = { flag: true, … }`) whose uniform value type is inferred from
+    // its properties. Any other init without an annotation has no static type to
+    // put on the OnceLock — defer.
     if d.type_annotation.is_none()
         && !matches!(init, Expression::RegExpLiteral(_))
         && !is_inferable_call(init)
         && !is_inferable_new(init)
+        && !is_inferable_object(init)
+        && !is_inferable_binary(init)
     {
         return false;
     }
@@ -256,6 +261,23 @@ pub(in crate::translator) fn lazy_static_items(
         // infers its element type from the first array element so the OnceLock
         // holds `HashSet<T>` (`["jpg", …]` → `HashSet<String>`).
         new_collection_return_type(new).unwrap_or_else(|| parse_quote!(_))
+    } else if let Expression::ObjectExpression(obj) = init {
+        // An options/config object literal with no annotation — `const opts =
+        // { flag: true, … }` infers a uniform value type `V` from its properties
+        // so the OnceLock holds `HashMap<String, V>` (`{ a: true, b: true }` →
+        // `HashMap<String, bool>`). An anonymous object literal lowers to a
+        // `HashMap` (JS objects are dynamic maps); a uniform scalar value type
+        // is read off the properties so the cell has a concrete type.
+        let val =
+            object_literal_value_type(obj).unwrap_or_else(|| parse_quote!(::serde_json::Value));
+        parse_quote!(::std::collections::HashMap<String, #val>)
+    } else if let Expression::BinaryExpression(bin) = init {
+        // A string-concatenation `+` chain — `'<a>' + NS + '</a>'` — lowers to
+        // `String`: the init translates to `format!(...)` (Rust's `+` does not
+        // apply to `String`), so the OnceLock holds a `String`. A numeric `+`
+        // chain is not a candidate (`is_inferable_binary` requires a string leaf).
+        let _ = bin;
+        parse_quote!(String)
     } else {
         // A regex literal with no annotation — `regress::Regex`.
         parse_quote!(regress::Regex)
@@ -349,6 +371,86 @@ fn is_inferable_new(init: &Expression) -> bool {
         return false;
     };
     new_collection_return_type(new).is_some()
+}
+
+/// Whether `init` is an object literal whose value type the translator can infer
+/// without an annotation — so a module-global options/config singleton lowers to
+/// a `OnceLock<HashMap<String, V>>` even without one. Every property value must be
+/// the same scalar kind (all `boolean`, all `number`, or all `string`) so `V` is
+/// uniform; a mixed-kind or non-scalar object defers (no single `V`).
+fn is_inferable_object(init: &Expression) -> bool {
+    let Expression::ObjectExpression(obj) = init else {
+        return false;
+    };
+    object_literal_value_type(obj).is_some()
+}
+
+/// The uniform value type `V` of an object literal whose properties are all the
+/// same scalar kind — the `V` in `HashMap<String, V>` for a module-global
+/// options object (`{ flag: true, on: true }` → `bool`). `None` for an empty
+/// object, a non-identifier-keyed/non-ObjectProperty member, a non-scalar value,
+/// or mixed kinds (so a uniform `V` cannot be chosen).
+fn object_literal_value_type(obj: &ObjectExpression) -> Option<Type> {
+    let kinds: Vec<&str> = obj
+        .properties
+        .iter()
+        .filter_map(|p| {
+            let ObjectPropertyKind::ObjectProperty(op) = p else {
+                return None;
+            };
+            Some(match &op.value {
+                Expression::StringLiteral(_) => "str",
+                Expression::NumericLiteral(_) => "num",
+                Expression::BooleanLiteral(_) => "bool",
+                _ => return None,
+            })
+        })
+        .collect();
+    if kinds.is_empty() || kinds.iter().any(|k| *k != kinds[0]) {
+        return None;
+    }
+    Some(match kinds[0] {
+        "str" => parse_quote!(String),
+        "num" => parse_quote!(f64),
+        _ => parse_quote!(bool),
+    })
+}
+
+/// Whether `init` is a `+` chain that is string concatenation — so a
+/// module-global string-built constant (`const XML = '<a>' + NS + '</a>'`)
+/// lowers to a `OnceLock<String>` even without an annotation. A `+` chain is
+/// string concatenation when any leaf operand is a string literal (TS `+`
+/// semantics: one string operand makes the whole chain a string). A purely
+/// numeric `+` chain is arithmetic (`f64`) and is not a candidate.
+fn is_inferable_binary(init: &Expression) -> bool {
+    let Expression::BinaryExpression(bin) = init else {
+        return false;
+    };
+    if !matches!(bin.operator, BinaryOperator::Addition) {
+        return false;
+    }
+    binary_is_string_concat(bin)
+}
+
+/// Whether a `+` BinaryExpression is string concatenation: any leaf operand is
+/// a string literal, recursing through nested `+` and parens. A syntactic check
+/// (no `Ctx`/`local_type`), so it is usable from the candidate filter — the
+/// emit path's `concat_is_string` (binary.rs) re-checks with type context.
+fn binary_is_string_concat(bin: &BinaryExpression) -> bool {
+    operand_is_str_literal(&bin.left) || operand_is_str_literal(&bin.right)
+}
+
+/// Whether `expr` is (or contains, via nested `+`/parens) a string literal —
+/// the marker that a `+` chain is string concatenation.
+fn operand_is_str_literal(expr: &Expression) -> bool {
+    match expr {
+        Expression::StringLiteral(_) => true,
+        Expression::BinaryExpression(bin) if matches!(bin.operator, BinaryOperator::Addition) => {
+            binary_is_string_concat(bin)
+        }
+        Expression::ParenthesizedExpression(p) => operand_is_str_literal(&p.expression),
+        _ => false,
+    }
 }
 
 /// The collection type of a `new Set([literal array])` initializer, inferred
