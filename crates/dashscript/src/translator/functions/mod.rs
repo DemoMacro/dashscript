@@ -933,11 +933,34 @@ fn register_declarator(
     let name = bindings::snake(id.name.as_str()).to_string();
     let path = match &decl.init {
         Some(Expression::CallExpression(call)) => callee_return_path(call, registry),
+        // `new Uint8Array(…)` → `Vec<u8>` (typed_array_path), so a later
+        // `x[0] = v` stores with a `u8` cast. Any other `new` callee falls
+        // through to the element-path probe (which yields `None` for it).
+        Some(Expression::NewExpression(n)) => typed_array_path(n),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
     if let Some(path) = path {
         locals.insert(name, path);
+    }
+}
+
+/// `new Uint8Array(…)` / `ArrayBuffer` / `Uint8ClampedArray` → `Vec<u8>`, so an
+/// unannotated `let x = new Uint8Array(3)` records `Vec<u8>` and a later
+/// `x[0] = v` stores the value with a `u8` cast. Mirrors the type mapping;
+/// `None` for any other `new` callee.
+fn typed_array_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    if matches!(
+        id.name.as_str(),
+        "Uint8Array" | "ArrayBuffer" | "Uint8ClampedArray"
+    ) {
+        Some(parse_quote!(Vec<u8>))
+    } else {
+        None
     }
 }
 

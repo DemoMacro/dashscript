@@ -32,6 +32,11 @@ enum AssignTarget {
         /// the `array_set` call reborrows it (`array_set(c, …)`) rather than
         /// taking `&mut` of an owned binding.
         is_ref: bool,
+        /// The target is a `Vec<u8>` local (a `Uint8Array`), so the stored
+        /// value is narrowed to `u8`. `__ds::array_set` is generic over
+        /// `Vec<T>`, and an ES `bytes[i] = n` writes a `number`; a `Vec<f64>`
+        /// array keeps the `f64` store (`false`).
+        elem_is_u8: bool,
     },
 }
 
@@ -137,7 +142,12 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
             AssignmentOperator::Assign => parse_quote!(#map.insert(#key, #right)),
             _ => parse_quote!(::core::todo!()),
         },
-        Some(AssignTarget::ArraySet { obj, idx, is_ref }) => match a.operator {
+        Some(AssignTarget::ArraySet {
+            obj,
+            idx,
+            is_ref,
+            elem_is_u8,
+        }) => match a.operator {
             // `xs[i] = v` → `__ds::array_set(&mut xs, i, v)` (ES auto-grow). A
             // bare `xs[i as usize] = v` would panic on a Rust `Vec` when `i` is
             // out of range; ES grows the array instead. Compound assign on an
@@ -148,8 +158,14 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
             AssignmentOperator::Assign => {
                 // Coerce a numeric RHS to `f64` — `__ds::array_set` stores into
                 // a `Vec<f64>`, so an `i64` scalar RHS (`arr[i] = count`) needs
-                // the same site-cast as `arr.push(count)`.
+                // the same site-cast as `arr.push(count)`. A `Vec<u8>` target
+                // (a `Uint8Array`) then narrows the value to `u8`.
                 let val = array_elem_expr(&a.right, ctx);
+                let val: Expr = if elem_is_u8 {
+                    parse_quote!((#val) as u8)
+                } else {
+                    val
+                };
                 // Bind the value first so an RHS that reads the same array
                 // (`arr[i] = arr[j]`) cannot collide with the `&mut` borrow
                 // `array_set` takes — the immutable borrow ends at the `let`
@@ -256,7 +272,13 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
                 ctx,
             );
             let is_ref = is_ref_param_target(&cm.object, ctx);
-            Some(AssignTarget::ArraySet { obj, idx, is_ref })
+            let elem_is_u8 = u8_elem_target(&cm.object, ctx);
+            Some(AssignTarget::ArraySet {
+                obj,
+                idx,
+                is_ref,
+                elem_is_u8,
+            })
         }
         _ => None,
     }
@@ -280,6 +302,36 @@ fn is_ref_param_target(object: &Expression, ctx: &Ctx<'_>) -> bool {
     };
     let name = ctx.names().of_reference(id).to_string();
     ctx.is_ref_param(&name)
+}
+
+/// Whether a computed-member assignment target (`xs[i] = v`) is a `Vec<u8>`
+/// local (a `Uint8Array`), so the stored value narrows to `u8`. Only a
+/// bare-identifier root whose tracked type is `Vec<u8>` matches.
+fn u8_elem_target(object: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = object else {
+        return false;
+    };
+    let name = ctx.names().of_reference(id).to_string();
+    matches!(ctx.local_type(&name), Some(p) if is_vec_u8(p))
+}
+
+/// Whether a type path is `Vec<u8>` (a `Uint8Array` byte buffer).
+fn is_vec_u8(path: &syn::Path) -> bool {
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
+    if seg.ident != "Vec" {
+        return false;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return false;
+    };
+    args.args.iter().any(|a| {
+        matches!(
+            a,
+            syn::GenericArgument::Type(syn::Type::Path(tp)) if tp.path.is_ident("u8")
+        )
+    })
 }
 
 /// Whether an assignment target is a `String`-typed local — so `+=` and

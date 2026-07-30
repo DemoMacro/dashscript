@@ -223,6 +223,24 @@ fn translates_array_index_assign_to_array_set() {
 }
 
 #[test]
+fn array_set_to_uint8_array_narrows_value_to_u8() {
+    // `let x = new Uint8Array(3); x[0] = 255` — the typed array's element is
+    // `u8`, so the number value narrows to `u8` at the store site (not the
+    // default `f64` store a `Vec<f64>` array gets). The unannotated
+    // `let x = new Uint8Array(…)` records `Vec<u8>`, which drives the cast.
+    let src = "function f(): void { let x = new Uint8Array(3); x[0] = 255; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("as u8"),
+        "Uint8Array index assign narrows the value to u8: {rust}"
+    );
+    assert!(
+        rust.contains("array_set(&mut x,"),
+        "still routes through array_set: {rust}"
+    );
+}
+
+#[test]
 fn array_set_rhs_reading_same_array_compiles() {
     // `arr[i] = arr[j]` — the RHS borrows the same array the store mutates. The
     // temp binding keeps the immutable borrow's lifetime clear of the `&mut`.
