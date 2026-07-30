@@ -999,33 +999,34 @@ use rquickjs::{
 };
 use std::sync::Mutex;
 
-/// Build-time-resolved `.js` module table: ESM specifier → absolute file path.
-/// Populated by `register_js_module` calls the translator emits at the start of
-/// `fn main` (one per degraded `.js` module). The `Loader` reads source from
-/// here at runtime — node_modules resolution already happened at build time, so
-/// the engine never walks the filesystem to resolve an `import`.
+/// Build-time-resolved `.js` module table: ESM specifier → inlined source. The
+/// translator reads each degraded `.js` module's source at build time and
+/// emits a `register_js_module(specifier, source)` call, so the `Loader`'s
+/// `source_of` is a table lookup — the emitted crate is self-contained (no
+/// runtime `.js` files), and node_modules resolution already happened at build
+/// time, so the engine never walks the filesystem to resolve an `import`.
 static JS_MODULES: Mutex<Vec<(String, String)>> = Mutex::new(Vec::new());
 
-/// Register a degraded `.js` module so the engine's `Loader` can find it. The
-/// translator emits one call per `.js` module that degrades to the engine.
-/// Idempotent — a stub `fn` re-registers on every call, so a module imported
-/// through several stubs registers once.
-pub fn register_js_module(specifier: &str, path: &str) {
+/// Register a degraded `.js` module's source so the engine's `Loader` can find
+/// it. The translator emits one call per `.js` module that degrades to the
+/// engine, inlining the source at build time. Idempotent — a stub `fn`
+/// re-registers on every call, so a module imported through several stubs
+/// registers once.
+pub fn register_js_module(specifier: &str, source: &str) {
     let mut v = JS_MODULES.lock().expect("JS_MODULES lock");
     if !v.iter().any(|(s, _)| s == specifier) {
-        v.push((specifier.to_string(), path.to_string()));
+        v.push((specifier.to_string(), source.to_string()));
     }
 }
 
 /// Read a registered module's source, or an error if it was never registered.
 fn source_of(name: &str) -> rquickjs::Result<String> {
-    let path = JS_MODULES
+    JS_MODULES
         .lock()
         .expect("JS_MODULES lock")
         .iter()
         .find(|(n, _)| n == name)
-        .map(|(_, p)| p.clone());
-    path.and_then(|p| std::fs::read_to_string(&p).ok())
+        .map(|(_, source)| source.clone())
         .ok_or_else(|| rquickjs::Error::new_loading(name))
 }
 

@@ -12,6 +12,18 @@ use std::{
 
 use crate::{FileRole, Package, RuntimeDeps, Translator};
 
+/// True when `dep_path` lives under a `node_modules` directory — an npm
+/// package's `.js`. Such modules are pure ECMAScript implementations (classes
+/// that `extends`, `BigInt`, prototype reflection, …) the static translator
+/// cannot lower correctly, so they degrade wholesale to the engine rather than
+/// transpile per-feature. A workspace `.js` (under `packages/`) keeps the
+/// transpile-first path: it is a first-party source the translator may lower.
+fn is_npm_js(dep_path: &Path) -> bool {
+    dep_path
+        .components()
+        .any(|c| c.as_os_str() == std::ffi::OsStr::new("node_modules"))
+}
+
 /// Translate one resolved dependency to the Rust source for `src/<module>.rs`,
 /// merging its runtime deps into `deps`. The `DepKind` picks the path: a `.ts`
 /// or untyped `.js` dep is transpiled as a Rust module (transpile-first); a
@@ -45,7 +57,9 @@ fn translate_dep(
             // `compile_error!`. `.ts` deps keep the per-function/whole-program
             // degradation path (their classes may extend too, but a `.ts` dep
             // is a workspace source, not an npm package).
-            if matches!(kind, DepKind::Js) && translator.js_module_needs_engine(&dep_src) {
+            if matches!(kind, DepKind::Js)
+                && (is_npm_js(dep_path) || translator.js_module_needs_engine(&dep_src))
+            {
                 return degrade_js_module(translator, dep_path, &dep_src, None, deps);
             }
             let (rust, dep_deps) = translator
@@ -73,7 +87,7 @@ fn translate_dep(
             // signatures specialize each stub (a marshal-safe signature like
             // `bytesToHex(bytes: Uint8Array): string` keeps its concrete Rust
             // types); a signature with an unmappable type falls back to `Value`.
-            if translator.js_module_needs_engine(&js_src) {
+            if is_npm_js(&js_path) || translator.js_module_needs_engine(&js_src) {
                 return degrade_js_module(translator, &js_path, &js_src, Some(&dts_src), deps);
             }
             let dts_items = translator.translate_dts(&dts_src);
@@ -184,6 +198,10 @@ fn degrade_js_module(
     deps.insert(crate::translator::RuntimeDep::Engine);
     let specifier = js_path.to_string_lossy().replace('\\', "/");
     let path_lit = format!("{specifier:?}");
+    // Inline the `.js` source at build time as a Rust string literal so the
+    // emitted crate is self-contained — the engine's `Loader` reads it from the
+    // `JS_MODULES` table at runtime, never from the filesystem.
+    let js_source_lit = format!("{js_src:?}");
     // Index the sibling `.d.ts`'s declared signatures by name+arity so each
     // stub can specialize when its whole signature is marshal-safe.
     let sigs = dts_src
@@ -233,7 +251,7 @@ fn degrade_js_module(
                     .join(", ");
                 format!(
                     "pub fn {name}({params}) -> {ret_str} {{\n    \
-                     crate::__ds_engine::register_js_module({path_lit}, {path_lit});\n    \
+                     crate::__ds_engine::register_js_module({path_lit}, {js_source_lit});\n    \
                      let __ds_ret = crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, \
                      &[{args}]);\n    \
                      serde_json::from_value(__ds_ret).expect(\"unmarshal {name} return\")\n}}\n\n",
@@ -252,7 +270,7 @@ fn degrade_js_module(
                     .join(", ");
                 format!(
                     "pub fn {name}({params}) -> serde_json::Value {{\n    \
-                     crate::__ds_engine::register_js_module({path_lit}, {path_lit});\n    \
+                     crate::__ds_engine::register_js_module({path_lit}, {js_source_lit});\n    \
                      crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, &[{args}])\n}}\n\n",
                 )
             }
