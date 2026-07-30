@@ -357,17 +357,16 @@ fn engine_loads_multi_file_js_module_graph() {
     // B6-2: the engine's `Loader`/`Resolver` loads a multi-file ESM `.js`
     // module graph (a.js imports b.js), `call_module_fn` lazily declares +
     // evaluates it, and the return marshals back. The `bytes` export returns a
-    // `Uint8Array`, covering B6-1's `js_to_json` TypedArray arm end-to-end.
+    // `Uint8Array`, covering B6-1's `js_to_json` TypedArray arm end-to-end. Each
+    // module's source is inlined via `register_js_module` — the emitted crate is
+    // self-contained (no runtime `.js` files; `source_of` is a table lookup, not
+    // a filesystem read).
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
     let target_dir = tmp.path().join("target");
     fs::create_dir_all(project.join("src")).expect("probe src");
     let a_js = "import { double } from \"./b.js\";\nexport function f(x) { return double(x) + 1; }\nexport function bytes() { return new Uint8Array([1, 2, 3]); }\n";
     let b_js = "export function double(x) { return x * 2; }\n";
-    let a_path = tmp.path().join("a.js");
-    let b_path = tmp.path().join("b.js");
-    fs::write(&a_path, a_js).expect("write a.js");
-    fs::write(&b_path, b_js).expect("write b.js");
     // Pull the engine dep set (needs_engine) so write_project emits
     // __ds_engine.rs + the rquickjs cargo line, without translating any .ts.
     let (_, deps) = Translator::new()
@@ -378,8 +377,8 @@ fn engine_loads_multi_file_js_module_graph() {
     assert!(deps.needs_engine(), "probe must pull the engine dep set");
     let main = format!(
         "fn main() {{\n    __ds_engine::register_js_module(\"a.js\", {a:?});\n    __ds_engine::register_js_module(\"b.js\", {b:?});\n    let r = __ds_engine::call_module_fn(\"a.js\", \"f\", &[serde_json::json!(3)]);\n    println!(\"f={{}}\", r);\n    let bytes = __ds_engine::call_module_fn(\"a.js\", \"bytes\", &[]);\n    println!(\"bytes={{}}\", bytes);\n}}\n",
-        a = a_path.display().to_string(),
-        b = b_path.display().to_string(),
+        a = a_js,
+        b = b_js,
     );
     write_project(&project, &main, &deps);
     let (ok, out) = cargo(&project, &target_dir, &["run", "--quiet"]);

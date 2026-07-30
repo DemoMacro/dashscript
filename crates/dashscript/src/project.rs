@@ -24,6 +24,27 @@ fn is_npm_js(dep_path: &Path) -> bool {
         .any(|c| c.as_os_str() == std::ffi::OsStr::new("node_modules"))
 }
 
+/// Build-time mirror of the engine's runtime `DsResolver` join
+/// (`__ds_engine.rs`): a bare specifier stays as-is (already a resolved
+/// `node_modules` package path); a relative specifier joins onto the base
+/// module's directory. The result is the key a degraded module is registered
+/// under, so the runtime resolver — which applies the identical join — finds
+/// it. Bare and relative must agree between build time and runtime, or a
+/// transitive `import "./_md.js"` resolves to a key the loader never stored.
+fn ds_resolve_specifier(base: &str, name: &str) -> String {
+    if !name.starts_with('.') {
+        name.to_string()
+    } else {
+        let base_dir = base.rsplit_once('/').map(|(dir, _)| dir).unwrap_or("");
+        let rel = name.strip_prefix("./").unwrap_or(name);
+        if base_dir.is_empty() {
+            rel.to_string()
+        } else {
+            format!("{base_dir}/{rel}")
+        }
+    }
+}
+
 /// Translate one resolved dependency to the Rust source for `src/<module>.rs`,
 /// merging its runtime deps into `deps`. The `DepKind` picks the path: a `.ts`
 /// or untyped `.js` dep is transpiled as a Rust module (transpile-first); a
@@ -35,6 +56,7 @@ fn translate_dep(
     translator: &Translator,
     dep_path: &Path,
     kind: DepKind,
+    import_specifier: &str,
     deps: &mut RuntimeDeps,
 ) -> Result<String, Box<dyn Error>> {
     match kind {
@@ -60,7 +82,14 @@ fn translate_dep(
             if matches!(kind, DepKind::Js)
                 && (is_npm_js(dep_path) || translator.js_module_needs_engine(&dep_src))
             {
-                return degrade_js_module(translator, dep_path, &dep_src, None, deps);
+                return degrade_js_module(
+                    translator,
+                    dep_path,
+                    &dep_src,
+                    None,
+                    import_specifier,
+                    deps,
+                );
             }
             let (rust, dep_deps) = translator
                 .translate_with_deps_as(&dep_src, FileRole::Module)
@@ -88,7 +117,14 @@ fn translate_dep(
             // `bytesToHex(bytes: Uint8Array): string` keeps its concrete Rust
             // types); a signature with an unmappable type falls back to `Value`.
             if is_npm_js(&js_path) || translator.js_module_needs_engine(&js_src) {
-                return degrade_js_module(translator, &js_path, &js_src, Some(&dts_src), deps);
+                return degrade_js_module(
+                    translator,
+                    &js_path,
+                    &js_src,
+                    Some(&dts_src),
+                    import_specifier,
+                    deps,
+                );
             }
             let dts_items = translator.translate_dts(&dts_src);
             let (js_rust, dep_deps) = translator
@@ -178,29 +214,86 @@ fn render_type(ty: &syn::Type) -> String {
         .replace("> ", ">")
 }
 
+/// Walk a degraded module's ESM import graph and record every transitive
+/// `.js`/`.ts` source in `deps.js_module_sources` under its DsResolver
+/// specifier. A `.js` package like `@noble/hashes` is a multi-file graph
+/// (`sha2.js` → `_md.js` → `_u64.js`); the runtime `DsLoader` resolves each
+/// transitive `import` via `source_of`, so each one must be registered at build
+/// time — not just the directly-imported module. A module with no
+/// `export function` (only `export const`/`class`, e.g. `_md.js`) emits no stub
+/// and is never runtime-registered, so it relies on this table alone.
+fn register_js_module_graph(
+    translator: &Translator,
+    js_path: &Path,
+    js_src: &str,
+    specifier: &str,
+    deps: &mut RuntimeDeps,
+) {
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut worklist: std::collections::VecDeque<(PathBuf, String, String)> =
+        std::collections::VecDeque::new();
+    worklist.push_back((
+        js_path.to_path_buf(),
+        js_src.to_string(),
+        specifier.to_string(),
+    ));
+    while let Some((path, src, spec)) = worklist.pop_front() {
+        if !seen.insert(spec.clone()) {
+            continue;
+        }
+        deps.add_js_module(&spec, &src);
+        let base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in translator.imports(&src) {
+            let child_spec = ds_resolve_specifier(&spec, &imp.source);
+            if seen.contains(&child_spec) {
+                continue;
+            }
+            let Ok((child_path, child_kind)) = resolve_local_module(base, &imp.source) else {
+                continue;
+            };
+            let child_js = match &child_kind {
+                DepKind::Js | DepKind::Ts => fs::read_to_string(&child_path).ok(),
+                DepKind::DtsWithJs { js_path, .. } => fs::read_to_string(js_path).ok(),
+                DepKind::DtsOnly => None,
+            };
+            let Some(child_js) = child_js else {
+                continue;
+            };
+            worklist.push_back((child_path, child_js, child_spec));
+        }
+    }
+}
+
 /// Lower a `.js`/`.mjs`/`.cjs` module that degrades wholesale to the engine —
 /// it declares a class `extends` the static translator cannot lower. Flag the
-/// engine runtime dep (so `__ds_engine.rs` is emitted), and emit one stub `fn`
-/// per `export function`: each registers the module under its absolute path
-/// (the engine's `Loader` reads source from `JS_MODULES`, and `DsResolver`
-/// joins relative imports onto the base path), then forwards the call to
-/// `__ds_engine::call_module_fn`. When a sibling `.d.ts` carries the function's
-/// signature and every param/return type is marshal-safe, the stub specializes
-/// to those concrete types (marshaling via `serde_json::{to,from}_value`) so a
-/// static call site stays type-correct; otherwise it marshals `Value` end to end.
+/// engine runtime dep (so `__ds_engine.rs` is emitted), register this module
+/// and its whole transitive import graph under their DsResolver specifiers
+/// ([`register_js_module_graph`]), and emit one stub `fn` per
+/// `export function`: each forwards to `__ds_engine::call_module_fn`. When a
+/// sibling `.d.ts` carries the function's signature and every param/return type
+/// is marshal-safe, the stub specializes to those concrete types (marshaling
+/// via `serde_json::{to,from}_value`) so a static call site stays type-correct;
+/// otherwise it marshals `Value` end to end.
 fn degrade_js_module(
     translator: &Translator,
     js_path: &Path,
     js_src: &str,
     dts_src: Option<&str>,
+    import_specifier: &str,
     deps: &mut RuntimeDeps,
 ) -> Result<String, Box<dyn Error>> {
     deps.insert(crate::translator::RuntimeDep::Engine);
-    let specifier = js_path.to_string_lossy().replace('\\', "/");
+    // Register this module and every transitive `.js` it imports, each under
+    // the specifier the runtime `DsResolver` resolves its imports to (bare
+    // verbatim, relative joined onto the base) — not its filesystem path, which
+    // a `package.json` `exports` map may diverge from.
+    register_js_module_graph(translator, js_path, js_src, import_specifier, deps);
+    let specifier = import_specifier;
     let path_lit = format!("{specifier:?}");
     // Inline the `.js` source at build time as a Rust string literal so the
     // emitted crate is self-contained — the engine's `Loader` reads it from the
-    // `JS_MODULES` table at runtime, never from the filesystem.
+    // `JS_MODULES` table (or the build-time `__DS_MODULE_SOURCES` table) at
+    // runtime, never from the filesystem.
     let js_source_lit = format!("{js_src:?}");
     // Index the sibling `.d.ts`'s declared signatures by name+arity so each
     // stub can specialize when its whole signature is marshal-safe.
@@ -586,20 +679,28 @@ pub fn translate_sources(
         .map(|(name, _)| name)
         .collect();
     let mut extra_enum_text = String::new();
-    // Worklist of `(module, source_spec, base_dir)` — each popped dep is
-    // translated once, then its own imports extend the worklist. A cycle
-    // (a.ts ↔ b.ts) terminates: `seen` dedupes by module name, so the second
-    // edge to an already-translated module is a no-op.
-    let mut worklist: std::collections::VecDeque<(String, String, PathBuf)> =
+    // Worklist of `(module, source_spec, base_dir, specifier)` — each popped
+    // dep is translated once, then its own imports extend the worklist. A cycle
+    // (a.ts ↔ b.ts) terminates: `seen` dedupes by module name. `specifier` is
+    // the dep's DsResolver specifier (bare verbatim, relative joined onto the
+    // importer's), so a degraded `.js` registers under the key the runtime
+    // resolver finds it under. The entry's own specifier is its file stem.
+    let entry_spec = src_path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("")
+        .to_string();
+    let mut worklist: std::collections::VecDeque<(String, String, PathBuf, String)> =
         std::collections::VecDeque::new();
     for imp in translator.imports(src) {
         if seen.insert(imp.module.clone()) {
-            worklist.push_back((imp.module, imp.source, base.to_path_buf()));
+            let spec = ds_resolve_specifier(&entry_spec, &imp.source);
+            worklist.push_back((imp.module, imp.source, base.to_path_buf(), spec));
         }
     }
-    while let Some((module, source, dir)) = worklist.pop_front() {
+    while let Some((module, source, dir, spec)) = worklist.pop_front() {
         let (dep_path, kind) = resolve_local_module(&dir, &source)?;
-        let dep_rust = translate_dep(&translator, &dep_path, kind, &mut deps)?;
+        let dep_rust = translate_dep(&translator, &dep_path, kind, &spec, &mut deps)?;
         fs::write(
             project_dir.join("src").join(format!("{module}.rs")),
             dep_rust,
@@ -616,7 +717,8 @@ pub fn translate_sources(
         let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
         for imp in translator.imports(&dep_src) {
             if seen.insert(imp.module.clone()) {
-                worklist.push_back((imp.module, imp.source, dep_base.to_path_buf()));
+                let child_spec = ds_resolve_specifier(&spec, &imp.source);
+                worklist.push_back((imp.module, imp.source, dep_base.to_path_buf(), child_spec));
             }
         }
     }
@@ -743,6 +845,9 @@ fn translate_one_with_mods(
         .translate_with_deps_as(&src, role)
         .map_err(|e| format!("translate {}: {e}", ds.display()))?;
     let base = ds.parent().unwrap_or_else(|| Path::new(""));
+    // The entry's DsResolver specifier is its stem; a degraded `.js` it imports
+    // registers under the specifier the runtime resolver finds.
+    let entry_spec = stem_of(ds);
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
     for imp in translator.imports(&src) {
@@ -760,7 +865,8 @@ fn translate_one_with_mods(
         };
         let scanned_by_walk = imp.source.starts_with('.') && matches!(kind, DepKind::Ts);
         if !scanned_by_walk {
-            let dep_rust = translate_dep(&translator, &dep_path, kind, &mut deps)?;
+            let spec = ds_resolve_specifier(&entry_spec, &imp.source);
+            let dep_rust = translate_dep(&translator, &dep_path, kind, &spec, &mut deps)?;
             fs::write(
                 project_dir.join("src").join(format!("{}.rs", imp.module)),
                 dep_rust,
@@ -1093,7 +1199,7 @@ pub fn apply_runtime_deps(
         inject_helper_module(project_dir, "__ds", &helper, root_stems)?;
     }
     if let Some(engine) = deps.engine_helper_module() {
-        inject_helper_module(project_dir, "__ds_engine", engine, root_stems)?;
+        inject_helper_module(project_dir, "__ds_engine", &engine, root_stems)?;
     }
     Ok(())
 }
@@ -1724,8 +1830,14 @@ mod tests {
         );
         let translator = Translator::new();
         let mut deps = RuntimeDeps::empty();
-        let rust = translate_dep(&translator, &root.join("dep.js"), DepKind::Js, &mut deps)
-            .expect("a class-extends .js degrades");
+        let rust = translate_dep(
+            &translator,
+            &root.join("dep.js"),
+            DepKind::Js,
+            "dep.js",
+            &mut deps,
+        )
+        .expect("a class-extends .js degrades");
         assert!(rust.contains("pub fn f"), "stub fn emitted: {rust}");
         assert!(
             rust.contains("call_module_fn"),
@@ -1750,13 +1862,88 @@ mod tests {
         );
         let translator = Translator::new();
         let mut deps = RuntimeDeps::empty();
-        let rust = translate_dep(&translator, &root.join("dep.js"), DepKind::Js, &mut deps)
-            .expect("a plain .js transpiles");
+        let rust = translate_dep(
+            &translator,
+            &root.join("dep.js"),
+            DepKind::Js,
+            "dep.js",
+            &mut deps,
+        )
+        .expect("a plain .js transpiles");
         assert!(
             !rust.contains("call_module_fn"),
             "no engine stub for a static .js: {rust}"
         );
         assert!(!deps.needs_engine());
+    }
+
+    #[test]
+    fn degrade_registers_under_import_specifier_not_path() {
+        // A degraded `.js` registers under its import specifier (the runtime
+        // `DsResolver` finds bare specifiers verbatim), not its filesystem path —
+        // a `package.json` `exports` map may diverge the two.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "dep.js",
+            "class A extends B {}\nexport function f(x) { return x; }",
+        );
+        let translator = Translator::new();
+        let mut deps = RuntimeDeps::empty();
+        let rust = translate_dep(
+            &translator,
+            &root.join("dep.js"),
+            DepKind::Js,
+            "@scope/pkg/dep.js",
+            &mut deps,
+        )
+        .expect("a class-extends .js degrades");
+        assert!(
+            rust.contains("\"@scope/pkg/dep.js\""),
+            "stub registers under the import specifier: {rust}"
+        );
+        assert!(
+            !rust.contains(&root.display().to_string().replace('\\', "/")),
+            "stub does not use the filesystem path: {rust}"
+        );
+    }
+
+    #[test]
+    fn degrade_registers_transitive_js_under_resolver_specifier() {
+        // `a.js` (class extends → degrades) imports `b.js` (only `export const`,
+        // no `export function`). Both must land in the build-time source table
+        // under their DsResolver specifiers — `a.js` under the bare import
+        // specifier, `b.js` under the joined specifier (`pkg/` + `b.js`) — so the
+        // runtime loader resolves the transitive import even though `b.js` emits
+        // no stub fn and is never runtime-registered.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "a.js",
+            "import { x } from \"./b.js\";\nclass A extends B {}\nexport function f() { return x; }",
+        );
+        write(root, "b.js", "export const x = 42;");
+        let translator = Translator::new();
+        let mut deps = RuntimeDeps::empty();
+        translate_dep(
+            &translator,
+            &root.join("a.js"),
+            DepKind::Js,
+            "pkg/a.js",
+            &mut deps,
+        )
+        .expect("a.js degrades");
+        let sources = deps.js_module_sources();
+        assert!(
+            sources.iter().any(|(s, _)| s == "pkg/a.js"),
+            "a.js registered under its specifier: {sources:?}"
+        );
+        assert!(
+            sources.iter().any(|(s, _)| s == "pkg/b.js"),
+            "b.js registered under the joined specifier (pkg/b.js), not \"./b.js\" or a path: {sources:?}"
+        );
     }
 
     #[test]

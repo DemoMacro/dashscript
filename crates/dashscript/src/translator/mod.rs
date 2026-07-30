@@ -193,6 +193,13 @@ impl RuntimeDep {
 #[derive(Debug, Clone, Default)]
 pub struct RuntimeDeps {
     deps: BTreeSet<RuntimeDep>,
+    /// Build-time-resolved degraded module sources: (DsResolver specifier,
+    /// source). Emitted as a `static __DS_MODULE_SOURCES` table in
+    /// `__ds_engine.rs` so `source_of` reaches every degraded module without a
+    /// `register_js_module` stub call — a module with no `export function`
+    /// (e.g. `@noble/hashes`'s `_md.js`, only `export const`/`class`) still
+    /// resolves at runtime.
+    js_module_sources: Vec<(String, String)>,
 }
 
 impl RuntimeDeps {
@@ -210,6 +217,25 @@ impl RuntimeDeps {
     /// Add `dep` to this set in place.
     pub fn insert(&mut self, dep: RuntimeDep) {
         self.deps.insert(dep);
+    }
+
+    /// Record a degraded module's source under its build-time DsResolver
+    /// specifier. Deduped by specifier — a module imported through several
+    /// paths registers once. The engine's `source_of` falls back to this table
+    /// when a specifier is not runtime-registered by a stub, so a module with
+    /// no `export function` (no stub emitted) still resolves.
+    pub fn add_js_module(&mut self, specifier: &str, source: &str) {
+        if !self.js_module_sources.iter().any(|(s, _)| s == specifier) {
+            self.js_module_sources
+                .push((specifier.to_string(), source.to_string()));
+        }
+    }
+
+    /// Read-only access to the build-time module source table — for tests and
+    /// debugging. Each entry is `(DsResolver specifier, source)`.
+    #[cfg(test)]
+    pub(crate) fn js_module_sources(&self) -> &[(String, String)] {
+        &self.js_module_sources
     }
 
     /// Whether `dep` is in the set.
@@ -245,6 +271,11 @@ impl RuntimeDeps {
     /// any of its translated files does.
     pub fn merge(&mut self, other: &RuntimeDeps) {
         self.deps.extend(&other.deps);
+        for (spec, src) in &other.js_module_sources {
+            if !self.js_module_sources.iter().any(|(s, _)| s == spec) {
+                self.js_module_sources.push((spec.clone(), src.clone()));
+            }
+        }
     }
 
     /// The `__ds` helper module source — assembled from whichever helper slices
@@ -271,8 +302,19 @@ impl RuntimeDeps {
     /// The `__ds_engine` compat module source — runs a `.ts` source under an
     /// embedded QuickJS engine — when this dep set flags `Engine`. `None`
     /// otherwise, so the caller writes nothing and pulls no engine dependency.
-    pub fn engine_helper_module(&self) -> Option<&'static str> {
-        self.needs_engine().then_some(ENGINE_HELPER_MODULE)
+    /// The build-time module source table (`__DS_MODULE_SOURCES`) is appended
+    /// so the runtime `source_of` reaches every degraded module — including
+    /// ones with no `export function` (no stub, never runtime-registered).
+    pub fn engine_helper_module(&self) -> Option<String> {
+        self.needs_engine().then(|| {
+            let mut src = ENGINE_HELPER_MODULE.to_string();
+            src.push_str("\nstatic __DS_MODULE_SOURCES: &[(&str, &str)] = &[");
+            for (spec, source) in &self.js_module_sources {
+                src.push_str(&format!("({spec:?}, {source:?}),"));
+            }
+            src.push_str("];\n");
+            src
+        })
     }
 
     /// Append each flagged cargo dep to a generated `Cargo.toml`, creating the
@@ -1019,14 +1061,24 @@ pub fn register_js_module(specifier: &str, source: &str) {
     }
 }
 
-/// Read a registered module's source, or an error if it was never registered.
+/// Read a module's source: the runtime `JS_MODULES` table first (a stub's
+/// `register_js_module` call), then the build-time `__DS_MODULE_SOURCES`
+/// table — so a module with no `export function` (no stub emitted, never
+/// registered at runtime) still resolves.
 fn source_of(name: &str) -> rquickjs::Result<String> {
-    JS_MODULES
+    if let Some(source) = JS_MODULES
         .lock()
         .expect("JS_MODULES lock")
         .iter()
         .find(|(n, _)| n == name)
         .map(|(_, source)| source.clone())
+    {
+        return Ok(source);
+    }
+    __DS_MODULE_SOURCES
+        .iter()
+        .find(|(n, _)| *n == name)
+        .map(|(_, source)| source.to_string())
         .ok_or_else(|| rquickjs::Error::new_loading(name))
 }
 
