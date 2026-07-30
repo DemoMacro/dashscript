@@ -89,6 +89,16 @@ fn interface_extends_keyword_field_name() {
 }
 
 #[test]
+fn interface_keyword_name_becomes_raw_ident() {
+    // A TS type name that lands on a Rust reserved keyword (`macro`) emits a
+    // raw ident so `struct r#macro {}` parses, instead of panicking on
+    // `format_ident!("macro")` (a bare reserved keyword is not a valid item name).
+    let src = "interface macro { x: number }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("struct r#macro"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_interface_to_struct() {
     let src = "interface Point { x: number; y: number; }";
     let rust = Translator::new().translate(src).expect("should translate");

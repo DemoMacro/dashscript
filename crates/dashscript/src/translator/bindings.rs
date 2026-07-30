@@ -118,6 +118,17 @@ fn is_rust_keyword(s: &str) -> bool {
             | "union"
             | "yield"
             | "try"
+            | "abstract"
+            | "become"
+            | "box"
+            | "do"
+            | "final"
+            | "macro"
+            | "override"
+            | "priv"
+            | "typeof"
+            | "unsized"
+            | "virtual"
     )
 }
 
@@ -132,7 +143,15 @@ pub fn ident_of(ident: &BindingIdentifier) -> Ident {
 /// value identifiers [`snake`] produces. TS type names are conventionally
 /// already PascalCase, so we pass them through unchanged.
 pub fn type_ident(name: &str) -> Ident {
-    format_ident!("{}", name)
+    // A TS type name that lands on a Rust keyword (`type`, `macro`) emits a raw
+    // ident so `struct r#type {}` parses — `format_ident!` would emit a bare
+    // keyword and fail. PascalCase type names (`Match`) are not Rust keywords,
+    // so they pass through unchanged.
+    if is_rust_keyword(name) {
+        keyword_ident(name)
+    } else {
+        format_ident!("{}", name)
+    }
 }
 
 /// A crate name (`serde`, `cfg-if`) → a Rust module identifier (`serde`,
