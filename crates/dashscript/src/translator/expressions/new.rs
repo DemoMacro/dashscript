@@ -38,12 +38,14 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             }
         }
         // `new Uint8Array(n)` / `Uint8ClampedArray(n)` / `Int8Array(n)` — an ES
-        // typed array of `n` zeroed `u8` elements (a crypto byte buffer) →
-        // `vec![0u8; n as usize]`; `new Uint8Array()` is empty. The element type
-        // is `u8` for these three; other typed arrays (`Int32Array`, …) are a
-        // later batch. A non-number arg (an iterable copy) is later work too —
-        // it falls through to the generic `Foo::new(…)` path and surfaces at
-        // `cargo check` honestly.
+        // typed array of `u8` elements (a crypto byte buffer). Two constructor
+        // forms lower: a numeric length `new Uint8Array(n)` → `vec![0_u8; n as
+        // usize]` (n zeroed u8s), and `new Uint8Array([1, 2, 3])` → a copy with
+        // each element cast to u8 (the typed-array-from-array case). An empty
+        // `new Uint8Array()` is an empty vec. The element type is `u8` for these
+        // three; other typed arrays (`Int32Array`, …) and a non-array iterable
+        // arg are later work — they fall through to the generic `Foo::new(…)`
+        // path and surface at `cargo check` honestly.
         if matches!(
             id.name.as_str(),
             "Uint8Array" | "Uint8ClampedArray" | "Int8Array"
@@ -52,8 +54,16 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 return parse_quote!(::std::vec::Vec::<u8>::new());
             }
             if n.arguments.len() == 1 {
-                let len = array_elem_arg(&n.arguments[0], ctx);
-                return parse_quote!(::std::vec![0_u8; (#len) as usize]);
+                let arg = &n.arguments[0];
+                let elem = array_elem_arg(arg, ctx);
+                if matches!(arg.as_expression(), Some(Expression::ArrayExpression(_))) {
+                    // `new Uint8Array([1, 2, 3])` — copy from a literal array.
+                    return parse_quote!(
+                        (#elem).into_iter().map(|x| x as u8).collect::<::std::vec::Vec<u8>>()
+                    );
+                }
+                // `new Uint8Array(n)` — n zeroed u8 elements.
+                return parse_quote!(::std::vec![0_u8; (#elem) as usize]);
             }
         }
     }

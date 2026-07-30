@@ -49,6 +49,22 @@ fn translates_new_uint8_array_empty_to_empty_vec() {
 }
 
 #[test]
+fn translates_new_uint8_array_from_array_literal() {
+    // `new Uint8Array([1, 2, 3])` — the typed-array-from-array case: copy each
+    // element, casting to u8 (not the length form `vec![0_u8; n as usize]`).
+    let src = "function f(): Uint8Array { return new Uint8Array([1, 2, 3]); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("map(|x| x as u8)"),
+        "new Uint8Array([…]) copies with a u8 cast: {rust}"
+    );
+    assert!(
+        !rust.contains("as usize"),
+        "array literal must not take the length path: {rust}"
+    );
+}
+
+#[test]
 fn translates_map_methods() {
     // `m.set`/`get`/`has`/`delete`/`size` map to HashMap insert/get(Option)/
     // contains_key/remove(.is_some)/len. `set` is a mutator, so `m` is `let mut`.
