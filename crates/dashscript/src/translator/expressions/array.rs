@@ -46,6 +46,30 @@ pub(in crate::translator) fn array_slice_expr(
     Some(parse_quote!(&[#(#elems),*]))
 }
 
+/// A spread-free inline array literal as an owned array `[a, b, …]` of fixed
+/// size, for `HashSet::from` / array constructors that take `[T; N]`. `None`
+/// when the array has a spread (those need a `Vec` concat). Mirrors
+/// [`array_slice_expr`] but owned — a borrowed `&[..]` does not satisfy
+/// `From<[T; N]>`.
+pub(in crate::translator) fn array_owned_expr(
+    arr: &ArrayExpression,
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    if arr
+        .elements
+        .iter()
+        .any(|e| matches!(e, ArrayExpressionElement::SpreadElement(_)))
+    {
+        return None;
+    }
+    let elems: Vec<Expr> = arr
+        .elements
+        .iter()
+        .filter_map(|e| array_element(e, ctx))
+        .collect();
+    Some(parse_quote!([#(#elems),*]))
+}
+
 /// `[...xs, 4]` → `[xs.as_slice(), &[4_f64][..]].concat()`: consecutive literals
 /// batch into one `&[..]` slice, each spread into `arg.as_slice()`.
 fn spread_array(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {

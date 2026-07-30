@@ -22,9 +22,10 @@ mod unary;
 
 // Re-exports only for callers outside this module's dispatch: `builtins` reads
 // `bool_expr`/`string_expr` via `super::super::expressions::…`, and `functions`
-// reads `array_slice_expr`. Sibling families use fully-qualified paths
-// (`super::logical::assign_truthy`) instead, so they need no re-export.
-pub(in crate::translator) use array::array_slice_expr;
+// reads `array_slice_expr`, and `new` reads `array_owned_expr`. Sibling
+// families use fully-qualified paths (`super::logical::assign_truthy`)
+// instead, so they need no re-export.
+pub(in crate::translator) use array::{array_owned_expr, array_slice_expr};
 pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
 pub(in crate::translator) use member::{is_hashmap_local, is_hashset_local, option_unwrap_object};

@@ -6,8 +6,8 @@
 use std::collections::HashSet;
 
 use oxc_ast::ast::{
-    BindingPattern, CallExpression, Expression, Statement, TSTypeParameterInstantiation,
-    VariableDeclarationKind,
+    ArrayExpression, ArrayExpressionElement, BindingPattern, CallExpression, Expression,
+    NewExpression, Statement, TSTypeParameterInstantiation, VariableDeclarationKind,
 };
 use oxc_semantic::SymbolId;
 use quote::format_ident;
@@ -66,13 +66,15 @@ pub(in crate::translator) fn lazy_static_candidate(
         return false;
     }
     // An inferable type: an explicit annotation, a regex literal (→
-    // `regress::Regex`), or a runtime factory call (`const p = createFactory<T>(...)`)
-    // whose return type is inferred from the callee's cross-file signature. Any
-    // other init without an annotation has no static type to put on the
-    // OnceLock — defer.
+    // `regress::Regex`), a runtime factory call (`const p = createFactory<T>(...)`)
+    // whose return type is inferred from the callee's cross-file signature, or a
+    // collection constructor (`const s = new Set([…])`) whose element type is
+    // inferred from the literal. Any other init without an annotation has no
+    // static type to put on the OnceLock — defer.
     if d.type_annotation.is_none()
         && !matches!(init, Expression::RegExpLiteral(_))
         && !is_inferable_call(init)
+        && !is_inferable_new(init)
     {
         return false;
     }
@@ -249,6 +251,11 @@ pub(in crate::translator) fn lazy_static_items(
         // (`createFactory<TFile>` ← `createFactory<Opts>`); a method call via its
         // builtin return type (`arr.join("")` → `String`).
         infer_call_return_type(call, registry).unwrap_or_else(|| parse_quote!(_))
+    } else if let Expression::NewExpression(new) = init {
+        // A collection constructor with no annotation — `new Set([literal])`
+        // infers its element type from the first array element so the OnceLock
+        // holds `HashSet<T>` (`["jpg", …]` → `HashSet<String>`).
+        new_collection_return_type(new).unwrap_or_else(|| parse_quote!(_))
     } else {
         // A regex literal with no annotation — `regress::Regex`.
         parse_quote!(regress::Regex)
@@ -329,6 +336,51 @@ fn builtin_method_return_type(method: &str) -> Option<Type> {
         | "toUpperCase" | "toLowerCase" | "trim" | "trimStart" | "trimEnd" | "repeat"
         | "padStart" | "padEnd" | "replace" | "replaceAll" | "concat" | "toFixed"
         | "toExponential" | "toPrecision" => Some(parse_quote!(String)),
+        _ => None,
+    }
+}
+
+/// Whether `init` is a `new Set([literal array])` whose element type the
+/// translator can infer without an annotation — so a module-global collection
+/// singleton lowers to a `OnceLock<HashSet<T>>` even without one. A `Map` or a
+/// user class with no static element type to read yields `false` (defer).
+fn is_inferable_new(init: &Expression) -> bool {
+    let Expression::NewExpression(new) = init else {
+        return false;
+    };
+    new_collection_return_type(new).is_some()
+}
+
+/// The collection type of a `new Set([literal array])` initializer, inferred
+/// without an annotation: `HashSet<T>` where `T` is the first scalar element's
+/// type (`["jpg", …]` → `HashSet<String>`). A non-Set `new`, a non-array arg,
+/// or a non-scalar first element yields `None`.
+fn new_collection_return_type(new: &NewExpression) -> Option<Type> {
+    let Expression::Identifier(id) = &new.callee else {
+        return None;
+    };
+    if id.name.as_str() != "Set" {
+        return None;
+    }
+    let arr = new.arguments.first()?.as_expression()?;
+    let Expression::ArrayExpression(arr) = arr else {
+        return None;
+    };
+    let elem = array_literal_elem_type(arr)?;
+    Some(parse_quote!(::std::collections::HashSet<#elem>))
+}
+
+/// The scalar element type of a literal array — taken from its first element
+/// (`"jpg"` → `String`, `1` → `f64`, `true` → `bool`), mirroring the element
+/// translation `array_elem_expr` applies (`"jpg".to_string()` for a string
+/// literal) so the inferred `HashSet<T>` matches what `HashSet::from([...])`
+/// builds. `None` for an empty array or a non-scalar (spread / variable /
+/// object) first element.
+fn array_literal_elem_type(arr: &ArrayExpression) -> Option<Type> {
+    match arr.elements.first()? {
+        ArrayExpressionElement::StringLiteral(_) => Some(parse_quote!(String)),
+        ArrayExpressionElement::NumericLiteral(_) => Some(parse_quote!(f64)),
+        ArrayExpressionElement::BooleanLiteral(_) => Some(parse_quote!(bool)),
         _ => None,
     }
 }

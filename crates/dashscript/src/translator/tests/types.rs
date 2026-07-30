@@ -95,6 +95,28 @@ fn method_call_singleton_infers_builtin_return_type() {
 }
 
 #[test]
+fn set_literal_singleton_infers_hashset_type() {
+    // A module-global `new Set([literal array])` with no annotation lowers to a
+    // OnceLock<HashSet<String>> — element type inferred from the first literal,
+    // matching the `.to_string()` translation each element gets — and the
+    // initializer is `HashSet::from([...])`, mirroring the factory/method-call
+    // singleton paths.
+    let src = "const EXT = new Set([\"jpg\", \"png\"]);\
+               function contains(value: string): boolean { return EXT.has(value); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains(
+            "static EXT_CELL: ::std::sync::OnceLock<::std::collections::HashSet<String>>"
+        ),
+        "got:\n{rust}"
+    );
+    assert!(
+        rust.contains("::std::collections::HashSet::from(["),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn const_arrow_lowers_to_fn_item() {
     // A module-level const arrow (`const f = () => …`) is a declaration that
     // lowers to a `fn` item, not an executable statement — so it never lands in
