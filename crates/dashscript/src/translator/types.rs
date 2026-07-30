@@ -453,6 +453,14 @@ fn reference_type(r: &TSTypeReference) -> Type {
             return parse_quote!(Vec<#inner_ty>);
         }
     }
+    // `Uint8Array` / `ArrayBuffer` / `Uint8ClampedArray` (a crypto byte buffer)
+    // → `Vec<u8>` — the ES typed array's element shape is `u8`, so a `sha1()`
+    // return or a `bytesToHex()` param marshals as a Rust byte vec. Other typed
+    // arrays (`Int32Array`, `Float64Array`, …) are a later batch; crypto uses
+    // `Uint8Array`.
+    if matches!(name, "Uint8Array" | "ArrayBuffer" | "Uint8ClampedArray") {
+        return parse_quote!(Vec<u8>);
+    }
     // `Record<K, V>` / `Map<K, V>` → `HashMap<K, V>` — the TS record and the ES
     // `Map` both lower to a Rust `HashMap`. (A `Map`'s insertion order is not
     // preserved — an `IndexMap` would — but DashScript targets std collections

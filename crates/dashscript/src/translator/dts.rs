@@ -87,3 +87,81 @@ fn make_pub(item: &mut Item) {
         _ => {}
     }
 }
+
+/// A `declare function` signature extracted from a `.d.ts`: the name, each
+/// parameter's Rust type (an unmappable TS type becomes `serde_json::Value` via
+/// [`types::translate_type_degraded`]; an optional `?:` parameter is
+/// `Option<T>`), and the return type (`None` when the annotation is absent).
+/// A degraded `.js` module's stub fns specialize their signatures from this, so
+/// a static call site stays type-correct when every type is marshal-safe.
+pub struct DtsFnSig {
+    /// The declared function name (the stub fn uses it verbatim).
+    pub name: String,
+    /// Each parameter's Rust type, in declaration order.
+    pub params: Vec<syn::Type>,
+    /// The return type, or `None` when no `: T` annotation is present.
+    pub ret: Option<syn::Type>,
+}
+
+/// The `declare function` signatures in a `.d.ts` source (bare or `export`-ed).
+/// A parse error yields none. A degraded `.js` module's stub emitter uses this
+/// to specialize a stub fn's signature from its `.d.ts` when possible; the
+/// `Option<T>` shape of an optional parameter signals "not marshal-safe" to the
+/// emitter, so it falls back to a `Value` stub rather than guessing.
+#[must_use]
+pub fn dts_fn_signatures(source: &str) -> Vec<DtsFnSig> {
+    let allocator = Allocator::default();
+    let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+    if !ret.diagnostics.is_empty() {
+        return Vec::new();
+    }
+    let program = allocator.alloc(ret.program);
+    let mut out = Vec::new();
+    for stmt in &program.body {
+        // A `declare function f()` is `FunctionDeclaration` — bare at the top
+        // level (the `Statement` variant inherits from `Declaration`) or wrapped
+        // in `ExportNamedDeclaration` for `export declare function f()`.
+        let f = match stmt {
+            Statement::ExportNamedDeclaration(exp) => match &exp.declaration {
+                Some(Declaration::FunctionDeclaration(b)) => &**b,
+                _ => continue,
+            },
+            Statement::FunctionDeclaration(b) => &**b,
+            _ => continue,
+        };
+        let Some(id) = &f.id else { continue };
+        let params = f
+            .params
+            .items
+            .iter()
+            .map(|fp| {
+                // An unmappable annotation (a complex union, `unknown`) degrades
+                // to `serde_json::Value`; an unannotated param (rare in a
+                // `.d.ts`) defaults to `Value` too, since `_` is not a legal
+                // signature type.
+                let inner = fp
+                    .type_annotation
+                    .as_deref()
+                    .map(|ta| super::types::translate_type_degraded(&ta.type_annotation))
+                    .unwrap_or_else(|| parse_quote!(::serde_json::Value));
+                // An optional (`?:`) or default-initialized parameter is
+                // `Option<T>` — the same shape `translate_params` emits.
+                if fp.optional || fp.initializer.is_some() {
+                    parse_quote!(Option<#inner>)
+                } else {
+                    inner
+                }
+            })
+            .collect();
+        let ret_ty = f
+            .return_type
+            .as_deref()
+            .map(|ta| super::types::translate_type_degraded(&ta.type_annotation));
+        out.push(DtsFnSig {
+            name: id.name.to_string(),
+            params,
+            ret: ret_ty,
+        });
+    }
+    out
+}

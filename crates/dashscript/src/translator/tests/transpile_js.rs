@@ -80,3 +80,46 @@ fn js_export_fns_lists_named_exports() {
     assert!(fns.contains(&("sha1".to_string(), 1)), "got: {fns:?}");
     assert!(fns.contains(&("bytesToHex".to_string(), 2)), "got: {fns:?}");
 }
+
+#[test]
+fn uint8_array_maps_to_byte_vec() {
+    // `Uint8Array` (a crypto byte buffer) lowers to `Vec<u8>` — the typed
+    // array's element shape is `u8`, so a `sha1()` return or a `bytesToHex`
+    // param marshals as a Rust byte vec.
+    let ts = "export function id(x: Uint8Array): Uint8Array { return x; }";
+    let rust = Translator::new()
+        .translate_with_deps_as(ts, FileRole::Module)
+        .expect("Uint8Array maps")
+        .0;
+    assert!(rust.contains("Vec<u8>"), "Uint8Array → Vec<u8>: {rust}");
+}
+
+#[test]
+fn dts_fn_signatures_extracts_declare_function() {
+    // A `.d.ts`'s `declare function` (bare or `export`-ed) yields its name,
+    // param types (`Uint8Array` → `Vec<u8>`), and return type, with an
+    // optional `?:` parameter wrapped as `Option<T>`.
+    use quote::ToTokens;
+    let dts = "declare function bytesToHex(b: Uint8Array): string;\n\
+               export declare function withOpt(n: number, s?: string): boolean;";
+    let sigs = Translator::new().dts_fn_signatures(dts);
+    let bth = sigs
+        .iter()
+        .find(|s| s.name == "bytesToHex")
+        .expect("bytesToHex");
+    assert_eq!(bth.params.len(), 1);
+    assert!(
+        bth.params[0].to_token_stream().to_string().contains("u8"),
+        "Uint8Array param → Vec<u8>"
+    );
+    let opt = sigs.iter().find(|s| s.name == "withOpt").expect("withOpt");
+    assert_eq!(opt.params.len(), 2);
+    // The optional `s?: string` is `Option<String>`.
+    assert!(
+        opt.params[1]
+            .to_token_stream()
+            .to_string()
+            .contains("Option"),
+        "optional param → Option<T>"
+    );
+}

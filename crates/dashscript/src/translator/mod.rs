@@ -2209,6 +2209,17 @@ impl Translator {
         dts::translate_dts(source)
     }
 
+    /// The `declare function` signatures in a `.d.ts` source — the (name, param
+    /// types, return type) of each declared function, with unmappable TS types
+    /// degraded to `serde_json::Value`. A degraded `.js` module's stub emitter
+    /// specializes a stub fn's signature from its sibling `.d.ts` when every
+    /// type is marshal-safe, so a static call site stays type-correct. A parse
+    /// error yields none.
+    #[must_use]
+    pub fn dts_fn_signatures(&self, source: &str) -> Vec<dts::DtsFnSig> {
+        dts::dts_fn_signatures(source)
+    }
+
     /// The inline scalar-union enums (`__DsUnion…`) a `.ts` file's type
     /// positions introduce, each as `(name, rust_text)` where `rust_text` is
     /// the enum plus its `Display` impl. `ds build` collects these across the

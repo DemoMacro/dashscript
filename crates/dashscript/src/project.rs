@@ -46,7 +46,7 @@ fn translate_dep(
             // degradation path (their classes may extend too, but a `.ts` dep
             // is a workspace source, not an npm package).
             if matches!(kind, DepKind::Js) && translator.js_module_needs_engine(&dep_src) {
-                return degrade_js_module(translator, dep_path, &dep_src, deps);
+                return degrade_js_module(translator, dep_path, &dep_src, None, deps);
             }
             let (rust, dep_deps) = translator
                 .translate_with_deps_as(&dep_src, FileRole::Module)
@@ -61,23 +61,21 @@ fn translate_dep(
         }
         DepKind::DtsWithJs { dts_path, js_path } => {
             // A typed package: the `.d.ts` carries `interface`/`type`
-            // declarations (and the value signatures we do not yet inject);
-            // the `.js` is the implementation. Transpile the `.js` (batch C
-            // path — untyped params default to `f64`) and prepend the `.d.ts`'s
-            // type items so cross-module type imports resolve. `declare
-            // function` emits nothing — the `.js` provides the implementation,
-            // and signature type injection is a later enhancement.
+            // declarations; the `.js` is the implementation. Transpile the
+            // `.js` (batch C path — untyped params default to `f64`) and prepend
+            // the `.d.ts`'s type items so cross-module type imports resolve.
             let js_src = fs::read_to_string(&js_path)
                 .map_err(|e| format!("cannot read import {}: {e}", js_path.display()))?;
-            // Same wholesale degradation as a bare `.js`: a class `extends`
-            // lowers to engine stubs. The `.d.ts` value signatures are not yet
-            // wired into the stubs (a later batch); they would otherwise carry
-            // the param/return types.
-            if translator.js_module_needs_engine(&js_src) {
-                return degrade_js_module(translator, &js_path, &js_src, deps);
-            }
             let dts_src = fs::read_to_string(&dts_path)
                 .map_err(|e| format!("cannot read import {}: {e}", dts_path.display()))?;
+            // Same wholesale degradation as a bare `.js`: a class `extends`
+            // lowers to engine stubs. The sibling `.d.ts`'s `declare function`
+            // signatures specialize each stub (a marshal-safe signature like
+            // `bytesToHex(bytes: Uint8Array): string` keeps its concrete Rust
+            // types); a signature with an unmappable type falls back to `Value`.
+            if translator.js_module_needs_engine(&js_src) {
+                return degrade_js_module(translator, &js_path, &js_src, Some(&dts_src), deps);
+            }
             let dts_items = translator.translate_dts(&dts_src);
             let (js_rust, dep_deps) = translator
                 .translate_with_deps_as(&js_src, FileRole::Module)
@@ -92,43 +90,174 @@ fn translate_dep(
     }
 }
 
+/// The marshal-safe Rust types a degraded stub can specialize to. A type
+/// outside this set (a user `struct`, an `Option<T>`, a bare type-alias
+/// reference the degraded module did not emit) returns `None` from
+/// [`marshal_kind`], so the stub falls back to a `Value` signature.
+#[derive(Clone, Copy, PartialEq, Debug)]
+enum MarshalKind {
+    /// `String` — a JS `string`.
+    Str,
+    /// `f64` — a JS `number`.
+    Num,
+    /// `bool` — a JS `boolean`.
+    Bool,
+    /// `Vec<u8>` — a `Uint8Array`/`ArrayBuffer` (a crypto byte buffer).
+    Bytes,
+    /// `serde_json::Value` — the universal marshal type (already marshaled).
+    Json,
+}
+
+/// The [`MarshalKind`] of a Rust type, or `None` when it is not one of the
+/// marshal-safe scalars. The degraded stub emitter specializes a stub fn's
+/// signature only when every param and the return type yield `Some`.
+fn marshal_kind(ty: &syn::Type) -> Option<MarshalKind> {
+    let path = match ty {
+        syn::Type::Path(p) if p.qself.is_none() => &p.path,
+        _ => return None,
+    };
+    let last = path.segments.last()?;
+    Some(match last.ident.to_string().as_str() {
+        "String" => MarshalKind::Str,
+        "f64" => MarshalKind::Num,
+        "bool" => MarshalKind::Bool,
+        "Value" => {
+            // Only `serde_json::Value` is marshal-safe (a bare `Value` from
+            // another path is not — it would be an unresolved name).
+            path.segments
+                .iter()
+                .any(|s| s.ident == "serde_json")
+                .then_some(MarshalKind::Json)?
+        }
+        "Vec" => {
+            // Only `Vec<u8>` (a `Uint8Array`) is marshal-safe — its JSON shape
+            // is a number array serde deserializes back to bytes.
+            let syn::PathArguments::AngleBracketed(args) = &last.arguments else {
+                return None;
+            };
+            let syn::GenericArgument::Type(inner) = args.args.first()? else {
+                return None;
+            };
+            let inner_last = match inner {
+                syn::Type::Path(p) if p.qself.is_none() => p.path.segments.last()?,
+                _ => return None,
+            };
+            (inner_last.ident == "u8").then_some(MarshalKind::Bytes)?
+        }
+        _ => return None,
+    })
+}
+
+/// Render a `syn::Type` back to source text for the emitted stub, collapsing
+/// the spaced punctuation `quote!` emits (`Vec < u8 >`, `serde_json :: Value`)
+/// so the stub stays `cargo fmt`-clean. The marshal-safe set is finite
+/// (`String`/`f64`/`bool`/`Vec<u8>`/`serde_json::Value`/`Option<…>`), so the
+/// collapses cover every type the stub emitter renders.
+fn render_type(ty: &syn::Type) -> String {
+    use quote::ToTokens;
+    ty.to_token_stream()
+        .to_string()
+        .replace(" < ", "<")
+        .replace(" >", ">")
+        .replace(" :: ", "::")
+        .replace("< ", "<")
+        .replace("> ", ">")
+}
+
 /// Lower a `.js`/`.mjs`/`.cjs` module that degrades wholesale to the engine —
 /// it declares a class `extends` the static translator cannot lower. Flag the
 /// engine runtime dep (so `__ds_engine.rs` is emitted), and emit one stub `fn`
 /// per `export function`: each registers the module under its absolute path
 /// (the engine's `Loader` reads source from `JS_MODULES`, and `DsResolver`
 /// joins relative imports onto the base path), then forwards the call to
-/// `__ds_engine::call_module_fn`, marshaling every value as `serde_json::Value`.
-/// TypedArray params/returns and `.d.ts`-derived signatures land in a later
-/// batch; for now the stub is `Value` end to end.
+/// `__ds_engine::call_module_fn`. When a sibling `.d.ts` carries the function's
+/// signature and every param/return type is marshal-safe, the stub specializes
+/// to those concrete types (marshaling via `serde_json::{to,from}_value`) so a
+/// static call site stays type-correct; otherwise it marshals `Value` end to end.
 fn degrade_js_module(
     translator: &Translator,
     js_path: &Path,
     js_src: &str,
+    dts_src: Option<&str>,
     deps: &mut RuntimeDeps,
 ) -> Result<String, Box<dyn Error>> {
     deps.insert(crate::translator::RuntimeDep::Engine);
     let specifier = js_path.to_string_lossy().replace('\\', "/");
     let path_lit = format!("{specifier:?}");
+    // Index the sibling `.d.ts`'s declared signatures by name+arity so each
+    // stub can specialize when its whole signature is marshal-safe.
+    let sigs = dts_src
+        .map(|s| translator.dts_fn_signatures(s))
+        .unwrap_or_default();
     let mut out = String::from(
         "//! Degraded to the embedded QuickJS engine: a class `extends` here has \
-         no static lowering. Each exported function forwards to the engine.\n\n",
+         no static lowering. Each exported function forwards to the engine; when \
+         its `.d.ts` signature is fully marshal-safe the stub keeps that concrete \
+         type so a static call site stays type-correct.\n\n",
     );
     for (name, nparams) in translator.js_export_fns(js_src) {
-        let params = (0..nparams)
-            .map(|i| format!("__ds_p{i}: serde_json::Value"))
-            .collect::<Vec<_>>()
-            .join(", ");
-        let args = (0..nparams)
-            .map(|i| format!("__ds_p{i}"))
-            .collect::<Vec<_>>()
-            .join(", ");
         let fn_lit = format!("{name:?}");
-        out.push_str(&format!(
-            "pub fn {name}({params}) -> serde_json::Value {{\n    \
-             crate::__ds_engine::register_js_module({path_lit}, {path_lit});\n    \
-             crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, &[{args}])\n}}\n\n",
-        ));
+        // Find the matching `.d.ts` signature and specialize only when every
+        // param and the return type is marshal-safe (and the arity matches).
+        let specialized = sigs
+            .iter()
+            .find(|s| s.name == name && s.params.len() == nparams)
+            .and_then(|s| {
+                let ret = s.ret.as_ref()?;
+                let _param_kinds: Vec<MarshalKind> = s
+                    .params
+                    .iter()
+                    .map(marshal_kind)
+                    .collect::<Option<Vec<_>>>()?;
+                let _ret_kind = marshal_kind(ret)?;
+                Some(s)
+            });
+        let stub = match specialized {
+            Some(sig) => {
+                // Concrete signature: marshal each arg via
+                // `serde_json::to_value` and the return via `from_value`. Every
+                // type here is `Serialize + Deserialize` (the marshal-safe set).
+                let params = sig
+                    .params
+                    .iter()
+                    .enumerate()
+                    .map(|(i, ty)| format!("__ds_p{i}: {}", render_type(ty)))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let ret_str = render_type(sig.ret.as_ref().expect("checked Some"));
+                let args = (0..sig.params.len())
+                    .map(|i| {
+                        format!("serde_json::to_value(&__ds_p{i}).expect(\"marshal {name} arg\")")
+                    })
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                format!(
+                    "pub fn {name}({params}) -> {ret_str} {{\n    \
+                     crate::__ds_engine::register_js_module({path_lit}, {path_lit});\n    \
+                     let __ds_ret = crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, \
+                     &[{args}]);\n    \
+                     serde_json::from_value(__ds_ret).expect(\"unmarshal {name} return\")\n}}\n\n",
+                )
+            }
+            None => {
+                // Value stub: no sibling `.d.ts`, an arity mismatch, or a
+                // param/return type that is not marshal-safe.
+                let params = (0..nparams)
+                    .map(|i| format!("__ds_p{i}: serde_json::Value"))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let args = (0..nparams)
+                    .map(|i| format!("__ds_p{i}"))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                format!(
+                    "pub fn {name}({params}) -> serde_json::Value {{\n    \
+                     crate::__ds_engine::register_js_module({path_lit}, {path_lit});\n    \
+                     crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, &[{args}])\n}}\n\n",
+                )
+            }
+        };
+        out.push_str(&stub);
     }
     Ok(out)
 }
@@ -1651,6 +1780,108 @@ mod tests {
         assert!(
             cargo.contains("rquickjs") || cargo.contains("rquickjs-sys"),
             "engine crate dep on Cargo.toml: {cargo}"
+        );
+    }
+
+    #[test]
+    fn emit_cargo_project_specializes_stub_from_marshal_safe_dts() {
+        // A `.js` dep with a class `extends` degrades to engine stubs, and a
+        // sibling `.d.ts` with a marshal-safe `declare function` signature
+        // specializes the stub: `bytesToHex(b: Uint8Array): string` becomes
+        // `pub fn bytesToHex(__ds_p0: Vec<u8>) -> String`, marshaling via
+        // serde_json rather than `Value` end to end. (The entry only imports
+        // it; whether the call site stays type-correct is a separate concern.)
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "package.json",
+            r#"{ "name": "probe", "bin": "main.ts" }"#,
+        );
+        write(
+            root,
+            "main.ts",
+            "import { bytesToHex } from \"./dep.js\";\nfunction main() {}",
+        );
+        write(
+            root,
+            "dep.js",
+            "class A extends B {}\nexport function bytesToHex(b) { return b; }",
+        );
+        write(
+            root,
+            "dep.d.ts",
+            "declare function bytesToHex(b: Uint8Array): string;",
+        );
+        let out = tmp.path().join("out");
+        let main_path = root.join("main.ts");
+        let src = fs::read_to_string(&main_path).unwrap();
+        emit_cargo_project(&src, &main_path, &out).unwrap();
+        let mut stub = String::new();
+        for entry in fs::read_dir(out.join("src")).unwrap() {
+            let p = entry.unwrap().path();
+            if p.extension().and_then(|e| e.to_str()) == Some("rs") {
+                let body = fs::read_to_string(&p).unwrap();
+                if body.contains("crate::__ds_engine::call_module_fn") {
+                    stub = body;
+                }
+            }
+        }
+        assert!(stub.contains("pub fn bytesToHex"), "stub emitted: {stub}");
+        assert!(
+            stub.contains("Vec<u8>") && stub.contains("-> String"),
+            "Uint8Array param + string return specialized: {stub}"
+        );
+        assert!(
+            stub.contains("serde_json::from_value") && stub.contains("serde_json::to_value"),
+            "marshal via serde_json: {stub}"
+        );
+    }
+
+    #[test]
+    fn emit_cargo_project_falls_back_to_value_for_unmappable_dts() {
+        // A `.d.ts` signature with a non-marshal-safe type (a `string | number`
+        // union lowers to a generated enum, not a JSON scalar) does not
+        // specialize the stub — it stays `serde_json::Value` end to end.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        write(
+            root,
+            "package.json",
+            r#"{ "name": "probe", "bin": "main.ts" }"#,
+        );
+        write(
+            root,
+            "main.ts",
+            "import { pick } from \"./dep.js\";\nfunction main() {}",
+        );
+        write(
+            root,
+            "dep.js",
+            "class A extends B {}\nexport function pick(x) { return x; }",
+        );
+        write(
+            root,
+            "dep.d.ts",
+            "declare function pick(x: string | number): string;",
+        );
+        let out = tmp.path().join("out");
+        let main_path = root.join("main.ts");
+        let src = fs::read_to_string(&main_path).unwrap();
+        emit_cargo_project(&src, &main_path, &out).unwrap();
+        let mut stub = String::new();
+        for entry in fs::read_dir(out.join("src")).unwrap() {
+            let p = entry.unwrap().path();
+            if p.extension().and_then(|e| e.to_str()) == Some("rs") {
+                let body = fs::read_to_string(&p).unwrap();
+                if body.contains("crate::__ds_engine::call_module_fn") {
+                    stub = body;
+                }
+            }
+        }
+        assert!(
+            stub.contains("pub fn pick(__ds_p0: serde_json::Value) -> serde_json::Value"),
+            "Value stub for an unmappable signature: {stub}"
         );
     }
 
