@@ -405,6 +405,13 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::collection_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `buf.set(source, offset)` on a `Uint8Array` (`Vec<u8>` local) — a
+        // byte-buffer copy. Dispatched after `collection_method` so a `Map.set`
+        // (a HashMap receiver) is handled first; only a `Vec<u8>` receiver
+        // lands here, and `map_method` does not map `set`, so the order is safe.
+        if let Some(expr) = builtins::typed_array_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(method) = builtins::map_method(&sm.property.name) {
             // `obj.opt_field.push(..)` — the field is `Option<Vec<..>>`; route
             // through `get_or_insert_with(Default::default)` so the method lands

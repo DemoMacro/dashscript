@@ -11,7 +11,7 @@ use super::super::bindings;
 use super::super::context::Ctx;
 use super::logical::assign_truthy;
 use super::member::{is_hashmap_local, static_member_is_optional_field};
-use super::{array_elem_expr, ident_expr, translate_expr};
+use super::{array_elem_expr, ident_expr, is_vec_u8, translate_expr};
 
 /// The lvalue kind of an assignment's left-hand side. A plain target is any
 /// Rust lvalue (`x`, `obj.field`, `arr[i as usize]`); a `m["k"]` on a
@@ -313,25 +313,6 @@ fn u8_elem_target(object: &Expression, ctx: &Ctx<'_>) -> bool {
     };
     let name = ctx.names().of_reference(id).to_string();
     matches!(ctx.local_type(&name), Some(p) if is_vec_u8(p))
-}
-
-/// Whether a type path is `Vec<u8>` (a `Uint8Array` byte buffer).
-fn is_vec_u8(path: &syn::Path) -> bool {
-    let Some(seg) = path.segments.last() else {
-        return false;
-    };
-    if seg.ident != "Vec" {
-        return false;
-    }
-    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
-        return false;
-    };
-    args.args.iter().any(|a| {
-        matches!(
-            a,
-            syn::GenericArgument::Type(syn::Type::Path(tp)) if tp.path.is_ident("u8")
-        )
-    })
 }
 
 /// Whether an assignment target is a `String`-typed local — so `+=` and

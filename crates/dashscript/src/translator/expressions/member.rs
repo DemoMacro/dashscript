@@ -8,9 +8,9 @@ use super::super::bindings;
 use super::super::builtins;
 use super::super::context::Ctx;
 use super::super::types;
-use super::is_hashmap;
 use super::is_hashset;
 use super::translate_expr;
+use super::{is_hashmap, is_vec_u8};
 
 /// Optional chaining `a?.field` → `a.as_ref().map(|__c| __c.field)`. The
 /// receiver is an `Option`; the access maps over a reference and yields
@@ -497,6 +497,16 @@ pub(in crate::translator) fn is_hashset_local(expr: &Expression, ctx: &Ctx<'_>) 
     };
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name).is_some_and(is_hashset)
+}
+
+/// True when `expr` is a local whose type is `Vec<u8>` (a `Uint8Array` byte
+/// buffer).
+pub(in crate::translator) fn is_vec_u8_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(is_vec_u8)
 }
 
 /// A HashMap key: a string literal stays bare (a `&str` for `HashMap::get`);

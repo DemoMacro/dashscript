@@ -23,6 +23,7 @@ mod number;
 mod object;
 mod string;
 mod temporal;
+mod typed_array;
 
 #[cfg(test)]
 mod drift_guard;
@@ -39,6 +40,7 @@ pub(in crate::translator) use number::{number_constant, number_method, number_st
 pub(in crate::translator) use object::object_method;
 pub(in crate::translator) use string::{string_method, string_method_on, string_static};
 pub(in crate::translator) use temporal::temporal_static;
+pub(in crate::translator) use typed_array::typed_array_method;
 
 use oxc_ast::ast::{Argument, Expression};
 use proc_macro2::Span;

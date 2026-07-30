@@ -65,6 +65,44 @@ fn translates_new_uint8_array_from_array_literal() {
 }
 
 #[test]
+fn translates_typed_array_set_to_copy_from_slice() {
+    // `buf.set(src, off)` on a `Uint8Array` (`Vec<u8>`) — ES
+    // `TypedArray.prototype.set` copies `src`'s bytes into `buf` starting at
+    // `off`. The receiver's `Vec<u8>` type (recorded by `new Uint8Array(…)`)
+    // drives the dispatch; `copy_from_slice` does the copy. `off` (a `number`)
+    // is cast to `usize`.
+    let src = "function f(h: Uint8Array): void {\
+                 let buf = new Uint8Array(8);\
+                 buf.set(h, 0);\
+             }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("copy_from_slice"),
+        "buf.set(src, off) → copy_from_slice: {rust}"
+    );
+    assert!(
+        !rust.contains(".set("),
+        "must not emit a plain .set( call: {rust}"
+    );
+}
+
+#[test]
+fn map_set_not_confused_with_typed_array_set() {
+    // A `Map.set(k, v)` on a `HashMap` keeps the `insert` lowering; the
+    // typed-array `set` dispatch must not grab it (different receiver type).
+    let src = "function f(): void {\
+                 let m: Map<string, number> = new Map();\
+                 m.set(\"k\", 1);\
+             }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".insert("), "Map.set → insert: {rust}");
+    assert!(
+        !rust.contains("copy_from_slice"),
+        "Map.set must not lower to copy_from_slice: {rust}"
+    );
+}
+
+#[test]
 fn translates_map_methods() {
     // `m.set`/`get`/`has`/`delete`/`size` map to HashMap insert/get(Option)/
     // contains_key/remove(.is_some)/len. `set` is a mutator, so `m` is `let mut`.

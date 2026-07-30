@@ -28,7 +28,9 @@ mod unary;
 pub(in crate::translator) use array::{array_owned_expr, array_slice_expr};
 pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
-pub(in crate::translator) use member::{is_hashmap_local, is_hashset_local, option_unwrap_object};
+pub(in crate::translator) use member::{
+    is_hashmap_local, is_hashset_local, is_vec_u8_local, option_unwrap_object,
+};
 pub(in crate::translator) use unary::typeof_operand_is_runtime;
 
 use oxc_ast::ast::{
@@ -899,6 +901,27 @@ pub(in crate::translator) fn is_hashmap(path: &syn::Path) -> bool {
 /// True when `path` names a `HashSet` (the target of an ES `Set<T>`).
 pub(in crate::translator) fn is_hashset(path: &syn::Path) -> bool {
     path.segments.last().is_some_and(|s| s.ident == "HashSet")
+}
+
+/// True when `path` names a `Vec<u8>` (the target of a `Uint8Array` byte
+/// buffer). Only the bare `Vec<u8>` form matches — a `Vec<f64>` (an ES `Array`)
+/// or any other element type does not.
+pub(in crate::translator) fn is_vec_u8(path: &syn::Path) -> bool {
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
+    if seg.ident != "Vec" {
+        return false;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return false;
+    };
+    args.args.iter().any(|a| {
+        matches!(
+            a,
+            syn::GenericArgument::Type(syn::Type::Path(tp)) if tp.path.is_ident("u8")
+        )
+    })
 }
 
 /// `(x) => expr` → `|x| expr` (expression body only; a block body is unmapped).
