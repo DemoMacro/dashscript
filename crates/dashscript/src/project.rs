@@ -703,16 +703,27 @@ fn collect_workspace_deps(src: &str, base: &Path) -> std::collections::HashSet<S
     deps
 }
 
-/// Record `source` as a workspace dep when it is a bare specifier that
-/// [`resolve_workspace_dep`] maps to a local `src/`. Relative (`.`) and
-/// `cargo:` imports are skipped (the former is already local; the latter is an
-/// extern crate).
+/// Record `source` as a local module so its `use` path is `crate::…`. Two bare
+/// specifiers lower to an in-crate `mod`: a symlinked workspace member (mapped
+/// by [`resolve_workspace_dep`] to a local `src/`), and a registry npm package
+/// whose resolved entry is a `.js` (or `.js`+`.d.ts` pair) — that degrades to a
+/// mod stub (e.g. an npm hash library), so the consumer's `use` must be
+/// `crate::…` to resolve from a sibling module. Relative (`.`) and `cargo:`
+/// imports are skipped (the former is already local; the latter is an extern
+/// crate). A bare spec that fails to resolve (deps not installed) is skipped
+/// too — it surfaces later.
 fn record_workspace_dep(source: &str, base: &Path, deps: &mut std::collections::HashSet<String>) {
-    if !source.starts_with('.')
-        && !source.starts_with("cargo:")
-        && resolve_workspace_dep(base, source).is_some()
-    {
+    if source.starts_with('.') || source.starts_with("cargo:") {
+        return;
+    }
+    if resolve_workspace_dep(base, source).is_some() {
         deps.insert(source.to_string());
+        return;
+    }
+    if let Ok((_, kind)) = resolve_local_module(base, source) {
+        if matches!(kind, DepKind::Js | DepKind::DtsWithJs { .. }) {
+            deps.insert(source.to_string());
+        }
     }
 }
 
@@ -1746,6 +1757,30 @@ mod tests {
             "no engine stub for a static .js: {rust}"
         );
         assert!(!deps.needs_engine());
+    }
+
+    #[test]
+    fn record_workspace_dep_marks_node_modules_js_as_local() {
+        // A bare specifier resolving to a node_modules `.js` degrades to an
+        // in-crate mod stub, so it must be recorded as local — the consumer's
+        // `use` path is `crate::…`, not a bare `mod` (Rust 2018 path clarity
+        // rejects the bare form from a sibling module).
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg = root.join("node_modules").join("my-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        write(
+            &pkg,
+            "package.json",
+            r#"{ "name": "my-pkg", "main": "index.js" }"#,
+        );
+        write(&pkg, "index.js", "export function f(x) { return x; }");
+        let mut deps = std::collections::HashSet::new();
+        record_workspace_dep("my-pkg", root, &mut deps);
+        assert!(
+            deps.contains("my-pkg"),
+            "node_modules .js should be recorded as a local mod: {deps:?}"
+        );
     }
 
     #[test]
