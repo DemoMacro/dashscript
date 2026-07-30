@@ -29,6 +29,26 @@ fn translates_new_set_to_hashset_new() {
 }
 
 #[test]
+fn translates_new_uint8_array_to_zeroed_vec() {
+    // `new Uint8Array(n)` — a crypto byte buffer of `n` zeroed u8 elements —
+    // lowers to `vec![0u8; n as usize]`, not the generic `Uint8Array::new(n)`
+    // (there is no such Rust type).
+    let src = "function f(n: number): Uint8Array { return new Uint8Array(n); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("vec![0_u8;"), "new Uint8Array(n): {rust}");
+}
+
+#[test]
+fn translates_new_uint8_array_empty_to_empty_vec() {
+    let src = "function f(): Uint8Array { return new Uint8Array(); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("Vec::<u8>::new()"),
+        "new Uint8Array(): {rust}"
+    );
+}
+
+#[test]
 fn translates_map_methods() {
     // `m.set`/`get`/`has`/`delete`/`size` map to HashMap insert/get(Option)/
     // contains_key/remove(.is_some)/len. `set` is a mutator, so `m` is `let mut`.

@@ -37,6 +37,25 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 return worker_ctor(arg, handler);
             }
         }
+        // `new Uint8Array(n)` / `Uint8ClampedArray(n)` / `Int8Array(n)` — an ES
+        // typed array of `n` zeroed `u8` elements (a crypto byte buffer) →
+        // `vec![0u8; n as usize]`; `new Uint8Array()` is empty. The element type
+        // is `u8` for these three; other typed arrays (`Int32Array`, …) are a
+        // later batch. A non-number arg (an iterable copy) is later work too —
+        // it falls through to the generic `Foo::new(…)` path and surfaces at
+        // `cargo check` honestly.
+        if matches!(
+            id.name.as_str(),
+            "Uint8Array" | "Uint8ClampedArray" | "Int8Array"
+        ) {
+            if n.arguments.is_empty() {
+                return parse_quote!(::std::vec::Vec::<u8>::new());
+            }
+            if n.arguments.len() == 1 {
+                let len = array_elem_arg(&n.arguments[0], ctx);
+                return parse_quote!(::std::vec![0_u8; (#len) as usize]);
+            }
+        }
     }
     let Some(name) = class_name(&n.callee) else {
         return parse_quote!(::core::todo!());
