@@ -127,6 +127,30 @@ fn const_arrow_lowers_to_fn_item() {
 }
 
 #[test]
+fn export_const_literal_lowers_to_pub_const() {
+    // `export const X = <literal>` (Number/Bool/String) is a const-expr literal
+    // → a `pub const` item, not a dropped executable statement (an arrow
+    // initializer is already a `fn` item). String and boolean literals map to
+    // `&'static str` and `bool`.
+    let src = "export const LEVEL = 1;\
+               export const NAME = \"x\";\
+               export const FLAG = true;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("pub const level: f64 = 1_f64;"),
+        "got:\n{rust}"
+    );
+    assert!(
+        rust.contains("pub const name: &'static str = \"x\";"),
+        "got:\n{rust}"
+    );
+    assert!(
+        rust.contains("pub const flag: bool = true;"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn interface_extends_keyword_field_name() {
     // A parent interface field named `type` (a Rust keyword) flattens into the
     // child struct as `r#type` (raw ident), not a panic on `Ident::new`.

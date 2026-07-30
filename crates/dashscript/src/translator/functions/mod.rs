@@ -325,7 +325,18 @@ fn translate_exported_declaration(
         // is a named function (the binding names it), so it lowers to a `fn`
         // item. Only arrow initializers map; any other const value stays a
         // top-level executable statement (the implicit-`main` path).
-        Declaration::VariableDeclaration(var) => const_arrow_fn_items(var, registry, names),
+        Declaration::VariableDeclaration(var) => {
+            let mut items = const_arrow_fn_items(var, registry, names);
+            // A non-arrow `export const X = <literal>` (Number/Bool/String) is a
+            // const-expr literal → a `pub const` item, not a dropped executable
+            // statement (an arrow initializer is already a `fn` item above).
+            if items.is_empty() {
+                if let Some(item) = escape::const_item_from_var(var, names, true) {
+                    items.push(item);
+                }
+            }
+            items
+        }
         Declaration::TSEnumDeclaration(decl) => {
             declarations::translate_enum(decl).unwrap_or_default()
         }

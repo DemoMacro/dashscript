@@ -9,7 +9,7 @@ use oxc_ast::ast::{
     BindingPattern, Expression, Statement, VariableDeclaration, VariableDeclarationKind,
 };
 use oxc_semantic::SymbolId;
-use syn::{parse_quote, Expr, Type};
+use syn::{parse_quote, Expr, Type, Visibility};
 
 use super::super::analysis;
 use super::super::expressions;
@@ -145,39 +145,26 @@ pub(in crate::translator) fn all_promotable_const_names(
         .collect()
 }
 
-/// Build the crate-level `const` item for a promoted top-level `const` or
-/// non-mutated `let` declaration, if `stmt` is one whose rust name is in
-/// `promoted`. The item keeps the binding's snake-case rust name (lowercase) so
-/// every reference — in `fn main` and in any function — resolves to it
-/// unchanged; the `#[allow(non_upper_case_globals)]` attribute silences the
-/// rustc lint for a lowercase `const` (the lint is the only reason a `const`
-/// is conventionally SCREAMING_SNAKE; the name itself is arbitrary, and
-/// matching the reference resolution avoids touching every call site).
-pub(in crate::translator) fn promoted_const_item(
-    stmt: &Statement,
-    promoted: &HashSet<String>,
+/// Build a `const` item for a single-declarator `const`/non-mutated `let`
+/// whose initializer is a Rust const-expression literal (Number/Bool/String),
+/// or `None` for a non-literal initializer or a non-identifier pattern.
+/// `public` controls `pub` visibility: `export const X = <literal>` emits
+/// `pub const`; escape promotion emits a crate-local `const`. Shared by
+/// [`promoted_const_item`] (escape, non-pub) and `translate_exported_declaration`
+/// (export, pub) so the literal→`(Type, Expr)` mapping has one source. The item
+/// keeps the binding's snake-case rust name; `#[allow(non_upper_case_globals)]`
+/// silences the rustc lint for a lowercase `const` (the name is arbitrary, and
+/// matching reference resolution avoids touching every call site).
+pub(in crate::translator) fn const_item_from_var(
+    var: &VariableDeclaration,
     names: &NameTable<'_>,
+    public: bool,
 ) -> Option<syn::Item> {
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
-    if !matches!(
-        decl.kind,
-        VariableDeclarationKind::Const | VariableDeclarationKind::Let
-    ) {
-        return None;
-    }
-    if decl.declarations.len() != 1 {
-        return None;
-    }
-    let d = &decl.declarations[0];
+    let d = var.declarations.first()?;
     let BindingPattern::BindingIdentifier(id) = &d.id else {
         return None;
     };
     let name = names.of_binding(id);
-    if !promoted.contains(&name.to_string()) {
-        return None;
-    }
     let init = d.init.as_ref()?;
     let (ty, init_expr): (Type, Expr) = match init {
         Expression::NumericLiteral(n) => (
@@ -196,8 +183,37 @@ pub(in crate::translator) fn promoted_const_item(
         }
         _ => return None,
     };
+    let vis: Visibility = if public {
+        parse_quote!(pub)
+    } else {
+        parse_quote!()
+    };
     Some(parse_quote! {
         #[allow(non_upper_case_globals)]
-        const #name: #ty = #init_expr;
+        #vis const #name: #ty = #init_expr;
     })
+}
+
+/// Build the crate-level `const` item for a promoted top-level `const` or
+/// non-mutated `let` declaration, if `stmt` is one whose rust name is in
+/// `promoted` (the escape set). Delegates the literal→item mapping to
+/// [`const_item_from_var`] (non-pub: a crate-local `const`).
+pub(in crate::translator) fn promoted_const_item(
+    stmt: &Statement,
+    promoted: &HashSet<String>,
+    names: &NameTable<'_>,
+) -> Option<syn::Item> {
+    let Statement::VariableDeclaration(decl) = stmt else {
+        return None;
+    };
+    // Only bindings in the escape set (promoted) become crate-level const items;
+    // `promotable_const_info` already guarantees a single declarator.
+    let d = decl.declarations.first()?;
+    let BindingPattern::BindingIdentifier(id) = &d.id else {
+        return None;
+    };
+    if !promoted.contains(&names.of_binding(id).to_string()) {
+        return None;
+    }
+    const_item_from_var(decl, names, false)
 }
