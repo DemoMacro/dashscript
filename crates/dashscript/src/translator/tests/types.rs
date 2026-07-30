@@ -80,6 +80,41 @@ fn factory_singleton_infers_generic_return_type() {
 }
 
 #[test]
+fn cross_package_factory_singleton_prefixes_return_type() {
+    // A factory whose signature was collected from another package carries
+    // `source_crate`; its return type is prefixed `crate::<pkg>::…` on the
+    // consumer's OnceLock, since the consumer imports only the factory, not its
+    // return type (`createPacker` is imported, `Packer` is not).
+    use super::super::FnSignature;
+    use std::collections::HashMap;
+    let mut sigs = HashMap::new();
+    sigs.insert(
+        "make".to_string(),
+        FnSignature {
+            type_params: vec!["T".to_string()],
+            return_type: Some(syn::parse_quote!(Wrapper<T>)),
+            source_crate: Some("office_open_core".to_string()),
+        },
+    );
+    let src = "const p = make<number>(42);\
+               function useP(): Wrapper<number> { return p; }";
+    let rust = Translator::new()
+        .with_extra_function_signatures(sigs)
+        .translate(src)
+        .expect("should translate");
+    assert!(
+        rust.contains(
+            "static P_CELL: ::std::sync::OnceLock<crate::office_open_core::Wrapper<f64>>"
+        ),
+        "got:\n{rust}"
+    );
+    assert!(
+        rust.contains("fn p() -> &'static crate::office_open_core::Wrapper<f64>"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn method_call_singleton_infers_builtin_return_type() {
     // A module-global constant whose initializer is a method call with a known
     // builtin return type (`arr.join("")` → String) lowers to a OnceLock<String>

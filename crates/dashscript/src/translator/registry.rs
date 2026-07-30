@@ -55,6 +55,14 @@ pub struct InterfaceField {
 pub struct FnSignature {
     pub type_params: Vec<String>,
     pub return_type: Option<Type>,
+    /// The workspace-member crate this signature's return type lives in
+    /// (`Some("office_open_core")` for a factory defined in another package),
+    /// so a cross-package singleton's OnceLock type is prefixed
+    /// `crate::<source_crate>::…`. `None` for the entry file and same-package
+    /// deps — the type is already visible. Set by
+    /// `collect_package_function_signatures` (which walks the import graph);
+    /// single-file collection leaves it `None`.
+    pub source_crate: Option<String>,
 }
 
 /// Project-wide type info gathered in the first pass.
@@ -339,6 +347,7 @@ fn register_function(func: &Function, names: &NameTable, registry: &mut TypeRegi
         FnSignature {
             type_params: generic_param_names(func.type_parameters.as_deref()),
             return_type: func.return_type.as_deref().and_then(return_type_of),
+            source_crate: None,
         },
     );
     // An inline scalar union in a parameter type (e.g. `Record<string,
@@ -381,6 +390,7 @@ fn register_variable_declaration(decl: &VariableDeclaration, registry: &mut Type
             FnSignature {
                 type_params: generic_param_names(arrow.type_parameters.as_deref()),
                 return_type: arrow.return_type.as_deref().and_then(return_type_of),
+                source_crate: None,
             },
         );
     }

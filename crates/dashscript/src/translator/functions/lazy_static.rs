@@ -340,8 +340,34 @@ fn factory_call_return_type(call: &CallExpression, registry: &TypeRegistry) -> O
     };
     let sig = registry.function_signatures.get(id.name.as_ref())?;
     let ret = sig.return_type.clone()?;
+    // Prefix the toplevel type with its source crate when the factory is
+    // defined in another package — the return type (e.g. `Packer`) is not
+    // imported by the consumer, so the OnceLock type needs
+    // `crate::<pkg>::Packer<…>` to resolve. Applied before substitution: the
+    // substitutor only replaces single-segment type-param idents (`TFile`),
+    // so a prefixed multi-segment path (`crate::pkg::Packer`) is untouched
+    // while the inner type arg is still instantiated.
+    let ret = match sig.source_crate.as_ref() {
+        Some(c) => prefix_toplevel_crate(&ret, c),
+        None => ret,
+    };
     let bindings = bind_type_params(&sig.type_params, call.type_arguments.as_deref());
     Some(substitute_type(ret, &bindings))
+}
+
+/// Prefix a return type's toplevel path with `crate::<crate_name>` so a
+/// cross-package factory's return type — collected without a prefix in its home
+/// package — resolves from the consumer's module: `Packer<TFile>` →
+/// `crate::office_open_core::Packer<TFile>`. Non-path types (fn pointers,
+/// tuples) are returned cloned unchanged; factory returns are nominal path
+/// types.
+fn prefix_toplevel_crate(ty: &Type, crate_name: &str) -> Type {
+    let Type::Path(tp) = ty else {
+        return ty.clone();
+    };
+    let crate_ident = format_ident!("{}", crate_name);
+    let original = &tp.path;
+    parse_quote!(crate::#crate_ident::#original)
 }
 
 /// The return type of a module-global initializer call, inferred without an

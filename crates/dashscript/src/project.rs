@@ -238,22 +238,33 @@ fn collect_package_function_signatures(
         .map_err(|e| format!("collect signatures {}: {e}", src_path.display()))?;
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: HashSet<String> = HashSet::new();
-    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    // (path, member_crate): member_crate is the workspace-member crate this dep
+    // lives in (`Some` for a cross-package dep, `None` for the entry's own
+    // package). A bare workspace specifier sets it; a relative import inherits
+    // the parent's — so a factory reached through a barrel (`@scope/core` →
+    // `./opc/packer`) still carries the `core` member, not the relative hop.
+    let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
     for imp in collector.imports(src) {
         if seen.insert(imp.module.clone()) {
             let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
             if !matches!(kind, DepKind::Js) {
-                worklist.push_back((imp.module, dep_path));
+                let member = workspace_member_crate(base, &imp.source);
+                worklist.push_back((dep_path, member));
             }
         }
     }
-    while let Some((_module, path)) = worklist.pop_front() {
+    while let Some((path, member)) = worklist.pop_front() {
         let dep_src = fs::read_to_string(&path)
             .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
-        for (k, v) in collector
+        let mut dep_sigs = collector
             .collect_function_signatures(&dep_src)
-            .map_err(|e| format!("collect signatures {}: {e}", path.display()))?
-        {
+            .map_err(|e| format!("collect signatures {}: {e}", path.display()))?;
+        // Tag each signature with the workspace crate its file lives in, so a
+        // cross-package factory's return type is prefixed at the consumer.
+        for sig in dep_sigs.values_mut() {
+            sig.source_crate = member.clone();
+        }
+        for (k, v) in dep_sigs {
             shared.entry(k).or_insert_with(|| v);
         }
         let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
@@ -261,12 +272,31 @@ fn collect_package_function_signatures(
             if seen.insert(imp.module.clone()) {
                 let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
                 if !matches!(kind, DepKind::Js) {
-                    worklist.push_back((imp.module, dep_path));
+                    // A bare workspace specifier enters that member; a relative
+                    // import stays in the current member.
+                    let child_member =
+                        workspace_member_crate(dep_base, &imp.source).or(member.clone());
+                    worklist.push_back((dep_path, child_member));
                 }
             }
         }
     }
     Ok(shared)
+}
+
+/// The workspace-member crate a bare import `source` resolves to, or `None`
+/// for a relative import (same package) or a `cargo:`/npm extern. Mirrors
+/// [`record_workspace_dep`]: a bare specifier that maps to a local `src/` is a
+/// workspace member, whose crate name is the sanitized module ident. Used to
+/// tag cross-package factory signatures so their return type is prefixed
+/// `crate::<member>::…` at the consumer.
+fn workspace_member_crate(dir: &Path, source: &str) -> Option<String> {
+    if source.starts_with('.') || source.starts_with("cargo:") {
+        return None;
+    }
+    resolve_workspace_dep(dir, source)
+        .and_then(|_| crate::translator::imports::module_ident(source))
+        .map(|i| i.to_string())
 }
 
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
