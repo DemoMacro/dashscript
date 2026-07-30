@@ -80,6 +80,31 @@ fn factory_singleton_infers_generic_return_type() {
 }
 
 #[test]
+fn method_call_singleton_infers_builtin_return_type() {
+    // A module-global constant whose initializer is a method call with a known
+    // builtin return type (`arr.join("")` → String) lowers to a OnceLock<String>
+    // without an explicit annotation, mirroring the factory-call path.
+    let src = "const arr: string[] = [\"a\", \"b\"];\
+               const joined = arr.join(\"\");\
+               function f(): string { return joined; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("static JOINED_CELL: ::std::sync::OnceLock<String>"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
+fn const_arrow_lowers_to_fn_item() {
+    // A module-level const arrow (`const f = () => …`) is a declaration that
+    // lowers to a `fn` item, not an executable statement — so it never lands in
+    // the rejected module-file executable set.
+    let src = "const greet = (name: string): string => \"hi \" + name;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("fn greet("), "got:\n{rust}");
+}
+
+#[test]
 fn interface_extends_keyword_field_name() {
     // A parent interface field named `type` (a Rust keyword) flattens into the
     // child struct as `r#type` (raw ident), not a panic on `Ident::new`.

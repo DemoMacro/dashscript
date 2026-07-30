@@ -72,7 +72,7 @@ pub(in crate::translator) fn lazy_static_candidate(
     // OnceLock — defer.
     if d.type_annotation.is_none()
         && !matches!(init, Expression::RegExpLiteral(_))
-        && !is_factory_call(init)
+        && !is_inferable_call(init)
     {
         return false;
     }
@@ -244,10 +244,11 @@ pub(in crate::translator) fn lazy_static_items(
     let ty: Type = if let Some(ta) = d.type_annotation.as_ref() {
         types::translate_type(&ta.type_annotation)
     } else if let Expression::CallExpression(call) = init {
-        // A factory call with no annotation — infer the return type from the
-        // callee's cross-file signature, instantiating its generic params with
-        // the call's type arguments (`createFactory<TFile>` ← `createFactory<Opts>`).
-        factory_call_return_type(call, registry).unwrap_or_else(|| parse_quote!(_))
+        // A factory or method call with no annotation — infer the return type:
+        // an identifier factory call resolves via its cross-file signature
+        // (`createFactory<TFile>` ← `createFactory<Opts>`); a method call via its
+        // builtin return type (`arr.join("")` → `String`).
+        infer_call_return_type(call, registry).unwrap_or_else(|| parse_quote!(_))
     } else {
         // A regex literal with no annotation — `regress::Regex`.
         parse_quote!(regress::Regex)
@@ -274,15 +275,22 @@ pub(in crate::translator) fn lazy_static_items(
     ])
 }
 
-/// Whether `init` is a runtime factory call (`ident<args>(...)`) — its return
-/// type is inferred from the callee's cross-file signature, so a module-global
-/// singleton (`const p = createFactory<T>(...)`) lowers to a `OnceLock` even
-/// without an explicit annotation.
-fn is_factory_call(init: &Expression) -> bool {
-    matches!(
-        init,
-        Expression::CallExpression(call) if matches!(&call.callee, Expression::Identifier(_))
-    )
+/// Whether `init` is a call whose return type the translator can infer without
+/// an annotation — so a module-global singleton lowers to a `OnceLock` even
+/// without one. Two shapes: an identifier factory call (`createFactory<T>(...)`,
+/// return type from the callee's cross-file signature) or a method call whose
+/// builtin return type is known (`entries.map(...).join("")` → `String`).
+fn is_inferable_call(init: &Expression) -> bool {
+    let Expression::CallExpression(call) = init else {
+        return false;
+    };
+    match &call.callee {
+        Expression::Identifier(_) => true,
+        Expression::StaticMemberExpression(sm) => {
+            builtin_method_return_type(&sm.property.name).is_some()
+        }
+        _ => false,
+    }
 }
 
 /// The instantiated return type of a factory call, looked up from the callee's
@@ -297,6 +305,32 @@ fn factory_call_return_type(call: &CallExpression, registry: &TypeRegistry) -> O
     let ret = sig.return_type.clone()?;
     let bindings = bind_type_params(&sig.type_params, call.type_arguments.as_deref());
     Some(substitute_type(ret, &bindings))
+}
+
+/// The return type of a module-global initializer call, inferred without an
+/// annotation: an identifier factory call resolves via its cross-file signature
+/// ([`factory_call_return_type`]); a method call resolves via its builtin return
+/// type ([`builtin_method_return_type`]). `None` otherwise.
+fn infer_call_return_type(call: &CallExpression, registry: &TypeRegistry) -> Option<Type> {
+    match &call.callee {
+        Expression::Identifier(_) => factory_call_return_type(call, registry),
+        Expression::StaticMemberExpression(sm) => builtin_method_return_type(&sm.property.name),
+        _ => None,
+    }
+}
+
+/// The always-`String` ES built-in methods (on `Array` / `String` / `Number`),
+/// so a module-level constant ending in one (`arr.map(...).join("")`) has a
+/// known static type without an annotation. Matched by method name only — the
+/// receiver type is irrelevant since each of these yields `String`.
+fn builtin_method_return_type(method: &str) -> Option<Type> {
+    match method {
+        "join" | "toString" | "toLocaleString" | "slice" | "substring" | "substr"
+        | "toUpperCase" | "toLowerCase" | "trim" | "trimStart" | "trimEnd" | "repeat"
+        | "padStart" | "padEnd" | "replace" | "replaceAll" | "concat" | "toFixed"
+        | "toExponential" | "toPrecision" => Some(parse_quote!(String)),
+        _ => None,
+    }
 }
 
 /// Bind a signature's generic type parameters to a call's type arguments

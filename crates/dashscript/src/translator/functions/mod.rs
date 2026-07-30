@@ -215,10 +215,15 @@ pub fn translate_statement(
         // the way an ES enum works. A non-literal initializer yields nothing
         // here and `check` flags the enum unsupported.
         Statement::TSEnumDeclaration(decl) => declarations::translate_enum(decl).unwrap_or_default(),
+        // A non-export `const` arrow (`const f = () => …`) lowers to a `fn`
+        // item, mirroring the `export const f = …` path. `is_executable_top_level`
+        // routes it here (a const arrow is a declaration, not executable), so
+        // only an arrow initializer maps; any other const value never reaches
+        // this arm (it is executable → implicit `fn main`).
+        Statement::VariableDeclaration(var) => const_arrow_fn_items(var, registry, names),
         // Executable statements run in the implicit `fn main`, not as items
         // (see `is_executable_top_level`); an empty item list is correct.
         Statement::ExpressionStatement(_)
-        | Statement::VariableDeclaration(_)
         | Statement::IfStatement(_)
         | Statement::WhileStatement(_)
         | Statement::DoWhileStatement(_)
@@ -258,6 +263,14 @@ pub fn translate_statement(
 /// never calls them). Shared with `check`, which treats them as legitimate
 /// top-level statements rather than unmapped.
 pub(in crate::translator) fn is_executable_top_level(stmt: &Statement) -> bool {
+    // A `const` arrow (`const f = () => …`) lowers to a `fn` item — a
+    // declaration, not an executable statement — so it is excluded: it goes
+    // through `translate_statement` to `translate_const_arrow_to_fn`, never
+    // into the implicit `fn main` (or, for a module, the rejected executable
+    // set). Every other kind here runs in source order inside `fn main`.
+    if is_const_arrow(stmt) {
+        return false;
+    }
     matches!(
         stmt,
         Statement::ExpressionStatement(_)
@@ -273,6 +286,20 @@ pub(in crate::translator) fn is_executable_top_level(stmt: &Statement) -> bool {
             | Statement::ThrowStatement(_)
             | Statement::BlockStatement(_)
     )
+}
+
+/// Whether `stmt` is a single-declarator `const` arrow-function binding
+/// (`const f = () => …`), which lowers to a `fn` item rather than an
+/// executable statement.
+fn is_const_arrow(stmt: &Statement) -> bool {
+    let Statement::VariableDeclaration(v) = stmt else {
+        return false;
+    };
+    v.declarations.len() == 1
+        && matches!(
+            &v.declarations[0].init,
+            Some(Expression::ArrowFunctionExpression(_))
+        )
 }
 
 /// Translate the inner declaration of an `export` (`export function` /
@@ -298,24 +325,36 @@ fn translate_exported_declaration(
         // is a named function (the binding names it), so it lowers to a `fn`
         // item. Only arrow initializers map; any other const value stays a
         // top-level executable statement (the implicit-`main` path).
-        Declaration::VariableDeclaration(var) => var
-            .declarations
-            .iter()
-            .filter_map(|d| match d.init.as_ref()? {
-                Expression::ArrowFunctionExpression(arrow) => {
-                    let name = names.of_pattern(&d.id);
-                    Some(syn::Item::Fn(translate_const_arrow_to_fn(
-                        name, arrow, registry, names,
-                    )))
-                }
-                _ => None,
-            })
-            .collect(),
+        Declaration::VariableDeclaration(var) => const_arrow_fn_items(var, registry, names),
         Declaration::TSEnumDeclaration(decl) => {
             declarations::translate_enum(decl).unwrap_or_default()
         }
         _ => Vec::new(),
     }
+}
+
+/// `const` / `export const` arrow declarations (`const f = (x) => …`) lower to
+/// `fn` items — the binding names each function. Shared by the export path
+/// ([`translate_exported_declaration`]) and the plain top-level path
+/// ([`translate_statement`]). Non-arrow initializers yield nothing (a const
+/// value is an executable statement, not an item).
+fn const_arrow_fn_items(
+    var: &VariableDeclaration,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Vec<syn::Item> {
+    var.declarations
+        .iter()
+        .filter_map(|d| match d.init.as_ref()? {
+            Expression::ArrowFunctionExpression(arrow) => {
+                let name = names.of_pattern(&d.id);
+                Some(syn::Item::Fn(translate_const_arrow_to_fn(
+                    name, arrow, registry, names,
+                )))
+            }
+            _ => None,
+        })
+        .collect()
 }
 
 /// Translate the declaration of an `export default` (`export default
