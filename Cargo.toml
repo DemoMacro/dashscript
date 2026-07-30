@@ -63,8 +63,10 @@ lsp-types = "0.97.0"
 
 # dev-only — the conformance test harness (`tests/conformance.rs`). rquickjs
 # runs engine-gated fixtures in-process (ES reflection the static translator
-# cannot lower), skipping a cargo compile per fixture.
-rquickjs = "0.12"
+# cannot lower), skipping a cargo compile per fixture. The `loader` feature
+# enables `Loader`/`Resolver` — the engine loads multi-file `.js` ESM modules
+# (e.g. an npm package whose source `import`s sibling `.js` files) at runtime.
+rquickjs = { version = "0.12", features = ["loader"] }
 tempfile = "3"
 # Per-fixture run timeout — a hanging fixture (catastropic regexp backtracking,
 # an infinite loop) is killed at 30s instead of stalling the whole matrix.

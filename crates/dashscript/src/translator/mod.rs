@@ -141,7 +141,13 @@ impl RuntimeDep {
             // `serde_json` is the per-function degradation marshal layer
             // (`call_fn` marshals args/return as `serde_json::Value`).
             RuntimeDep::Engine => Some(&[
-                ("rquickjs", "\"0.12\""),
+                // `loader` enables `Loader`/`Resolver` so the engine can load
+                // multi-file `.js` ESM modules (npm packages with sibling
+                // `import`s) at runtime, not just single-file `ctx.eval`.
+                (
+                    "rquickjs",
+                    "{ version = \"0.12\", features = [\"loader\"] }",
+                ),
                 ("serde", "{ version = \"1\", features = [\"derive\"] }"),
                 ("serde_json", "\"1\""),
             ]),
@@ -983,7 +989,7 @@ const ENGINE_HELPER_MODULE: &str = r##"//! DashScript compat engine: run a `.ts`
 //! - `call_fn(name, body, args)` — the per-function degradation path: a dynamic
 //!   function keeps its native Rust signature, but its body runs under JS.
 use rquickjs::context::EvalOptions;
-use rquickjs::{Array, Context, Ctx, FromJs, IntoJs, Object, Runtime, Type, Value};
+use rquickjs::{Array, Context, Ctx, FromJs, IntoJs, Object, Runtime, TypedArray, Type, Value};
 
 thread_local! {
     static RUNTIME: Runtime = Runtime::new().expect("rquickjs Runtime");
@@ -1076,7 +1082,18 @@ pub fn js_to_json<'js>(ctx: &Ctx<'js>, v: Value<'js>) -> rquickjs::Result<serde_
             }
             Ok(serde_json::Value::Object(map))
         }
-        Type::Symbol | Type::BigInt | Type::Module | Type::Unknown => Ok(serde_json::Value::Null),
+        Type::Symbol | Type::BigInt | Type::Module => Ok(serde_json::Value::Null),
+        // A TypedArray instance (Uint8Array, …) reports as `Type::Unknown` —
+        // QuickJS tags it as neither a plain object nor an array. Marshal it as
+        // a JSON array of bytes so a crypto result (sha1 returns a Uint8Array)
+        // does not silently collapse to null. Other Unknown values stay null.
+        Type::Unknown => match TypedArray::<u8>::from_value(v.clone()) {
+            Ok(ta) => Ok(ta
+                .as_bytes()
+                .and_then(|bytes| serde_json::to_value(bytes).ok())
+                .unwrap_or(serde_json::Value::Null)),
+            Err(_) => Ok(serde_json::Value::Null),
+        },
     }
 }
 
