@@ -3,7 +3,7 @@
  * DashScript benchmark harness.
  *
  * Each bench is a subdirectory of examples/bench holding `main.ts` +
- * `manifest.json` — one algorithm written once. `function main` is DashScript's
+ * `package.json` — one algorithm written once. `function main` is DashScript's
  * entry (it lowers to Rust `fn main`); the trailing `main()` call is a no-op
  * for `ds` (cargo calls `fn main`) but runs the same source unchanged under
  * node / bun / perry, so one file serves every runtime.
@@ -22,7 +22,7 @@
  *
  * Per-sample timeout. The first available runtime (ds) sets the reference
  * median for a bench; every later runtime gets `ds_median +
- * BENCH_EXTRA_MS` per sample (at most ~30s slower than ds), and a sample over
+ * BENCH_EXTRA_MS` per sample (at most ~10s slower than ds), and a sample over
  * that is killed and the runtime marked `T/O` for that bench. This stops a
  * pathologically slow runtime from blocking the whole suite — perry on an f64
  * recurrence loop its optimizer cannot fold ran ~100s/sample vs ds's ~3.4s,
@@ -45,9 +45,9 @@ const SAMPLES = +(process.env.BENCH_SAMPLES ?? 5);
 const IS_WIN = process.platform === "win32";
 const EXE = IS_WIN ? ".exe" : "";
 // Per-sample wall-clock budget. The first runtime (ds) is the reference:
-// later runtimes get ds_median + EXTRA_MS (at most ~30s slower than ds).
+// later runtimes get ds_median + EXTRA_MS (at most ~10s slower than ds).
 const TIMEOUT_MS = +(process.env.BENCH_TIMEOUT_MS ?? 60_000);
-const EXTRA_MS = +(process.env.BENCH_EXTRA_MS ?? 30_000);
+const EXTRA_MS = +(process.env.BENCH_EXTRA_MS ?? 10_000);
 // Builds (ds build / perry compile) get a separate, roomier ceiling — a cold
 // first compile is legitimately slower than any single run.
 const BUILD_TIMEOUT_MS = +(process.env.BENCH_BUILD_TIMEOUT_MS ?? 300_000);
@@ -134,7 +134,23 @@ const RUNTIMES = [
     build: (dir, name) => sh(`perry compile main.ts -o ${name}-perry${EXE}`, { cwd: dir }),
     runCmd: (dir, name) => `"${join(dir, name + "-perry" + EXE)}"`,
   },
+  {
+    name: "scriptc",
+    vcmd: "scriptc",
+    build: (dir, name) => sh(`scriptc build main.ts -o ${name}-scriptc${EXE}`, { cwd: dir }),
+    runCmd: (dir, name) => `"${join(dir, name + "-scriptc" + EXE)}"`,
+  },
+  {
+    // ant is a JavaScript runtime (node/bun class), invoked directly — no
+    // compile step. Its binary lives wherever it was installed, so the path
+    // comes from `ANT_BIN` rather than a hardcoded location; unset → skipped.
+    name: "ant",
+    vcmd: process.env.ANT_BIN,
+    build: () => {},
+    runCmd: () => `"${process.env.ANT_BIN}" main.ts`,
+  },
 ]
+  .filter((r) => r.vcmd)
   .filter((r) => available(r.vcmd))
   .filter((r) => {
     const want = process.env.BENCH_RUNTIMES?.split(",").map((s) => s.trim());
@@ -155,7 +171,7 @@ console.log("-".repeat(16 + RUNTIMES.length * 10 + 24));
 
 for (const bench of benches) {
   const dir = join(ROOT, bench);
-  const name = JSON.parse(readFileSync(join(dir, "manifest.json"), "utf8")).name;
+  const name = JSON.parse(readFileSync(join(dir, "package.json"), "utf8")).name;
   const row = { bench, name, times: {}, checksums: {}, error: {}, timedOut: {} };
   // The first runtime's median is the reference for relative timeouts on
   // subsequent runtimes.

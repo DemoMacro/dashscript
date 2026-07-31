@@ -1,11 +1,11 @@
 # DashScript benchmarks
 
 Microbenchmarks comparing **DashScript** (`ds`, TypeScript → native Rust) against
-**node** (V8), **bun** (JSC), and **perry** (also TypeScript → native), all
-running the identical TypeScript source. Each bench is one algorithm written
-once: `main.ts` is DashScript's entry (it lowers to Rust `fn main`),
-`main.reference.ts` runs unchanged under node / bun / perry with a trailing
-`main()`.
+**node** (V8), **bun** (JSC), **perry** (also TypeScript → native), and **ant**
+(a JavaScript runtime), all running the identical TypeScript source. Each bench
+is one algorithm written once: `main.ts` is DashScript's entry (it lowers to
+Rust `fn main`); the same file runs unchanged under node / bun / ant with a
+trailing `main()`, and `perry compile` lowers it to native.
 
 The kernel selection mirrors perry's `benchmarks/` — the polyglot single-
 language kernels and the Node/Bun compute kernels — so the same algorithms
@@ -22,6 +22,10 @@ node examples/bench/run.mjs fib array-ops
 
 # more samples, or pin specific runtimes
 BENCH_SAMPLES=11 BENCH_RUNTIMES=ds,node,bun node examples/bench/run.mjs
+
+# ant is enabled by pointing ANT_BIN at its binary (the harness hardcodes no
+# install path); unset ANT_BIN to skip it
+ANT_BIN=/path/to/ant node examples/bench/run.mjs
 ```
 
 The harness writes `results.json` (median + raw samples, machine-readable) and
@@ -38,11 +42,14 @@ cannot block the suite.
 
 - **ds** — `ds build` produces `dist/<name>(.exe)`; the timed process is the
   prebuilt native binary — pure native execution, no `cargo` on the hot path.
-- **node** / **bun** — `node main.reference.ts` / `bun main.reference.ts`; the timed process
+- **node** / **bun** — `node main.ts` / `bun main.ts`; the timed process
   includes VM startup (V8 / JSC init), exactly what any `node script.ts`
   invocation pays.
 - **perry** — `perry compile` produces a native binary, timed the same way as
   ds.
+- **ant** — `ant main.ts`; a JavaScript runtime, timed like node/bun (process
+  launch incl. runtime startup). It is not assumed to be on `PATH` — the
+  harness reads its location from `ANT_BIN` and skips it when unset.
 
 `main.ts` deliberately has no `Date.now()` — the bench output is a pure
 checksum — so all runtimes are measured by the same external yardstick: the
@@ -55,44 +62,50 @@ without correctness is worthless.
 
 <!-- Updated by `node run.mjs` — re-run to refresh. Lower wall-clock median is better. -->
 
-| bench               |     ds |   node |    bun |  perry | checksum       |     |
-| ------------------- | -----: | -----: | -----: | -----: | -------------- | --- |
-| array-ops           |  114.5 |  229.5 |  172.2 | 2053.1 | 5000000000     | ✓   |
-| array-read          |  502.6 | 1140.2 |  740.6 | 3045.3 | 499999500000   | ✓   |
-| array-write         |  533.2 | 1105.1 |  721.1 | 4172.0 | 999999         | ✓   |
-| binary-trees        |   32.8 |  130.6 |  125.5 |  139.9 | 1500001500000  | ✓   |
-| closure             |   63.0 |  153.1 |  140.6 |  242.7 | 25000000000000 | ✓   |
-| factorial           |   72.8 |  216.8 |  201.5 |  590.8 | 49950000000    | ✓   |
-| fib                 |   67.9 |  211.3 |  182.5 |  148.6 | 9227465        | ✓   |
-| int-add             |  657.0 |  757.4 |  736.2 | 2317.8 | 49999999906710 | ✗   |
-| levenshtein         |  153.4 |  151.7 |  118.1 | 1191.0 | 600000         | ✓   |
-| loop-data-dependent | 1383.4 | 1478.5 | 1463.6 |    T/O | 2.550796048282 | ✓   |
-| mandelbrot          |   41.4 |  162.2 |  118.0 |  140.5 | 8011148        | ✓   |
-| matrix-multiply     |   67.9 |  154.9 |  139.3 | 1949.2 | 41079519680    | ✓   |
-| method-calls        |   35.9 |  137.4 |  120.3 | 2715.0 | 10000000       | ✓   |
-| nested-loops        |  514.7 | 1168.3 |  754.9 | 7401.9 | 499999500000   | ✓   |
-| object-create       |  152.2 |  255.6 |  177.2 | 1166.0 | 1499998500000  | ✓   |
-| primes              |   32.1 |  125.2 |  122.1 |  311.3 | 78498          | ✓   |
-| str-concat          |   25.0 |  119.3 |  100.5 |  130.4 | 100000         | ✓   |
-| string-ops          |  155.7 |  157.9 |  176.0 |  241.0 | 129991         | ✓   |
+| bench               |     ds |   node |    bun |  perry |     ant | checksum       |     |
+| ------------------- | -----: | -----: | -----: | -----: | ------: | -------------- | --- |
+| array-ops           |  122.9 |  177.6 |  164.9 | 2146.1 |  2087.1 | 5000000000     | ✓   |
+| array-read          |  447.5 |  646.9 |  699.2 | 3133.9 | 15900.6 | 499999500000   | ✓   |
+| array-write         |  503.6 |  713.6 |  696.2 | 3498.6 | 26031.6 | 999999         | ✓   |
+| binary-trees        |   29.9 |  122.7 |  127.9 |  132.9 |   501.0 | 1500001500000  | ✓   |
+| closure             |   62.3 |  274.3 |  146.9 |  261.9 |   280.5 | 25000000000000 | ✓   |
+| factorial           |   82.9 |  425.8 |  186.5 |  601.7 |   832.5 | 49950000000    | ✓   |
+| fib                 |   80.6 |  195.6 |  159.6 |  150.1 |   245.7 | 9227465        | ✓   |
+| int-add             |  675.8 | 1045.2 |  751.5 | 2386.2 |  4054.6 | 49999999906710 | ✗   |
+| levenshtein         |  161.9 |  148.4 |  124.5 | 1126.4 |  5073.0 | 600000         | ✓   |
+| loop-data-dependent | 1393.4 | 1475.7 | 1468.5 |    T/O |     T/O | 2.550796048282 | ✓   |
+| mandelbrot          |   42.1 |  131.0 |  131.1 |  147.4 |   215.1 | 8011148        | ✓   |
+| matrix-multiply     |   85.0 |  139.9 |  137.4 | 2085.7 |   620.3 | 41079519680    | ✓   |
+| method-calls        |   36.2 |  120.9 |  120.1 | 2826.1 |   844.5 | 10000000       | ✓   |
+| nested-loops        |  463.6 |  683.0 |  727.8 | 7373.2 | 16677.3 | 499999500000   | ✓   |
+| object-create       |  162.1 |  252.6 |  193.2 | 1262.8 |  8917.3 | 1499998500000  | ✓   |
+| primes              |   41.8 |  179.1 |  121.8 |  312.1 |   375.4 | 78498          | ✓   |
+| str-concat          |   27.4 |  119.2 |  104.2 |  127.6 |    75.6 | 100000         | ✓   |
+| string-ops          |  165.4 |  159.7 |  166.0 |  236.1 |   839.7 | 129991         | ✓   |
 
 _All times wall-clock ms per process launch, median of 5 samples. Measured
-2026-07-20, Windows 11, ds 0.0.0 / node v24.18.0 / bun 1.3.6 / perry (native).
-`results.json` holds the raw per-sample numbers._
+2026-07-31, Windows 11, ds 0.0.0 / node v26.5.0 / bun 1.3.6 / perry 0.5.1220 /
+ant 12.3. `results.json` holds the raw per-sample numbers. A runtime slower than
+`ds_median + 10s` per sample is killed and shown as `T/O`._
 
 _The single `✗` is **`int-add`**, and it is perry's deviation, not
 DashScript's: the 1e9-iteration sum reaches ~5×10¹⁷, past 2⁵³ where f64 loses
-integer precision. `ds` / `node` / `bun` all return the ES-correct
+integer precision. `ds` / `node` / `bun` / `ant` all return the ES-correct
 `499999999067109000` (f64); `perry` computes the sum as **i64** and returns
-`499999999067108992`. DashScript matches node/bun — the row is flagged only
+`499999999067108992`. DashScript matches node/bun/ant — the row is flagged only
 because the cross-runtime checksum gate refuses to silently endorse a
 divergence. (`int-add` annotates the accumulator `let sum: number = 0` so
 DashScript's number-flavor inference keeps it `f64`; without the annotation
 Phase 1 would promote it to `i64` and return the exact — but non-ES, since an
 ES `number` is `f64` — `499999999500000000`.)_
 
-_`perry` on `loop-data-dependent` is `T/O`: its optimizer cannot fold the f64
-recurrence, and a single sample runs past the `ds_median + 30s` ceiling._
+_`perry` and `ant` on `loop-data-dependent` are `T/O`: perry's optimizer cannot
+fold the f64 recurrence, and ant's interpreter cannot finish 1e7 dependent
+iterations within the `ds_median + 10s` ceiling. `ant` is also slow on the
+allocator-heavy kernels (`array-write` 26 s, `nested-loops` 17 s, `object-create`
+9 s) — interpreter dispatch and GC dominate there; it is uncompetitive on
+anything numeric or allocation-bound, and only approaches the pack on
+`str-concat` (76 ms, second to `ds`)._
 
 ## Benches
 
