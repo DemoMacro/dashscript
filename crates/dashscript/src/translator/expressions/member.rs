@@ -254,11 +254,15 @@ pub(in crate::translator) fn option_unwrap_object(e: &Expression, ctx: &Ctx<'_>)
     let Expression::Identifier(id) = e else {
         return None;
     };
-    let name = bindings::snake(&id.name).to_string();
+    // `bindings::snake` returns a raw ident (`r#ref`) for a Rust-keyword
+    // binding name; reuse it directly so quote emits the raw form, instead of
+    // stringifying to `r#ref` and rebuilding with `Ident::new` (which rejects
+    // the `r#` prefix).
+    let ident = bindings::snake(&id.name);
+    let name = ident.to_string();
     if !ctx.is_option(&name) || ctx.is_narrowed_some(&name) {
         return None;
     }
-    let ident = Ident::new(&name, Span::call_site());
     Some(parse_quote!(#ident.as_ref().unwrap()))
 }
 

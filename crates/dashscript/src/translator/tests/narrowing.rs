@@ -16,6 +16,20 @@ fn translates_optional_chain_coalesce_to_unwrap_or() {
 }
 
 #[test]
+fn option_field_access_unwraps_keyword_binding_via_raw_ident() {
+    // A binding whose snake name is a Rust keyword (`ref` → `r#ref`) that is an
+    // `Option<T>` parameter: a field access on it unwraps via
+    // `r#ref.as_ref().unwrap()`. Previously this panicked — `Ident::new`
+    // rejected the `r#` prefix after stringifying the raw ident to rebuild it.
+    let src = "function f(ref: string | undefined): number { return ref.length; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("r#ref.as_ref().unwrap"),
+        "keyword option binding not unwrapped via raw ident:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_optional_chain_on_optional_field_uses_and_then() {
     // `a` is optional (`?:` → Option<bool>), so `opts?.a ?? false` must use
     // `and_then` (which flattens) rather than `map` (which would nest
