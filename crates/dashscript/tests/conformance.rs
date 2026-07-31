@@ -8,11 +8,13 @@
 //!   *contains* a substring — it never compiles). No `expect`, so the run
 //!   reports the current state without asserting it.
 //! - `test262.json` — auto-extracted from tc39 test262 by
-//!   `scripts/extract-test262.mjs`. The differential layer: each fixture is
-//!   wrapped in a `main()` that logs its asserts, then Node (oracle) and `ds`
-//!   (actual) run the same source and stdout is diffed line by line. Result
-//!   `supported` (match) | `partial` (compile fail or stdout diff); Node absent
-//!   → oracle skipped (compile-only).
+//!   `scripts/extract-test262.mjs`. The conformance layer: each fixture's body
+//!   is wrapped verbatim in `function main(): void { … }` (asserts kept as-is),
+//!   and the verdict is **assert-driven** — no Node oracle. The static path
+//!   (`Translator::check` → `cargo build` → run the probe) and the engine path
+//!   (in-process QuickJS with the test262 harness injected) each run it; exit 0
+//!   / no throw = every assert held = `supported`, a thrown `Test262Error`
+//!   (assert mismatch) = `partial`, a build failure or timeout = `unsupported`.
 //! - `correctness.json` — hand-written correctness cases (the *only* hand-written
 //!   fixtures). Each carries `expect` + `expect_output`; the runner cargo-runs
 //!   the emitted program and compares stdout. Asserted (regression guard).
@@ -55,11 +57,12 @@ const MANIFEST: &str =
 /// matrix. 30s sits between mutants.rs's 20s floor and nextest's 60s default.
 const PROBE_TIMEOUT_SECS: u64 = 30;
 
-/// test262 `features:` that neither the Node oracle nor the ds engine ships — a
-/// fixture exercising one has neither an oracle nor ds support, so it is
-/// honestly `unsupported` without running anything. Currently empty: Node 26
-/// ships Temporal (the oracle), and the ds side maps Temporal via the
-/// `temporal-rs` crate. Add a feature here only when both sides lack it.
+/// test262 `features:` the ds toolchain does not ship — a fixture exercising
+/// one has no ds support (neither the static translator nor the engine covers
+/// it), so it is honestly `unsupported` without running anything. Currently
+/// empty: the ds side maps Temporal via the `temporal-rs` crate, and the engine
+/// (QuickJS) inherits full ECMAScript semantics. Add a feature here only when
+/// both the static path and the engine lack it.
 const UNSHIPPED_FEATURES: &[&str] = &[] as &[&str];
 
 #[derive(Debug, Deserialize)]
@@ -81,41 +84,12 @@ struct RawFeature {
     /// unshipped-feature short-circuit in `run_test262`.
     #[serde(default)]
     features: Vec<String>,
-}
-
-/// Differential-test result against the Node oracle (test262 features only).
-#[derive(Debug, Clone, Serialize)]
-struct Oracle {
-    status: &'static str, // matched | diff | node-error | node-missing
-    #[serde(skip_serializing_if = "String::is_empty")]
-    detail: String,
-}
-
-impl Oracle {
-    fn matched() -> Self {
-        Self {
-            status: "matched",
-            detail: String::new(),
-        }
-    }
-    fn diff(detail: String) -> Self {
-        Self {
-            status: "diff",
-            detail,
-        }
-    }
-    fn err(detail: String) -> Self {
-        Self {
-            status: "node-error",
-            detail,
-        }
-    }
-    fn missing() -> Self {
-        Self {
-            status: "node-missing",
-            detail: String::new(),
-        }
-    }
+    /// test262 `includes:` frontmatter (`$INCLUDE`) — harness files the
+    /// extractor did not inline (propertyHelper.js, isConstructor.js, …). The
+    /// engine path injects the matching harness before the fixture so reference
+    /// semantics (reflection, compareArray) run under the test262 harness.
+    #[serde(default)]
+    includes: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -132,8 +106,6 @@ struct Outcome {
     expect: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     correct: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    oracle: Option<Oracle>,
     note: String,
 }
 
@@ -192,29 +164,25 @@ fn conformance_matrix() {
         .chain(correct.features.into_iter().map(|r| (r, "correctness")))
         .collect();
 
-    // N independent probe projects, each with its own `target/` + `work/`,
-    // run in parallel. cargo's incremental build is keyed per-target-dir, so a
-    // single shared `target/` forces the whole matrix to serialize on one
-    // linker lock — every tiny `main.rs` revision re-links under it. Splitting
-    // the fixtures across workers gives cargo N independent `target/`s to
-    // compile into concurrently; each worker pays a one-time std compile,
-    // amortized across its share. `node_oracle` writes a fixed `oracle.ts`
-    // into `work/`, so each worker needs its own `work/` too (a shared one
-    // would clobber the file mid-run).
+    // N independent probe projects, each with its own `target/`, run in
+    // parallel. cargo's incremental build is keyed per-target-dir, so a single
+    // shared `target/` forces the whole matrix to serialize on one linker lock
+    // — every tiny `main.rs` revision re-links under it. Splitting the fixtures
+    // across workers gives cargo N independent `target/`s to compile into
+    // concurrently; each worker pays a one-time std compile, amortized across
+    // its share.
     let n_workers = std::thread::available_parallelism()
         .map(|n| n.get())
         .unwrap_or(1)
         .clamp(1, 8);
     let tmp = TempDir::new().expect("tempdir");
-    let workers: Vec<(PathBuf, PathBuf, PathBuf)> = (0..n_workers)
+    let workers: Vec<(PathBuf, PathBuf)> = (0..n_workers)
         .map(|i| {
             let root = tmp.path().join(format!("w{i}"));
             let project = root.join("probe");
             let target_dir = root.join("target");
-            let work = root.join("work");
             fs::create_dir_all(project.join("src")).expect("create probe src");
-            fs::create_dir_all(&work).expect("create work");
-            (project, target_dir, work)
+            (project, target_dir)
         })
         .collect();
 
@@ -226,27 +194,21 @@ fn conformance_matrix() {
     // `crates-io`" and the fixture is mis-recorded as `partial`.
     warm_cargo_cache(&workers[0].0);
 
-    // Node is the test262 ground-truth oracle. Probe once; if absent, the
-    // differential layer degrades to compile-only (oracle → node-missing).
-    let node_ok = node_available();
-
     // Split the fixtures into `n_workers` contiguous chunks — one per worker
     // thread. Each thread runs its chunk sequentially against its own
-    // project/target/work triple, so the parallelism is across workers (N
-    // simultaneous cargo invocations), not within one.
+    // project/target pair, so the parallelism is across workers (N simultaneous
+    // cargo invocations), not within one.
     let chunk_size = raws.len().div_ceil(n_workers).max(1);
     let handles: Vec<_> = raws
         .chunks(chunk_size)
         .enumerate()
         .map(|(i, chunk)| {
-            let (project, target_dir, work) = workers[i].clone();
+            let (project, target_dir) = workers[i].clone();
             let chunk: Vec<(RawFeature, &'static str)> = chunk.to_vec();
             std::thread::spawn(move || {
                 chunk
                     .into_iter()
-                    .map(|(raw, layer)| {
-                        run_fixture(&raw, layer, &project, &target_dir, &work, node_ok)
-                    })
+                    .map(|(raw, layer)| run_fixture(&raw, layer, &project, &target_dir))
                     .collect::<Vec<Outcome>>()
             })
         })
@@ -517,15 +479,10 @@ fn outcome(
     status: &'static str,
     detail: String,
     correct: Option<bool>,
-    mut oracle: Option<Oracle>,
 ) -> Outcome {
-    // A failed fixture's `detail` may quote a tool diagnostic (node/rustc) that
+    // A failed fixture's `detail` may quote a tool diagnostic (rustc) that
     // embeds the contributor's full tempdir. Scrub host-local absolute paths
-    // before the value lands in the committed matrix — both the top-level
-    // `detail` and the embedded `oracle.detail`.
-    if let Some(o) = oracle.as_mut() {
-        o.detail = scrub_local_paths(&o.detail);
-    }
+    // before the value lands in the committed matrix.
     Outcome {
         id: raw.id.clone(),
         layer: layer.to_string(),
@@ -534,7 +491,6 @@ fn outcome(
         detail: scrub_local_paths(&detail),
         expect: raw.expect.clone(),
         correct,
-        oracle,
         note: raw.note.clone(),
     }
 }
@@ -585,18 +541,23 @@ fn cargo(project: &Path, target_dir: &Path, args: &[&str]) -> (bool, String) {
     // of stalling here on `.output()`. (`cargo check` never hangs — fixtures
     // carry no build scripts — so the check path keeps the simple form.)
     if is_run {
-        return match cargo_run_full(project, target_dir) {
-            Some(full) => {
-                let trimmed = full
-                    .lines()
-                    .filter(|l| !l.trim().is_empty())
-                    .take(6)
-                    .collect::<Vec<_>>()
-                    .join("\n");
-                (true, trimmed)
-            }
-            None => (false, String::new()),
-        };
+        // The run path executes the probe binary; route it through
+        // [`cargo_run_full`] so a hanging fixture is killed at the timeout
+        // instead of stalling here on `.output()`. The correctness layer diffs
+        // the captured stdout against `expected`; the verdict drives the
+        // test262 path. (`cargo check` never hangs — fixtures carry no build
+        // scripts — so the check path keeps the simple `.output()` form.)
+        let (verdict, stdout) = cargo_run_full(project, target_dir);
+        if matches!(verdict, RunOutcome::Ok) {
+            let trimmed = stdout
+                .lines()
+                .filter(|l| !l.trim().is_empty())
+                .take(6)
+                .collect::<Vec<_>>()
+                .join("\n");
+            return (true, trimmed);
+        }
+        return (false, String::new());
     }
     let mut cmd = Command::new("cargo");
     cmd.args(args)
@@ -672,56 +633,18 @@ fn translate_catch(source: &str) -> Result<(String, RuntimeDeps), String> {
 }
 
 /// Whether `node` is on PATH (the test262 oracle). Probed once per run.
-fn node_available() -> bool {
-    Command::new("node")
-        .arg("--version")
-        .output()
-        .map(|o| o.status.success())
-        .unwrap_or(false)
-}
-
-/// Node oracle outcome for a test262 fixture. The fixture is self-contained —
-/// it declares `function main()` and calls it (pure-TS execution semantics: a
-/// declaration alone does not run), so Node runs the fixture verbatim.
-enum NodeResult {
-    Ok(String),
-    Error(String),
-    Missing,
-}
-
-fn node_oracle(fixture: &str, work: &Path) -> NodeResult {
-    let file = work.join("oracle.ts");
-    if fs::write(&file, fixture).is_err() {
-        return NodeResult::Error("failed to write oracle.ts".into());
-    }
-    match Command::new("node").arg(&file).output() {
-        Ok(o) if o.status.success() => {
-            NodeResult::Ok(String::from_utf8_lossy(&o.stdout).into_owned())
-        }
-        Ok(o) => {
-            let stderr = String::from_utf8_lossy(&o.stderr);
-            NodeResult::Error(format!(
-                "exit {}: {}",
-                o.status,
-                stderr.chars().take(120).collect::<String>()
-            ))
-        }
-        Err(_) => NodeResult::Missing,
-    }
-}
-
-/// Full stdout of the compiled probe (untrimmed) for the test262 differential —
-/// the shared `cargo()` truncates to 6 lines, which would mask multi-assert
-/// diffs.
+/// Build and run the compiled probe, returning an assert-driven verdict.
 ///
 /// Build and run are split so a hanging fixture (catastrophic regexp
 /// backtracking, an infinite loop) cannot stall the matrix: `cargo build`
 /// emits the `probe` binary, then we spawn it directly and cap it at
 /// [`PROBE_TIMEOUT_SECS`]. Because the binary is our own child — not a
 /// grandchild under `cargo run` — `kill()` reaps it whole, leaving no orphaned
-/// loop hoarding a core. A timeout, a non-zero exit, or a build failure yields
-/// `None` (the caller reports empty output, never a hang).
-fn cargo_run_full(project: &Path, target_dir: &Path) -> Option<String> {
+/// loop hoarding a core. The probe's exit code + stderr is the verdict: exit 0
+/// (every test262 assert held) → `Ok`; a panicked `Test262Error` (assert
+/// mismatch) → `AssertFailed`; a build failure or timeout → `BuildFailed`/
+/// `Timeout`; any other non-zero exit → `RunError`.
+fn cargo_run_full(project: &Path, target_dir: &Path) -> (RunOutcome, String) {
     use std::io::Read;
     use std::process::Stdio;
     use std::time::Duration;
@@ -735,292 +658,256 @@ fn cargo_run_full(project: &Path, target_dir: &Path) -> Option<String> {
     if OFFLINE_READY.load(Ordering::SeqCst) {
         build.env("CARGO_NET_OFFLINE", "true");
     }
-    if !build.output().ok()?.status.success() {
-        return None;
+    let build_out = match build.output() {
+        Ok(o) => o,
+        Err(e) => {
+            return (
+                RunOutcome::BuildFailed(format!("spawn: {e}")),
+                String::new(),
+            )
+        }
+    };
+    if !build_out.status.success() {
+        return (
+            RunOutcome::BuildFailed(format!(
+                "exit {}: {}",
+                build_out.status,
+                String::from_utf8_lossy(&build_out.stderr)
+                    .chars()
+                    .take(200)
+                    .collect::<String>(),
+            )),
+            String::new(),
+        );
     }
 
     let bin = target_dir
         .join("debug")
         .join(if cfg!(windows) { "probe.exe" } else { "probe" });
-    let mut child = Command::new(&bin)
+    let mut child = match Command::new(&bin)
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
-        .stderr(Stdio::null())
+        .stderr(Stdio::piped())
         .spawn()
-        .ok()?;
+    {
+        Ok(c) => c,
+        Err(e) => return (RunOutcome::RunError(format!("spawn: {e}")), String::new()),
+    };
     let status = match child.wait_timeout(Duration::from_secs(PROBE_TIMEOUT_SECS)) {
         Ok(Some(s)) => s,
         _ => {
             let _ = child.kill();
             let _ = child.wait();
-            return None;
+            return (RunOutcome::Timeout, String::new());
         }
     };
-    if !status.success() {
-        return None;
-    }
-    let mut out = String::new();
-    child.stdout.as_mut()?.read_to_string(&mut out).ok()?;
-    Some(out)
-}
-
-/// Line-by-line diff of `ds` stdout vs the Node oracle. `None` = equivalent;
-/// `Some` = up to the first 3 differing lines (or a line-count mismatch).
-/// Equivalence (not raw string equality) is via `lines_equiv`, which normalizes
-/// the display-layer differences between Rust `f64` Display and JS
-/// `Number.toString` — see its doc comment for why.
-fn diff_stdout(ds: &str, oracle: &str) -> Option<String> {
-    let d: Vec<&str> = ds.lines().filter(|l| !l.trim().is_empty()).collect();
-    let o: Vec<&str> = oracle.lines().filter(|l| !l.trim().is_empty()).collect();
-    let all_equiv = d.len() == o.len() && d.iter().zip(o.iter()).all(|(a, b)| lines_equiv(a, b));
-    if all_equiv {
-        return None;
-    }
-    let mut diffs = Vec::new();
-    for (i, (a, b)) in d.iter().zip(o.iter()).enumerate() {
-        if !lines_equiv(a, b) {
-            diffs.push(format!("line {}: ds={:?} node={:?}", i + 1, a, b));
+    if status.success() {
+        // On success stdout holds the program's normal output (the correctness
+        // layer diffs it against `expected`). Reads of the already-exited
+        // child's pipes never block.
+        let mut stdout = String::new();
+        if let Some(o) = child.stdout.as_mut() {
+            let _ = o.read_to_string(&mut stdout);
         }
-        if diffs.len() >= 3 {
-            break;
-        }
+        return (RunOutcome::Ok, stdout);
     }
-    if diffs.is_empty() {
-        diffs.push(format!("line count: ds={} node={}", d.len(), o.len()));
+    let mut stderr = String::new();
+    if let Some(e) = child.stderr.as_mut() {
+        let _ = e.read_to_string(&mut stderr);
     }
-    Some(diffs.join("; "))
-}
-
-/// Whether a `ds` stdout line and a Node-oracle line are semantically equivalent.
-/// Identical strings match; otherwise both are parsed as f64 — the same numeric
-/// value counts as a match even when Rust Display and JS `Number.toString`
-/// disagree on the *spelling* (`inf`/`Infinity`, `-inf`/`-Infinity`,
-/// `1000000000000000000000`/`1e+21`). DashScript's semantics are Rust's; these
-/// are display-layer differences, not semantic bugs, so the differential layer
-/// normalizes them away rather than letting translator output mimic JS
-/// `ToString`. Non-numeric lines (strings, "__OK__", constructor names from
-/// `assert.throws`) fall back to exact comparison. `NaN` matches `NaN`; `-0.0`
-/// matches `0.0` at this layer (the value layer already produces the right sign).
-fn lines_equiv(a: &str, b: &str) -> bool {
-    if a == b {
-        return true;
-    }
-    match (parse_num(a), parse_num(b)) {
-        (Some(x), Some(y)) => (x.is_nan() && y.is_nan()) || x == y,
-        _ => false,
-    }
-}
-
-/// Parse a stdout line as f64, accepting both Rust Display (`inf`, `-inf`,
-/// `NaN`) and JS `Number.toString` (`Infinity`, `-Infinity`, `NaN`) spellings,
-/// plus plain/scientific numerics. `None` for non-numeric lines.
-fn parse_num(s: &str) -> Option<f64> {
-    match s.trim() {
-        "inf" | "Infinity" => Some(f64::INFINITY),
-        "-inf" | "-Infinity" => Some(f64::NEG_INFINITY),
-        "NaN" | "nan" => Some(f64::NAN),
-        t => t.parse::<f64>().ok(),
-    }
-}
-
-/// The `detail` marker for a supported run that used the embedded QuickJS
-/// engine (ES reflection), so the matrix records honestly which supported
-/// fixtures run via the compat path rather than the static Rust lowering.
-fn engine_note(via_engine: bool) -> String {
-    if via_engine {
-        "via rquickjs engine".to_string()
+    // exit≠0: a test262 assert panics `Test262Error: …`; any other panic or
+    // non-zero exit is a runtime error. The stderr snippet drives the verdict.
+    let snippet = stderr.chars().take(200).collect::<String>();
+    if snippet.contains("Test262Error") {
+        (RunOutcome::AssertFailed(snippet), String::new())
     } else {
-        String::new()
+        (
+            RunOutcome::RunError(format!("exit {}: {}", status, snippet)),
+            String::new(),
+        )
     }
 }
 
-/// QuickJS prelude that defines `console.log` with a Node-`inspect`-style
-/// formatter. ES `String()` coerces objects to `[object Object]`, functions to
-/// their source text, and BigInt without the `n` suffix — all diverging from
-/// Node's `console.log`, which would surface as a spurious oracle diff. This
-/// prelude renders objects `{ k: v }`, functions `[Function: name]`, and BigInt
-/// `0n`, matching Node for the test262 fixture shapes (depth-limited,
-/// single-quoted nested strings). `__ds_print_line` is the native line sink
-/// [`engine_eval`] installs per call.
-const INSPECT_PRELUDE: &str = r#"
-this.console = {
-  log: function () {
-    var out = [];
-    for (var i = 0; i < arguments.length; i++) {
-      out.push(__ds_inspect(arguments[i], 0));
-    }
-    __ds_print_line(out.join(" "));
-  }
-};
-function __ds_inspect(v, depth) {
-  if (v === null) return "null";
-  if (v === undefined) return "undefined";
-  var t = typeof v;
-  if (t === "string") return depth === 0 ? v : "'" + v + "'";
-  if (t === "number" || t === "boolean") return String(v);
-  if (t === "bigint") return v.toString() + "n";
-  if (t === "symbol") return v.toString();
-  if (t === "function") {
-    var name = v.name ? v.name : "(anonymous)";
-    return "[Function: " + name + "]";
-  }
-  if (depth >= 6) return "...";
-  if (Array.isArray(v)) {
-    if (v.length === 0) return "[]";
-    var items = [];
-    for (var i = 0; i < v.length; i++) {
-      items.push(__ds_inspect(v[i], depth + 1));
-    }
-    return "[ " + items.join(", ") + " ]";
-  }
-  try {
-    var keys = Object.keys(v);
-  } catch (e) {
-    return String(v);
-  }
-  if (keys.length === 0) return "{}";
-  var items = [];
-  for (var i = 0; i < keys.length; i++) {
-    items.push(__ds_format_key(keys[i]) + ": " + __ds_inspect(v[keys[i]], depth + 1));
-  }
-  return "{ " + items.join(", ") + " }";
+/// Verdict from running a compiled probe binary. Assert-driven: a test262
+/// fixture's asserts all hold → `Ok` (supported); a thrown `Test262Error` →
+/// `AssertFailed` (partial); a build or timeout → `BuildFailed`/`Timeout`
+/// (unsupported); any other non-zero exit → `RunError` (partial).
+enum RunOutcome {
+    Ok,
+    AssertFailed(String),
+    BuildFailed(String),
+    Timeout,
+    RunError(String),
 }
-function __ds_format_key(k) {
-  if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(k)) return k;
-  return "'" + k + "'";
+
+/// Verdict from running a fixture's JS under the embedded engine. The engine
+/// throws a `Test262Error` (defined by `sta.js`, thrown by `assert.js`) on an
+/// assert mismatch → `AssertFailed`; any other throw → `OtherError`; clean
+/// completion → `Ok`.
+enum EngineOutcome {
+    Ok,
+    AssertFailed(String),
+    OtherError(String),
 }
-"#;
+
+/// Map a compiled-probe verdict to a (status, detail) row. No Node oracle: the
+/// test262 fixture carries its own expected values, and `Test262Error` is the
+/// single failure signal.
+fn judge_run(o: RunOutcome) -> (&'static str, String) {
+    match o {
+        RunOutcome::Ok => ("supported", String::new()),
+        RunOutcome::AssertFailed(d) => ("partial", format!("Test262Error: {d}")),
+        RunOutcome::BuildFailed(d) => ("unsupported", format!("cargo build failed: {d}")),
+        RunOutcome::Timeout => ("unsupported", "timed out".into()),
+        RunOutcome::RunError(d) => ("partial", format!("runtime error: {d}")),
+    }
+}
+
+/// Map an engine verdict to a (status, detail) row, tagging supported engine
+/// runs so the matrix records the compat path honestly.
+fn judge_engine(o: EngineOutcome) -> (&'static str, String) {
+    match o {
+        EngineOutcome::Ok => ("supported", "via rquickjs engine".to_string()),
+        EngineOutcome::AssertFailed(d) => ("partial", format!("Test262Error: {d}")),
+        EngineOutcome::OtherError(d) => ("partial", format!("engine error: {d}")),
+    }
+}
+
+/// Minimal `console.log` for the engine path — a no-op. The verdict is
+/// exit/throw-driven (a `Test262Error` is the single failure signal), so console
+/// output is irrelevant; this just keeps a fixture that calls `console.log`
+/// from throwing `ReferenceError: console is not defined`.
+const CONSOLE_PRELUDE: &str = "this.console = { log: function () {} };\n";
+
+/// The two harness files every test262 fixture needs: `sta.js` defines
+/// `Test262Error` (the assert-failure exception), `assert.js` defines the
+/// `assert.*` family that throws it. Injected on the engine path before any
+/// fixture, so a clean run means every assert held.
+const HARNESS_STA: &str = include_str!("conformance/data/harness/sta.js");
+const HARNESS_ASSERT: &str = include_str!("conformance/data/harness/assert.js");
+
+/// The rest of the bundled harness, looked up by `$INCLUDE` name (a fixture's
+/// `includes:` frontmatter) and injected on the engine path — `propertyHelper`
+/// (reflection/verifyProperty), `compareArray`, `deepEqual`, `isConstructor`
+/// (the `new X()` throws check), `byteConversionValues`. Unknown includes are
+/// skipped (a referenced-but-missing helper surfaces as a `ReferenceError`
+/// engine error → partial, an honest signal).
+const HARNESS_FILES: &[(&str, &str)] = &[
+    (
+        "compareArray.js",
+        include_str!("conformance/data/harness/compareArray.js"),
+    ),
+    (
+        "deepEqual.js",
+        include_str!("conformance/data/harness/deepEqual.js"),
+    ),
+    (
+        "propertyHelper.js",
+        include_str!("conformance/data/harness/propertyHelper.js"),
+    ),
+    (
+        "isConstructor.js",
+        include_str!("conformance/data/harness/isConstructor.js"),
+    ),
+    (
+        "byteConversionValues.js",
+        include_str!("conformance/data/harness/byteConversionValues.js"),
+    ),
+];
+
+fn harness_source(name: &str) -> Option<&'static str> {
+    HARNESS_FILES
+        .iter()
+        .find(|(n, _)| *n == name)
+        .map(|(_, s)| *s)
+}
 
 /// Run an engine-gated fixture's ECMAScript under an embedded QuickJS engine —
-/// the same engine `__ds_engine` embeds for `ds build`, but in-process —
-/// capturing `console.log` output via [`INSPECT_PRELUDE`]. Skips the cargo
-/// compile entirely: the engine Rust template (`fn main() {
+/// the same engine `__ds_engine` embeds for `ds build`, but in-process. Skips
+/// the cargo compile entirely: the engine Rust template (`fn main() {
 /// __ds_engine::run(src) }`) is fixed-shape and its compile correctness is
 /// covered by translator unit tests + the engine-path integration test, so
-/// re-compiling a throwaway project per fixture would only burn time. Returns
-/// the captured stdout, or `None` if the engine fails to start or the source
-/// throws (a throw surfaces as empty stdout → an oracle diff → `partial`).
-fn engine_eval(js_source: &str) -> Option<String> {
+/// re-compiling a throwaway project per fixture would only burn time. Injects
+/// the test262 harness (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s)
+/// before the fixture, so the assert family runs with reference semantics; a
+/// thrown `Test262Error` (assert mismatch) is the single failure signal.
+fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
     use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
-    use std::sync::{Arc, Mutex};
-    let runtime = Runtime::new().ok()?;
-    let ctx = Context::full(&runtime).ok()?;
+    let runtime = match Runtime::new() {
+        Ok(r) => r,
+        Err(e) => return EngineOutcome::OtherError(format!("runtime: {e}")),
+    };
+    let ctx = match Context::full(&runtime) {
+        Ok(c) => c,
+        Err(e) => return EngineOutcome::OtherError(format!("context: {e}")),
+    };
     let sloppy = || {
         let mut o = EvalOptions::default();
         o.strict = false;
         o
     };
-    let captured: Arc<Mutex<String>> = Arc::new(Mutex::new(String::new()));
-    let cap = captured.clone();
     let result = ctx.with(move |ctx: Ctx<'_>| -> rquickjs::Result<()> {
-        let print_line = rquickjs::Function::new(ctx.clone(), move |s: String| {
-            let mut g = cap.lock().expect("engine capture lock");
-            g.push_str(&s);
-            g.push('\n');
-        })?;
-        ctx.globals().set("__ds_print_line", print_line)?;
-        ctx.eval_with_options::<(), _>(INSPECT_PRELUDE, sloppy())?;
-        // The fixture is self-contained (declares `main` and calls it, pure-TS
-        // execution semantics), so a single eval runs it — no separate call.
-        ctx.eval_with_options::<(), _>(js_source, sloppy())?;
-        Ok(())
-    });
-    result.ok()?;
-    let mut g = captured.lock().expect("engine capture lock");
-    Some(std::mem::take(&mut g))
-}
-
-/// Compare `ds_stdout` against the Node oracle for a test262 fixture. Shared by
-/// the engine path (in-process QuickJS) and the static path (cargo run) — the
-/// differential logic is identical; only the success `detail` note differs.
-fn compare_oracle(
-    ds_stdout: &str,
-    fixture: &str,
-    work: &Path,
-    node_ok: bool,
-    via_engine: bool,
-) -> (&'static str, String, Option<Oracle>) {
-    if !node_ok {
-        return (
-            "supported",
-            engine_note(via_engine),
-            Some(Oracle::missing()),
-        );
-    }
-    match node_oracle(fixture, work) {
-        NodeResult::Missing => (
-            "supported",
-            engine_note(via_engine),
-            Some(Oracle::missing()),
-        ),
-        NodeResult::Error(e) => {
-            // Node failed. If our side (engine or cargo run) also produced no
-            // output, both sides lack the feature the fixture exercises (e.g.
-            // `Temporal`, which neither Node nor QuickJS ships) — that is honest
-            // `unsupported`, not a spurious `supported` from empty-vs-empty
-            // stdout agreement. If our side did produce output, the oracle is
-            // unavailable, so we cannot claim `supported` → `partial`.
-            if ds_stdout.trim().is_empty() {
-                ("unsupported", format!("node + ds both error: {e}"), None)
-            } else {
-                (
-                    "partial",
-                    format!("node oracle error: {e}"),
-                    Some(Oracle::err(e)),
-                )
+        ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy())?;
+        // Harness prelude: sta.js (defines Test262Error), assert.js (throws it
+        // on mismatch), then any $INCLUDE helpers the fixture declares.
+        ctx.eval_with_options::<(), _>(HARNESS_STA, sloppy())?;
+        ctx.eval_with_options::<(), _>(HARNESS_ASSERT, sloppy())?;
+        for inc in includes {
+            if let Some(src) = harness_source(inc) {
+                ctx.eval_with_options::<(), _>(src, sloppy())?;
             }
         }
-        NodeResult::Ok(oracle_stdout) => match diff_stdout(ds_stdout, &oracle_stdout) {
-            None => (
-                "supported",
-                engine_note(via_engine),
-                Some(Oracle::matched()),
-            ),
-            Some(d) => (
-                "partial",
-                format!("oracle diff: {d}"),
-                Some(Oracle::diff(d)),
-            ),
-        },
+        // The fixture is self-contained (declares `main` and calls it, pure-TS
+        // execution semantics), so a single eval runs it — no separate call.
+        // Wrap it so any escaped throw is stringified: a thrown `Test262Error`
+        // (assert mismatch) becomes "Test262Error: …" (its toString), and any
+        // other escaped value (TypeError, ReferenceError, …) names itself —
+        // instead of rquickjs's opaque "Exception generated by QuickJS".
+        let wrapped =
+            format!("try {{\n{js_source}\n}} catch (__ds_err) {{ throw String(__ds_err); }}\n");
+        ctx.eval_with_options::<(), _>(wrapped.as_str(), sloppy())?;
+        Ok(())
+    });
+    match result {
+        Ok(()) => EngineOutcome::Ok,
+        Err(e) => {
+            let msg = format!("{e}");
+            if msg.contains("Test262Error") {
+                EngineOutcome::AssertFailed(msg)
+            } else {
+                EngineOutcome::OtherError(msg)
+            }
+        }
     }
 }
 
-/// Run one test262 fixture through the differential pipeline. Returns
-/// `(status, detail, oracle)`.
+/// Run one test262 fixture through the assert-driven pipeline. Returns
+/// `(status, detail)`.
 ///
 /// Engine path (`needs_engine`, ES reflection the static translator cannot
-/// lower): run the source in-process under QuickJS vs the Node oracle — no
-/// cargo compile (see [`engine_eval`]). Static path: `Translator::check`
-/// (translatability) → `cargo check` (compiles) → `cargo run` vs the Node
-/// oracle (semantics); translator scope limits like top-level statements stay
-/// honestly `unsupported`.
-fn run_test262(
-    raw: &RawFeature,
-    project: &Path,
-    target_dir: &Path,
-    work: &Path,
-    node_ok: bool,
-) -> (&'static str, String, Option<Oracle>) {
-    // A fixture whose `features:` neither Node nor the ds engine ships has no
-    // oracle and no ds support — `unsupported` up front, skipping translate +
-    // node + cargo. (A1 caught this at runtime as both-fail; A2 makes it static
-    // + precisely labeled.)
+/// lower): run the source in-process under QuickJS with the test262 harness
+/// injected (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s), so a clean
+/// completion means every assert held and a thrown `Test262Error` marks a
+/// partial — no Node oracle, no cargo compile (see [`engine_eval`]). Static
+/// path: `Translator::check` (translatability) → `cargo check` (compiles,
+/// partial on failure) → build + run the probe; exit 0 → supported, a panicked
+/// `Test262Error` → partial, a build failure or timeout → unsupported.
+/// Translator scope limits stay honestly `unsupported`.
+fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
+    // A fixture whose `features:` the ds engine does not ship has no ds support
+    // — `unsupported` up front, skipping translate + cargo.
     for feat in &raw.features {
         if UNSHIPPED_FEATURES.contains(&feat.as_str()) {
-            return (
-                "unsupported",
-                format!("neither node nor ds ships feature: {feat}"),
-                None,
-            );
+            return ("unsupported", format!("ds does not ship feature: {feat}"));
         }
     }
     let (rust, deps) = match translate_catch(&raw.fixture) {
         Ok(r) => r,
-        Err(e) => return ("partial", e, None),
+        Err(e) => return ("partial", e),
     };
     // Engine path: ES reflection the static translator cannot lower. Run the
-    // source in-process under QuickJS (the exact bytes `translate_with_deps`
-    // embeds in `__ds_engine::run`), skipping the cargo compile entirely.
+    // source in-process under QuickJS with the test262 harness injected, so
+    // reflection + the full assert family run with reference semantics.
     if deps.needs_engine() {
         let js_source = match Translator::new().engine_source(&raw.fixture) {
             Some(s) => s,
@@ -1028,15 +915,13 @@ fn run_test262(
                 return (
                     "partial",
                     "engine flag set but engine_source returned None".into(),
-                    None,
                 )
             }
         };
-        let ds_stdout = engine_eval(&js_source).unwrap_or_default();
-        return compare_oracle(&ds_stdout, &raw.fixture, work, node_ok, true);
+        return judge_engine(engine_eval(&js_source, &raw.includes));
     }
-    // Static path: `check` (translatability) → cargo check (compiles) → cargo
-    // run vs the Node oracle (semantics).
+    // Static path: `check` (translatability) → cargo check (compiles) → build
+    // + run the probe (assert-driven verdict).
     let diags = Translator::new().check(&raw.fixture);
     if !diags.is_empty() {
         let msg = diags
@@ -1044,7 +929,7 @@ fn run_test262(
             .map(|d| format!("{d}"))
             .collect::<Vec<_>>()
             .join(" | ");
-        return ("unsupported", msg, None);
+        return ("unsupported", msg);
     }
     write_project(project, &rust, &deps);
     let (ok, err) = cargo(
@@ -1053,28 +938,21 @@ fn run_test262(
         &["check", "--quiet", "--message-format=short"],
     );
     if !ok {
-        return ("partial", err, None);
+        return ("partial", err);
     }
-    let ds_stdout = cargo_run_full(project, target_dir).unwrap_or_default();
-    compare_oracle(&ds_stdout, &raw.fixture, work, node_ok, false)
+    let (verdict, _stdout) = cargo_run_full(project, target_dir);
+    judge_run(verdict)
 }
 
-/// One fixture, run against a worker-owned `project`/`target_dir`/`work`
-/// triple. Unifies the test262 differential path (Node oracle) with the
+/// One fixture, run against a worker-owned `project`/`target_dir` pair.
+/// Unifies the test262 assert-driven path (exit code + Test262Error) with the
 /// translator-tests/correctness path (cargo check + optional expected-stdout
 /// run). Pure over its arguments — no shared mutable state across calls — so
 /// it is safe to invoke from many threads in parallel, each on its own project.
-fn run_fixture(
-    raw: &RawFeature,
-    layer: &str,
-    project: &Path,
-    target_dir: &Path,
-    work: &Path,
-    node_ok: bool,
-) -> Outcome {
+fn run_fixture(raw: &RawFeature, layer: &str, project: &Path, target_dir: &Path) -> Outcome {
     if layer == "test262" {
-        let (status, detail, oracle) = run_test262(raw, project, target_dir, work, node_ok);
-        return outcome(raw, layer, status, detail, None, oracle);
+        let (status, detail) = run_test262(raw, project, target_dir);
+        return outcome(raw, layer, status, detail, None);
     }
     let diags = Translator::new().check(&raw.fixture);
     let (status, detail) = if !diags.is_empty() {
@@ -1087,7 +965,7 @@ fn run_fixture(
     } else {
         let (rust, deps) = match translate_catch(&raw.fixture) {
             Ok(r) => r,
-            Err(e) => return outcome(raw, layer, "partial", e, None, None),
+            Err(e) => return outcome(raw, layer, "partial", e, None),
         };
         write_project(project, &rust, &deps);
         let (ok, err) = cargo(
@@ -1119,7 +997,7 @@ fn run_fixture(
         None
     };
 
-    outcome(raw, layer, status, detail, correct, None)
+    outcome(raw, layer, status, detail, correct)
 }
 
 /// `tests/conformance/` — the dir this file lives in (data + matrix outputs).
@@ -1223,13 +1101,9 @@ fn render_section(outcomes: &[Outcome]) -> String {
                 Some(c) => format!(" _correct: {}_", c),
                 None => String::new(),
             };
-            let oracle_suffix = match &o.oracle {
-                Some(oracle) => format!(" _oracle: {}_", oracle.status),
-                None => String::new(),
-            };
             s.push_str(&format!(
-                "| {} | {} {} | {}{}{} |\n",
-                o.id, badge, o.status, note, correct_suffix, oracle_suffix
+                "| {} | {} {} | {}{} |\n",
+                o.id, badge, o.status, note, correct_suffix
             ));
         }
         s.push('\n');
