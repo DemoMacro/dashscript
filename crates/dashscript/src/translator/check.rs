@@ -296,7 +296,7 @@ pub(super) struct EngineSites {
 /// (a non-function statement, an `export` of a class/variable/re-export). Used
 /// by the engine-site walk so an exported dynamic function degrades the same
 /// way a non-exported one does.
-fn top_level_function<'a>(stmt: &'a Statement<'a>) -> Option<&'a Function<'a>> {
+pub(super) fn top_level_function<'a>(stmt: &'a Statement<'a>) -> Option<&'a Function<'a>> {
     match stmt {
         Statement::FunctionDeclaration(f) => Some(&**f),
         Statement::ExportNamedDeclaration(e) => match &e.declaration {

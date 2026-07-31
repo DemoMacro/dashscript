@@ -117,6 +117,20 @@ fn translate_dep(
                     deps,
                 );
             }
+            // B6-5c: if this dep directly imports a degraded `.js` module, its
+            // functions depend on engine-only exports — degrade the whole
+            // module (every function under `call_module_fn`, the loader
+            // resolves the imports). Per-file: cleared on return so it does not
+            // leak into the next dep.
+            let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
+            Translator::set_whole_module_degrade(src_imports_degraded_js(&dep_src, dep_base));
+            struct DegradeGuard;
+            impl Drop for DegradeGuard {
+                fn drop(&mut self) {
+                    Translator::set_whole_module_degrade(false);
+                }
+            }
+            let _degrade_guard = DegradeGuard;
             let (rust, dep_deps) = translator
                 .translate_with_deps_as(&dep_src, FileRole::Module)
                 .map_err(|e| format!("translate {}: {e}", dep_path.display()))?;
@@ -913,6 +927,35 @@ fn probe_sources_use_engine(probe: &Translator, src: &str, base: &Path) -> bool 
     false
 }
 
+/// Whether `src` directly imports an **npm** `.js` module that degrades to the
+/// engine. This is the B6-5c trigger for whole-module degrade: an npm package
+/// may export a generic-callable the translator cannot specialize into a stub
+/// (e.g. `export const sha512 = createHasher(…)`, which has no `export
+/// function`, so the stub loop emits nothing and `sha512` stays unresolved).
+/// With no callable stub, the file's own functions cannot call it statically —
+/// so the whole module degrades: every function runs under the engine, whose
+/// module loader resolves the import itself. A *local* degraded `.js` (a class
+/// `extends`) does not trigger this: it still emits a `call_module_fn` stub for
+/// each `export function`, so callers stay static (static-first). Only direct
+/// imports are checked — a `.js` reached through another `.ts` degrades that
+/// `.ts`, which becomes a normal stub crate this file calls.
+fn src_imports_degraded_js(src: &str, base: &Path) -> bool {
+    for imp in Translator::new().imports(src) {
+        let Ok((dep_path, kind)) = resolve_local_module(base, &imp.source) else {
+            continue;
+        };
+        let js_path = match &kind {
+            DepKind::Js => &dep_path,
+            DepKind::DtsWithJs { js_path, .. } => js_path,
+            _ => continue,
+        };
+        if is_npm_js(js_path) {
+            return true;
+        }
+    }
+    false
+}
+
 /// Walk the import graph from `src` and collect every bare specifier that
 /// resolves to a workspace member (a `node_modules` symlink to a local `src/`),
 /// so the translator lowers those imports to `crate::mod` — they translate
@@ -986,13 +1029,35 @@ fn translate_one_with_mods(
 ) -> Result<RuntimeDeps, Box<dyn Error>> {
     let translator = Translator::new();
     let src = fs::read_to_string(ds).map_err(|e| format!("cannot read {}: {e}", ds.display()))?;
+    let base = ds.parent().unwrap_or_else(|| Path::new(""));
+    // The file's DsResolver specifier is its stem; a degraded `.js` it imports
+    // registers under the specifier the runtime resolver finds. Set before the
+    // translate so a per-function-degraded file whose JS still carries ESM
+    // imports (B6-5b), or a whole-module-degraded one (B6-5c), routes its
+    // functions to `call_module_fn` keyed by it. Cleared on return.
+    let entry_spec = stem_of(ds);
+    crate::translator::imports::set_current_module_specifier(Some(entry_spec.clone()));
+    struct SpecifierGuard;
+    impl Drop for SpecifierGuard {
+        fn drop(&mut self) {
+            crate::translator::imports::clear_current_module_specifier();
+        }
+    }
+    let _specifier_guard = SpecifierGuard;
+    // B6-5c: same as `translate_dep`, a file that directly imports a degraded
+    // `.js` module degrades the whole module (its functions run under
+    // `call_module_fn`, the loader resolves the imports). Cleared on return.
+    Translator::set_whole_module_degrade(src_imports_degraded_js(&src, base));
+    struct DegradeGuard;
+    impl Drop for DegradeGuard {
+        fn drop(&mut self) {
+            Translator::set_whole_module_degrade(false);
+        }
+    }
+    let _degrade_guard = DegradeGuard;
     let (rust, mut deps) = translator
         .translate_with_deps_as(&src, role)
         .map_err(|e| format!("translate {}: {e}", ds.display()))?;
-    let base = ds.parent().unwrap_or_else(|| Path::new(""));
-    // The entry's DsResolver specifier is its stem; a degraded `.js` it imports
-    // registers under the specifier the runtime resolver finds.
-    let entry_spec = stem_of(ds);
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
     for imp in translator.imports(&src) {

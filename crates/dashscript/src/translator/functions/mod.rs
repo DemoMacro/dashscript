@@ -73,6 +73,16 @@ thread_local! {
     /// Set once by `Translator::translate_with_deps_as` before any statement is
     /// translated.
     static MODULE_MODE: Cell<bool> = const { Cell::new(false) };
+    /// True when this `.ts` file should degrade wholesale to the engine — every
+    /// top-level function runs under `call_module_fn` (its JS, carrying the ESM
+    /// imports, loaded by the module loader). Set by the project emitter when a
+    /// `.ts` transitively imports a degraded module (a `.js` the static table
+    /// cannot lower, e.g. an npm package's `export const sha512 = …` with a
+    /// generic-callable type the translator cannot specialize), so its
+    /// functions — which depend on engine-only exports — run under the engine
+    /// instead of statically calling a stub that does not exist. Per-file: set
+    /// before each translate, cleared after.
+    static WHOLE_MODULE_DEGRADE: Cell<bool> = const { Cell::new(false) };
 }
 
 /// Record the file's per-function engine degradation sites (TS function names),
@@ -116,6 +126,19 @@ pub(in crate::translator) fn set_module_mode(on: bool) {
 /// See [`MODULE_MODE`].
 pub(in crate::translator) fn module_mode() -> bool {
     MODULE_MODE.with(|c| c.get())
+}
+
+/// Set whether this `.ts` file degrades wholesale to the engine (every
+/// top-level function under `call_module_fn`). Set per-file by the project
+/// emitter before the translate; cleared after. See [`WHOLE_MODULE_DEGRADE`].
+pub(crate) fn set_whole_module_degrade(on: bool) {
+    WHOLE_MODULE_DEGRADE.with(|c| c.set(on));
+}
+
+/// Whether this `.ts` file degrades wholesale to the engine. See
+/// [`WHOLE_MODULE_DEGRADE`].
+pub(in crate::translator) fn whole_module_degrade() -> bool {
+    WHOLE_MODULE_DEGRADE.with(|c| c.get())
 }
 
 /// Translate a top-level statement into a `syn::Item`, if mapped.
@@ -199,6 +222,17 @@ pub fn translate_statement(
         // namespace import (`import * as ns`) lowers to its own
         // `use other as ns;` (a module-path alias, not a group leaf).
         Statement::ImportDeclaration(imp) => {
+            // B6-5c: a whole-module-degraded file's functions all run under the
+            // engine (`call_module_fn`), so a value import (`import { sha512 }`
+            // from a degraded npm `.js`) is never referenced statically — its
+            // `use` would point at a stub whose `export const sha512` has no
+            // callable specialization, failing to resolve. Skip value-import
+            // `use`; the engine's module loader resolves it at run time. A type
+            // import (`import type`) is still emitted — Rust signatures still
+            // reference the imported type.
+            if whole_module_degrade() && imp.import_kind.is_value() {
+                return Vec::new();
+            }
             let Some(mod_ident) = super::imports::module_ident(&imp.source.value) else {
                 return Vec::new();
             };

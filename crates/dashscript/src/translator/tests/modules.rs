@@ -1173,3 +1173,60 @@ fn per_function_degraded_without_specifier_keeps_call_fn() {
         "no specifier → script-eval const:\n{rust}"
     );
 }
+
+#[test]
+fn whole_module_degrade_routes_all_functions_to_call_module_fn() {
+    // B6-5c: a `.ts` file that imports a degraded `.js` module (an npm package
+    // whose export is a generic-callable the translator cannot specialize into a
+    // stub) degrades the *whole* module: every top-level function — even ones
+    // whose signatures map statically — routes to `call_module_fn`, so the
+    // engine resolves the import itself. The project emitter sets the
+    // whole-module-degrade flag from `src_imports_degraded_js` plus the import
+    // specifier; here both are set directly, then two statically-mappable
+    // functions translate.
+    use crate::translator::imports;
+    imports::set_current_module_specifier(Some("mod_spec".to_string()));
+    struct SpecGuard;
+    impl Drop for SpecGuard {
+        fn drop(&mut self) {
+            imports::clear_current_module_specifier();
+        }
+    }
+    let _sg = SpecGuard;
+    Translator::set_whole_module_degrade(true);
+    struct DegradeGuard;
+    impl Drop for DegradeGuard {
+        fn drop(&mut self) {
+            Translator::set_whole_module_degrade(false);
+        }
+    }
+    let _dg = DegradeGuard;
+    let src = "import { sha512 } from \"./other\";\n\
+               export function a(): number { return 1; }\n\
+               export function b(): number { return 2; }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate");
+    assert!(
+        rust.contains("call_module_fn"),
+        "whole-module degrade should route to call_module_fn:\n{rust}"
+    );
+    assert!(
+        !rust.contains("__DS_MODULE_JS"),
+        "module mode should not emit the script-eval const:\n{rust}"
+    );
+    // Whole-module degrade unions *all* top-level functions, not just one with
+    // an unmappable signature — both `a` and `b` route through the loader.
+    let module_fn_count = rust.matches("call_module_fn").count();
+    assert!(
+        module_fn_count >= 2,
+        "both functions should route through call_module_fn, found {module_fn_count}:\n{rust}"
+    );
+    assert!(
+        deps.js_module_sources()
+            .iter()
+            .any(|(s, _)| s == "mod_spec"),
+        "module source should be in the static table: {:?}",
+        deps.js_module_sources()
+    );
+}

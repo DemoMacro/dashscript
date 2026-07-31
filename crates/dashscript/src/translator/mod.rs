@@ -1676,6 +1676,15 @@ impl Translator {
         functions::set_force_serde_derive(b);
     }
 
+    /// Set whether the next `.ts` file translated degrades wholesale to the
+    /// engine — every top-level function runs under `call_module_fn`. Set
+    /// per-file by the project emitter when the file transitively imports a
+    /// degraded module (a `.js` the static table cannot lower), so its
+    /// functions — which depend on engine-only exports — run under the engine.
+    pub fn set_whole_module_degrade(b: bool) {
+        functions::set_whole_module_degrade(b);
+    }
+
     /// Parse `.ts` source, translate the AST to Rust source, report the runtime
     /// dependencies, and lower according to `role`. [`FileRole::BinEntry`] emits
     /// an implicit `fn main` collecting top-level executable statements;
@@ -1753,28 +1762,47 @@ impl Translator {
         // `translate_function` swaps just those bodies for `call_fn` (every
         // other function stays native Rust). The `__DS_MODULE_JS` const and the
         // serde derives are emitted below, after the items are collected.
-        let per_function = !sites.dynamic_fns.is_empty();
+        let mut dynamic_fns = sites.dynamic_fns;
+        // B6-5c: whole-module degrade (transitive — this .ts imports a degraded
+        // module, so its functions depend on engine-only exports) → every
+        // top-level function runs under the engine. Add all top-level function
+        // names so they swap to `call_module_fn`; their JS (carrying the ESM
+        // imports) is loaded by the module loader. This is the path around a
+        // generic-callable export (e.g. an npm package's `export const sha512 =
+        // createHasher(…)`) the translator cannot specialize into a stub: the
+        // function's body runs in the engine, which resolves the import itself.
+        if functions::whole_module_degrade() {
+            for stmt in &program.body {
+                if let Some(f) = check::top_level_function(stmt) {
+                    if let Some(id) = &f.id {
+                        dynamic_fns.insert(id.name.as_str().to_string());
+                    }
+                }
+            }
+        }
+        let per_function = !dynamic_fns.is_empty();
         // Always (re)set the thread-local dynamic-function set — even when
         // empty. The conformance harness translates many fixtures in one
         // thread; without a reset, a fixture that degrades its `main` leaves a
         // stale set that rewrites the next fixture's `main` as an engine call,
         // emitting `__ds_engine` references while `needs_engine` stays false.
-        functions::set_dynamic_fns(sites.dynamic_fns.clone());
+        functions::set_dynamic_fns(dynamic_fns);
         // B6-5b: a per-function-degraded module whose annotation-stripped JS
         // still carries ESM `import`/`export` cannot run under `call_fn`'s
         // script-mode `eval` (ESM syntax is rejected in script mode). When such
         // a module also has a known import specifier (it is a dep reached via
         // that specifier), its degraded bodies route to `call_module_fn` keyed
         // by the specifier — the module loader resolves the imports — and the
-        // module source lands in the runtime dep's static table. Gated on
-        // `per_function` (only degraded bodies switch) and a known specifier
-        // (the loader keys the module by it).
+        // module source lands in the runtime dep's static table. B6-5c extends
+        // the loader gate to whole-module degrade (its functions call
+        // engine-only exports through the module JS, which carries imports).
         let has_esm_binding = program
             .body
             .iter()
             .any(|s| s.as_module_declaration().is_some());
+        let needs_loader = has_esm_binding || functions::whole_module_degrade();
         functions::set_module_mode(
-            per_function && has_esm_binding && imports::current_module_specifier().is_some(),
+            per_function && needs_loader && imports::current_module_specifier().is_some(),
         );
 
         // Record the file's namespace-import bindings (`import * as ns`) so a
