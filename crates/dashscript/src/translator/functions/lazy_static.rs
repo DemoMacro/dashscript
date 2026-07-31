@@ -8,7 +8,7 @@ use std::collections::HashSet;
 use oxc_ast::ast::{
     ArrayExpression, ArrayExpressionElement, BinaryExpression, BinaryOperator, BindingPattern,
     CallExpression, Declaration, Expression, NewExpression, ObjectExpression, ObjectPropertyKind,
-    Statement, TSTypeParameterInstantiation, VariableDeclarationKind,
+    Statement, TSTypeParameterInstantiation, VariableDeclaration, VariableDeclarationKind,
 };
 use oxc_semantic::SymbolId;
 use quote::format_ident;
@@ -42,6 +42,24 @@ fn function_body<'a>(stmt: &'a Statement<'a>) -> Option<&'a oxc_ast::ast::Functi
     }
 }
 
+/// The `VariableDeclaration` a top-level `const`/`let` carries — a bare
+/// `const x = …` or an `export const x = …` (an `ExportNamedDeclaration`
+/// wrapping the declaration). `None` for any other statement. An exported
+/// module-global singleton lowers to the same lazy-static accessor as a bare
+/// one (just `pub`), so the candidate/sym/items passes treat both shapes
+/// alike — without this, an `export const` object/regex/call would skip the
+/// lazy-static emit entirely (the declaration stays unwritten).
+fn variable_decl<'a>(stmt: &'a Statement<'a>) -> Option<&'a VariableDeclaration<'a>> {
+    match stmt {
+        Statement::VariableDeclaration(d) => Some(d),
+        Statement::ExportNamedDeclaration(e) => match &e.declaration {
+            Some(Declaration::VariableDeclaration(d)) => Some(d),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
 /// Whether `stmt` is a module-level `const` or non-mutated `let` that lowers to
 /// a lazy static (OnceLock + accessor fn) — see [`lazy_static_items`]. A
 /// const-expression literal is NOT a candidate (escape promotion handles it):
@@ -56,7 +74,7 @@ pub(in crate::translator) fn lazy_static_candidate(
     mutable_names: &HashSet<String>,
     names: &NameTable<'_>,
 ) -> bool {
-    let Statement::VariableDeclaration(decl) = stmt else {
+    let Some(decl) = variable_decl(stmt) else {
         return false;
     };
     if !matches!(
@@ -162,9 +180,7 @@ pub(in crate::translator) fn mutable_top_level_names(
 /// The rust name of a top-level `VariableDeclaration`'s binding (the first
 /// declarator), or `None` for any other statement / a non-identifier pattern.
 pub(in crate::translator) fn decl_name(stmt: &Statement, names: &NameTable<'_>) -> Option<String> {
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
+    let decl = variable_decl(stmt)?;
     let d = decl.declarations.first()?;
     let BindingPattern::BindingIdentifier(id) = &d.id else {
         return None;
@@ -228,9 +244,7 @@ pub(in crate::translator) fn lazy_static_sym(
     stmt: &Statement,
     names: &NameTable<'_>,
 ) -> Option<SymbolId> {
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
+    let decl = variable_decl(stmt)?;
     let d = &decl.declarations[0];
     names.symbol_of_pattern(&d.id)
 }
@@ -251,9 +265,7 @@ pub(in crate::translator) fn lazy_static_items(
     if !lazy_static_candidate(stmt, mutable_names, names) {
         return None;
     }
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
+    let decl = variable_decl(stmt)?;
     let d = &decl.declarations[0];
     let BindingPattern::BindingIdentifier(id) = &d.id else {
         return None;
@@ -383,7 +395,7 @@ pub(in crate::translator) fn mutable_static_candidate(
     mutable_names: &HashSet<String>,
     names: &NameTable<'_>,
 ) -> bool {
-    let Statement::VariableDeclaration(decl) = stmt else {
+    let Some(decl) = variable_decl(stmt) else {
         return false;
     };
     if !matches!(decl.kind, VariableDeclarationKind::Let) {
@@ -429,9 +441,7 @@ pub(in crate::translator) fn mutable_static_items(
     if !mutable_static_candidate(stmt, mutable_names, names) {
         return None;
     }
-    let Statement::VariableDeclaration(decl) = stmt else {
-        return None;
-    };
+    let decl = variable_decl(stmt)?;
     let d = &decl.declarations[0];
     let BindingPattern::BindingIdentifier(id) = &d.id else {
         return None;

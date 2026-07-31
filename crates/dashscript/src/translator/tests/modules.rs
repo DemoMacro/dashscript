@@ -762,6 +762,29 @@ fn module_as_const_array_lazy_static_infers_vec_type() {
 }
 
 #[test]
+fn module_export_const_object_lazy_static_emits_accessor() {
+    // `export const M = {...}` is an `ExportNamedDeclaration` wrapping the
+    // `VariableDeclaration` — without unwrapping it, the lazy-static pre-pass
+    // skipped the binding entirely (the module emitted no accessor at all, so a
+    // cross-file `use crate::m::M` resolved to nothing). Both shapes lower to
+    // the same `OnceLock` + `pub fn` accessor; the `export` only adds visibility.
+    let src = "export const M: Record<string, string> = { a: \"1\", b: \"2\" };\nexport function has(): boolean { return true; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(
+        diags.is_empty(),
+        "export const lazy static flagged: {diags:?}"
+    );
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("static M_CELL") && rust.contains("pub fn m()"),
+        "export const not lowered to OnceLock accessor: {rust}"
+    );
+}
+
+#[test]
 fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
     // B3-1a (entry path, via promotable relaxation): a top-level non-mutated
     // `let` literal referenced from a function promotes to a crate `const` item

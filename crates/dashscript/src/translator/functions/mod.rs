@@ -272,6 +272,32 @@ pub(in crate::translator) fn is_executable_top_level(stmt: &Statement) -> bool {
     if is_const_arrow(stmt) {
         return false;
     }
+    // An `export const x = …` / `export let x = …` runs in source order (it
+    // binds a value that constructs at runtime → lazy static), so it is an
+    // executable top-level wrapped in an `ExportNamedDeclaration`. A const-expr
+    // literal (`export const N = 5` → `pub const` item) and a const arrow
+    // (`export const f = () => …` → `fn` item, excluded above) are declarations,
+    // not executable; `export function`/`class`/`type`/`interface` likewise.
+    if let Statement::ExportNamedDeclaration(e) = stmt {
+        if let Some(Declaration::VariableDeclaration(v)) = &e.declaration {
+            let is_literal = v
+                .declarations
+                .first()
+                .and_then(|d| d.init.as_ref())
+                .map(|init| {
+                    matches!(
+                        init,
+                        Expression::NumericLiteral(_)
+                            | Expression::BooleanLiteral(_)
+                            | Expression::StringLiteral(_)
+                    )
+                })
+                .unwrap_or(false);
+            if !is_literal {
+                return true;
+            }
+        }
+    }
     matches!(
         stmt,
         Statement::ExpressionStatement(_)
@@ -293,8 +319,15 @@ pub(in crate::translator) fn is_executable_top_level(stmt: &Statement) -> bool {
 /// (`const f = () => …`), which lowers to a `fn` item rather than an
 /// executable statement.
 fn is_const_arrow(stmt: &Statement) -> bool {
-    let Statement::VariableDeclaration(v) = stmt else {
-        return false;
+    let v = match stmt {
+        Statement::VariableDeclaration(v) => v,
+        // `export const f = () => …` wraps the same arrow binding in an
+        // `ExportNamedDeclaration`; it lowers to a `fn` item too.
+        Statement::ExportNamedDeclaration(e) => match &e.declaration {
+            Some(Declaration::VariableDeclaration(v)) => v,
+            _ => return false,
+        },
+        _ => return false,
     };
     v.declarations.len() == 1
         && matches!(
