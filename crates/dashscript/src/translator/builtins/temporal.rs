@@ -18,6 +18,19 @@ use syn::{parse_quote, Expr};
 use super::super::context::Ctx;
 use super::super::expressions::translate_argument;
 
+/// The Temporal types that share an infallible `from_utf8` constructor and the
+/// same calendar/time accessor shape. `Temporal.<Type>.from(s)` lowers to
+/// `temporal_rs::<Type>` for each. Single source of truth — `infer.rs` (the
+/// binding's inferred type) and `member.rs::is_temporal_local` (accessor
+/// dispatch) both read this list, so a type added here flows everywhere.
+pub(in crate::translator) const TEMPORAL_DATE_TIME_TYPES: &[&str] = &[
+    "PlainDate",
+    "PlainDateTime",
+    "PlainTime",
+    "PlainYearMonth",
+    "PlainMonthDay",
+];
+
 /// `Temporal.<Type>.<method>(…)` static calls. The caller (`translate_call`)
 /// has already split the nested callee (`Temporal.PlainDate.from`) into its
 /// type and method names. Returns `None` for any unrecognized pair (an unknown
@@ -28,17 +41,21 @@ pub(in crate::translator) fn temporal_static(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
+    if method == "from" && TEMPORAL_DATE_TIME_TYPES.contains(&ty) {
+        return temporal_from(ty, args, ctx);
+    }
     match (ty, method) {
-        ("PlainDate", "from") => plain_date_from(args, ctx),
         ("PlainDate", "compare") => plain_date_compare(args, ctx),
         _ => None,
     }
 }
 
-/// `Temporal.PlainDate.from(s)` → `temporal_rs::PlainDate::from_utf8(s.as_bytes()).unwrap()`.
+/// `Temporal.<Type>.from(s)` → `temporal_rs::<Type>::from_utf8(s.as_bytes())`.
 /// `from_utf8` is an inherent constructor (no `FromStr` trait import needed);
 /// a string literal stays a bare `&str` so `.as_bytes()` yields a `&'static [u8]`.
-fn plain_date_from(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+/// `<Type>` is any `temporal_rs` type with an infallible-`from_utf8` constructor
+/// (PlainDate / PlainDateTime / PlainTime / PlainYearMonth / PlainMonthDay).
+fn temporal_from(ty: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     let a = args.first()?;
     let e = if let Argument::StringLiteral(s) = a {
         let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
@@ -46,12 +63,13 @@ fn plain_date_from(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     } else {
         translate_argument(a, ctx)
     };
+    let ty = syn::Ident::new(ty, Span::call_site());
     Some(parse_quote!({
         // A malformed ISO string is an ES `RangeError`/`SyntaxError`, not a
         // panic — lower the `TemporalResult::Err` to a `DsError` so `catch (e)`
         // recovers `e.constructor.name`/`e.name`/`e.message` (the temporal-rs
         // `ErrorKind` is the ES error class; `into_message` is the text).
-        match temporal_rs::PlainDate::from_utf8((#e).as_bytes()) {
+        match temporal_rs::#ty::from_utf8((#e).as_bytes()) {
             Ok(__d) => __d,
             Err(__err) => ::std::panic::panic_any(crate::__ds::DsError::new(
                 match __err.kind() {

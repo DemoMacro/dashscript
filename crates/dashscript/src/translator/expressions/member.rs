@@ -183,12 +183,12 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return e;
         }
     }
-    // `d.year`/`d.month`/`d.day`/… on a `Temporal.PlainDate` local → the matching
-    // `temporal_rs::PlainDate` accessor method (Rust accessors are methods, not
-    // fields; ES Temporal calendar fields are properties). Numeric fields cast to
-    // `f64` (a `.ts` `number` is `f64`); `inLeapYear` is a bool, no cast.
-    if is_plain_date_local(&sm.object, ctx) {
-        if let Some(m) = plain_date_method(field_name) {
+    // `d.year`/`d.month`/`d.hour`/… on a `Temporal.<Type>` local → the matching
+    // `temporal_rs::<Type>` accessor method (Rust accessors are methods, not
+    // fields; ES Temporal calendar/time fields are properties). Numeric fields
+    // cast to `f64` (a `.ts` `number` is `f64`); `inLeapYear` is a bool, no cast.
+    if is_temporal_local(&sm.object, ctx) {
+        if let Some(m) = temporal_accessor(field_name) {
             let method = syn::Ident::new(m, Span::call_site());
             let obj = translate_expr(&sm.object, ctx);
             return if field_name == "inLeapYear" {
@@ -390,17 +390,24 @@ fn is_match_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     ctx.local_type(&name).is_some_and(is_option_ds_match)
 }
 
-/// Whether `expr` is a `Temporal.PlainDate` local (a
-/// `let d = Temporal.PlainDate.from(…)` result), so `d.year`/`d.month`/…
-/// route to `temporal_rs::PlainDate`'s accessor methods instead of failing on a
-/// missing struct field (E0609 — PlainDate's slots are private).
-fn is_plain_date_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+/// Whether `expr` is a `Temporal.<Type>` local (a
+/// `let x = Temporal.<Type>.from(…)` result) whose slots are private, so
+/// `x.year`/`x.hour`/… route to `temporal_rs::<Type>`'s accessor methods
+/// instead of failing on a missing struct field (E0609). Covers the calendar
+/// and date/time types that share the same accessor shape.
+fn is_temporal_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     let Expression::Identifier(id) = expr else {
         return false;
     };
     let name = bindings::snake(&id.name).to_string();
-    ctx.local_type(&name)
-        .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "PlainDate"))
+    let Some(ty) = ctx.local_type(&name) else {
+        return false;
+    };
+    let Some(seg) = ty.segments.last() else {
+        return false;
+    };
+    let ident = seg.ident.to_string();
+    builtins::TEMPORAL_DATE_TIME_TYPES.contains(&ident.as_str())
 }
 
 /// Whether `expr` is a `DsError` local (a `catch (e)` binding) — the panic
@@ -416,11 +423,14 @@ fn is_ds_error_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
         .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "DsError"))
 }
 
-/// The `temporal_rs::PlainDate` accessor method for an ES Temporal calendar
-/// field, if any (`dayOfYear` → `day_of_year`, …). Returns `None` for a field
-/// that is not a calendar accessor (e.g. `calendar`, or a user-added field).
-fn plain_date_method(name: &str) -> Option<&'static str> {
+/// The `temporal_rs::<Type>` accessor method for an ES Temporal calendar or
+/// time field, if any (`dayOfYear` → `day_of_year`, `hour` → `hour`, …). Shared
+/// across the date/time types — a fixture only reads fields its own type has
+/// (a PlainDate has no `hour`), so one table suffices. Returns `None` for a
+/// field that is not an accessor (e.g. `calendar`, or a user-added field).
+fn temporal_accessor(name: &str) -> Option<&'static str> {
     match name {
+        // Calendar/date fields (PlainDate / PlainDateTime / PlainYearMonth / …).
         "year" => Some("year"),
         "month" => Some("month"),
         "day" => Some("day"),
@@ -431,6 +441,13 @@ fn plain_date_method(name: &str) -> Option<&'static str> {
         "daysInYear" => Some("days_in_year"),
         "monthsInYear" => Some("months_in_year"),
         "inLeapYear" => Some("in_leap_year"),
+        // Time fields (PlainDateTime / PlainTime).
+        "hour" => Some("hour"),
+        "minute" => Some("minute"),
+        "second" => Some("second"),
+        "millisecond" => Some("millisecond"),
+        "microsecond" => Some("microsecond"),
+        "nanosecond" => Some("nanosecond"),
         _ => None,
     }
 }

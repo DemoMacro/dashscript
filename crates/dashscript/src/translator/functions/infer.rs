@@ -218,11 +218,10 @@ pub(super) fn infer_literal_type(expr: &Expression) -> Option<Type> {
         Expression::NewExpression(n) if matches!(&n.callee, Expression::Identifier(id) if id.name.as_str() == "RegExp") => {
             Some(parse_quote!(regress::Regex))
         }
-        // `Temporal.PlainDate.from(s)` → `temporal_rs::PlainDate` (the type
-        // `.toString`/`.year`/`.month`/`.day` dispatch on).
-        Expression::CallExpression(_) if is_temporal_static_call(expr, "PlainDate", "from") => {
-            Some(parse_quote!(temporal_rs::PlainDate))
-        }
+        // `Temporal.<Type>.from(s)` → `temporal_rs::<Type>` (the type
+        // `.toString`/`.year`/`.hour`/… dispatch on), for the five date/time
+        // types sharing the `from_utf8` constructor + accessor shape.
+        Expression::CallExpression(_) => temporal_from_type(expr),
         _ => None,
     }
 }
@@ -243,4 +242,18 @@ fn is_temporal_static_call(expr: &Expression, ty: &str, method: &str) -> bool {
             if tm.property.name.as_str() == ty
                 && matches!(&tm.object, Expression::Identifier(id) if id.name.as_str() == "Temporal")
         )
+}
+
+/// `Temporal.<Type>.from(s)` infers `temporal_rs::<Type>` (the type the
+/// accessors + `Display` dispatch on), for the five types with an infallible
+/// `from_utf8` constructor. Reads the shared `TEMPORAL_DATE_TIME_TYPES` list so
+/// it stays in sync with `temporal.rs::temporal_static` +
+/// `member.rs::is_temporal_local` — one list, three readers.
+fn temporal_from_type(expr: &Expression) -> Option<Type> {
+    let ty = super::super::builtins::TEMPORAL_DATE_TIME_TYPES
+        .iter()
+        .copied()
+        .find(|t| is_temporal_static_call(expr, t, "from"))?;
+    let ident = syn::Ident::new(ty, proc_macro2::Span::call_site());
+    Some(parse_quote!(temporal_rs::#ident))
 }

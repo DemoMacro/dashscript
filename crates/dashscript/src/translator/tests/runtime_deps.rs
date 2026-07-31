@@ -785,6 +785,32 @@ fn temporal_plain_date_compare_emits_ordering_match() {
 }
 
 #[test]
+fn temporal_plain_date_time_from_and_time_accessors_route_through_temporal_rs() {
+    // `Temporal.PlainDateTime.from(s)` → `temporal_rs::PlainDateTime::from_utf8`,
+    // and `.hour`/`.minute`/`.second` on the local → the matching accessor
+    // methods (ES time fields are properties; Rust accessors are methods).
+    // Covers the four types added beyond PlainDate (PlainDateTime / PlainTime /
+    // PlainYearMonth / PlainMonthDay) — they share the `from_utf8` constructor
+    // + accessor shape, so one representative asserts the shared path.
+    let src = "function main(): void {\n  const dt = Temporal.PlainDateTime.from(\"2024-03-15T10:30:45\");\n  console.log(dt.hour);\n  console.log(dt.minute);\n  console.log(dt.second);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_temporal(),
+        "Temporal.PlainDateTime.from flags needs_temporal, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("temporal_rs::PlainDateTime::from_utf8"),
+        "from routes through temporal_rs, got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".hour()") && rust.contains(".minute()") && rust.contains(".second()"),
+        "time accessors route to methods, got:\n{rust}"
+    );
+}
+
+#[test]
 fn regex_literal_flags_and_source_are_static() {
     // `/abc/gi.flags` / `.source` / `.global` / `.ignoreCase` → bare literals
     // (the flags are known at translate time), not a runtime `Regex` field —
