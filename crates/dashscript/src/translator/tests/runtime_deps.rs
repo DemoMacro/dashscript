@@ -111,6 +111,34 @@ fn non_numeric_interpolation_routes_through_display_and_flags_dep() {
 }
 
 #[test]
+fn text_encoder_encode_flags_encoding_dep_and_ships_structs() {
+    // `new TextEncoder()` (a WHATWG Encoding API constructor — a WinterTC Web
+    // API) maps to `__ds::TextEncoder::new()`; `.encode(str)` returns the UTF-8
+    // bytes as a `Vec<u8>`. The `__ds::TextEncoder` marker flags the `Encoding`
+    // dep, which ships both `TextEncoder` and `TextDecoder` structs in `__ds.rs`
+    // (pure `std` — `String::into_bytes`, no cargo crate).
+    let src = "const e = new TextEncoder();\nconst b = e.encode(\"hi\");\nconsole.log(b.length);";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::TextEncoder::new()"),
+        "new TextEncoder() → __ds::TextEncoder::new(), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Encoding),
+        "Encoding dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module().is_some_and(|s| {
+            s.contains("pub struct TextEncoder") && s.contains("pub struct TextDecoder")
+        }),
+        "Encoding dep ships both structs, got helper: {:?}",
+        deps.helper_module()
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

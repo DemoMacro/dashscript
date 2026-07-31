@@ -89,12 +89,20 @@ pub enum RuntimeDep {
     /// a boolean → `"true"`/`"false"`, an array → elements joined by `,`, an
     /// object → `"[object Object]"`. Pure `std` — no cargo dep.
     Display,
+    /// A WHATWG Encoding API constructor (`new TextEncoder()` / `new
+    /// TextDecoder()`) — a WinterTC Web API. UTF-8 only (the sole encoding the
+    /// Encoding API guarantees); `.encode`/`.decode` route through
+    /// `__ds::TextEncoder`/`__ds::TextDecoder` backed by `String::into_bytes`
+    /// and `String::from_utf8_lossy`. Pure `std` — no cargo dep. The marker is
+    /// `__ds::TextEncoder`; the helper slice defines both structs, so a file
+    /// that uses either gets both.
+    Encoding,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 9] = [
+    const ALL: [RuntimeDep; 10] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -104,6 +112,7 @@ impl RuntimeDep {
         RuntimeDep::Worker,
         RuntimeDep::Truthy,
         RuntimeDep::Display,
+        RuntimeDep::Encoding,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -119,6 +128,7 @@ impl RuntimeDep {
             RuntimeDep::Worker => Some("__ds::Worker"),
             RuntimeDep::Truthy => Some("__ds::truthy"),
             RuntimeDep::Display => Some("__ds::display"),
+            RuntimeDep::Encoding => Some("__ds::TextEncoder"),
             RuntimeDep::Engine => None,
         }
     }
@@ -165,6 +175,7 @@ impl RuntimeDep {
             RuntimeDep::ArrayHelper => None,
             RuntimeDep::Truthy => None,
             RuntimeDep::Display => None,
+            RuntimeDep::Encoding => None,
         }
     }
 
@@ -178,6 +189,7 @@ impl RuntimeDep {
             RuntimeDep::Worker => Some(WORKER_HELPER),
             RuntimeDep::Truthy => Some(TRUTHY_HELPER),
             RuntimeDep::Display => Some(DISPLAY_HELPER),
+            RuntimeDep::Encoding => Some(ENCODING_HELPER),
         }
     }
 }
@@ -447,6 +459,38 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
     } else {
         arr.resize(idx + 1, T::default());
         arr[idx] = v;
+    }
+}
+";
+
+/// WHATWG Encoding API helpers — `__ds::TextEncoder`/`__ds::TextDecoder`. The
+/// Encoding API is UTF-8 only, so no encoding table: `encode` is
+/// `String::into_bytes` (zero-copy), `decode` is `String::from_utf8_lossy`
+/// (invalid bytes become U+FFFD, matching the ES `fatal: false` default). Both
+/// structs are stateless, so a single shared instance is sound.
+const ENCODING_HELPER: &str = "\
+pub struct TextEncoder;
+impl TextEncoder {
+    #[inline]
+    pub fn new() -> Self {
+        TextEncoder
+    }
+    #[inline]
+    pub fn encode(&self, s: String) -> Vec<u8> {
+        s.into_bytes()
+    }
+}
+#[allow(dead_code)]
+pub struct TextDecoder;
+#[allow(dead_code)]
+impl TextDecoder {
+    #[inline]
+    pub fn new() -> Self {
+        TextDecoder
+    }
+    #[inline]
+    pub fn decode(&self, bytes: Vec<u8>) -> String {
+        String::from_utf8_lossy(&bytes).into_owned()
     }
 }
 ";

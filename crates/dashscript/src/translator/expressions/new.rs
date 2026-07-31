@@ -66,6 +66,17 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 return parse_quote!(::std::vec![0_u8; (#elem) as usize]);
             }
         }
+        // `new TextEncoder()` / `new TextDecoder()` — the WHATWG Encoding API
+        // (a WinterTC Web API). Stateless global constructors; `.encode`/
+        // `.decode` map to the `__ds::TextEncoder`/`__ds::TextDecoder` impls
+        // (UTF-8). Intercepted before the generic `Foo::new` path, which would
+        // emit `TextEncoder::new` (E0425 — no such Rust type). The `Encoding`
+        // runtime dep is flagged by the `__ds::TextEncoder` marker probe, which
+        // injects both struct defs into `__ds.rs`.
+        if matches!(id.name.as_str(), "TextEncoder" | "TextDecoder") {
+            let name = bindings::type_ident(&id.name);
+            return parse_quote!(crate::__ds::#name::new());
+        }
     }
     let Some(name) = class_name(&n.callee) else {
         return parse_quote!(::core::todo!());
