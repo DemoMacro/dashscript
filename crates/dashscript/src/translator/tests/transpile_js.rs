@@ -56,7 +56,7 @@ fn untyped_js_homogeneous_array_transpiles() {
 
 #[test]
 fn js_module_with_class_extends_needs_engine() {
-    // A class `extends` (e.g. a crypto package's `class _SHA1 extends HashMD`)
+    // A class `extends` (e.g. a crypto package's `class _A extends B`)
     // has no static lowering, so the whole module degrades to the engine.
     let js = "class A extends B {}\nexport function f(x) { return x; }";
     assert!(Translator::new().js_module_needs_engine(js));

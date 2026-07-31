@@ -325,7 +325,7 @@ fn alias_item(name: &Ident, gens: &[Ident], ty: &Type) -> Item {
 ///    (`string | number` → `Str(String), Num(f64)`), type refs → tuple
 ///    (`Circle | Square` → `Circle(Circle)`), discriminated literals → named-
 ///    field (`{ kind: "circle"; radius: number }` → `Circle { radius: f64 }`).
-/// 2. **Mixed** unions (`boolean | string[]`, `{ _attr } | XmlAtom | XmlAtom[]`)
+/// 2. **Mixed** unions (`boolean | string[]`, `{ _key } | Item | Item[]`)
 ///    lower member-by-member via [`member_to_variant`] — the ts2rust
 ///    tagged-union model: every member is one variant regardless of the others,
 ///    since a Rust enum admits mixed unit/tuple/struct variants. An inline-
@@ -550,7 +550,7 @@ fn object_member_variant(
     };
     // An index-signature-only literal (`{ [k: string]: V }`) is a map member,
     // not a struct — lower to a `Map(HashMap<String, V>)` variant so a union
-    // like `{ [k: string]: V } | XmlDesc` names a concrete enum rather than
+    // like `{ [k: string]: V } | Named` names a concrete enum rather than
     // degrading to `_` (an index signature has no named fields to build a
     // struct variant from).
     if let Some(hm) = index_signature_type(lit) {
@@ -575,8 +575,8 @@ fn object_member_variant(
 }
 
 /// The variant tag of a plain inline-object member: the sorted field names,
-/// PascalCase-joined (`{ _attr: .. }` → `Attr`; `{ _attr; _cdata }` →
-/// `AttrCdata`) — readable and shape-distinct. `pub` so the registry pre-pass
+/// PascalCase-joined (`{ _key: .. }` → `Key`; `{ _key; _val }` →
+/// `KeyVal`) — readable and shape-distinct. `pub` so the registry pre-pass
 /// can compute the same signature for an object-literal `type` alias body and
 /// map it to the alias name (structural typing → alias upgrade).
 pub(in crate::translator) fn object_member_tag(lit: &TSTypeLiteral) -> Option<String> {

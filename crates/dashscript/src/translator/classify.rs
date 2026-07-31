@@ -240,7 +240,7 @@ pub(in crate::translator) fn classify_function_signature(f: &Function) -> Mappin
 /// (`extends`) cannot lower statically — DashScript models composition, not
 /// inheritance, so `class B extends A` reaches the static translator only as a
 /// `compile_error!` (see `class::translate_class`). A `.js`/`.mjs`/`.cjs`
-/// module whose class extends another (e.g. `class _SHA1 extends HashMD`) must
+/// module whose class extends another (e.g. `class _A extends B`) must
 /// therefore degrade wholesale to the engine, where QuickJS runs the real
 /// prototype chain. A single-base class with only a constructor and methods
 /// stays `Mapped` (the #130-132 lowering).

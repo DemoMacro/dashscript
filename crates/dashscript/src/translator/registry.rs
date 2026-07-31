@@ -56,7 +56,7 @@ pub struct FnSignature {
     pub type_params: Vec<String>,
     pub return_type: Option<Type>,
     /// The workspace-member crate this signature's return type lives in
-    /// (`Some("office_open_core")` for a factory defined in another package),
+    /// (`Some("member_crate")` for a factory defined in another package),
     /// so a cross-package singleton's OnceLock type is prefixed
     /// `crate::<source_crate>::…`. `None` for the entry file and same-package
     /// deps — the type is already visible. Set by

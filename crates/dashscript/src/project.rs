@@ -30,7 +30,7 @@ fn is_npm_js(dep_path: &Path) -> bool {
 /// module's directory. The result is the key a degraded module is registered
 /// under, so the runtime resolver — which applies the identical join — finds
 /// it. Bare and relative must agree between build time and runtime, or a
-/// transitive `import "./_md.js"` resolves to a key the loader never stored.
+/// transitive `import "./dep.js"` resolves to a key the loader never stored.
 fn ds_resolve_specifier(base: &str, name: &str) -> String {
     if !name.starts_with('.') {
         name.to_string()
@@ -86,7 +86,7 @@ fn translate_dep(
             let dep_src = fs::read_to_string(dep_path)
                 .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
             // A `.js` module whose class `extends` another (e.g. a crypto
-            // package's `class _SHA1 extends HashMD`) cannot lower statically,
+            // package's `class _A extends B`) cannot lower statically,
             // so it degrades wholesale to the engine — stub fns forward to
             // QuickJS instead of the static translator emitting a
             // `compile_error!`. `.ts` deps keep the per-function/whole-program
@@ -229,11 +229,11 @@ fn render_type(ty: &syn::Type) -> String {
 
 /// Walk a degraded module's ESM import graph and record every transitive
 /// `.js`/`.ts` source in `deps.js_module_sources` under its DsResolver
-/// specifier. A `.js` package like `@noble/hashes` is a multi-file graph
-/// (`sha2.js` → `_md.js` → `_u64.js`); the runtime `DsLoader` resolves each
+/// specifier. A `.js` package like `@scope/pkg` is a multi-file graph
+/// (`a.js` → `b.js` → `c.js`); the runtime `DsLoader` resolves each
 /// transitive `import` via `source_of`, so each one must be registered at build
 /// time — not just the directly-imported module. A module with no
-/// `export function` (only `export const`/`class`, e.g. `_md.js`) emits no stub
+/// `export function` (only `export const`/`class`, e.g. `b.js`) emits no stub
 /// and is never runtime-registered, so it relies on this table alone.
 fn register_js_module_graph(
     translator: &Translator,

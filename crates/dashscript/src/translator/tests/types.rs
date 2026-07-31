@@ -93,7 +93,7 @@ fn cross_package_factory_singleton_prefixes_return_type() {
         FnSignature {
             type_params: vec!["T".to_string()],
             return_type: Some(syn::parse_quote!(Wrapper<T>)),
-            source_crate: Some("office_open_core".to_string()),
+            source_crate: Some("member_crate".to_string()),
         },
     );
     let src = "const p = make<number>(42);\
@@ -103,13 +103,11 @@ fn cross_package_factory_singleton_prefixes_return_type() {
         .translate(src)
         .expect("should translate");
     assert!(
-        rust.contains(
-            "static P_CELL: ::std::sync::OnceLock<crate::office_open_core::Wrapper<f64>>"
-        ),
+        rust.contains("static P_CELL: ::std::sync::OnceLock<crate::member_crate::Wrapper<f64>>"),
         "got:\n{rust}"
     );
     assert!(
-        rust.contains("fn p() -> &'static crate::office_open_core::Wrapper<f64>"),
+        rust.contains("fn p() -> &'static crate::member_crate::Wrapper<f64>"),
         "got:\n{rust}"
     );
 }
@@ -429,32 +427,32 @@ fn translates_tuple_to_rust_tuple() {
 }
 
 #[test]
-fn translates_complex_mixed_union_like_xml_desc() {
-    // The office-open/xml `XmlDesc` shape: inline-object members, a type ref,
-    // and an array-of-type-ref — a real XML/JSON-library union. Every member
+fn translates_complex_mixed_union_with_map_and_array_members() {
+    // A complex mixed-union shape: inline-object members, a type ref,
+    // and an array-of-type-ref — a real library union. Every member
     // lowers to its own variant; objects without a discriminant become tuple
     // variants wrapping a `__DsAnon_<hash>` struct.
     let src = r#"
-        type XmlAttrs = { [key: string]: string | number };
-        type XmlAtom = string | number | boolean | null;
-        type XmlDescArray = { [index: number]: { _attr: XmlAttrs } };
-        export type XmlDesc =
-          | { _attr: XmlAttrs }
-          | { _cdata: string }
-          | { _attr: XmlAttrs; _cdata: string }
-          | XmlAtom
-          | XmlAtom[]
-          | XmlDescArray;
+        type AttrMap = { [key: string]: string | number };
+        type Atom = string | number | boolean | null;
+        type ArrayMember = { [index: number]: { _meta: AttrMap } };
+        export type Node =
+          | { _meta: AttrMap }
+          | { _text: string }
+          | { _meta: AttrMap; _text: string }
+          | Atom
+          | Atom[]
+          | ArrayMember;
     "#;
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("enum XmlDesc"),
-        "XmlDesc should be enum, got:\n{rust}"
+        rust.contains("enum Node"),
+        "Node should be enum, got:\n{rust}"
     );
-    assert!(rust.contains("Attr("), "got:\n{rust}");
-    assert!(rust.contains("Cdata("), "got:\n{rust}");
-    assert!(rust.contains("XmlAtom(XmlAtom)"), "got:\n{rust}");
-    assert!(rust.contains("ArrayOfXmlAtom"), "got:\n{rust}");
+    assert!(rust.contains("Meta("), "got:\n{rust}");
+    assert!(rust.contains("Text("), "got:\n{rust}");
+    assert!(rust.contains("Atom(Atom)"), "got:\n{rust}");
+    assert!(rust.contains("ArrayOfAtom"), "got:\n{rust}");
 }
 
 #[test]

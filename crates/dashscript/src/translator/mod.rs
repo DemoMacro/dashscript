@@ -197,7 +197,7 @@ pub struct RuntimeDeps {
     /// source). Emitted as a `static __DS_MODULE_SOURCES` table in
     /// `__ds_engine.rs` so `source_of` reaches every degraded module without a
     /// `register_js_module` stub call — a module with no `export function`
-    /// (e.g. `@noble/hashes`'s `_md.js`, only `export const`/`class`) still
+    /// (e.g. `@scope/pkg`'s `b.js`, only `export const`/`class`) still
     /// resolves at runtime.
     js_module_sources: Vec<(String, String)>,
 }

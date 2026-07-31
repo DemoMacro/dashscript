@@ -521,7 +521,7 @@ fn factory_call_return_type(call: &CallExpression, registry: &TypeRegistry) -> O
 /// Prefix a return type's toplevel path with `crate::<crate_name>` so a
 /// cross-package factory's return type — collected without a prefix in its home
 /// package — resolves from the consumer's module: `Packer<TFile>` →
-/// `crate::office_open_core::Packer<TFile>`. Non-path types (fn pointers,
+/// `crate::member_crate::Packer<TFile>`. Non-path types (fn pointers,
 /// tuples) are returned cloned unchanged; factory returns are nominal path
 /// types.
 fn prefix_toplevel_crate(ty: &Type, crate_name: &str) -> Type {
