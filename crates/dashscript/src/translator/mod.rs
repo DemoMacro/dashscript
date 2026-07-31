@@ -104,12 +104,22 @@ pub enum RuntimeDep {
     /// work without string-matching panic messages. Pure `std` — no cargo
     /// dep. Routes through `__ds::DsError`.
     Error,
+    /// Node-inspect rendering for a `console.log` argument Rust's `Display`
+    /// cannot reach — a `Vec`/`HashMap`/`HashSet`/`Option` (std collections
+    /// have no `Display`, so `println!("{}", vec)` would not compile) — plus
+    /// the nested Node format (`[ a, 'b' ]`, `{ k: v }`, `Set { … }`). The
+    /// translator emits `__ds::inspect(&expr)` for a non-primitive console.log
+    /// argument; the Rust compiler picks the matching `DsInspect` impl by
+    /// inferred type. Distinct from `DsDisplay` (ES `ToString`: objects →
+    /// "[object Object]"): `console.log` inspects, `${obj}` displays. Flags
+    /// `ryu-js` (an `f64` element formats via `ryu_js`).
+    Inspect,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 11] = [
+    const ALL: [RuntimeDep; 12] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -121,6 +131,7 @@ impl RuntimeDep {
         RuntimeDep::Display,
         RuntimeDep::Encoding,
         RuntimeDep::Error,
+        RuntimeDep::Inspect,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -138,6 +149,7 @@ impl RuntimeDep {
             RuntimeDep::Display => Some("__ds::display"),
             RuntimeDep::Encoding => Some("__ds::TextEncoder"),
             RuntimeDep::Error => Some("__ds::DsError"),
+            RuntimeDep::Inspect => Some("__ds::inspect"),
             RuntimeDep::Engine => None,
         }
     }
@@ -186,6 +198,7 @@ impl RuntimeDep {
             RuntimeDep::Display => None,
             RuntimeDep::Encoding => None,
             RuntimeDep::Error => None,
+            RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\"")]),
         }
     }
 
@@ -201,6 +214,7 @@ impl RuntimeDep {
             RuntimeDep::Display => Some(DISPLAY_HELPER),
             RuntimeDep::Encoding => Some(ENCODING_HELPER),
             RuntimeDep::Error => Some(ERROR_HELPER),
+            RuntimeDep::Inspect => Some(INSPECT_HELPER),
         }
     }
 }
@@ -756,6 +770,166 @@ impl<K, V> DsDisplay for std::collections::HashMap<K, V> {
     #[inline]
     fn ds_display(&self) -> String {
         "[object Object]".to_string()
+    }
+}
+"#;
+
+const INSPECT_HELPER: &str = r#"
+use std::collections::{HashMap, HashSet};
+
+/// Node `console.log`/`util.inspect` rendering — distinct from [`DsDisplay`]
+/// (ES `ToString`: an object is "[object Object]", an array joins by ","). A
+/// `console.log` argument that is not a primitive routes through `inspect`;
+/// nested composites recurse to `depth` (Node's default 2), then collapse to
+/// `[Array]`/`[Object]`. A top-level `console.log` STRING prints verbatim (the
+/// translator keeps it on `Display`); a NESTED string quotes (`'x'`).
+///
+/// Static-first, per the scriptc/boa precedent: one trait, monomorphized per
+/// concrete type, so a `Vec<String>`/`HashMap<String, V>` lowers to zero-cost
+/// Rust (no dynamic value enum). A `console.log` of a bare `Vec`/`HashMap`
+/// would otherwise not compile (std collections have no `Display`).
+pub trait DsInspect {
+    fn ds_inspect(&self, recurse: u32, depth: i32) -> String;
+}
+
+/// Render `x` the way Node's `console.log` prints a non-primitive argument, at
+/// the Node default depth (2). The translator emits `__ds::inspect(&expr)`.
+#[inline]
+pub fn inspect<T: DsInspect>(x: &T) -> String {
+    x.ds_inspect(0, 2)
+}
+
+/// A nested string quotes with single quotes, escaping `'`/`\`/control —
+/// Node's inspect quoting (the common case; the full quote ladder — single →
+/// double → backtick — is a later refinement).
+fn inspect_quote(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 2);
+    out.push('\'');
+    for c in s.chars() {
+        match c {
+            '\'' => out.push_str("\\'"),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            _ => out.push(c),
+        }
+    }
+    out.push('\'');
+    out
+}
+
+impl DsInspect for f64 {
+    #[inline]
+    fn ds_inspect(&self, _recurse: u32, _depth: i32) -> String {
+        if *self == 0.0 {
+            "0".to_string()
+        } else {
+            ryu_js::Buffer::new().format(*self).to_string()
+        }
+    }
+}
+
+impl DsInspect for bool {
+    #[inline]
+    fn ds_inspect(&self, _recurse: u32, _depth: i32) -> String {
+        if *self { "true".to_string() } else { "false".to_string() }
+    }
+}
+
+impl DsInspect for String {
+    #[inline]
+    fn ds_inspect(&self, _recurse: u32, _depth: i32) -> String {
+        inspect_quote(self)
+    }
+}
+
+impl DsInspect for str {
+    #[inline]
+    fn ds_inspect(&self, _recurse: u32, _depth: i32) -> String {
+        inspect_quote(self)
+    }
+}
+
+impl DsInspect for () {
+    #[inline]
+    fn ds_inspect(&self, _recurse: u32, _depth: i32) -> String {
+        "undefined".to_string()
+    }
+}
+
+impl<T: DsInspect> DsInspect for Option<T> {
+    #[inline]
+    fn ds_inspect(&self, recurse: u32, depth: i32) -> String {
+        match self {
+            Some(x) => x.ds_inspect(recurse, depth),
+            None => "null".to_string(),
+        }
+    }
+}
+
+impl<T: DsInspect> DsInspect for Vec<T> {
+    #[inline]
+    fn ds_inspect(&self, recurse: u32, depth: i32) -> String {
+        if self.is_empty() {
+            return "[]".to_string();
+        }
+        if depth >= 0 && recurse > depth as u32 {
+            return "[Array]".to_string();
+        }
+        let mut s = String::from("[ ");
+        for (i, x) in self.iter().enumerate() {
+            if i > 0 {
+                s.push_str(", ");
+            }
+            s.push_str(&x.ds_inspect(recurse + 1, depth));
+        }
+        s.push_str(" ]");
+        s
+    }
+}
+
+impl<V: DsInspect> DsInspect for HashMap<String, V> {
+    #[inline]
+    fn ds_inspect(&self, recurse: u32, depth: i32) -> String {
+        if self.is_empty() {
+            return "{}".to_string();
+        }
+        if depth >= 0 && recurse > depth as u32 {
+            return "[Object]".to_string();
+        }
+        let mut s = String::from("{ ");
+        for (i, (k, v)) in self.iter().enumerate() {
+            if i > 0 {
+                s.push_str(", ");
+            }
+            s.push_str(k);
+            s.push_str(": ");
+            s.push_str(&v.ds_inspect(recurse + 1, depth));
+        }
+        s.push_str(" }");
+        s
+    }
+}
+
+impl<T: DsInspect> DsInspect for HashSet<T> {
+    #[inline]
+    fn ds_inspect(&self, recurse: u32, depth: i32) -> String {
+        if self.is_empty() {
+            return "Set(0) {}".to_string();
+        }
+        if depth >= 0 && recurse > depth as u32 {
+            return "[Set]".to_string();
+        }
+        let mut s = String::from("Set { ");
+        for (i, x) in self.iter().enumerate() {
+            if i > 0 {
+                s.push_str(", ");
+            }
+            s.push_str(&x.ds_inspect(recurse + 1, depth));
+        }
+        s.push_str(" }");
+        s
     }
 }
 "#;

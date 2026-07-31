@@ -124,6 +124,26 @@ fn is_reg_exp_ctor(expr: &Expression) -> bool {
 /// Whether a `console.log` argument evaluates to `Option<DsMatch>` — an ES
 /// `RegExp.prototype.exec` result — so it must route through
 /// `__ds::fmt_option_match` (Node's match-array inspect form) rather than `{}`
+/// A `console.log` argument that is a container Rust `Display` cannot reach —
+/// a `Vec`/`HashMap`/`HashSet`/`Option` (std collections have no `Display`, so
+/// `println!("{}", vec)` would not compile). Routed through `__ds::inspect`
+/// (Node's `console.log` inspect format). Only an identifier whose type is
+/// known via `Ctx::local_type`; inline container expressions widen later.
+fn is_container_arg(arg: &Argument, ctx: &Ctx<'_>) -> bool {
+    let Argument::Identifier(id) = arg else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|p| {
+        p.segments.last().is_some_and(|s| {
+            matches!(
+                s.ident.to_string().as_str(),
+                "Vec" | "HashMap" | "HashSet" | "Option"
+            )
+        })
+    })
+}
+
 /// (which fails to compile: `Option<DsMatch>` has no `Display`, blocked by the
 /// orphan rule since `Option` is std's).
 fn is_match_arg(arg: &Argument, ctx: &Ctx<'_>) -> bool {
@@ -260,6 +280,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                     // Node match-array formatter instead of `{}`.
                     let e = translate_argument(a, ctx);
                     let wrapped: Expr = parse_quote!(crate::__ds::fmt_option_match(#e));
+                    fmt.push_str("{}");
+                    vals.push(wrapped);
+                }
+                _ if is_container_arg(a, ctx) => {
+                    // A container (`Vec`/`HashMap`/`HashSet`/`Option`) has no
+                    // Rust `Display` — route through `__ds::inspect`, Node's
+                    // console.log inspect format (`[ a, 'b' ]`, `{ k: v }`).
+                    let e = translate_argument(a, ctx);
+                    let wrapped: Expr = parse_quote!(crate::__ds::inspect(&(#e)));
                     fmt.push_str("{}");
                     vals.push(wrapped);
                 }
