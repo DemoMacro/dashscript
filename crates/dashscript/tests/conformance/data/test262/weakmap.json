@@ -1,41 +1,1680 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.weakmap.constructor",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof WeakMap);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakMap, 'function',\n  'typeof WeakMap is \"function\"'\n);\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.empty-iterable",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar counter = 0;\nvar set = WeakMap.prototype.set;\nWeakMap.prototype.set = function(value) {\n  counter++;\n  return set.call(this, value);\n};\nvar map = new WeakMap([]);\n\nassert.sameValue(Object.getPrototypeOf(map), WeakMap.prototype);\nassert(map instanceof WeakMap);\nassert.sameValue(\n  counter, 0,\n  'empty iterable does not call WeakMap.prototype.set'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/empty-iterable.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.get-set-method-failure",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nObject.defineProperty(WeakMap.prototype, 'set', {\n  get: function() {\n    throw new Test262Error();\n  }\n});\n\nnew WeakMap();\nnew WeakMap(null);\n\nassert.throws(Test262Error, function() {\n  new WeakMap([]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/get-set-method-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.is-a-constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(WeakMap), true, 'isConstructor(WeakMap) must return true');\nnew WeakMap();\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakMap"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterable-failure",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  new WeakMap({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterable-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterable-with-object-keys",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar first = {};\nvar second = {};\nvar results = [];\nvar set = WeakMap.prototype.set;\nWeakMap.prototype.set = function(key, value) {\n  results.push({\n    _this: this,\n    key: key,\n    value: value\n  });\n  return set.call(this, key, value);\n};\nvar map = new WeakMap([\n  [first, 42],\n  [second, 43]\n]);\n\nassert.sameValue(results.length, 2, 'Called WeakMap#set for each object');\nassert.sameValue(results[0].key, first, 'Adds object in order - first key');\nassert.sameValue(results[0].value, 42, 'Adds object in order - first value');\nassert.sameValue(results[0]._this, map, 'Adds object in order - this');\nassert.sameValue(results[1].key, second, 'Adds object in order - second key');\nassert.sameValue(results[1].value, 43, 'Adds object in order - second value');\nassert.sameValue(results[1]._this, map, 'Adds object in order - this');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterable-with-object-keys.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterable-with-symbol-keys",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar sym = Symbol('a description');\nvar results = [];\nvar set = WeakMap.prototype.set;\nWeakMap.prototype.set = function(key, value) {\n  results.push({\n    _this: this,\n    key: key,\n    value: value\n  });\n  return set.call(this, key, value);\n};\nvar map = new WeakMap([\n  [sym, 42],\n  [Symbol.hasInstance, 43],\n]);\n\nassert.sameValue(results.length, 2, 'Called set() for each entry');\nassert.sameValue(results[0].key, sym, 'Adds object in order - first key, regular symbol');\nassert.sameValue(results[0].value, 42, 'Adds object in order - first value');\nassert.sameValue(results[0]._this, map, 'Adds object in order - this');\nassert.sameValue(results[1].key, Symbol.hasInstance, 'Adds object in order - second key, well-known symbol');\nassert.sameValue(results[1].value, 43, 'Adds object in order - second value');\nassert.sameValue(results[1]._this, map, 'Adds object in order - this');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterable-with-symbol-keys.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterator-close-after-set-failure",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: [],\n        done: false\n      };\n    },\n    return: function() {\n      count += 1;\n    }\n  };\n};\nWeakMap.prototype.set = function() {\n  throw new Test262Error();\n};\n\nassert.throws(Test262Error, function() {\n  new WeakMap(iterable);\n});\n\nassert.sameValue(\n  count, 1,\n  'The iterator is closed when `WeakMap.prototype.set` throws an error.'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterator-close-after-set-failure.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterator-item-first-entry-returns-abrupt",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar item = ['foo', 'bar'];\nObject.defineProperty(item, 0, {\n  get: function() {\n    throw new Test262Error();\n  }\n});\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: item,\n        done: false\n      };\n    },\n    return: function() {\n      count++;\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new WeakMap(iterable);\n});\n\nassert.sameValue(count, 1, 'The get error closed the iterator');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterator-item-first-entry-returns-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterator-item-second-entry-returns-abrupt",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar item = ['foo', 'bar'];\nObject.defineProperty(item, 1, {\n  get: function() {\n    throw new Test262Error();\n  }\n});\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: item,\n        done: false\n      };\n    },\n    return: function() {\n      count++;\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new WeakMap(iterable);\n});\n\nassert.sameValue(count, 1, 'The get error closed the iterator');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterator-item-second-entry-returns-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterator-items-are-not-object-close-iterator",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar nextItem;\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: nextItem,\n        done: false\n      };\n    },\n    return: function() {\n      count += 1;\n    }\n  };\n};\n\nnextItem = 1;\nassert.throws(TypeError, function() {\n  new WeakMap(iterable);\n});\nassert.sameValue(count, 1);\n\nnextItem = true;\nassert.throws(TypeError, function() {\n  new WeakMap(iterable);\n});\nassert.sameValue(count, 2);\n\nnextItem = '';\nassert.throws(TypeError, function() {\n  new WeakMap(iterable);\n});\nassert.sameValue(count, 3);\n\nnextItem = null;\nassert.throws(TypeError, function() {\n  new WeakMap(iterable);\n});\nassert.sameValue(count, 4);\n\nnextItem = undefined;\nassert.throws(TypeError, function() {\n  new WeakMap(iterable);\n});\nassert.sameValue(count, 5);\n\nnextItem = Symbol.for('a');\nassert.throws(TypeError, function() {\n  new WeakMap(iterable);\n});\nassert.sameValue(count, 6);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterator-items-are-not-object-close-iterator.js",
+      "n_asserts": 12,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterator-items-keys-cannot-be-held-weakly",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  new WeakMap([1, 1]);\n});\n\nassert.throws(TypeError, function() {\n  new WeakMap(['', 1]);\n});\n\nassert.throws(TypeError, function() {\n  new WeakMap([true, 1]);\n});\n\nassert.throws(TypeError, function() {\n  new WeakMap([null, 1]);\n});\n\nassert.throws(TypeError, function() {\n  new WeakMap([Symbol.for('registered symbol'), 1]);\n}, 'Registered symbol not allowed as a WeakMap key');\n\nassert.throws(TypeError, function() {\n  new WeakMap([undefined, 1]);\n});\n\nassert.throws(TypeError, function() {\n  new WeakMap([\n    ['a', 1], 2\n  ]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterator-items-keys-cannot-be-held-weakly.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterator-next-failure",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      throw new Test262Error();\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new WeakMap(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterator-next-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.iterator-value-failure",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        get value() {\n          throw new Test262Error();\n        },\n        done: false\n      };\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new WeakMap(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/iterator-value-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.no-iterable",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar a = new WeakMap();\nvar b = new WeakMap(undefined);\nvar c = new WeakMap(null);\n\nassert.sameValue(Object.getPrototypeOf(a), WeakMap.prototype);\nassert.sameValue(Object.getPrototypeOf(b), WeakMap.prototype);\nassert.sameValue(Object.getPrototypeOf(c), WeakMap.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/no-iterable.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.properties-of-map-instances",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(new WeakMap()),\n  WeakMap.prototype,\n  '`Object.getPrototypeOf(new WeakMap())` returns `WeakMap.prototype`'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/properties-of-map-instances.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.weakmap.properties-of-the-weakmap-prototype-object",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakMap.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(WeakMap.prototype),\n  Object.prototype,\n  '`Object.getPrototypeOf(WeakMap.prototype)` returns `Object.prototype`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/properties-of-the-weakmap-prototype-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.proto-from-ctor-realm",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar C = new other.Function();\nC.prototype = null;\n\nvar o = Reflect.construct(WeakMap, [], C);\n\nassert.sameValue(Object.getPrototypeOf(o), other.WeakMap.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/proto-from-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(WeakMap.prototype.constructor, WeakMap);\nassert.sameValue((new WeakMap()).constructor, WeakMap);\n\nverifyProperty(WeakMap.prototype, 'constructor', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.delete-entry-with-object-key-initial-iterable",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar map = new WeakMap([\n  [foo, 42]\n]);\n\nvar result = map.delete(foo);\n\nassert.sameValue(map.has(foo), false);\nassert.sameValue(result, true, 'WeakMap#delete returns true');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/delete-entry-with-object-key-initial-iterable.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.delete-entry-with-object-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar map = new WeakMap();\n\nmap.set(foo, 42);\n\nvar result = map.delete(foo);\n\nassert.sameValue(map.has(foo), false);\nassert.sameValue(result, true, 'WeakMap#delete returns true');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/delete-entry-with-object-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.delete-entry-with-symbol-key-initial-iterable",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar map = new WeakMap([\n  [foo, 42],\n  [bar, 43],\n  [Symbol.hasInstance, 44],\n]);\n\nvar result = map.delete(foo);\nassert(!map.has(foo), 'Regular symbol was deleted from map');\nassert(map.has(bar), \"Symbols with the same description don't alias to each other\");\nassert.sameValue(result, true, 'delete() returns true for regular symbol');\n\nresult = map.delete(Symbol.hasInstance);\nassert(!map.has(Symbol.hasInstance), 'Well-known symbol was deleted from map');\nassert.sameValue(result, true, 'delete() returns true for well-known symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/delete-entry-with-symbol-key-initial-iterable.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.delete-entry-with-symbol-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar map = new WeakMap();\n\nmap.set(foo, 42);\nmap.set(bar, 43);\n\nvar result = map.delete(foo);\n\nassert(!map.has(foo), 'Regular symbol was deleted from map');\nassert(map.has(bar), \"Symbols with the same description don't alias each other\");\nassert.sameValue(result, true, 'delete() returns true for regular symbol');\n\nmap.set(Symbol.hasInstance, 44);\n\nresult = map.delete(Symbol.hasInstance);\n\nassert(!map.has(Symbol.hasInstance), 'Well-known symbol was deleted from map');\nassert.sameValue(result, true, 'delete() returns true for well-known symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/delete-entry-with-symbol-key.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.delete",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakMap.prototype.delete,\n  'function',\n  'typeof WeakMap.prototype.delete is \"function\"'\n);\n\nverifyProperty(WeakMap.prototype, 'delete', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/delete.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.does-not-have-weakmapdata-internal-slot-array",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call([], {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call([], {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/does-not-have-weakmapdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.does-not-have-weakmapdata-internal-slot-map",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(new Map(), {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(new Map(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/does-not-have-weakmapdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.does-not-have-weakmapdata-internal-slot-object",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call({}, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call({}, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/does-not-have-weakmapdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.does-not-have-weakmapdata-internal-slot-set",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(new Set(), {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(new Set(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/does-not-have-weakmapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.does-not-have-weakmapdata-internal-slot-weakmap-prototype",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(WeakMap.prototype, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(WeakMap.prototype, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/does-not-have-weakmapdata-internal-slot-weakmap-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.not-a-constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakMap.prototype.delete),\n  false,\n  'isConstructor(WeakMap.prototype.delete) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let wm = new WeakMap(); new wm.delete();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakMap",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.returns-false-if-key-cannot-be-held-weakly",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\n\nassert.sameValue(map.delete(1), false);\nassert.sameValue(map.delete(''), false);\nassert.sameValue(map.delete(NaN), false);\nassert.sameValue(map.delete(null), false);\nassert.sameValue(map.delete(undefined), false);\nassert.sameValue(map.delete(true), false);\nassert.sameValue(map.delete(Symbol.for('registered symbol')), false, 'registered symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/returns-false-if-key-cannot-be-held-weakly.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.returns-false-when-object-key-not-present",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = {};\nvar bar = {};\n\nmap.set(foo, 42);\n\nassert.sameValue(map.delete(bar), false);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/returns-false-when-object-key-not-present.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.returns-false-when-symbol-key-not-present",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar baz = Symbol('another description');\n\nmap.set(foo, 42);\n\nassert.sameValue(map.delete(baz), false, 'Regular symbol key not present')\nassert.sameValue(map.delete(bar), false, \"Symbols with the same description don't alias to each other\");\nassert.sameValue(map.delete(Symbol.hasInstance), false, 'Well-known symbol key not present');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/returns-false-when-symbol-key-not-present.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.this-not-object-throw-boolean",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(false, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(false, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/this-not-object-throw-boolean.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.this-not-object-throw-null",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(null, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(null, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/this-not-object-throw-null.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.this-not-object-throw-number",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(0, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(0, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/this-not-object-throw-number.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.this-not-object-throw-string",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call('', {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call('', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/this-not-object-throw-string.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.this-not-object-throw-symbol",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(Symbol(), {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(Symbol(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/this-not-object-throw-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.delete.this-not-object-throw-undefined",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.delete.call(undefined, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.delete.call(undefined, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/delete/this-not-object-throw-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.does-not-have-weakmapdata-internal-slot-map",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call(new Map(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.get.call(new Map(), 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/does-not-have-weakmapdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.does-not-have-weakmapdata-internal-slot-set",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call(new Set(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.get.call(new Set(), 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/does-not-have-weakmapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.does-not-have-weakmapdata-internal-slot",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\n\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call([], 1);\n});\n\nassert.throws(TypeError, function() {\n  map.get.call([], 1);\n});\n\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call({}, 1);\n});\n\nassert.throws(TypeError, function() {\n  map.get.call({}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/does-not-have-weakmapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.get",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakMap.prototype.get,\n  'function',\n  '`typeof WeakMap.prototype.get` is `function`'\n);\n\nverifyProperty(WeakMap.prototype, 'get', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/get.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.not-a-constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakMap.prototype.get),\n  false,\n  'isConstructor(WeakMap.prototype.get) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let wm = new WeakMap(); new wm.get();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakMap",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.returns-undefined-if-key-cannot-be-held-weakly",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\n\nassert.sameValue(map.get(null), undefined, 'Returns undefined if key is null');\n\nassert.sameValue(map.get(NaN), undefined, 'Returns undefined if key is NaN');\n\nassert.sameValue(\n  map.get('foo'), undefined,\n  'Returns undefined if key is a String'\n);\n\nassert.sameValue(\n  map.get(1), undefined,\n  'Returns undefined if key is a Number'\n);\n\nassert.sameValue(\n  map.get(undefined), undefined,\n  'Returns undefined if key is undefined'\n);\n\nassert.sameValue(\n  map.get(Symbol.for('registered symbol')), undefined,\n  'Returns undefined if key is a registered Symbol'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/returns-undefined-if-key-cannot-be-held-weakly.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.returns-undefined-with-object-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar key = {};\n\nassert.sameValue(\n  map.get(key), undefined,\n  'returns undefined if key is not on the weakmap'\n);\n\nmap.set(key, 1);\nmap.set({}, 2);\nmap.delete(key);\nmap.set({}, 3);\n\nassert.sameValue(\n  map.get(key), undefined,\n  'returns undefined if key was deleted'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/returns-undefined-with-object-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.returns-undefined-with-symbol-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar key = Symbol('a description');\n\nassert.sameValue(map.get(key), undefined, 'returns undefined for regular symbol on initially empty map');\nassert.sameValue(\n  map.get(Symbol.hasInstance),\n  undefined,\n  'returns undefined for well-known symbol on initially empty map'\n);\n\nmap.set(key, 1);\nmap.set(Symbol.hasInstance, 2);\nmap.delete(key);\nmap.delete(Symbol.hasInstance);\n\nassert.sameValue(map.get(key), undefined, 'returns undefined for deleted regular symbol');\nassert.sameValue(map.get(Symbol.hasInstance), undefined, 'returns undefined for deleted well-known symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/returns-undefined-with-symbol-key.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.returns-value-with-object-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar bar = {};\nvar baz = [];\nvar map = new WeakMap([\n  [foo, 0]\n]);\n\nassert.sameValue(map.get(foo), 0);\n\nmap.set(bar, 1);\nassert.sameValue(map.get(bar), 1);\n\nmap.set(baz, 2);\nassert.sameValue(map.get(baz), 2);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/returns-value-with-object-key.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.returns-value-with-symbol-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar baz = Symbol('different description');\nvar map = new WeakMap([\n  [foo, 0],\n]);\n\nassert.sameValue(map.get(foo), 0, 'Regular symbol as key, added in constructor');\n\nmap.set(bar, 1);\nmap.set(baz, 2);\nassert.sameValue(map.get(baz), 2, 'Regular symbol as key, added with set()');\nassert.sameValue(map.get(bar), 1, \"Symbols with the same description don't overwrite each other\");\n\nmap.set(Symbol.hasInstance, 3);\nassert.sameValue(map.get(Symbol.hasInstance), 3, 'Well-known symbol as key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/returns-value-with-symbol-key.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.get.this-not-object-throw",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call(false, {});\n});\n\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call(1, {});\n});\n\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call('', {});\n});\n\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call(undefined, {});\n});\n\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call(null, {});\n});\n\nassert.throws(TypeError, function() {\n  WeakMap.prototype.get.call(Symbol(), {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.get.call(false, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/get/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.adds-object-element",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = {};\nvar bar = {};\nvar baz = {};\n\nmap.getOrInsert(foo, 1);\nmap.getOrInsert(bar, 2);\nmap.getOrInsert(baz, 3);\n\nassert.sameValue(map.has(foo), true);\nassert.sameValue(map.has(bar), true);\nassert.sameValue(map.has(baz), true);\n\nassert.sameValue(map.get(foo), 1);\nassert.sameValue(map.get(bar), 2);\nassert.sameValue(map.get(baz), 3);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/adds-object-element.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.adds-symbol-element",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\n\nmap.getOrInsert(foo, 1);\nmap.getOrInsert(bar, 2);\nmap.getOrInsert(Symbol.hasInstance, 3);\n\nassert.sameValue(map.has(bar), true, 'Regular symbol as key');\nassert.sameValue(map.get(foo), 1, \"Symbols with the same description don't overwrite each other\");\nassert.sameValue(map.has(Symbol.hasInstance), true, 'Well-known symbol as key');\n\nassert.sameValue(map.get(bar), 2);\nassert.sameValue(map.get(Symbol.hasInstance), 3);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/adds-symbol-element.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.does-not-have-weakmapdata-internal-slot-array",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsert.call([], {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.getOrInsert.call([], {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/does-not-have-weakmapdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.does-not-have-weakmapdata-internal-slot-map",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsert.call(new Map(), {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.getOrInsert.call(new Map(), {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/does-not-have-weakmapdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Map",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.does-not-have-weakmapdata-internal-slot-object",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsert.call({}, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.getOrInsert.call({}, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/does-not-have-weakmapdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.does-not-have-weakmapdata-internal-slot-set",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsert.call(new Set(), {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.getOrInsert.call(new Set(), {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/does-not-have-weakmapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.does-not-have-weakmapdata-internal-slot-weakmap-prototype",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsert.call(WeakMap.prototype, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.getOrInsert.call(WeakMap.prototype, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/does-not-have-weakmapdata-internal-slot-weakmap-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.getorinsert",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakMap.prototype.getOrInsert,\n  'function',\n  'typeof WeakMap.prototype.getOrInsert is \"function\"'\n);\n\nverifyProperty(WeakMap.prototype, \"getOrInsert\", {\n  value: WeakMap.prototype.getOrInsert,\n  writable: true,\n  enumerable: false,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/getOrInsert.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.not-a-constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakMap.prototype.getOrInsert),\n  false,\n  'isConstructor(WeakMap.prototype.getOrInsert) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let wm = new WeakMap(); new wm.getOrInsert({}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakMap",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.returns-value-if-key-is-not-present-object-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar bar = {};\nvar baz = [];\nvar map = new WeakMap();\n\nassert.sameValue(map.getOrInsert(foo, 0), 0);\n\nassert.sameValue(map.getOrInsert(bar, 1), 1);\n\nassert.sameValue(map.getOrInsert(baz, 2), 2);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/returns-value-if-key-is-not-present-object-key.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.returns-value-if-key-is-not-present-symbol-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar baz = Symbol('different description');\nvar map = new WeakMap();\n\nassert.sameValue(map.getOrInsert(foo, 0), 0);\n\nassert.sameValue(map.getOrInsert(baz, 2), 2);\nassert.sameValue(map.getOrInsert(bar, 1), 1);\n\nassert.sameValue(map.getOrInsert(Symbol.hasInstance, 3), 3);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/returns-value-if-key-is-not-present-symbol-key.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.returns-value-if-key-is-present-object-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar bar = {};\nvar baz = [];\nvar map = new WeakMap([\n  [foo, 0]\n]);\n\nassert.sameValue(map.getOrInsert(foo, 3), 0);\n\nmap.set(bar, 1);\nassert.sameValue(map.getOrInsert(bar, 4), 1);\n\nmap.set(baz, 2);\nassert.sameValue(map.getOrInsert(baz, 5), 2);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/returns-value-if-key-is-present-object-key.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.returns-value-if-key-is-present-symbol-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar baz = Symbol('different description');\nvar map = new WeakMap([\n  [foo, 0],\n]);\n\nassert.sameValue(map.getOrInsert(foo), 0, 'Regular symbol as key, added in constructor');\n\nmap.set(bar, 1);\nmap.set(baz, 2);\nassert.sameValue(map.getOrInsert(baz), 2, 'Regular symbol as key, added with set()');\nassert.sameValue(map.getOrInsert(bar), 1, \"Symbols with the same description don't overwrite each other\");\n\nmap.set(Symbol.hasInstance, 3);\nassert.sameValue(map.getOrInsert(Symbol.hasInstance), 3, 'Well-known symbol as key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/returns-value-if-key-is-present-symbol-key.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.this-not-object-throw",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new WeakMap();\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(false, {}, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(1, {}, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(\"\", {}, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(undefined, {}, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(null, {}, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(Symbol(), {}, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call('', {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsert.throw-if-key-cannot-be-held-weakly",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakMap();\n\nassert.throws(TypeError, function() {\n  s.getOrInsert(1, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.getOrInsert(false, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.getOrInsert(undefined, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.getOrInsert('string', 1);\n});\n\nassert.throws(TypeError, function() {\n  s.getOrInsert(null, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.getOrInsert(Symbol.for('registered symbol'), 1);\n}, 'Registered symbol not allowed as WeakMap key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsert/throw-if-key-cannot-be-held-weakly.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.adds-object-element",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = {};\nvar bar = {};\nvar baz = {};\n\nmap.getOrInsertComputed(foo, () => 1);\nmap.getOrInsertComputed(bar, () => 2);\nmap.getOrInsertComputed(baz, () => 3);\n\nassert.sameValue(map.has(foo), true);\nassert.sameValue(map.has(bar), true);\nassert.sameValue(map.has(baz), true);\n\nassert.sameValue(map.get(foo), 1);\nassert.sameValue(map.get(bar), 2);\nassert.sameValue(map.get(baz), 3);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/adds-object-element.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.adds-symbol-element",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\n\nmap.getOrInsertComputed(foo, () => 1);\nmap.getOrInsertComputed(bar, () => 2);\nmap.getOrInsertComputed(Symbol.hasInstance, () => 3);\n\nassert.sameValue(map.has(bar), true, 'Regular symbol as key');\nassert.sameValue(map.get(foo), 1, \"Symbols with the same description don't overwrite each other\");\nassert.sameValue(map.has(Symbol.hasInstance), true, 'Well-known symbol as key');\n\nassert.sameValue(map.get(bar), 2);\nassert.sameValue(map.get(Symbol.hasInstance), 3);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/adds-symbol-element.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.adds-value-different-callbackfn",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bar = {};\nvar baz = {};\nvar foo = {};\nvar foobar = {};\nvar foobarbaz = {};\n\nvar m = new WeakMap();\n\nassert.sameValue(\n    m.getOrInsertComputed(bar, function() {return 1;})\n    , 1);\nassert.sameValue(m.get(bar), 1);\n\n\nassert.sameValue(\n    m.getOrInsertComputed(baz, () => 2)\n    , 2);\nassert.sameValue(m.get(baz), 2);\n\n\nfunction three() {return 3;}\n\nassert.sameValue(\n    m.getOrInsertComputed(foo, three)\n    , 3);\nassert.sameValue(m.get(foo), 3);\n\n\nassert.sameValue(\n    m.getOrInsertComputed(foobar, new Function())\n    , undefined);\nassert.sameValue(m.get(foobar), undefined);\n\n\nassert.sameValue(\n    m.getOrInsertComputed(foobarbaz, (function() {return 5;}).bind(m))\n    , 5);\nassert.sameValue(m.get(foobarbaz), 5);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/adds-value-different-callbackfn.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "arrow-function",
+        "upsert",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.callbackfn-throws",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\n\nvar bar = {};\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(bar, function() {\n    throw new Error('throw in callback');\n  })\n}, Error);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/callbackfn-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "upsert",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.check-callback-fn-args",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar symbol = Symbol('a description');\n\nmap.getOrInsertComputed(symbol, function () {\n  assert.sameValue(this, undefined);\n  assert.sameValue(arguments.length, 1);\n  assert.sameValue(arguments[0], symbol);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/check-callback-fn-args.js",
+      "n_asserts": 3,
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [
+        "upsert",
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.check-state-after-callback-fn-throws",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nconst obj0 = {};\nconst obj1 = {};\nconst obj2 = {};\nconst obj3 = {};\nmap.set(obj0, 'zero');\nmap.set(obj1, 'one');\nmap.set(obj2, 'two');\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(Symbol('3'), function() {\n    throw new Error('throw in callback');\n  })\n});\n\n// Check the values after throwing in callbackfn.\nassert.sameValue(map.get(obj0), 'zero');\nassert.sameValue(map.get(obj1), 'one');\nassert.sameValue(map.get(obj2), 'two');\nassert.sameValue(map.has(obj3), false);\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(obj3, function() {\n    map.set(obj1, 'mutated');\n    throw new Error('throw in callback');\n  })\n});\n\n// Check the values after throwing in callbackfn, with mutation.\nassert.sameValue(map.get(obj0), 'zero');\nassert.sameValue(map.get(obj1), 'mutated');\nassert.sameValue(map.get(obj2), 'two');\nassert.sameValue(map.has(obj3), false);\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(obj3, function() {\n    map.set(obj3, 'mutated');\n    throw new Error('throw in callback');\n  })\n});\n\n// Check the values after throwing in callbackfn, with mutation.\nassert.sameValue(map.get(obj0), 'zero');\nassert.sameValue(map.get(obj1), 'mutated');\nassert.sameValue(map.get(obj2), 'two');\nassert.sameValue(map.get(obj3), 'mutated');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/check-state-after-callback-fn-throws.js",
+      "n_asserts": 15,
+      "flags": [],
+      "features": [
+        "upsert",
+        "WeakMap",
+        "Symbol",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.does-not-evaluate-callbackfn-if-key-present",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst obj1 = {};\nconst obj2 = {};\nconst obj3 = {};\nconst obj4 = {};\nconst map = new WeakMap();\nmap.set(obj1, 0);\n\nlet callbackCalls = 0;\nfunction callback() {\n  callbackCalls += 1;\n  throw new Error('Callbackfn should not be evaluated if key is present');\n}\n\nassert.sameValue(map.getOrInsertComputed(obj1, callback), 0);\n\nmap.set(obj2, 1);\nassert.sameValue(map.getOrInsertComputed(obj2, callback), 1);\n\nmap.set(obj3, 2);\nassert.sameValue(map.getOrInsertComputed(obj3, callback), 2);\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(obj4, callback)\n}, Error);\n\nassert.sameValue(callbackCalls, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/does-not-evaluate-callbackfn-if-key-present.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.does-not-have-weakmapdata-internal-slot-array",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsertComputed.call([], {}, () => 1);\n});\n\nvar map = new WeakMap();\nassert.throws(TypeError, function() {\n  map.getOrInsertComputed.call([], {}, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/does-not-have-weakmapdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "upsert",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.does-not-have-weakmapdata-internal-slot-map",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsertComputed.call(new Map(), {}, () => 1);\n});\n\nvar map = new WeakMap();\nassert.throws(TypeError, function() {\n  map.getOrInsertComputed.call(new Map(), {}, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/does-not-have-weakmapdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.does-not-have-weakmapdata-internal-slot-object",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsertComputed.call({}, {}, () => 1);\n});\n\nvar map = new WeakMap();\nassert.throws(TypeError, function() {\n  map.getOrInsertComputed.call({}, {}, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/does-not-have-weakmapdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "upsert",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.does-not-have-weakmapdata-internal-slot-set",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsertComputed.call(new Set(), {}, () => 1);\n});\n\nvar map = new WeakMap();\nassert.throws(TypeError, function() {\n  map.getOrInsertComputed.call(new Set(), {}, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/does-not-have-weakmapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set",
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.does-not-have-weakmapdata-internal-slot-weakmap-prototype",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.getOrInsertComputed.call(WeakMap.prototype, {}, () => 1);\n});\n\nvar map = new WeakMap();\nassert.throws(TypeError, function() {\n  map.getOrInsertComputed.call(WeakMap.prototype, {}, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/does-not-have-weakmapdata-internal-slot-weakmap-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.not-a-constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakMap.prototype.getOrInsertComputed),\n  false,\n  'isConstructor(WeakMap.prototype.getOrInsertComputed) must return false'\n);\n\nlet wm = new WeakMap();\nassert.throws(TypeError, () => {\n  new wm.getOrInsertComputed({}, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakMap",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.not-a-function-callbackfn-throws",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar bar = {};\nvar m = new WeakMap();\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, \"\");\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, true);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, undefined);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, null);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, {});\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, []);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, Symbol());\n});\n\n// Check that it also throws if the key is already present (thus it does not try to call the callback)\nm.set(bar, \"foo\");\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(bar, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/not-a-function-callbackfn-throws.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.overwrites-mutation-from-callbackfn",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = {};\nvar bar = {};\nvar baz = {};\n\nmap.getOrInsertComputed(foo, () => {map.set(foo, 0); return 3;});\nmap.getOrInsertComputed(bar, () => {map.set(bar, 1)});\nmap.getOrInsertComputed(baz, () => {map.set(baz, 2); return 'string';});\n\nassert.sameValue(map.get(foo), 3);\nassert.sameValue(map.get(bar), undefined);\nassert.sameValue(map.get(baz), 'string');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/overwrites-mutation-from-callbackfn.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.returns-value-if-key-is-not-present-object-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar bar = {};\nvar baz = [];\nvar map = new WeakMap();\n\nassert.sameValue(map.getOrInsertComputed(foo, () => 0), 0);\n\nassert.sameValue(map.getOrInsertComputed(bar, () => 1), 1);\n\nassert.sameValue(map.getOrInsertComputed(baz, () => 2), 2);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/returns-value-if-key-is-not-present-object-key.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.returns-value-if-key-is-not-present-symbol-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar baz = Symbol('different description');\nvar map = new WeakMap();\n\nassert.sameValue(map.getOrInsertComputed(foo, () => 0), 0, 'Regular symbol as key, added in constructor');\nassert.sameValue(map.getOrInsertComputed(baz, () => 2), 2, 'Regular symbol as key, added with set()');\nassert.sameValue(map.getOrInsertComputed(bar, () => 1), 1, \"Symbols with the same description don't overwrite each other\");\nassert.sameValue(map.getOrInsertComputed(Symbol.hasInstance, () => 3), 3, 'Well-known symbol as key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/returns-value-if-key-is-not-present-symbol-key.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.returns-value-if-key-is-present-object-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar bar = {};\nvar baz = [];\nvar map = new WeakMap([\n  [foo, 0]\n]);\n\nassert.sameValue(map.getOrInsertComputed(foo, () => 3), 0);\n\nmap.set(bar, 1);\nassert.sameValue(map.getOrInsertComputed(bar, () => 4), 1);\n\nmap.set(baz, 2);\nassert.sameValue(map.getOrInsertComputed(baz, () => 5), 2);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/returns-value-if-key-is-present-object-key.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.returns-value-if-key-is-present-symbol-key",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar baz = Symbol('different description');\nvar map = new WeakMap([\n  [foo, 0],\n]);\n\nassert.sameValue(map.getOrInsertComputed(foo, () => 3), 0, 'Regular symbol as key, added in constructor');\n\nmap.set(bar, 1);\nmap.set(baz, 2);\nassert.sameValue(map.getOrInsertComputed(baz, () => 4), 2, 'Regular symbol as key, added with set()');\nassert.sameValue(map.getOrInsertComputed(bar, () => 5), 1, \"Symbols with the same description don't overwrite each other\");\n\nmap.set(Symbol.hasInstance, 3);\nassert.sameValue(map.getOrInsertComputed(Symbol.hasInstance, () => 6), 3, 'Well-known symbol as key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/returns-value-if-key-is-present-symbol-key.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.this-not-object-throw",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new WeakMap();\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(false, {}, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(1, {}, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(\"\", {}, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(undefined, {}, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(null, {}, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(Symbol(), {}, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call('', {}, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.throw-if-key-cannot-be-held-weakly",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar log = [];\nvar invalidKeys = [1, false, undefined, 'string', null];\n\nvar s = new WeakMap();\n\nfor (let invalidKey of invalidKeys) {\n  assert.throws(TypeError, function () {\n    s.getOrInsertComputed(invalidKey,\n      () => log.push(`Unexpected evaluation of callback function, key: ${invalidKey}`));\n  }, `${typeof invalidKey} not allowed as WeakMap key`);\n}\n\nassert.throws(TypeError, function () {\n  s.getOrInsertComputed(Symbol.for('registered symbol'),\n    () => log.push(\"Unexpected callback evaluation\"));\n}, 'Registered symbol not allowed as WeakMap key');\n\nassert.compareArray(log, []);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/getOrInsertComputed/throw-if-key-cannot-be-held-weakly.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.does-not-have-weakmapdata-internal-slot-array",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call([], {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call([], {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/does-not-have-weakmapdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.does-not-have-weakmapdata-internal-slot-map",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(new Map(), {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(new Map(), {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/does-not-have-weakmapdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.does-not-have-weakmapdata-internal-slot-object",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call({}, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call({}, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/does-not-have-weakmapdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.does-not-have-weakmapdata-internal-slot-set",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(new Set(), {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(new Set(), {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/does-not-have-weakmapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.does-not-have-weakmapdata-internal-slot-weakmap-prototype",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(WeakMap.prototype, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(WeakMap.prototype, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/does-not-have-weakmapdata-internal-slot-weakmap-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.has",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakMap.prototype.has,\n  'function',\n  'typeof WeakMap.prototype.has is \"function\"'\n);\n\nverifyProperty(WeakMap.prototype, 'has', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/has.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.not-a-constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakMap.prototype.has),\n  false,\n  'isConstructor(WeakMap.prototype.has) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let wm = new WeakMap(); new wm.has();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakMap",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.returns-false-when-key-cannot-be-held-weakly",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\n\nassert.sameValue(map.has(1), false);\nassert.sameValue(map.has(''), false);\nassert.sameValue(map.has(null), false);\nassert.sameValue(map.has(undefined), false);\nassert.sameValue(map.has(true), false);\nassert.sameValue(map.has(Symbol.for('registered symbol')), false, 'Registered symbol not allowed as key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/returns-false-when-key-cannot-be-held-weakly.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.returns-false-when-object-key-not-present",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar bar = {};\nvar map = new WeakMap();\n\nassert.sameValue(map.has(foo), false);\n\nmap.set(foo, 1);\nassert.sameValue(map.has(bar), false);\n\nmap.delete(foo);\nassert.sameValue(map.has(foo), false);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/returns-false-when-object-key-not-present.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.returns-false-when-symbol-key-not-present",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar map = new WeakMap();\n\nassert.sameValue(map.has(foo), false, 'WeakMap is initially empty of regular symbol');\nassert.sameValue(map.has(Symbol.hasInstance), false, 'WeakMap is initially empty of well-known symbol');\n\nmap.set(foo, 1);\nassert.sameValue(map.has(bar), false, \"Symbols with the same description don't alias each other\");\n\nmap.delete(foo);\nassert.sameValue(map.has(foo), false, 'WeakMap is empty again of regular symbol after deleting');\n\nmap.set(Symbol.hasInstance, 2);\nmap.delete(Symbol.hasInstance);\nassert.sameValue(map.has(Symbol.hasInstance), false, 'WeakMap is empty again of well-known symbol after deleting');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/returns-false-when-symbol-key-not-present.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.returns-true-when-object-key-present",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar map = new WeakMap();\n\nmap.set(foo, 1);\nassert.sameValue(map.has(foo), true);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/returns-true-when-object-key-present.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.returns-true-when-symbol-key-present",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar map = new WeakMap();\n\nmap.set(foo, 1);\nmap.set(bar, 2);\nassert.sameValue(map.has(foo), true, \"Regular symbol as key\");\n\nmap.delete(foo);\nassert.sameValue(map.has(bar), true, \"Symbols with the same description don't alias each other\");\n\nmap.set(Symbol.hasInstance, 3);\nassert.sameValue(map.has(Symbol.hasInstance), true, \"Well-known symbol as key\");\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/returns-true-when-symbol-key-present.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.this-not-object-throw-boolean",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(false, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(false, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/this-not-object-throw-boolean.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.this-not-object-throw-null",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(null, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(null, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/this-not-object-throw-null.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.this-not-object-throw-number",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(0, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(0, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/this-not-object-throw-number.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.this-not-object-throw-string",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call('', {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call('', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/this-not-object-throw-string.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.this-not-object-throw-symbol",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(Symbol(), {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(Symbol(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/this-not-object-throw-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.has.this-not-object-throw-undefined",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.has.call(undefined, {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.has.call(undefined, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/has/this-not-object-throw-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.adds-object-element",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = {};\nvar bar = {};\nvar baz = {};\n\nmap.set(foo, 1);\nmap.set(bar, 2);\nmap.set(baz, 3);\n\nassert(map.has(foo));\nassert(map.has(bar));\nassert(map.has(baz));\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/adds-object-element.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.adds-symbol-element",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\n\nmap.set(foo, 1);\nmap.set(bar, 2);\nmap.set(Symbol.hasInstance, 3);\n\nassert(map.has(bar), 'Regular symbol as key');\nassert.sameValue(map.get(foo), 1, \"Symbols with the same description don't overwrite each other\");\nassert(map.has(Symbol.hasInstance), 'Well-known symbol as key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/adds-symbol-element.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.does-not-have-weakmapdata-internal-slot-array",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call([], {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call([], {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/does-not-have-weakmapdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.does-not-have-weakmapdata-internal-slot-map",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(new Map(), {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(new Map(), {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/does-not-have-weakmapdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.does-not-have-weakmapdata-internal-slot-object",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call({}, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call({}, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/does-not-have-weakmapdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.does-not-have-weakmapdata-internal-slot-set",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(new Set(), {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(new Set(), {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/does-not-have-weakmapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.does-not-have-weakmapdata-internal-slot-weakmap-prototype",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(WeakMap.prototype, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(WeakMap.prototype, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/does-not-have-weakmapdata-internal-slot-weakmap-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.not-a-constructor",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakMap.prototype.set),\n  false,\n  'isConstructor(WeakMap.prototype.set) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let wm = new WeakMap(); new wm.set({}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakMap",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.returns-this-when-ignoring-duplicate",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar map = new WeakMap([\n  [foo, 1]\n]);\n\nassert.sameValue(map.set(foo, 1), map, '`map.set(foo, 1)` returns `map`');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/returns-this-when-ignoring-duplicate.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.returns-this",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new WeakMap();\n\nassert.sameValue(map.set({}, 1), map, '`map.set({}, 1)` returns `map`');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/returns-this.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.set",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakMap.prototype.set,\n  'function',\n  'typeof WeakMap.prototype.set is \"function\"'\n);\n\nverifyProperty(WeakMap.prototype, 'set', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/set.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.this-not-object-throw-boolean",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(false, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(false, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/this-not-object-throw-boolean.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.this-not-object-throw-null",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(null, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(null, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/this-not-object-throw-null.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.this-not-object-throw-number",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(0, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(0, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/this-not-object-throw-number.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.this-not-object-throw-string",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call('', {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call('', {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/this-not-object-throw-string.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.this-not-object-throw-symbol",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(Symbol(), {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(Symbol(), {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/this-not-object-throw-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.this-not-object-throw-undefined",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap.prototype.set.call(undefined, {}, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new WeakMap();\n  map.set.call(undefined, {}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/this-not-object-throw-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.set.throw-if-key-cannot-be-held-weakly",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakMap();\n\nassert.throws(TypeError, function() {\n  s.set(1, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.set(false, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.set(undefined, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.set('string', 1);\n});\n\nassert.throws(TypeError, function() {\n  s.set(null, 1);\n});\n\nassert.throws(TypeError, function() {\n  s.set(Symbol.for('registered symbol'), 1);\n}, 'Registered symbol not allowed as WeakMap key');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/set/throw-if-key-cannot-be-held-weakly.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.prototype.symbol.tostringtag",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(WeakMap.prototype[Symbol.toStringTag], 'WeakMap');\n\nverifyProperty(WeakMap.prototype, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/prototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.weakmap.prototype-of-weakmap",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakMap));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(WeakMap),\n  Function.prototype,\n  '`Object.getPrototypeOf(WeakMap)` returns `Function.prototype`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/prototype-of-weakmap.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakmap.set-not-callable-throws",
+      "category": "weakmap",
+      "source": "test262",
+      "fixture": "function main(): void {\nWeakMap.prototype.set = null;\nnew WeakMap();\n\nassert.throws(TypeError, function() {\n  new WeakMap([]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakMap/set-not-callable-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.weakmap.undefined-newtarget",
       "category": "weakmap",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  WeakMap();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  WeakMap([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakMap();\n});\n\nassert.throws(TypeError, function() {\n  WeakMap([]);\n});\n}\nmain();\n",
       "origin": "test/built-ins/WeakMap/undefined-newtarget.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     }
   ]
 }

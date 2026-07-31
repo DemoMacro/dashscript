@@ -1,59 +1,468 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.asyncgeneratorprototype.next.iterator-result-prototype",
       "category": "asyncgeneratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nasync function* g() {}\n\ng().next().then(function (result) {\n  console.log(Object.prototype.hasOwnProperty.call(result, 'value'));\n  console.log(Object.prototype.hasOwnProperty.call(result, 'done'));\n  console.log(Object.getPrototypeOf(result));\n}).then($DONE, $DONE)\n}\nmain();\n",
+      "fixture": "function main(): void {\nasync function* g() {}\n\ng().next().then(function (result) {\n  assert(\n    Object.prototype.hasOwnProperty.call(result, 'value'), 'Has \"own\" property `value`'\n  );\n  assert(\n    Object.prototype.hasOwnProperty.call(result, 'done'), 'Has \"own\" property `done`'\n  );\n  assert.sameValue(Object.getPrototypeOf(result), Object.prototype);\n}).then($DONE, $DONE)\n}\nmain();\n",
       "origin": "test/built-ins/AsyncGeneratorPrototype/next/iterator-result-prototype.js",
       "n_asserts": 3,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-await-order",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar yieldorder = 0;\nvar resolveLatePromise;\n\nfunction resolveLater() {\n  return new Promise(resolve => {\n    resolveLatePromise = resolve;\n  });\n}\n\nasync function* g() {\n  yield resolveLater();\n  yield ++yieldorder;\n}\n\nvar iter = g();\n\nassert.sameValue(yieldorder, 0);\n\nvar item1 = iter.next();\nvar item2 = iter.next();\nvar item3 = iter.next();\n\nasync function awaitnexts() {\n  assert.sameValue((await item3).value, undefined)\n  assert.sameValue(yieldorder, 2, \"All next requests have been proccessed.\")\n  assert.sameValue((await item2).value, 2)\n  assert.sameValue((await item1).value, 1)\n}\n\nasyncTest(awaitnexts);\n\n// At this point:\n//   yieldorder == 0\n//   item1 is an unresolved promise\nresolveLatePromise(++yieldorder);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/next/request-queue-await-order.js",
+      "n_asserts": 5,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-order-state-executing",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iter, result;\nvar executionorder = 0;\nvar valueisset = false;\n\nasync function* g() {\n\n  iter.next().then(\n    function(result) {\n      assert(valueisset, \"variable valueisset should be set to true\");\n      assert.sameValue(++executionorder, 2);\n      assert.sameValue(result.value, 2);\n      assert.sameValue(result.done, false);\n    },\n    function() {\n      $DONE(new Test262Error(\"next() should result in resolved promise.\"));\n    }\n  ).catch($DONE)\n\n  valueisset = true;\n\n  yield 1;\n  yield 2;\n}\n\niter = g();\n\niter.next().then(function(result) {\n  assert.sameValue(++executionorder, 1);\n  assert.sameValue(result.value, 1);\n  assert.sameValue(result.done, false);\n\n  iter.next().then(function(result) {\n    assert.sameValue(++executionorder, 3);\n    assert.sameValue(result.value, undefined);\n    assert.sameValue(result.done, true);\n  }).then($DONE, $DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/next/request-queue-order-state-executing.js",
+      "n_asserts": 10,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-order",
       "category": "asyncgeneratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar order = 0;\n\nasync function* g() {\n  yield 'first';\n  yield 'second';\n}\n\nvar iter = g();\n\nvar item1 = iter.next();\nvar item2 = iter.next();\nvar item3 = iter.next();\n\nvar resolvedorder = 0;\n\nPromise.all([\n\n  item3.then(function(result) {\n    resolvedorder++;\n    console.log(resolvedorder);\n    console.log(result.value);\n    console.log(result.done);\n  }),\n\n  item2.then(function(result) {\n    resolvedorder++;\n    console.log(resolvedorder);\n    console.log(result.value);\n    console.log(result.done);\n  }),\n\n  item1.then(function(result) {\n    resolvedorder++;\n    console.log(resolvedorder);\n    console.log(result.value);\n    console.log(result.done);\n  })\n\n]).then(function() { $DONE(); }, $DONE);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar order = 0;\n\nasync function* g() {\n  yield 'first';\n  yield 'second';\n}\n\nvar iter = g();\n\nvar item1 = iter.next();\nvar item2 = iter.next();\nvar item3 = iter.next();\n\nvar resolvedorder = 0;\n\nPromise.all([\n\n  item3.then(function(result) {\n    resolvedorder++;\n    assert.sameValue(resolvedorder, 3);\n    assert.sameValue(result.value, undefined);\n    assert.sameValue(result.done, true);\n  }),\n\n  item2.then(function(result) {\n    resolvedorder++;\n    assert.sameValue(resolvedorder, 2);\n    assert.sameValue(result.value, \"second\");\n    assert.sameValue(result.done, false);\n  }),\n\n  item1.then(function(result) {\n    resolvedorder++;\n    assert.sameValue(resolvedorder, 1);\n    assert.sameValue(result.value, \"first\");\n    assert.sameValue(result.done, false);\n  })\n\n]).then(function() { $DONE(); }, $DONE);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncGeneratorPrototype/next/request-queue-order.js",
       "n_asserts": 9,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-promise-resolve-order",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar yieldorder = 0;\nvar resolveLatePromise;\n\nfunction resolveLater() {\n  return new Promise(resolve => {\n    resolveLatePromise = resolve;\n  });\n}\n\nasync function* g() {\n  yield resolveLater();\n  yield ++yieldorder;\n}\n\nvar iter = g();\n\nvar item1 = iter.next();\nvar item2 = iter.next();\nvar item3 = iter.next();\n\nvar resolvedorder = 0;\n\nPromise.all([\n\n  item3.then(function(result) {\n    resolvedorder++;\n    assert.sameValue(resolvedorder, 3);\n    assert.sameValue(result.value, undefined);\n    assert.sameValue(result.done, true);\n  }),\n\n  item2.then(function(result) {\n    resolvedorder++;\n    assert.sameValue(resolvedorder, 2);\n    assert.sameValue(result.value, 2);\n    assert.sameValue(result.done, false);\n  }),\n\n  item1.then(function(result) {\n    resolvedorder++;\n    assert.sameValue(resolvedorder, 1);\n    assert.sameValue(result.value, 1);\n    assert.sameValue(result.done, false);\n  })\n\n]).then(function() { $DONE(); }, $DONE);\n\n// At this point:\n//   yieldorder == 0\n//   item1 is an unresolved promise\nresolveLatePromise(++yieldorder);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/next/request-queue-promise-resolve-order.js",
+      "n_asserts": 9,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncgeneratorprototype.next.return-promise",
       "category": "asyncgeneratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nasync function* g() {}\nvar result = g().next()\n\nconsole.log(result instanceof Promise)\n}\nmain();\n",
+      "fixture": "function main(): void {\nasync function* g() {}\nvar result = g().next()\n\nassert(result instanceof Promise)\n}\nmain();\n",
       "origin": "test/built-ins/AsyncGeneratorPrototype/next/return-promise.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncgeneratorprototype.return.iterator-result-prototype",
       "category": "asyncgeneratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nasync function* g() {}\n\ng().return().then(function (result) {\n  console.log(Object.prototype.hasOwnProperty.call(result, 'value'));\n  console.log(Object.prototype.hasOwnProperty.call(result, 'done'));\n  console.log(Object.getPrototypeOf(result));\n}).then($DONE, $DONE)\n}\nmain();\n",
+      "fixture": "function main(): void {\nasync function* g() {}\n\ng().return().then(function (result) {\n  assert(\n    Object.prototype.hasOwnProperty.call(result, 'value'), 'Has \"own\" property `value`'\n  );\n  assert(\n    Object.prototype.hasOwnProperty.call(result, 'done'), 'Has \"own\" property `done`'\n  );\n  assert.sameValue(Object.getPrototypeOf(result), Object.prototype);\n}).then($DONE, $DONE)\n}\nmain();\n",
       "origin": "test/built-ins/AsyncGeneratorPrototype/return/iterator-result-prototype.js",
       "n_asserts": 3,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.request-queue-order-state-executing",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iter;\nvar executionorder = 0;\nvar valueisset = false;\n\nasync function* g() {\n\n  iter.return(42).then(\n    function(result) {\n      assert(valueisset, \"variable valueisset should be set to true\");\n      assert.sameValue(++executionorder, 2);\n      assert.sameValue(result.value, 42);\n      assert.sameValue(result.done, true);\n    }\n  ).catch($DONE);\n\n  valueisset = true;\n\n  yield 1;\n  throw new Test262Error(\"This line should no be reached: generator closed by return\");\n}\n\niter = g();\n\niter.next().then(function(result) {\n\n  assert.sameValue(++executionorder, 1);\n  assert.sameValue(result.value, 1);\n  assert.sameValue(result.done, false);\n\n  iter.next().then(function(result) {\n    assert.sameValue(++executionorder, 3);\n    assert.sameValue(result.value, undefined);\n    assert.sameValue(result.done, true);\n  }).then($DONE, $DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/request-queue-order-state-executing.js",
+      "n_asserts": 10,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-promise",
       "category": "asyncgeneratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nasync function* g() {}\nvar result = g().return()\n\nconsole.log(result instanceof Promise)\n}\nmain();\n",
+      "fixture": "function main(): void {\nasync function* g() {}\nvar result = g().return()\n\nassert(result instanceof Promise)\n}\nmain();\n",
       "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-promise.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-state-completed-broken-promise",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet unblock;\nlet blocking = new Promise(resolve => { unblock = resolve; });\nlet unblocked = false;\nvar g = async function*() {\n  await blocking;\n  unblocked = true;\n};\n\nvar it = g();\nlet brokenPromise = Promise.resolve(42);\nObject.defineProperty(brokenPromise, 'constructor', {\n  get: function () {\n    throw new Error('broken promise');\n  }\n});\n\nit.next().then(function(result) {\n  assert.sameValue(result.value, undefined);\n  assert.sameValue(result.done, true);\n\n  it.return(brokenPromise)\n    .then(\n      () => {\n        throw new Test262Error(\"Expected rejection\");\n      },\n      err => {\n        assert(unblocked, 'return should be rejected when the generator is completed');\n        assert.sameValue(err.message, 'broken promise');\n      }\n    )\n    .then($DONE, $DONE);\n});\n\nunblock();\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-state-completed-broken-promise.js",
+      "n_asserts": 4,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-state-completed",
       "category": "asyncgeneratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar g = async function*() {};\n\nvar iter = g();\niter.next().then(function(result) {\n  console.log(result.value);\n  console.log(result.done);\n\n  iter.return(42).then(function(result) {\n    console.log(result.value)\n    console.log(result.done)\n  }).then($DONE, $DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar g = async function*() {};\n\nvar iter = g();\niter.next().then(function(result) {\n  assert.sameValue(result.value, undefined);\n  assert.sameValue(result.done, true);\n\n  iter.return(42).then(function(result) {\n    assert.sameValue(result.value, 42)\n    assert.sameValue(result.done, true)\n  }).then($DONE, $DONE);\n\n}).catch($DONE);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-state-completed.js",
       "n_asserts": 4,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedstart-broken-promise",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nlet brokenPromise = Promise.resolve(42);\nObject.defineProperty(brokenPromise, 'constructor', {\n  get: function () {\n    throw new Error('broken promise');\n  }\n});\n\nit.return(brokenPromise)\n  .then(\n    () => {\n      throw new Test262Error(\"Expected rejection\");\n    },\n    err => {\n      assert.sameValue(err.message, 'broken promise');\n    }\n  )\n  .then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedStart-broken-promise.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedstart-promise",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nvar resolve;\nvar promise = new Promise(function(resolver) {\n  resolve = resolver;\n});\n\nit.return(promise).then(function(ret) {\n  assert.sameValue(ret.value, 'unwrapped-value', 'AsyncGeneratorResolve(generator, completion.[[Value]], true)');\n  assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, completion.[[Value]], true)');\n\n  it.next().then(function(ret) {\n    assert.sameValue(ret.value, undefined, 'Generator is closed');\n    assert.sameValue(ret.done, true, 'Generator is closed');\n  }).then($DONE, $DONE);\n}).catch($DONE);\n\nresolve('unwrapped-value');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedStart-promise.js",
+      "n_asserts": 4,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedstart",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nit.return('sent-value').then(function(ret) {\n  assert.sameValue(ret.value, 'sent-value', 'AsyncGeneratorResolve(generator, completion.[[Value]], true)');\n  assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, completion.[[Value]], true)');\n\n  it.next().then(function(ret) {\n    assert.sameValue(ret.value, undefined, 'Generator is closed');\n    assert.sameValue(ret.done, true, 'Generator is closed');\n  }).then($DONE, $DONE);\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedStart.js",
+      "n_asserts": 4,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-broken-promise-try-catch",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet caughtErr;\nvar g = async function*() {\n  try {\n    yield;\n    return 'this is never returned';\n  } catch (err) {\n    caughtErr = err;\n    return 1;\n  }\n};\n\nlet brokenPromise = Promise.resolve(42);\nObject.defineProperty(brokenPromise, 'constructor', {\n  get: function () {\n    throw new Error('broken promise');\n  }\n});\n\nvar it = g();\nit.next().then(() => {\n  return it.return(brokenPromise);\n}).then(ret => {\n  assert.sameValue(caughtErr.message, 'broken promise');\n  assert.sameValue(ret.value, 1, 'returned value');\n  assert.sameValue(ret.done, true, 'iterator is closed');\n}).then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedYield-broken-promise-try-catch.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-promise",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  yield 1;\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nvar resolve;\nvar promise = new Promise(function(resolver) {\n  resolve = resolver;\n});\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.return(promise).then(function(ret) {\n    assert.sameValue(ret.value, 'unwrapped-value', 'AsyncGeneratorResolve(generator, resultValue, true)');\n    assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, resultValue, true)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n    \n  }).catch($DONE);\n\n  resolve('unwrapped-value');\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedYield-promise.js",
+      "n_asserts": 6,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-try-finally-return",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  try {\n    yield 1;\n    throw new Test262Error('Generator must be resumed in finally block.');\n  } finally {\n    return 'done';\n  }\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.return('sent-value').then(function(ret) {\n    assert.sameValue(ret.value, 'done', 'AsyncGeneratorResolve(generator, resultValue, true)');\n    assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, resultValue, true)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n    \n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedYield-try-finally-return.js",
+      "n_asserts": 6,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-try-finally-throw",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar error = new Error(\"boop\");\nvar g = async function*() {\n  try {\n    yield 1;\n    throw new Test262Error('Generator must be resumed in finally block.');\n  } finally {\n    throw error;\n    throw new Test262Error('Generator must not be resumed.');\n  }\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.return('sent-value').then($DONE, function(err) {\n    assert.sameValue(err, error, 'AsyncGeneratorReject(generator, resultValue)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n    \n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedYield-try-finally-throw.js",
+      "n_asserts": 5,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-try-finally",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  try {\n    yield 1;\n    throw new Test262Error('Generator must be resumed in finally block.');\n  } finally {\n    yield 2;\n  }\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.return('sent-value').then(function(ret) {\n    assert.sameValue(ret.value, 2, 'Yield in finally block');\n    assert.sameValue(ret.done, false, 'Yield in finally block');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, 'sent-value', 'AsyncGeneratorResolve(generator, resultValue, true)');\n      assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, resultValue, true)');\n\n      it.next().then(function(ret) {\n        assert.sameValue(ret.value, undefined, 'Generator is closed');\n        assert.sameValue(ret.done, true, 'Generator is closed');\n      }).then($DONE, $DONE);\n\n    }).catch($DONE);\n    \n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedYield-try-finally.js",
+      "n_asserts": 8,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  yield 1;\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.return('sent-value').then(function(ret) {\n    assert.sameValue(ret.value, 'sent-value', 'AsyncGeneratorResolve(generator, resultValue, true)');\n    assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, resultValue, true)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n    \n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/return/return-suspendedYield.js",
+      "n_asserts": 6,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.request-queue-order-state-executing",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iter, result;\nvar thrownErr = new Error(\"Catch me.\");\nvar caughtErr;\n\nvar order = 0;\nvar promises = []\n\nasync function* g() {\n\n  iter.throw(thrownErr).then(\n    function() {\n      $DONE(new Test262Error(\"throw() should result in reject promise.\"));\n    },\n    function(e) {\n      caughtErr = e;\n      order++;\n    }\n  );\n\n  yield 1;\n  yield 2;\n}\n\niter = g();\n\niter.next().then(function(result) {\n\n  assert.sameValue(++order, 1);\n  assert.sameValue(result.value, 1);\n  assert.sameValue(result.done, false);\n\n  iter.next().then(function(result) {\n    assert.sameValue(++order, 3);\n    assert.sameValue(caughtErr, thrownErr);\n    assert.sameValue(result.done, true);\n  }).then($DONE, $DONE);\n\n}).catch($DONE)\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/request-queue-order-state-executing.js",
+      "n_asserts": 6,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.return-rejected-promise",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nasync function* g() {}\n\nvar errormessage = \"Promise rejected.\"\nvar result = g().throw(new Test262Error(errormessage))\n\nassert(result instanceof Promise, \"Expected result to be an instanceof Promise\")\n\nresult.then(\n  function () {\n    throw new Test262Error(\"Expected result to be rejected promise.\");\n  },\n  function (e) {\n    if (!(e.message = errormessage)) {\n      throw new Test262Error(\"Expected thrown custom error, got \" + e);\n    }\n  }\n).then($DONE, $DONE)\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/return-rejected-promise.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-state-completed",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar throwError = new Error('Catch me');\nvar g = async function*() {};\n\nvar iter = g();\niter.next().then(function(result) {\n  assert.sameValue(result.value, undefined);\n  assert.sameValue(result.done, true);\n\n  iter.throw(throwError).then($DONE, function(err) {\n    assert.sameValue(err, throwError)\n  }).then($DONE, $DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-state-completed.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedstart-promise",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nvar promise = new Promise(function() {});\n\nit.throw(promise).then($DONE, function(err) {\n  assert.sameValue(err, promise, 'AsyncGeneratorReject(generator, completion.[[Value]])');\n\n  it.next().then(function(ret) {\n    assert.sameValue(ret.value, undefined, 'Generator is closed');\n    assert.sameValue(ret.done, true, 'Generator is closed');\n  }).then($DONE, $DONE);\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedStart-promise.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedstart",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar error = new Error('boop');\nvar g = async function*() {\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nit.throw(error).then($DONE, function(err) {\n  assert.sameValue(err, error, 'AsyncGeneratorReject(generator, completion.[[Value]])');\n\n  it.next().then(function(ret) {\n    assert.sameValue(ret.value, undefined, 'Generator is closed');\n    assert.sameValue(ret.done, true, 'Generator is closed');\n  }).then($DONE, $DONE);\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedStart.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-promise",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar g = async function*() {\n  yield 1;\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nvar promise = new Promise(function() {});\n\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.throw(promise).then($DONE, function(err) {\n    assert.sameValue(err, promise, 'AsyncGeneratorReject(generator, resultValue)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedYield-promise.js",
+      "n_asserts": 5,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-catch",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar error = new Error('boop');\nvar g = async function*() {\n  try {\n    yield 1;\n    throw new Test262Error('Generator must be resumed in catch block.');\n  } catch (err) {\n    assert.sameValue(err, error);\n    return 'done';\n  }\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.throw(error).then(function(ret) {\n    assert.sameValue(ret.value, 'done', 'AsyncGeneratorResolve(generator, resultValue, true)');\n    assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, resultValue, true)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedYield-try-catch.js",
+      "n_asserts": 7,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-finally-return",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass Err extends Error {};\nvar g = async function*() {\n  try {\n    yield 1;\n    throw new Test262Error('Generator must be resumed in finally block.');\n  } finally {\n    return 'done';\n    throw new Test262Error('Generator must not be resumed.');\n  }\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.throw(new Err).then(function(ret) {\n    assert.sameValue(ret.value, 'done', 'AsyncGeneratorResolve(generator, resultValue, true)');\n    assert.sameValue(ret.done, true, 'AsyncGeneratorResolve(generator, resultValue, true)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedYield-try-finally-return.js",
+      "n_asserts": 6,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-finally-throw",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar error = new Error('boop');\nvar g = async function*() {\n  try {\n    yield 1;\n    throw new Test262Error('Generator must be resumed in finally block.');\n  } finally {\n    throw error;\n    throw new Test262Error('Generator must not be resumed.');\n  }\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.throw(new Error('superceded')).then($DONE, function(err) {\n    assert.sameValue(err, error, 'AsyncGeneratorReject(generator, resultValue)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedYield-try-finally-throw.js",
+      "n_asserts": 5,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-finally",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar error = new Error('boop');\nvar g = async function*() {\n  try {\n    yield 1;\n    throw new Test262Error('Generator must be resumed in finally block.');\n  } finally {\n    yield 2;\n  }\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.throw(error).then(function(ret) {\n    assert.sameValue(ret.value, 2, 'Yield in finally block');\n    assert.sameValue(ret.done, false, 'Yield in finally block');\n\n    it.next().then($DONE, function(err) {\n      assert.sameValue(err, error, 'AsyncGeneratorReject(generator, returnValue)');\n\n      it.next().then(function(ret) {\n        assert.sameValue(ret.value, undefined, 'Generator is closed');\n        assert.sameValue(ret.done, true, 'Generator is closed');\n      }).then($DONE, $DONE);\n\n    }).catch($DONE);\n    \n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedYield-try-finally.js",
+      "n_asserts": 7,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield",
+      "category": "asyncgeneratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar error = new Error('boop');\nvar g = async function*() {\n  yield 1;\n  throw new Test262Error('Generator must not be resumed.');\n};\n\nvar it = g();\nit.next().then(function(ret) {\n  assert.sameValue(ret.value, 1, 'Initial yield');\n  assert.sameValue(ret.done, false, 'Initial yield');\n\n  it.throw(error).then($DONE, function(err) {\n    assert.sameValue(err, error, 'AsyncGeneratorReject(generator, resultValue)');\n\n    it.next().then(function(ret) {\n      assert.sameValue(ret.value, undefined, 'Generator is closed');\n      assert.sameValue(ret.done, true, 'Generator is closed');\n    }).then($DONE, $DONE);\n    \n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncGeneratorPrototype/throw/throw-suspendedYield.js",
+      "n_asserts": 5,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     }
   ]
 }

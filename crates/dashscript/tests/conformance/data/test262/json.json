@@ -1,824 +1,1795 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.json.15.12-0-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar o = JSON;\n\nconsole.log(typeof(o));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar o = JSON;\n\nassert.sameValue(typeof(o), \"object\", 'typeof(o)');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/15.12-0-1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.15.12-0-2",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = JSON;\nassert.throws(TypeError, function() {\n  var j = new JSON();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/15.12-0-2.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.15.12-0-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar o = JSON;\ntry { (function() {\n  var j = JSON();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar o = JSON;\nassert.throws(TypeError, function() {\n  var j = JSON();\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/15.12-0-3.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.15.12-0-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar o = JSON;\nvar i = 0;\nfor (var p in o) {\n  i++;\n}\n\n\nconsole.log(i);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar o = JSON;\nvar i = 0;\nfor (var p in o) {\n  i++;\n}\n\n\nassert.sameValue(i, 0, 'i');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/15.12-0-4.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.israwjson.basic",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconst values = [1, 1.1, null, false, true, '123'];\nfor (const value of values) {\n  console.log(!JSON.isRawJSON(value));\n  console.log(JSON.isRawJSON(JSON.rawJSON(value)));\n}\nconsole.log(!JSON.isRawJSON(undefined));\nconsole.log(!JSON.isRawJSON(Symbol('123')));\nconsole.log(!JSON.isRawJSON([]));\nconsole.log(!JSON.isRawJSON({}));\nconsole.log(!JSON.isRawJSON({ rawJSON: '123' }));\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst values = [1, 1.1, null, false, true, '123'];\nfor (const value of values) {\n  assert(!JSON.isRawJSON(value));\n  assert(JSON.isRawJSON(JSON.rawJSON(value)));\n}\nassert(!JSON.isRawJSON(undefined));\nassert(!JSON.isRawJSON(Symbol('123')));\nassert(!JSON.isRawJSON([]));\nassert(!JSON.isRawJSON({}));\nassert(!JSON.isRawJSON({ rawJSON: '123' }));\n}\nmain();\n",
       "origin": "test/built-ins/JSON/isRawJSON/basic.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.israwjson.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(JSON.isRawJSON));\nconsole.log(typeof JSON.isRawJSON);\nconsole.log(Object.getPrototypeOf(JSON.isRawJSON));\n\nconsole.log(Object.getOwnPropertyDescriptor(JSON.isRawJSON, \"prototype\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Object.isExtensible(JSON.isRawJSON), \"JSON.isRawJSON is extensible\");\nassert.sameValue(\n  typeof JSON.isRawJSON,\n  'function',\n  'The value of `typeof JSON.isRawJSON` is \"function\"'\n);\nassert.sameValue(\n  Object.getPrototypeOf(JSON.isRawJSON),\n  Function.prototype,\n  'Object.getPrototypeOf(JSON.isRawJSON) must return the value of \"Function.prototype\"'\n);\n\nassert.sameValue(\n  Object.getOwnPropertyDescriptor(JSON.isRawJSON, \"prototype\"),\n  undefined,\n  \"JSON.isRawJSON has no own prototype property\"\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/isRawJSON/builtin.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.israwjson.not-a-constructor",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(JSON.isRawJSON), false, 'isConstructor(JSON.isRawJSON) must return false');\n\nassert.throws(TypeError, () => {\n  new JSON.isRawJSON();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/isRawJSON/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "json-parse-with-source",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('12\\t\\r\\n 34'); // should produce a syntax error as whitespace results in two tokens\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('12\\t\\r\\n 34'); // should produce a syntax error as whitespace results in two tokens\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u000b1234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u000b1234'); // should produce a syntax error \n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u000c1234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u000c1234'); // should produce a syntax error \n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-3.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u00a01234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u00a01234'); // should produce a syntax error \n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-4.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-5",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u200b1234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u200b1234'); // should produce a syntax error \n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-5.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-6",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\ufeff1234'); // should produce a syntax error a\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\ufeff1234'); // should produce a syntax error a\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-6.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-0-8",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u2028\\u20291234'); // should produce a syntax error \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u2028\\u20291234'); // should produce a syntax error \n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-0-8.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\t1234'));\n\ntry { (function() {\n    JSON.parse('12\\t34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\\t1234'), 1234, '<TAB> should be ignored');\n\nassert.throws(SyntaxError, function() {\n    JSON.parse('12\\t34');\n}, '<TAB> should produce a syntax error as whitespace results in two tokens');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-1.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\r1234'));\n\ntry { (function() {\n    JSON.parse('12\\r34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\\r1234'), 1234, '<cr> should be ignored');\n\nassert.throws(SyntaxError, function() {\n    JSON.parse('12\\r34');\n}, '<CR> should produce a syntax error as whitespace results in two tokens');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-2.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\\n1234'));\n\ntry { (function() {\n    JSON.parse('12\\n34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\\n1234'), 1234, '<LF> should be ignored');\n\nassert.throws(SyntaxError, function() {\n    JSON.parse('12\\n34');\n}, '<LF> should produce a syntax error as whitespace results in two tokens');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-3.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g1-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse(' 1234'));\n\ntry { (function() {\n    JSON.parse('12 34');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse(' 1234'), 1234, '<SP> should be ignored');\n\nassert.throws(SyntaxError, function() {\n    JSON.parse('12 34');\n}, '<SP> should produce a syntax error as whitespace results in two tokens');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g1-4.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"abc\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"abc\"'), \"abc\", 'JSON.parse(\\'\"abc\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse(\"'abc'\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse(\"'abc'\");\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse(\"\\\\u0022abc\\\\u0022\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse(\"\\\\u0022abc\\\\u0022\");\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-3.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\"ab'+\"c'\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\"ab'+\"c'\");\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-4.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-5",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\"'), \"\", 'JSON.parse(\\'\"\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g2-5.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n    JSON.parse('\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\"'); // invalid string characters should produce a syntax error\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0008\\u0009\\u000a\\u000b\\u000c\\u000d\\u000e\\u000f\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n    JSON.parse('\"\\u0008\\u0009\\u000a\\u000b\\u000c\\u000d\\u000e\\u000f\"'); // invalid string characters should produce a syntax error\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n    JSON.parse('\"\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\"'); // invalid string characters should produce a syntax error\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-3.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g4-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    JSON.parse('\"\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"'); // invalid string characters should produce a syntax error\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n    JSON.parse('\"\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\"'); // invalid string characters should produce a syntax error\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g4-4.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\u0058\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\u0058\"'), 'X', 'JSON.parse(\\'\"\\\\u0058\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g5-1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n        JSON.parse('\"\\\\u005\"') \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n        JSON.parse('\"\\\\u005\"') \n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g5-2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n        JSON.parse('\"\\\\u0X50\"') \n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n        JSON.parse('\"\\\\u0X50\"') \n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g5-3.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\/\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\/\"'), '/', 'JSON.parse(\\'\"\\\\/\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g6-1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-2",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\\\\\\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\\\\\\"'), '\\\\', 'JSON.parse(\\'\"\\\\\\\\\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g6-2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-3",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\b\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\b\"'), '\\b', 'JSON.parse(\\'\"\\\\b\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g6-3.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-4",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\f\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\f\"'), '\\f', 'JSON.parse(\\'\"\\\\f\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g6-4.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-5",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\n\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\n\"'), '\\n', 'JSON.parse(\\'\"\\\\n\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g6-5.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-6",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\r\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\r\"'), '\\r', 'JSON.parse(\\'\"\\\\r\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g6-6.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-7",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('\"\\\\t\"'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('\"\\\\t\"'), '\\t', 'JSON.parse(\\'\"\\\\t\"\\')');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/15.12.1.1-g6-7.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-1",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ ' + nullChars[index] + ' : \"John\" } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-1.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-10",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ \"name\" : ' + \"Jo\" + nullChars[index] + \"hn\" + ' } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-10.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-2",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ ' + nullChars[index] + \"name\" + ' : \"John\" } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-2.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-3",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{' + \"name\" + nullChars[index] + ' : \"John\" } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-3.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-4",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{' + nullChars[index] + \"name\" + nullChars[index] + ' : \"John\" } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-4.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-5",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ ' + \"na\" + nullChars[index] + \"me\" + ' : \"John\" } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-5.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-6",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ \"name\" : ' + nullChars[index] + ' } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-6.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-7",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ \"name\" : ' + nullChars[index] + \"John\" + ' } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-7.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-8",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ \"name\" : ' + \"John\" + nullChars[index] + ' } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-8.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.15.12.2-2-9",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nullChars = new Array();\nnullChars[0] = '\\\"\\u0000\\\"';\nnullChars[1] = '\\\"\\u0001\\\"';\nnullChars[2] = '\\\"\\u0002\\\"';\nnullChars[3] = '\\\"\\u0003\\\"';\nnullChars[4] = '\\\"\\u0004\\\"';\nnullChars[5] = '\\\"\\u0005\\\"';\nnullChars[6] = '\\\"\\u0006\\\"';\nnullChars[7] = '\\\"\\u0007\\\"';\nnullChars[8] = '\\\"\\u0008\\\"';\nnullChars[9] = '\\\"\\u0009\\\"';\nnullChars[10] = '\\\"\\u000A\\\"';\nnullChars[11] = '\\\"\\u000B\\\"';\nnullChars[12] = '\\\"\\u000C\\\"';\nnullChars[13] = '\\\"\\u000D\\\"';\nnullChars[14] = '\\\"\\u000E\\\"';\nnullChars[15] = '\\\"\\u000F\\\"';\nnullChars[16] = '\\\"\\u0010\\\"';\nnullChars[17] = '\\\"\\u0011\\\"';\nnullChars[18] = '\\\"\\u0012\\\"';\nnullChars[19] = '\\\"\\u0013\\\"';\nnullChars[20] = '\\\"\\u0014\\\"';\nnullChars[21] = '\\\"\\u0015\\\"';\nnullChars[22] = '\\\"\\u0016\\\"';\nnullChars[23] = '\\\"\\u0017\\\"';\nnullChars[24] = '\\\"\\u0018\\\"';\nnullChars[25] = '\\\"\\u0019\\\"';\nnullChars[26] = '\\\"\\u001A\\\"';\nnullChars[27] = '\\\"\\u001B\\\"';\nnullChars[28] = '\\\"\\u001C\\\"';\nnullChars[29] = '\\\"\\u001D\\\"';\nnullChars[30] = '\\\"\\u001E\\\"';\nnullChars[31] = '\\\"\\u001F\\\"';\n\nfor (var index in nullChars) {\n  assert.throws(SyntaxError, function() {\n    var obj = JSON.parse('{ \"name\" : ' + nullChars[index] + \"John\" + nullChars[index] + ' } ');\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/15.12.2-2-9.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar parse = JSON.parse;\nconsole.log(Object.isExtensible(parse));\nconsole.log(typeof parse);\nconsole.log(Object.prototype.toString.call(parse));\nconsole.log(Object.getPrototypeOf(parse));\nconsole.log(parse.hasOwnProperty('prototype'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar parse = JSON.parse;\nassert(Object.isExtensible(parse), 'Object.isExtensible(parse) must return true');\nassert.sameValue(typeof parse, 'function', 'The value of `typeof parse` is \"function\"');\nassert.sameValue(\n  Object.prototype.toString.call(parse),\n  '[object Function]',\n  'Object.prototype.toString.call(\"JSON.parse\") must return \"[object Function]\"'\n);\nassert.sameValue(\n  Object.getPrototypeOf(parse),\n  Function.prototype,\n  'Object.getPrototypeOf(\"JSON.parse\") must return the value of Function.prototype'\n);\nassert.sameValue(\n  parse.hasOwnProperty('prototype'),\n  false,\n  'parse.hasOwnProperty(\"prototype\") must return false'\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/builtin.js",
       "n_asserts": 5,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.duplicate-proto",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar result = JSON.parse('{ \"__proto__\": 1, \"__proto__\": 2 }');\n\nconsole.log(result.__proto__);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar result = JSON.parse('{ \"__proto__\": 1, \"__proto__\": 2 }');\n\nassert.sameValue(result.__proto__, 2);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/duplicate-proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.invalid-whitespace",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse('\\u16801');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u180e1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20001');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20011');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20021');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20031');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20041');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20051');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20061');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20071');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20081');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u20091');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u200a1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u202f1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u205f1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse('\\u30001');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u16801');\n}, '\\\\u1680');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u180e1');\n}, '\\\\u180e');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20001');\n}, '\\\\u2000');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20011');\n}, '\\\\u2001');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20021');\n}, '\\\\u2002');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20031');\n}, '\\\\u2003');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20041');\n}, '\\\\u2004');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20051');\n}, '\\\\u2005');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20061');\n}, '\\\\u2006');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20071');\n}, '\\\\u2007');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20081');\n}, '\\\\u2008');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u20091');\n}, '\\\\u2009');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u200a1');\n}, '\\\\u200a');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u202f1');\n}, '\\\\u202f');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u205f1');\n}, '\\\\u205f');\n\nassert.throws(SyntaxError, function() {\n  JSON.parse('\\u30001');\n}, '\\\\u3000');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/invalid-whitespace.js",
       "n_asserts": 16,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.not-a-constructor",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(JSON.parse), false, 'isConstructor(JSON.parse) must return false');\n\nassert.throws(TypeError, () => {\n  new JSON.parse('{}');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.json.parse.revived-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\nvar returnCount = 0;\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.parse('[null, null]', function() {\n    this[1] = handle.proxy;\n    returnCount += 1;\n  });\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(returnCount);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\nvar returnCount = 0;\n\nhandle.revoke();\n\nassert.throws(TypeError, function() {\n  JSON.parse('[null, null]', function() {\n    this[1] = handle.proxy;\n    returnCount += 1;\n  });\n});\n\nassert.sameValue(returnCount, 1, 'invocation returns normally');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/revived-proxy-revoked.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.revived-proxy",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar objectProxy = new Proxy({\n  length: 0,\n  other: 0\n}, {});\nvar arrayProxy = new Proxy([], {});\nvar arrayProxyProxy = new Proxy(arrayProxy, {});\nvar visitedOther, injectProxy;\n\narrayProxy.other = 0;\n\ninjectProxy = function(name, val) {\n  if (name === 'other') {\n    visitedOther = true;\n  }\n  this[1] = objectProxy;\n  return val;\n};\nvisitedOther = false;\n\nJSON.parse('[null, null]', injectProxy);\n\nassert.sameValue(visitedOther, true, 'proxy for ordinary object');\n\ninjectProxy = function(name, val) {\n  if (name === 'other') {\n    visitedOther = true;\n  }\n  this[1] = arrayProxy;\n  return val;\n};\nvisitedOther = false;\n\nJSON.parse('[null, null]', injectProxy);\n\nassert.sameValue(visitedOther, false, 'proxy for array');\n\ninjectProxy = function(name, val) {\n  if (name === 'other') {\n    visitedOther = true;\n  }\n  this[1] = arrayProxyProxy;\n  return val;\n};\nvisitedOther = false;\n\nJSON.parse('[null, null]', injectProxy);\n\nassert.sameValue(visitedOther, false, 'proxy for array proxy');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/revived-proxy.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-array-define-prop-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar badDefine = new Proxy([null], {\n  defineProperty: function(_, name) {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[\"first\", null]', function(_, value) {\n    if (value === 'first') {\n      this[1] = badDefine;\n    }\n    return value;\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-array-define-prop-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-array-delete-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar badDelete = new Proxy([0], {\n  deleteProperty: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[0,0]', function() {\n    this[1] = badDelete;\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-array-delete-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.reviver-array-get-prop-from-prototype",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nArray.prototype[1] = 3;\n\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    console.log(delete this[1]);\n  }\n\n  return value;\n});\n\nconsole.log(delete Array.prototype[1]);\nconsole.log(arr[0]);\nconsole.log(arr.hasOwnProperty('1'));\nconsole.log(arr[1]);\n}\nmain();\n",
+      "fixture": "function main(): void {\nArray.prototype[1] = 3;\n\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    assert(delete this[1]);\n  }\n\n  return value;\n});\n\nassert(delete Array.prototype[1]);\nassert.sameValue(arr[0], 1);\nassert(arr.hasOwnProperty('1'));\nassert.sameValue(arr[1], 3);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/reviver-array-get-prop-from-prototype.js",
       "n_asserts": 5,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-array-length-coerce-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar uncoercible = {\n  valueOf: function() {\n    throw new Test262Error();\n  }\n};\nvar badLength = new Proxy([], {\n  get: function(_, name) {\n    if (name === 'length') {\n      return uncoercible;\n    }\n  }\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[0,0]', function() {\n    this[1] = badLength;\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-array-length-coerce-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-array-length-get-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar badLength = new Proxy([], {\n  get: function(_, name) {\n    if (name === 'length') {\n      throw new Test262Error();\n    }\n  }\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[0,0]', function() {\n    this[1] = badLength;\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-array-length-get-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.reviver-array-non-configurable-prop-create",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    Object.defineProperty(this, '1', {configurable: false});\n  }\n  if (key === '1') return 22;\n\n  return value;\n});\n\nconsole.log(arr[0]);\nconsole.log(arr[1]);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    Object.defineProperty(this, '1', {configurable: false});\n  }\n  if (key === '1') return 22;\n\n  return value;\n});\n\nassert.sameValue(arr[0], 1);\nassert.sameValue(arr[1], 2);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/reviver-array-non-configurable-prop-create.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.reviver-array-non-configurable-prop-delete",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    Object.defineProperty(this, '1', {configurable: false});\n  }\n  if (key === '1') return;\n\n  return value;\n});\n\nconsole.log(arr[0]);\nconsole.log(arr.hasOwnProperty('1'));\nconsole.log(arr[1]);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar json = '[1, 2]';\nvar arr = JSON.parse(json, function(key, value) {\n  if (key === '0') {\n    Object.defineProperty(this, '1', {configurable: false});\n  }\n  if (key === '1') return;\n\n  return value;\n});\n\nassert.sameValue(arr[0], 1);\nassert(arr.hasOwnProperty('1'));\nassert.sameValue(arr[1], 2);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/reviver-array-non-configurable-prop-delete.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-call-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(Test262Error, function() {\n  JSON.parse('0', function() {\n    throw new Test262Error();\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-call-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-context-source-array-literal",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction assertOnlyOwnProperties(object, props, message) {\n  assert.compareArray(Object.getOwnPropertyNames(object), props, `${message}: object should have no other properties than expected`);\n  assert.compareArray(Object.getOwnPropertySymbols(object), [], `${message}: object should have no own symbol properties`);\n}\n\nfunction reviverWithExpectedSources(expectedSources) {\n  let i = 0;\n  return function reviver(key, value, context) {\n    assert.sameValue(typeof context, \"object\", \"context should be an object\");\n    assert.sameValue(Object.getPrototypeOf(context), Object.prototype, \"context should be a plain object\");\n    if (expectedSources[i] !== undefined) {\n      assertOnlyOwnProperties(context, [\"source\"],\n        \"the JSON value is a primitve value, its context should only have a source property\");\n      verifyProperty(context, \"source\", {\n        value: expectedSources[i++],\n        configurable: true,\n        enumerable: true,\n        writable: true,\n      }, { restore: true });\n    } else {\n      assertOnlyOwnProperties(context, [],\n        \"the JSON value is an Array or Object, its context should have no property\");\n      i++;\n    }\n    return value;\n  };\n}\n\nassert.compareArray(JSON.parse('[1.0]', reviverWithExpectedSources(['1.0'])), [1]);\nassert.compareArray(\n  JSON.parse('[1.1]', reviverWithExpectedSources(['1.1'])),\n  [1.1]\n);\nassert.compareArray(JSON.parse('[]', reviverWithExpectedSources([])), []);\n\nconst longArray = JSON.parse(\n  '[1, \"2\", true, null, {\"x\": 1, \"y\": 1}]',\n  reviverWithExpectedSources(['1', '\"2\"', 'true', 'null', '1', '1'])\n);\nassert.sameValue(longArray[0], 1, \"array, element 0\");\nassert.sameValue(longArray[1], \"2\", \"array, element 1\");\nassert.sameValue(longArray[2], true, \"array, element 2\");\nassert.sameValue(longArray[3], null, \"array, element 3\");\nassertOnlyOwnProperties(longArray[4], [\"x\", \"y\"], \"array, element 5\");\nassert.sameValue(longArray[4].x, 1, \"array, element 5, prop x\");\nassert.sameValue(longArray[4].y, 1, \"array, element 5, prop y\");\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-context-source-array-literal.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": [
+        "compareArray.js",
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-context-source-object-literal",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction assertOnlyOwnProperties(object, props, message) {\n  assert.compareArray(Object.getOwnPropertyNames(object), props, `${message}: object should have no other properties than expected`);\n  assert.compareArray(Object.getOwnPropertySymbols(object), [], `${message}: object should have no own symbol properties`);\n}\n\nfunction reviverWithExpectedSources(expectedSources) {\n  let i = 0;\n  return function reviver(key, value, context) {\n    assert.sameValue(typeof context, \"object\", \"context should be an object\");\n    assert.sameValue(Object.getPrototypeOf(context), Object.prototype, \"context should be a plain object\");\n    if (expectedSources[i] !== undefined) {\n      assertOnlyOwnProperties(context, [\"source\"],\n        \"the JSON value is a primitve value, its context should only have a source property\");\n      verifyProperty(context, \"source\", {\n        value: expectedSources[i++],\n        configurable: true,\n        enumerable: true,\n        writable: true,\n      }, { restore: true });\n    } else {\n      assertOnlyOwnProperties(context, [],\n        \"the JSON value is an Array or Object, its context should have no property\");\n      i++;\n    }\n    return value;\n  };\n}\n\nassertOnlyOwnProperties(\n  JSON.parse('{}', reviverWithExpectedSources([])),\n  [],\n  \"empty object\"\n);\n\nconst singleProp = JSON.parse('{\"42\":37}', reviverWithExpectedSources(['37']));\nassertOnlyOwnProperties(singleProp, [\"42\"], \"single numeric property key\");\nassert.sameValue(singleProp[42], 37, \"value of single numeric property key\");\n\nconst multipleProps = JSON.parse('{\"x\": 1, \"y\": 2}', reviverWithExpectedSources(['1', '2']));\nassertOnlyOwnProperties(multipleProps, [\"x\", \"y\"], \"multiple properties\");\nassert.sameValue(multipleProps.x, 1, \"multiple properties, value of x\");\nassert.sameValue(multipleProps.y, 2, \"multiple properties, value of y\");\n\n// undefined means the json value is JSObject or JSArray and the passed\n// context to the reviver function has no source property.\nconst arrayProps = JSON.parse(\n  '{\"x\": [1,2], \"y\": [2,3]}',\n  reviverWithExpectedSources(['1', '2', undefined, '2', '3', undefined])\n);\nassertOnlyOwnProperties(arrayProps, [\"x\", \"y\"], \"array-valued properties\");\nassert.compareArray(arrayProps.x, [1, 2], \"array-valued properties, value of x\");\nassert.compareArray(arrayProps.y, [2, 3], \"array-valued properties, value of y\");\n\nconst objectProps = JSON.parse(\n  '{\"x\": {\"x\": 1, \"y\": 2}}',\n  reviverWithExpectedSources(['1', '2', undefined, undefined])\n);\nassertOnlyOwnProperties(objectProps, [\"x\"], \"object-valued properties\");\nassertOnlyOwnProperties(objectProps.x, [\"x\", \"y\"], \"object-valued properties, value of x\");\nassert.sameValue(objectProps.x.x, 1, \"object-valued properties, value of x.x\");\nassert.sameValue(objectProps.x.y, 2, \"object-valued properties, value of x.y\");\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-context-source-object-literal.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": [
+        "compareArray.js",
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-context-source-primitive-literal",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction assertOnlyOwnProperties(object, props, message) {\n  assert.compareArray(Object.getOwnPropertyNames(object), props, `${message}: object should have no other properties than expected`);\n  assert.compareArray(Object.getOwnPropertySymbols(object), [], `${message}: object should have no own symbol properties`);\n}\n\nfunction reviverWithExpectedSources(expectedSources) {\n  let i = 0;\n  return function reviver(key, value, context) {\n    assert.sameValue(typeof context, \"object\", \"context should be an object\");\n    assert.sameValue(Object.getPrototypeOf(context), Object.prototype, \"context should be a plain object\");\n    if (expectedSources[i] !== undefined) {\n      assertOnlyOwnProperties(context, [\"source\"],\n        \"the JSON value is a primitve value, its context should only have a source property\");\n      verifyProperty(context, \"source\", {\n        value: expectedSources[i++],\n        configurable: true,\n        enumerable: true,\n        writable: true,\n      }, { restore: true });\n    } else {\n      assertOnlyOwnProperties(context, [],\n        \"the JSON value is an Array or Object, its context should have no property\");\n      i++;\n    }\n    return value;\n  };\n}\n\nassert.sameValue(1, JSON.parse('1', reviverWithExpectedSources(['1'])));\nassert.sameValue(1.1, JSON.parse('1.1', reviverWithExpectedSources(['1.1'])));\nassert.sameValue(-1, JSON.parse('-1', reviverWithExpectedSources(['-1'])));\nassert.sameValue(\n  -1.1,\n  JSON.parse('-1.1', reviverWithExpectedSources(['-1.1']))\n);\nassert.sameValue(\n  11,\n  JSON.parse('1.1e1', reviverWithExpectedSources(['1.1e1']))\n);\nassert.sameValue(\n  11,\n  JSON.parse('1.1e+1', reviverWithExpectedSources(['1.1e+1']))\n);\nassert.sameValue(\n  0.11,\n  JSON.parse('1.1e-1', reviverWithExpectedSources(['1.1e-1']))\n);\nassert.sameValue(\n  11,\n  JSON.parse('1.1E1', reviverWithExpectedSources(['1.1E1']))\n);\nassert.sameValue(\n  11,\n  JSON.parse('1.1E+1', reviverWithExpectedSources(['1.1E+1']))\n);\nassert.sameValue(\n  0.11,\n  JSON.parse('1.1E-1', reviverWithExpectedSources(['1.1E-1']))\n);\n\n// Test NullLiteral, BoolLiteral, StringLiteral\nassert.sameValue(\n  JSON.parse('null', reviverWithExpectedSources(['null'])),\n  null\n);\nassert.sameValue(\n  JSON.parse('true', reviverWithExpectedSources(['true'])),\n  true\n);\nassert.sameValue(\n  JSON.parse('false', reviverWithExpectedSources(['false'])),\n  false\n);\nassert.sameValue(\n  JSON.parse('\"foo\"', reviverWithExpectedSources(['\"foo\"'])),\n  \"foo\"\n);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-context-source-primitive-literal.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": [
+        "compareArray.js",
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-forward-modifies-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction assertOnlyOwnProperties(object, props, message) {\n  assert.compareArray(Object.getOwnPropertyNames(object), props, `${message}: object should have no other properties than expected`);\n  assert.compareArray(Object.getOwnPropertySymbols(object), [], `${message}: object should have no own symbol properties`);\n}\n\nconst replacements = [\n  42,\n  [\"foo\"],\n  { foo: \"bar\" },\n  \"foo\"\n];\n\n// Test Array forward modify\nfor (const replacement of replacements) {\n  let alreadyReplaced = false;\n  let expectedKeys = [\"0\", \"1\", \"\"];\n  // if the replacement is an object, add its keys to the expected keys\n  if (typeof replacement === \"object\") {\n    expectedKeys.splice(1, 0, ...Object.keys(replacement));\n  }\n  const o = JSON.parse(\"[1, 2]\", function (k, v, { source }) {\n    assert.sameValue(k, expectedKeys.shift());\n    if (k === \"0\") {\n      if (!alreadyReplaced) {\n        this[1] = replacement;\n        alreadyReplaced = true;\n      }\n    } else if (k !== \"\") {\n      assert.sameValue(source, undefined);\n    }\n    return this[k];\n  });\n  assert.sameValue(expectedKeys.length, 0);\n  assert.compareArray(o, [1, replacement], `array forward-modified with ${replacement}`);\n}\n\nfunction assertOnlyOwnProperties(object, props, message) {\n  assert.compareArray(Object.getOwnPropertyNames(object), props, `${message}: object should have no other properties than expected`);\n  assert.compareArray(Object.getOwnPropertySymbols(object), [], `${message}: object should have no own symbol properties`);\n}\n\n// Test Object forward modify\nfor (const replacement of replacements) {\n  let alreadyReplaced = false;\n  let expectedKeys = [\"p\", \"q\", \"\"];\n  if (typeof replacement === \"object\") {\n    expectedKeys.splice(1, 0, ...Object.keys(replacement));\n  }\n  const o = JSON.parse('{\"p\":1, \"q\":2}', function (k, v, { source }) {\n    assert.sameValue(k, expectedKeys.shift());\n    if (k === 'p') {\n      if (!alreadyReplaced) {\n        this.q = replacement;\n        alreadyReplaced = true;\n      }\n    } else if (k !== \"\") {\n      assert.sameValue(source, undefined);\n    }\n    return this[k];\n  });\n  assert.sameValue(expectedKeys.length, 0);\n  assertOnlyOwnProperties(o, [\"p\", \"q\"], `object forward-modified with ${replacement}`);\n  assert.sameValue(o.p, 1, \"property p should not be replaced\");\n  assert.sameValue(o.q, replacement, `property q should be replaced with ${replacement}`);\n}\n\n// Test combinations of possible JSON input with multiple forward modifications\n\n{\n  let reviverCallIndex = 0;\n  const expectedKeys = [\"a\", \"b\", \"c\", \"\"];\n  const reviver = function(key, value, {source}) {\n    assert.sameValue(key, expectedKeys[reviverCallIndex++]);\n    if (key === \"a\") {\n      this.b = 2;\n      assert.sameValue(source, \"0\");\n    } else if (key === \"b\") {\n      this.c = 3;\n      assert.sameValue(value, 2);\n      assert.sameValue(source, undefined);\n    } else if (key === \"c\") {\n      assert.sameValue(value, 3);\n      assert.sameValue(source, undefined);\n    }\n    return value;\n  }\n  const parsed = JSON.parse('{\"a\": 0, \"b\": 1, \"c\": [1, 2]}', reviver);\n  assertOnlyOwnProperties(parsed, [\"a\", \"b\", \"c\"], \"object with forward-modified properties\");\n  assert.sameValue(parsed.a, 0, \"'a' property should be unmodified\");\n  assert.sameValue(parsed.b, 2, \"'b' property should be modified to 2\");\n  assert.sameValue(parsed.c, 3, \"'c' property should be modified to 3\");\n}\n\n{\n  let reviverCallIndex = 0;\n  const expectedKeys = [\"0\", \"1\", \"2\", \"3\", \"\"];\n  const reviver = function(key, value, {source}) {\n    assert.sameValue(key, expectedKeys[reviverCallIndex++]);\n    if (key === \"0\") {\n      this[1] = 3;\n      assert.sameValue(value, 1);\n      assert.sameValue(source, \"1\");\n    } else if (key === \"1\") {\n      this[2] = 4;\n      assert.sameValue(value, 3);\n      assert.sameValue(source, undefined);\n    } else if(key === \"2\") {\n      this[3] = 5;\n      assert.sameValue(value, 4);\n      assert.sameValue(source, undefined);\n    } else if(key === \"5\") {\n      assert.sameValue(value, 5);\n      assert.sameValue(source, undefined);\n    }\n    return value;\n  }\n  assert.compareArray(JSON.parse('[1, 2, 3, {\"a\": 1}]', reviver), [1, 3, 4, 5], \"array with forward-modified elements\");\n}\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-forward-modifies-object.js",
+      "n_asserts": 26,
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-get-name-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrower = function() {\n  throw new Test262Error();\n};\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[0,0]', function() {\n    Object.defineProperty(this, '1', {\n      get: thrower\n    });\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-get-name-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-object-define-prop-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar badDefine = new Proxy({\n  0: null\n}, {\n  defineProperty: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[\"first\", null]', function(_, value) {\n    if (value === 'first') {\n      this[1] = badDefine;\n    }\n    return value;\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-object-define-prop-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-object-delete-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar badDelete = new Proxy({\n  a: 1\n}, {\n  deleteProperty: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[0,0]', function() {\n    this[1] = badDelete;\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-object-delete-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.reviver-object-get-prop-from-prototype",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nObject.prototype.b = 3;\n\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    console.log(delete this.b);\n  }\n\n  return value;\n});\n\nconsole.log(delete Object.prototype.b);\nconsole.log(obj.a);\nconsole.log(obj.hasOwnProperty('b'));\nconsole.log(obj.b);\n}\nmain();\n",
+      "fixture": "function main(): void {\nObject.prototype.b = 3;\n\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    assert(delete this.b);\n  }\n\n  return value;\n});\n\nassert(delete Object.prototype.b);\nassert.sameValue(obj.a, 1);\nassert(obj.hasOwnProperty('b'));\nassert.sameValue(obj.b, 3);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/reviver-object-get-prop-from-prototype.js",
       "n_asserts": 5,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.reviver-object-non-configurable-prop-create",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    Object.defineProperty(this, 'b', {configurable: false});\n  }\n  if (key === 'b') return 22;\n\n  return value;\n});\n\nconsole.log(obj.a);\nconsole.log(obj.b);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    Object.defineProperty(this, 'b', {configurable: false});\n  }\n  if (key === 'b') return 22;\n\n  return value;\n});\n\nassert.sameValue(obj.a, 1);\nassert.sameValue(obj.b, 2);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/reviver-object-non-configurable-prop-create.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.reviver-object-non-configurable-prop-delete",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    Object.defineProperty(this, 'b', {configurable: false});\n  }\n  if (key === 'b') return;\n\n  return value;\n});\n\nconsole.log(obj.a);\nconsole.log(obj.hasOwnProperty('b'));\nconsole.log(obj.b);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar json = '{\"a\": 1, \"b\": 2}';\nvar obj = JSON.parse(json, function(key, value) {\n  if (key === 'a') {\n    Object.defineProperty(this, 'b', {configurable: false});\n  }\n  if (key === 'b') return;\n\n  return value;\n});\n\nassert.sameValue(obj.a, 1);\nassert(obj.hasOwnProperty('b'));\nassert.sameValue(obj.b, 2);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/reviver-object-non-configurable-prop-delete.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-object-own-keys-err",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar badKeys = new Proxy({}, {\n  ownKeys: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse('[0,0]', function() {\n    this[1] = badKeys;\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-object-own-keys-err.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.reviver-wrapper",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nObject.defineProperty(Object.prototype, '', {\n  set: function() {\n    throw new Test262Error('[[Set]] should not be called.');\n  },\n});\n\nvar wrapper;\nJSON.parse('2', function() {\n  wrapper = this;\n});\n\nassert.sameValue(typeof wrapper, 'object');\nassert.sameValue(Object.getPrototypeOf(wrapper), Object.prototype);\nassert.sameValue(Object.getOwnPropertyNames(wrapper).length, 1);\nassert(Object.isExtensible(wrapper));\n\nverifyProperty(wrapper, '', {\n  value: 2,\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/reviver-wrapper.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.json.parse.s15.12.2_a1",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar x = JSON.parse('{\"__proto__\":[]}');\n\nconsole.log(Object.getPrototypeOf(x));\n\nconsole.log(Array.isArray(x.__proto__));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar x = JSON.parse('{\"__proto__\":[]}');\n\nassert.sameValue(\n  Object.getPrototypeOf(x),\n  Object.prototype,\n  'Object.getPrototypeOf(\"JSON.parse(\\'{\"__proto__\":[]}\\')\") returns Object.prototype'\n);\n\nassert(Array.isArray(x.__proto__), 'Array.isArray(x.__proto__) must return true');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/S15.12.2_A1.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.text-negative-zero",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.parse('-0'));\nconsole.log(JSON.parse(' \\n-0'));\nconsole.log(JSON.parse('-0  \\t'));\nconsole.log(JSON.parse('\\n\\t -0\\n   '));\n\nconsole.log(JSON.parse(-0));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.parse('-0'), -0);\nassert.sameValue(JSON.parse(' \\n-0'), -0);\nassert.sameValue(JSON.parse('-0  \\t'), -0);\nassert.sameValue(JSON.parse('\\n\\t -0\\n   '), -0);\n\nassert.sameValue(JSON.parse(-0), 0);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/text-negative-zero.js",
       "n_asserts": 5,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.text-non-string-primitive",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  JSON.parse();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.parse(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(JSON.parse(null));\nconsole.log(JSON.parse(false));\nconsole.log(JSON.parse(true));\nconsole.log(JSON.parse(0));\nconsole.log(JSON.parse(3.14));\n\nvar sym = Symbol('desc');\ntry { (function() {\n  JSON.parse(sym);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  JSON.parse();\n});\n\nassert.throws(SyntaxError, function() {\n  JSON.parse(undefined);\n});\n\nassert.sameValue(JSON.parse(null), null);\nassert.sameValue(JSON.parse(false), false);\nassert.sameValue(JSON.parse(true), true);\nassert.sameValue(JSON.parse(0), 0);\nassert.sameValue(JSON.parse(3.14), 3.14);\n\nvar sym = Symbol('desc');\nassert.throws(TypeError, function() {\n  JSON.parse(sym);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/text-non-string-primitive.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.parse.text-object-abrupt",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(Test262Error, function() {\n  JSON.parse({\n    toString: null,\n    get valueOf() {\n      throw new Test262Error();\n    },\n  });\n});\n\nassert.throws(Test262Error, function() {\n  JSON.parse({\n    toString: function() {\n      throw new Test262Error();\n    },\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/parse/text-object-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.parse.text-object",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar hint = JSON.parse({\n  toString: function() {\n    return '\"string\"';\n  },\n  valueOf: function() {\n    return '\"default_or_number\"';\n  },\n});\n\nconsole.log(hint);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar hint = JSON.parse({\n  toString: function() {\n    return '\"string\"';\n  },\n  valueOf: function() {\n    return '\"default_or_number\"';\n  },\n});\n\nassert.sameValue(hint, 'string');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/parse/text-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.prop-desc",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof JSON, \"object\");\n\nassert.throws(TypeError, function() {\n  JSON();\n}, \"no [[Call]]\");\n\nassert.throws(TypeError, function() {\n  new JSON();\n}, \"no [[Construct]]\");\n\nverifyProperty(this, \"JSON\", {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/prop-desc.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.json.rawjson.basic",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify(JSON.rawJSON(1)));\nconsole.log(JSON.stringify(JSON.rawJSON(1.1)));\nconsole.log(JSON.stringify(JSON.rawJSON(-1)));\nconsole.log(JSON.stringify(JSON.rawJSON(-1.1)));\nconsole.log(JSON.stringify(JSON.rawJSON(1.1e1)));\nconsole.log(JSON.stringify(JSON.rawJSON(1.1e-1)));\n\nconsole.log(JSON.stringify(JSON.rawJSON(null)));\nconsole.log(JSON.stringify(JSON.rawJSON(true)));\nconsole.log(JSON.stringify(JSON.rawJSON(false)));\nconsole.log(JSON.stringify(JSON.rawJSON('\"foo\"')));\n\nconsole.log(JSON.stringify({ 42: JSON.rawJSON(37) }));\nconsole.log(JSON.stringify({ x: JSON.rawJSON(1), y: JSON.rawJSON(2) }));\nconsole.log(JSON.stringify({ x: { x: JSON.rawJSON(1), y: JSON.rawJSON(2) } }));\n\nconsole.log(JSON.stringify([JSON.rawJSON(1), JSON.rawJSON(1.1)]));\nconsole.log(JSON.stringify([\n    JSON.rawJSON('\"1\"'),\n    JSON.rawJSON(true),\n    JSON.rawJSON(null),\n    JSON.rawJSON(false),\n  ]));\nconsole.log(JSON.stringify([{ x: JSON.rawJSON(1), y: JSON.rawJSON(1) }]));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(JSON.rawJSON(1)), '1');\nassert.sameValue(JSON.stringify(JSON.rawJSON(1.1)), '1.1');\nassert.sameValue(JSON.stringify(JSON.rawJSON(-1)), '-1');\nassert.sameValue(JSON.stringify(JSON.rawJSON(-1.1)), '-1.1');\nassert.sameValue(JSON.stringify(JSON.rawJSON(1.1e1)), '11');\nassert.sameValue(JSON.stringify(JSON.rawJSON(1.1e-1)), '0.11');\n\nassert.sameValue(JSON.stringify(JSON.rawJSON(null)), 'null');\nassert.sameValue(JSON.stringify(JSON.rawJSON(true)), 'true');\nassert.sameValue(JSON.stringify(JSON.rawJSON(false)), 'false');\nassert.sameValue(JSON.stringify(JSON.rawJSON('\"foo\"')), '\"foo\"');\n\nassert.sameValue(JSON.stringify({ 42: JSON.rawJSON(37) }), '{\"42\":37}');\nassert.sameValue(\n  JSON.stringify({ x: JSON.rawJSON(1), y: JSON.rawJSON(2) }),\n  '{\"x\":1,\"y\":2}'\n);\nassert.sameValue(\n  JSON.stringify({ x: { x: JSON.rawJSON(1), y: JSON.rawJSON(2) } }),\n  '{\"x\":{\"x\":1,\"y\":2}}'\n);\n\nassert.sameValue(JSON.stringify([JSON.rawJSON(1), JSON.rawJSON(1.1)]), '[1,1.1]');\nassert.sameValue(\n  JSON.stringify([\n    JSON.rawJSON('\"1\"'),\n    JSON.rawJSON(true),\n    JSON.rawJSON(null),\n    JSON.rawJSON(false),\n  ]),\n  '[\"1\",true,null,false]'\n);\nassert.sameValue(\n  JSON.stringify([{ x: JSON.rawJSON(1), y: JSON.rawJSON(1) }]),\n  '[{\"x\":1,\"y\":1}]'\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/rawJSON/basic.js",
       "n_asserts": 16,
-      "flags": []
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.rawjson.bigint-raw-json-can-be-stringified",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconst tooBigForNumber = BigInt(Number.MAX_SAFE_INTEGER) + 2n;\nconst intToBigInt = (key, val, { source }) =>\n  typeof val === 'number' && val % 1 === 0 ? BigInt(source) : val;\nconst roundTripped = JSON.parse(String(tooBigForNumber), intToBigInt);\nconsole.log(roundTripped);\n\nconst bigIntToRawJSON = (key, val) =>\n  typeof val === 'bigint' ? JSON.rawJSON(val) : val;\nconst embedded = JSON.stringify({ tooBigForNumber }, bigIntToRawJSON);\nconsole.log(embedded);\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst tooBigForNumber = BigInt(Number.MAX_SAFE_INTEGER) + 2n;\nconst intToBigInt = (key, val, { source }) =>\n  typeof val === 'number' && val % 1 === 0 ? BigInt(source) : val;\nconst roundTripped = JSON.parse(String(tooBigForNumber), intToBigInt);\nassert.sameValue(roundTripped, tooBigForNumber);\n\nconst bigIntToRawJSON = (key, val) =>\n  typeof val === 'bigint' ? JSON.rawJSON(val) : val;\nconst embedded = JSON.stringify({ tooBigForNumber }, bigIntToRawJSON);\nassert.sameValue(embedded, '{\"tooBigForNumber\":9007199254740993}');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/rawJSON/bigint-raw-json-can-be-stringified.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt",
+        "json-parse-with-source"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.rawjson.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(JSON.rawJSON));\nconsole.log(typeof JSON.rawJSON);\n\nconsole.log(Object.getPrototypeOf(JSON.rawJSON));\n\nconsole.log(Object.getOwnPropertyDescriptor(JSON.rawJSON, \"prototype\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Object.isExtensible(JSON.rawJSON), \"JSON.rawJSON is extensible\");\nassert.sameValue(\n  typeof JSON.rawJSON,\n  'function',\n  'The value of `typeof JSON.rawJSON` is \"function\"'\n);\n\nassert.sameValue(\n  Object.getPrototypeOf(JSON.rawJSON),\n  Function.prototype,\n  \"Prototype of JSON.rawJSON is Function.prototype\"\n);\n\nassert.sameValue(\n  Object.getOwnPropertyDescriptor(JSON.rawJSON, \"prototype\"),\n  undefined,\n  \"JSON.rawJSON has no own prototype property\"\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/rawJSON/builtin.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.rawjson.illegal-empty-and-start-end-chars",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconst ILLEGAL_END_CHARS = ['\\n', '\\t', '\\r', ' '];\nfor (const char of ILLEGAL_END_CHARS) {\n  try { (() => {\n    JSON.rawJSON(`${char}123`);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n  try { (() => {\n    JSON.rawJSON(`123${char}`);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n\ntry { (() => {\n  JSON.rawJSON('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst ILLEGAL_END_CHARS = ['\\n', '\\t', '\\r', ' '];\nfor (const char of ILLEGAL_END_CHARS) {\n  assert.throws(SyntaxError, () => {\n    JSON.rawJSON(`${char}123`);\n  });\n  assert.throws(SyntaxError, () => {\n    JSON.rawJSON(`123${char}`);\n  });\n}\n\nassert.throws(SyntaxError, () => {\n  JSON.rawJSON('');\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/rawJSON/illegal-empty-and-start-end-chars.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.rawjson.invalid-json-text",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => {\n  JSON.rawJSON(Symbol('123'));\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  JSON.rawJSON(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  JSON.rawJSON({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  JSON.rawJSON([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  JSON.rawJSON(Symbol('123'));\n});\n\nassert.throws(SyntaxError, () => {\n  JSON.rawJSON(undefined);\n});\n\nassert.throws(SyntaxError, () => {\n  JSON.rawJSON({});\n});\n\nassert.throws(SyntaxError, () => {\n  JSON.rawJSON([]);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/rawJSON/invalid-JSON-text.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.rawjson.not-a-constructor",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(JSON.rawJSON), false, 'isConstructor(JSON.rawJSON) must return false');\n\nassert.throws(TypeError, () => {\n  new JSON.rawJSON();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/rawJSON/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "json-parse-with-source",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.json.rawjson.returns-expected-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction assertIsRawJSON(rawJSON, expectedRawJSONValue) {\n  assert.sameValue(Object.getPrototypeOf(rawJSON), null, \"RawJSON object should have null prototype\");\n  assert(Object.hasOwn(rawJSON, \"rawJSON\"), \"RawJSON object should have rawJSON own property\");\n  assert.compareArray(Object.getOwnPropertyNames(rawJSON), [\"rawJSON\"], \"RawJSON object should have only rawJSON own property\");\n  assert.compareArray(Object.getOwnPropertySymbols(rawJSON), [], \"RawJSON object should have no own property symbols\");\n  assert.sameValue(rawJSON.rawJSON, expectedRawJSONValue, \"rawJSON value\");\n}\n\nassertIsRawJSON(JSON.rawJSON(1), \"1\");\nassertIsRawJSON(JSON.rawJSON(null), \"null\");\nassertIsRawJSON(JSON.rawJSON(true), \"true\");\nassertIsRawJSON(JSON.rawJSON(false), \"false\");\nassertIsRawJSON(JSON.rawJSON('\"foo\"'), '\"foo\"');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/rawJSON/returns-expected-object.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "json-parse-with-source"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.json.stringify.builtin",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(JSON.stringify));\nconsole.log(Object.prototype.toString.call(JSON.stringify));\nconsole.log(Object.getPrototypeOf(JSON.stringify));\nconsole.log(JSON.stringify.hasOwnProperty('prototype'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Object.isExtensible(JSON.stringify), 'Object.isExtensible(JSON.stringify) must return true');\nassert.sameValue(\n  Object.prototype.toString.call(JSON.stringify),\n  '[object Function]',\n  'Object.prototype.toString.call(JSON.stringify) must return \"[object Function]\"'\n);\nassert.sameValue(\n  Object.getPrototypeOf(JSON.stringify),\n  Function.prototype,\n  'Object.getPrototypeOf(JSON.stringify) must return the value of Function.prototype'\n);\nassert.sameValue(\n  JSON.stringify.hasOwnProperty('prototype'),\n  false,\n  'JSON.stringify.hasOwnProperty(\"prototype\") must return false'\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/builtin.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.not-a-constructor",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(JSON.stringify), false, 'isConstructor(JSON.stringify) must return false');\n\nassert.throws(TypeError, () => {\n  new JSON.stringify({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.json.stringify.property-order",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar o = {\n  p1: 'p1',\n  p2: 'p2',\n  p3: 'p3',\n};\n\n// This getter will be triggered during enumeration, but the property it adds should not be enumerated.\nObject.defineProperty(o, 'add', {\n  enumerable: true,\n  get: function () {\n    o.extra = 'extra';\n    return 'add';\n  }\n});\n\no.p4 = 'p4';\n\no[2] = '2';\no[0] = '0';\no[1] = '1';\n\ndelete o.p1;\ndelete o.p3;\no.p1 = 'p1';\n\nvar actual = JSON.stringify(o);\n\nvar expected = '{\"0\":\"0\",\"1\":\"1\",\"2\":\"2\",\"p2\":\"p2\",\"add\":\"add\",\"p4\":\"p4\",\"p1\":\"p1\"}';\n\nconsole.log(actual);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar o = {\n  p1: 'p1',\n  p2: 'p2',\n  p3: 'p3',\n};\n\n// This getter will be triggered during enumeration, but the property it adds should not be enumerated.\nObject.defineProperty(o, 'add', {\n  enumerable: true,\n  get: function () {\n    o.extra = 'extra';\n    return 'add';\n  }\n});\n\no.p4 = 'p4';\n\no[2] = '2';\no[0] = '0';\no[1] = '1';\n\ndelete o.p1;\ndelete o.p3;\no.p1 = 'p1';\n\nvar actual = JSON.stringify(o);\n\nvar expected = '{\"0\":\"0\",\"1\":\"1\",\"2\":\"2\",\"p2\":\"p2\",\"add\":\"add\",\"p4\":\"p4\",\"p1\":\"p1\"}';\n\nassert.sameValue(actual, expected);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/property-order.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "for-in-order"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-array-abrupt",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar abruptLength = new Proxy([], {\n  get: function(_target, key) {\n    if (key === 'length') {\n      throw new Test262Error();\n    }\n  },\n});\n\nassert.throws(Test262Error, function() {\n  JSON.stringify(null, abruptLength);\n});\n\nvar abruptToPrimitive = {\n  valueOf: function() {\n    throw new Test262Error();\n  },\n};\n\nvar abruptToLength = new Proxy([], {\n  get: function(_target, key) {\n    if (key === 'length') {\n      return abruptToPrimitive;\n    }\n  },\n});\n\nassert.throws(Test262Error, function() {\n  JSON.stringify([], abruptToLength);\n});\n\nvar abruptIndex = new Array(1);\nObject.defineProperty(abruptIndex, '0', {\n  get: function() {\n    throw new Test262Error();\n  },\n});\n\nassert.throws(Test262Error, function() {\n  JSON.stringify({}, abruptIndex);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-array-abrupt.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-array-duplicates",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar getCalls = 0;\nvar value = {\n  get key() {\n    getCalls += 1;\n    return true;\n  },\n};\n\nconsole.log(JSON.stringify(value, ['key', 'key']));\nconsole.log(getCalls);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar getCalls = 0;\nvar value = {\n  get key() {\n    getCalls += 1;\n    return true;\n  },\n};\n\nassert.sameValue(JSON.stringify(value, ['key', 'key']), '{\"key\":true}');\nassert.sameValue(getCalls, 1);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-duplicates.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-array-empty",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify({a: 1, b: 2}, []));\n\nconsole.log(JSON.stringify({a: 1, b: {c: 2}}, []));\n\nconsole.log(JSON.stringify([1, {a: 2}], []));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  JSON.stringify({a: 1, b: 2}, []),\n  '{}'\n);\n\nassert.sameValue(\n  JSON.stringify({a: 1, b: {c: 2}}, []),\n  '{}'\n);\n\nassert.sameValue(\n  JSON.stringify([1, {a: 2}], []),\n  '[1,{}]'\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-empty.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-array-number-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar num = new Number(10);\nnum.toString = function() { return 'toString'; };\nnum.valueOf = function() { throw new Test262Error('should not be called'); };\n\nvar value = {\n  10: 1,\n  toString: 2,\n  valueOf: 3,\n};\n\nassert.sameValue(JSON.stringify(value, [num]), '{\"toString\":2}');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-array-number-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-array-number",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  '0': 0,\n  '1': 1,\n  '-4': 2,\n  '0.3': 3,\n  '-Infinity': 4,\n  'NaN': 5,\n};\n\nvar replacer = [\n  -0,\n  1,\n  -4,\n  0.3,\n  -Infinity,\n  NaN,\n];\n\nconsole.log(JSON.stringify(obj, replacer));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {\n  '0': 0,\n  '1': 1,\n  '-4': 2,\n  '0.3': 3,\n  '-Infinity': 4,\n  'NaN': 5,\n};\n\nvar replacer = [\n  -0,\n  1,\n  -4,\n  0.3,\n  -Infinity,\n  NaN,\n];\n\nassert.sameValue(\n  JSON.stringify(obj, replacer),\n  JSON.stringify(obj)\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-number.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-array-order",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar replacer = ['c', 'b', 'a'];\n\nconsole.log(JSON.stringify({b: 1, a: 2, c: 3}, replacer));\n\nconsole.log(JSON.stringify({a: {b: 2, c: 3}}, replacer));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar replacer = ['c', 'b', 'a'];\n\nassert.sameValue(\n  JSON.stringify({b: 1, a: 2, c: 3}, replacer),\n  '{\"c\":3,\"b\":1,\"a\":2}'\n);\n\nassert.sameValue(\n  JSON.stringify({a: {b: 2, c: 3}}, replacer),\n  '{\"a\":{\"c\":3,\"b\":2}}'\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-order.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked-realm",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OProxy = $262.createRealm().global.Proxy;\nvar handle = OProxy.revocable([], {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify({}, handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OProxy = $262.createRealm().global.Proxy;\nvar handle = OProxy.revocable([], {});\n\nhandle.revoke();\n\nassert.throws(TypeError, function() {\n  JSON.stringify({}, handle.proxy);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-proxy-revoked-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-array-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify({}, handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\nassert.throws(TypeError, function() {\n  JSON.stringify({}, handle.proxy);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-array-proxy-revoked.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-array-proxy",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar replacer = new Proxy(['b'], {});\n\nassert.sameValue(JSON.stringify({a: 1, b: 2}, replacer), '{\"b\":2}');\nassert.sameValue(JSON.stringify({b: {a: 3, b: 4}}, replacer), '{\"b\":{\"b\":4}}');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-array-proxy.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-array-string-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar str = new String('str');\nstr.toString = function() { return 'toString'; };\nstr.valueOf = function() { throw new Test262Error('should not be called'); };\n\nvar value = {\n  str: 1,\n  toString: 2,\n  valueOf: 3,\n};\n\nassert.sameValue(JSON.stringify(value, [str]), '{\"toString\":2}');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-array-string-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-array-undefined",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify({undefined: 1}, [undefined]), '{}');\nassert.sameValue(JSON.stringify({key: 1, undefined: 2}, [,,,]), '{}');\n\nvar sparse = new Array(3);\nsparse[1] = 'key';\n\nassert.sameValue(\n  JSON.stringify({undefined: 1, key: 2}, sparse),\n  '{\"key\":2}'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-array-undefined.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-array-wrong-type",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = new Proxy({}, {\n  get: function(_target, key) {\n    if (key !== 'toJSON') {\n      throw new Test262Error();\n    }\n  },\n});\n\nvar replacer = [\n  true,\n  false,\n  null,\n  {toString: function() { return 'toString'; }},\n  Symbol(),\n];\n\nassert.sameValue(JSON.stringify(obj, replacer), '{}');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-array-wrong-type.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-function-abrupt",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(Test262Error, function() {\n  JSON.stringify({}, function() {\n    throw new Test262Error();\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-function-abrupt.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-function-arguments",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar calls = [];\nvar replacer = function(key, value) {\n  if (key !== '') {\n    calls.push([this, key, value]);\n  }\n\n  return value;\n};\n\nvar b1 = [1, 2];\nvar b2 = {c1: true, c2: false};\nvar a1 = {\n  b1: b1,\n  b2: {\n    toJSON: function() { return b2; },\n  },\n};\nvar obj = {a1: a1, a2: 'a2'};\n\nassert.sameValue(\n  JSON.stringify(obj, replacer),\n  JSON.stringify(obj)\n);\n\nassert.compareArray(calls[0], [obj, 'a1', a1]);\nassert.compareArray(calls[1], [a1, 'b1', b1]);\nassert.compareArray(calls[2], [b1, '0', 1]);\nassert.compareArray(calls[3], [b1, '1', 2]);\nassert.compareArray(calls[4], [a1, 'b2', b2]);\nassert.compareArray(calls[5], [b2, 'c1', true]);\nassert.compareArray(calls[6], [b2, 'c2', false]);\nassert.compareArray(calls[7], [obj, 'a2', 'a2']);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-function-arguments.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "compareArray.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-function-array-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar circular = [{}];\nvar circularReplacer = function(k, v) {\n  return circular;\n};\n\ntry { (function() {\n  JSON.stringify(circular, circularReplacer);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar circular = [{}];\nvar circularReplacer = function(k, v) {\n  return circular;\n};\n\nassert.throws(TypeError, function() {\n  JSON.stringify(circular, circularReplacer);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-function-array-circular.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-function-object-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar direct = {prop: {}};\nvar directReplacer = function(k, v) {\n  return direct;\n};\n\ntry { (function() {\n  JSON.stringify(direct, directReplacer);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = {p1: {p2: {}}};\nvar indirectReplacer = function(key, value) {\n  if (key === 'p2') {\n    return indirect;\n  } \n\n  return value;\n};\n\ntry { (function() {\n  JSON.stringify(indirect, indirectReplacer);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar direct = {prop: {}};\nvar directReplacer = function(k, v) {\n  return direct;\n};\n\nassert.throws(TypeError, function() {\n  JSON.stringify(direct, directReplacer);\n});\n\nvar indirect = {p1: {p2: {}}};\nvar indirectReplacer = function(key, value) {\n  if (key === 'p2') {\n    return indirect;\n  } \n\n  return value;\n};\n\nassert.throws(TypeError, function() {\n  JSON.stringify(indirect, indirectReplacer);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-function-object-circular.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-function-object-deleted-property",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  get a() {\n    delete this.b;\n    return 1;\n  },\n  b: 2,\n};\n\nvar replacer = function(key, value) {\n  if (key === 'b') {\n    console.log(value);\n    return '<replaced>';\n  }\n\n  return value;\n};\n\nconsole.log(JSON.stringify(obj, replacer));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {\n  get a() {\n    delete this.b;\n    return 1;\n  },\n  b: 2,\n};\n\nvar replacer = function(key, value) {\n  if (key === 'b') {\n    assert.sameValue(value, undefined);\n    return '<replaced>';\n  }\n\n  return value;\n};\n\nassert.sameValue(\n  JSON.stringify(obj, replacer),\n  '{\"a\":1,\"b\":\"<replaced>\"}'\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-function-object-deleted-property.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-function-result-undefined",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify(1, function() {}));\nconsole.log(JSON.stringify([1], function() {}));\nconsole.log(JSON.stringify({prop: 1}, function() {}));\n\nvar replacer = function(_key, value) {\n  return value === 1 ? undefined : value;\n};\n\nconsole.log(JSON.stringify([1], replacer));\nconsole.log(JSON.stringify({prop: 1}, replacer));\nconsole.log(JSON.stringify({\n  a: {\n    b: [1],\n  },\n}, replacer));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(1, function() {}), undefined);\nassert.sameValue(JSON.stringify([1], function() {}), undefined);\nassert.sameValue(JSON.stringify({prop: 1}, function() {}), undefined);\n\nvar replacer = function(_key, value) {\n  return value === 1 ? undefined : value;\n};\n\nassert.sameValue(JSON.stringify([1], replacer), '[null]');\nassert.sameValue(JSON.stringify({prop: 1}, replacer), '{}');\nassert.sameValue(JSON.stringify({\n  a: {\n    b: [1],\n  },\n}, replacer), '{\"a\":{\"b\":[null]}}');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-function-result-undefined.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-function-result",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2],\n    b2: {\n      c1: true,\n      c2: false,\n    },\n  },\n  a2: 'a2',\n};\n\nvar replacer = function(key, value) {\n  assert.sameValue(value, null);\n\n  switch (key) {\n    case '': return {a1: null, a2: null};\n    case 'a1': return {b1: null, b2: null};\n    case 'a2': return 'a2';\n\n    case 'b1': return [null, null];\n    case 'b2': return {c1: null, c2: null};\n\n    case '0': return 1;\n    case '1': return 2;\n    case 'c1': return true;\n    case 'c2': return false;\n  }\n\n  throw new Test262Error('unreachable');\n};\n\nassert.sameValue(\n  JSON.stringify(null, replacer),\n  JSON.stringify(obj)\n);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-function-result.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.replacer-function-tojson",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify({\n    toJSON: function() {\n      return 'toJSON';\n    },\n  }, function(_key, value) {\n    return value + '|replacer';\n  }));\n\nconsole.log(JSON.stringify({\n    toJSON: function() {\n      return {calls: 'toJSON'};\n    },\n  }, function(_key, value) {\n    if (value && value.calls) {\n      value.calls += '|replacer';\n    }\n\n    return value;\n  }));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  JSON.stringify({\n    toJSON: function() {\n      return 'toJSON';\n    },\n  }, function(_key, value) {\n    return value + '|replacer';\n  }),\n  '\"toJSON|replacer\"'\n);\n\nassert.sameValue(\n  JSON.stringify({\n    toJSON: function() {\n      return {calls: 'toJSON'};\n    },\n  }, function(_key, value) {\n    if (value && value.calls) {\n      value.calls += '|replacer';\n    }\n\n    return value;\n  }),\n  '{\"calls\":\"toJSON|replacer\"}'\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/replacer-function-tojson.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-function-wrapper",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nObject.defineProperty(Object.prototype, '', {\n  set: function() {\n    throw new Test262Error('[[Set]] should not be called.');\n  },\n});\n\nvar value = {};\nvar wrapper;\nJSON.stringify(value, function() {\n  wrapper = this;\n});\n\nassert.sameValue(typeof wrapper, 'object');\nassert.sameValue(Object.getPrototypeOf(wrapper), Object.prototype);\nassert.sameValue(Object.getOwnPropertyNames(wrapper).length, 1);\nassert(Object.isExtensible(wrapper));\n\nverifyProperty(wrapper, '', {\n  value: value,\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-function-wrapper.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.replacer-wrong-type",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {key: [1]};\nvar json = '{\"key\":[1]}';\n\nassert.sameValue(JSON.stringify(obj, {}), json);\nassert.sameValue(JSON.stringify(obj, new String('str')), json);\nassert.sameValue(JSON.stringify(obj, new Number(6.1)), json);\n\nassert.sameValue(JSON.stringify(obj, null), json);\nassert.sameValue(JSON.stringify(obj, ''), json);\nassert.sameValue(JSON.stringify(obj, 0), json);\nassert.sameValue(JSON.stringify(obj, Symbol()), json);\nassert.sameValue(JSON.stringify(obj, true), json);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/replacer-wrong-type.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.space-number-float",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(\n  JSON.stringify(obj, null, -1.99999),\n  JSON.stringify(obj, null, -1)\n);\n\nassert.sameValue(\n  JSON.stringify(obj, null, new Number(5.11111)),\n  JSON.stringify(obj, null, 5)\n);\n\nassert.sameValue(\n  JSON.stringify(obj, null, 6.99999),\n  JSON.stringify(obj, null, 6)\n);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/space-number-float.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.space-number-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(\n  JSON.stringify(obj, null, new Number(1)),\n  JSON.stringify(obj, null, 1)\n);\n\nvar num = new Number(1);\nnum.toString = function() { throw new Test262Error('should not be called'); };\nnum.valueOf = function() { return 3; };\n\nassert.sameValue(\n  JSON.stringify(obj, null, num),\n  JSON.stringify(obj, null, 3)\n);\n\nvar abrupt = new Number(4);\nabrupt.toString = function() { throw new Test262Error(); };\nabrupt.valueOf = function() { throw new Test262Error(); };\n\nassert.throws(Test262Error, function() {\n  JSON.stringify(obj, null, abrupt);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/space-number-object.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.space-number-range",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(\n  JSON.stringify(obj, null, new Number(-5)),\n  JSON.stringify(obj, null, 0)\n);\n\nassert.sameValue(\n  JSON.stringify(obj, null, 10),\n  JSON.stringify(obj, null, 100)\n);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/space-number-range.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.space-number",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nconsole.log(JSON.stringify(obj, null, 0));\n\nconsole.log(JSON.stringify(obj, null, 4));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(\n  JSON.stringify(obj, null, 0),\n  JSON.stringify(obj, null, '')\n);\n\nassert.sameValue(\n  JSON.stringify(obj, null, 4),\n  JSON.stringify(obj, null, '    ') // 4 spaces\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/space-number.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.space-string-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(\n  JSON.stringify(obj, null, new String('xxx')),\n  JSON.stringify(obj, null, 'xxx')\n);\n\nvar str = new String('xxx');\nstr.toString = function() { return '---'; };\nstr.valueOf = function() { throw new Test262Error('should not be called'); };\n\nassert.sameValue(\n  JSON.stringify(obj, null, str),\n  JSON.stringify(obj, null, '---')\n);\n\nvar abrupt = new String('xxx');\nabrupt.toString = function() { throw new Test262Error(); };\nabrupt.valueOf = function() { throw new Test262Error(); };\n\nassert.throws(Test262Error, function() {\n  JSON.stringify(obj, null, abrupt);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/space-string-object.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.space-string-range",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nconsole.log(JSON.stringify(obj, null, '0123456789xxxxxxxxx'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(\n  JSON.stringify(obj, null, '0123456789xxxxxxxxx'),\n  JSON.stringify(obj, null, '0123456789')\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/space-string-range.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.space-string",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nconsole.log(JSON.stringify(obj, null, ''));\nconsole.log(JSON.stringify(obj, null, '  '));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(JSON.stringify(obj, null, ''), JSON.stringify(obj));\nassert.sameValue(JSON.stringify(obj, null, '  '), [\n  '{'\n, '  \"a1\": {'\n, '    \"b1\": ['\n, '      1,'\n, '      2,'\n, '      3,'\n, '      4'\n, '    ],'\n, '    \"b2\": {'\n, '      \"c1\": 1,'\n, '      \"c2\": 2'\n, '    }'\n, '  },'\n, '  \"a2\": \"a2\"'\n, '}'\n].join('\\n'));\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/space-string.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.space-wrong-type",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  a1: {\n    b1: [1, 2, 3, 4],\n    b2: {\n      c1: 1,\n      c2: 2,\n    },\n  },\n  a2: 'a2',\n};\n\nassert.sameValue(JSON.stringify(obj), JSON.stringify(obj, null, null));\nassert.sameValue(JSON.stringify(obj), JSON.stringify(obj, null, true));\nassert.sameValue(JSON.stringify(obj), JSON.stringify(obj, null, new Boolean(false)));\nassert.sameValue(JSON.stringify(obj), JSON.stringify(obj, null, Symbol()));\nassert.sameValue(JSON.stringify(obj), JSON.stringify(obj, null, {}));\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/space-wrong-type.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-array-abrupt",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar abruptLength = new Proxy([], {\n  get: function(_target, key) {\n    if (key === 'length') {\n      throw new Test262Error();\n    }\n  },\n});\n\nassert.throws(Test262Error, function() {\n  JSON.stringify(abruptLength);\n});\n\nvar abruptToPrimitive = {\n  valueOf: function() {\n    throw new Test262Error();\n  },\n};\n\nvar abruptToLength = new Proxy([], {\n  get: function(_target, key) {\n    if (key === 'length') {\n      return abruptToPrimitive;\n    }\n  },\n});\n\nassert.throws(Test262Error, function() {\n  JSON.stringify([abruptToLength]);\n});\n\nvar abruptIndex = new Array(1);\nObject.defineProperty(abruptIndex, '0', {\n  get: function() {\n    throw new Test262Error();\n  },\n});\n\nassert.throws(Test262Error, function() {\n  JSON.stringify({key: abruptIndex});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-array-abrupt.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-array-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar direct = [];\ndirect.push(direct);\n\ntry { (function() {\n  JSON.stringify(direct);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = [];\nindirect.push([[indirect]]);\n\ntry { (function() {\n  JSON.stringify(indirect);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar direct = [];\ndirect.push(direct);\n\nassert.throws(TypeError, function() {\n  JSON.stringify(direct);\n});\n\nvar indirect = [];\nindirect.push([[indirect]]);\n\nassert.throws(TypeError, function() {\n  JSON.stringify(indirect);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-array-circular.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-array-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify(handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.stringify([[[handle.proxy]]]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable([], {});\n\nhandle.revoke();\n\nassert.throws(TypeError, function() {\n  JSON.stringify(handle.proxy);\n}, 'top-level value');\n\nassert.throws(TypeError, function() {\n  JSON.stringify([[[handle.proxy]]]);\n}, 'nested value');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-array-proxy-revoked.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-array-proxy",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayProxy = new Proxy([], {\n  get: function(_target, key) {\n    if (key === 'length') return 2;\n    return Number(key);\n  },\n});\n\nassert.sameValue(\n  JSON.stringify(arrayProxy), '[0,1]', 'proxy for an array'\n);\nassert.sameValue(\n  JSON.stringify([[arrayProxy]]), '[[[0,1]]]', 'proxy for an array (nested)'\n);\n\nvar arrayProxyProxy = new Proxy(arrayProxy, {});\nassert.sameValue(\n  JSON.stringify([[arrayProxyProxy]]),\n  '[[[0,1]]]',\n  'proxy for a proxy for an array (nested)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-array-proxy.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-bigint-cross-realm",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar wrapped = other.Object(other.BigInt(100));\n\ntry { (() => JSON.stringify(wrapped))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nother.BigInt.prototype.toJSON = function () { return this.toString(); };\n\nconsole.log(JSON.stringify(wrapped));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar wrapped = other.Object(other.BigInt(100));\n\nassert.throws(TypeError, () => JSON.stringify(wrapped),\n              \"cross-realm BigInt object without toJSON method\");\n\nother.BigInt.prototype.toJSON = function () { return this.toString(); };\n\nassert.sameValue(JSON.stringify(wrapped), \"\\\"100\\\"\",\n                 \"cross-realm BigInt object with toJSON method\");\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-cross-realm.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt",
+        "cross-realm"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-bigint-order",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nlet step;\n\nfunction replacer(x, k, v)\n{\n  console.log(step++);\n  console.log(v);\n  return x;\n}\n\nBigInt.prototype.toJSON = function () { console.log(step++); return 1n; };\n\nstep = 0;\ntry { (() => JSON.stringify(0n, (k, v) => replacer(2n, k, v)))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(step);\n\nstep = 0;\ntry { (() => JSON.stringify(0n, (k, v) => replacer(Object(2n), k, v)))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(step);\n}\nmain();\n",
+      "fixture": "function main(): void {\nlet step;\n\nfunction replacer(x, k, v)\n{\n  assert.sameValue(step++, 1);\n  assert.sameValue(v, 1n);\n  return x;\n}\n\nBigInt.prototype.toJSON = function () { assert.sameValue(step++, 0); return 1n; };\n\nstep = 0;\nassert.throws(TypeError, () => JSON.stringify(0n, (k, v) => replacer(2n, k, v)));\nassert.sameValue(step, 2);\n\nstep = 0;\nassert.throws(TypeError, () => JSON.stringify(0n, (k, v) => replacer(Object(2n), k, v)));\nassert.sameValue(step, 2);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-order.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt",
+        "arrow-function"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-bigint-replacer",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction replacer(k, v)\n{\n    if (typeof v === \"bigint\")\n        return \"bigint\";\n    else\n        return v;\n}\n\nconsole.log(JSON.stringify(0n, replacer));\nconsole.log(JSON.stringify({x: 0n}, replacer));\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction replacer(k, v)\n{\n    if (typeof v === \"bigint\")\n        return \"bigint\";\n    else\n        return v;\n}\n\nassert.sameValue(JSON.stringify(0n, replacer), '\"bigint\"');\nassert.sameValue(JSON.stringify({x: 0n}, replacer), '{\"x\":\"bigint\"}');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-replacer.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-bigint-tojson-receiver",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => JSON.stringify(1n))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// The BigInt proposal changes the SerializeJSONProperty algorithm to\n// specifically allow passing BigInt objects as receivers for the toJSON\n// method.\nObject.defineProperty(BigInt.prototype, \"toJSON\", {\n    get() {\n        \"use strict\";\n        return () => typeof this;\n    }\n});\n\nconsole.log(JSON.stringify(1n));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => JSON.stringify(1n),\n              \"toString throws for BigInt object\");\n\n// The BigInt proposal changes the SerializeJSONProperty algorithm to\n// specifically allow passing BigInt objects as receivers for the toJSON\n// method.\nObject.defineProperty(BigInt.prototype, \"toJSON\", {\n    get() {\n        \"use strict\";\n        return () => typeof this;\n    }\n});\n\nassert.sameValue(JSON.stringify(1n), \"\\\"bigint\\\"\",\n                 \"BigInt toJSON method called with value as receiver\");\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-tojson-receiver.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-bigint-tojson",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nBigInt.prototype.toJSON = function () { return this.toString(); };\nconsole.log(JSON.stringify(0n));\n}\nmain();\n",
+      "fixture": "function main(): void {\nBigInt.prototype.toJSON = function () { return this.toString(); };\nassert.sameValue(JSON.stringify(0n), '\"0\"');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint-tojson.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-bigint",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => JSON.stringify(0n))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => JSON.stringify(Object(0n)))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (() => JSON.stringify({x: 0n}))(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => JSON.stringify(0n));\nassert.throws(TypeError, () => JSON.stringify(Object(0n)));\nassert.throws(TypeError, () => JSON.stringify({x: 0n}));\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-bigint.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-boolean-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(new Boolean(true)), 'true');\n\nassert.sameValue(\n  JSON.stringify({\n    toJSON: function() {\n      return {key: new Boolean(false)};\n    },\n  }),\n  '{\"key\":false}'\n);\n\nassert.sameValue(JSON.stringify([1], function(_k, v) {\n  return v === 1 ? new Boolean(true) : v;\n}), '[true]');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-boolean-object.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-function",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify(function() {}));\nconsole.log(JSON.stringify([function() {}]));\nconsole.log(JSON.stringify({key: function() {}}));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(function() {}), undefined);\nassert.sameValue(JSON.stringify([function() {}]), '[null]');\nassert.sameValue(JSON.stringify({key: function() {}}), '{}');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-function.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-number-negative-zero",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify(-0));\nconsole.log(JSON.stringify(['-0', 0, -0]));\nconsole.log(JSON.stringify({key: -0}));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(-0), '0');\nassert.sameValue(JSON.stringify(['-0', 0, -0]), '[\"-0\",0,0]');\nassert.sameValue(JSON.stringify({key: -0}), '{\"key\":0}');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-number-negative-zero.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-number-non-finite",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify(Infinity));\nconsole.log(JSON.stringify({key: -Infinity}));\nconsole.log(JSON.stringify([NaN]));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(Infinity), 'null');\nassert.sameValue(JSON.stringify({key: -Infinity}), '{\"key\":null}');\nassert.sameValue(JSON.stringify([NaN]), '[null]');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-number-non-finite.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-number-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(new Number(8.5)), '8.5');\n\nvar toPrimitiveReplacer = function(_key, value) {\n  if (value === 'str') {\n    var num = new Number(42);\n    num.toString = function() { throw new Test262Error('should not be called'); };\n    num.valueOf = function() { return 2; };\n    return num;\n  }\n\n  return value;\n};\n\nassert.sameValue(JSON.stringify(['str'], toPrimitiveReplacer), '[2]');\n\nvar abruptToJSON = function() {\n  var num = new Number(3.14);\n  num.toString = function() { throw new Test262Error(); };\n  num.valueOf = function() { throw new Test262Error(); };\n  return num;\n};\n\nassert.throws(Test262Error, function() {\n  JSON.stringify({\n    key: {\n      toJSON: abruptToJSON,\n    },\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-number-object.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-object-abrupt",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(Test262Error, function() {\n  JSON.stringify({\n    get key() {\n      throw new Test262Error();\n    },\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-object-abrupt.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-object-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar direct = {};\ndirect.prop = direct;\n\ntry { (function() {\n  JSON.stringify(direct);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar indirect = {\n  p1: {\n    p2: {\n      get p3() {\n        return indirect;\n      },\n    },\n  },\n};\n\ntry { (function() {\n  JSON.stringify(indirect);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar direct = {};\ndirect.prop = direct;\n\nassert.throws(TypeError, function() {\n  JSON.stringify(direct);\n});\n\nvar indirect = {\n  p1: {\n    p2: {\n      get p3() {\n        return indirect;\n      },\n    },\n  },\n};\n\nassert.throws(TypeError, function() {\n  JSON.stringify(indirect);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-object-circular.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-object-proxy-revoked",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar handle = Proxy.revocable({}, {});\n\nhandle.revoke();\n\ntry { (function() {\n  JSON.stringify(handle.proxy);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  JSON.stringify({a: {b: handle.proxy}});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar handle = Proxy.revocable({}, {});\n\nhandle.revoke();\n\nassert.throws(TypeError, function() {\n  JSON.stringify(handle.proxy);\n}, 'top-level value');\n\nassert.throws(TypeError, function() {\n  JSON.stringify({a: {b: handle.proxy}});\n}, 'nested value');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-object-proxy-revoked.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-object-proxy",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar objectProxy = new Proxy({}, {\n  getOwnPropertyDescriptor: function() {\n    return {value: 1, writable: true, enumerable: true, configurable: true};\n  },\n  get: function() {\n    return 1;\n  },\n  ownKeys: function() {\n    return ['a', 'b'];\n  },\n});\n\nassert.sameValue(\n  JSON.stringify(objectProxy), '{\"a\":1,\"b\":1}', 'proxy for an object'\n);\nassert.sameValue(\n  JSON.stringify({l1: {l2: objectProxy}}),\n  '{\"l1\":{\"l2\":{\"a\":1,\"b\":1}}}',\n  'proxy for an object (nested)'\n);\n\nvar objectProxyProxy = new Proxy(objectProxy, {});\nassert.sameValue(\n  JSON.stringify({l1: {l2: objectProxyProxy}}),\n  '{\"l1\":{\"l2\":{\"a\":1,\"b\":1}}}',\n  'proxy for a proxy for an object (nested)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-object-proxy.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Proxy"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-primitive-top-level",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify(null));\nconsole.log(JSON.stringify(true));\nconsole.log(JSON.stringify(false));\nconsole.log(JSON.stringify('str'));\nconsole.log(JSON.stringify(123));\nconsole.log(JSON.stringify(undefined));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(null), 'null');\nassert.sameValue(JSON.stringify(true), 'true');\nassert.sameValue(JSON.stringify(false), 'false');\nassert.sameValue(JSON.stringify('str'), '\"str\"');\nassert.sameValue(JSON.stringify(123), '123');\nassert.sameValue(JSON.stringify(undefined), undefined);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-primitive-top-level.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-string-escape-ascii",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar char_to_json = {\n  '\"': '\\\\\"',\n  \"\\\\\": \"\\\\\\\\\",\n  \"\\x00\": \"\\\\u0000\",\n  \"\\x01\": \"\\\\u0001\",\n  \"\\x02\": \"\\\\u0002\",\n  \"\\x03\": \"\\\\u0003\",\n  \"\\x04\": \"\\\\u0004\",\n  \"\\x05\": \"\\\\u0005\",\n  \"\\x06\": \"\\\\u0006\",\n  \"\\x07\": \"\\\\u0007\",\n  \"\\x08\": \"\\\\b\",\n  \"\\x09\": \"\\\\t\",\n  \"\\x0A\": \"\\\\n\",\n  \"\\x0B\": \"\\\\u000b\",\n  \"\\x0C\": \"\\\\f\",\n  \"\\x0D\": \"\\\\r\",\n  \"\\x0E\": \"\\\\u000e\",\n  \"\\x0F\": \"\\\\u000f\",\n  \"\\x10\": \"\\\\u0010\",\n  \"\\x11\": \"\\\\u0011\",\n  \"\\x12\": \"\\\\u0012\",\n  \"\\x13\": \"\\\\u0013\",\n  \"\\x14\": \"\\\\u0014\",\n  \"\\x15\": \"\\\\u0015\",\n  \"\\x16\": \"\\\\u0016\",\n  \"\\x17\": \"\\\\u0017\",\n  \"\\x18\": \"\\\\u0018\",\n  \"\\x19\": \"\\\\u0019\",\n  \"\\x1A\": \"\\\\u001a\",\n  \"\\x1B\": \"\\\\u001b\",\n  \"\\x1C\": \"\\\\u001c\",\n  \"\\x1D\": \"\\\\u001d\",\n  \"\\x1E\": \"\\\\u001e\",\n  \"\\x1F\": \"\\\\u001f\"\n}\n\nvar chars = Object.keys(char_to_json).join(\"\");\nvar chars_reversed = Object.keys(char_to_json).reverse().join(\"\");\nvar jsonChars = Object.values(char_to_json).join(\"\");\nvar jsonChars_reversed = Object.values(char_to_json).reverse().join(\"\");\nvar json = JSON.stringify({\n  [\"name\" + chars + chars_reversed]: chars_reversed + chars + \"value\"\n});\n\nfor (var char in char_to_json) {\n  var count = json.split(char_to_json[char]).length - 1;\n  console.log(count);\n}\n\nconsole.log(json);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar char_to_json = {\n  '\"': '\\\\\"',\n  \"\\\\\": \"\\\\\\\\\",\n  \"\\x00\": \"\\\\u0000\",\n  \"\\x01\": \"\\\\u0001\",\n  \"\\x02\": \"\\\\u0002\",\n  \"\\x03\": \"\\\\u0003\",\n  \"\\x04\": \"\\\\u0004\",\n  \"\\x05\": \"\\\\u0005\",\n  \"\\x06\": \"\\\\u0006\",\n  \"\\x07\": \"\\\\u0007\",\n  \"\\x08\": \"\\\\b\",\n  \"\\x09\": \"\\\\t\",\n  \"\\x0A\": \"\\\\n\",\n  \"\\x0B\": \"\\\\u000b\",\n  \"\\x0C\": \"\\\\f\",\n  \"\\x0D\": \"\\\\r\",\n  \"\\x0E\": \"\\\\u000e\",\n  \"\\x0F\": \"\\\\u000f\",\n  \"\\x10\": \"\\\\u0010\",\n  \"\\x11\": \"\\\\u0011\",\n  \"\\x12\": \"\\\\u0012\",\n  \"\\x13\": \"\\\\u0013\",\n  \"\\x14\": \"\\\\u0014\",\n  \"\\x15\": \"\\\\u0015\",\n  \"\\x16\": \"\\\\u0016\",\n  \"\\x17\": \"\\\\u0017\",\n  \"\\x18\": \"\\\\u0018\",\n  \"\\x19\": \"\\\\u0019\",\n  \"\\x1A\": \"\\\\u001a\",\n  \"\\x1B\": \"\\\\u001b\",\n  \"\\x1C\": \"\\\\u001c\",\n  \"\\x1D\": \"\\\\u001d\",\n  \"\\x1E\": \"\\\\u001e\",\n  \"\\x1F\": \"\\\\u001f\"\n}\n\nvar chars = Object.keys(char_to_json).join(\"\");\nvar chars_reversed = Object.keys(char_to_json).reverse().join(\"\");\nvar jsonChars = Object.values(char_to_json).join(\"\");\nvar jsonChars_reversed = Object.values(char_to_json).reverse().join(\"\");\nvar json = JSON.stringify({\n  [\"name\" + chars + chars_reversed]: chars_reversed + chars + \"value\"\n});\n\nfor (var char in char_to_json) {\n  var count = json.split(char_to_json[char]).length - 1;\n  assert.sameValue(count, 4,\n    \"Every ASCII 0x\" + char.charCodeAt(0).toString(16) + \" serializes to \" + char_to_json[char]);\n}\n\nassert.sameValue(\n  json,\n  `{\"${\"name\" + jsonChars + jsonChars_reversed}\":\"${jsonChars_reversed + jsonChars + \"value\"}\"}`,\n  \"JSON.stringify(objectUsingControlCharacters)\"\n);\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-string-escape-ascii.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-string-escape-unicode",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify(\"\\uD834\"));\nconsole.log(JSON.stringify(\"\\uDF06\"));\n\nconsole.log(JSON.stringify(\"\\uD834\\uDF06\"));\nconsole.log(JSON.stringify(\"\\uD834\\uD834\\uDF06\\uD834\"));\nconsole.log(JSON.stringify(\"\\uD834\\uD834\\uDF06\\uDF06\"));\nconsole.log(JSON.stringify(\"\\uDF06\\uD834\\uDF06\\uD834\"));\nconsole.log(JSON.stringify(\"\\uDF06\\uD834\\uDF06\\uDF06\"));\n\nconsole.log(JSON.stringify(\"\\uDF06\\uD834\"));\nconsole.log(JSON.stringify(\"\\uD834\\uDF06\\uD834\\uD834\"));\nconsole.log(JSON.stringify(\"\\uD834\\uDF06\\uD834\\uDF06\"));\nconsole.log(JSON.stringify(\"\\uDF06\\uDF06\\uD834\\uD834\"));\nconsole.log(JSON.stringify(\"\\uDF06\\uDF06\\uD834\\uDF06\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(\"\\uD834\"), '\"\\\\ud834\"',\n  'JSON.stringify(\"\\\\uD834\")');\nassert.sameValue(JSON.stringify(\"\\uDF06\"), '\"\\\\udf06\"',\n  'JSON.stringify(\"\\\\uDF06\")');\n\nassert.sameValue(JSON.stringify(\"\\uD834\\uDF06\"), '\"𝌆\"',\n  'JSON.stringify(\"\\\\uD834\\\\uDF06\")');\nassert.sameValue(JSON.stringify(\"\\uD834\\uD834\\uDF06\\uD834\"), '\"\\\\ud834𝌆\\\\ud834\"',\n  'JSON.stringify(\"\\\\uD834\\\\uD834\\\\uDF06\\\\uD834\")');\nassert.sameValue(JSON.stringify(\"\\uD834\\uD834\\uDF06\\uDF06\"), '\"\\\\ud834𝌆\\\\udf06\"',\n  'JSON.stringify(\"\\\\uD834\\\\uD834\\\\uDF06\\\\uDF06\")');\nassert.sameValue(JSON.stringify(\"\\uDF06\\uD834\\uDF06\\uD834\"), '\"\\\\udf06𝌆\\\\ud834\"',\n  'JSON.stringify(\"\\\\uDF06\\\\uD834\\\\uDF06\\\\uD834\")');\nassert.sameValue(JSON.stringify(\"\\uDF06\\uD834\\uDF06\\uDF06\"), '\"\\\\udf06𝌆\\\\udf06\"',\n  'JSON.stringify(\"\\\\uDF06\\\\uD834\\\\uDF06\\\\uDF06\")');\n\nassert.sameValue(JSON.stringify(\"\\uDF06\\uD834\"), '\"\\\\udf06\\\\ud834\"',\n  'JSON.stringify(\"\\\\uDF06\\\\uD834\")');\nassert.sameValue(JSON.stringify(\"\\uD834\\uDF06\\uD834\\uD834\"), '\"𝌆\\\\ud834\\\\ud834\"',\n  'JSON.stringify(\"\\\\uD834\\\\uDF06\\\\uD834\\\\uD834\")');\nassert.sameValue(JSON.stringify(\"\\uD834\\uDF06\\uD834\\uDF06\"), '\"𝌆𝌆\"',\n  'JSON.stringify(\"\\\\uD834\\\\uDF06\\\\uD834\\\\uDF06\")');\nassert.sameValue(JSON.stringify(\"\\uDF06\\uDF06\\uD834\\uD834\"), '\"\\\\udf06\\\\udf06\\\\ud834\\\\ud834\"',\n  'JSON.stringify(\"\\\\uDF06\\\\uDF06\\\\uD834\\\\uD834\")');\nassert.sameValue(JSON.stringify(\"\\uDF06\\uDF06\\uD834\\uDF06\"), '\"\\\\udf06\\\\udf06𝌆\"',\n  'JSON.stringify(\"\\\\uDF06\\\\uDF06\\\\uD834\\\\uDF06\")');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-string-escape-unicode.js",
       "n_asserts": 12,
-      "flags": []
+      "flags": [],
+      "features": [
+        "well-formed-json-stringify"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-string-object",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify(new String('str')), '\"str\"');\n\nvar toJSON = function() {\n  var str = new String('str');\n  str.toString = function() { return 'toString'; };\n  str.valueOf = function() { throw new Test262Error('should not be called'); };\n  return str;\n};\n\nassert.sameValue(\n  JSON.stringify({\n    key: {\n      toJSON: toJSON,\n    },\n  }),\n  '{\"key\":\"toString\"}'\n);\n\nvar abruptReplacer = function(_key, value) {\n  if (value === true) {\n    var str = new String('str');\n    str.toString = function() { throw new Test262Error(); };\n    str.valueOf = function() { throw new Test262Error(); };\n    return str;\n  }\n\n  return value;\n};\n\nassert.throws(Test262Error, function() {\n  JSON.stringify([true], abruptReplacer);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-string-object.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-symbol",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol('desc');\nconsole.log(JSON.stringify(sym));\nconsole.log(JSON.stringify([sym]));\nconsole.log(JSON.stringify({key: sym}));\n\nvar obj = {};\nobj[sym] = 1;\nconsole.log(JSON.stringify(obj));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar sym = Symbol('desc');\nassert.sameValue(JSON.stringify(sym), undefined);\nassert.sameValue(JSON.stringify([sym]), '[null]');\nassert.sameValue(JSON.stringify({key: sym}), '{}');\n\nvar obj = {};\nobj[sym] = 1;\nassert.sameValue(JSON.stringify(obj), '{}');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-symbol.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-tojson-abrupt",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(Test262Error, function() {\n  JSON.stringify({\n    get toJSON() {\n      throw new Test262Error();\n    },\n  });\n});\n\nassert.throws(Test262Error, function() {\n  JSON.stringify({\n    toJSON() {\n      throw new Test262Error();\n    },\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-tojson-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-tojson-arguments",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar callCount = 0;\nvar _this, _key;\nvar obj = {\n  toJSON: function(key) {\n    callCount += 1;\n    _this = this;\n    _key = key;\n  },\n};\n\nconsole.log(JSON.stringify(obj));\nconsole.log(callCount);\nconsole.log(_this);\nconsole.log(_key);\n\nconsole.log(JSON.stringify([1, obj, 3]));\nconsole.log(callCount);\nconsole.log(_this);\nconsole.log(_key);\n\nconsole.log(JSON.stringify({key: obj}));\nconsole.log(callCount);\nconsole.log(_this);\nconsole.log(_key);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar callCount = 0;\nvar _this, _key;\nvar obj = {\n  toJSON: function(key) {\n    callCount += 1;\n    _this = this;\n    _key = key;\n  },\n};\n\nassert.sameValue(JSON.stringify(obj), undefined);\nassert.sameValue(callCount, 1);\nassert.sameValue(_this, obj);\nassert.sameValue(_key, '');\n\nassert.sameValue(JSON.stringify([1, obj, 3]), '[1,null,3]');\nassert.sameValue(callCount, 2);\nassert.sameValue(_this, obj);\nassert.sameValue(_key, '1');\n\nassert.sameValue(JSON.stringify({key: obj}), '{}');\nassert.sameValue(callCount, 3);\nassert.sameValue(_this, obj);\nassert.sameValue(_key, 'key');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-tojson-arguments.js",
       "n_asserts": 12,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-tojson-array-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar arr = [];\nvar circular = [arr];\n\narr.toJSON = function() {\n  return circular;\n};\n\ntry { (function() {\n  JSON.stringify(circular);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar arr = [];\nvar circular = [arr];\n\narr.toJSON = function() {\n  return circular;\n};\n\nassert.throws(TypeError, function() {\n  JSON.stringify(circular);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-tojson-array-circular.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-tojson-not-function",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(JSON.stringify({toJSON: null}));\nconsole.log(JSON.stringify({toJSON: false}));\nconsole.log(JSON.stringify({toJSON: []}));\nconsole.log(JSON.stringify({toJSON: /re/}));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(JSON.stringify({toJSON: null}), '{\"toJSON\":null}');\nassert.sameValue(JSON.stringify({toJSON: false}), '{\"toJSON\":false}');\nassert.sameValue(JSON.stringify({toJSON: []}), '{\"toJSON\":[]}');\nassert.sameValue(JSON.stringify({toJSON: /re/}), '{\"toJSON\":{}}');\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-tojson-not-function.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.json.stringify.value-tojson-object-circular",
       "category": "json",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {};\nvar circular = { prop: obj };\n\nobj.toJSON = function() {\n  return circular;\n};\n\ntry { (function() {\n  JSON.stringify(circular);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {};\nvar circular = { prop: obj };\n\nobj.toJSON = function() {\n  return circular;\n};\n\nassert.throws(TypeError, function() {\n  JSON.stringify(circular);\n});\n}\nmain();\n",
       "origin": "test/built-ins/JSON/stringify/value-tojson-object-circular.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.stringify.value-tojson-result",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  JSON.stringify({\n    toJSON: function() { return [false]; },\n  }),\n  '[false]'\n);\n\nvar arr = [true];\narr.toJSON = function() {};\nassert.sameValue(JSON.stringify(arr), undefined);\n\nvar str = new String('str');\nstr.toJSON = function() { return null; };\nassert.sameValue(JSON.stringify({key: str}), '{\"key\":null}');\n\nvar num = new Number(14);\nnum.toJSON = function() { return {key: 7}; };\nassert.sameValue(JSON.stringify([num]), '[{\"key\":7}]');\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/stringify/value-tojson-result.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.json.symbol.tostringtag",
+      "category": "json",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(JSON[Symbol.toStringTag], 'JSON');\n\nverifyProperty(JSON, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/JSON/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     }
   ]
 }

@@ -1,41 +1,216 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.suppressederror.is-a-constructor",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(SuppressedError), true, 'isConstructor(SuppressedError) must return true');\nnew SuppressedError();\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.message-tostring-abrupt-symbol",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar case1 = Symbol();\n\nassert.throws(TypeError, () => {\n  new SuppressedError(undefined, undefined, case1);\n}, 'toPrimitive');\n\nvar case2 = {\n  [Symbol.toPrimitive]() {\n    return Symbol();\n  },\n  toString() {\n    throw new Test262Error();\n  },\n  valueOf() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(TypeError, () => {\n  new SuppressedError(undefined, undefined, case2);\n}, 'from ToPrimitive');\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/message-tostring-abrupt-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Symbol",
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.message-tostring-abrupt",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar case1 = {\n  [Symbol.toPrimitive]() {\n    throw new Test262Error();\n  },\n  toString() {\n    throw 'toString called';\n  },\n  valueOf() {\n    throw 'valueOf called';\n  }\n};\n\nassert.throws(Test262Error, () => {\n  new SuppressedError(undefined, undefined, case1);\n}, 'toPrimitive');\n\nvar case2 = {\n  [Symbol.toPrimitive]: undefined,\n  toString() {\n    throw new Test262Error();\n  },\n  valueOf() {\n    throw 'valueOf called';\n  }\n};\n\nassert.throws(Test262Error, () => {\n  new SuppressedError(undefined, undefined, case2);\n}, 'toString');\n\nvar case3 = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, () => {\n  new SuppressedError(undefined, undefined, case3);\n}, 'valueOf');\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/message-tostring-abrupt.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.message-undefined-no-prop",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar case1 = new SuppressedError(undefined, undefined, undefined);\n\nassert.sameValue(\n  Object.prototype.hasOwnProperty.call(case1, 'message'),\n  false,\n  'explicit'\n);\n\nvar case2 = new SuppressedError([]);\n\nassert.sameValue(\n  Object.prototype.hasOwnProperty.call(case2, 'message'),\n  false,\n  'implicit'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/message-undefined-no-prop.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.suppressederror.newtarget-is-undefined",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = SuppressedError();\n\nconsole.log(Object.getPrototypeOf(obj));\nconsole.log(obj instanceof SuppressedError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = SuppressedError();\n\nassert.sameValue(Object.getPrototypeOf(obj), SuppressedError.prototype);\nassert(obj instanceof SuppressedError);\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/newtarget-is-undefined.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.newtarget-proto-custom",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar custom = { x: 42 };\nvar newt = new Proxy(function() {}, {\n  get(t, p) {\n    if (p === 'prototype') {\n      return custom;\n    }\n\n    return t[p];\n  }\n});\n\nvar obj = Reflect.construct(SuppressedError, [], newt);\n\nassert.sameValue(Object.getPrototypeOf(obj), custom);\nassert.sameValue(obj.x, 42);\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/newtarget-proto-custom.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.newtarget-proto-fallback",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst values = [\n  undefined,\n  null,\n  42,\n  false,\n  true,\n  Symbol(),\n  'string',\n  SuppressedError.prototype,\n];\n\nconst NewTarget = new Function();\n\nfor (const value of values) {\n  const NewTargetProxy = new Proxy(NewTarget, {\n    get(t, p) {\n      if (p === 'prototype') {\n        return value;\n      }\n      return t[p];\n    }\n  });\n\n  const error = Reflect.construct(SuppressedError, [], NewTargetProxy);\n  assert.sameValue(Object.getPrototypeOf(error), SuppressedError.prototype);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/newtarget-proto-fallback.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.newtarget-proto",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = new SuppressedError();\n\nassert.sameValue(Object.getPrototypeOf(obj), SuppressedError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/newtarget-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.order-of-args-evaluation",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet messageStringified = false;\nconst message = {\n  toString() {\n    messageStringified = true;\n    return '';\n  }\n};\nconst error = {};\nconst suppressed = {};\n\nconst e = new SuppressedError(error, suppressed, message);\n\nassert.sameValue(messageStringified, true);\nconst keys = Object.getOwnPropertyNames(e);\n\n// Allow implementation-defined properties before \"message\" and after \"suppressed\".\n\nconst messageIndex = keys.indexOf(\"message\");\nassert.notSameValue(messageIndex, -1, \"Expected 'message' to be defined\");\n\nconst errorIndex = keys.indexOf(\"error\");\nassert.sameValue(errorIndex, messageIndex + 1, \"Expected 'error' to be defined after 'message'\");\n\nconst suppressedIndex = keys.indexOf(\"suppressed\");\nassert.sameValue(suppressedIndex, errorIndex + 1, \"Expected 'suppressed' to be defined after 'error'\");\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/order-of-args-evaluation.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.prop-desc",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof SuppressedError, 'function');\n\nverifyProperty(this, 'SuppressedError', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.proto-from-ctor-realm",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(SuppressedError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SuppressedError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(SuppressedError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SuppressedError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nerr = Reflect.construct(SuppressedError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SuppressedError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nerr = Reflect.construct(SuppressedError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SuppressedError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(SuppressedError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SuppressedError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = -1;\nerr = Reflect.construct(SuppressedError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SuppressedError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.suppressederror.proto",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError);\n\nconsole.log(proto);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError);\n\nassert.sameValue(proto, Error);\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.suppressederror.prototype.errors-absent-on-prototype",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"error\"));\nconsole.log(SuppressedError.prototype.hasOwnProperty(\"suppressed\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(SuppressedError.prototype.hasOwnProperty(\"error\"), false);\nassert.sameValue(SuppressedError.prototype.hasOwnProperty(\"suppressed\"), false);\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/prototype/errors-absent-on-prototype.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.suppressederror.prototype.prop-desc",
+      "category": "suppressederror",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof SuppressedError.prototype, 'object');\n\nverifyProperty(SuppressedError, 'prototype', {\n  enumerable: false,\n  writable: false,\n  configurable: false\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SuppressedError/prototype/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.suppressederror.prototype.proto",
       "category": "suppressederror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError.prototype);\n\nconsole.log(proto);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(SuppressedError.prototype);\n\nassert.sameValue(proto, Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/SuppressedError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     }
   ]
 }

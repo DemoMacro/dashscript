@@ -1,32 +1,809 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.alphabet",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.compareArray(Uint8Array.fromBase64('x+/y'), [199, 239, 242]);\nassert.compareArray(Uint8Array.fromBase64('x+/y', { alphabet: 'base64' }), [199, 239, 242]);\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('x+/y', { alphabet: 'base64url' });\n});\n\nassert.compareArray(Uint8Array.fromBase64('x-_y', { alphabet: 'base64url' }), [199, 239, 242]);\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('x-_y');\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('x-_y', { alphabet: 'base64' });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/alphabet.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.ignores-receiver",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fromBase64 = Uint8Array.fromBase64;\nvar noReceiver = fromBase64(\"Zg==\");\nassert.sameValue(Object.getPrototypeOf(noReceiver), Uint8Array.prototype);\n\nclass Subclass extends Uint8Array {\n  constructor() {\n    throw new Test262Error(\"subclass constructor called\");\n  }\n}\nvar fromSubclass = Subclass.fromBase64(\"Zg==\");\nassert.sameValue(Object.getPrototypeOf(fromSubclass), Uint8Array.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/ignores-receiver.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.uint8array.frombase64.illegal-characters",
       "category": "uint8array",
       "source": "test262",
-      "fixture": "function main(): void {\nvar illegal = [\n  'Zm.9v',\n  'Zm9v^',\n  'Zg==&',\n  'Z−==', // U+2212 'Minus Sign'\n  'Z＋==', // U+FF0B 'Fullwidth Plus Sign'\n  'Zg\\u00A0==', // nbsp\n  'Zg\\u2009==', // thin space\n  'Zg\\u2028==', // line separator\n];\nillegal.forEach(function(value) {\n  try { (function() {\n    Uint8Array.fromBase64(value)\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar illegal = [\n  'Zm.9v',\n  'Zm9v^',\n  'Zg==&',\n  'Z−==', // U+2212 'Minus Sign'\n  'Z＋==', // U+FF0B 'Fullwidth Plus Sign'\n  'Zg\\u00A0==', // nbsp\n  'Zg\\u2009==', // thin space\n  'Zg\\u2028==', // line separator\n];\nillegal.forEach(function(value) {\n  assert.throws(SyntaxError, function() {\n    Uint8Array.fromBase64(value)\n  });\n});\n}\nmain();\n",
       "origin": "test/built-ins/Uint8Array/fromBase64/illegal-characters.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.last-chunk-handling",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// padding\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg=='), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg==', { lastChunkHandling: 'loose' }), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg==', { lastChunkHandling: 'stop-before-partial' }), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg==', { lastChunkHandling: 'strict' }), [101, 120, 97, 102]);\n\n// no padding\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg'), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg', { lastChunkHandling: 'loose' }), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg', { lastChunkHandling: 'stop-before-partial' }), [101, 120, 97]);\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg', { lastChunkHandling: 'strict' });\n});\n\n// non-zero padding bits\nassert.compareArray(Uint8Array.fromBase64('ZXhhZh=='), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZh==', { lastChunkHandling: 'loose' }), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZh==', { lastChunkHandling: 'stop-before-partial' }), [101, 120, 97, 102]);\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZh==', { lastChunkHandling: 'strict' });\n});\n\n// non-zero padding bits, no padding\nassert.compareArray(Uint8Array.fromBase64('ZXhhZh'), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZh', { lastChunkHandling: 'loose' }), [101, 120, 97, 102]);\nassert.compareArray(Uint8Array.fromBase64('ZXhhZh', { lastChunkHandling: 'stop-before-partial' }), [101, 120, 97]);\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZh', { lastChunkHandling: 'strict' });\n});\n\n// partial padding\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg=');\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg=', { lastChunkHandling: 'loose' });\n});\nassert.compareArray(Uint8Array.fromBase64('ZXhhZg=', { lastChunkHandling: 'stop-before-partial' }), [101, 120, 97]);\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg=', { lastChunkHandling: 'strict' });\n});\n\n// excess padding\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg===');\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg===', { lastChunkHandling: 'loose' });\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg===', { lastChunkHandling: 'stop-before-partial' });\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ZXhhZg===', { lastChunkHandling: 'strict' });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/last-chunk-handling.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.last-chunk-invalid",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// Non-padded incomplete chunk 'A'\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('A');\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('A', { lastChunkHandling: 'loose' });\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('A', { lastChunkHandling: 'strict' });\n});\nassert.compareArray(Uint8Array.fromBase64('A', { lastChunkHandling: 'stop-before-partial' }), []);\n\n// Non-padded incomplete chunk 'ABCDA'\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ABCDA');\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ABCDA', { lastChunkHandling: 'loose' });\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('ABCDA', { lastChunkHandling: 'strict' });\n});\nassert.compareArray(Uint8Array.fromBase64('ABCDA', { lastChunkHandling: 'stop-before-partial' }), [0, 16, 131]);\n\n// Incomplete padding in chunk 'AA=' is allowed but skipped in 'stop-before-partial', but not other modes\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('AA=');\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('AA=', { lastChunkHandling: 'loose' });\n});\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromBase64('AA=', { lastChunkHandling: 'strict' });\n});\nassert.compareArray(Uint8Array.fromBase64('AA=', { lastChunkHandling: 'stop-before-partial' }), []);\nassert.compareArray(Uint8Array.fromBase64('aQ=', { lastChunkHandling: 'stop-before-partial' }), []);\nassert.compareArray(Uint8Array.fromBase64('ABCDAA=', { lastChunkHandling: 'stop-before-partial' }), [0, 16, 131]);\n\n// Padded chunks always throw when incomplete before padding\nvar illegal = [\n  '=',\n  '==',\n  '===',\n  '====',\n  '=====',\n  'A=',\n  'A==',\n  'A===',\n  'A====',\n  'A=====',\n  'AA====',\n  'AA=====',\n  'AAA==',\n  'AAA===',\n  'AAA====',\n  'AAA=====',\n  'AAAA=',\n  'AAAA==',\n  'AAAA===',\n  'AAAA====',\n  'AAAA=====',\n  'AAAAA=',\n  'AAAAA==',\n  'AAAAA===',\n  'AAAAA====',\n  'AAAAA=====',\n];\n\nillegal.forEach(function(value) {\n  assert.throws(SyntaxError, function() {\n    Uint8Array.fromBase64(value);\n  });\n  assert.throws(SyntaxError, function() {\n    Uint8Array.fromBase64(value, { lastChunkHandling: 'loose' });\n  });\n  assert.throws(SyntaxError, function() {\n    Uint8Array.fromBase64(value, { lastChunkHandling: 'strict' });\n  });\n  assert.throws(SyntaxError, function() {\n    Uint8Array.fromBase64(value, { lastChunkHandling: 'stop-before-partial' });\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/last-chunk-invalid.js",
+      "n_asserts": 13,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.nonconstructor",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(Uint8Array.fromBase64), \"Uint8Array.fromBase64 is not a constructor\");\n\nassert.throws(TypeError, function() {\n  new Uint8Array.fromBase64('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.option-coercion",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Uint8Array.fromBase64(\"Zg==\", { alphabet: Object(\"base64\") });\n});\n\nassert.throws(TypeError, function() {\n  Uint8Array.fromBase64(\"Zg==\", { lastChunkHandling: Object(\"loose\") });\n});\n\n\nvar toStringCalls = 0;\nvar throwyToString = {\n  toString: function() {\n    toStringCalls += 1;\n    throw new Test262Error(\"toString called\");\n  }\n};\nassert.throws(TypeError, function() {\n  Uint8Array.fromBase64(\"Zg==\", { alphabet: throwyToString });\n});\nassert.sameValue(toStringCalls, 0);\n\nassert.throws(TypeError, function() {\n  Uint8Array.fromBase64(\"Zg==\", { lastChunkHandling: throwyToString });\n});\nassert.sameValue(toStringCalls, 0);\n\n\nvar alphabetAccesses = 0;\nvar base64UrlOptions = {};\nObject.defineProperty(base64UrlOptions, \"alphabet\", {\n  get: function() {\n    alphabetAccesses += 1;\n    return \"base64url\";\n  }\n});\nvar arr = Uint8Array.fromBase64(\"x-_y\", base64UrlOptions);\nassert.compareArray(arr, [199, 239, 242]);\nassert.sameValue(alphabetAccesses, 1);\n\nvar lastChunkHandlingAccesses = 0;\nvar strictOptions = {};\nObject.defineProperty(strictOptions, \"lastChunkHandling\", {\n  get: function() {\n    lastChunkHandlingAccesses += 1;\n    return \"strict\";\n  }\n});\nvar arr = Uint8Array.fromBase64(\"Zg==\", strictOptions);\nassert.compareArray(arr, [102]);\nassert.sameValue(lastChunkHandlingAccesses, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/option-coercion.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.results",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// standard test vectors from https://datatracker.ietf.org/doc/html/rfc4648#section-10\nvar standardBase64Vectors = [\n  [\"\", []],\n  [\"Zg==\", [102]],\n  [\"Zm8=\", [102, 111]],\n  [\"Zm9v\", [102, 111, 111]],\n  [\"Zm9vYg==\", [102, 111, 111, 98]],\n  [\"Zm9vYmE=\", [102, 111, 111, 98, 97]],\n  [\"Zm9vYmFy\", [102, 111, 111, 98, 97, 114]],\n];\n\nstandardBase64Vectors.forEach(function (pair) {\n  var arr = Uint8Array.fromBase64(pair[0]);\n  assert.sameValue(Object.getPrototypeOf(arr), Uint8Array.prototype, \"decoding \" + pair[0]);\n  assert.sameValue(arr.length, pair[1].length, \"decoding \" + pair[0]);\n  assert.sameValue(arr.buffer.byteLength, pair[1].length, \"decoding \" + pair[0]);\n  assert.compareArray(arr, pair[1], \"decoding \" + pair[0]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/results.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.string-coercion",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toStringCalls = 0;\nvar throwyToString = {\n  toString: function() {\n    toStringCalls += 1;\n    throw new Test262Error(\"toString called\");\n  }\n};\n\nassert.throws(TypeError, function() {\n  Uint8Array.fromBase64(throwyToString);\n});\nassert.sameValue(toStringCalls, 0);\n\n\nvar optionAccesses = 0;\nvar touchyOptions = {};\nObject.defineProperty(touchyOptions, \"alphabet\", {\n  get: function() {\n    optionAccesses += 1;\n    throw new Test262Error(\"alphabet accessed\");\n  }\n});\nObject.defineProperty(touchyOptions, \"lastChunkHandling\", {\n  get: function() {\n    optionAccesses += 1;\n    throw new Test262Error(\"lastChunkHandling accessed\");\n  }\n});\nassert.throws(TypeError, function() {\n  Uint8Array.fromBase64(throwyToString, touchyOptions);\n});\nassert.sameValue(toStringCalls, 0);\nassert.sameValue(optionAccesses, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/string-coercion.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.frombase64.whitespace",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar whitespaceKinds = [\n  [\"Z g==\", \"space\"],\n  [\"Z\\tg==\", \"tab\"],\n  [\"Z\\x0Ag==\", \"LF\"],\n  [\"Z\\x0Cg==\", \"FF\"],\n  [\"Z\\x0Dg==\", \"CR\"],\n];\nwhitespaceKinds.forEach(function(pair) {\n  var arr = Uint8Array.fromBase64(pair[0]);\n  assert.sameValue(arr.length, 1);\n  assert.sameValue(arr.buffer.byteLength, 1);\n  assert.compareArray(arr, [102], \"ascii whitespace: \" + pair[1]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromBase64/whitespace.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.fromhex.ignores-receiver",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fromHex = Uint8Array.fromHex;\nvar noReceiver = fromHex(\"aa\");\nassert.sameValue(Object.getPrototypeOf(noReceiver), Uint8Array.prototype);\n\nclass Subclass extends Uint8Array {\n  constructor() {\n    throw new Test262Error(\"subclass constructor called\");\n  }\n}\nvar fromSubclass = Subclass.fromHex(\"aa\");\nassert.sameValue(Object.getPrototypeOf(fromSubclass), Uint8Array.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromHex/ignores-receiver.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.uint8array.fromhex.illegal-characters",
       "category": "uint8array",
       "source": "test262",
-      "fixture": "function main(): void {\nvar illegal = [\n  'a.a',\n  'aa^',\n  'a a',\n  'a\\ta',\n  'a\\x0Aa',\n  'a\\x0Ca',\n  'a\\x0Da',\n  'a\\u00A0a', // nbsp\n  'a\\u2009a', // thin space\n  'a\\u2028a', // line separator\n];\nillegal.forEach(function(value) {\n  try { (function() {\n    Uint8Array.fromHex(value)\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar illegal = [\n  'a.a',\n  'aa^',\n  'a a',\n  'a\\ta',\n  'a\\x0Aa',\n  'a\\x0Ca',\n  'a\\x0Da',\n  'a\\u00A0a', // nbsp\n  'a\\u2009a', // thin space\n  'a\\u2028a', // line separator\n];\nillegal.forEach(function(value) {\n  assert.throws(SyntaxError, function() {\n    Uint8Array.fromHex(value)\n  });\n});\n}\nmain();\n",
       "origin": "test/built-ins/Uint8Array/fromHex/illegal-characters.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.fromhex.nonconstructor",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(Uint8Array.fromHex), \"Uint8Array.fromHex is not a constructor\");\n\nassert.throws(TypeError, function() {\n  new Uint8Array.fromHex('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromHex/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.uint8array.fromhex.odd-length-input",
       "category": "uint8array",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Uint8Array.fromHex('a');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  Uint8Array.fromHex('a');\n});\n}\nmain();\n",
       "origin": "test/built-ins/Uint8Array/fromHex/odd-length-input.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.fromhex.results",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar cases = [\n  [\"\", []],\n  [\"66\", [102]],\n  [\"666f\", [102, 111]],\n  [\"666F\", [102, 111]],\n  [\"666f6f\", [102, 111, 111]],\n  [\"666F6f\", [102, 111, 111]],\n  [\"666f6f62\", [102, 111, 111, 98]],\n  [\"666f6f6261\", [102, 111, 111, 98, 97]],\n  [\"666f6f626172\", [102, 111, 111, 98, 97, 114]],\n];\n\ncases.forEach(function (pair) {\n  var arr = Uint8Array.fromHex(pair[0]);\n  assert.sameValue(Object.getPrototypeOf(arr), Uint8Array.prototype, \"decoding \" + pair[0]);\n  assert.sameValue(arr.length, pair[1].length, \"decoding \" + pair[0]);\n  assert.sameValue(arr.buffer.byteLength, pair[1].length, \"decoding \" + pair[0]);\n  assert.compareArray(arr, pair[1], \"decoding \" + pair[0]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromHex/results.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.fromhex.string-coercion",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toStringCalls = 0;\nvar throwyToString = {\n  toString: function() {\n    toStringCalls += 1;\n    throw new Test262Error(\"toString called\");\n  }\n};\n\nassert.throws(TypeError, function() {\n  Uint8Array.fromHex(throwyToString);\n});\nassert.sameValue(toStringCalls, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/fromHex/string-coercion.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.alphabet",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = new Uint8Array([255, 255, 255, 255]);\nvar result = target.setFromBase64('x+/y');\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [199, 239, 242, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255]);\nvar result = target.setFromBase64('x+/y', { alphabet: 'base64' });\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [199, 239, 242, 255]);\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255]);\n  target.setFromBase64('x+/y', { alphabet: 'base64url' });\n});\n\n\nvar target = new Uint8Array([255, 255, 255, 255]);\nvar result = target.setFromBase64('x-_y', { alphabet: 'base64url' });\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [199, 239, 242, 255]);\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255]);\n  target.setFromBase64('x-_y');\n});\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255]);\n  target.setFromBase64('x-_y', { alphabet: 'base64' });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/alphabet.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.detached-buffer",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = new Uint8Array([255, 255, 255]);\n$DETACHBUFFER(target.buffer);\nassert.throws(TypeError, function() {\n  target.setFromBase64('Zg==');\n});\n\nvar getterCalls = 0;\nvar targetDetachingOptions = {};\nObject.defineProperty(targetDetachingOptions, 'alphabet', {\n  get: function() {\n    getterCalls += 1;\n    $DETACHBUFFER(target.buffer);\n    return \"base64\";\n  }\n});\nvar target = new Uint8Array([255, 255, 255]);\nassert.throws(TypeError, function() {\n  target.setFromBase64('Zg==', targetDetachingOptions);\n});\nassert.sameValue(getterCalls, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/detached-buffer.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "detachArrayBuffer.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.illegal-characters",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar illegal = [\n  'Zm.9v',\n  'Zm9v^',\n  'Zg==&',\n  'Z−==', // U+2212 'Minus Sign'\n  'Z＋==', // U+FF0B 'Fullwidth Plus Sign'\n  'Zg\\u00A0==', // nbsp\n  'Zg\\u2009==', // thin space\n  'Zg\\u2028==', // line separator\n];\nillegal.forEach(function(value) {\n  assert.throws(SyntaxError, function() {\n    var target = new Uint8Array([255, 255, 255, 255, 255]);\n    target.setFromBase64(value);\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/illegal-characters.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.last-chunk-handling",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// padding\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg==');\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg==', { lastChunkHandling: 'loose' });\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg==', { lastChunkHandling: 'stop-before-partial' });\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg==', { lastChunkHandling: 'strict' });\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\n\n// no padding\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg');\nassert.sameValue(result.read, 6);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg', { lastChunkHandling: 'loose' });\nassert.sameValue(result.read, 6);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg', { lastChunkHandling: 'stop-before-partial' });\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [101, 120, 97, 255, 255, 255]);\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg', { lastChunkHandling: 'strict' });\n});\n\n\n// non-zero padding bits\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZh==');\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZh==', { lastChunkHandling: 'loose' });\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZh==', { lastChunkHandling: 'stop-before-partial' });\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZh==', { lastChunkHandling: 'strict' });\n});\n\n\n// non-zero padding bits, no padding\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZh');\nassert.sameValue(result.read, 6);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZh', { lastChunkHandling: 'loose' });\nassert.sameValue(result.read, 6);\nassert.sameValue(result.written, 4);\nassert.compareArray(target, [101, 120, 97, 102, 255, 255]);\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZh', { lastChunkHandling: 'stop-before-partial' });\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [101, 120, 97, 255, 255, 255]);\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZh', { lastChunkHandling: 'strict' });\n});\n\n\n// partial padding\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg=');\n});\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg=', { lastChunkHandling: 'loose' });\n});\n\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('ZXhhZg=', { lastChunkHandling: 'stop-before-partial' });\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [101, 120, 97, 255, 255, 255]);\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg=', { lastChunkHandling: 'strict' });\n});\n\n\n// excess padding\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg===');\n});\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg===', { lastChunkHandling: 'loose' });\n});\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg===', { lastChunkHandling: 'stop-before-partial' });\n});\n\nassert.throws(SyntaxError, function() {\n  var target = new Uint8Array([255, 255, 255, 255, 255, 255]);\n  target.setFromBase64('ZXhhZg===', { lastChunkHandling: 'strict' });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/last-chunk-handling.js",
+      "n_asserts": 38,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.nonconstructor",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(Uint8Array.prototype.setFromBase64), \"Uint8Array.prototype.setFromBase64 is not a constructor\");\n\nassert.throws(TypeError, function() {\n  var target = new Uint8Array(10);\n  new target.setFromBase64('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.option-coercion",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  var target = new Uint8Array([255, 255, 255]);\n  target.setFromBase64(\"Zg==\", { alphabet: Object(\"base64\") });\n});\n\nassert.throws(TypeError, function() {\n  var target = new Uint8Array([255, 255, 255]);\n  target.setFromBase64(\"Zg==\", { lastChunkHandling: Object(\"strict\") });\n});\n\n\nvar toStringCalls = 0;\nvar throwyToString = {\n  toString: function() {\n    toStringCalls += 1;\n    throw new Test262Error(\"toString called\");\n  }\n};\nassert.throws(TypeError, function() {\n  var target = new Uint8Array([255, 255, 255]);\n  target.setFromBase64(\"Zg==\", { alphabet: throwyToString });\n});\nassert.sameValue(toStringCalls, 0);\n\nassert.throws(TypeError, function() {\n  var target = new Uint8Array([255, 255, 255]);\n  target.setFromBase64(\"Zg==\", { lastChunkHandling: throwyToString });\n});\nassert.sameValue(toStringCalls, 0);\n\n\nvar alphabetAccesses = 0;\nvar base64UrlOptions = {};\nObject.defineProperty(base64UrlOptions, \"alphabet\", {\n  get: function() {\n    alphabetAccesses += 1;\n    return \"base64url\";\n  }\n});\nvar target = new Uint8Array([255, 255, 255, 255]);\nvar result = target.setFromBase64(\"x-_y\", base64UrlOptions);\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [199, 239, 242, 255]);\nassert.sameValue(alphabetAccesses, 1);\n\nvar lastChunkHandlingAccesses = 0;\nvar strictOptions = {};\nObject.defineProperty(strictOptions, \"lastChunkHandling\", {\n  get: function() {\n    lastChunkHandlingAccesses += 1;\n    return \"strict\";\n  }\n});\nvar target = new Uint8Array([255, 255, 255, 255]);\nvar result = target.setFromBase64(\"Zg==\", strictOptions);\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 1);\nassert.compareArray(target, [102, 255, 255, 255]);\nassert.sameValue(lastChunkHandlingAccesses, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/option-coercion.js",
+      "n_asserts": 12,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.results",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// standard test vectors from https://datatracker.ietf.org/doc/html/rfc4648#section-10\nvar standardBase64Vectors = [\n  [\"\", []],\n  [\"Zg==\", [102]],\n  [\"Zm8=\", [102, 111]],\n  [\"Zm9v\", [102, 111, 111]],\n  [\"Zm9vYg==\", [102, 111, 111, 98]],\n  [\"Zm9vYmE=\", [102, 111, 111, 98, 97]],\n  [\"Zm9vYmFy\", [102, 111, 111, 98, 97, 114]],\n];\n\nstandardBase64Vectors.forEach(function (pair) {\n  var allFF = [255, 255, 255, 255, 255, 255, 255, 255];\n  var target = new Uint8Array(allFF);\n  var result = target.setFromBase64(pair[0]);\n  assert.sameValue(result.read, pair[0].length);\n  assert.sameValue(result.written, pair[1].length);\n\n  var expected = pair[1].concat(allFF.slice(pair[1].length))\n  assert.compareArray(target, expected, \"decoding \" + pair[0]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/results.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.string-coercion",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toStringCalls = 0;\nvar throwyToString = {\n  toString: function() {\n    toStringCalls += 1;\n    throw new Test262Error(\"toString called\");\n  }\n};\n\nassert.throws(TypeError, function() {\n  var target = new Uint8Array(10);\n  target.setFromBase64(throwyToString);\n});\nassert.sameValue(toStringCalls, 0);\n\n\nvar optionAccesses = 0;\nvar touchyOptions = {};\nObject.defineProperty(touchyOptions, \"alphabet\", {\n  get: function() {\n    optionAccesses += 1;\n    throw new Test262Error(\"alphabet accessed\");\n  }\n});\nObject.defineProperty(touchyOptions, \"lastChunkHandling\", {\n  get: function() {\n    optionAccesses += 1;\n    throw new Test262Error(\"lastChunkHandling accessed\");\n  }\n});\nassert.throws(TypeError, function() {\n  var target = new Uint8Array(10);\n  target.setFromBase64(throwyToString, touchyOptions);\n});\nassert.sameValue(toStringCalls, 0);\nassert.sameValue(optionAccesses, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/string-coercion.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.subarray",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar base = new Uint8Array([255, 255, 255, 255, 255, 255, 255]);\nvar subarray = base.subarray(2, 5);\n\nvar result = subarray.setFromBase64('Zm9vYmFy');\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(subarray, [102, 111, 111]);\nassert.compareArray(base, [255, 255, 102, 111, 111, 255, 255]);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/subarray.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.target-size",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// buffer too small\nvar target = new Uint8Array([255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmFy');\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [102, 111, 111, 255, 255]);\n\n// buffer too small, padded\nvar target = new Uint8Array([255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmE=');\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [102, 111, 111, 255]);\n\n// buffer exact\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmFy');\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 6);\nassert.compareArray(target, [102, 111, 111, 98, 97, 114]);\n\n// buffer exact, padded\nvar target = new Uint8Array([255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmE=');\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 5);\nassert.compareArray(target, [102, 111, 111, 98, 97]);\n\n// buffer exact, not padded\nvar target = new Uint8Array([255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmE');\nassert.sameValue(result.read, 7);\nassert.sameValue(result.written, 5);\nassert.compareArray(target, [102, 111, 111, 98, 97]);\n\n// buffer exact, padded, stop-before-partial\nvar target = new Uint8Array([255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmE=', { lastChunkHandling: 'stop-before-partial' });\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 5);\nassert.compareArray(target, [102, 111, 111, 98, 97]);\n\n// buffer exact, not padded, stop-before-partial\nvar target = new Uint8Array([255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmE', { lastChunkHandling: 'stop-before-partial' });\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [102, 111, 111, 255, 255]);\n\n// buffer too large\nvar target = new Uint8Array([255, 255, 255, 255, 255, 255, 255]);\nvar result = target.setFromBase64('Zm9vYmFy');\nassert.sameValue(result.read, 8);\nassert.sameValue(result.written, 6);\nassert.compareArray(target, [102, 111, 111, 98, 97, 114, 255]);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/target-size.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.throws-when-target-is-backed-by-immutable-arraybuffer",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\ntestWithAllTypedArrayConstructors((TA, makeCtorArg) => {\n  var calls = [];\n\n  var ta = new TA(makeCtorArg([\"1\", \"2\", \"3\", \"4\"]));\n  var options = {\n    get alphabet() {\n      calls.push(\"get options.alphabet\");\n      return undefined;\n    },\n    get lastChunkHandling() {\n      calls.push(\"get options.lastChunkHandling\");\n      return undefined;\n    },\n  };\n\n  assert.throws(TypeError, function() {\n    ta.setFromBase64(\"Zm9v\", options);\n  }, \"non-empty base64\");\n  assert.compareArray(calls, [],\n    \"Must verify mutability before reading arguments (non-empty base64).\");\n  assert.compareArray(ta, new TA([\"1\", \"2\", \"3\", \"4\"]),\n    \"Must not mutate contents (non-empty base64).\");\n\n  calls = [];\n  assert.throws(TypeError, function() {\n    ta.setFromBase64(\"\", options);\n  }, \"empty base64\");\n  assert.compareArray(calls, [],\n    \"Must verify mutability before reading arguments (empty base64).\");\n  assert.compareArray(ta, new TA([\"1\", \"2\", \"3\", \"4\"]),\n    \"Must not mutate contents (empty base64).\");\n}, [Uint8Array], [\"immutable\"]);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/throws-when-target-is-backed-by-immutable-arraybuffer.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "TypedArray",
+        "uint8array-base64",
+        "immutable-arraybuffer"
+      ],
+      "includes": [
+        "testTypedArray.js",
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.trailing-garbage-empty",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// Zero length typed array.\nvar u8 = new Uint8Array(0);\n\n// No SyntaxError when passing invalid inputs.\nfor (var string of [\n  \"#\",\n  \"a#\",\n  \"aa#\",\n  \"aaa#\",\n  \"aaaa#\",\n]) {\n  for (var lastChunkHandling of [\"loose\", \"strict\", \"stop-before-partial\"]) {\n    var result = u8.setFromBase64(string, {lastChunkHandling});\n    assert.sameValue(\n      result.read,\n      0,\n      `Read for \"${string}\" with lastChunkHandling=\"${lastChunkHandling}\"`\n    );\n    assert.sameValue(\n      result.written,\n      0,\n      `Write for \"${string}\" with lastChunkHandling=\"${lastChunkHandling}\"`\n    );\n  }\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/trailing-garbage-empty.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.trailing-garbage",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// Uint8Array large enough to hold a single decoded chunk.\nvar u8 = new Uint8Array(3);\n\n// Throws a SyntaxError for incomplete chunks.\nfor (var invalid of [\n  \"#\",\n  \"a#\",\n  \"aa#\",\n  \"aaa#\",\n]) {\n  for (var lastChunkHandling of [\"loose\", \"strict\", \"stop-before-partial\"]) {\n    assert.throws(SyntaxError, function() {\n      u8.setFromBase64(invalid, {lastChunkHandling});\n    }, `\"${invalid}\" is rejected with lastChunkHandling=\"${lastChunkHandling}\"`);\n  }\n}\n\n// No SyntaxError when a full chunk can be read.\nfor (var valid of [\n  \"aaaa#\",\n  \"aaaaa#\",\n  \"aaaaaa#\",\n  \"aaaaaaa#\",\n  \"aaaaaaaa#\",\n]) {\n  for (var lastChunkHandling of [\"loose\", \"strict\", \"stop-before-partial\"]) {\n    // Reset state.\n    u8.fill(0);\n\n    var result = u8.setFromBase64(valid, {lastChunkHandling});\n    assert.sameValue(\n      result.read,\n      4,\n      `Read for \"${valid}\" with lastChunkHandling=\"${lastChunkHandling}\"`\n    );\n    assert.sameValue(\n      result.written,\n      3,\n      `Write for \"${valid}\" with lastChunkHandling=\"${lastChunkHandling}\"`\n    );\n    assert.sameValue(\n      u8[0],\n      0x69,\n      `Index=0 for \"${valid}\" with lastChunkHandling=\"${lastChunkHandling}\"`\n    );\n    assert.sameValue(\n      u8[1],\n      0xa6,\n      `Index=1 for \"${valid}\" with lastChunkHandling=\"${lastChunkHandling}\"`\n    );\n    assert.sameValue(\n      u8[2],\n      0x9a,\n      `Index=2 for \"${valid}\" with lastChunkHandling=\"${lastChunkHandling}\"`\n    );\n  }\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/trailing-garbage.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.whitespace",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar whitespaceKinds = [\n  [\"Z g==\", \"space\"],\n  [\"Z\\tg==\", \"tab\"],\n  [\"Z\\x0Ag==\", \"LF\"],\n  [\"Z\\x0Cg==\", \"FF\"],\n  [\"Z\\x0Dg==\", \"CR\"],\n];\nwhitespaceKinds.forEach(function(pair) {\n  var target = new Uint8Array([255, 255, 255]);\n  var result = target.setFromBase64(pair[0]);\n  assert.sameValue(result.read, 5);\n  assert.sameValue(result.written, 1);\n  assert.compareArray(target, [102, 255, 255], \"ascii whitespace: \" + pair[1]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/whitespace.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.writes-up-to-error",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = new Uint8Array([255, 255, 255, 255, 255]);\nassert.throws(SyntaxError, function() {\n  target.setFromBase64(\"MjYyZm.9v\");\n}, \"illegal character in second chunk\");\nassert.compareArray(target, [50, 54, 50, 255, 255], \"decoding from MjYyZm.9v should only write the valid chunks\");\n\ntarget = new Uint8Array([255, 255, 255, 255, 255]);\nassert.throws(SyntaxError, function() {\n  target.setFromBase64(\"MjYyZg\", { lastChunkHandling: \"strict\" });\n}, \"padding omitted with lastChunkHandling: strict\");\nassert.compareArray(target, [50, 54, 50, 255, 255], \"decoding from MjYyZg should only write the valid chunks\");\n\ntarget = new Uint8Array([255, 255, 255, 255, 255]);\nassert.throws(SyntaxError, function() {\n  target.setFromBase64(\"MjYyZg===\");\n}, \"extra characters after padding\");\nassert.compareArray(target, [50, 54, 50, 255, 255], \"decoding from MjYyZg=== should not write the last chunk because it has extra padding\");\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromBase64/writes-up-to-error.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.detached-buffer",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = new Uint8Array([255, 255, 255]);\n$DETACHBUFFER(target.buffer);\nassert.throws(TypeError, function() {\n  target.setFromHex('aa');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/detached-buffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "detachArrayBuffer.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.illegal-characters",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar illegal = [\n  'a.a',\n  'aa^',\n  'a a',\n  'a\\ta',\n  'a\\x0Aa',\n  'a\\x0Ca',\n  'a\\x0Da',\n  'a\\u00A0a', // nbsp\n  'a\\u2009a', // thin space\n  'a\\u2028a', // line separator\n];\nillegal.forEach(function(value) {\n  assert.throws(SyntaxError, function() {\n    var target = new Uint8Array([255, 255, 255, 255, 255]);\n    target.setFromHex(value);\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/illegal-characters.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.nonconstructor",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(Uint8Array.prototype.setFromHex), \"target.setFromHex is not a constructor\");\n\nassert.throws(TypeError, function() {\n  var target = new Uint8Array(10);\n  new target.setFromHex('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.results",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar cases = [\n  [\"\", []],\n  [\"66\", [102]],\n  [\"666f\", [102, 111]],\n  [\"666F\", [102, 111]],\n  [\"666f6f\", [102, 111, 111]],\n  [\"666F6f\", [102, 111, 111]],\n  [\"666f6f62\", [102, 111, 111, 98]],\n  [\"666f6f6261\", [102, 111, 111, 98, 97]],\n  [\"666f6f626172\", [102, 111, 111, 98, 97, 114]],\n];\n\ncases.forEach(function (pair) {\n  var allFF = [255, 255, 255, 255, 255, 255, 255, 255];\n  var target = new Uint8Array(allFF);\n  var result = target.setFromHex(pair[0]);\n  assert.sameValue(result.read, pair[0].length);\n  assert.sameValue(result.written, pair[1].length);\n\n  var expected = pair[1].concat(allFF.slice(pair[1].length))\n  assert.compareArray(target, expected, \"decoding \" + pair[0]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/results.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.string-coercion",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toStringCalls = 0;\nvar throwyToString = {\n  toString: function() {\n    toStringCalls += 1;\n    throw new Test262Error(\"toString called\");\n  }\n};\n\nassert.throws(TypeError, function() {\n  var target = new Uint8Array(10);\n  target.setFromHex(throwyToString);\n});\nassert.sameValue(toStringCalls, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/string-coercion.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.subarray",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar base = new Uint8Array([255, 255, 255, 255, 255, 255, 255]);\nvar subarray = base.subarray(2, 5);\n\nvar result = subarray.setFromHex('aabbcc');\nassert.sameValue(result.read, 6);\nassert.sameValue(result.written, 3);\nassert.compareArray(subarray, [170, 187, 204]);\nassert.compareArray(base, [255, 255, 170, 187, 204, 255, 255]);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/subarray.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.target-size",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// buffer too small\nvar target = new Uint8Array([255, 255]);\nvar result = target.setFromHex('aabbcc');\nassert.sameValue(result.read, 4);\nassert.sameValue(result.written, 2);\nassert.compareArray(target, [170, 187]);\n\n// buffer exact\nvar target = new Uint8Array([255, 255, 255]);\nvar result = target.setFromHex('aabbcc');\nassert.sameValue(result.read, 6);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [170, 187, 204]);\n\n// buffer too large\nvar target = new Uint8Array([255, 255, 255, 255]);\nvar result = target.setFromHex('aabbcc');\nassert.sameValue(result.read, 6);\nassert.sameValue(result.written, 3);\nassert.compareArray(target, [170, 187, 204, 255]);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/target-size.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.throws-when-string-length-is-odd",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar zeroLength = new Uint8Array(0);\n\nassert.throws(SyntaxError, function() {\n  zeroLength.setFromHex(\"1\")\n}, \"Uint8Array has length 0\");\n\n\nvar nonZeroLength = new Uint8Array(1);\n\nassert.throws(SyntaxError, function() {\n  nonZeroLength.setFromHex(\"1\")\n}, \"Uint8Array has length >0\");\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/throws-when-string-length-is-odd.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "TypedArray",
+        "uint8array-base64"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.throws-when-target-is-backed-by-immutable-arraybuffer",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\ntestWithAllTypedArrayConstructors((TA, makeCtorArg) => {\n  var ta = new TA(makeCtorArg([\"1\", \"2\", \"3\", \"4\"]));\n\n  assert.throws(TypeError, function() {\n    ta.setFromHex(\"666f6f\");\n  }, \"non-empty hex\");\n  assert.compareArray(ta, new TA([\"1\", \"2\", \"3\", \"4\"]),\n    \"Must not mutate contents (non-empty hex).\");\n\n  assert.throws(TypeError, function() {\n    ta.setFromHex(\"\");\n  }, \"empty hex\");\n  assert.compareArray(ta, new TA([\"1\", \"2\", \"3\", \"4\"]),\n    \"Must not mutate contents (empty hex).\");\n}, [Uint8Array], [\"immutable\"]);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/throws-when-target-is-backed-by-immutable-arraybuffer.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "TypedArray",
+        "uint8array-base64",
+        "immutable-arraybuffer"
+      ],
+      "includes": [
+        "testTypedArray.js",
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.setfromhex.writes-up-to-error",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar illegal = [\n  'aaa ',\n  'aaag',\n];\nillegal.forEach(function(value) {\n  var target = new Uint8Array([255, 255, 255, 255, 255]);\n  assert.throws(SyntaxError, function() {\n    target.setFromHex(value);\n  });\n  assert.compareArray(target, [170, 255, 255, 255, 255], \"decoding from \" + value);\n});\n\nvar target = new Uint8Array([255, 255, 255, 255, 255]);\nassert.throws(SyntaxError, function() {\n  target.setFromHex('aaa');\n});\nassert.compareArray(target, [255, 255, 255, 255, 255], \"when length is odd no data is written\");\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/setFromHex/writes-up-to-error.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tobase64.alphabet",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue((new Uint8Array([199, 239, 242])).toBase64(), \"x+/y\");\n\nassert.sameValue((new Uint8Array([199, 239, 242])).toBase64({ alphabet: 'base64' }), \"x+/y\");\n\nassert.sameValue((new Uint8Array([199, 239, 242])).toBase64({ alphabet: 'base64url' }), \"x-_y\");\n\nassert.throws(TypeError, function() {\n  (new Uint8Array([199, 239, 242])).toBase64({ alphabet: 'other' });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toBase64/alphabet.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tobase64.detached-buffer",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar array = new Uint8Array(2);\nvar getterCalls = 0;\nvar receiverDetachingOptions = {};\nObject.defineProperty(receiverDetachingOptions, \"alphabet\", {\n  get: function() {\n    getterCalls += 1;\n    $DETACHBUFFER(array.buffer);\n    return \"base64\";\n  }\n});\nassert.throws(TypeError, function() {\n  array.toBase64(receiverDetachingOptions);\n});\nassert.sameValue(getterCalls, 1);\n\n\nvar detached = new Uint8Array(2);\n$DETACHBUFFER(detached.buffer);\nvar getterCalls = 0;\nvar sideEffectingOptions = {};\nObject.defineProperty(sideEffectingOptions, \"alphabet\", {\n  get: function() {\n    getterCalls += 1;\n    return \"base64\";\n  }\n});\nassert.throws(TypeError, function() {\n  detached.toBase64(sideEffectingOptions);\n});\nassert.sameValue(getterCalls, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toBase64/detached-buffer.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "detachArrayBuffer.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tobase64.nonconstructor",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(Uint8Array.prototype.toBase64), \"Uint8Array.prototype.toBase64 is not a constructor\");\n\nvar uint8Array = new Uint8Array(8);\nassert.throws(TypeError, function() {\n  new uint8Array.toBase64();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toBase64/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tobase64.omit-padding",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// works with default alphabet\nassert.sameValue((new Uint8Array([199, 239])).toBase64(), \"x+8=\");\nassert.sameValue((new Uint8Array([199, 239])).toBase64({ omitPadding: false }), \"x+8=\");\nassert.sameValue((new Uint8Array([199, 239])).toBase64({ omitPadding: true }), \"x+8\");\nassert.sameValue((new Uint8Array([255])).toBase64({ omitPadding: true }), \"/w\");\n\n// works with base64url alphabet\nassert.sameValue((new Uint8Array([199, 239])).toBase64({ alphabet: \"base64url\" }), \"x-8=\");\nassert.sameValue((new Uint8Array([199, 239])).toBase64({ alphabet: \"base64url\", omitPadding: false }), \"x-8=\");\nassert.sameValue((new Uint8Array([199, 239])).toBase64({ alphabet: \"base64url\", omitPadding: true }), \"x-8\");\nassert.sameValue((new Uint8Array([255])).toBase64({ alphabet: \"base64url\", omitPadding: true }), \"_w\");\n\n// performs ToBoolean on the argument\nassert.sameValue((new Uint8Array([255])).toBase64({ omitPadding: 0 }), \"/w==\");\nassert.sameValue((new Uint8Array([255])).toBase64({ omitPadding: 1 }), \"/w\");\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toBase64/omit-padding.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tobase64.option-coercion",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  (new Uint8Array(2)).toBase64({ alphabet: Object(\"base64\") });\n});\n\n\nvar toStringCalls = 0;\nvar throwyToString = {\n  toString: function() {\n    toStringCalls += 1;\n    throw new Test262Error(\"toString called on alphabet value\");\n  }\n};\nassert.throws(TypeError, function() {\n  (new Uint8Array(2)).toBase64({ alphabet: throwyToString });\n});\nassert.sameValue(toStringCalls, 0);\n\nvar alphabetAccesses = 0;\nvar base64UrlOptions = {};\nObject.defineProperty(base64UrlOptions, \"alphabet\", {\n  get: function() {\n    alphabetAccesses += 1;\n    return \"base64url\";\n  }\n});\nassert.sameValue((new Uint8Array([199, 239, 242])).toBase64(base64UrlOptions), \"x-_y\");\nassert.sameValue(alphabetAccesses, 1);\n\n// side-effects from the getter on the receiver are reflected in the result\nvar array = new Uint8Array([0]);\nvar receiverMutatingOptions = {};\nObject.defineProperty(receiverMutatingOptions, \"alphabet\", {\n  get: function() {\n    array[0] = 255;\n    return \"base64\";\n  }\n});\nvar result = array.toBase64(receiverMutatingOptions);\nassert.sameValue(result, \"/w==\");\nassert.sameValue(array[0], 255);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toBase64/option-coercion.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tobase64.receiver-not-uint8array",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toBase64 = Uint8Array.prototype.toBase64;\n\nvar options = {};\nObject.defineProperty(options, \"alphabet\", {\n  get: function() {\n    throw new Test262Error(\"options.alphabet accessed despite incompatible receiver\");\n  }\n});\n\ntestWithTypedArrayConstructors(function(TA, makeCtorArg) {\n  if (TA === Uint8Array) return;\n  var sample = new TA(makeCtorArg(2));\n  assert.throws(TypeError, function() {\n    Uint8Array.prototype.toBase64.call(sample, options);\n  });\n}, null, [\"passthrough\"]);\n\nassert.throws(TypeError, function() {\n  Uint8Array.prototype.toBase64.call([], options);\n}, null, [\"passthrough\"]);\n\nassert.throws(TypeError, function() {\n  toBase64(options);\n}, null, [\"passthrough\"]);\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toBase64/receiver-not-uint8array.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "testTypedArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tobase64.results",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\n// standard test vectors from https://datatracker.ietf.org/doc/html/rfc4648#section-10\nassert.sameValue((new Uint8Array([])).toBase64(), \"\");\nassert.sameValue((new Uint8Array([102])).toBase64(), \"Zg==\");\nassert.sameValue((new Uint8Array([102, 111])).toBase64(), \"Zm8=\");\nassert.sameValue((new Uint8Array([102, 111, 111])).toBase64(), \"Zm9v\");\nassert.sameValue((new Uint8Array([102, 111, 111, 98])).toBase64(), \"Zm9vYg==\");\nassert.sameValue((new Uint8Array([102, 111, 111, 98, 97])).toBase64(), \"Zm9vYmE=\");\nassert.sameValue((new Uint8Array([102, 111, 111, 98, 97, 114])).toBase64(), \"Zm9vYmFy\");\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toBase64/results.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tohex.detached-buffer",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar array = new Uint8Array(2);\n$DETACHBUFFER(array.buffer);\nassert.throws(TypeError, function() {\n  array.toHex();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toHex/detached-buffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "detachArrayBuffer.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tohex.nonconstructor",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(Uint8Array.prototype.toHex), \"Uint8Array.prototype.toHex is not a constructor\");\n\nvar uint8Array = new Uint8Array(8);\nassert.throws(TypeError, function() {\n  new uint8Array.toHex();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toHex/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tohex.receiver-not-uint8array",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar toHex = Uint8Array.prototype.toHex;\n\ntestWithTypedArrayConstructors(function(TA, makeCtorArg) {\n  if (TA === Uint8Array) return;\n  var sample = new TA(makeCtorArg(2));\n  assert.throws(TypeError, function() {\n    Uint8Array.prototype.toHex.call(sample);\n  });\n});\n\nassert.throws(TypeError, function() {\n  Uint8Array.prototype.toHex.call([]);\n});\n\nassert.throws(TypeError, function() {\n  toHex();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toHex/receiver-not-uint8array.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": [
+        "testTypedArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.uint8array.prototype.tohex.results",
+      "category": "uint8array",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue((new Uint8Array([])).toHex(), \"\");\nassert.sameValue((new Uint8Array([102])).toHex(), \"66\");\nassert.sameValue((new Uint8Array([102, 111])).toHex(), \"666f\");\nassert.sameValue((new Uint8Array([102, 111, 111])).toHex(), \"666f6f\");\nassert.sameValue((new Uint8Array([102, 111, 111, 98])).toHex(), \"666f6f62\");\nassert.sameValue((new Uint8Array([102, 111, 111, 98, 97])).toHex(), \"666f6f6261\");\nassert.sameValue((new Uint8Array([102, 111, 111, 98, 97, 114])).toHex(), \"666f6f626172\");\n}\nmain();\n",
+      "origin": "test/built-ins/Uint8Array/prototype/toHex/results.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "uint8array-base64",
+        "TypedArray"
+      ],
+      "includes": []
     }
   ]
 }

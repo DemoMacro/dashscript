@@ -1,473 +1,1189 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.symbol.asyncdispose.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.asyncDispose);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.asyncDispose, OSymbol.asyncDispose);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/asyncDispose/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.asyncdispose.no-key",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol.keyFor(Symbol.asyncDispose));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Symbol.keyFor(Symbol.asyncDispose), undefined);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/asyncDispose/no-key.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.asyncdispose.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.asyncDispose, 'symbol');\nverifyProperty(Symbol, 'asyncDispose', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/asyncDispose/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.asynciterator.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.asyncIterator);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.asyncIterator, OSymbol.asyncIterator);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/asyncIterator/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.asyncIterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.asynciterator.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.asyncIterator, 'symbol');\n\nverifyProperty(Symbol, 'asyncIterator', {\n    enumerable: false,\n    writable: false,\n    configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/asyncIterator/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.asyncIterator"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.auto-boxing-non-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.a = 0;\nconsole.log(sym.a);\n\nsym['a' + 'b'] = 0;\nconsole.log(sym['a' + 'b']);\n\nsym[62] = 0;\nconsole.log(sym[62]);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.a = 0;\nassert.sameValue(sym.a, undefined, \"The value of `sym.a` is `undefined`, after executing `sym.a = 0;`\");\n\nsym['a' + 'b'] = 0;\nassert.sameValue(sym['a' + 'b'], undefined, \"The value of `sym['a' + 'b']` is `undefined`, after executing `sym['a' + 'b'] = 0;`\");\n\nsym[62] = 0;\nassert.sameValue(sym[62], undefined, \"The value of `sym[62]` is `undefined`, after executing `sym[62] = 0;`\");\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/auto-boxing-non-strict.js",
       "n_asserts": 3,
-      "flags": ["noStrict"]
+      "flags": [
+        "noStrict"
+      ],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.auto-boxing-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  var sym = Symbol('66');\n  sym.a = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  var sym = Symbol('66');\n  sym['a' + 'b'] = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  var sym = Symbol('66');\n  sym[62] = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  var sym = Symbol('66');\n  sym.a = 0;\n});\n\nassert.throws(TypeError, function() {\n  var sym = Symbol('66');\n  sym['a' + 'b'] = 0;\n});\n\nassert.throws(TypeError, function() {\n  var sym = Symbol('66');\n  sym[62] = 0;\n});\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/auto-boxing-strict.js",
       "n_asserts": 3,
-      "flags": ["onlyStrict"]
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.constructor",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Symbol('66')).constructor);\nconsole.log(Object.getPrototypeOf(Object(Symbol('66'))).constructor);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(Symbol('66')).constructor,\n  Symbol,\n  \"The value of `Object.getPrototypeOf(Symbol('66')).constructor` is `Symbol`\"\n);\nassert.sameValue(\n  Object.getPrototypeOf(Object(Symbol('66'))).constructor,\n  Symbol,\n  \"The value of `Object.getPrototypeOf(Object(Symbol('66'))).constructor` is `Symbol`\"\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/constructor.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.desc-to-string-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol('1');\n\ntry { (function() {\n  Symbol(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar s = Symbol('1');\n\nassert.throws(TypeError, function() {\n  Symbol(s);\n});\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/desc-to-string-symbol.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.desc-to-string",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar calls, val;\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: function() {\n    calls += 'toString';\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nconsole.log(calls);\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\ntry { (function() {\n  Symbol(val);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\ntry { (function() {\n  Symbol(val);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(calls);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar calls, val;\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nassert.sameValue(calls, 'toStringvalueOf');\n\nval = {\n  toString: function() {\n    calls += 'toString';\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nassert.sameValue(calls, 'toString');\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n  }\n};\n\ncalls = '';\nSymbol(val);\nassert.sameValue(calls, 'valueOf');\n\nval = {\n  toString: null,\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\nassert.throws(TypeError, function() {\n  Symbol(val);\n}, '`toString` is not callable, and `valueOf` returns a non-primitive value');\nassert.sameValue(\n  calls, 'valueOf', 'invocation pattern for non-callable `toString`'\n);\n\nval = {\n  toString: function() {\n    calls += 'toString';\n    return {};\n  },\n  valueOf: function() {\n    calls += 'valueOf';\n    return {};\n  }\n};\n\ncalls = '';\nassert.throws(TypeError, function() {\n  Symbol(val);\n}, '`toString` nor `valueOf` both return non-primitive values');\nassert.sameValue(\n  calls,\n  'toStringvalueOf',\n  'invocation pattern for non-callable `toString` and `valueOf`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/desc-to-string.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.dispose.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.dispose);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.dispose, OSymbol.dispose);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/dispose/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.dispose.no-key",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol.keyFor(Symbol.asyncDispose));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Symbol.keyFor(Symbol.asyncDispose), undefined);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/dispose/no-key.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.dispose.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.dispose, 'symbol');\nverifyProperty(Symbol, 'dispose', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/dispose/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.for.create-value",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(typeof canonical);\nconsole.log(canonical);\nconsole.log(canonical);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nassert.sameValue(typeof canonical, 'symbol');\nassert.notSameValue(canonical, Symbol('s'));\nassert.notSameValue(canonical, Symbol.for('y'));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/create-value.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.for.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nconsole.log(Symbol.for);\nconsole.log(parent);\nconsole.log(Symbol.for('child'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nassert.notSameValue(Symbol.for, OSymbol.for);\nassert.sameValue(parent, OSymbol.for('parent'));\nassert.sameValue(Symbol.for('child'), child);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/cross-realm.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.for.description",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar symbol = Symbol.for({toString: function() { return 'test262'; }});\n\nconsole.log(symbol.description);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar symbol = Symbol.for({toString: function() { return 'test262'; }});\n\nassert.sameValue(symbol.description, 'test262');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/description.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol",
+        "Symbol.prototype.description"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.for.not-a-constructor",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Symbol.for), false, 'isConstructor(Symbol.for) must return false');\n\nassert.throws(TypeError, () => {\n  new Symbol.for();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/for/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Symbol",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.for.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.for, 'function');\n\nverifyProperty(Symbol, 'for', {\n  writable: true,\n  enumerable: false,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/for/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.for.retrieve-value",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(typeof canonical);\nconsole.log(canonical);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nassert.sameValue(typeof canonical, 'symbol');\nassert.sameValue(canonical, Symbol.for('s'));\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/for/retrieve-value.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.for.to-string-err",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar subject = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  Symbol.for(subject);\n});\n\nsubject = Symbol('s');\n\nassert.throws(TypeError, function() {\n  Symbol.for(subject);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/for/to-string-err.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.hasinstance.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.hasInstance);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.hasInstance, OSymbol.hasInstance);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/hasInstance/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.hasInstance"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.hasinstance.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.hasInstance, 'symbol');\nverifyProperty(Symbol, 'hasInstance', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/hasInstance/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.hasInstance"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.invoked-with-new",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  new Symbol();\n});\n\nassert.throws(TypeError, function() {\n  new Symbol('1');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/invoked-with-new.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.is-constructor",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(isConstructor(Symbol));\nassert.sameValue(Object.getPrototypeOf(Symbol), Function.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/is-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.isconcatspreadable.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.isConcatSpreadable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.isConcatSpreadable, OSymbol.isConcatSpreadable);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/isConcatSpreadable/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.isConcatSpreadable"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.isconcatspreadable.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.isConcatSpreadable, 'symbol');\nverifyProperty(Symbol, 'isConcatSpreadable', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/isConcatSpreadable/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.isConcatSpreadable"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.iterator.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.iterator);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.iterator, OSymbol.iterator);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/iterator/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.iterator.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.iterator, 'symbol');\nverifyProperty(Symbol, 'iterator', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/iterator/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.keyfor.arg-non-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Symbol.keyFor);\n\ntry { (function() {\n  Symbol.keyFor(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor('1');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.keyFor(arguments);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar subject = Object(Symbol('s'));\n\ntry { (function() {\n  Symbol.keyFor(subject);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.keyFor, 'function');\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor('1');\n}, 'number');\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor('');\n}, 'string');\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor({});\n}, 'ordinary object');\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor([]);\n}, 'array exotic object');\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor(arguments);\n}, 'arguments exotic object');\n\nvar subject = Object(Symbol('s'));\n\nassert.throws(TypeError, function() {\n  Symbol.keyFor(subject);\n}, 'symbol object');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/arg-non-symbol.js",
       "n_asserts": 9,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.keyfor.arg-symbol-registry-hit",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nconsole.log(Symbol.keyFor(canonical));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar canonical = Symbol.for('s');\n\nassert.sameValue(Symbol.keyFor(canonical), 's');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/arg-symbol-registry-hit.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.keyfor.arg-symbol-registry-miss",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar constructed = Symbol('Symbol.iterator');\nconsole.log(Symbol.keyFor(constructed));\n\nconsole.log(Symbol.keyFor(Symbol.iterator));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar constructed = Symbol('Symbol.iterator');\nassert.sameValue(Symbol.keyFor(constructed), undefined, 'constructed symbol');\n\nassert.sameValue(\n  Symbol.keyFor(Symbol.iterator), undefined, 'well-known symbol'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/arg-symbol-registry-miss.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.iterator",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.keyfor.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nconsole.log(Symbol.keyFor);\nconsole.log(OSymbol.keyFor(parent));\nconsole.log(Symbol.keyFor(child));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\nvar parent = Symbol.for('parent');\nvar child = OSymbol.for('child');\n\nassert.notSameValue(Symbol.keyFor, OSymbol.keyFor);\nassert.sameValue(OSymbol.keyFor(parent), 'parent');\nassert.sameValue(Symbol.keyFor(child), 'child');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/keyFor/cross-realm.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.keyfor.not-a-constructor",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Symbol.keyFor), false, 'isConstructor(Symbol.keyFor) must return false');\n\nassert.throws(TypeError, () => {\n  new Symbol.keyFor(Symbol());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/keyFor/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Symbol",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.keyfor.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.keyFor, 'function');\n\nverifyProperty(Symbol, 'keyFor', {\n  writable: true,\n  enumerable: false,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/keyFor/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.match.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.match);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.match, OSymbol.match);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/match/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.match"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.match.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.match, 'symbol');\nverifyProperty(Symbol, 'match', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/match/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.match"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.matchall.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.matchAll);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.matchAll, OSymbol.matchAll);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/matchAll/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.matchAll"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.matchall.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.matchAll, 'symbol');\nverifyProperty(Symbol, 'matchAll', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/matchAll/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.matchAll"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.not-callable",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar sym = Symbol('desc');\nvar symObj = Object(Symbol());\n\nassert.throws(TypeError, function() {\n  sym();\n});\n\nassert.throws(TypeError, function() {\n  new sym();\n});\n\nassert.throws(TypeError, function() {\n  symObj();\n});\n\nassert.throws(TypeError, function() {\n  new symObj();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/not-callable.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.constructor",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Symbol.prototype.constructor, Symbol);\n\nverifyProperty(Symbol.prototype, 'constructor', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.description.description-symboldescriptivestring",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst symbol = Symbol('foo');\n\nconsole.log(symbol.description);\nconsole.log(symbol.toString());\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst symbol = Symbol('foo');\n\nassert.sameValue(\n  symbol.description,\n  'foo',\n  'The value of symbol.description is \"foo\"'\n);\nassert.sameValue(\n  symbol.toString(),\n  `Symbol(${symbol.description})`,\n  `symbol.toString() returns \"Symbol(${symbol.description})\"`\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/description-symboldescriptivestring.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.prototype.description"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.description.descriptor",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(Symbol.prototype, 'description');\n\nassert.sameValue(\n  desc.set,\n  undefined,\n  'The value of desc.set is `undefined`'\n);\n\nassert.sameValue(\n  desc.writable,\n  undefined,\n  'The value of desc.writable is `undefined`'\n);\n\nassert.sameValue(\n  typeof desc.get,\n  'function',\n  'The value of `typeof desc.get` is \"function\"'\n);\n\nverifyProperty(Symbol.prototype, 'description', {\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/description/descriptor.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Symbol.prototype.description"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.description.get",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst symbol = Symbol('test');\nconsole.log(symbol.description);\n\nconst empty = Symbol();\nconsole.log(empty.description);\n\nconst undef = Symbol(undefined);\nconsole.log(undef.description);\n\nconst emptyStr = Symbol('');\nconsole.log(emptyStr.description);\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst symbol = Symbol('test');\nassert.sameValue(\n  symbol.description,\n  'test',\n  'The value of symbol.description is \"test\"'\n);\n\nconst empty = Symbol();\nassert.sameValue(\n  empty.description,\n  undefined,\n  'The value of empty.description is `undefined`'\n);\n\nconst undef = Symbol(undefined);\nassert.sameValue(\n  undef.description,\n  undefined,\n  'The value of undef.description is `undefined`'\n);\n\nconst emptyStr = Symbol('');\nassert.sameValue(\n  emptyStr.description,\n  '',\n  'The value of emptyStr.description is \"\"'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/get.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.prototype.description"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.description.is-not-own-property",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol().hasOwnProperty('description'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Symbol().hasOwnProperty('description'),\n  false,\n  'Symbol().hasOwnProperty(\"description\") returns false'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/is-not-own-property.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.prototype.description"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.description.this-val-non-symbol",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst getter = Object.getOwnPropertyDescriptor(\n  Symbol.prototype, 'description'\n).get;\n\nassert.throws(TypeError, function() {\n  getter.call(null);\n}, 'getter.call(null) throws TypeError');\n\nassert.throws(TypeError, function() {\n  getter.call(123);\n}, 'getter.call(123) throws TypeError');\n\nassert.throws(TypeError, function() {\n  getter.call('test');\n}, 'getter.call(\"test\") throws TypeError');\n\nassert.throws(TypeError, function() {\n  getter.call(true);\n}, 'getter.call(true) throws TypeError');\n\nassert.throws(TypeError, function() {\n  getter.call(undefined);\n}, 'getter.call(undefined) throws TypeError');\n\nassert.throws(TypeError, function() {\n  getter.call(new Proxy({}, {}));\n}, 'getter.call(new Proxy({}, {})) throws TypeError');\n\nassert.throws(TypeError, function() {\n  getter.call({});\n}, 'getter.call({}) throws TypeError');\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/description/this-val-non-symbol.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol.prototype.description"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.description.this-val-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst getter = Object.getOwnPropertyDescriptor(\n  Symbol.prototype, 'description'\n).get;\n\nconst symbol = Symbol('test');\nconsole.log(getter.call(symbol));\nconsole.log(getter.call(Object(symbol)));\n\nconst empty = Symbol();\nconsole.log(getter.call(empty));\nconsole.log(getter.call(Object(empty)));\n\nconst undef = Symbol(undefined);\nconsole.log(getter.call(undef));\nconsole.log(getter.call(Object(undef)));\n\nconst emptyStr = Symbol('');\nconsole.log(getter.call(emptyStr));\nconsole.log(getter.call(Object(emptyStr)));\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst getter = Object.getOwnPropertyDescriptor(\n  Symbol.prototype, 'description'\n).get;\n\nconst symbol = Symbol('test');\nassert.sameValue(\n  getter.call(symbol),\n  'test',\n  'getter.call(symbol) returns \"test\"'\n);\nassert.sameValue(\n  getter.call(Object(symbol)),\n  'test',\n  'getter.call(Object(symbol)) returns \"test\"'\n);\n\nconst empty = Symbol();\nassert.sameValue(\n  getter.call(empty),\n  undefined,\n  'getter.call(empty) returns `undefined`'\n);\nassert.sameValue(\n  getter.call(Object(empty)),\n  undefined,\n  'getter.call(Object(empty)) returns `undefined`'\n);\n\nconst undef = Symbol(undefined);\nassert.sameValue(\n  getter.call(undef),\n  undefined,\n  'getter.call(undef) returns `undefined`'\n);\nassert.sameValue(\n  getter.call(Object(undef)),\n  undefined,\n  'getter.call(Object(undef)) returns `undefined`'\n);\n\nconst emptyStr = Symbol('');\nassert.sameValue(\n  getter.call(emptyStr),\n  '',\n  'getter.call(emptyStr) returns \"\"'\n);\nassert.sameValue(\n  getter.call(Object(emptyStr)),\n  '',\n  'getter.call(Object(emptyStr)) returns \"\"'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/this-val-symbol.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.prototype.description"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.description.wrapper",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconst symbol = Object(Symbol('test'));\nconsole.log(symbol.description);\n\nconst empty = Object(Symbol());\nconsole.log(empty.description);\n\nconst undef = Object(Symbol(undefined));\nconsole.log(undef.description);\n\nconst emptyStr = Object(Symbol(''));\nconsole.log(emptyStr.description);\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst symbol = Object(Symbol('test'));\nassert.sameValue(\n  symbol.description,\n  'test',\n  'The value of symbol.description is \"test\"'\n);\n\nconst empty = Object(Symbol());\nassert.sameValue(\n  empty.description,\n  undefined,\n  'The value of empty.description is `undefined`'\n);\n\nconst undef = Object(Symbol(undefined));\nassert.sameValue(\n  undef.description,\n  undefined,\n  'The value of undef.description is `undefined`'\n);\n\nconst emptyStr = Object(Symbol(''));\nassert.sameValue(\n  emptyStr.description,\n  '',\n  'The value of emptyStr.description is \"\"'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/description/wrapper.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.prototype.description"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.intrinsic",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Symbol('66')));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(Symbol('66')),\n  Symbol.prototype,\n  \"`Object.getPrototypeOf(Symbol('66'))` returns `Symbol.prototype`\"\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/intrinsic.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.redefined-symbol-wrapper-ordinary-toprimitive",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: null });\n\nconsole.log(Object(Symbol()) == \"Symbol()\");\ntry { (() => { +Object(Symbol()); })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log(`${Object(Symbol())}`);\n\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: undefined });\n\nconsole.log(Object(Symbol.iterator) == Symbol.iterator);\ntry { (() => { Object(Symbol()) <= \"\"; })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\nconsole.log({ \"Symbol()\": 1 }[Object(Symbol())]);\n}\nmain();\n",
+      "fixture": "function main(): void {\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: null });\n\nassert.sameValue(Object(Symbol()) == \"Symbol()\", false, \"hint: default\");\nassert.throws(TypeError, () => { +Object(Symbol()); }, \"hint: number\");\nassert.sameValue(`${Object(Symbol())}`, \"Symbol()\", \"hint: string\");\n\nObject.defineProperty(Symbol.prototype, Symbol.toPrimitive, { value: undefined });\n\nassert(Object(Symbol.iterator) == Symbol.iterator, \"hint: default\");\nassert.throws(TypeError, () => { Object(Symbol()) <= \"\"; }, \"hint: number\");\nassert.sameValue({ \"Symbol()\": 1 }[Object(Symbol())], 1, \"hint: string\");\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/redefined-symbol-wrapper-ordinary-toprimitive.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.removed-symbol-wrapper-ordinary-toprimitive",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(delete Symbol.prototype[Symbol.toPrimitive]);\n\nlet valueOfGets = 0;\nlet valueOfCalls = 0;\nlet valueOfFunction = () => { ++valueOfCalls; return 123; };\nObject.defineProperty(Symbol.prototype, \"valueOf\", {\n    get: () => { ++valueOfGets; return valueOfFunction; },\n});\n\nassert(Object(Symbol()) == 123, \"hint: default\");\nassert.sameValue(Object(Symbol()) - 0, 123, \"hint: number\");\nassert.sameValue(\"\".concat(Object(Symbol())), \"Symbol()\", \"hint: string\");\n\nassert.sameValue(valueOfGets, 2);\nassert.sameValue(valueOfCalls, 2);\n\nlet toStringGets = 0;\nlet toStringCalls = 0;\nlet toStringFunction = () => { ++toStringCalls; return \"foo\"; };\nObject.defineProperty(Symbol.prototype, \"toString\", {\n    get: () => { ++toStringGets; return toStringFunction; },\n});\n\nassert.sameValue(\"\" + Object(Symbol()), \"123\", \"hint: default\");\nassert.sameValue(Object(Symbol()) * 1, 123, \"hint: number\");\nassert.sameValue({ \"123\": 1, \"Symbol()\": 2, \"foo\": 3 }[Object(Symbol())], 3, \"hint: string\");\n\nassert.sameValue(valueOfGets, 4);\nassert.sameValue(valueOfCalls, 4);\nassert.sameValue(toStringGets, 1);\nassert.sameValue(toStringCalls, 1);\n\nvalueOfFunction = null;\n\nassert.sameValue(new Date(Object(Symbol())).getTime(), NaN, \"hint: default\");\nassert.sameValue(+Object(Symbol()), NaN, \"hint: number\");\nassert.sameValue(`${Object(Symbol())}`, \"foo\", \"hint: string\");\n\nassert.sameValue(valueOfGets, 6);\nassert.sameValue(valueOfCalls, 4);\nassert.sameValue(toStringGets, 4);\nassert.sameValue(toStringCalls, 4);\n\ntoStringFunction = function() { throw new Test262Error(); };\n\nassert.throws(Test262Error, () => { Object(Symbol()) != 123; }, \"hint: default\");\nassert.throws(Test262Error, () => { Object(Symbol()) / 0; }, \"hint: number\");\nassert.throws(Test262Error, () => { \"\".concat(Object(Symbol())); }, \"hint: string\");\n\nassert.sameValue(valueOfGets, 8);\nassert.sameValue(valueOfCalls, 4);\nassert.sameValue(toStringGets, 7);\nassert.sameValue(toStringCalls, 4);\n\ntoStringFunction = undefined;\n\nassert.throws(TypeError, () => { 1 + Object(Symbol()); }, \"hint: default\");\nassert.throws(TypeError, () => { Number(Object(Symbol())); }, \"hint: number\");\nassert.throws(TypeError, () => { String(Object(Symbol())); }, \"hint: string\");\n\nassert.sameValue(valueOfGets, 11);\nassert.sameValue(valueOfCalls, 4);\nassert.sameValue(toStringGets, 10);\nassert.sameValue(toStringCalls, 4);\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/removed-symbol-wrapper-ordinary-toprimitive.js",
+      "n_asserts": 34,
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-non-obj",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Symbol.prototype[Symbol.toPrimitive]);\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(86);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.prototype[Symbol.toPrimitive], 'function');\n\nassert.throws(TypeError, function() {\n  Symbol.prototype[Symbol.toPrimitive].call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Symbol.prototype[Symbol.toPrimitive].call(null);\n});\n\nassert.throws(TypeError, function() {\n  Symbol.prototype[Symbol.toPrimitive].call(86);\n});\n\nassert.throws(TypeError, function() {\n  Symbol.prototype[Symbol.toPrimitive].call('');\n});\n\nassert.throws(TypeError, function() {\n  Symbol.prototype[Symbol.toPrimitive].call(true);\n});\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-non-obj.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-obj-non-symbol-wrapper",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Symbol.prototype[Symbol.toPrimitive].call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Symbol.prototype[Symbol.toPrimitive].call({});\n});\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-obj-non-symbol-wrapper.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-obj-symbol-wrapper",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object(Symbol.toPrimitive)[Symbol.toPrimitive]());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object(Symbol.toPrimitive)[Symbol.toPrimitive](), Symbol.toPrimitive\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-obj-symbol-wrapper.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.symbol.toprimitive.this-val-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol.toPrimitive[Symbol.toPrimitive]());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Symbol.toPrimitive[Symbol.toPrimitive](), Symbol.toPrimitive);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/Symbol.toPrimitive/this-val-symbol.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.symbol.tostringtag",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Symbol.prototype[Symbol.toStringTag], 'Symbol');\n\nverifyProperty(Symbol.prototype, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.tostring.not-a-constructor",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Symbol.prototype.toString),\n  false,\n  'isConstructor(Symbol.prototype.toString) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let symbol = Symbol(); new symbol.toString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/toString/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Symbol",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.tostring.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.prototype.toString, 'function');\n\nverifyProperty(Symbol.prototype, 'toString', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/toString/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-non-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.toString = 0;\nconsole.log(sym.toString());\n\nsym.valueOf = 0;\nconsole.log(sym);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar sym = Symbol('66');\n\nsym.toString = 0;\nassert.sameValue(sym.toString(), 'Symbol(66)', \"`sym.toString()` returns `'Symbol(66)'`, after executing `sym.toString = 0;`\");\n\nsym.valueOf = 0;\nassert.sameValue(sym, sym.valueOf(), \"The value of `sym` is `sym.valueOf()`, after executing `sym.valueOf = 0;`\");\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/toString-default-attributes-non-strict.js",
       "n_asserts": 2,
-      "flags": ["noStrict"]
+      "flags": [
+        "noStrict"
+      ],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-strict",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol(\"66\");\n\ntry { (function() {\n  sym.toString = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  sym.valueOf = 0;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar sym = Symbol(\"66\");\n\nassert.throws(TypeError, function() {\n  sym.toString = 0;\n});\n\nassert.throws(TypeError, function() {\n  sym.valueOf = 0;\n});\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/toString-default-attributes-strict.js",
       "n_asserts": 2,
-      "flags": ["onlyStrict"]
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.tostring.tostring",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(String(Symbol('66')))\nconsole.log(Symbol('66').toString());\nconsole.log(Object(Symbol('66')).toString());\nconsole.log(Symbol.prototype.toString.call(Symbol('66')));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  String(Symbol('66')),\n  'Symbol(66)',\n  \"`String(Symbol('66'))` returns `'Symbol(66)'`\"\n)\nassert.sameValue(\n  Symbol('66').toString(),\n  'Symbol(66)',\n  \"`Symbol('66').toString()` returns `'Symbol(66)'`\"\n);\nassert.sameValue(\n  Object(Symbol('66')).toString(),\n  'Symbol(66)',\n  \"`Object(Symbol('66')).toString()` returns `'Symbol(66)'`\"\n);\nassert.sameValue(\n  Symbol.prototype.toString.call(Symbol('66')),\n  'Symbol(66)',\n  \"`Symbol.prototype.toString.call(Symbol('66'))` returns `'Symbol(66)'`\"\n);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/toString.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.tostring.undefined",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol().toString());\nconsole.log(Symbol(undefined).toString());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Symbol().toString(), 'Symbol()', 'implicit value');\nassert.sameValue(Symbol(undefined).toString(), 'Symbol()', 'explicit value');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/toString/undefined.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.valueof.not-a-constructor",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Symbol.prototype.valueOf),\n  false,\n  'isConstructor(Symbol.prototype.valueOf) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let symbol = Symbol(); new symbol.valueOf();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/valueOf/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Symbol",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.prototype.valueof.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.prototype.valueOf, 'function');\n\nverifyProperty(Symbol.prototype, 'valueOf', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/prototype/valueOf/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-non-obj",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\ntry { (function() {\n  valueOf.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\nassert.throws(TypeError, function() {\n  valueOf.call(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  valueOf.call(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  valueOf.call(0);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  valueOf.call('');\n}, 'string');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-non-obj.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-obj-non-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\ntry { (function() {\n  valueOf.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  valueOf.call(arguments);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\n\nassert.throws(TypeError, function() {\n  valueOf.call({});\n}, 'ordinary object');\n\nassert.throws(TypeError, function() {\n  valueOf.call([]);\n}, 'array exotic object');\n\nassert.throws(TypeError, function() {\n  valueOf.call(arguments);\n}, 'arguments exotic object');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-obj-non-symbol.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-obj-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar symbol = Symbol('s');\nvar symbolObject = Object(symbol);\n\nconsole.log(valueOf.call(symbolObject));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar symbol = Symbol('s');\nvar symbolObject = Object(symbol);\n\nassert.sameValue(valueOf.call(symbolObject), symbol);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-obj-symbol.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.prototype.valueof.this-val-symbol",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar subject = Symbol('s');\n\nconsole.log(valueOf.call(subject));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar valueOf = Symbol.prototype.valueOf;\nvar subject = Symbol('s');\n\nassert.sameValue(valueOf.call(subject), subject);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/prototype/valueOf/this-val-symbol.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.replace.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.replace);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.replace, OSymbol.replace);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/replace/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.replace"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.replace.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.replace, 'symbol');\nverifyProperty(Symbol, 'replace', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/replace/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.replace"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.search.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.search);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.search, OSymbol.search);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/search/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.search"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.search.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.search, 'symbol');\nverifyProperty(Symbol, 'search', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/search/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.search"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.symbol.species.basic",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(Symbol !== undefined, \"Symbol exists\");\nassert(Symbol.species !== undefined, \"Symbol.species exists\");\n\nverifyProperty(Symbol, \"species\", {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/species/basic.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.species"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.species.builtin-getter-name",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction getGetterName(obj, name) {\n  var getter = Object.getOwnPropertyDescriptor(obj, Symbol.species).get;\n  return getter && getter.name;\n}\n\nconsole.log(getGetterName(Array, Symbol.species));\nconsole.log(getGetterName(Map, Symbol.species));\nconsole.log(getGetterName(Promise, Symbol.species));\nconsole.log(getGetterName(RegExp, Symbol.species));\nconsole.log(getGetterName(Set, Symbol.species));\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction getGetterName(obj, name) {\n  var getter = Object.getOwnPropertyDescriptor(obj, Symbol.species).get;\n  return getter && getter.name;\n}\n\nassert.sameValue(getGetterName(Array, Symbol.species), \"get [Symbol.species]\");\nassert.sameValue(getGetterName(Map, Symbol.species), \"get [Symbol.species]\");\nassert.sameValue(getGetterName(Promise, Symbol.species), \"get [Symbol.species]\");\nassert.sameValue(getGetterName(RegExp, Symbol.species), \"get [Symbol.species]\");\nassert.sameValue(getGetterName(Set, Symbol.species), \"get [Symbol.species]\");\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/species/builtin-getter-name.js",
       "n_asserts": 5,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.species"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.species.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.species);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.species, OSymbol.species);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/species/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.species"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.species.subclassing",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nclass MyRegExp extends RegExp {};\n\nconsole.log(MyRegExp[Symbol.species]);\n}\nmain();\n",
+      "fixture": "function main(): void {\nclass MyRegExp extends RegExp {};\n\nassert.sameValue(MyRegExp[Symbol.species], MyRegExp);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/species/subclassing.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.species"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.split.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.split);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.split, OSymbol.split);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/split/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.split"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.split.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.split, 'symbol');\nverifyProperty(Symbol, 'split', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/split/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.split"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.toprimitive.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.split);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.split, OSymbol.split);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/toPrimitive/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.split"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.toprimitive.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.toPrimitive, 'symbol');\nverifyProperty(Symbol, 'toPrimitive', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/toPrimitive/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.tostringtag.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.toStringTag);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.toStringTag, OSymbol.toStringTag);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/toStringTag/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.toStringTag"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.tostringtag.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.toStringTag, 'symbol');\nverifyProperty(Symbol, 'toStringTag', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/toStringTag/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.symbol.uniqueness",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Symbol(''));\nconsole.log(Symbol());\nconsole.log(Symbol(null));\nconsole.log(Symbol('x'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.notSameValue(Symbol(''), Symbol(''), 'empty string');\nassert.notSameValue(Symbol(), Symbol(), 'undefined');\nassert.notSameValue(Symbol(null), Symbol(null), 'null value');\nassert.notSameValue(Symbol('x'), Symbol('x'), 'string \"x\"');\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/uniqueness.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.symbol.unscopables.cross-realm",
       "category": "symbol",
       "source": "test262",
-      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nconsole.log(Symbol.unscopables);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar OSymbol = $262.createRealm().global.Symbol;\n\nassert.sameValue(Symbol.unscopables, OSymbol.unscopables);\n}\nmain();\n",
       "origin": "test/built-ins/Symbol/unscopables/cross-realm.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Symbol.unscopables"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.symbol.unscopables.prop-desc",
+      "category": "symbol",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Symbol.unscopables, 'symbol');\nverifyProperty(Symbol, 'unscopables', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Symbol/unscopables/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.unscopables"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     }
   ]
 }

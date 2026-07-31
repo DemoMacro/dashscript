@@ -1,86 +1,1119 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.asyncdisposablestack.constructor",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof AsyncDisposableStack);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof AsyncDisposableStack, 'function',\n  'typeof AsyncDisposableStack is function'\n);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.instance-extensible",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.sameValue(Object.isExtensible(stack), true);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/instance-extensible.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.is-a-constructor",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(AsyncDisposableStack), true, 'isConstructor(AsyncDisposableStack) must return true');\nnew AsyncDisposableStack();\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.newtarget-prototype-is-not-object",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack;\nfunction newTarget() {}\n\nnewTarget.prototype = undefined;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), AsyncDisposableStack.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), AsyncDisposableStack.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), AsyncDisposableStack.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), AsyncDisposableStack.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), AsyncDisposableStack.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = 1;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), AsyncDisposableStack.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/newtarget-prototype-is-not-object.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Reflect.construct",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.proto-from-ctor-realm",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar stack;\n\nnewTarget.prototype = undefined;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), other.AsyncDisposableStack.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), other.AsyncDisposableStack.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), other.AsyncDisposableStack.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), other.AsyncDisposableStack.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), other.AsyncDisposableStack.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = 1;\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), other.AsyncDisposableStack.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.proto",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(AsyncDisposableStack));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(AsyncDisposableStack),\n  Function.prototype,\n  'Object.getPrototypeOf(AsyncDisposableStack) returns the value of `Function.prototype`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.adds-value-ondisposeasync",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var resource = { disposed: false };\n  stack.adopt(resource, async r => { r.disposed = true });\n  await stack.disposeAsync();\n  assert.sameValue(resource.disposed, true, 'Expected resource to have been disposed');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/adds-value-onDisposeAsync.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.not-a-constructor",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(AsyncDisposableStack.prototype.adopt),\n  false,\n  'isConstructor(AsyncDisposableStack.prototype.adopt) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let stack = new AsyncDisposableStack({}); new stack.adopt();\n}, '`let stack = new AsyncDisposableStack({}); new stack.adopt()` throws TypeError');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "explicit-resource-management",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.prop-desc",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.adopt, 'function');\n\nverifyProperty(AsyncDisposableStack.prototype, 'adopt', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.puts-value-ondisposeasync-on-top-of-stack",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var disposed = [];\n  var resource1 = {};\n  async function dispose1(res) { disposed.push([res, dispose1]); }\n  var resource2 = {};\n  function dispose2(res) { disposed.push([res, dispose2]); }\n  stack.adopt(resource1, dispose1);\n  stack.adopt(resource2, dispose2);\n  await stack.disposeAsync();\n  assert.sameValue(2, disposed.length);\n  assert.sameValue(disposed[0][0], resource2, 'Expected resource2 to be the first disposed resource');\n  assert.sameValue(disposed[0][1], dispose2, 'Expected dispose2 to be the first onDispose invoked');\n  assert.sameValue(disposed[1][0], resource1, 'Expected resource1 to be the second disposed resource');\n  assert.sameValue(disposed[1][1], dispose1, 'Expected dispose1 to be the second onDispose invoked');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/puts-value-onDisposeAsync-on-top-of-stack.js",
+      "n_asserts": 5,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.returns-value",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nvar resource = {};\nassert.sameValue(stack.adopt(resource, async _ => {}), resource);\nassert.sameValue(stack.adopt(null, async _ => {}), null);\nassert.sameValue(stack.adopt(undefined, async _ => {}), undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/returns-value.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.this-does-not-have-internal-asyncdisposablestate-throws",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.adopt, 'function');\n\nvar adopt = AsyncDisposableStack.prototype.adopt;\n\nassert.throws(TypeError, function() {\n  adopt.call({ ['[[AsyncDisposableState]]']: {} });\n}, 'Ordinary object without [[AsyncDisposableState]]');\n\nassert.throws(TypeError, function() {\n  adopt.call(AsyncDisposableStack.prototype);\n}, 'AsyncDisposableStack.prototype does not have a [[AsyncDisposableState]] internal slot');\n\nassert.throws(TypeError, function() {\n  adopt.call(AsyncDisposableStack);\n}, 'AsyncDisposableStack does not have a [[AsyncDisposableState]] internal slot');\n\nvar stack = new DisposableStack();\nassert.throws(TypeError, function() {\n  adopt.call(stack);\n}, 'DisposableStack instance');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/this-does-not-have-internal-asyncdisposablestate-throws.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.this-not-object-throws",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof AsyncDisposableStack.prototype.adopt);\n\nvar adopt = AsyncDisposableStack.prototype.adopt;\n\ntry { (function() {\n  adopt.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  adopt.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  adopt.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.adopt, 'function');\n\nvar adopt = AsyncDisposableStack.prototype.adopt;\n\nassert.throws(TypeError, function() {\n  adopt.call(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  adopt.call(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  adopt.call(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  adopt.call(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  adopt.call(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  adopt.call('object');\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  adopt.call(s);\n}, 'symbol');\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/this-not-object-throws.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.throws-if-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nstack.disposeAsync();\n\nassert.throws(ReferenceError, function() {\n  stack.adopt(null, async _ => {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/throws-if-disposed.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.adopt.throws-if-ondisposeasync-not-callable",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.adopt(null, null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  stack.adopt(null, undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  stack.adopt(null, true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  stack.adopt(null, false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  stack.adopt(null, 1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  stack.adopt(null, 'object');\n}, 'string');\n\nassert.throws(TypeError, function() {\n  stack.adopt(null, {});\n}, 'object');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  stack.adopt(null, s);\n}, 'symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/adopt/throws-if-onDisposeAsync-not-callable.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.adds-ondisposeasync",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var disposed = false;\n  stack.defer(async () => { disposed = true });\n  await stack.disposeAsync();\n  assert.sameValue(disposed, true, 'Expected callback to have been called');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/adds-onDisposeAsync.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.not-a-constructor",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(AsyncDisposableStack.prototype.defer),\n  false,\n  'isConstructor(AsyncDisposableStack.prototype.defer) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let stack = new AsyncDisposableStack({}); new stack.defer();\n}, '`let stack = new AsyncDisposableStack({}); new stack.defer()` throws TypeError');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "explicit-resource-management",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.prop-desc",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.defer, 'function');\n\nverifyProperty(AsyncDisposableStack.prototype, 'defer', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.puts-ondisposeasync-on-top-of-stack",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var disposed = [];\n  async function dispose1() { disposed.push(dispose1); }\n  function dispose2() { disposed.push(dispose2); }\n  stack.defer(dispose1);\n  stack.defer(dispose2);\n  await stack.disposeAsync();\n  assert.sameValue(2, disposed.length);\n  assert.sameValue(disposed[0], dispose2, 'Expected dispose2 to be the first onDisposeAsync invoked');\n  assert.sameValue(disposed[1], dispose1, 'Expected dispose1 to be the second onDisposeAsync invoked');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/puts-onDisposeAsync-on-top-of-stack.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.returns-undefined",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.sameValue(stack.defer(_ => {}), undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/returns-undefined.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.this-does-not-have-internal-asyncdisposablestate-throws",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.defer, 'function');\n\nvar defer = AsyncDisposableStack.prototype.defer;\n\nassert.throws(TypeError, function() {\n  defer.call({ ['[[AsyncDisposableState]]']: {} });\n}, 'Ordinary object without [[AsyncDisposableState]]');\n\nassert.throws(TypeError, function() {\n  defer.call(AsyncDisposableStack.prototype);\n}, 'AsyncDisposableStack.prototype does not have a [[AsyncDisposableState]] internal slot');\n\nassert.throws(TypeError, function() {\n  defer.call(AsyncDisposableStack);\n}, 'AsyncDisposableStack does not have a [[AsyncDisposableState]] internal slot');\n\nvar stack = new DisposableStack();\nassert.throws(TypeError, function() {\n  defer.call(stack);\n}, 'DisposableStack instance');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/this-does-not-have-internal-asyncdisposablestate-throws.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.this-not-object-throws",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof AsyncDisposableStack.prototype.defer);\n\nvar defer = AsyncDisposableStack.prototype.defer;\n\ntry { (function() {\n  defer.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  defer.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  defer.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.defer, 'function');\n\nvar defer = AsyncDisposableStack.prototype.defer;\n\nassert.throws(TypeError, function() {\n  defer.call(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  defer.call(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  defer.call(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  defer.call(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  defer.call(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  defer.call('object');\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  defer.call(s);\n}, 'symbol');\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/this-not-object-throws.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.throws-if-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nstack.disposeAsync();\n\nassert.throws(ReferenceError, function() {\n  stack.defer(async _ => {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/throws-if-disposed.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.defer.throws-if-ondisposeasync-not-callable",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.defer(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  stack.defer(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  stack.defer(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  stack.defer(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  stack.defer(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  stack.defer('object');\n}, 'string');\n\nassert.throws(TypeError, function() {\n  stack.defer({});\n}, 'object');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  stack.defer(s);\n}, 'symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/defer/throws-if-onDisposeAsync-not-callable.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.does-not-reinvoke-disposers-if-already-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var useCount = 0;\n  var adoptCount = 0;\n  var deferCount = 0;\n  stack.use({ async [Symbol.asyncDispose]() { useCount++; } });\n  stack.adopt({}, _ => { adoptCount++; });\n  stack.defer(() => { deferCount++; });\n  await stack.disposeAsync();\n  assert.sameValue(useCount, 1);\n  assert.sameValue(adoptCount, 1);\n  assert.sameValue(deferCount, 1);\n  await stack.disposeAsync();\n  assert.sameValue(useCount, 1);\n  assert.sameValue(adoptCount, 1);\n  assert.sameValue(deferCount, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/does-not-reinvoke-disposers-if-already-disposed.js",
+      "n_asserts": 6,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.does-not-reinvoke-disposers-if-dispose-already-started",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var useCount = 0;\n  var adoptCount = 0;\n  var deferCount = 0;\n  stack.use({ async [Symbol.asyncDispose]() { useCount++; } });\n  stack.adopt({}, _ => { adoptCount++; });\n  stack.defer(() => { deferCount++; });\n  var p1 = stack.disposeAsync();\n  var p2 = stack.disposeAsync();\n  await Promise.all([p1, p2]);\n  assert.sameValue(useCount, 1);\n  assert.sameValue(adoptCount, 1);\n  assert.sameValue(deferCount, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/does-not-reinvoke-disposers-if-dispose-already-started.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.does-not-reject-if-already-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var p = stack.disposeAsync();\n  var r1 = await stack.disposeAsync();\n  var r2 = await p;\n  var r3 = await stack.disposeAsync();\n  assert.sameValue(r1, undefined);\n  assert.sameValue(r2, undefined);\n  assert.sameValue(r3, undefined);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/does-not-reject-if-already-disposed.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.not-a-constructor",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(AsyncDisposableStack.prototype.disposeAsync),\n  false,\n  'isConstructor(AsyncDisposableStack.prototype.disposeAsync) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let stack = new AsyncDisposableStack({}); new stack.disposeAsync();\n}, '`let stack = new AsyncDisposableStack({}); new stack.disposeAsync()` throws TypeError');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "explicit-resource-management",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.prop-desc",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.disposeAsync, 'function');\n\nverifyProperty(AsyncDisposableStack.prototype, 'disposeAsync', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.rejects-with-suppressederror-if-multiple-errors-during-disposal",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  class MyError extends Error {}\n  var error1 = new MyError();\n  var error2 = new MyError();\n  var error3 = new MyError();\n  var stack = new AsyncDisposableStack();\n  stack.defer(function () { throw error1; });\n  stack.defer(function () { throw error2; });\n  stack.defer(function () { throw error3; });\n  var promise = stack.disposeAsync();\n  try {\n    await promise;\n    assert(false, 'Expected await stack.disposeAsync() to have thrown an error.');\n  }\n  catch (e) {\n    assert.sameValue(Object.getPrototypeOf(e), SuppressedError.prototype, \"Expected await stack.disposeAsync() to have thrown a SuppressedError\");\n    assert.sameValue(e.error, error1, \"Expected the outermost suppressing error to have been 'error1'\");\n    assert.sameValue(Object.getPrototypeOf(e.suppressed), SuppressedError.prototype, \"Expected the outermost suppressed error to have been a SuppressedError\");\n    assert.sameValue(e.suppressed.error, error2, \"Expected the innermost suppressing error to have been 'error2'\");\n    assert.sameValue(e.suppressed.suppressed, error3, \"Expected the innermost suppressed error to have been 'error3'\");\n  }\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/rejects-with-suppressederror-if-multiple-errors-during-disposal.js",
+      "n_asserts": 6,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.resolves-to-undefined",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack1 = new AsyncDisposableStack();\n  assert.sameValue(await stack1.disposeAsync(), undefined);\n\n  var stack2 = new AsyncDisposableStack();\n  stack2.defer(async () => 1);\n  stack2.defer(() => 2);\n  assert.sameValue(await stack2.disposeAsync(), undefined);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/resolves-to-undefined.js",
+      "n_asserts": 2,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.returns-promise",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.sameValue(Object.getPrototypeOf(stack.disposeAsync()), Promise.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/returns-promise.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.sets-state-to-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var wasDisposed = stack.disposed;\n  var p = stack.disposeAsync();\n  var wasDisposedBeforeAwait = stack.disposed;\n  await p;\n  var isDisposedAfterAwait = stack.disposed;\n  assert.sameValue(wasDisposed, false);\n  assert.sameValue(wasDisposedBeforeAwait, true);\n  assert.sameValue(isDisposedAfterAwait, true);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/sets-state-to-disposed.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.symbol.asyncdispose-method-not-async",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var resource = {\n    disposed: false,\n    [Symbol.asyncDispose]() {\n      this.disposed = true;\n    }\n  };\n\n  var stack = new AsyncDisposableStack();\n  stack.use(resource);\n  await stack.disposeAsync();\n\n  assert.sameValue(resource.disposed, true, 'Expected resource to have been disposed');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/Symbol.asyncDispose-method-not-async.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.this-does-not-have-internal-asyncdisposablestate-rejects",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function() {\n  assert.sameValue(typeof AsyncDisposableStack.prototype.disposeAsync, 'function');\n  \n  var disposeAsync = AsyncDisposableStack.prototype.disposeAsync;\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call({ ['[[AsyncDisposableState]]']: {} });\n  }, 'Ordinary object without [[AsyncDisposableState]]');\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(AsyncDisposableStack.prototype);\n  }, 'AsyncDisposableStack.prototype does not have a [[AsyncDisposableState]] internal slot');\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(AsyncDisposableStack);\n  }, 'AsyncDisposableStack does not have a [[AsyncDisposableState]] internal slot');\n  \n  var stack = new DisposableStack();\n  await assert.throwsAsync(TypeError, function () {\n    return disposeAsync.call(stack);\n  }, 'DisposableStack instance');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/this-does-not-have-internal-asyncdisposablestate-rejects.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposeasync.this-not-object-rejects",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.disposeAsync, 'function');\n\nvar disposeAsync = AsyncDisposableStack.prototype.disposeAsync;\n\nasyncTest(async function () {\n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(undefined);\n  }, 'undefined');\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(null);\n  }, 'null');\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(true);\n  }, 'true');\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(false);\n  }, 'false');\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(1);\n  }, 'number');\n  \n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call('object');\n  }, 'string');\n  \n  var s = Symbol();\n  await assert.throwsAsync(TypeError, function() {\n    return disposeAsync.call(s);\n  }, 'symbol');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposeAsync/this-not-object-rejects.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposed.does-not-have-asyncdisposablestate-internal-slot",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(AsyncDisposableStack.prototype, 'disposed');\n\nvar stack = new AsyncDisposableStack();\n\n// Does not throw\ndescriptor.get.call(stack);\n\nassert.throws(TypeError, function() {\n  descriptor.get.call([]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposed/does-not-have-asyncdisposablestate-internal-slot.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposed.getter",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(AsyncDisposableStack.prototype, 'disposed');\n\nassert.sameValue(\n  typeof descriptor.get,\n  'function',\n  'typeof descriptor.get is function'\n);\nassert.sameValue(\n  typeof descriptor.set,\n  'undefined',\n  'typeof descriptor.set is undefined'\n);\n\nverifyProperty(AsyncDisposableStack.prototype, 'disposed', {\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposed/getter.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposed.name",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(AsyncDisposableStack.prototype, 'disposed');\n\nassert.sameValue(descriptor.get.name,\n  'get disposed',\n  'The value of `descriptor.get.name` is `get disposed`'\n);\n\nverifyProperty(descriptor.get, 'name', {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposed/name.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposed.returns-false-when-not-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\n\nassert.sameValue(stack.disposed, false);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposed/returns-false-when-not-disposed.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposed.returns-true-when-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nstack.disposeAsync();\nassert.sameValue(stack.disposed, true);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/disposed/returns-true-when-disposed.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.prototype.disposed.this-not-object-throw",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(AsyncDisposableStack.prototype, 'disposed');\n\ntry { (function() {\n  descriptor.get.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(AsyncDisposableStack.prototype, 'disposed');\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(1);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(false);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(1);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call('');\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(null);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(Symbol());\n});\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/prototype/disposed/this-not-object-throw.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.does-not-dispose-resources",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nvar disposed = false;\nstack.defer(() => { disposed = true; });\nstack.move();\nassert.sameValue(disposed, false);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/does-not-dispose-resources.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.not-a-constructor",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(AsyncDisposableStack.prototype.move),\n  false,\n  'isConstructor(AsyncDisposableStack.prototype.move) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let stack = new AsyncDisposableStack({}); new stack.move();\n}, '`let stack = new AsyncDisposableStack({}); new stack.move()` throws TypeError');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "explicit-resource-management",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.prop-desc",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.move, 'function');\n\nverifyProperty(AsyncDisposableStack.prototype, 'move', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.returns-new-asyncdisposablestack-that-is-still-pending",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack1 = new AsyncDisposableStack();\nvar stack2 = stack1.move();\nassert.sameValue(stack2.disposed, false);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/returns-new-asyncdisposablestack-that-is-still-pending.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.returns-new-asyncdisposablestack",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack1 = new AsyncDisposableStack();\nvar stack2 = stack1.move();\nassert(stack2 !== stack1, 'Expected stack2 to not be the same reference as stack1');\nassert(stack2 instanceof AsyncDisposableStack, 'Expected stack2 to be an instance of AsyncDisposableStack');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/returns-new-asyncdisposablestack.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.sets-state-to-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nvar wasDisposed = stack.disposed;\nstack.move();\nvar isDisposed = stack.disposed;\nassert.sameValue(wasDisposed, false);\nassert.sameValue(isDisposed, true);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/sets-state-to-disposed.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.still-returns-new-asyncdisposablestack-when-subclassed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass MyAsyncDisposableStack extends AsyncDisposableStack {}\n\nvar stack1 = new MyAsyncDisposableStack();\nvar stack2 = stack1.move();\nassert(stack2 instanceof AsyncDisposableStack, 'Expected stack2 to be an instance of AsyncDisposableStack');\nassert(!(stack2 instanceof MyAsyncDisposableStack), 'Expected stack2 to not be an instance of MyAsyncDisposableStack');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/still-returns-new-asyncdisposablestack-when-subclassed.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.this-does-not-have-internal-asyncdisposablestate-throws",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.move, 'function');\n\nvar move = AsyncDisposableStack.prototype.move;\n\nassert.throws(TypeError, function() {\n  move.call({ ['[[AsyncDisposableState]]']: {} });\n}, 'Ordinary object without [[AsyncDisposableState]]');\n\nassert.throws(TypeError, function() {\n  move.call(AsyncDisposableStack.prototype);\n}, 'AsyncDisposableStack.prototype does not have a [[AsyncDisposableState]] internal slot');\n\nassert.throws(TypeError, function() {\n  move.call(AsyncDisposableStack);\n}, 'AsyncDisposableStack does not have a [[AsyncDisposableState]] internal slot');\n\nvar stack = new DisposableStack();\nassert.throws(TypeError, function() {\n  move.call(stack);\n}, 'DisposableStack instance');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/this-does-not-have-internal-asyncdisposablestate-throws.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.this-not-object-throws",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof AsyncDisposableStack.prototype.move);\n\nvar move = AsyncDisposableStack.prototype.move;\n\ntry { (function() {\n  move.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  move.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  move.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.move, 'function');\n\nvar move = AsyncDisposableStack.prototype.move;\n\nassert.throws(TypeError, function() {\n  move.call(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  move.call(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  move.call(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  move.call(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  move.call(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  move.call('object');\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  move.call(s);\n}, 'symbol');\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/prototype/move/this-not-object-throws.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.move.throws-if-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nstack.disposeAsync();\n\nassert.throws(ReferenceError, function() {\n  stack.move();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/move/throws-if-disposed.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.prototype.proto",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AsyncDisposableStack.prototype);\nconsole.log(proto);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AsyncDisposableStack.prototype);\nassert.sameValue(proto, Object.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.adds-async-disposable-value",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var resource = {\n      disposed: false,\n      async [Symbol.asyncDispose]() {\n          this.disposed = true;\n      }\n  };\n  stack.use(resource);\n  await stack.disposeAsync();\n  assert.sameValue(resource.disposed, true, 'Expected resource to have been disposed');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/adds-async-disposable-value.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.adds-sync-disposable-value",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var resource = {\n      disposed: false,\n      [Symbol.dispose]() {\n          this.disposed = true;\n      }\n  };\n  stack.use(resource);\n  await stack.disposeAsync();\n  assert.sameValue(resource.disposed, true, 'Expected resource to have been disposed');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/adds-sync-disposable-value.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.gets-value-symbol.asyncdispose-property-once",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var resource = {\n      disposeReadCount: 0,\n      get [Symbol.asyncDispose]() {\n          this.disposeReadCount++;\n          return async function() { };\n      }\n  };\n  stack.use(resource);\n  var countAfterUse = resource.disposeReadCount;\n  await stack.disposeAsync();\n  var countAfterDispose = resource.disposeReadCount;\n  assert.sameValue(countAfterUse, 1, 'Expected [Symbol.asyncDispose] to have been read only once');\n  assert.sameValue(countAfterDispose, 1, 'Expected [Symbol.asyncDispose] to have been read only once');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/gets-value-Symbol.asyncDispose-property-once.js",
+      "n_asserts": 2,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.gets-value-symbol.dispose-property-once",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var resource = {\n      disposeReadCount: 0,\n      get [Symbol.dispose]() {\n          this.disposeReadCount++;\n          return function() { };\n      }\n  };\n  stack.use(resource);\n  var countAfterUse = resource.disposeReadCount;\n  await stack.disposeAsync();\n  var countAfterDispose = resource.disposeReadCount;\n  assert.sameValue(countAfterUse, 1, 'Expected [Symbol.dispose] to have been read only once');\n  assert.sameValue(countAfterDispose, 1, 'Expected [Symbol.dispose] to have been read only once');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/gets-value-Symbol.dispose-property-once.js",
+      "n_asserts": 2,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.not-a-constructor",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(AsyncDisposableStack.prototype.use),\n  false,\n  'isConstructor(AsyncDisposableStack.prototype.use) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let stack = new AsyncDisposableStack({}); new stack.use();\n}, '`let stack = new AsyncDisposableStack({}); new stack.use()` throws TypeError');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "explicit-resource-management",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.prop-desc",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.use, 'function');\n\nverifyProperty(AsyncDisposableStack.prototype, 'use', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.puts-value-on-top-of-stack",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var stack = new AsyncDisposableStack();\n  var disposed = [];\n  var resource1 = {\n      async [Symbol.asyncDispose]() {\n          disposed.push(this);\n      }\n  };\n  var resource2 = {\n      [Symbol.dispose]() {\n          disposed.push(this);\n      }\n  };\n  stack.use(resource1);\n  stack.use(resource2);\n  await stack.disposeAsync();\n  assert.sameValue(2, disposed.length);\n  assert.sameValue(disposed[0], resource2, 'Expected resource2 to be the first disposed resource');\n  assert.sameValue(disposed[1], resource1, 'Expected resource1 to be the second disposed resource');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/puts-value-on-top-of-stack.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.returns-value",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nvar resource1 = { async [Symbol.asyncDispose]() { } };\nvar resource2 = { [Symbol.dispose]() { } };\nassert.sameValue(stack.use(resource1), resource1);\nassert.sameValue(stack.use(resource2), resource2);\nassert.sameValue(stack.use(null), null);\nassert.sameValue(stack.use(undefined), undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/returns-value.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.symbol.asyncdispose-getter",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var resource = {\n    disposed: false,\n    get [Symbol.asyncDispose]() {\n      return async function () {\n        this.disposed = true;\n      };\n    }\n  };\n\n  var stack = new AsyncDisposableStack();\n  stack.use(resource);\n  await stack.disposeAsync();\n\n  assert.sameValue(resource.disposed, true, 'Expected resource to have been disposed');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/Symbol.asyncDispose-getter.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.symbol.dispose-getter",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nasyncTest(async function () {\n  var resource = {\n    disposed: false,\n    get [Symbol.dispose]() {\n      return function() {\n        this.disposed = true;\n      };\n    }\n  };\n\n  var stack = new AsyncDisposableStack();\n  stack.use(resource);\n  await stack.disposeAsync();\n\n  assert.sameValue(resource.disposed, true, 'Expected resource to have been disposed');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/Symbol.dispose-getter.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.this-does-not-have-internal-asyncdisposablestate-throws",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.use, 'function');\n\nvar use = AsyncDisposableStack.prototype.use;\n\nassert.throws(TypeError, function() {\n  use.call({ ['[[AsyncDisposableState]]']: {} });\n}, 'Ordinary object without [[AsyncDisposableState]]');\n\nassert.throws(TypeError, function() {\n  use.call(AsyncDisposableStack.prototype);\n}, 'AsyncDisposableStack.prototype does not have a [[AsyncDisposableState]] internal slot');\n\nassert.throws(TypeError, function() {\n  use.call(AsyncDisposableStack);\n}, 'AsyncDisposableStack does not have a [[AsyncDisposableState]] internal slot');\n\nvar stack = new DisposableStack();\nassert.throws(TypeError, function() {\n  use.call(stack);\n}, 'DisposableStack instance');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/this-does-not-have-internal-asyncdisposablestate-throws.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.this-not-object-throws",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof AsyncDisposableStack.prototype.use);\n\nvar use = AsyncDisposableStack.prototype.use;\n\ntry { (function() {\n  use.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  use.call('object');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  use.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AsyncDisposableStack.prototype.use, 'function');\n\nvar use = AsyncDisposableStack.prototype.use;\n\nassert.throws(TypeError, function() {\n  use.call(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  use.call(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  use.call(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  use.call(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  use.call(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  use.call('object');\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  use.call(s);\n}, 'symbol');\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/prototype/use/this-not-object-throws.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.throws-if-disposed",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nstack.disposeAsync();\n\nassert.throws(ReferenceError, function() {\n  stack.use(undefined);\n}, 'undefined');\n\nassert.throws(ReferenceError, function() {\n  stack.use(null);\n}, 'null');\n\nassert.throws(ReferenceError, function() {\n  stack.use(true);\n}, 'true');\n\nassert.throws(ReferenceError, function() {\n  stack.use(false);\n}, 'false');\n\nassert.throws(ReferenceError, function() {\n  stack.use(1);\n}, 'number');\n\nassert.throws(ReferenceError, function() {\n  stack.use('object');\n}, 'string');\n\nvar s = Symbol();\nassert.throws(ReferenceError, function() {\n  stack.use(s);\n}, 'symbol');\n\nassert.throws(ReferenceError, function() {\n  stack.use({});\n}, 'non disposable object');\n\nassert.throws(ReferenceError, function() {\n  stack.use({ async [Symbol.asyncDispose]() {} });\n}, 'async disposable object');\n\nassert.throws(ReferenceError, function() {\n  stack.use({ [Symbol.dispose]() {} });\n}, 'disposable object');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/throws-if-disposed.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.throws-if-value-missing-symbol.asyncdispose-and-symbol.dispose",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.use({ });\n}, 'true');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/throws-if-value-missing-Symbol.asyncDispose-and-Symbol.dispose.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.throws-if-value-not-object",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.use(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  stack.use(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  stack.use(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  stack.use('object');\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  stack.use(s);\n}, 'symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/throws-if-value-not-object.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.throws-if-value-symbol.asyncdispose-property-is-null-or-undefined",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.asyncDispose]: null });\n}, 'null');\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.asyncDispose]: undefined });\n}, 'undefined');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/throws-if-value-Symbol.asyncDispose-property-is-null-or-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.throws-if-value-symbol.asyncdispose-property-not-callable",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.asyncDispose]: true });\n}, 'true');\n\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.asyncDispose]: false });\n}, 'false');\n\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.asyncDispose]: 1 });\n}, 'number');\n\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.asyncDispose]: 'object' });\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.asyncDispose]: s });\n}, 'symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/throws-if-value-Symbol.asyncDispose-property-not-callable.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.throws-if-value-symbol.dispose-property-is-null-or-undefined",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.dispose]: null });\n}, 'null');\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.dispose]: undefined });\n}, 'undefined');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/throws-if-value-Symbol.dispose-property-is-null-or-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype.use.throws-if-value-symbol.dispose-property-not-callable",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.dispose]: true });\n}, 'true');\n\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.dispose]: false });\n}, 'false');\n\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.dispose]: 1 });\n}, 'number');\n\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.dispose]: 'object' });\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  stack.use({ [Symbol.dispose]: s });\n}, 'symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype/use/throws-if-value-Symbol.dispose-property-not-callable.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype-from-newtarget-abrupt",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar calls = 0;\nvar newTarget = function() {}.bind(null);\nObject.defineProperty(newTarget, 'prototype', {\n  get: function() {\n    calls += 1;\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.construct(AsyncDisposableStack, [], newTarget);\n});\n\nassert.sameValue(calls, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype-from-newtarget-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype-from-newtarget-custom",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack;\n\nstack = Reflect.construct(AsyncDisposableStack, [], Object);\nassert.sameValue(Object.getPrototypeOf(stack), Object.prototype, 'NewTarget is built-in Object constructor');\n\nvar newTarget = function() {}.bind(null);\nObject.defineProperty(newTarget, 'prototype', {\n  get: function() {\n    return Array.prototype;\n  }\n});\nstack = Reflect.construct(AsyncDisposableStack, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(stack), Array.prototype, 'NewTarget is BoundFunction with accessor');\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype-from-newtarget-custom.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "explicit-resource-management",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncdisposablestack.prototype-from-newtarget",
+      "category": "asyncdisposablestack",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar stack = new AsyncDisposableStack();\nassert.sameValue(Object.getPrototypeOf(stack), AsyncDisposableStack.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncDisposableStack/prototype-from-newtarget.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncdisposablestack.undefined-newtarget-throws",
       "category": "asyncdisposablestack",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  AsyncDisposableStack();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  AsyncDisposableStack();\n});\n}\nmain();\n",
       "origin": "test/built-ins/AsyncDisposableStack/undefined-newtarget-throws.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "explicit-resource-management"
+      ],
+      "includes": []
     }
   ]
 }

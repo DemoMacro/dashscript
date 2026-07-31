@@ -1,50 +1,743 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.shadowrealm.constructor",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm,\n  'function',\n  'This test must fail if ShadowRealm is not a function'\n);\n\nassert(isConstructor(ShadowRealm));\nassert.sameValue(Object.getPrototypeOf(ShadowRealm), Function.prototype);\nnew ShadowRealm();\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/constructor.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ShadowRealm",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
     {
       "id": "test262.test.built-ins.shadowrealm.extensibility",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(ShadowRealm));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.isExtensible(ShadowRealm), true);\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/extensibility.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.instance-extensibility",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst realm = new ShadowRealm();\n\nassert(Object.isExtensible(realm));\n\nObject.defineProperty(realm, 'foo', { configurable: true });\nassert(realm.hasOwnProperty('foo'), 'confirms extensibility adding a new property');\n\nObject.defineProperty(realm, 'foo', {\n  value: 'bar',\n  writable: true,\n  configurable: true,\n  enumerable: false,\n});\n\nverifyProperty(realm, 'foo', {\n  value: 'bar',\n  writable: true,\n  configurable: true,\n  enumerable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/instance-extensibility.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.instance",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm,\n  'function',\n  'This test must fail if ShadowRealm is not a function'\n);\n\nvar realm = new ShadowRealm();\n\nassert(realm instanceof ShadowRealm);\nassert.sameValue(\n  Object.getPrototypeOf(realm),\n  ShadowRealm.prototype,\n  '[[Prototype]] is set to %ShadowRealm.prototype%'\n);\n\nvar otherRealm = new ShadowRealm();\nassert.notSameValue(realm, otherRealm, 'each instance is different');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/instance.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.shadowrealm.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(ShadowRealm), Function.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.errors-from-the-other-realm-is-wrapped-into-a-typeerror",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(SyntaxError, () => r.evaluate('...'), 'SyntaxError exposed to Parent');\nassert.throws(TypeError, () => r.evaluate('throw 42'), 'throw primitive => TypeError');\nassert.throws(TypeError, () => r.evaluate('throw new ReferenceError(\"aaa\")'), 'custom ctor => TypeError');\nassert.throws(TypeError, () => r.evaluate('throw new TypeError(\"aaa\")'), 'Child TypeError => Parent TypeError');\nassert.throws(TypeError, () => r.evaluate('eval(\"...\");'), 'syntaxerror parsing coming after runtime evaluation');\nassert.throws(TypeError, () => r.evaluate(`\n  'use strict';\n  eval(\"var public = 1;\");\n`), 'strict-mode only syntaxerror parsing coming after runtime evaluation');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/errors-from-the-other-realm-is-wrapped-into-a-typeerror.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.globalthis-available-properties",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nlet properties = [\n  'globalThis',\n  'Infinity',\n  'NaN',\n  'undefined',\n  'eval',\n  'isFinite',\n  'isNaN',\n  'parseFloat',\n  'parseInt',\n  'decodeURI',\n  'decodeURIComponent',\n  'encodeURI',\n  'encodeURIComponent',\n  'AggregateError',\n  'Array',\n  'ArrayBuffer',\n  'BigInt',\n  'BigInt64Array',\n  'BigUint64Array',\n  'Boolean',\n  'DataView',\n  'Date',\n  'Error',\n  'EvalError',\n  'FinalizationRegistry',\n  'Float16Array',\n  'Float32Array',\n  'Float64Array',\n  'Function',\n  'Int8Array',\n  'Int16Array',\n  'Int32Array',\n  'Map',\n  'Number',\n  'Object',\n  'Promise',\n  'Proxy',\n  'RangeError',\n  'ReferenceError',\n  'RegExp',\n  'Set',\n  'SharedArrayBuffer',\n  'String',\n  'Symbol',\n  'SyntaxError',\n  'TypeError',\n  'Uint8Array',\n  'Uint8ClampedArray',\n  'Uint16Array',\n  'Uint32Array',\n  'URIError',\n  'WeakMap',\n  'WeakRef',\n  'WeakSet',\n  'Atomics',\n  'JSON',\n  'Math',\n  'Reflect',\n];\n\n// The intention of this test is to ensure that all built-in properties of the\n// global object are also exposed on the ShadowRealm's global object, without\n// penalizing implementations that don't have all of them implemented. Notably,\n// SharedArrayBuffer may still not be (re-)enabled in all circumstances.\nproperties = properties.filter(name => {\n    return name in globalThis;\n});\n\nconst available = properties.filter(name => {\n  // This test is intentionally not using wrapped functions.\n  // This test should not depend on wrapped functions.\n  return r.evaluate(`Object.prototype.hasOwnProperty.call(globalThis, '${name}')`);\n});\n\n// This comparison is intentional to list difference in names if the the assertion fails\nassert.compareArray(properties, available);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/globalthis-available-properties.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.globalthis-config-only-properties",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nconst anyMissed = r.evaluate(`\n  // These names are the only exception as non configurable values.\n  // Yet, they don't represent any object value.\n  const esNonConfigValues = [\n    'undefined',\n    'Infinity',\n    'NaN'\n  ];\n\n  const entries = Object.entries(Object.getOwnPropertyDescriptors(globalThis));\n\n  const missed = entries\n    .filter(entry => entry[1].configurable === false)\n    .map(([name]) => name)\n    .filter(name => !esNonConfigValues.includes(name))\n    .join(', ');\n\n  missed;\n`);\n\nassert.sameValue(anyMissed, '', 'All globalThis properties must be configurable');\n\nconst result = r.evaluate(`\n  const ObjectKeys = Object.keys;\n  const hasOwn = Object.prototype.hasOwnProperty;\n  const savedGlobal = globalThis;\n  const names = Object.keys(Object.getOwnPropertyDescriptors(globalThis));\n\n  // These names are the only exception as non configurable values.\n  // Yet, they don't represent any object value.\n  const esNonConfigValues = [\n    'undefined',\n    'Infinity',\n    'NaN'\n  ];\n\n  // Delete every name except globalThis, for now\n  const remainingNames = names.filter(name => {\n    if (esNonConfigValues.includes(name)) {\n      return false;\n    }\n\n    if (name !== 'globalThis') {\n      delete globalThis[name];\n      return hasOwn.call(globalThis, name);\n    }\n  });\n\n  delete globalThis['globalThis'];\n\n  if (hasOwn.call(savedGlobal, 'globalThis')) {\n    remainingNames.push('globalThis');\n  }\n\n  const failedDelete = remainingNames.join(', ');\n\n  failedDelete;\n`);\n\nassert.sameValue(result, '', 'deleting any globalThis property must be effective');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/globalthis-config-only-properties.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ShadowRealm",
+        "Array.prototype.includes"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.globalthis-ordinary-object",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.sameValue(\n  r.evaluate('Object.getPrototypeOf(globalThis) === Object.prototype'),\n  true,\n  'The [[Prototype]] of globalThis is Object.prototype'\n);\n\nassert.sameValue(\n  r.evaluate('Object.isExtensible(globalThis)'),\n  true,\n  'globalThis is extensible'\n);\n\nassert.sameValue(\n  r.evaluate('globalThis.constructor === Object'),\n  true,\n  'globalThis.constructor is Object'\n);\n\nassert.sameValue(\n  r.evaluate(`\n    let result;\n    try {\n      globalThis.__proto__ = {x: 2};\n      result = true;\n    } catch (e) {\n      result = false;\n    }\n    result;\n  `),\n  true,\n  'Can assign to globalThis.__proto__ directly'\n);\n\nassert.sameValue(\n  r.evaluate(`\n    Reflect.set(globalThis, '__proto__', {x: 1}) &&\n    Reflect.setPrototypeOf(globalThis.__proto__, {x: 2});\n  `),\n  true,\n  'Can set an ordinary globalThis.__proto__'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/globalthis-ordinary-object.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.nested-realms",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nglobalThis.myValue = 'a';\nconst realm1 = new ShadowRealm();\n\nrealm1.evaluate('globalThis.myValue = \"b\";');\n\nconst realm2Evaluate = realm1.evaluate(`\n  const realm2 = new ShadowRealm();\n\n  (str) => realm2.evaluate(str);\n`);\n\nrealm2Evaluate('globalThis.myValue = \"c\";');\n\nassert.sameValue(globalThis.myValue, 'a');\nassert.sameValue(realm1.evaluate('globalThis.myValue'), 'b');\nassert.sameValue(realm2Evaluate('globalThis.myValue'), 'c');\n\nrealm1.evaluate('globalThis.myValue = \"d\"');\n\nassert.sameValue(globalThis.myValue, 'a', 'no side effects');\nassert.sameValue(realm1.evaluate('globalThis.myValue'), 'd', 'no side effects');\nassert.sameValue(realm2Evaluate('globalThis.myValue'), 'c', 'no side effects');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/nested-realms.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.no-conditional-strict-mode",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nconst res = r.evaluate(`\n  function lol() {\n    arguments = 42; // This would be a SyntaxError if in strict mode\n\n    return arguments;\n  }\n  lol;\n`);\n\nassert.sameValue(res(), 42);\n\nconst res2 = r.evaluate('var public = 1; 42');\n\nassert.sameValue(res2, 42);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/no-conditional-strict-mode.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.not-constructor",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nassert.sameValue(\n  isConstructor(ShadowRealm.prototype.evaluate),\n  false,\n  'isConstructor(ShadowRealm.prototype.evaluate) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new ShadowRealm.prototype.evaluate(\"\");\n});\n\nconst r = new ShadowRealm();\nr.evaluate('globalThis.x = 0');\n\nassert.throws(TypeError, () => {\n  new r.evaluate(\"globalThis.x += 1;\");\n}, '`new r.evaluate(\"...\")` throws TypeError');\n\nassert.sameValue(r.evaluate('globalThis.x'), 0, 'No code evaluated in the new expression');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/not-constructor.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "ShadowRealm",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype.evaluate));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(ShadowRealm.prototype.evaluate), Function.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/prototype/evaluate/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.returns-primitive-values",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.sameValue(r.evaluate('1 + 1'), 2);\nassert.sameValue(r.evaluate('null'), null);\nassert.sameValue(r.evaluate(''), undefined, 'undefined from empty completion');\nassert.sameValue(r.evaluate('undefined'), undefined);\nassert.sameValue(r.evaluate('true'), true);\nassert.sameValue(r.evaluate('false'), false);\nassert.sameValue(r.evaluate('function fn() {}'), undefined, 'fn declaration has empty completion');\nassert.sameValue(r.evaluate('{}'), undefined, 'Block has empty completion');\nassert.sameValue(r.evaluate('-0'), -0);\nassert.sameValue(r.evaluate('\"str\"'), 'str');\nassert(Number.isNaN(r.evaluate('NaN')));\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/returns-primitive-values.js",
+      "n_asserts": 12,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.returns-proxy-callable-object",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nconst proxyCallable = r.evaluate(`\nfunction fn() { return 42; }\nnew Proxy(fn, {});\n`);\n\nassert.sameValue(typeof proxyCallable, 'function', 'wrapped proxy callable object is typeof function');\nassert.sameValue(proxyCallable(), 42, 'wrappedpfn() returns 42');\nassert.sameValue((new Proxy(proxyCallable, {}))(), 42, 'wrapped functions can be proxied');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/returns-proxy-callable-object.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.returns-symbol-values",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\nconst s = r.evaluate('Symbol(\"foobar\")');\n\nassert.sameValue(typeof s, 'symbol');\nassert.sameValue(s.constructor, Symbol, 'primitive does not expose other ShadowRealm constructor');\nassert.sameValue(Object.getPrototypeOf(s), Symbol.prototype);\nassert.sameValue(Symbol.prototype.toString.call(s), 'Symbol(foobar)');\n\nconst shadowX = r.evaluate('Symbol.for(\"my symbol name\")');\nconst myX = Symbol.for('my symbol name')\n\nassert.sameValue(\n  shadowX,\n  myX,\n  'The shadow realms observes the symbol global registry used in Symbol.for'\n);\n\nassert.sameValue(\n  Symbol.keyFor(shadowX),\n  'my symbol name',\n  'Symbol.keyFor observes the string key name of a symbol originally registered in the shadow realm'\n);\n\nassert.sameValue(\n  Symbol.keyFor(s),\n  undefined,\n  'Symbol.keyFor cannot find a key for a regular symbol created in the shadow realm'\n);\n\nconst { get: description } = Object.getOwnPropertyDescriptor(Symbol.prototype, 'description');\n\nassert.sameValue(\n  description.call(s),\n  'foobar',\n  'get description for the symbol created in the shadow realm'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/returns-symbol-values.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.throws-error-from-ctor-realm",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nvar other = $262.createRealm().global;\nvar OtherTypeError = other.TypeError;\nvar OtherSyntaxError = other.SyntaxError;\nvar OtherShadowRealm = other.ShadowRealm;\n\nvar realm = Reflect.construct(OtherShadowRealm, []);\n\nassert.throws(OtherTypeError, () => realm.evaluate('globalThis'), 'throws a TypeError if return value can not be wrapped');\nassert.throws(OtherTypeError, () => realm.evaluate('throw new Error()'), 'throws a TypeError if completion is abrupt');\n\nassert.throws(OtherTypeError, () => realm.evaluate(1), 'throws a TypeError if sourceText is not a string');\nassert.throws(OtherSyntaxError, () => realm.evaluate('...'), 'throws a SyntaxError if the sourceText is not valid');\n\nconst bogus = {};\nassert.throws(OtherTypeError, function() {\n  realm.evaluate.call(bogus, 'This is invalid code and should not be evaluated');\n}, 'throws a TypeError if this is not a ShadowRealm object');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/throws-error-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "ShadowRealm",
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.throws-syntaxerror-on-bad-syntax",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(SyntaxError, () => r.evaluate('...'), 'SyntaxError exposed to Parent');\nassert.throws(SyntaxError, () => r.evaluate(`\n  \"use strict\";\n  throw \"do not evaluate\";\n  function lol(){\n    arguments = 1;\n  }\n`), 'Strict mode only SyntaxError, setting value to a fn arguments');\nassert.throws(SyntaxError, () => r.evaluate(`\n  \"use strict\";\n  throw \"do not evaluate\";\n  var public = 1;\n`), 'Strict mode only SyntaxError, var public');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/throws-syntaxerror-on-bad-syntax.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.throws-typeerror-if-evaluation-resolves-to-non-primitive",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(TypeError, () => r.evaluate('globalThis'), 'globalThis');\nassert.throws(TypeError, () => r.evaluate('[]'), 'array literal');\nassert.throws(TypeError, () => r.evaluate(`\n    ({\n        [Symbol.toPrimitive]() { return 'string'; },\n        toString() { return 'str'; },\n        valueOf() { return 1; }\n    });\n`), 'object literal with immediate primitive coercion methods');\nassert.throws(TypeError, () => r.evaluate('Object.create(null)'), 'ordinary object with null __proto__');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/throws-typeerror-if-evaluation-resolves-to-non-primitive.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.throws-typeerror-wrap-throwing",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(TypeError, () => r.evaluate(`\nconst revocable = Proxy.revocable(() => {}, {});\nrevocable.revoke();\n\nrevocable.proxy;\n`), 'TypeError on wrapping a revoked callable proxy');\n\nassert.throws(TypeError, () => r.evaluate(`\nconst fn = () => {};\nObject.defineProperty(fn, 'name', {\n  get() {\n    throw new Error();\n  },\n});\n\nfn;\n`), 'TypeError on wrapping a fn with throwing name accessor');\n\nassert.throws(TypeError, () => r.evaluate(`\nconst fn = () => {};\nObject.defineProperty(fn, 'length', {\n  get() {\n    throw new Error();\n  },\n});\n\nfn;\n`), 'TypeError on wrapping a fn with throwing length accessor');\n\nassert.throws(TypeError, () => r.evaluate(`\nconst proxy = new Proxy(() => {}, {\n  getOwnPropertyDescriptor(target, key) {\n    throw new Error();\n  },\n});\n\nproxy;\n`), 'TypeError on wrapping a callable proxy with throwing getOwnPropertyDescriptor trap');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/throws-typeerror-wrap-throwing.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.throws-when-argument-is-not-a-string",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(TypeError, () => r.evaluate(['1+1']));\nassert.throws(TypeError, () => r.evaluate({ [Symbol.toPrimitive]() { return '1+1'; }}));\nassert.throws(TypeError, () => r.evaluate(1));\nassert.throws(TypeError, () => r.evaluate(null));\nassert.throws(TypeError, () => r.evaluate(undefined));\nassert.throws(TypeError, () => r.evaluate(true));\nassert.throws(TypeError, () => r.evaluate(false));\nassert.throws(TypeError, () => r.evaluate(new String('nope')));\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/throws-when-argument-is-not-a-string.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.validates-realm-object",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\nconst bogus = {};\n\nassert.throws(TypeError, function() {\n  r.evaluate.call(bogus, 'This is invalid code and should not be evaluated');\n}, 'throws a TypeError if this is not a ShadowRealm object');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/validates-realm-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-arguments-are-wrapped-into-the-inner-realm-extended",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\nconst blueFn = (x, y) => x + y;\n\nconst redWrappedFn = r.evaluate(`\n    function fn(wrapped1, wrapped2, wrapped3) {\n        if (wrapped1.x) {\n            return 1;\n        }\n        if (wrapped2.x) {\n            return 2;\n        }\n        if (wrapped3.x) {\n            // Not unwrapped\n            return 3;\n        }\n        if (wrapped1 === wrapped2) {\n            // Always a new wrapped function\n            return 4;\n        }\n\n        // No unwrapping\n        if (wrapped3 === fn) {\n            return 5;\n        };\n\n        return true;\n    }\n    fn.x = 'secret';\n    fn;\n`);\nassert.sameValue(redWrappedFn(blueFn, blueFn, redWrappedFn), true);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-arguments-are-wrapped-into-the-inner-realm-extended.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-arguments-are-wrapped-into-the-inner-realm",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\nconst blueFn = (x, y) => x + y;\n\nconst redWrappedFn = r.evaluate(`\n0, (blueWrappedFn, a, b, c) => {\n    return blueWrappedFn(a, b) * c;\n}\n`);\nassert.sameValue(redWrappedFn(blueFn, 2, 3, 4), 20);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-arguments-are-wrapped-into-the-inner-realm.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-from-return-values-share-no-identity",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nr.evaluate(`\nfunction fn() { return 42; }\nglobalThis.arrow = x => x * 2;\nglobalThis.pFn = new Proxy(fn, {\n    apply() {\n        pFn.used = 1;\n        return 39;\n    }\n});\nasync function aFn() {\n    return 1;\n}\n\nfunction * genFn() {\n    return 1;\n}\n\nfn.x = 'secrets';\narrow.x = 'secrets';\npFn.x = 'secrets';\naFn.x = 'secrets';\ngenFn.x = 'secrets';\n`)\n\nconst wrappedOrdinary = r.evaluate('() => fn')();\nassert.sameValue(typeof wrappedOrdinary, 'function', 'ordinary function wrapped');\nassert.sameValue(wrappedOrdinary(), 42, 'ordinary, return');\nassert.sameValue(wrappedOrdinary.x, undefined, 'ordinary, no property shared');\nassert.sameValue(Object.prototype.hasOwnProperty.call(wrappedOrdinary, 'x'), false, 'ordinary, no own property shared');\n\nconst wrappedArrow = r.evaluate('() => arrow')();\nassert.sameValue(typeof wrappedArrow, 'function', 'arrow function wrapped');\nassert.sameValue(wrappedArrow(7), 14, 'arrow function, return');\nassert.sameValue(wrappedArrow.x, undefined, 'arrow function, no property');\nassert.sameValue(Object.prototype.hasOwnProperty.call(wrappedArrow, 'x'), false, 'arrow function, no own property shared');\n\nconst wrappedProxied = r.evaluate('() => pFn')();\nassert.sameValue(typeof wrappedProxied, 'function', 'proxied ordinary function wrapped');\nassert.sameValue(r.evaluate('pFn.used'), undefined, 'pFn not called yet');\nassert.sameValue(wrappedProxied(), 39, 'return of the proxied callable');\nassert.sameValue(r.evaluate('pFn.used'), 1, 'pfn called');\nassert.sameValue(wrappedProxied.x, undefined, 'proxy callable, no property');\nassert.sameValue(Object.prototype.hasOwnProperty.call(wrappedProxied, 'x'), false, 'proxy callable, no own property shared');\n\nconst wrappedAsync = r.evaluate('() => aFn')();\nassert.sameValue(typeof wrappedAsync, 'function', 'async function wrapped');\nassert.throws(TypeError, () => wrappedAsync(), 'wrapped function cannot return non callable object');\nassert.sameValue(wrappedAsync.x, undefined, 'async function, no property');\nassert.sameValue(Object.prototype.hasOwnProperty.call(wrappedAsync, 'x'), false, 'async function, no own property shared');\n\nconst wrappedGenerator = r.evaluate('() => genFn')();\nassert.sameValue(typeof wrappedGenerator, 'function', 'gen function wrapped');\nassert.throws(TypeError, () => wrappedGenerator(), 'wrapped function cannot return non callable object');\nassert.sameValue(wrappedGenerator.x, undefined, 'generator, no property');\nassert.sameValue(Object.prototype.hasOwnProperty.call(wrappedGenerator, 'x'), false, 'generator, no own property shared');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-from-return-values-share-no-identity.js",
+      "n_asserts": 23,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-multiple-different-realms-nested",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nglobalThis.count = 0;\nconst realm1 = new ShadowRealm();\n\nconst r1wrapped = realm1.evaluate(`\n  globalThis.count = 0;\n  () => globalThis.count += 1;\n`);\n\nconst realm2Evaluate = realm1.evaluate(`\n  const realm2 = new ShadowRealm();\n\n  (str) => realm2.evaluate(str);\n`);\n\nconst r2wrapper = realm2Evaluate(`\n  globalThis.wrapped = undefined;\n  globalThis.count = 0; // Bait\n  (fn) => globalThis.wrapped = fn;\n`);\n\nconst rewrapped = r2wrapper(r1wrapped);\n\nassert.notSameValue(rewrapped, r1wrapped, 'rewrapped !== r1wrapped');\n\nconst r2wrapped = realm2Evaluate('globalThis.wrapped');\n\nassert.notSameValue(r2wrapped, r1wrapped, 'r2wrapped !== r1wrapped');\nassert.notSameValue(r2wrapped, rewrapped, 'r2wrapped !== rewrapped');\n\nassert.sameValue(realm1.evaluate('globalThis.count'), 0, `getting wrapped function won't trigger a call`);\n\nassert.sameValue(r2wrapped(), 1, 'call from r2 wrapped (r2wrapped) cycles back to r1');\n\nassert.sameValue(realm1.evaluate('globalThis.count'), 1, 'effects produced in a third realm, #1');\n\nassert.sameValue(rewrapped(), 2, 'call from r2 wrapped (rewrapped) cycles back to r1');\n\nassert.sameValue(realm1.evaluate('globalThis.count'), 2, 'effects produced in a third realm, #2');\n\nassert.sameValue(realm2Evaluate('globalThis.count'), 0, 'no side effects produced in the wrong realm (realm2)');\nassert.sameValue(globalThis.count, 0, 'no side effects produced in the wrong realm (main realm)');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-multiple-different-realms-nested.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-multiple-different-realms",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst realm1 = new ShadowRealm();\nconst realm2 = new ShadowRealm();\n\nglobalThis.count = 0;\n\nassert.notSameValue(realm1, realm2);\n\nconst r1wrapped = realm1.evaluate(`\n  globalThis.count = 0;\n  () => globalThis.count += 1;\n`);\n\nconst r2wrapper = realm2.evaluate(`\n  globalThis.wrapped = undefined;\n  globalThis.count = 0; // Bait\n  (fn) => globalThis.wrapped = fn;\n`);\n\nconst rewrapped = r2wrapper(r1wrapped);\n\nassert.notSameValue(rewrapped, r1wrapped, 'rewrapped !== r1wrapped');\n\nconst r2wrapped = realm2.evaluate('globalThis.wrapped');\n\nassert.notSameValue(r2wrapped, r1wrapped, 'r2wrapped !== r1wrapped');\nassert.notSameValue(r2wrapped, rewrapped, 'r2wrapped !== rewrapped');\n\nassert.sameValue(realm1.evaluate('globalThis.count'), 0, `getting wrapped function won't trigger a call`);\n\nassert.sameValue(r2wrapped(), 1, 'call from r2 wrapped (r2wrapped) cycles back to r1');\n\nassert.sameValue(realm1.evaluate('globalThis.count'), 1, 'effects produced in a third realm, #1');\n\nassert.sameValue(rewrapped(), 2, 'call from r2 wrapped (rewrapped) cycles back to r1');\n\nassert.sameValue(realm1.evaluate('globalThis.count'), 2, 'effects produced in a third realm, #2');\n\nassert.sameValue(realm2.evaluate('globalThis.count'), 0, 'no side effects produced in the wrong realm (realm2)');\nassert.sameValue(globalThis.count, 0, 'no side effects produced in the wrong realm (main realm)');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-multiple-different-realms.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-observing-their-scopes",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\nlet myValue;\n\nfunction blueFn(x) {\n    myValue = x;\n    return myValue;\n}\n\n// cb is a new function in the red ShadowRealm that chains the call to the blueFn\nconst redFunction = r.evaluate(`\n    var myValue = 'red';\n    0, function(cb) {\n        cb(42);\n        return myValue;\n    };\n`);\n\nassert.sameValue(redFunction(blueFn), 'red');\nassert.sameValue(myValue, 42);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-observing-their-scopes.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-proto-from-caller-realm",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nvar other = $262.createRealm().global;\nvar OtherShadowRealm = other.ShadowRealm;\nvar OtherFunctionPrototype = other.Function.prototype;\n\nvar yetAnother = $262.createRealm().global;\nvar YetAnotherShadowRealm = yetAnother.ShadowRealm;\nvar YetAnotherFunctionPrototype = yetAnother.Function.prototype;\n\nvar realm = Reflect.construct(OtherShadowRealm, []);\n\nvar checkArgWrapperFn = realm.evaluate('(x) => { return Object.getPrototypeOf(x) === Function.prototype }')\nassert.sameValue(checkArgWrapperFn(() => {}), true, 'callable arguments passed into WrappedFunction should be wrapped in target realm');\n\nvar fn = realm.evaluate('() => { return () => { return 1 } }');\nassert.sameValue(Object.getPrototypeOf(fn), OtherFunctionPrototype, 'WrappedFunction should be derived from the caller realm');\nassert.sameValue(Object.getPrototypeOf(fn()), OtherFunctionPrototype, 'callable results from WrappedFunction should be wrapped in caller realm');\n\nvar fn = YetAnotherShadowRealm.prototype.evaluate.call(realm, '() => { return () => { return 1 } }');\nassert.sameValue(Object.getPrototypeOf(fn), YetAnotherFunctionPrototype, 'WrappedFunction should be derived from the caller realm');\nassert.sameValue(Object.getPrototypeOf(fn()), YetAnotherFunctionPrototype, 'callable results from WrappedFunction should be wrapped in caller realm');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-proto-from-caller-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "ShadowRealm",
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-proxied-observes-boundary",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nconst wrapped = r.evaluate(`() => { return 1; };`);\n\nconst secretObj = {x: 2};\n\nlet received;\n\nconst proxiedWrapped = new Proxy(wrapped, {\n  apply(target, _, args) {\n    assert.sameValue(target, wrapped);\n    received = args;\n\n    // Object can't be sent to the other Realm\n    return target({x: 1});\n  }\n});\n\nassert.throws(\n  TypeError,\n  () => proxiedWrapped(secretObj),\n  'Proxying a wrapped function and invoking it still performs boundary checks'\n);\n\nassert.sameValue(received[0], secretObj, 'proxy still calls the handler trap');\nassert.sameValue(received.length, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-proxied-observes-boundary.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-throws-typeerror-from-caller-realm",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nvar other = $262.createRealm().global;\nvar OtherTypeError = other.TypeError;\nvar OtherShadowRealm = other.ShadowRealm;\n\nvar yetAnother = $262.createRealm().global;\nvar YetAnotherTypeError = yetAnother.TypeError;\nvar YetAnotherShadowRealm = yetAnother.ShadowRealm;\n\nvar realm = Reflect.construct(OtherShadowRealm, []);\n\n{\n  let wrappedFunction = realm.evaluate('() => {}');\n  let wrappedFunction2 = realm.evaluate('() => globalThis');\n\n  assert.throws(OtherTypeError, () => wrappedFunction(1, globalThis), 'throws TypeError if arguments are not wrappable');\n  assert.throws(OtherTypeError, () => wrappedFunction2(), 'throws TypeError if return value is not wrappable');\n}\n\n{\n  let wrappedFunction = YetAnotherShadowRealm.prototype.evaluate.call(realm, '() => {}');\n  let wrappedFunction2 = YetAnotherShadowRealm.prototype.evaluate.call(realm, '() => globalThis');\n  assert.throws(YetAnotherTypeError, () => wrappedFunction(1, globalThis), 'throws TypeError if arguments are not wrappable');\n  assert.throws(YetAnotherTypeError, () => wrappedFunction2(), 'throws TypeError if return value is not wrappable');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-throws-typeerror-from-caller-realm.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "ShadowRealm",
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-throws-typeerror-on-exceptional-exit",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.sameValue(\n  r.evaluate(`(f) => {\n    try {\n      f();\n    } catch (e) {\n      if (e instanceof TypeError) {\n        return 'ok';\n      } else {\n        return e.toString();\n      }\n    }\n    return 'normal exit';\n  }`)(() => { throw Error(\"ahh\"); }),\n  'ok',\n  'WrappedFunction throws TypeError (from the calling realm) if the wrapped callable throws any exception'\n);\n\nassert.throws(\n  TypeError,\n  () => r.evaluate('() => { throw new Error(\"ahh\"); }')(),\n  'WrappedFunction throws TypeError if the wrapped callable throws any exception'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-throws-typeerror-on-exceptional-exit.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-throws-typeerror-on-non-primitive-arguments",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\nconst wrappedFunction = r.evaluate('() => {}');\n\nassert.sameValue(\n  typeof wrappedFunction,\n  'function',\n  'This test must fail if wrappedFunction is not a function'\n);\n\nassert.throws(TypeError, () => wrappedFunction(1, globalThis), 'globalThis');\nassert.throws(TypeError, () => wrappedFunction(1, []), 'array literal');\nassert.throws(TypeError, () => wrappedFunction(1, {\n  [Symbol.toPrimitive]() { return 'string'; },\n  toString() { return 'str'; },\n  valueOf() { return 1; }\n}), 'object literal with immediate primitive coercion methods');\nassert.throws(TypeError, () => wrappedFunction(1, Object.create(null)), 'ordinary object with null __proto__');\nassert.throws(TypeError, () => wrappedFunction(1, new Proxy({}, { apply() {} })), 'non-callable proxy');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-throws-typeerror-on-non-primitive-arguments.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-throws-typeerror-on-non-primitive-returns",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(TypeError, r.evaluate('() => globalThis'), 'globalThis');\nassert.throws(TypeError, r.evaluate('() => []'), 'array literal');\nassert.throws(TypeError, r.evaluate(`\n    () => ({\n        [Symbol.toPrimitive]() { return 'string'; },\n        toString() { return 'str'; },\n        valueOf() { return 1; }\n    });\n`), 'object literal with immediate primitive coercion methods');\nassert.throws(TypeError, r.evaluate('() => Object.create(null)'), 'ordinary object with null __proto__');\nassert.throws(TypeError, r.evaluate('() => new Proxy({}, { apply() {} })'), 'non-callable proxy');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-function-throws-typeerror-on-non-primitive-returns.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-functions-accepts-callable-objects",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.sameValue(typeof r.evaluate('function fn() {} fn'), 'function', 'value from a fn declaration');\nassert.sameValue(typeof r.evaluate('(function() {})'), 'function', 'function expression');\nassert.sameValue(typeof r.evaluate('(async function() {})'), 'function', 'async function expression');\nassert.sameValue(typeof r.evaluate('(function*() {})'), 'function', 'generator expression');\nassert.sameValue(typeof r.evaluate('(async function*() {})'), 'function', 'async generator expression');\nassert.sameValue(typeof r.evaluate('() => {}'), 'function', 'arrow function');\nassert.sameValue(typeof r.evaluate('new Proxy(() => {}, { apply() {} })'), 'function', 'callable proxy');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-functions-accepts-callable-objects.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-functions-can-resolve-callable-returns",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nconst wrapped = r.evaluate('x => y => x * y');\nconst nestedWrapped = wrapped(2);\nconst otherNestedWrapped = wrapped(4);\n\nassert.sameValue(otherNestedWrapped(3), 12);\nassert.sameValue(nestedWrapped(3), 6);\n\nassert.notSameValue(nestedWrapped, otherNestedWrapped, 'new wrapping for each return');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-functions-can-resolve-callable-returns.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-functions-new-wrapping-on-each-evaluation",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nr.evaluate(`\nfunction fn() {\n    return 42;\n}\n`);\n\nconst wrapped = r.evaluate('fn');\nconst otherWrapped = r.evaluate('fn');\n\nassert.notSameValue(wrapped, otherWrapped);\nassert.sameValue(typeof wrapped, 'function');\nassert.sameValue(typeof otherWrapped, 'function');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-functions-new-wrapping-on-each-evaluation.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-functions-share-no-properties-extended",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nr.evaluate(`\nfunction fn() { return 42; }\nglobalThis.arrow = x => x * 2;\nglobalThis.pFn = new Proxy(fn, {\n    apply() {\n        pFn.used = 1;\n        return 39;\n    }\n});\nasync function aFn() {\n    return 1;\n}\n\nfunction * genFn() {\n    return 1;\n}\n\nfn.x = 'secrets';\narrow.x = 'secrets';\npFn.x = 'secrets';\naFn.x = 'secrets';\ngenFn.x = 'secrets';\n`);\n\nconst wrappedOrdinary = r.evaluate('fn');\nassert.sameValue(typeof wrappedOrdinary, 'function', 'ordinary function wrapped');\nassert.sameValue(wrappedOrdinary(), 42, 'ordinary, return');\nassert.sameValue(wrappedOrdinary.x, undefined, 'ordinary, no property shared');\n\nconst wrappedArrow = r.evaluate('arrow');\nassert.sameValue(typeof wrappedArrow, 'function', 'arrow function wrapped');\nassert.sameValue(wrappedArrow(7), 14, 'arrow function, return');\nassert.sameValue(wrappedArrow.x, undefined, 'arrow function, no property');\n\nconst wrappedProxied = r.evaluate('pFn');\nassert.sameValue(typeof wrappedProxied, 'function', 'proxied ordinary function wrapped');\nassert.sameValue(r.evaluate('pFn.used'), undefined, 'pFn not called yet');\nassert.sameValue(wrappedProxied(), 39, 'return of the proxied callable');\nassert.sameValue(r.evaluate('pFn.used'), 1, 'pfn called');\nassert.sameValue(wrappedProxied.x, undefined, 'proxy callable, no property');\n\nconst wrappedAsync = r.evaluate('aFn');\nassert.sameValue(typeof wrappedAsync, 'function', 'async function wrapped');\nassert.throws(TypeError, () => wrappedAsync(), 'wrapped function cannot return non callable object');\nassert.sameValue(wrappedAsync.x, undefined, 'async fn, no property');\n\nconst wrappedGenerator = r.evaluate('genFn');\nassert.sameValue(typeof wrappedGenerator, 'function', 'gen function wrapped');\nassert.throws(TypeError, () => wrappedGenerator(), 'wrapped function cannot return non callable object');\nassert.sameValue(wrappedGenerator.x, undefined, 'generator, no property');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-functions-share-no-properties-extended.js",
+      "n_asserts": 18,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-functions-share-no-properties",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nconst wrapped = r.evaluate(`\nfunction fn() {\n    return fn.secret;\n}\n\nfn.secret = 'confidential';\nfn;\n`);\n\nassert.sameValue(wrapped.secret, undefined);\nassert.sameValue(wrapped(), 'confidential');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/evaluate/wrapped-functions-share-no-properties.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.import-value",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nconst r = new ShadowRealm();\n\nr.importValue('./import-value_FIXTURE.js', 'x').then(x => {\n\n  assert.sameValue(x, 1);\n\n}).then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/import-value.js",
+      "n_asserts": 2,
+      "flags": [
+        "async",
+        "module"
+      ],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.not-constructor",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nassert.sameValue(\n  isConstructor(ShadowRealm.prototype.importValue),\n  false,\n  'isConstructor(ShadowRealm.prototype.importValue) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new ShadowRealm.prototype.importValue(\"\", \"name\");\n}, '`new ShadowRealm.prototype.importValue(\"\")` throws TypeError');\n\nconst r = new ShadowRealm();\n\nassert.throws(TypeError, () => {\n  new r.importValue(\"./import-value_FIXTURE.js\", \"x\");\n}, '`new r.importValue(\"...\")` throws TypeError');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/not-constructor.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "ShadowRealm",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype.importValue));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(ShadowRealm.prototype.importValue), Function.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/prototype/importValue/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.specifier-tostring",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nconst r = new ShadowRealm();\nlet count = 0;\n\nconst specifier = Object.create(null);\n\n// A - valueOF\n\nspecifier.valueOf = function() {\n  count += 1;\n  throw new Test262Error();\n};\n\nassert.throws(Test262Error, () => {\n  r.importValue(specifier);\n}, 'ToString(specifier) returns abrupt from valueOf');\n\nassert.sameValue(count, 1, 'ToString calls the valueOf method');\n\n\n// B - toString\n\ncount = 0;\n\nspecifier.valueOf = function() {\n  count += 1000;\n  throw new Error('valueOf is not reached if toString is present');\n};\n\nspecifier.toString = function() {\n  count += 1;\n  throw new Test262Error();\n};\n\nassert.throws(Test262Error, () => {\n  r.importValue(specifier);\n}, 'ToString(specifier) returns abrupt from toString');\n\nassert.sameValue(count, 1, 'ToString calls the toString method');\n\n// C - @@toPrimitive\n\ncount = 0;\n\nspecifier[Symbol.toPrimitive] = function() {\n  count += 1;\n  throw new Test262Error();\n};\n\nspecifier.toString = function() {\n  count += 1000;\n  throw new Error('toString is not reached if @@toPrimitive is present');\n};\n\nassert.throws(Test262Error, () => {\n  r.importValue(specifier);\n}, 'ToString(specifier) returns abrupt from @@toPrimitive');\n\nassert.sameValue(count, 1, 'ToString calls the @@toPrimitive method');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/specifier-tostring.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-if-exportname-not-string",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nconst r = new ShadowRealm();\nlet count = 0;\n\nconst exportName = {\n  toString() {\n    count += 1;\n    throw new Test262Error();\n  }\n};\n\nassert.throws(TypeError, () => {\n  r.importValue('', exportName);\n});\n\nassert.sameValue(count, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/throws-if-exportname-not-string.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-if-import-value-does-not-exist",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nconst r = new ShadowRealm();\n\nr.importValue('./import-value_FIXTURE.js', 'y')\n  .then(\n    () => {\n      throw new Test262Error(\"Expected rejection\");\n    },\n    err => {\n      assert.sameValue(Object.getPrototypeOf(err), TypeError.prototype, 'should be rejected with TypeError');\n    }\n  )\n  .then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/throws-if-import-value-does-not-exist.js",
+      "n_asserts": 2,
+      "flags": [
+        "async",
+        "module"
+      ],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-typeerror-import-syntax-error",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nconst r = new ShadowRealm();\n\nr.importValue('./import-value_syntax_error_FIXTURE.js', 'y')\n  .then(\n    () => {\n      throw new Test262Error(\"unreachable\");\n    },\n    err => {\n      assert.sameValue(Object.getPrototypeOf(err), TypeError.prototype, 'should be rejected with TypeError');\n    }\n  )\n  .then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/throws-typeerror-import-syntax-error.js",
+      "n_asserts": 2,
+      "flags": [
+        "async",
+        "module"
+      ],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-typeerror-import-throws",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nconst r = new ShadowRealm();\n\nr.importValue('./import-value_throws_FIXTURE.js', 'y')\n  .then(\n    () => {\n      throw new Test262Error(\"unreachable\");\n    },\n    err => {\n      assert.sameValue(Object.getPrototypeOf(err), TypeError.prototype, 'should be rejected with TypeError');\n    }\n  )\n  .then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/throws-typeerror-import-throws.js",
+      "n_asserts": 2,
+      "flags": [
+        "async",
+        "module"
+      ],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.validates-realm-object",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.importValue,\n  'function',\n  'This test must fail if ShadowRealm.prototype.importValue is not a function'\n);\n\nconst r = new ShadowRealm();\nconst bogus = {};\n\nassert.throws(TypeError, function() {\n  r.importValue.call(bogus, \"specifier\", \"name\");\n}, 'throws a TypeError if this is not a ShadowRealm object');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/prototype/importValue/validates-realm-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.shadowrealm.prototype.proto",
       "category": "shadowrealm",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ShadowRealm.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(ShadowRealm.prototype), Object.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/ShadowRealm/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.wrappedfunction.length-throws-typeerror",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(TypeError, () => r.evaluate(`\nfunction fn() {}\nObject.defineProperty(fn, 'length', {\n  get: () => {\n    throw new Error('blah');\n  },\n  enumerable: false,\n  configurable: true,\n});\nfn;\n`), 'expect a TypeError on length getter throwing');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/WrappedFunction/length-throws-typeerror.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.wrappedfunction.length",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\n\nlet wrapped = r.evaluate(`\nfunction fn(foo, bar) {}\nfn;\n`);\nverifyProperty(wrapped, \"length\", {\n  value: 2,\n  enumerable: false,\n  writable: false,\n  configurable: true,\n});\n\n\nwrapped = r.evaluate(`\nfunction fn() {}\ndelete fn.length;\nfn;\n`);\nverifyProperty(wrapped, \"length\", {\n  value: 0,\n  enumerable: false,\n  writable: false,\n  configurable: true,\n});\n\n\nwrapped = r.evaluate(`\nfunction fn() {}\nObject.defineProperty(fn, 'length', {\n  get: () => Infinity,\n  enumerable: false,\n  configurable: true,\n});\nfn;\n`);\nverifyProperty(wrapped, \"length\", {\n  value: Infinity,\n  enumerable: false,\n  writable: false,\n  configurable: true,\n});\n\n\nwrapped = r.evaluate(`\nfunction fn() {}\nObject.defineProperty(fn, 'length', {\n  get: () => -Infinity,\n  enumerable: false,\n  configurable: true,\n});\nfn;\n`);\nverifyProperty(wrapped, \"length\", {\n  value: 0,\n  enumerable: false,\n  writable: false,\n  configurable: true,\n});\n\n\nwrapped = r.evaluate(`\nfunction fn() {}\nObject.defineProperty(fn, 'length', {\n  get: () => -1,\n  enumerable: false,\n  configurable: true,\n});\nfn;\n`);\nverifyProperty(wrapped, \"length\", {\n  value: 0,\n  enumerable: false,\n  writable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/WrappedFunction/length.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.wrappedfunction.name-throws-typeerror",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nassert.throws(TypeError, () => r.evaluate(`\nfunction fn() {}\nObject.defineProperty(fn, 'name', {\n  get: () => {\n    throw new Error('blah');\n  },\n  enumerable: false,\n  configurable: true,\n});\nfn;\n`), 'expect a TypeError on name getter throwing');\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/WrappedFunction/name-throws-typeerror.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.wrappedfunction.name",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nlet wrapped = r.evaluate(`\nfunction fn() {}\nfn;\n`);\nverifyProperty(wrapped, \"name\", {\n  value: \"fn\",\n  enumerable: false,\n  writable: false,\n  configurable: true,\n});\n\n// The name property is an accessor.\nwrapped = r.evaluate(`\nfunction fn() {}\nObject.defineProperty(fn, 'name', {\n  get: () => \"bar\",\n  enumerable: false,\n  configurable: true,\n});\nfn;\n`);\nverifyProperty(wrapped, \"name\", {\n  value: \"bar\",\n  enumerable: false,\n  writable: false,\n  configurable: true,\n});\n\n// The value of fn.name is not a string.\nfor (const name of [null, undefined, 0, '1n', false, NaN, Infinity, 'Symbol()', '[]', '{}']) {\n  wrapped = r.evaluate(`\nfunction fn() {}\nObject.defineProperty(fn, 'name', {\n  value: ${String(name)},\n  enumerable: false,\n  configurable: true,\n});\nfn;\n`);\n  verifyProperty(wrapped, \"name\", {\n    value: \"\",\n    enumerable: false,\n    writable: false,\n    configurable: true,\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/WrappedFunction/name.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.shadowrealm.wrappedfunction.throws-typeerror-on-revoked-proxy",
+      "category": "shadowrealm",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof ShadowRealm.prototype.evaluate,\n  'function',\n  'This test must fail if ShadowRealm.prototype.evaluate is not a function'\n);\n\nconst r = new ShadowRealm();\n\nconst fn = r.evaluate(`\nglobalThis.revocable = Proxy.revocable(() => {}, {});\n\nglobalThis.revocable.proxy;\n`);\nr.evaluate('revocable.revoke()');\nassert.throws(TypeError, () => fn());\n}\nmain();\n",
+      "origin": "test/built-ins/ShadowRealm/WrappedFunction/throws-typeerror-on-revoked-proxy.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "ShadowRealm"
+      ],
+      "includes": []
     }
   ]
 }

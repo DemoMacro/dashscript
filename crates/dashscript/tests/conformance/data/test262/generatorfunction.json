@@ -1,68 +1,285 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.generatorfunction.extensibility",
       "category": "generatorfunction",
       "source": "test262",
-      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nconsole.log(Object.isExtensible(GeneratorFunction));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nassert(Object.isExtensible(GeneratorFunction));\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorFunction/extensibility.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.has-instance",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nfunction* gDecl() {}\nvar gExpr = function*() {};\n\nassert(\n  gDecl instanceof GeneratorFunction,\n  'Generators created via GeneratorDeclaration syntax are proper instances of GeneratorFunction'\n);\n\nassert(\n  gExpr instanceof GeneratorFunction,\n  'Generators created via GeneratorExpression syntax are proper instances of GeneratorFunction'\n);\n\nassert(\n  new GeneratorFunction() instanceof GeneratorFunction,\n  'Generators created via constructor invocation of GeneratorFunction are proper instances of GeneratorFunction'\n);\n\nassert(\n  GeneratorFunction() instanceof GeneratorFunction,\n  'Generators created via function invocation of GeneratorFunction are proper instances of GeneratorFunction'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/has-instance.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.instance-construct-throws",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar instance = GeneratorFunction();\n\nassert.throws(TypeError, function() {\n  new instance();\n})\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/instance-construct-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.instance-length",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nassert.sameValue(GeneratorFunction().length, 0);\nassert.sameValue(GeneratorFunction('').length, 0);\nassert.sameValue(GeneratorFunction('x').length, 0);\nassert.sameValue(GeneratorFunction('x', '').length, 1);\nassert.sameValue(GeneratorFunction('x', 'y', '').length, 2);\nassert.sameValue(GeneratorFunction('x, y', '').length, 2);\n\nverifyNotEnumerable(GeneratorFunction(), 'length');\nverifyNotWritable(GeneratorFunction(), 'length');\nverifyConfigurable(GeneratorFunction(), 'length');\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/instance-length.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.instance-name",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nassert.sameValue(GeneratorFunction().name, 'anonymous');\nverifyNotEnumerable(GeneratorFunction(), 'name');\nverifyNotWritable(GeneratorFunction(), 'name');\nverifyConfigurable(GeneratorFunction(), 'name');\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/instance-name.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.instance-prototype",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar instance = GeneratorFunction();\n\nassert.sameValue(typeof instance.prototype, 'object');\nassert.sameValue(\n  Object.getPrototypeOf(instance.prototype),\n  Object.getPrototypeOf(instance).prototype\n);\n\nverifyProperty(instance, 'prototype', {\n  writable: true,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/instance-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.instance-restricted-properties",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar Generator = Object.getPrototypeOf(function*() {});\nvar GeneratorFunction = Generator.constructor;\nvar generator = new GeneratorFunction();\n\nassert.sameValue(\n  generator.hasOwnProperty('caller'), false, 'No \"caller\" own property'\n);\nassert.sameValue(\n  generator.hasOwnProperty('arguments'), false, 'No \"arguments\" own property'\n);\n\nassert.throws(TypeError, function() {\n  return generator.caller;\n});\n\nassert.throws(TypeError, function() {\n  generator.caller = {};\n});\n\nassert.throws(TypeError, function() {\n  return generator.arguments;\n});\n\nassert.throws(TypeError, function() {\n  generator.arguments = {};\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/instance-restricted-properties.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorfunction.instance-yield-expr-in-param",
       "category": "generatorfunction",
       "source": "test262",
-      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\n// YieldExpression is permitted in function body.\nGeneratorFunction('x = yield');\n\ntry { (function() {\n  GeneratorFunction('x = yield', '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar withinGenerator = function*() {\n  GeneratorFunction('x = yield', '');\n};\n\ntry { (function() {\n  withinGenerator().next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\n// YieldExpression is permitted in function body.\nGeneratorFunction('x = yield');\n\nassert.throws(SyntaxError, function() {\n  GeneratorFunction('x = yield', '');\n}, 'YieldExpression not permitted generally');\n\nvar withinGenerator = function*() {\n  GeneratorFunction('x = yield', '');\n};\n\nassert.throws(SyntaxError, function() {\n  withinGenerator().next();\n}, 'YieldExpression not permitted when calling context is a generator');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorFunction/instance-yield-expr-in-param.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.invoked-as-constructor-no-arguments",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar g = new GeneratorFunction();\nvar iter = g();\nvar result = iter.next();\n\nassert.sameValue(result.value, undefined, 'Result `value`');\nassert.sameValue(result.done, true, 'Result `done` flag');\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/invoked-as-constructor-no-arguments.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorfunction.invoked-as-function-multiple-arguments",
       "category": "generatorfunction",
       "source": "test262",
-      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar g = GeneratorFunction('x', 'y', 'yield x + y;');\nvar iter = g(2, 3);\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar g = GeneratorFunction('x', 'y', 'yield x + y;');\nvar iter = g(2, 3);\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 5, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, undefined, 'Final result `value`');\nassert.sameValue(result.done, true, 'Final result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorFunction/invoked-as-function-multiple-arguments.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorfunction.invoked-as-function-no-arguments",
       "category": "generatorfunction",
       "source": "test262",
-      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar g = GeneratorFunction();\nvar iter = g();\nvar result = iter.next();\n\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar g = GeneratorFunction();\nvar iter = g();\nvar result = iter.next();\n\nassert.sameValue(result.value, undefined, 'Result `value`');\nassert.sameValue(result.done, true, 'Result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorFunction/invoked-as-function-no-arguments.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorfunction.invoked-as-function-single-argument",
       "category": "generatorfunction",
       "source": "test262",
-      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar g = GeneratorFunction('yield 1;');\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nvar g = GeneratorFunction('yield 1;');\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, undefined, 'Final result `value`');\nassert.sameValue(result.done, true, 'Final result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorFunction/invoked-as-function-single-argument.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.is-a-constructor",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = getWellKnownIntrinsicObject('%GeneratorFunction%');\nassert.sameValue(isConstructor(GeneratorFunction), true, 'isConstructor(GeneratorFunction) must return true');\nnew GeneratorFunction();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js",
+        "wellKnownIntrinsicObjects.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.proto-from-ctor-realm-prototype",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar realmA = $262.createRealm().global;\nrealmA.calls = 0;\nvar aGeneratorFunction = realmA.eval(\"(function* () {})\").constructor;\nvar aGeneratorPrototype = Object.getPrototypeOf(\n  realmA.eval(\"(function* () {})\").prototype\n);\n\nvar realmB = $262.createRealm().global;\nvar bGeneratorFunction = realmB.eval(\"(function* () {})\").constructor;\nvar newTarget = new realmB.Function();\nnewTarget.prototype = null;\n\nvar fn = Reflect.construct(aGeneratorFunction, [\"calls += 1;\"], newTarget);\nassert.sameValue(Object.getPrototypeOf(fn), bGeneratorFunction.prototype);\nassert.sameValue(Object.getPrototypeOf(fn.prototype), aGeneratorPrototype);\n\nvar gen = fn();\nassert(gen instanceof realmA.Object);\ngen.next();\nassert.sameValue(realmA.calls, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/proto-from-ctor-realm-prototype.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "generators",
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.proto-from-ctor-realm",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\nvar other = $262.createRealm().global;\nvar OtherGeneratorFunction = Object.getPrototypeOf(\n  other.eval('(0, function* () {})')\n).constructor;\nvar C = new other.Function();\nC.prototype = null;\n\nvar o = Reflect.construct(GeneratorFunction, [], C);\n\nassert.sameValue(Object.getPrototypeOf(o), OtherGeneratorFunction.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/proto-from-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators",
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.prototype.constructor",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nassert.sameValue(GeneratorFunction.prototype.constructor, GeneratorFunction);\n\nverifyProperty(GeneratorFunction.prototype, 'constructor', {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.generatorfunction.prototype.extensibility",
       "category": "generatorfunction",
       "source": "test262",
-      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nconsole.log(Object.isExtensible(GeneratorFunction.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;\n\nassert(Object.isExtensible(GeneratorFunction.prototype));\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorFunction/prototype/extensibility.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorfunction.prototype.not-callable",
       "category": "generatorfunction",
       "source": "test262",
-      "fixture": "function main(): void {\nvar GeneratorFunctionPrototype = Object.getPrototypeOf(function* () {});\n\nconsole.log(typeof GeneratorFunctionPrototype);\ntry { (function() {\n  GeneratorFunctionPrototype();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nconsole.log(!GeneratorFunctionPrototype.hasOwnProperty(\"length\"));\nconsole.log(!GeneratorFunctionPrototype.hasOwnProperty(\"name\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar GeneratorFunctionPrototype = Object.getPrototypeOf(function* () {});\n\nassert.sameValue(typeof GeneratorFunctionPrototype, \"object\");\nassert.throws(TypeError, function() {\n  GeneratorFunctionPrototype();\n});\n\nassert(!GeneratorFunctionPrototype.hasOwnProperty(\"length\"), \"length\");\nassert(!GeneratorFunctionPrototype.hasOwnProperty(\"name\"), \"name\");\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorFunction/prototype/not-callable.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.prototype.prototype",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunctionPrototype = Object.getPrototypeOf(function*() {});\nassert.sameValue(\n  GeneratorFunctionPrototype.prototype,\n  Object.getPrototypeOf(function*() {}.prototype)\n);\n\nverifyProperty(GeneratorFunctionPrototype, 'prototype', {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/prototype/prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.generatorfunction.prototype.symbol.tostringtag",
+      "category": "generatorfunction",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorFunctionPrototype = Object.getPrototypeOf(function*() {});\n\nassert.sameValue(\n  GeneratorFunctionPrototype[Symbol.toStringTag], 'GeneratorFunction'\n);\n\nverifyProperty(GeneratorFunctionPrototype, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorFunction/prototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators",
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     }
   ]
 }

@@ -813,6 +813,71 @@ const HARNESS_FILES: &[(&str, &str)] = &[
         "byteConversionValues.js",
         include_str!("conformance/data/harness/byteConversionValues.js"),
     ),
+    (
+        "testTypedArray.js",
+        include_str!("conformance/data/harness/testTypedArray.js"),
+    ),
+    (
+        "temporalHelpers.js",
+        include_str!("conformance/data/harness/temporalHelpers.js"),
+    ),
+    (
+        "detachArrayBuffer.js",
+        include_str!("conformance/data/harness/detachArrayBuffer.js"),
+    ),
+    (
+        "resizableArrayBufferUtils.js",
+        include_str!("conformance/data/harness/resizableArrayBufferUtils.js"),
+    ),
+    (
+        "asyncHelpers.js",
+        include_str!("conformance/data/harness/asyncHelpers.js"),
+    ),
+    (
+        "atomicsHelper.js",
+        include_str!("conformance/data/harness/atomicsHelper.js"),
+    ),
+    (
+        "testAtomics.js",
+        include_str!("conformance/data/harness/testAtomics.js"),
+    ),
+    (
+        "promiseHelper.js",
+        include_str!("conformance/data/harness/promiseHelper.js"),
+    ),
+    (
+        "proxyTrapsHelper.js",
+        include_str!("conformance/data/harness/proxyTrapsHelper.js"),
+    ),
+    (
+        "nativeErrors.js",
+        include_str!("conformance/data/harness/nativeErrors.js"),
+    ),
+    (
+        "regExpUtils.js",
+        include_str!("conformance/data/harness/regExpUtils.js"),
+    ),
+    ("nans.js", include_str!("conformance/data/harness/nans.js")),
+    (
+        "wellKnownIntrinsicObjects.js",
+        include_str!("conformance/data/harness/wellKnownIntrinsicObjects.js"),
+    ),
+    (
+        "dateConstants.js",
+        include_str!("conformance/data/harness/dateConstants.js"),
+    ),
+    (
+        "compareIterator.js",
+        include_str!("conformance/data/harness/compareIterator.js"),
+    ),
+    (
+        "iteratorZipUtils.js",
+        include_str!("conformance/data/harness/iteratorZipUtils.js"),
+    ),
+    (
+        "nativeFunctionMatcher.js",
+        include_str!("conformance/data/harness/nativeFunctionMatcher.js"),
+    ),
 ];
 
 fn harness_source(name: &str) -> Option<&'static str> {

@@ -1,14 +1,34 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.eval.not-a-constructor",
+      "category": "eval",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(eval), false, 'isConstructor(eval) must return false');\n\nassert.throws(TypeError, () => {\n  new eval('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/eval/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
     {
       "id": "test262.test.built-ins.eval.private-identifiers-not-empty",
       "category": "eval",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  let o = {};\n  eval(\"o.#f\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(SyntaxError, function() {\n  let o = {};\n  eval(\"o.#f\");\n}, 'It should be a SyntaxError if AllPrivateIdentifiersValid returns false to eval body');\n}\nmain();\n",
       "origin": "test/built-ins/eval/private-identifiers-not-empty.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "class-fields-private"
+      ],
+      "includes": []
     }
   ]
 }

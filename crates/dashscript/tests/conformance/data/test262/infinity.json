@@ -1,50 +1,64 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.infinity.15.1.1.2-0",
       "category": "infinity",
       "source": "test262",
-      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(this, 'Infinity');\n\nconsole.log(desc.writable);\nconsole.log(desc.enumerable);\nconsole.log(desc.configurable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(this, 'Infinity');\n\nassert.sameValue(desc.writable, false, 'desc.writable');\nassert.sameValue(desc.enumerable, false, 'desc.enumerable');\nassert.sameValue(desc.configurable, false, 'desc.configurable');\n}\nmain();\n",
       "origin": "test/built-ins/Infinity/15.1.1.2-0.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.infinity.s15.1.1.2_a1",
       "category": "infinity",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof(Infinity));\nconsole.log(isFinite(Infinity));\nconsole.log(isNaN(Infinity));\n\nconsole.log(Infinity);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof(Infinity), \"number\", 'The value of `typeof(Infinity)` is expected to be \"number\"');\nassert.sameValue(isFinite(Infinity), false, 'isFinite(Infinity) must return false');\nassert.sameValue(isNaN(Infinity), false, 'isNaN(Infinity) must return false');\n\nassert.sameValue(\n  Infinity,\n  Number.POSITIVE_INFINITY,\n  'The value of Infinity is expected to equal the value of Number.POSITIVE_INFINITY'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Infinity/S15.1.1.2_A1.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.infinity.s15.1.1.2_a2_t2",
       "category": "infinity",
       "source": "test262",
-      "fixture": "function main(): void {\n// CHECK#1\nInfinity = true;\nconsole.log(typeof(Infinity));\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
+      "fixture": "function main(): void {\n// CHECK#1\nInfinity = true;\nassert.notSameValue(typeof(Infinity), \"boolean\", 'The value of typeof(Infinity) is not \"boolean\"');\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/Infinity/S15.1.1.2_A2_T2.js",
       "n_asserts": 1,
-      "flags": ["noStrict"]
+      "flags": [
+        "noStrict"
+      ],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.infinity.s15.1.1.2_a3_t2",
       "category": "infinity",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(delete Infinity);\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(delete Infinity, false, 'The value of `delete Infinity` is expected to be false');\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/Infinity/S15.1.1.2_A3_T2.js",
       "n_asserts": 1,
-      "flags": ["noStrict"]
+      "flags": [
+        "noStrict"
+      ],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.infinity.s15.1.1.2_a4",
       "category": "infinity",
       "source": "test262",
-      "fixture": "function main(): void {\n// CHECK#1\nfor (var prop in this) {\n  console.log(prop);\n}\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
+      "fixture": "function main(): void {\n// CHECK#1\nfor (var prop in this) {\n  assert.notSameValue(prop, \"Infinity\", 'The value of prop is not \"Infinity\"');\n}\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/Infinity/S15.1.1.2_A4.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     }
   ]
 }

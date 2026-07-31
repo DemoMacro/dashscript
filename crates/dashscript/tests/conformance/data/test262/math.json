@@ -20,8 +20,13 @@
       "origin": "test/built-ins/Math/abs/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.abs.s15.8.2.1_a1",
@@ -64,8 +69,13 @@
       "origin": "test/built-ins/Math/acos/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.acos.s15.8.2.2_a1",
@@ -152,8 +162,13 @@
       "origin": "test/built-ins/Math/acosh/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.asin.not-a-constructor",
@@ -163,8 +178,13 @@
       "origin": "test/built-ins/Math/asin/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.asin.s15.8.2.3_a1",
@@ -240,8 +260,13 @@
       "origin": "test/built-ins/Math/asinh/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.atan.not-a-constructor",
@@ -251,8 +276,13 @@
       "origin": "test/built-ins/Math/atan/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.atan.s15.8.2.4_a1",
@@ -295,8 +325,13 @@
       "origin": "test/built-ins/Math/atan2/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a1",
@@ -394,8 +429,13 @@
       "origin": "test/built-ins/Math/atanh/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.cbrt.cbrt-specialvalues",
@@ -416,8 +456,13 @@
       "origin": "test/built-ins/Math/cbrt/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.ceil.not-a-constructor",
@@ -427,8 +472,13 @@
       "origin": "test/built-ins/Math/ceil/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.ceil.s15.8.2.6_a1",
@@ -581,8 +631,13 @@
       "origin": "test/built-ins/Math/clz32/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.cos.not-a-constructor",
@@ -592,8 +647,13 @@
       "origin": "test/built-ins/Math/cos/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.cos.s15.8.2.7_a1",
@@ -669,8 +729,13 @@
       "origin": "test/built-ins/Math/cosh/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.e.value",
@@ -691,8 +756,13 @@
       "origin": "test/built-ins/Math/exp/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.exp.s15.8.2.8_a1",
@@ -768,8 +838,13 @@
       "origin": "test/built-ins/Math/expm1/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.f16round.not-a-constructor",
@@ -779,8 +854,13 @@
       "origin": "test/built-ins/Math/f16round/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Float16Array", "Reflect.construct"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Float16Array",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.f16round.value-conversion",
@@ -790,8 +870,12 @@
       "origin": "test/built-ins/Math/f16round/value-conversion.js",
       "n_asserts": 1,
       "flags": [],
-      "features": ["Float16Array"],
-      "includes": ["byteConversionValues.js"]
+      "features": [
+        "Float16Array"
+      ],
+      "includes": [
+        "byteConversionValues.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.floor.not-a-constructor",
@@ -801,8 +885,13 @@
       "origin": "test/built-ins/Math/floor/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.floor.s15.8.2.9_a1",
@@ -922,8 +1011,13 @@
       "origin": "test/built-ins/Math/fround/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.fround.ties",
@@ -1043,8 +1137,13 @@
       "origin": "test/built-ins/Math/hypot/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.imul.not-a-constructor",
@@ -1054,8 +1153,13 @@
       "origin": "test/built-ins/Math/imul/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.imul.results",
@@ -1098,8 +1202,13 @@
       "origin": "test/built-ins/Math/log/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.log.s15.8.2.10_a1",
@@ -1175,8 +1284,13 @@
       "origin": "test/built-ins/Math/log10/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.log10e.value",
@@ -1197,8 +1311,13 @@
       "origin": "test/built-ins/Math/log1p/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.log1p.specific-results",
@@ -1230,8 +1349,13 @@
       "origin": "test/built-ins/Math/log2/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.log2e.value",
@@ -1274,8 +1398,13 @@
       "origin": "test/built-ins/Math/max/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.max.s15.8.2.11_a1",
@@ -1351,8 +1480,13 @@
       "origin": "test/built-ins/Math/min/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.min.s15.8.2.12_a1",
@@ -1571,8 +1705,13 @@
       "origin": "test/built-ins/Math/pow/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.prop-desc",
@@ -1583,7 +1722,9 @@
       "n_asserts": 3,
       "flags": [],
       "features": [],
-      "includes": ["propertyHelper.js"]
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.proto",
@@ -1604,8 +1745,13 @@
       "origin": "test/built-ins/Math/random/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.random.s15.8.2.14_a1",
@@ -1626,8 +1772,13 @@
       "origin": "test/built-ins/Math/round/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.round.s15.8.2.15_a1",
@@ -1714,8 +1865,13 @@
       "origin": "test/built-ins/Math/sign/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.sign.sign-specialvals",
@@ -1736,8 +1892,13 @@
       "origin": "test/built-ins/Math/sin/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.sin.s15.8.2.16_a1",
@@ -1791,8 +1952,13 @@
       "origin": "test/built-ins/Math/sinh/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.sinh.sinh-specialvals",
@@ -1813,8 +1979,13 @@
       "origin": "test/built-ins/Math/sqrt/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.sqrt.results",
@@ -1912,8 +2083,13 @@
       "origin": "test/built-ins/Math/sumPrecise/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "Math.sumPrecise"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "Math.sumPrecise"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.sumprecise.sum-is-infinite",
@@ -1923,7 +2099,9 @@
       "origin": "test/built-ins/Math/sumPrecise/sum-is-infinite.js",
       "n_asserts": 4,
       "flags": [],
-      "features": ["Math.sumPrecise"],
+      "features": [
+        "Math.sumPrecise"
+      ],
       "includes": []
     },
     {
@@ -1934,7 +2112,9 @@
       "origin": "test/built-ins/Math/sumPrecise/sum-is-minus-zero.js",
       "n_asserts": 4,
       "flags": [],
-      "features": ["Math.sumPrecise"],
+      "features": [
+        "Math.sumPrecise"
+      ],
       "includes": []
     },
     {
@@ -1945,7 +2125,9 @@
       "origin": "test/built-ins/Math/sumPrecise/sum-is-NaN.js",
       "n_asserts": 3,
       "flags": [],
-      "features": ["Math.sumPrecise"],
+      "features": [
+        "Math.sumPrecise"
+      ],
       "includes": []
     },
     {
@@ -1956,7 +2138,9 @@
       "origin": "test/built-ins/Math/sumPrecise/sum.js",
       "n_asserts": 25,
       "flags": [],
-      "features": ["Math.sumPrecise"],
+      "features": [
+        "Math.sumPrecise"
+      ],
       "includes": []
     },
     {
@@ -1967,7 +2151,10 @@
       "origin": "test/built-ins/Math/sumPrecise/takes-iterable.js",
       "n_asserts": 6,
       "flags": [],
-      "features": ["generators", "Math.sumPrecise"],
+      "features": [
+        "generators",
+        "Math.sumPrecise"
+      ],
       "includes": []
     },
     {
@@ -1978,7 +2165,9 @@
       "origin": "test/built-ins/Math/sumPrecise/throws-on-non-number.js",
       "n_asserts": 14,
       "flags": [],
-      "features": ["Math.sumPrecise"],
+      "features": [
+        "Math.sumPrecise"
+      ],
       "includes": []
     },
     {
@@ -1989,8 +2178,12 @@
       "origin": "test/built-ins/Math/Symbol.toStringTag.js",
       "n_asserts": 1,
       "flags": [],
-      "features": ["Symbol.toStringTag"],
-      "includes": ["propertyHelper.js"]
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.tan.not-a-constructor",
@@ -2000,8 +2193,13 @@
       "origin": "test/built-ins/Math/tan/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.tan.s15.8.2.18_a1",
@@ -2066,8 +2264,13 @@
       "origin": "test/built-ins/Math/tanh/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.tanh.tanh-specialvals",
@@ -2154,8 +2357,13 @@
       "origin": "test/built-ins/Math/trunc/not-a-constructor.js",
       "n_asserts": 2,
       "flags": [],
-      "features": ["Reflect.construct", "arrow-function"],
-      "includes": ["isConstructor.js"]
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.math.trunc.trunc-sampletests",

@@ -1,0 +1,117 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.does-not-have-mapiterator-internal-slots-map",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[1, 11], [2, 22]]);\n\nvar iterator = map[Symbol.iterator]();\nassert.throws(TypeError, function() {\n  iterator.next.call(map);\n});\n\niterator = map.entries();\nassert.throws(TypeError, function() {\n  iterator.next.call(map);\n});\n\niterator = map.keys();\nassert.throws(TypeError, function() {\n  iterator.next.call(map);\n});\n\niterator = map.values();\nassert.throws(TypeError, function() {\n  iterator.next.call(map);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/does-not-have-mapiterator-internal-slots-map.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.does-not-have-mapiterator-internal-slots",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[1, 11], [2, 22]]);\n\nvar iterator = map[Symbol.iterator]();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\niterator = map.entries();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\niterator = map.keys();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\niterator = map.values();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\n// does not throw an Error\niterator.next.call(map[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/does-not-have-mapiterator-internal-slots.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.iteration-mutable",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set(1, 11);\nmap.set(2, 22);\n\nvar iterator = map[Symbol.iterator]();\nvar result;\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 1, 'First result `value` (map key)');\nassert.sameValue(result.value[1], 11, 'First result `value` (map value)');\nassert.sameValue(result.value.length, 2, 'First result `value` (length)');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nmap.set(3, 33);\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 2, 'Second result `value` (map key)');\nassert.sameValue(result.value[1], 22, 'Second result `value` (map value)');\nassert.sameValue(result.value.length, 2, 'Second result `value` (length)');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 3, 'Third result `value` (map key)');\nassert.sameValue(result.value[1], 33, 'Third result `value` (map value)');\nassert.sameValue(result.value.length, 2, 'Third result `value` (length)');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, undefined, 'Exhausted result `value`');\nassert.sameValue(result.done, true, 'Exhausted result `done` flag');\n\nmap.set(4, 44);\n\nresult = iterator.next();\nassert.sameValue(\n  result.value, undefined, 'Exhausted result `value` (repeated request)'\n);\nassert.sameValue(\n  result.done, true, 'Exhausted result `done` flag (repeated request)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/iteration-mutable.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.iteration",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set(1, 11);\nmap.set(2, 22);\nmap.set(3, 33);\n\nvar iterator = map[Symbol.iterator]();\nvar result;\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 1, 'First result `value` (map key)');\nassert.sameValue(result.value[1], 11, 'First result `value` (map value)');\nassert.sameValue(result.value.length, 2, 'First result `value` (length)');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 2, 'Second result `value` (map key)');\nassert.sameValue(result.value[1], 22, 'Second result `value` (map value)');\nassert.sameValue(result.value.length, 2, 'Second result `value` (length)');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 3, 'Third result `value` (map key)');\nassert.sameValue(result.value[1], 33, 'Third result `value` (map value)');\nassert.sameValue(result.value.length, 2, 'Third result `value` (length)');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, undefined, 'Exhausted result `value`');\nassert.sameValue(result.done, true, 'Exhausted result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(\n  result.value, undefined, 'Exhausted result `value` (repeated request)'\n);\nassert.sameValue(\n  result.done, true, 'Exhausted result `done` flag (repeated request)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/iteration.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-entries",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[1, 11], [2, 22]]);\nvar iterator = map.entries();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(map[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/this-not-object-throw-entries.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-keys",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[1, 11], [2, 22]]);\nvar iterator = map.keys();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(map[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/this-not-object-throw-keys.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-prototype-iterator",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[1, 11], [2, 22]]);\nvar iterator = map[Symbol.iterator]();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(map[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/this-not-object-throw-prototype-iterator.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-values",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[1, 11], [2, 22]]);\nvar iterator = map.values();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(map[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/next/this-not-object-throw-values.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.mapiteratorprototype.symbol.tostringtag",
+      "category": "mapiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar MapIteratorProto = Object.getPrototypeOf(new Map()[Symbol.iterator]());\n\nassert.sameValue('Map Iterator', MapIteratorProto[Symbol.toStringTag]);\n\nverifyProperty(MapIteratorProto, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/MapIteratorPrototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator",
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    }
+  ]
+}

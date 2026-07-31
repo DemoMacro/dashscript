@@ -1,0 +1,1555 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.reflect.apply.arguments-list-is-not-array-like-but-still-valid",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet count = 0;\n\nfunction fn(...args) {\n  count++;\n  return args;\n}\n\nlet f_unction = new Function();\n\nObject.defineProperty(f_unction, \"length\", {\n  get() {\n    return 1;\n  }\n});\n\nassert.compareArray(Reflect.apply(fn, null, f_unction), [undefined]);\n\nlet object = new Object();\n\nObject.defineProperty(object, \"length\", {\n  get() {\n    return 1;\n  }\n});\n\nassert.compareArray(Reflect.apply(fn, null, object), [undefined]);\n\nlet number = new Number();\n\nObject.defineProperty(number, \"length\", {\n  get() {\n    return 1;\n  }\n});\n\nassert.compareArray(Reflect.apply(fn, null, number), [undefined]);\n\nlet boolean = new Boolean();\n\nObject.defineProperty(boolean, \"length\", {\n  get() {\n    return 1;\n  }\n});\n\nassert.compareArray(Reflect.apply(fn, null, boolean), [undefined]);\n\nassert.sameValue(count, 4, 'The value of `count` is 1');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/apply/arguments-list-is-not-array-like-but-still-valid.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "arrow-function",
+        "Symbol"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.apply.arguments-list-is-not-array-like",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet count = 0;\n\nfunction fn() {\n  count++;\n}\n\nassert.throws(Test262Error, () => {\n  Reflect.apply(fn, null, {\n    get length() {\n      throw new Test262Error();\n    }\n  });\n}, '`Reflect.apply(fn, null, {get length() {throw new Test262Error();}})` throws a Test262Error exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null /* empty */);\n}, '`Reflect.apply(fn, null /* empty */)` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, Symbol());\n}, '`Reflect.apply(fn, null, Symbol())` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, 1);\n}, '`Reflect.apply(fn, null, 1)` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, Infinity);\n}, '`Reflect.apply(fn, null, Infinity)` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, null);\n}, '`Reflect.apply(fn, null, null)` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, undefined);\n}, '`Reflect.apply(fn, null, undefined)` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, false);\n}, '`Reflect.apply(fn, null, false)` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, true);\n}, '`Reflect.apply(fn, null, true)` throws a TypeError exception');\n\nassert.throws(TypeError, () => {\n  Reflect.apply(fn, null, NaN);\n}, '`Reflect.apply(fn, null, NaN)` throws a TypeError exception');\n\n\nassert.sameValue(count, 0, 'The value of `count` is 0');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/apply/arguments-list-is-not-array-like.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "arrow-function",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.apply.call-target",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar count = 0;\nvar results, args;\n\nfunction fn() {\n  count++;\n  results = {\n    thisArg: this,\n    args: arguments\n  };\n}\n\nReflect.apply(fn, o, ['arg1', 2, , null]);\n\nassert.sameValue(count, 1, 'Called target once');\nassert.sameValue(results.thisArg, o, 'Called target with `o` as `this` object');\nassert.sameValue(results.args.length, 4, 'Called target with 4 arguments');\nassert.sameValue(results.args[0], 'arg1');\nassert.sameValue(results.args[1], 2);\nassert.sameValue(results.args[2], undefined);\nassert.sameValue(results.args[3], null);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/apply/call-target.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.apply.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Reflect.apply), false, 'isConstructor(Reflect.apply) must return false');\n\nassert.throws(TypeError, () => {\n  new Reflect.apply(() => {}, undefined, []);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/apply/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.apply.return-target-call-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\n\nfunction fn() {\n  return o;\n}\n\nvar result = Reflect.apply(fn, 1, []);\n\nassert.sameValue(result, o);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/apply/return-target-call-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.apply.target-is-not-callable-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.apply(1, 1, []);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.apply(null, 1, []);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.apply({}, 1, []);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/apply/target-is-not-callable-throws.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.construct.arguments-list-is-not-array-like",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fn() {}\nvar o = {};\n\nObject.defineProperty(o, 'length', {\n  get: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.construct(fn, o);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.construct(fn, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/construct/arguments-list-is-not-array-like.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.construct.newtarget-is-not-constructor-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.construct(function() {}, [], 1);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.construct(function() {}, [], null);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.construct(function() {}, [], {});\n});\n\nassert.throws(TypeError, function() {\n  Reflect.construct(function() {}, [], Date.now);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/construct/newtarget-is-not-constructor-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.construct.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Reflect.construct), false, 'isConstructor(Reflect.construct) must return false');\n\nassert.throws(TypeError, () => {\n  new Reflect.construct(Function, [], Function);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/construct/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.construct.return-with-newtarget-argument",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar internPrototype;\n\nfunction fn() {\n  this.o = o;\n  internPrototype = Object.getPrototypeOf(this);\n}\n\nvar result = Reflect.construct(fn, [], Array);\nassert.sameValue(Object.getPrototypeOf(result), Array.prototype);\nassert.sameValue(\n  internPrototype, Array.prototype,\n  'prototype of this from within the constructor function is Array.prototype'\n);\nassert.sameValue(result.o, o);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/construct/return-with-newtarget-argument.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.construct.return-without-newtarget-argument",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\n\nfunction fn() {\n  this.o = o;\n}\n\nvar result = Reflect.construct(fn, []);\n\nassert.sameValue(result.o, o);\nassert(result instanceof fn);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/construct/return-without-newtarget-argument.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.construct.target-is-not-constructor-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.construct(1, []);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.construct(null, []);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.construct({}, []);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.construct(Date.now, []);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/construct/target-is-not-constructor-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.construct.use-arguments-list",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction fn() {\n  this.args = arguments;\n}\n\nvar result = Reflect.construct(fn, [42, 'Mike', 'Leo']);\n\nassert.sameValue(result.args.length, 3, 'result.args.length');\nassert.sameValue(result.args[0], 42);\nassert.sameValue(result.args[1], 'Mike');\nassert.sameValue(result.args[2], 'Leo');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/construct/use-arguments-list.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.define-properties",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar desc;\n\nReflect.defineProperty(o, 'p1', {\n  value: 42,\n  writable: true,\n  enumerable: true\n});\n\nassert.sameValue(o.p1, 42);\n\nverifyWritable(o, 'p1');\nverifyNotConfigurable(o, 'p1');\nverifyEnumerable(o, 'p1');\n\nvar f1 = function() {};\nvar f2 = function() {};\nReflect.defineProperty(o, 'p2', {\n  get: f1,\n  set: f2\n});\n\ndesc = Object.getOwnPropertyDescriptor(o, 'p2');\nassert.sameValue(desc.get, f1);\nassert.sameValue(desc.set, f2);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/define-properties.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.define-symbol-properties",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar desc;\n\nvar s1 = Symbol('1');\n\nReflect.defineProperty(o, s1, {\n  value: 42,\n  writable: true,\n  enumerable: true\n});\n\nassert.sameValue(o[s1], 42);\n\ndesc = Object.getOwnPropertyDescriptor(o, s1);\n\nassert.sameValue(desc.writable, true);\nassert.sameValue(desc.configurable, false);\nassert.sameValue(desc.enumerable, true);\n\nvar s2 = Symbol('2');\n\nvar f1 = function() {};\nvar f2 = function() {};\nReflect.defineProperty(o, s2, {\n  get: f1,\n  set: f2\n});\n\ndesc = Object.getOwnPropertyDescriptor(o, s2);\nassert.sameValue(desc.get, f1);\nassert.sameValue(desc.set, f2);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/define-symbol-properties.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Reflect.defineProperty),\n  false,\n  'isConstructor(Reflect.defineProperty) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Reflect.defineProperty({}, '');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.return-abrupt-from-attributes",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar attributes = {};\n\nObject.defineProperty(attributes, 'enumerable', {\n  get: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.defineProperty({}, 'a', attributes);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/return-abrupt-from-attributes.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.return-abrupt-from-property-key",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  Reflect.defineProperty({}, p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/return-abrupt-from-property-key.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar p = new Proxy(o, {\n  defineProperty: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.defineProperty(p, 'p1', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.return-boolean",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\n\no.p1 = 'foo';\nassert.sameValue(Reflect.defineProperty(o, 'p1', {}), true);\nassert.sameValue(o.hasOwnProperty('p1'), true);\n\nassert.sameValue(Reflect.defineProperty(o, 'p2', {\n  value: 42\n}), true);\nassert.sameValue(o.hasOwnProperty('p2'), true);\n\nObject.freeze(o);\n\nassert.sameValue(Reflect.defineProperty(o, 'p2', {\n  value: 43\n}), false);\nassert.sameValue(o.p2, 42);\n\nassert.sameValue(Reflect.defineProperty(o, 'p3', {}), false);\nassert.sameValue(o.hasOwnProperty('p4'), false);\n\nassert.sameValue(Reflect.defineProperty(o, 'p4', {\n  value: 1\n}), false);\nassert.sameValue(o.hasOwnProperty('p4'), false);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/return-boolean.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.defineProperty(1, 'p', {});\n});\n\nassert.throws(TypeError, function() {\n  Reflect.defineProperty(null, 'p', {});\n});\n\nassert.throws(TypeError, function() {\n  Reflect.defineProperty(undefined, 'p', {});\n});\n\nassert.throws(TypeError, function() {\n  Reflect.defineProperty('', 'p', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.defineproperty.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.defineProperty(Symbol(1), 'p', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/defineProperty/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.delete-properties",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {\n  prop: 42\n};\n\nReflect.deleteProperty(o, 'prop');\n\nassert.sameValue(o.hasOwnProperty('prop'), false);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/delete-properties.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.delete-symbol-properties",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = Symbol('1');\nvar o = {};\no[s] = 42;\n\nReflect.deleteProperty(o, s);\n\nassert.sameValue(o.hasOwnProperty(s), false);\nassert.sameValue(o[s], undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/delete-symbol-properties.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Reflect.deleteProperty),\n  false,\n  'isConstructor(Reflect.deleteProperty) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Reflect.deleteProperty({}, '');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.return-abrupt-from-property-key",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  Reflect.deleteProperty({}, p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/return-abrupt-from-property-key.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar p = new Proxy(o, {\n  deleteProperty: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.deleteProperty(p, 'p1');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.return-boolean",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\n\no.p1 = 'foo';\nassert.sameValue(Reflect.deleteProperty(o, 'p1'), true);\nassert.sameValue(o.hasOwnProperty('p1'), false);\n\no.p2 = 'foo';\nObject.freeze(o);\nassert.sameValue(Reflect.deleteProperty(o, 'p2'), false);\nassert.sameValue(o.hasOwnProperty('p2'), true);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/return-boolean.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.deleteProperty(1, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.deleteProperty(null, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.deleteProperty(undefined, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.deleteProperty('', 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.deleteproperty.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.deleteProperty(Symbol(1), 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/deleteProperty/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.enumerate.undefined",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Reflect.hasOwnProperty(\"enumerate\"), false);\nassert.sameValue(Reflect.enumerate, undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/enumerate/undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Reflect.get), false, 'isConstructor(Reflect.get) must return false');\n\nassert.throws(TypeError, () => {\n  new Reflect.get({}, '');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.return-abrupt-from-property-key",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  Reflect.get({}, p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/return-abrupt-from-property-key.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nObject.defineProperty(o1, 'p1', {\n  get: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.get(o1, 'p1');\n});\n\n// Abrupt from the prototype property\nvar o2 = Object.create(o1);\nassert.throws(Test262Error, function() {\n  Reflect.get(o2, 'p1');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/return-abrupt-from-result.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.return-value-from-receiver",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar receiver = {\n  y: 42\n};\n\nObject.defineProperty(o1, 'x', {\n  get: function() {\n    return this.y;\n  }\n});\nassert.sameValue(\n  Reflect.get(o1, 'x', receiver), 42,\n  'Return own property value using a receiver'\n);\n\nvar o2 = Object.create(o1);\nassert.sameValue(\n  Reflect.get(o2, 'x', receiver), 42,\n  'Return prototype property value using a receiver'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/return-value-from-receiver.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.return-value-from-symbol-key",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar s = Symbol('1');\no[s] = 42;\n\nassert.sameValue(Reflect.get(o, s), 42);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/return-value-from-symbol-key.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.return-value",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\n\no.p1 = 'value 1';\nassert.sameValue(\n  Reflect.get(o, 'p1'), 'value 1',\n  'Return value from data descriptor'\n);\n\nObject.defineProperty(o, 'p2', {\n  get: undefined\n});\nassert.sameValue(\n  Reflect.get(o, 'p2'), undefined,\n  'Return undefined if getter is undefined'\n);\n\nObject.defineProperty(o, 'p3', {\n  get: function() {\n    return 'foo';\n  }\n});\nassert.sameValue(\n  Reflect.get(o, 'p3'), 'foo',\n  'Return Call(getter, Receiver)'\n);\n\nvar o2 = Object.create({\n  p: 42\n});\nassert.sameValue(\n  Reflect.get(o2, 'p'), 42,\n  'Return value from prototype without own property.'\n);\n\nassert.sameValue(\n  Reflect.get(o2, 'u'), undefined,\n  'Return undefined without property on the object and its prototype'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/return-value.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.get(1, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.get(null, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.get(undefined, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.get('', 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.get.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.get(Symbol(1), 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/get/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Reflect.getOwnPropertyDescriptor),\n  false,\n  'isConstructor(Reflect.getOwnPropertyDescriptor) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Reflect.getOwnPropertyDescriptor({}, '');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-abrupt-from-property-key",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  Reflect.getOwnPropertyDescriptor({}, p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/return-abrupt-from-property-key.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar p = new Proxy(o1, {\n  getOwnPropertyDescriptor: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.getOwnPropertyDescriptor(p, 'p1');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-from-accessor-descriptor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar fn = function() {};\nObject.defineProperty(o1, 'p', {\n  get: fn,\n  configurable: true\n});\n\nvar result = Reflect.getOwnPropertyDescriptor(o1, 'p');\n\nassert.compareArray(\n  Object.getOwnPropertyNames(result),\n  ['get', 'set', 'enumerable', 'configurable']\n);\nassert.sameValue(result.enumerable, false);\nassert.sameValue(result.configurable, true);\nassert.sameValue(result.get, fn);\nassert.sameValue(result.set, undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/return-from-accessor-descriptor.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-from-data-descriptor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {\n  p: 'foo'\n};\n\nvar result = Reflect.getOwnPropertyDescriptor(o1, 'p');\n\nassert.compareArray(\n  Object.getOwnPropertyNames(result),\n  ['value', 'writable', 'enumerable', 'configurable']\n);\nassert.sameValue(result.value, 'foo');\nassert.sameValue(result.enumerable, true);\nassert.sameValue(result.configurable, true);\nassert.sameValue(result.writable, true);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/return-from-data-descriptor.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.symbol-property",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar s = Symbol('42');\no[s] = 42;\n\nvar result = Reflect.getOwnPropertyDescriptor(o, s);\n\nassert.compareArray(\n  Object.getOwnPropertyNames(result),\n  ['value', 'writable', 'enumerable', 'configurable']\n);\nassert.sameValue(result.value, 42);\nassert.sameValue(result.enumerable, true);\nassert.sameValue(result.configurable, true);\nassert.sameValue(result.writable, true);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/symbol-property.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.getOwnPropertyDescriptor(1, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.getOwnPropertyDescriptor(null, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.getOwnPropertyDescriptor(undefined, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.getOwnPropertyDescriptor('', 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.getOwnPropertyDescriptor(Symbol(1), 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.undefined-own-property",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = Object.create({\n  p: 1\n});\n\nvar result = Reflect.getOwnPropertyDescriptor(o, 'p');\nassert.sameValue(result, undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/undefined-own-property.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getownpropertydescriptor.undefined-property",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar result = Reflect.getOwnPropertyDescriptor({}, undefined);\nassert.sameValue(result, undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getOwnPropertyDescriptor/undefined-property.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getprototypeof.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Reflect.getPrototypeOf),\n  false,\n  'isConstructor(Reflect.getPrototypeOf) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Reflect.getPrototypeOf({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getPrototypeOf/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getprototypeof.null-prototype",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = Object.create(null);\nassert.sameValue(Reflect.getPrototypeOf(o), null);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getPrototypeOf/null-prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getprototypeof.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar p = new Proxy(o1, {\n  getPrototypeOf: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.getPrototypeOf(p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getPrototypeOf/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getprototypeof.return-prototype",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nassert.sameValue(\n  Reflect.getPrototypeOf(o), Object.prototype,\n  'return default prototypes'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getPrototypeOf/return-prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getprototypeof.skip-own-properties",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar valid = {};\nvar o = Object.create(valid, {\n  prototype: {\n    value: 'invalid',\n    enumerable: true\n  }\n});\n\nassert.sameValue(\n  Reflect.getPrototypeOf(o), valid,\n  'skip own properties'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getPrototypeOf/skip-own-properties.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getprototypeof.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.getPrototypeOf(1);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.getPrototypeOf(null);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.getPrototypeOf(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.getPrototypeOf('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getPrototypeOf/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.getprototypeof.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.getPrototypeOf(Symbol(1));\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/getPrototypeOf/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.has.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Reflect.has), false, 'isConstructor(Reflect.has) must return false');\n\nassert.throws(TypeError, () => {\n  new Reflect.has();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/has/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.has.return-abrupt-from-property-key",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  Reflect.has({}, p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/has/return-abrupt-from-property-key.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.has.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar p = new Proxy(o, {\n  has: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.has(p, 'p1');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/has/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.has.return-boolean",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {\n  p: 42\n};\n\nassert.sameValue(Reflect.has(o1, 'p'), true, 'true from own property');\nassert.sameValue(\n  Reflect.has(o1, 'z'), false,\n  'false when property is not present'\n);\n\nvar o2 = Object.create({\n  p: 42\n});\nassert.sameValue(Reflect.has(o2, 'p'), true, 'true from a prototype property');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/has/return-boolean.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.has.symbol-property",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar s1 = Symbol('1');\no[s1] = 42;\n\nvar s2 = Symbol('1');\n\n\nassert.sameValue(Reflect.has(o, s1), true, 'true from own property');\nassert.sameValue(\n  Reflect.has(o, s2), false,\n  'false when property is not present'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/has/symbol-property.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.has.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.has(1, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.has(null, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.has(undefined, 'p');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.has('', 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/has/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.has.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.has(Symbol(1), 'p');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/has/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.isextensible.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Reflect.isExtensible), false, 'isConstructor(Reflect.isExtensible) must return false');\n\nassert.throws(TypeError, () => {\n  new Reflect.isExtensible({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/isExtensible/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.isextensible.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar p = new Proxy(o1, {\n  isExtensible: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.isExtensible(p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/isExtensible/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.isextensible.return-boolean",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nassert.sameValue(Reflect.isExtensible(o), true);\n\nObject.preventExtensions(o);\nassert.sameValue(Reflect.isExtensible(o), false);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/isExtensible/return-boolean.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.isextensible.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.isExtensible(1);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.isExtensible(null);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.isExtensible(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.isExtensible('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/isExtensible/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.isextensible.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.isExtensible(Symbol(1));\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/isExtensible/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.object-prototype",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(Reflect),\n  Object.prototype,\n  '`Object.getPrototypeOf(Reflect)` returns `Object.prototype`'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/object-prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.ownkeys.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Reflect.ownKeys), false, 'isConstructor(Reflect.ownKeys) must return false');\n\nassert.throws(TypeError, () => {\n  new Reflect.ownKeys({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/ownKeys/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.ownkeys.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nvar p = new Proxy(o, {\n  ownKeys: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.ownKeys(p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/ownKeys/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.ownkeys.return-on-corresponding-order-large-index",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {\n  12345678900: true,\n  b: true,\n  1: true,\n  a: true,\n  [Number.MAX_SAFE_INTEGER]: true,\n  [Symbol.for('z')]: true,\n  12345678901: true,\n  4294967294: true,\n  4294967295: true,\n};\n\nvar result = Reflect.ownKeys(o1);\n\nassert.sameValue(result.length, 9);\nassert.sameValue(result[0], '1');\nassert.sameValue(result[1], '4294967294');\nassert.sameValue(result[2], '12345678900');\nassert.sameValue(result[3], 'b');\nassert.sameValue(result[4], 'a');\nassert.sameValue(result[5], String(Number.MAX_SAFE_INTEGER));\nassert.sameValue(result[6], '12345678901');\nassert.sameValue(result[7], '4294967295');\nassert.sameValue(result[8], Symbol.for('z'));\n\nvar o2 = {};\n\no2[12345678900] = true;\no2.b = true;\no2[1] = true;\no2.a = true;\no2[Number.MAX_SAFE_INTEGER] = true;\no2[Symbol.for('z')] = true;\no2[12345678901] = true;\no2[4294967294] = true;\no2[4294967295] = true;\n\n\nresult = Reflect.ownKeys(o2);\n\nassert.sameValue(result.length, 9);\nassert.sameValue(result[0], '1');\nassert.sameValue(result[1], '4294967294');\nassert.sameValue(result[2], '12345678900');\nassert.sameValue(result[3], 'b');\nassert.sameValue(result[4], 'a');\nassert.sameValue(result[5], String(Number.MAX_SAFE_INTEGER));\nassert.sameValue(result[6], '12345678901');\nassert.sameValue(result[7], '4294967295');\nassert.sameValue(result[8], Symbol.for('z'));\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/ownKeys/return-on-corresponding-order-large-index.js",
+      "n_asserts": 20,
+      "flags": [],
+      "features": [
+        "computed-property-names",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.ownkeys.return-on-corresponding-order",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\no.p1 = 42;\no.p2 = 43;\n\nvar s1 = Symbol('1');\nvar s2 = Symbol('a');\no[s1] = 44;\no[s2] = 45;\n\no[2] = 46;\no[0] = 47;\no[1] = 48;\n\nvar result = Reflect.ownKeys(o);\n\nassert.sameValue(result.length, 7);\nassert.sameValue(result[0], '0');\nassert.sameValue(result[1], '1');\nassert.sameValue(result[2], '2');\nassert.sameValue(result[3], 'p1');\nassert.sameValue(result[4], 'p2');\nassert.sameValue(result[5], s1);\nassert.sameValue(result[6], s2);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/ownKeys/return-on-corresponding-order.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.ownkeys.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.ownKeys(1);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.ownKeys(null);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.ownKeys(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.ownKeys('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/ownKeys/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.ownkeys.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.ownKeys(Symbol(1));\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/ownKeys/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.preventextensions.always-return-true-from-ordinary-object",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nassert.sameValue(\n  Reflect.preventExtensions(o), true,\n  'returns true after preventing extensions on an object'\n);\nassert.sameValue(\n  Reflect.preventExtensions(o), true,\n  'returns true even if the object already prevents extensions'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/preventExtensions/always-return-true-from-ordinary-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.preventextensions.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Reflect.preventExtensions),\n  false,\n  'isConstructor(Reflect.preventExtensions) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Reflect.preventExtensions({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/preventExtensions/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.preventextensions.prevent-extensions",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o = {};\nReflect.preventExtensions(o);\nassert.sameValue(Object.isExtensible(o), false, 'object is not extensible');\n\nassert.throws(TypeError, function() {\n  Object.defineProperty(o, 'y', {});\n});\nassert.throws(TypeError, function() {\n  Object.setPrototypeOf(o, Array.prototype);\n});\n\nReflect.preventExtensions(o);\nassert.sameValue(\n  Object.isExtensible(o), false,\n  'object is still not extensible on exhausted calls'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/preventExtensions/prevent-extensions.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.preventextensions.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar p = new Proxy(o1, {\n  preventExtensions: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.preventExtensions(p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/preventExtensions/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.preventextensions.return-boolean-from-proxy-object",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p1 = new Proxy({}, {\n  preventExtensions: function() {\n    return false;\n  }\n});\n\nassert.sameValue(\n  Reflect.preventExtensions(p1), false,\n  'returns false from Proxy handler'\n);\n\nvar p2 = new Proxy({}, {\n  preventExtensions: function(target) {\n    Object.preventExtensions(target);\n    return true;\n  }\n});\n\nassert.sameValue(\n  Reflect.preventExtensions(p2), true,\n  'returns true from Proxy handler'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/preventExtensions/return-boolean-from-proxy-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.preventextensions.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.preventExtensions(1);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.preventExtensions(null);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.preventExtensions(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.preventExtensions('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/preventExtensions/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.preventextensions.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.isExtensible(Symbol(1));\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/preventExtensions/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.prop-desc",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Reflect, \"object\");\n\nassert.throws(TypeError, function() {\n  Reflect();\n}, \"no [[Call]]\");\n\nassert.throws(TypeError, function() {\n  new Reflect();\n}, \"no [[Construct]]\");\n\nverifyProperty(this, \"Reflect\", {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/prop-desc.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.call-prototype-property-set",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar args;\nvar count = 0;\nvar _this;\nvar proto = {};\nObject.defineProperty(proto, 'p', {\n  set: function() {\n    _this = this;\n    args = arguments;\n    count++;\n  }\n});\n\nvar target = Object.create(proto);\nvar result = Reflect.set(target, 'p', 42);\nassert.sameValue(result, true, 'returns true');\nassert.sameValue(args.length, 1, 'prototype `set` called with 1 argument');\nassert.sameValue(args[0], 42, 'prototype `set` called with 42');\nassert.sameValue(_this, target, 'prototype `set` called with target as `this`');\nassert.sameValue(count, 1, 'prototype `set` called once');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/call-prototype-property-set.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.creates-a-data-descriptor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar result = Reflect.set(o1, 'p', 42);\nassert.sameValue(result, true, 'returns true on a successful setting');\nvar desc = Object.getOwnPropertyDescriptor(o1, 'p');\nassert.sameValue(\n  desc.value, 42,\n  'sets a data descriptor to set a new property'\n);\nverifyProperty(o1, 'p', {\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n\nvar o2 = {};\nvar receiver = {};\nresult = Reflect.set(o2, 'p', 43, receiver);\nassert.sameValue(\n  result, true,\n  'returns true on a successful setting with a receiver'\n);\ndesc = Object.getOwnPropertyDescriptor(o2, 'p');\nassert.sameValue(\n  desc, undefined,\n  'does not set a data descriptor on target if receiver is given'\n);\ndesc = Object.getOwnPropertyDescriptor(receiver, 'p');\nassert.sameValue(\n  desc.value, 43,\n  'sets a data descriptor on the receiver object to set a new property'\n);\nverifyProperty(receiver, 'p', {\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/creates-a-data-descriptor.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.different-property-descriptors",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar receiver = {};\nvar fn = function() {};\nObject.defineProperty(receiver, 'p', {\n  set: fn\n});\n\nvar o1 = {};\nvar result = Reflect.set(o1, 'p', 42, receiver);\nassert.sameValue(\n  result, false,\n  'target has no own `p` and receiver.p has an accessor descriptor'\n);\nassert.sameValue(\n  Object.getOwnPropertyDescriptor(receiver, 'p').set, fn,\n  'receiver.p is not changed'\n);\nassert.sameValue(o1.hasOwnProperty('p'), false, 'target.p is not set');\n\nvar o2 = {\n  p: 43\n};\nresult = Reflect.set(o2, 'p', 42, receiver);\nassert.sameValue(\n  result, false,\n  'target.p has a data descriptor and receiver.p has an accessor descriptor'\n);\nassert.sameValue(\n  Object.getOwnPropertyDescriptor(receiver, 'p').set, fn,\n  'receiver.p is not changed'\n);\nassert.sameValue(o2.p, 43, 'target.p is not changed');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/different-property-descriptors.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Reflect.set), false, 'isConstructor(Reflect.set) must return false');\n\nassert.throws(TypeError, () => {\n  new Reflect.set({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "Reflect.set",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.receiver-is-not-object",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {\n  p: 42\n};\nvar receiver = 'receiver is a string';\nvar result = Reflect.set(o1, 'p', 43, receiver);\n\nassert.sameValue(result, false, 'returns false');\nassert.sameValue(o1.p, 42, 'does not set a value');\nassert.sameValue(\n  receiver.hasOwnProperty('p'), false,\n  'does not set a new property on receiver if it is not an object'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/receiver-is-not-object.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.return-abrupt-from-property-key",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar p = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  Reflect.set({}, p);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/return-abrupt-from-property-key.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nObject.defineProperty(o1, 'p1', {\n  set: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.set(o1, 'p1', 42);\n});\n\n// Abrupt from the prototype property\nvar o2 = Object.create(o1);\nassert.throws(Test262Error, function() {\n  Reflect.set(o2, 'p1', 42);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/return-abrupt-from-result.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.return-false-if-receiver-is-not-writable",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\n\nObject.defineProperty(o1, 'p', {\n  writable: false,\n  value: 42\n});\nvar result = Reflect.set(o1, 'p', 43);\nassert.sameValue(result, false, 'returns false');\nassert.sameValue(o1.p, 42, 'does not set a new value');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/return-false-if-receiver-is-not-writable.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.return-false-if-target-is-not-writable",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar receiver = {};\nObject.defineProperty(receiver, 'p', {\n  writable: false,\n  value: 42\n});\nvar result = Reflect.set(o1, 'p', 43, receiver);\nassert.sameValue(result, false, 'returns false');\nassert.sameValue(receiver.p, 42, 'does not set a new value on receiver');\nassert.sameValue(\n  o1.hasOwnProperty('p'), false,\n  'does not set a new value on target'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/return-false-if-target-is-not-writable.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.set-value-on-accessor-descriptor-with-receiver",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar args;\nvar count = 0\nvar o1 = {};\nvar receiver = {};\nvar _receiver;\nObject.defineProperty(o1, 'p', {\n  set: function(a) {\n    count++;\n    args = arguments;\n    _receiver = this;\n    return false;\n  }\n});\n\nvar result = Reflect.set(o1, 'p', 42, receiver);\nassert.sameValue(\n  result, true,\n  'returns true if target.p has an accessor descriptor'\n);\nassert.sameValue(args.length, 1, 'target.p set is called with 1 argument');\nassert.sameValue(args[0], 42, 'target.p set is called with V');\nassert.sameValue(count, 1, 'target.p set is called once');\nassert.sameValue(\n  _receiver, receiver,\n  'target.p set is called with receiver as `this`'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/set-value-on-accessor-descriptor-with-receiver.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.set-value-on-accessor-descriptor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar args;\nvar count = 0\nvar o1 = {};\nObject.defineProperty(o1, 'p', {\n  set: function(a) {\n    count++;\n    args = arguments;\n    return false;\n  }\n});\n\nvar result = Reflect.set(o1, 'p', 42);\nassert.sameValue(\n  result, true,\n  'returns true if target.p has an accessor descriptor'\n);\nassert.sameValue(args.length, 1, 'target.p set is called with 1 argument');\nassert.sameValue(args[0], 42, 'target.p set is called with V');\nassert.sameValue(count, 1, 'target.p set is called once');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/set-value-on-accessor-descriptor.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.set-value-on-data-descriptor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {\n  p: 43\n};\nvar result = Reflect.set(o1, 'p', 42);\nassert.sameValue(result, true, 'returns true on a successful setting');\nassert.sameValue(\n  o1.p, 42,\n  'sets the new value'\n);\n\nvar o2 = {\n  p: 43\n};\nvar receiver = {\n  p: 44\n};\nvar result = Reflect.set(o2, 'p', 42, receiver);\nassert.sameValue(result, true, 'returns true on a successful setting');\nassert.sameValue(o2.p, 43, 'with a receiver, does not set a value on target');\nassert.sameValue(receiver.p, 42, 'sets the new value on the receiver');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/set-value-on-data-descriptor.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.symbol-property",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nvar s = Symbol('1');\nvar result = Reflect.set(o1, s, 42);\nassert.sameValue(result, true, 'returns true on a successful setting');\nassert.sameValue(o1[s], 42, 'sets the new value');\n\nvar o2 = {};\no2[s] = 43;\nvar receiver = {};\nreceiver[s] = 44;\nvar result = Reflect.set(o2, s, 42, receiver);\nassert.sameValue(result, true, 'returns true on a successful setting');\nassert.sameValue(o2[s], 43, 'with a receiver, does not set a value on target');\nassert.sameValue(receiver[s], 42, 'sets the new value on the receiver');\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/symbol-property.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.set(1, 'p', 42);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.set(null, 'p', 42);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.set(undefined, 'p', 42);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.set('', 'p', 42);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.set.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.set(Symbol(1), 'p', 42);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/set/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.set",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.not-a-constructor",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Reflect.setPrototypeOf),\n  false,\n  'isConstructor(Reflect.setPrototypeOf) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Reflect.setPrototypeOf({}, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Reflect",
+        "Reflect.setPrototypeOf",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.proto-is-not-object-and-not-null-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf({}, undefined);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf({}, 1);\n});\n\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf({}, 'string');\n});\n\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf({}, true);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/proto-is-not-object-and-not-null-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.proto-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = Symbol(1);\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf({}, s);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/proto-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.return-abrupt-from-result",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = {};\nvar p = new Proxy(target, {\n  setPrototypeOf: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.setPrototypeOf(p, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/return-abrupt-from-result.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Proxy",
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.return-false-if-target-and-proto-are-the-same",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nassert.sameValue(Reflect.setPrototypeOf(o1, o1), false);\nassert.sameValue(Object.getPrototypeOf(o1), Object.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/return-false-if-target-and-proto-are-the-same.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.return-false-if-target-is-not-extensible",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nObject.preventExtensions(o1);\nassert.sameValue(Reflect.setPrototypeOf(o1, {}), false);\nassert.sameValue(Object.getPrototypeOf(o1), Object.prototype);\n\nvar o2 = {};\nObject.preventExtensions(o2);\nassert.sameValue(Reflect.setPrototypeOf(o2, null), false);\nassert.sameValue(Object.getPrototypeOf(o2), Object.prototype);\n\nvar o3 = Object.create(null);\nObject.preventExtensions(o3);\nassert.sameValue(Reflect.setPrototypeOf(o3, {}), false);\nassert.sameValue(Object.getPrototypeOf(o3), null);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/return-false-if-target-is-not-extensible.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.return-false-if-target-is-prototype-of-proto",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar target = {};\nvar proto = Object.create(target);\nassert.sameValue(Reflect.setPrototypeOf(target, proto), false);\nassert.sameValue(Object.getPrototypeOf(target), Object.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/return-false-if-target-is-prototype-of-proto.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.return-true-if-new-prototype-is-set",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nassert.sameValue(Reflect.setPrototypeOf(o1, null), true);\nassert.sameValue(Object.getPrototypeOf(o1), null);\n\nvar o2 = Object.create(null);\nassert.sameValue(Reflect.setPrototypeOf(o2, Object.prototype), true);\nassert.sameValue(Object.getPrototypeOf(o2), Object.prototype);\n\nvar o3 = {};\nvar proto = {};\nassert.sameValue(Reflect.setPrototypeOf(o3, proto), true);\nassert.sameValue(Object.getPrototypeOf(o3), proto);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/return-true-if-new-prototype-is-set.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.return-true-if-proto-is-current",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar o1 = {};\nObject.preventExtensions(o1);\nassert.sameValue(Reflect.setPrototypeOf(o1, Object.prototype), true);\n\nvar o2 = Object.create(null);\nObject.preventExtensions(o2);\nassert.sameValue(Reflect.setPrototypeOf(o2, null), true);\n\nvar proto = {};\nvar o3 = Object.create(proto);\nObject.preventExtensions(o3);\nassert.sameValue(Reflect.setPrototypeOf(o3, proto), true);\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/return-true-if-proto-is-current.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.target-is-not-object-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf(1, {});\n});\n\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf(null, {});\n});\n\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf(undefined, {});\n});\n\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf('', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/target-is-not-object-throws.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.reflect.setprototypeof.target-is-symbol-throws",
+      "category": "reflect",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Reflect.setPrototypeOf(Symbol(1), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Reflect/setPrototypeOf/target-is-symbol-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.setPrototypeOf",
+        "Symbol"
+      ],
+      "includes": []
+    }
+  ]
+}

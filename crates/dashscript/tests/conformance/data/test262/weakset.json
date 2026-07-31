@@ -1,50 +1,905 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.weakset.add-not-callable-throws",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nWeakSet.prototype.add = null;\nnew WeakSet();\n\nassert.throws(TypeError, function() {\n  new WeakSet([]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/add-not-callable-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.weakset.constructor",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof WeakSet);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakSet, 'function',\n  'typeof WeakSet is \"function\"'\n);\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.empty-iterable",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar counter = 0;\nvar add = WeakSet.prototype.add;\nWeakSet.prototype.add = function(value) {\n  counter++;\n  return add.call(this, value);\n};\nvar set = new WeakSet([]);\n\nassert.sameValue(Object.getPrototypeOf(set), WeakSet.prototype);\nassert(set instanceof WeakSet);\nassert.sameValue(\n  counter, 0,\n  'empty iterable does not call WeakSet.prototype.add'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/empty-iterable.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.get-add-method-failure",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nObject.defineProperty(WeakSet.prototype, 'add', {\n  get: function() {\n    throw new Test262Error();\n  }\n});\n\nnew WeakSet();\nnew WeakSet(null);\n\nassert.throws(Test262Error, function() {\n  new WeakSet([]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/get-add-method-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.is-a-constructor",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(WeakSet), true, 'isConstructor(WeakSet) must return true');\nnew WeakSet();\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakSet"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakset.iterable-failure",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  new WeakSet({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/iterable-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.iterable-with-object-values",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar first = {};\nvar second = {};\nvar added = [];\nvar add = WeakSet.prototype.add;\nWeakSet.prototype.add = function(value) {\n  added.push(value);\n  return add.call(this, value);\n};\nvar s = new WeakSet([first, second]);\n\nassert.sameValue(added.length, 2, 'Called WeakSet#add for each object');\nassert.sameValue(added[0], first, 'Adds object in order - first');\nassert.sameValue(added[1], second, 'Adds object in order - second');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/iterable-with-object-values.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakSet"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.iterator-close-after-add-failure",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: null,\n        done: false\n      };\n    },\n    return: function() {\n      count += 1;\n    }\n  };\n};\nWeakSet.prototype.add = function() {\n  throw new Test262Error();\n};\n\nassert.throws(Test262Error, function() {\n  new WeakSet(iterable);\n});\n\nassert.sameValue(\n  count, 1,\n  'The iterator is closed when `WeakSet.prototype.add` throws an error.'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/iterator-close-after-add-failure.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.iterator-next-failure",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      throw new Test262Error();\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new WeakSet(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/iterator-next-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.iterator-value-failure",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        get value() {\n          throw new Test262Error();\n        },\n        done: false\n      };\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new WeakSet(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/iterator-value-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.no-iterable",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar a = new WeakSet();\nvar b = new WeakSet(undefined);\nvar c = new WeakSet(null);\n\nassert.sameValue(Object.getPrototypeOf(a), WeakSet.prototype);\nassert.sameValue(Object.getPrototypeOf(b), WeakSet.prototype);\nassert.sameValue(Object.getPrototypeOf(c), WeakSet.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/no-iterable.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.weakset.properties-of-the-weakset-prototype-object",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakSet.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(WeakSet.prototype),\n  Object.prototype,\n  '`Object.getPrototypeOf(WeakSet.prototype)` returns `Object.prototype`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/properties-of-the-weakset-prototype-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.proto-from-ctor-realm",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar C = new other.Function();\nC.prototype = null;\n\nvar o = Reflect.construct(WeakSet, [], C);\n\nassert.sameValue(Object.getPrototypeOf(o), other.WeakSet.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/proto-from-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.add",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakSet.prototype.add,\n  'function',\n  'typeof WeakSet.prototype.add is \"function\"'\n);\n\nverifyProperty(WeakSet.prototype, 'add', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/add.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.adds-object-element",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\nvar foo = {};\nvar bar = {};\nvar baz = {};\n\ns.add(foo);\ns.add(bar);\ns.add(baz);\n\nassert(s.has(foo));\nassert(s.has(bar));\nassert(s.has(baz));\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/adds-object-element.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakSet"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.adds-symbol-element",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar baz = Symbol('a different description');\n\ns.add(foo);\ns.add(baz);\ns.add(Symbol.hasInstance);\n\nassert(s.has(foo), 'Regular symbol');\nassert(!s.has(bar), \"Symbols with the same description don't alias each other\");\nassert(s.has(baz), 'Regular symbol with different description');\nassert(s.has(Symbol.hasInstance), 'Well-known symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/adds-symbol-element.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.does-not-have-weaksetdata-internal-slot-array",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call([], {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call([], {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.does-not-have-weaksetdata-internal-slot-map",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(new Map(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(new Map(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.does-not-have-weaksetdata-internal-slot-object",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call({}, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call({}, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.does-not-have-weaksetdata-internal-slot-set",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(new Set(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(new Set(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.does-not-have-weaksetdata-internal-slot-weakset-prototype",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(WeakSet.prototype, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(WeakSet.prototype, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/does-not-have-weaksetdata-internal-slot-weakset-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.not-a-constructor",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakSet.prototype.add),\n  false,\n  'isConstructor(WeakSet.prototype.add) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let ws = new WeakSet(); new ws.add({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakSet",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.returns-this-symbol",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\n\nassert.sameValue(s.add(Symbol('description')), s, '`s.add(Symbol(\"description\"))` returns `s`');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/returns-this-symbol.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.returns-this-when-ignoring-duplicate-symbol",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('description');\nvar s = new WeakSet([foo]);\n\nassert.sameValue(s.add(foo), s, '`s.add(foo)` returns `s`');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/returns-this-when-ignoring-duplicate-symbol.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.returns-this-when-ignoring-duplicate",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar s = new WeakSet([foo]);\n\nassert.sameValue(s.add(foo), s, '`s.add(foo)` returns `s`');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/returns-this-when-ignoring-duplicate.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.returns-this",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\n\nassert.sameValue(s.add({}), s, '`s.add({})` returns `s`');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/returns-this.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.this-not-object-throw-boolean",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(false, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(false, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/this-not-object-throw-boolean.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.this-not-object-throw-null",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(null, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(null, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/this-not-object-throw-null.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.this-not-object-throw-number",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(0, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(0, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/this-not-object-throw-number.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.this-not-object-throw-string",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call('', {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call('', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/this-not-object-throw-string.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.this-not-object-throw-symbol",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(Symbol(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(Symbol(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/this-not-object-throw-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.this-not-object-throw-undefined",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.add.call(undefined, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.add.call(undefined, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/this-not-object-throw-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.add.throw-when-value-cannot-be-held-weakly",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\n\nassert.throws(TypeError, function() {\n  s.add(1);\n});\n\nassert.throws(TypeError, function() {\n  s.add(false);\n});\n\nassert.throws(TypeError, function() {\n  s.add();\n});\n\nassert.throws(TypeError, function() {\n  s.add('string');\n});\n\nassert.throws(TypeError, function() {\n  s.add(null);\n});\n\nassert.throws(TypeError, function() {\n  s.add(Symbol.for('registered symbol'));\n}, 'Registered symbol not allowed as WeakSet value');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/add/throw-when-value-cannot-be-held-weakly.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.weakset.prototype.constructor.weakset-prototype-constructor-intrinsic",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(WeakSet.prototype.constructor);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  WeakSet.prototype.constructor,\n  WeakSet,\n  'The value of WeakSet.prototype.constructor is \"WeakSet\"'\n);\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/prototype/constructor/weakset-prototype-constructor-intrinsic.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.delete-entry-initial-iterable",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar s = new WeakSet([foo]);\n\nvar result = s.delete(foo);\n\nassert.sameValue(s.has(foo), false);\nassert.sameValue(result, true, 'WeakSet#delete returns true');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/delete-entry-initial-iterable.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.delete-object-entry",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar s = new WeakSet();\n\ns.add(foo);\n\nvar result = s.delete(foo);\n\nassert.sameValue(s.has(foo), false);\nassert.sameValue(result, true, 'WeakSet#delete returns true');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/delete-object-entry.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakSet"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.delete-symbol-entry",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar s = new WeakSet();\n\ns.add(foo);\ns.add(bar);\ns.add(Symbol.hasInstance);\n\nassert.sameValue(s.delete(foo), true, 'Returns true for regular symbol');\nassert(!s.has(foo), 'Regular symbol is removed from set');\nassert(s.has(bar), 'Symbols with the same description are not aliased to each other');\n\nassert.sameValue(s.delete(Symbol.hasInstance), true, 'Returns true for well-known symbol');\nassert(!s.has(Symbol.hasInstance), 'Well-known symbol is removed from set');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/delete-symbol-entry.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.delete",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakSet.prototype.delete,\n  'function',\n  'typeof WeakSet.prototype.delete is \"function\"'\n);\n\nverifyProperty(WeakSet.prototype, 'delete', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/delete.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.does-not-have-weaksetdata-internal-slot-array",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call([], {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call([], {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/does-not-have-weaksetdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.does-not-have-weaksetdata-internal-slot-map",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(new Map(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(new Map(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/does-not-have-weaksetdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.does-not-have-weaksetdata-internal-slot-object",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call({}, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call({}, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/does-not-have-weaksetdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.does-not-have-weaksetdata-internal-slot-set",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(new Set(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(new Set(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/does-not-have-weaksetdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.does-not-have-weaksetdata-internal-slot-weakset-prototype",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(WeakSet.prototype, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(WeakSet.prototype, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/does-not-have-weaksetdata-internal-slot-weakset-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.not-a-constructor",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakSet.prototype.delete),\n  false,\n  'isConstructor(WeakSet.prototype.delete) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let ws = new WeakSet(); new ws.delete();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakSet",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.returns-false-when-delete-is-noop",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\n\nassert.sameValue(s.delete({}), false);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/returns-false-when-delete-is-noop.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.returns-false-when-value-cannot-be-held-weakly",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\n\nassert.sameValue(s.delete(1), false);\nassert.sameValue(s.delete(''), false);\nassert.sameValue(s.delete(null), false);\nassert.sameValue(s.delete(undefined), false);\nassert.sameValue(s.delete(true), false);\nassert.sameValue(s.delete(Symbol.for('registered symbol')), false, 'Registered symbol not allowed as value');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/returns-false-when-value-cannot-be-held-weakly.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.this-not-object-throw-boolean",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(false, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(false, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/this-not-object-throw-boolean.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.this-not-object-throw-null",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(null, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(null, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/this-not-object-throw-null.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.this-not-object-throw-number",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(0, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(0, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/this-not-object-throw-number.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.this-not-object-throw-string",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call('', {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call('', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/this-not-object-throw-string.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.this-not-object-throw-symbol",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(Symbol(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(Symbol(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/this-not-object-throw-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.delete.this-not-object-throw-undefined",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.delete.call(undefined, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.delete.call(undefined, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/delete/this-not-object-throw-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.does-not-have-weaksetdata-internal-slot-array",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call([], {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call([], {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/does-not-have-weaksetdata-internal-slot-array.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.does-not-have-weaksetdata-internal-slot-map",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(new Map(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(new Map(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/does-not-have-weaksetdata-internal-slot-map.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.does-not-have-weaksetdata-internal-slot-object",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call({}, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call({}, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/does-not-have-weaksetdata-internal-slot-object.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.does-not-have-weaksetdata-internal-slot-set",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(new Set(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(new Set(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/does-not-have-weaksetdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.does-not-have-weaksetdata-internal-slot-weakset-prototype",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(WeakSet.prototype, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(WeakSet.prototype, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/does-not-have-weaksetdata-internal-slot-weakset-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.has",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof WeakSet.prototype.has,\n  'function',\n  'typeof WeakSet.prototype.has is \"function\"'\n);\n\nverifyProperty(WeakSet.prototype, 'has', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/has.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.not-a-constructor",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(WeakSet.prototype.has),\n  false,\n  'isConstructor(WeakSet.prototype.has) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let ws = new WeakSet(); new ws.has();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "WeakSet",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.returns-false-when-object-value-not-present",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar bar = {};\nvar s = new WeakSet();\n\nassert.sameValue(s.has(foo), false);\n\ns.add(foo);\nassert.sameValue(s.has(bar), false);\n\ns.delete(foo);\nassert.sameValue(s.has(foo), false);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/returns-false-when-object-value-not-present.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "WeakSet"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.returns-false-when-symbol-value-not-present",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar bar = Symbol('a description');\nvar s = new WeakSet();\n\nassert.sameValue(s.has(foo), false, 'WeakSet is initially empty of regular symbol');\nassert.sameValue(s.has(Symbol.hasInstance), false, 'WeakSet is initially empty of well-known symbol');\n\ns.add(foo);\nassert.sameValue(s.has(bar), false, 'Symbols with the same description are not aliased to each other');\n\ns.delete(foo);\nassert.sameValue(s.has(foo), false, 'WeakSet is again empty of regular symbol after deleting');\ns.delete(Symbol.hasInstance);\nassert.sameValue(s.has(Symbol.hasInstance), false, 'WeakSet is again empty of well-known symbol after deleting');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/returns-false-when-symbol-value-not-present.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.returns-false-when-value-cannot-be-held-weakly",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = new WeakSet();\n\nassert.sameValue(s.has(1), false);\nassert.sameValue(s.has(''), false);\nassert.sameValue(s.has(null), false);\nassert.sameValue(s.has(undefined), false);\nassert.sameValue(s.has(true), false);\nassert.sameValue(s.has(Symbol.for('registered symbol')), false, 'Registered symbol not allowed as value');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/returns-false-when-value-cannot-be-held-weakly.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.returns-true-when-object-value-present",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = {};\nvar s = new WeakSet();\n\ns.add(foo);\nassert.sameValue(s.has(foo), true);\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/returns-true-when-object-value-present.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "WeakSet"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.returns-true-when-symbol-value-present",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar foo = Symbol('a description');\nvar s = new WeakSet();\n\ns.add(foo);\nassert.sameValue(s.has(foo), true, 'Regular symbol as value');\n\ns.add(Symbol.hasInstance);\nassert.sameValue(s.has(Symbol.hasInstance), true, 'Well-known symbol as value');\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/returns-true-when-symbol-value-present.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "WeakSet",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.this-not-object-throw-boolean",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(false, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(false, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/this-not-object-throw-boolean.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.this-not-object-throw-null",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(null, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(null, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/this-not-object-throw-null.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.this-not-object-throw-number",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(0, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(0, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/this-not-object-throw-number.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.this-not-object-throw-string",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call('', {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call('', {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/this-not-object-throw-string.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.this-not-object-throw-symbol",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(Symbol(), {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(Symbol(), {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/this-not-object-throw-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.has.this-not-object-throw-undefined",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet.prototype.has.call(undefined, {});\n});\n\nassert.throws(TypeError, function() {\n  var s = new WeakSet();\n  s.has.call(undefined, {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/has/this-not-object-throw-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.weakset.prototype.symbol.tostringtag",
+      "category": "weakset",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(WeakSet.prototype[Symbol.toStringTag], 'WeakSet');\n\nverifyProperty(WeakSet.prototype, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/WeakSet/prototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.weakset.prototype-of-weakset",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(WeakSet));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(WeakSet),\n  Function.prototype,\n  '`Object.getPrototypeOf(WeakSet)` returns `Function.prototype`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/prototype-of-weakset.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.weakset.undefined-newtarget",
       "category": "weakset",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  WeakSet();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  WeakSet([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  WeakSet();\n});\n\nassert.throws(TypeError, function() {\n  WeakSet([]);\n});\n}\nmain();\n",
       "origin": "test/built-ins/WeakSet/undefined-newtarget.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     }
   ]
 }

@@ -1,239 +1,839 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.nativeerrors.evalerror.constructor",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof EvalError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof EvalError, 'function', 'typeof EvalError is \"function\"');\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/EvalError/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.evalerror.instance-proto",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(new EvalError), EvalError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/EvalError/instance-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.evalerror.is-a-constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(EvalError), true, 'isConstructor(EvalError) must return true');\nnew EvalError();\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/EvalError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.evalerror.is-error-object",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(new EvalError), \"[object Error]\");\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/EvalError/is-error-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.evalerror.proto-from-ctor-realm",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(EvalError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.EvalError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(EvalError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.EvalError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = false;\nerr = Reflect.construct(EvalError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.EvalError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = 'str';\nerr = Reflect.construct(EvalError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.EvalError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(EvalError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.EvalError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = 0;\nerr = Reflect.construct(EvalError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.EvalError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/EvalError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.evalerror.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(EvalError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(EvalError), Error);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/EvalError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.evalerror.prototype.constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(EvalError.prototype.constructor, EvalError);\n\nverifyProperty(EvalError.prototype, \"constructor\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/EvalError/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.evalerror.prototype.message",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(EvalError.prototype.message, \"\");\n\nverifyProperty(EvalError.prototype, \"message\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/EvalError/prototype/message.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.evalerror.prototype.not-error-object",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.toString.call(EvalError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(EvalError.prototype), \"[object Object]\");\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/EvalError/prototype/not-error-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.evalerror.prototype.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(EvalError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(EvalError.prototype), Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/EvalError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.evalerror.prototype",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(EvalError.prototype, Object.getPrototypeOf(new EvalError));\n\nverifyProperty(EvalError, \"prototype\", {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/EvalError/prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.nativeerror-tostring-message-throws-symbol",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\n//Check #1\ntry { (function() {\n    EvalError(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #2\ntry { (function() {\n    RangeError(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #3\ntry { (function() {\n    ReferenceError(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #4\ntry { (function() {\n    SyntaxError(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #5\ntry { (function() {\n    TypeError(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #6\ntry { (function() {\n    URIError(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\nmain();\n",
+      "fixture": "function main(): void {\n//Check #1\nassert.throws(TypeError, function() {\n    EvalError(Symbol())\n}, \"If _message_ is a Symbol, EvalError should throw a TypeError\")\n\n//Check #2\nassert.throws(TypeError, function() {\n    RangeError(Symbol())\n}, \"If _message_ is a Symbol, RangeError should throw a TypeError\")\n\n//Check #3\nassert.throws(TypeError, function() {\n    ReferenceError(Symbol())\n}, \"If _message_ is a Symbol, ReferenceError should throw a TypeError\")\n\n//Check #4\nassert.throws(TypeError, function() {\n    SyntaxError(Symbol())\n}, \"If _message_ is a Symbol, SyntaxError should throw a TypeError\")\n\n//Check #5\nassert.throws(TypeError, function() {\n    TypeError(Symbol())\n}, \"If _message_ is a Symbol, TypeError should throw a TypeError\")\n\n//Check #6\nassert.throws(TypeError, function() {\n    URIError(Symbol())\n}, \"If _message_ is a Symbol, URIError should throw a TypeError\")\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/nativeerror-tostring-message-throws-symbol.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.nativeerror-tostring-message-throws-toprimitive",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\n//Check #1\ntry { (function() {\n    EvalError({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #2\ntry { (function() {\n    RangeError({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #3\ntry { (function() {\n    ReferenceError({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #4\ntry { (function() {\n    SyntaxError({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #5\ntry { (function() {\n    TypeError({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n\n//Check #6\ntry { (function() {\n    URIError({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\nmain();\n",
+      "fixture": "function main(): void {\n//Check #1\nassert.throws(TypeError, function() {\n    EvalError({toString: undefined, valueOf: undefined})\n}, \"EvalError should throw a TypeError in its ToPrimitive step\")\n\n//Check #2\nassert.throws(TypeError, function() {\n    RangeError({toString: undefined, valueOf: undefined})\n}, \"RangeError should throw a TypeError in its ToPrimitive step\")\n\n//Check #3\nassert.throws(TypeError, function() {\n    ReferenceError({toString: undefined, valueOf: undefined})\n}, \"ReferenceError should throw a TypeError in its ToPrimitive step\")\n\n//Check #4\nassert.throws(TypeError, function() {\n    SyntaxError({toString: undefined, valueOf: undefined})\n}, \"SyntaxError should throw a TypeError in its ToPrimitive step\")\n\n//Check #5\nassert.throws(TypeError, function() {\n    TypeError({toString: undefined, valueOf: undefined})\n}, \"TypeError should throw a TypeError in its ToPrimitive step\")\n\n//Check #6\nassert.throws(TypeError, function() {\n    URIError({toString: undefined, valueOf: undefined})\n}, \"URIError should throw a TypeError in its ToPrimitive step\")\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/nativeerror-tostring-message-throws-toprimitive.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.rangeerror.constructor",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof RangeError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof RangeError, 'function', 'typeof RangeError is \"function\"');\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/RangeError/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.rangeerror.instance-proto",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(new RangeError), RangeError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/RangeError/instance-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.rangeerror.is-a-constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(RangeError), true, 'isConstructor(RangeError) must return true');\nnew RangeError();\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/RangeError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.rangeerror.is-error-object",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(new RangeError), \"[object Error]\");\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/RangeError/is-error-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.rangeerror.proto-from-ctor-realm",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(RangeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.RangeError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(RangeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.RangeError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nerr = Reflect.construct(RangeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.RangeError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nerr = Reflect.construct(RangeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.RangeError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(RangeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.RangeError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = -0;\nerr = Reflect.construct(RangeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.RangeError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/RangeError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.rangeerror.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(RangeError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(RangeError), Error);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/RangeError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype.constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(RangeError.prototype.constructor, RangeError);\n\nverifyProperty(RangeError.prototype, \"constructor\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/RangeError/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype.message",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(RangeError.prototype.message, \"\");\n\nverifyProperty(RangeError.prototype, \"message\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/RangeError/prototype/message.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype.not-error-object",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.toString.call(RangeError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(RangeError.prototype), \"[object Object]\");\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/RangeError/prototype/not-error-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(RangeError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(RangeError.prototype), Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/RangeError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(RangeError.prototype, Object.getPrototypeOf(new RangeError));\n\nverifyProperty(RangeError, \"prototype\", {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/RangeError/prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.referenceerror.constructor",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof ReferenceError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof ReferenceError, 'function', 'typeof ReferenceError is \"function\"');\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/ReferenceError/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.referenceerror.instance-proto",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(new ReferenceError), ReferenceError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/ReferenceError/instance-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.referenceerror.is-a-constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(ReferenceError), true, 'isConstructor(ReferenceError) must return true');\nnew ReferenceError();\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/ReferenceError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.referenceerror.is-error-object",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(new ReferenceError), \"[object Error]\");\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/ReferenceError/is-error-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.referenceerror.proto-from-ctor-realm",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(ReferenceError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.ReferenceError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(ReferenceError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.ReferenceError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = false;\nerr = Reflect.construct(ReferenceError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.ReferenceError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = 'str';\nerr = Reflect.construct(ReferenceError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.ReferenceError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(ReferenceError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.ReferenceError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = NaN;\nerr = Reflect.construct(ReferenceError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.ReferenceError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/ReferenceError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.referenceerror.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ReferenceError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(ReferenceError), Error);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/ReferenceError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype.constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(ReferenceError.prototype.constructor, ReferenceError);\n\nverifyProperty(ReferenceError.prototype, \"constructor\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/ReferenceError/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype.message",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(ReferenceError.prototype.message, \"\");\n\nverifyProperty(ReferenceError.prototype, \"message\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/ReferenceError/prototype/message.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype.not-error-object",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.toString.call(ReferenceError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(ReferenceError.prototype), \"[object Object]\");\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/ReferenceError/prototype/not-error-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(ReferenceError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(ReferenceError.prototype), Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/ReferenceError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(ReferenceError.prototype, Object.getPrototypeOf(new ReferenceError));\n\nverifyProperty(ReferenceError, \"prototype\", {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/ReferenceError/prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.syntaxerror.constructor",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof SyntaxError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof SyntaxError, 'function', 'typeof SyntaxError is \"function\"');\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/SyntaxError/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.syntaxerror.instance-proto",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(new SyntaxError), SyntaxError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/SyntaxError/instance-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.syntaxerror.is-a-constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(SyntaxError), true, 'isConstructor(SyntaxError) must return true');\nnew SyntaxError();\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/SyntaxError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.syntaxerror.is-error-object",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(new SyntaxError), \"[object Error]\");\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/SyntaxError/is-error-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.syntaxerror.proto-from-ctor-realm",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(SyntaxError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SyntaxError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(SyntaxError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SyntaxError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nerr = Reflect.construct(SyntaxError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SyntaxError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nerr = Reflect.construct(SyntaxError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SyntaxError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(SyntaxError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SyntaxError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = Infinity;\nerr = Reflect.construct(SyntaxError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.SyntaxError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/SyntaxError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.syntaxerror.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(SyntaxError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(SyntaxError), Error);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/SyntaxError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype.constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(SyntaxError.prototype.constructor, SyntaxError);\n\nverifyProperty(SyntaxError.prototype, \"constructor\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/SyntaxError/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype.message",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(SyntaxError.prototype.message, \"\");\n\nverifyProperty(SyntaxError.prototype, \"message\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/SyntaxError/prototype/message.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype.not-error-object",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.toString.call(SyntaxError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(SyntaxError.prototype), \"[object Object]\");\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/SyntaxError/prototype/not-error-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(SyntaxError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(SyntaxError.prototype), Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/SyntaxError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(SyntaxError.prototype, Object.getPrototypeOf(new SyntaxError));\n\nverifyProperty(SyntaxError, \"prototype\", {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/SyntaxError/prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.typeerror.constructor",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof TypeError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof TypeError, 'function', 'typeof TypeError is \"function\"');\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/TypeError/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.typeerror.instance-proto",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(new TypeError), TypeError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/TypeError/instance-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.typeerror.is-a-constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(TypeError), true, 'isConstructor(TypeError) must return true');\nnew TypeError();\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/TypeError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.typeerror.is-error-object",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(new TypeError), \"[object Error]\");\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/TypeError/is-error-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.typeerror.proto-from-ctor-realm",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(TypeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.TypeError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(TypeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.TypeError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = false;\nerr = Reflect.construct(TypeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.TypeError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = 'str';\nerr = Reflect.construct(TypeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.TypeError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(TypeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.TypeError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = -Infinity;\nerr = Reflect.construct(TypeError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.TypeError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/TypeError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.typeerror.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(TypeError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(TypeError), Error);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/TypeError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.typeerror.prototype.constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(TypeError.prototype.constructor, TypeError);\n\nverifyProperty(TypeError.prototype, \"constructor\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/TypeError/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.typeerror.prototype.message",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(TypeError.prototype.message, \"\");\n\nverifyProperty(TypeError.prototype, \"message\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/TypeError/prototype/message.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.typeerror.prototype.not-error-object",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.toString.call(TypeError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(TypeError.prototype), \"[object Object]\");\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/TypeError/prototype/not-error-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.typeerror.prototype.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(TypeError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(TypeError.prototype), Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/TypeError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.typeerror.prototype",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(TypeError.prototype, Object.getPrototypeOf(new TypeError));\n\nverifyProperty(TypeError, \"prototype\", {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/TypeError/prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.urierror.constructor",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof URIError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof URIError, 'function', 'typeof URIError is \"function\"');\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/URIError/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.urierror.instance-proto",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(new URIError), URIError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/URIError/instance-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.urierror.is-a-constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(URIError), true, 'isConstructor(URIError) must return true');\nnew URIError();\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/URIError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.urierror.is-error-object",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(new URIError), \"[object Error]\");\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/URIError/is-error-object.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.urierror.proto-from-ctor-realm",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(URIError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.URIError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(URIError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.URIError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nerr = Reflect.construct(URIError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.URIError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nerr = Reflect.construct(URIError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.URIError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(URIError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.URIError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = 0;\nerr = Reflect.construct(URIError, [], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.URIError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/URIError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.urierror.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(URIError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(URIError), Error);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/URIError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.urierror.prototype.constructor",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(URIError.prototype.constructor, URIError);\n\nverifyProperty(URIError.prototype, \"constructor\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/URIError/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.urierror.prototype.message",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(URIError.prototype.message, \"\");\n\nverifyProperty(URIError.prototype, \"message\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/URIError/prototype/message.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.nativeerrors.urierror.prototype.not-error-object",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.toString.call(URIError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.prototype.toString.call(URIError.prototype), \"[object Object]\");\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/URIError/prototype/not-error-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.nativeerrors.urierror.prototype.proto",
       "category": "nativeerrors",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(URIError.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Object.getPrototypeOf(URIError.prototype), Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/NativeErrors/URIError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.nativeerrors.urierror.prototype",
+      "category": "nativeerrors",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(URIError.prototype, Object.getPrototypeOf(new URIError));\n\nverifyProperty(URIError, \"prototype\", {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/NativeErrors/URIError/prototype.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     }
   ]
 }

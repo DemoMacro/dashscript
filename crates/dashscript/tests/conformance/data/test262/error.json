@@ -1,212 +1,1037 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.error.cause_abrupt",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar message = \"my-message\";\nvar options;\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#0\noptions = new Proxy({}, {\n  has(target, prop) {\n    if (prop === \"cause\") {\n      throw new Test262Error(\"HasProperty\");\n    }\n    return prop in target;\n  },\n});\nassert.throws(Test262Error, function () {\n  new Error(message, options);\n}, \"HasProperty\");\n//////////////////////////////////////////////////////////////////////////////\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#1\noptions = {\n  get cause() {\n    throw new Test262Error(\"Get Cause\");\n  },\n};\nassert.throws(Test262Error, function () {\n  new Error(message, options);\n}, \"Get Cause\");\n//////////////////////////////////////////////////////////////////////////////\n}\nmain();\n",
+      "origin": "test/built-ins/Error/cause_abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-cause"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.error.error-message-tostring-symbol",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function () {\n    Error(Symbol())\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function () {\n    Error(Symbol())\n}, \"If _message_ is a Symbol, Error must throw TypeError\");\n}\nmain();\n",
       "origin": "test/built-ins/Error/error-message-tostring-symbol.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.error-message-tostring-toprimitive",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function () {\n    Error({toString: undefined, valueOf: undefined})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function () {\n    Error({toString: undefined, valueOf: undefined})\n}, \"Error should throw a TypeError in its ToPrimitive step\");\n}\nmain();\n",
       "origin": "test/built-ins/Error/error-message-tostring-toprimitive.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.instance-prototype",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Error.prototype.isPrototypeOf(new Error()), true,\n  'Error.prototype.isPrototypeOf(new Error()) returns true'\n);\n\nassert.sameValue(\n  Error.prototype.isPrototypeOf(Error()), true,\n  'Error.prototype.isPrototypeOf(Error()) returns true'\n);\n\nverifyProperty(Error, 'prototype', {\n  writable: false,\n  enumerable: false,\n  configurable: false,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/instance-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.internal-prototype",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Error().constructor));\n\nconsole.log(Function.prototype.isPrototypeOf(Error.constructor));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Function.prototype.isPrototypeOf(Error().constructor),\n  true,\n  'Function.prototype.isPrototypeOf(err1.constructor) returns true'\n);\n\nassert.sameValue(\n  Function.prototype.isPrototypeOf(Error.constructor),\n  true,\n  'Function.prototype.isPrototypeOf(Error.constructor) returns true'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Error/internal-prototype.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.is-a-constructor",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Error), true, 'isConstructor(Error) must return true');\nnew Error();\n}\nmain();\n",
+      "origin": "test/built-ins/Error/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.iserror.bigints",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.isError(0n));\nconsole.log(Error.isError(42n));\nconsole.log(Error.isError(BigInt(0)));\nconsole.log(Error.isError(BigInt(42)));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Error.isError(0n), false);\nassert.sameValue(Error.isError(42n), false);\nassert.sameValue(Error.isError(BigInt(0)), false);\nassert.sameValue(Error.isError(BigInt(42)), false);\n}\nmain();\n",
       "origin": "test/built-ins/Error/isError/bigints.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Error.isError",
+        "BigInt"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.error-subclass",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nclass MyError extends Error {}\nclass MyEvalError extends EvalError {}\nclass MyRangeError extends RangeError {}\nclass MyReferenceError extends ReferenceError {}\nclass MySyntaxError extends SyntaxError {}\nclass MyTypeError extends TypeError {}\nclass MyURIError extends URIError {}\n\nassert.sameValue(Error.isError(new MyError()), true);\nassert.sameValue(Error.isError(new MyEvalError()), true);\nassert.sameValue(Error.isError(new MyRangeError()), true);\nassert.sameValue(Error.isError(new MyReferenceError()), true);\nassert.sameValue(Error.isError(new MySyntaxError()), true);\nassert.sameValue(Error.isError(new MyTypeError()), true);\nassert.sameValue(Error.isError(new MyURIError()), true);\n\nif (typeof AggregateError !== 'undefined') {\n  class MyAggregateError extends AggregateError {}\n\n  assert.sameValue(Error.isError(new MyAggregateError([])), true);\n}\n\nif (typeof SuppressedError !== 'undefined') {\n  class MySuppressedError extends SuppressedError {}\n\n  assert.sameValue(Error.isError(new MySuppressedError()), true);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/isError/error-subclass.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "Error.isError",
+        "class"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.errors-other-realm",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\n\nassert.sameValue(Error.isError(new other.Error()), true);\nassert.sameValue(Error.isError(new other.EvalError()), true);\nassert.sameValue(Error.isError(new other.RangeError()), true);\nassert.sameValue(Error.isError(new other.ReferenceError()), true);\nassert.sameValue(Error.isError(new other.SyntaxError()), true);\nassert.sameValue(Error.isError(new other.TypeError()), true);\nassert.sameValue(Error.isError(new other.URIError()), true);\n\nif (typeof AggregateError !== 'undefined') {\n  assert.sameValue(Error.isError(new other.AggregateError([])), true);\n}\nif (typeof SuppressedError !== 'undefined') {\n  assert.sameValue(Error.isError(new other.SuppressedError()), true);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/isError/errors-other-realm.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "Error.isError",
+        "cross-realm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.errors",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Error.isError(new Error()), true);\nassert.sameValue(Error.isError(new EvalError()), true);\nassert.sameValue(Error.isError(new RangeError()), true);\nassert.sameValue(Error.isError(new ReferenceError()), true);\nassert.sameValue(Error.isError(new SyntaxError()), true);\nassert.sameValue(Error.isError(new TypeError()), true);\nassert.sameValue(Error.isError(new URIError()), true);\n\nif (typeof AggregateError !== 'undefined') {\n  assert.sameValue(Error.isError(new AggregateError([])), true);\n}\nif (typeof SuppressedError !== 'undefined') {\n  assert.sameValue(Error.isError(new SuppressedError()), true);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/isError/errors.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "Error.isError"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.fake-errors",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fakeError = {\n  __proto__: Error.prototype,\n  constructor: Error,\n  message: '',\n  stack: new Error().stack\n};\n\nif (typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol') {\n  fakeError[Symbol.toStringTag] = 'Error';\n}\n\nassert.sameValue(Error.isError(fakeError), false);\n}\nmain();\n",
+      "origin": "test/built-ins/Error/isError/fake-errors.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Error.isError"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.is-a-constructor",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Error.isError), false, 'isConstructor(Error.isError) must return false');\nassert.throws(TypeError, function () { new Error.isError(); });\n}\nmain();\n",
+      "origin": "test/built-ins/Error/isError/is-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Error.isError",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.iserror.name",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.isError.name);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Error.isError.name, 'isError');\n}\nmain();\n",
       "origin": "test/built-ins/Error/isError/name.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Error.isError"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.iserror.non-error-objects-other-realm",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\n\nassert.sameValue(Error.isError(new other.Object()), false);\nassert.sameValue(Error.isError(new other.Array()), false);\nassert.sameValue(Error.isError(new other.Function('')), false);\nassert.sameValue(Error.isError(new other.RegExp('a')), false);\n\nassert.sameValue(Error.isError(other.Error), false);\nassert.sameValue(Error.isError(other.EvalError), false);\nassert.sameValue(Error.isError(other.RangeError), false);\nassert.sameValue(Error.isError(other.ReferenceError), false);\nassert.sameValue(Error.isError(other.SyntaxError), false);\nassert.sameValue(Error.isError(other.TypeError), false);\nassert.sameValue(Error.isError(other.URIError), false);\n\nif (typeof other.AggregateError !== 'undefined') {\n  assert.sameValue(Error.isError(other.AggregateError), false);\n}\nif (typeof other.SuppressedError !== 'undefined') {\n  assert.sameValue(Error.isError(other.SuppressedError), false);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/isError/non-error-objects-other-realm.js",
+      "n_asserts": 13,
+      "flags": [],
+      "features": [
+        "Error.isError",
+        "cross-realm"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.iserror.non-error-objects",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.isError({}));\nconsole.log(Error.isError([]));\nconsole.log(Error.isError(function () {}));\nconsole.log(Error.isError(/a/g));\n\nconsole.log(Error.isError(Error));\nconsole.log(Error.isError(EvalError));\nconsole.log(Error.isError(RangeError));\nconsole.log(Error.isError(ReferenceError));\nconsole.log(Error.isError(SyntaxError));\nconsole.log(Error.isError(TypeError));\nconsole.log(Error.isError(URIError));\n\nif (typeof AggregateError !== 'undefined') {\n  console.log(Error.isError(AggregateError));\n}\nif (typeof SuppressedError !== 'undefined') {\n  console.log(Error.isError(SuppressedError));\n}\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Error.isError({}), false);\nassert.sameValue(Error.isError([]), false);\nassert.sameValue(Error.isError(function () {}), false);\nassert.sameValue(Error.isError(/a/g), false);\n\nassert.sameValue(Error.isError(Error), false);\nassert.sameValue(Error.isError(EvalError), false);\nassert.sameValue(Error.isError(RangeError), false);\nassert.sameValue(Error.isError(ReferenceError), false);\nassert.sameValue(Error.isError(SyntaxError), false);\nassert.sameValue(Error.isError(TypeError), false);\nassert.sameValue(Error.isError(URIError), false);\n\nif (typeof AggregateError !== 'undefined') {\n  assert.sameValue(Error.isError(AggregateError), false);\n}\nif (typeof SuppressedError !== 'undefined') {\n  assert.sameValue(Error.isError(SuppressedError), false);\n}\n}\nmain();\n",
       "origin": "test/built-ins/Error/isError/non-error-objects.js",
       "n_asserts": 13,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Error.isError"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.iserror.primitives",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.isError());\nconsole.log(Error.isError(undefined));\nconsole.log(Error.isError(null));\nconsole.log(Error.isError(true));\nconsole.log(Error.isError(false));\nconsole.log(Error.isError(0));\nconsole.log(Error.isError(-0));\nconsole.log(Error.isError(NaN));\nconsole.log(Error.isError(Infinity));\nconsole.log(Error.isError(-Infinity));\nconsole.log(Error.isError(42));\nconsole.log(Error.isError(''));\nconsole.log(Error.isError('foo'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Error.isError(), false);\nassert.sameValue(Error.isError(undefined), false);\nassert.sameValue(Error.isError(null), false);\nassert.sameValue(Error.isError(true), false);\nassert.sameValue(Error.isError(false), false);\nassert.sameValue(Error.isError(0), false);\nassert.sameValue(Error.isError(-0), false);\nassert.sameValue(Error.isError(NaN), false);\nassert.sameValue(Error.isError(Infinity), false);\nassert.sameValue(Error.isError(-Infinity), false);\nassert.sameValue(Error.isError(42), false);\nassert.sameValue(Error.isError(''), false);\nassert.sameValue(Error.isError('foo'), false);\n}\nmain();\n",
       "origin": "test/built-ins/Error/isError/primitives.js",
       "n_asserts": 13,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Error.isError"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.iserror.symbols",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.isError(Symbol()));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Error.isError(Symbol()), false);\n}\nmain();\n",
       "origin": "test/built-ins/Error/isError/symbols.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Error.isError",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.length",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nvar err1 = Error(\"err\");\nconsole.log(err1.constructor.length);\nconsole.log(Error.constructor.length);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar err1 = Error(\"err\");\nassert.sameValue(err1.constructor.length, 1, 'The value of err1.constructor.length is 1');\nassert.sameValue(Error.constructor.length, 1, 'The value of Error.constructor.length is 1');\n}\nmain();\n",
       "origin": "test/built-ins/Error/length.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.name",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.prototype.name);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Error.prototype.name, 'Error');\n}\nmain();\n",
       "origin": "test/built-ins/Error/name.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.proto-from-ctor-realm",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar C = new other.Function();\nC.prototype = null;\n\nvar o = Reflect.construct(Error, [], C);\n\nassert.sameValue(Object.getPrototypeOf(o), other.Error.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Error/proto-from-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.constructor.s15.11.4.1_a1_t2",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar constr = Error.prototype.constructor;\n\nvar err = new constr;\n\nassert.notSameValue(err, undefined, 'The value of err is expected to not equal ``undefined``');\nassert.sameValue(err.constructor, Error, 'The value of err.constructor is expected to equal the value of Error');\nassert(Error.prototype.isPrototypeOf(err), 'Error.prototype.isPrototypeOf(err) must return true');\n//\n//////////////////////////////////////////////////////////////////////////////\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#3\nError.prototype.toString = Object.prototype.toString;\nassert.sameValue(err.toString(), '[object Error]', 'err.toString() must return \"[object Error]\"');\nassert.sameValue(err.valueOf().toString(), '[object Error]', 'err.valueOf().toString() must return \"[object Error]\"');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/constructor/S15.11.4.1_A1_T2.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.prototype.no-error-data",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\n// Although the spec doesn't define Error.prototype[@@toStringTag], set it\n// to non-string anyway because implementations are allowed to define it.\nObject.defineProperty(Error.prototype, Symbol.toStringTag, {\n  value: null,\n});\n\nconsole.log(Object.prototype.toString.call(Error.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\n// Although the spec doesn't define Error.prototype[@@toStringTag], set it\n// to non-string anyway because implementations are allowed to define it.\nObject.defineProperty(Error.prototype, Symbol.toStringTag, {\n  value: null,\n});\n\nassert.sameValue(\n  Object.prototype.toString.call(Error.prototype),\n  \"[object Object]\"\n);\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/no-error-data.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.3.1_a1_t1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar proto = Error.prototype;\n//////////////////////////////////////////////////////////////////////////////\n//CHECK#1\nverifyNotConfigurable(Error, \"prototype\");\ntry {\n  assert.sameValue(delete Error.prototype, false);\n} catch (e) {\n  if (e instanceof Test262Error) {\n    throw e;\n  }\n  assert(e instanceof TypeError);\n}\n//\n//////////////////////////////////////////////////////////////////////////////\n\n//////////////////////////////////////////////////////////////////////////////\n//CHECK#2\nif (Error.prototype !== proto) {\n  throw new Test262Error('#2: var proto=Error.prototype; delete Error.prototype; Error.prototype===proto. Actual: ' + Error.prototype);\n}\n//\n//////////////////////////////////////////////////////////////////////////////\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.3.1_A1_T1.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.prototype.s15.11.3.1_a2_t1",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.hasOwnProperty('prototype'));\n\nconsole.log(!Error.propertyIsEnumerable('prototype'));\n\n//\n//////////////////////////////////////////////////////////////////////////////\n\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#2\nvar cout = 0;\n\nfor (var p in Error) {\n  if (p === \"prototype\") {\n    cout++;\n  }\n}\n\nconsole.log(cout);\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Error.hasOwnProperty('prototype'), 'Error.hasOwnProperty(\\'prototype\\') must return true');\n\nassert(\n  !Error.propertyIsEnumerable('prototype'),\n  'The value of !Error.propertyIsEnumerable(\\'prototype\\') is expected to be true'\n);\n\n//\n//////////////////////////////////////////////////////////////////////////////\n\n\n//////////////////////////////////////////////////////////////////////////////\n// CHECK#2\nvar cout = 0;\n\nfor (var p in Error) {\n  if (p === \"prototype\") {\n    cout++;\n  }\n}\n\nassert.sameValue(cout, 0, 'The value of cout is expected to be 0');\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/S15.11.3.1_A2_T1.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.3.1_a3_t1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(Error.hasOwnProperty('prototype'));\n\nvar __obj = Error.prototype;\n\nverifyNotWritable(Error, \"prototype\", null, function() {\n  return \"shifted\";\n});\n\nassert.sameValue(Error.prototype, __obj);\n\n// TODO: Convert to verifyProperty() format.\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.3.1_A3_T1.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.prototype.s15.11.3.1_a4_t1",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.hasOwnProperty('prototype'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Error.hasOwnProperty('prototype'), 'Error.hasOwnProperty(\\'prototype\\') must return true');\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/S15.11.3.1_A4_T1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.prototype.s15.11.4_a1",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.isPrototypeOf(Error.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(\n  Object.prototype.isPrototypeOf(Error.prototype),\n  'Object.prototype.isPrototypeOf(Error.prototype) must return true'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/S15.11.4_A1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.prototype.s15.11.4_a2",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nError.prototype.toString = Object.prototype.toString;\nvar __tostr = Error.prototype.toString();\n\nconsole.log(__tostr);\n}\nmain();\n",
+      "fixture": "function main(): void {\nError.prototype.toString = Object.prototype.toString;\nvar __tostr = Error.prototype.toString();\n\nassert.sameValue(__tostr, \"[object Object]\", 'The value of __tostr is expected to be \"[object Object]\"');\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/S15.11.4_A2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.4_a3",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  Error.prototype();\n  throw new Test262Error();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.4_A3.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.s15.11.4_a4",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  new Error.prototype();\n  throw new Test262Error();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/S15.11.4_A4.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-cross-realm",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getA = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nvar realmB = $262.createRealm().global;\n\nassert.notSameValue(\n  Error.prototype,\n  realmB.Error.prototype,\n  'precondition: the two realms have distinct Error.prototype objects'\n);\n\n// (a) Realm A's getter on a realm B Error instance: the instance has\n// [[ErrorData]], so the getter returns a string regardless of which realm\n// owns the slot.\nvar errB = new realmB.Error('msg');\nassert.sameValue(typeof getA.call(errB), 'string', 'cross-realm Error instance returns a string');\n\n// (b) Realm A's getter on a realm B plain object: no [[ErrorData]], returns\n// undefined.\nvar plainB = new realmB.Object();\nassert.sameValue(getA.call(plainB), undefined, 'cross-realm plain object returns undefined');\n\n// (c) Realm A's getter on realm B's Error.prototype: the prototype object\n// itself has no [[ErrorData]] slot, so the getter returns undefined.\nassert.sameValue(getA.call(realmB.Error.prototype), undefined, 'cross-realm Error.prototype returns undefined');\n\n// (d) Realm B's getter on a realm A Error instance: same logic in reverse.\nvar getB = Object.getOwnPropertyDescriptor(realmB.Error.prototype, 'stack').get;\nassert.sameValue(typeof getB, 'function', 'realm B has its own getter');\nassert.notSameValue(getA, getB, 'the two realms have distinct getter functions');\n\nvar errA = new Error('msg');\nassert.sameValue(typeof getB.call(errA), 'string', 'realm B getter on realm A Error instance returns a string');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-cross-realm.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "cross-realm"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-data-property-shadows",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n  Object.defineProperty(err, 'stack', {\n    value: 'sentinel',\n    writable: true,\n    enumerable: true,\n    configurable: true,\n  });\n\n  assert.sameValue(err.stack, 'sentinel', Ctor.name + ': own data property is returned by [[Get]]');\n\n  // The inherited accessor still produces a string when invoked directly,\n  // because the algorithm operates on the [[ErrorData]] slot, not on properties.\n  assert.sameValue(typeof get.call(err), 'string', Ctor.name + ': inherited accessor still returns a string');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-data-property-shadows.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-error-as-prototype",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var protoErr = new Ctor('outer');\n  var o = { __proto__: protoErr };\n\n  assert.sameValue(get.call(o), undefined, Ctor.name + ': get.call on object with instance as proto');\n\n  // Property access walks the prototype chain to find the accessor on\n  // Error.prototype, then calls the getter with this set to the original\n  // receiver (o). Because o lacks [[ErrorData]], the result is undefined.\n  assert.sameValue(o.stack, undefined, Ctor.name + ': property access on object with instance as proto');\n\n  // The inherited instance still produces a string when the getter is invoked\n  // on it directly.\n  assert.sameValue(typeof get.call(protoErr), 'string', Ctor.name + ': get.call on the underlying instance');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-error-as-prototype.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "__proto__"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-error-instance",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nvar errors = [];\nfor (var i = 0; i < allErrorConstructors.length; ++i) {\n  var Ctor = allErrorConstructors[i];\n  errors.push([Ctor.name, makeNativeError(Ctor, true), makeNativeError(Ctor, false)]);\n}\n\nfor (var i = 0; i < errors.length; ++i) {\n  var name = errors[i][0];\n  var err = errors[i][1];\n  var err2 = errors[i][2];\n\n  assert.sameValue(typeof get.call(err), 'string', name + ': new Ctor instance via get.call');\n  assert.sameValue(typeof err.stack, 'string', name + ': new Ctor instance via property access');\n\n  assert.sameValue(typeof get.call(err2), 'string', name + ': Ctor called without new');\n\n  assert.sameValue(typeof get.call(err), 'string', name + ': second call still returns a string');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-error-instance.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-error-prototype",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nvar prototypes = [];\nfor (var i = 0; i < allErrorConstructors.length; ++i) {\n  var Ctor = allErrorConstructors[i];\n  prototypes.push([Ctor.name + '.prototype', Ctor.prototype]);\n}\n\nfor (var i = 0; i < prototypes.length; ++i) {\n  var label = prototypes[i][0];\n  var proto = prototypes[i][1];\n  assert.sameValue(get.call(proto), undefined, label);\n}\n\n// Access via the property also returns undefined on Error.prototype.\nassert.sameValue(Error.prototype.stack, undefined, 'Error.prototype.stack property access');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-error-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-foreign-new-target",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nfunction NotAnError() {}\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var e = Reflect.construct(Ctor, ['msg'], NotAnError);\n\n  assert.sameValue(\n    Object.getPrototypeOf(e),\n    NotAnError.prototype,\n    Ctor.name + ': [[Prototype]] is the new.target prototype'\n  );\n\n  // The internal slot is set by Ctor's [[Construct]] regardless of new.target,\n  // so the getter (called directly) still produces a string.\n  assert.sameValue(typeof get.call(e), 'string', Ctor.name + ': via get.call');\n\n  // Property access on the instance does NOT find the inherited accessor:\n  // Error.prototype is not on e's prototype chain (it's only on Ctor.prototype,\n  // which is bypassed by the foreign new.target). The lookup walks\n  // NotAnError.prototype then Object.prototype and returns undefined.\n  assert.sameValue(e.stack, undefined, Ctor.name + ': property access returns undefined');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-foreign-new-target.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-no-error-data",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nvar receivers = [\n  ['plain object', {}],\n  ['null-prototype object', { __proto__: null }],\n  ['array', []],\n  ['function', function () {}],\n  ['RegExp', /re/],\n  ['Date', new Date()],\n  ['Boolean wrapper', new Boolean(true)],\n  ['Number wrapper', new Number(0)],\n  ['String wrapper', new String('')],\n  typeof ArrayBuffer === 'undefined' ? null : ['ArrayBuffer', new ArrayBuffer(0)],\n  typeof Map === 'undefined' ? null : ['Map', new Map()],\n  typeof Set === 'undefined' ? null : ['Set', new Set()],\n  typeof WeakMap === 'undefined' ? null : ['WeakMap', new WeakMap()],\n  typeof WeakSet === 'undefined' ? null : ['WeakSet', new WeakSet()],\n  typeof Promise === 'undefined' ? null : ['Promise', new Promise(function () {})],\n  typeof Int8Array === 'undefined' ? null : ['TypedArray', new Int8Array()]\n];\n\nfor (var i = 0; i < receivers.length; ++i) {\n  if (!receivers[i]) continue;\n  var label = receivers[i][0];\n  var value = receivers[i][1];\n  assert.sameValue(get.call(value), undefined, label);\n}\n\n// An object that inherits from Error.prototype but lacks [[ErrorData]] still\n// returns undefined: the getter checks for the internal slot, not the prototype.\nvar fakeError = Object.create(Error.prototype);\nassert.sameValue(get.call(fakeError), undefined, 'object with Error.prototype on its prototype chain');\n\nvar fakeErrorWithStack = Object.create(Error.prototype);\nObject.defineProperty(fakeErrorWithStack, 'stack', { value: 'imposter', writable: true, enumerable: true, configurable: true });\nassert.sameValue(\n  get.call(fakeErrorWithStack),\n  undefined,\n  'an existing own \"stack\" data property is ignored by the getter on a non-Error object'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-no-error-data.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-not-a-constructor",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nassert.sameValue(\n  isConstructor(get),\n  false,\n  'isConstructor(get Error.prototype.stack) must return false'\n);\n\nassert.throws(TypeError, function () {\n  new get();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-receiver-is-proxy",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\n// (a) Proxy wrapping an Error instance: the Proxy itself has no [[ErrorData]],\n// so the getter returns undefined without consulting the wrapped target. No\n// proxy traps should fire; allowProxyTraps with no overrides throws\n// Test262Error if any do.\nassert.sameValue(\n  get.call(new Proxy(new Error('inner'), allowProxyTraps(null, '(a)'))),\n  undefined,\n  'Proxy wrapping Error returns undefined'\n);\n\n// (b) Property access through the Proxy: the [[Get]] forwards the access to\n// the proxy's get trap, but the receiver passed through to the inherited\n// accessor on Error.prototype is the proxy itself. Since the proxy lacks\n// [[ErrorData]], the getter returns undefined; the get trap fires exactly\n// once for the property access.\nvar stackTrapCalls = 0;\nvar pB = new Proxy(new Error('inner'), allowProxyTraps({\n  get: function (t, key, receiver) {\n    if (key === 'stack') {\n      stackTrapCalls += 1;\n    }\n    return Reflect.get(t, key, receiver);\n  }\n}, '(b)'));\nassert.sameValue(pB.stack, undefined, 'property access on proxy: receiver is proxy, no [[ErrorData]]');\nassert.sameValue(stackTrapCalls, 1, 'get trap fired once for the property access');\n\n// (c) Proxy wrapping a non-Error: still undefined.\nassert.sameValue(\n  get.call(new Proxy({}, allowProxyTraps(null, '(c)'))),\n  undefined,\n  'Proxy wrapping plain object returns undefined'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-receiver-is-proxy.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": [
+        "proxyTrapsHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.getter-subclass",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var Sub = class extends Ctor {};\n  var e = new Sub('msg');\n\n  assert.sameValue(typeof get.call(e), 'string', Ctor.name + ': subclass via get.call');\n  assert.sameValue(typeof e.stack, 'string', Ctor.name + ': subclass via property access');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/getter-subclass.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "class"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.prototype.stack.getter-this-not-object",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nconsole.log(typeof get);\n\nvar badReceivers = [\n  ['undefined', undefined],\n  ['null', null],\n  ['true', true],\n  ['false', false],\n  ['number', 1],\n  ['string', ''],\n  typeof Symbol === 'undefined' ? null : ['symbol', Symbol('s')],\n  typeof BigInt === 'undefined' ? null : ['bigint', BigInt(0)]\n];\n\nfor (var i = 0; i < badReceivers.length; ++i) {\n  if (!badReceivers[i]) continue;\n  var label = badReceivers[i][0];\n  var value = badReceivers[i][1];\n  try { (function () {\n    get.call(value);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\nassert.sameValue(typeof get, 'function');\n\nvar badReceivers = [\n  ['undefined', undefined],\n  ['null', null],\n  ['true', true],\n  ['false', false],\n  ['number', 1],\n  ['string', ''],\n  typeof Symbol === 'undefined' ? null : ['symbol', Symbol('s')],\n  typeof BigInt === 'undefined' ? null : ['bigint', BigInt(0)]\n];\n\nfor (var i = 0; i < badReceivers.length; ++i) {\n  if (!badReceivers[i]) continue;\n  var label = badReceivers[i][0];\n  var value = badReceivers[i][1];\n  assert.throws(TypeError, function () {\n    get.call(value);\n  }, label);\n}\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/stack/getter-this-not-object.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.instance-no-own-stack",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n\n  assert.sameValue(\n    Object.prototype.hasOwnProperty.call(err, 'stack'),\n    false,\n    Ctor.name + ': hasOwnProperty(\"stack\") is false'\n  );\n\n  assert.sameValue(\n    Object.getOwnPropertyDescriptor(err, 'stack'),\n    undefined,\n    Ctor.name + ': getOwnPropertyDescriptor returns undefined'\n  );\n\n  // For NativeErrors, the immediate prototype is e.g. TypeError.prototype,\n  // which does NOT have its own \"stack\" property; the accessor lives only on\n  // Error.prototype, two links up.\n  if (Ctor !== Error) {\n    assert.sameValue(\n      Object.getOwnPropertyDescriptor(Object.getPrototypeOf(err), 'stack'),\n      undefined,\n      Ctor.name + ': stack is not an own property of NativeError.prototype'\n    );\n  }\n\n  var desc = Object.getOwnPropertyDescriptor(Error.prototype, 'stack');\n  assert.notSameValue(desc, undefined, Ctor.name + ': Error.prototype has the accessor');\n  assert.sameValue(typeof desc.get, 'function', Ctor.name + ': accessor get is a function');\n  assert.sameValue(typeof desc.set, 'function', Ctor.name + ': accessor set is a function');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/instance-no-own-stack.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.instance-not-enumerable",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n\n  assert.sameValue(\n    Object.keys(err).indexOf('stack'),\n    -1,\n    Ctor.name + ': Object.keys does not include \"stack\"'\n  );\n\n  assert.sameValue(\n    Object.getOwnPropertyNames(err).indexOf('stack'),\n    -1,\n    Ctor.name + ': getOwnPropertyNames does not include \"stack\"'\n  );\n\n  var sawStack = false;\n  for (var key in err) {\n    if (key === 'stack') {\n      sawStack = true;\n    }\n  }\n  assert.sameValue(sawStack, false, Ctor.name + ': for-in does not yield \"stack\"');\n\n  assert.sameValue(\n    Object.prototype.propertyIsEnumerable.call(err, 'stack'),\n    false,\n    Ctor.name + ': propertyIsEnumerable returns false'\n  );\n\n  assert.sameValue(\n    Object.prototype.propertyIsEnumerable.call(Error.prototype, 'stack'),\n    false,\n    Ctor.name + ': Error.prototype.propertyIsEnumerable(\"stack\") is false'\n  );\n\n  // JSON.stringify omits non-enumerable / non-own properties; a fresh Error\n  // instance has no enumerable own properties at all.\n  assert.sameValue(\n    JSON.stringify(err),\n    '{}',\n    Ctor.name + ': JSON.stringify output is empty object'\n  );\n\n  // Object.assign reads only enumerable own properties; the inherited\n  // accessor is not own, so \"stack\" is not copied.\n  var copy = Object.assign({}, err);\n  assert.sameValue(\n    Object.prototype.hasOwnProperty.call(copy, 'stack'),\n    false,\n    Ctor.name + ': Object.assign({}, err) does not copy \"stack\"'\n  );\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/instance-not-enumerable.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-creates-own-property",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nvar errors = [];\nfor (var i = 0; i < allErrorConstructors.length; ++i) {\n  var Ctor = allErrorConstructors[i];\n  errors.push([Ctor.name, makeNativeError(Ctor, true)]);\n}\n\nfor (var i = 0; i < errors.length; ++i) {\n  var name = errors[i][0];\n  var err = errors[i][1];\n\n  assert.sameValue(\n    Object.prototype.hasOwnProperty.call(err, 'stack'),\n    false,\n    name + ': precondition: instance has no own \"stack\" property at construction'\n  );\n\n  var result = set.call(err, 'sentinel-' + name);\n  assert.sameValue(result, undefined, name + ': setter returns undefined');\n\n  verifyProperty(err, 'stack', {\n    value: 'sentinel-' + name,\n    writable: true,\n    enumerable: true,\n    configurable: true,\n  });\n}\n\n// The same applies to a plain object that lacks [[ErrorData]]: the setter\n// does not check for the internal slot before installing the property.\nvar plain = {};\nset.call(plain, 'on-plain');\nverifyProperty(plain, 'stack', {\n  value: 'on-plain',\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-creates-own-property.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js",
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-cross-realm",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar setA = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nvar realmB = $262.createRealm().global;\n\nassert.notSameValue(\n  Error.prototype,\n  realmB.Error.prototype,\n  'precondition: the two realms have distinct Error.prototype objects'\n);\n\n// (a) Realm A's setter on a realm B Error instance: passes SameValue (the\n// instance is not realm A's Error.prototype), and the instance has no own\n// \"stack\" property at construction, so CreateDataPropertyOrThrow installs one.\nvar errB = new realmB.Error('msg');\nassert.sameValue(\n  Object.prototype.hasOwnProperty.call(errB, 'stack'),\n  false,\n  'precondition: cross-realm Error instance has no own \"stack\" property'\n);\n\nsetA.call(errB, 'sentinel');\n\nverifyProperty(errB, 'stack', {\n  value: 'sentinel',\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n\n// (b) Realm A's setter on a plain object from realm B: same path, installs an\n// own data property.\nvar plainB = new realmB.Object();\nsetA.call(plainB, 'plain');\n\nverifyProperty(plainB, 'stack', {\n  value: 'plain',\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n\n// (c) Realm A's setter is structurally distinct from realm B's setter.\nvar setB = Object.getOwnPropertyDescriptor(realmB.Error.prototype, 'stack').set;\nassert.sameValue(typeof setB, 'function', 'realm B has its own setter');\nassert.notSameValue(setA, setB, 'the two realms have distinct setter functions');\n\n// (d) Realm A's setter on realm B's Error.prototype passes realm A's\n// SameValue check (the two prototypes are distinct objects), so step 2 of\n// SetterThatIgnoresPrototypeProperties does not fire. Step 3 finds realm B's\n// own \"stack\" accessor descriptor and proceeds to step 5: Set(O, p, v, true)\n// invokes that accessor's setter, which is realm B's setter. Realm B's setter\n// then throws via its own SameValue check (this === realm B's Error.prototype).\n// The thrown TypeError is realm B's TypeError.\nassert.throws(realmB.TypeError, function () {\n  setA.call(realmB.Error.prototype, 'should-throw');\n}, 'realm A setter on realm B Error.prototype throws (via realm B setter)');\n\n// (e) Realm A's setter on realm A's own Error.prototype throws via step 2\n// (SameValue with realm A's home).\nassert.throws(TypeError, function () {\n  setA.call(Error.prototype, 'should-throw');\n}, 'realm A setter on realm A Error.prototype throws via SameValue');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-cross-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "cross-realm"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-delete-round-trip",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n\n  // delete on a fresh instance: nothing to remove, returns true.\n  assert.sameValue(delete err.stack, true, Ctor.name + ': delete on fresh instance returns true');\n  assert.sameValue(\n    Object.prototype.hasOwnProperty.call(err, 'stack'),\n    false,\n    Ctor.name + ': still no own property after delete'\n  );\n\n  // The inherited accessor still produces a string.\n  assert.sameValue(typeof get.call(err), 'string', Ctor.name + ': accessor still works');\n\n  // After setting, an own data property is installed.\n  set.call(err, 'sentinel');\n  assert.sameValue(\n    Object.prototype.hasOwnProperty.call(err, 'stack'),\n    true,\n    Ctor.name + ': own property installed after set'\n  );\n  assert.sameValue(err.stack, 'sentinel', Ctor.name + ': data property shadows accessor');\n\n  // delete removes the own data property.\n  assert.sameValue(delete err.stack, true, Ctor.name + ': delete removes own data property');\n  assert.sameValue(\n    Object.prototype.hasOwnProperty.call(err, 'stack'),\n    false,\n    Ctor.name + ': own property removed'\n  );\n\n  // The inherited accessor is exposed again, and [[ErrorData]] still drives it.\n  assert.sameValue(typeof err.stack, 'string', Ctor.name + ': inherited accessor re-exposed');\n  assert.sameValue(typeof get.call(err), 'string', Ctor.name + ': accessor still returns a string');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-delete-round-trip.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-empty-string",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n  set.call(err, '');\n\n  // Verify the round-trip via property access before invoking verifyProperty\n  // (which deletes the configurable own property as part of its check).\n  assert.sameValue(err.stack, '', Ctor.name + ': empty string round-trips through property access');\n\n  verifyProperty(err, 'stack', {\n    value: '',\n    writable: true,\n    enumerable: true,\n    configurable: true,\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-empty-string.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "propertyHelper.js",
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-no-argument",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n\n  assert.throws(TypeError, function () {\n    set.call(err);\n  }, Ctor.name);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-no-argument.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-non-extensible-receiver",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nvar integrityLevels = [\n  { name: 'preventExtensions', fn: Object.preventExtensions },\n  { name: 'seal', fn: Object.seal },\n  { name: 'freeze', fn: Object.freeze }\n];\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n\n  for (var j = 0; j < integrityLevels.length; ++j) {\n    var level = integrityLevels[j];\n    var label = Ctor.name + '/' + level.name;\n\n    var err = new Ctor('msg');\n    assert.sameValue(\n      Object.prototype.hasOwnProperty.call(err, 'stack'),\n      false,\n      label + ': precondition: instance has no own \"stack\" property at construction'\n    );\n\n    level.fn(err);\n\n    assert.throws(TypeError, function () {\n      set.call(err, 'sentinel');\n    }, label + ': instance without own \"stack\" rejects setter');\n\n    assert.sameValue(\n      Object.prototype.hasOwnProperty.call(err, 'stack'),\n      false,\n      label + ': no own \"stack\" property was created'\n    );\n  }\n}\n\n// Same behavior on plain objects at each integrity level.\nfor (var k = 0; k < integrityLevels.length; ++k) {\n  var lvl = integrityLevels[k];\n  var obj = lvl.fn({});\n  assert.throws(TypeError, function () {\n    set.call(obj, 'sentinel');\n  }, lvl.name + ' plain object without own \"stack\"');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-non-extensible-receiver.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-non-string-value",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\n// An object with a toString method is not coerced; the algorithm requires v\n// to already be a String.\nvar coercible = {\n  toString: function () { return 'coerced'; },\n  valueOf: function () { return 'coerced'; },\n};\n\nvar badValues = [\n  ['undefined', undefined],\n  ['null', null],\n  ['true', true],\n  ['false', false],\n  ['number', 1],\n  ['object', {}],\n  ['array', []],\n  ['object with toString', coercible],\n  ['String wrapper object', new String('boxed')],\n  typeof Symbol === 'undefined' ? null : ['symbol', Symbol('s')],\n  typeof BigInt === 'undefined' ? null : ['bigint', BigInt(0)]\n];\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n\n  for (var j = 0; j < badValues.length; ++j) {\n    if (!badValues[j]) continue;\n    var label = badValues[j][0];\n    var value = badValues[j][1];\n    assert.throws(TypeError, function () {\n      set.call(err, value);\n    }, Ctor.name + ': ' + label);\n  }\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-non-string-value.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-non-writable-stack",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n\n  var err = new Ctor('msg');\n  Object.defineProperty(err, 'stack', {\n    value: 'original',\n    writable: false,\n    enumerable: false,\n    configurable: true,\n  });\n\n  assert.throws(TypeError, function () {\n    set.call(err, 'updated');\n  }, Ctor.name + ': non-writable own \"stack\"');\n\n  verifyProperty(err, 'stack', {\n    value: 'original',\n    writable: false,\n    enumerable: false,\n    configurable: true,\n  });\n\n  // Frozen instance with an own \"stack\" data property: still throws.\n  var frozen = new Ctor('msg');\n  Object.defineProperty(frozen, 'stack', {\n    value: 'frozen-original',\n    writable: false,\n    enumerable: false,\n    configurable: false,\n  });\n  Object.preventExtensions(frozen);\n\n  assert.throws(TypeError, function () {\n    set.call(frozen, 'updated');\n  }, Ctor.name + ': frozen with non-writable own \"stack\"');\n\n  verifyProperty(frozen, 'stack', {\n    value: 'frozen-original',\n    writable: false,\n    enumerable: false,\n    configurable: false,\n  });\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-non-writable-stack.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "propertyHelper.js",
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-not-a-constructor",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nassert.sameValue(\n  isConstructor(set),\n  false,\n  'isConstructor(set Error.prototype.stack) must return false'\n);\n\nassert.throws(TypeError, function () {\n  new set('');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-own-accessor",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n\n  // (a) Own accessor with a setter: the own setter receives v.\n  var observed;\n  var withSetter = new Ctor('msg');\n  Object.defineProperty(withSetter, 'stack', {\n    get: function () { return observed; },\n    set: function (v) { observed = v; },\n    enumerable: false,\n    configurable: true,\n  });\n\n  set.call(withSetter, 'sentinel');\n  assert.sameValue(observed, 'sentinel', Ctor.name + ': own setter received the value');\n\n  // (b) Own accessor with no setter: Set with Throw=true throws TypeError.\n  var withoutSetter = new Ctor('msg');\n  Object.defineProperty(withoutSetter, 'stack', {\n    get: function () { return 'getter-only'; },\n    enumerable: false,\n    configurable: true,\n  });\n\n  assert.throws(TypeError, function () {\n    set.call(withoutSetter, 'sentinel');\n  }, Ctor.name + ': own accessor without a setter');\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-own-accessor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-proxy-trap-rejects",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\n// (a) defineProperty trap returns false (no own stack: CreateDataPropertyOrThrow path).\nvar pA = new Proxy({}, {\n  defineProperty: function () {\n    return false;\n  },\n});\nassert.throws(TypeError, function () {\n  set.call(pA, 'v');\n}, 'defineProperty returns false');\n\n// (b) set trap returns false (own stack present: Set with Throw=true path).\nvar pB = new Proxy({ stack: 'old' }, {\n  set: function () {\n    return false;\n  },\n});\nassert.throws(TypeError, function () {\n  set.call(pB, 'v');\n}, 'set trap returns false');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-proxy-trap-rejects.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-proxy-trap-throws",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nfunction Sentinel() {}\n\n// (a) getOwnPropertyDescriptor trap throws: error propagates from step 3.\nvar pA = new Proxy({}, {\n  getOwnPropertyDescriptor: function () {\n    throw new Sentinel();\n  },\n});\nassert.throws(Sentinel, function () {\n  set.call(pA, 'v');\n}, 'getOwnPropertyDescriptor trap throw');\n\n// (b) defineProperty trap throws (no own stack: CreateDataPropertyOrThrow path).\nvar pB = new Proxy({}, {\n  defineProperty: function () {\n    throw new Sentinel();\n  },\n});\nassert.throws(Sentinel, function () {\n  set.call(pB, 'v');\n}, 'defineProperty trap throw');\n\n// (c) set trap throws (own stack present: Set path).\nvar pC = new Proxy({ stack: 'old' }, {\n  set: function () {\n    throw new Sentinel();\n  },\n});\nassert.throws(Sentinel, function () {\n  set.call(pC, 'v');\n}, 'set trap throw');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-proxy-trap-throws.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Proxy"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-proxy-wrapping-prototype",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nvar trapLog = [];\nvar p = new Proxy(Error.prototype, allowProxyTraps({\n  getOwnPropertyDescriptor: function (t, key) {\n    trapLog.push(['gOPD', key]);\n    return Object.getOwnPropertyDescriptor(t, key);\n  },\n  set: function (t, key, value) {\n    trapLog.push(['set', key, value]);\n    // Don't actually mutate Error.prototype; just acknowledge.\n    return true;\n  }\n}));\n\n// SameValue(p, Error.prototype) is false: a Proxy is a distinct object from\n// its target. Step 2 does not throw; the algorithm proceeds to query the\n// proxy's traps.\nset.call(p, 'sentinel');\n\nassert(trapLog.length >= 1, 'at least one trap was invoked');\nassert.sameValue(trapLog[0][0], 'gOPD', 'getOwnPropertyDescriptor trap fired first');\nassert.sameValue(trapLog[0][1], 'stack', 'getOwnPropertyDescriptor trap was called for \"stack\"');\n\n// Error.prototype's own \"stack\" descriptor is an accessor, so step 5 of\n// SetterThatIgnoresPrototypeProperties takes the Set path, which invokes the\n// proxy's set trap.\nvar sawSet = false;\nfor (var i = 0; i < trapLog.length; ++i) {\n  if (trapLog[i][0] === 'set') {\n    sawSet = true;\n    assert.sameValue(trapLog[i][1], 'stack', 'set trap was called for \"stack\"');\n    assert.sameValue(trapLog[i][2], 'sentinel', 'set trap received the value');\n  }\n}\nassert.sameValue(sawSet, true, 'set trap was invoked');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-proxy-wrapping-prototype.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Proxy"
+      ],
+      "includes": [
+        "proxyTrapsHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-receiver-is-other-prototype",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nvar prototypes = [];\nfor (var i = 0; i < allErrorConstructors.length; ++i) {\n  var Ctor = allErrorConstructors[i];\n  // Error.prototype is %Error.prototype% itself; that case is covered by setter-receiver-is-prototype.js.\n  if (Ctor === Error) continue;\n  prototypes.push([Ctor.name + '.prototype', Ctor.prototype]);\n}\n\nfor (var i = 0; i < prototypes.length; ++i) {\n  var label = prototypes[i][0];\n  var proto = prototypes[i][1];\n\n  assert.sameValue(\n    Object.getOwnPropertyDescriptor(proto, 'stack'),\n    undefined,\n    label + ': precondition: no own \"stack\" property'\n  );\n\n  set.call(proto, 'sentinel-' + label);\n\n  verifyProperty(proto, 'stack', {\n    value: 'sentinel-' + label,\n    writable: true,\n    enumerable: true,\n    configurable: true,\n  });\n\n  // verifyProperty above asserts configurable: true, which causes the helper\n  // to delete the property as part of its check; confirm the mutation didn't\n  // leak.\n  assert.sameValue(\n    Object.getOwnPropertyDescriptor(proto, 'stack'),\n    undefined,\n    label + ': cleanup'\n  );\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-receiver-is-other-prototype.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "nativeErrors.js",
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.prototype.stack.setter-receiver-is-prototype",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\ntry { (function () {\n  set.call(Error.prototype, '');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// Property assignment also throws. The setter throws unconditionally via\n// SetterThatIgnoresPrototypeProperties; the throw originates inside the\n// accessor function and propagates regardless of the caller's strict-mode\n// flag. (test262 runs this file in both strict and sloppy modes by default.)\ntry { (function () {\n  Error.prototype.stack = '';\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\n// The accessor descriptor on Error.prototype is unchanged.\nvar desc = Object.getOwnPropertyDescriptor(Error.prototype, 'stack');\nconsole.log(desc);\nconsole.log(typeof desc.get);\nconsole.log(typeof desc.set);\nconsole.log(desc.value);\nconsole.log(desc.writable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nassert.throws(TypeError, function () {\n  set.call(Error.prototype, '');\n}, 'set.call(Error.prototype, \"\")');\n\n// Property assignment also throws. The setter throws unconditionally via\n// SetterThatIgnoresPrototypeProperties; the throw originates inside the\n// accessor function and propagates regardless of the caller's strict-mode\n// flag. (test262 runs this file in both strict and sloppy modes by default.)\nassert.throws(TypeError, function () {\n  Error.prototype.stack = '';\n}, 'assignment to Error.prototype.stack');\n\n// The accessor descriptor on Error.prototype is unchanged.\nvar desc = Object.getOwnPropertyDescriptor(Error.prototype, 'stack');\nassert.notSameValue(desc, undefined, 'Error.prototype still has its own \"stack\" property');\nassert.sameValue(typeof desc.get, 'function', 'getter is still installed');\nassert.sameValue(typeof desc.set, 'function', 'setter is still installed');\nassert.sameValue(desc.value, undefined, 'descriptor has no value (still an accessor)');\nassert.sameValue(desc.writable, undefined, 'descriptor has no writable (still an accessor)');\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/stack/setter-receiver-is-prototype.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-receiver-is-proxy",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\n// (a) Proxy with no own \"stack\": getOwnPropertyDescriptor then defineProperty.\n// allowProxyTraps throws Test262Error for any other trap (including [[Set]]).\nvar trapLog = [];\nvar target1 = {};\nvar p1 = new Proxy(target1, allowProxyTraps({\n  getOwnPropertyDescriptor: function (t, key) {\n    trapLog.push(['gOPD', key]);\n    return Object.getOwnPropertyDescriptor(t, key);\n  },\n  defineProperty: function (t, key, desc) {\n    trapLog.push(['define', key, desc]);\n    return Reflect.defineProperty(t, key, desc);\n  }\n}, '(a)'));\n\nset.call(p1, 'sentinel');\nassert(trapLog.length >= 2, 'at least getOwnPropertyDescriptor and defineProperty were called');\nassert.sameValue(trapLog[0][0], 'gOPD', 'first trap is getOwnPropertyDescriptor');\nassert.sameValue(trapLog[0][1], 'stack', 'getOwnPropertyDescriptor was called for \"stack\"');\n\nvar lastDefine = null;\nfor (var i = 0; i < trapLog.length; ++i) {\n  if (trapLog[i][0] === 'define') {\n    lastDefine = trapLog[i];\n  }\n}\nassert.notSameValue(lastDefine, null, 'defineProperty trap was invoked');\nassert.sameValue(lastDefine[1], 'stack', 'defineProperty was called for \"stack\"');\n\n// CreateDataProperty constructs the descriptor record\n// { [[Value]]: V, [[Writable]]: true, [[Enumerable]]: true, [[Configurable]]: true };\n// FromPropertyDescriptor converts that into a plain Object with exactly those\n// four own properties before invoking the defineProperty trap.\nvar passedDesc = lastDefine[2];\nassert.sameValue(passedDesc.value, 'sentinel', 'descriptor.value');\nassert.sameValue(passedDesc.writable, true, 'descriptor.writable');\nassert.sameValue(passedDesc.enumerable, true, 'descriptor.enumerable');\nassert.sameValue(passedDesc.configurable, true, 'descriptor.configurable');\nassert.sameValue('get' in passedDesc, false, 'descriptor has no get key');\nassert.sameValue('set' in passedDesc, false, 'descriptor has no set key');\nassert.sameValue(target1.stack, 'sentinel', 'value reached the underlying target');\n\n// (b) Proxy with own \"stack\": getOwnPropertyDescriptor then set trap.\n// allowProxyTraps throws Test262Error for any other trap (including\n// [[DefineOwnProperty]]).\nvar trapLog2 = [];\nvar target2 = { stack: 'old' };\nvar p2 = new Proxy(target2, allowProxyTraps({\n  getOwnPropertyDescriptor: function (t, key) {\n    trapLog2.push(['gOPD', key]);\n    return Object.getOwnPropertyDescriptor(t, key);\n  },\n  set: function (t, key, value) {\n    trapLog2.push(['set', key, value]);\n    t[key] = value;\n    return true;\n  }\n}, '(b)'));\n\nset.call(p2, 'updated');\nvar sawSet = false;\nfor (var j = 0; j < trapLog2.length; ++j) {\n  if (trapLog2[j][0] === 'set') {\n    sawSet = true;\n    assert.sameValue(trapLog2[j][1], 'stack', 'set was called for \"stack\"');\n    assert.sameValue(trapLog2[j][2], 'updated', 'set received the value');\n  }\n}\nassert.sameValue(sawSet, true, 'set trap was invoked');\nassert.sameValue(target2.stack, 'updated', 'value reached the underlying target');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-receiver-is-proxy.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "error-stack-accessor",
+        "Proxy",
+        "Reflect"
+      ],
+      "includes": [
+        "proxyTrapsHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.error.prototype.stack.setter-this-not-object",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nconsole.log(typeof set);\n\nvar badReceivers = [\n  ['undefined', undefined],\n  ['null', null],\n  ['true', true],\n  ['false', false],\n  ['number', 1],\n  ['string', 's'],\n  typeof Symbol === 'undefined' ? null : ['symbol', Symbol('s')],\n  typeof BigInt === 'undefined' ? null : ['bigint', BigInt(0)]\n];\n\nfor (var i = 0; i < badReceivers.length; ++i) {\n  if (!badReceivers[i]) continue;\n  var label = badReceivers[i][0];\n  var value = badReceivers[i][1];\n  try { (function () {\n    set.call(value, '');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\n\n// A non-Object this combined with a non-String v throws TypeError. The spec\n// runs step 2 (this not Object) before step 3 (v not String), but both steps\n// throw TypeError, so the failure is observably the same either way.\ntry { (function () {\n  set.call(undefined, 0);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function () {\n  set.call(null, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar set = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').set;\n\nassert.sameValue(typeof set, 'function');\n\nvar badReceivers = [\n  ['undefined', undefined],\n  ['null', null],\n  ['true', true],\n  ['false', false],\n  ['number', 1],\n  ['string', 's'],\n  typeof Symbol === 'undefined' ? null : ['symbol', Symbol('s')],\n  typeof BigInt === 'undefined' ? null : ['bigint', BigInt(0)]\n];\n\nfor (var i = 0; i < badReceivers.length; ++i) {\n  if (!badReceivers[i]) continue;\n  var label = badReceivers[i][0];\n  var value = badReceivers[i][1];\n  assert.throws(TypeError, function () {\n    set.call(value, '');\n  }, label);\n}\n\n// A non-Object this combined with a non-String v throws TypeError. The spec\n// runs step 2 (this not Object) before step 3 (v not String), but both steps\n// throw TypeError, so the failure is observably the same either way.\nassert.throws(TypeError, function () {\n  set.call(undefined, 0);\n}, 'undefined this with non-String v');\n\nassert.throws(TypeError, function () {\n  set.call(null, {});\n}, 'null this with non-String v');\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/stack/setter-this-not-object.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.stack.setter-via-assignment",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar get = Object.getOwnPropertyDescriptor(Error.prototype, 'stack').get;\n\n// Plain object inheriting the accessor: assignment installs an own data property.\nvar plain = Object.create(Error.prototype);\nplain.stack = 'sentinel';\n\nverifyProperty(plain, 'stack', {\n  value: 'sentinel',\n  writable: true,\n  enumerable: true,\n  configurable: true,\n});\n\nfor (var i = 0; i < nativeErrors.length; ++i) {\n  var Ctor = nativeErrors[i];\n  var err = new Ctor('msg');\n\n  // Assigning a non-string still throws TypeError (step 3 of the setter).\n  // The `err.stack = null` form covered the \"release memory\" pattern in V8/JSC\n  // before this proposal; it now throws.\n  assert.throws(TypeError, function () {\n    err.stack = null;\n  }, Ctor.name + ': null assignment');\n\n  assert.throws(TypeError, function () {\n    err.stack = 0;\n  }, Ctor.name + ': numeric assignment');\n\n  assert.throws(TypeError, function () {\n    err.stack = undefined;\n  }, Ctor.name + ': undefined assignment');\n\n  // The failed setter does not affect the [[ErrorData]] slot: the inherited\n  // accessor still produces a string (Issue 13: a failed setter must not\n  // clobber the slot).\n  assert.sameValue(typeof get.call(err), 'string', Ctor.name + ': [[ErrorData]] preserved across failed setters');\n\n  // Assigning a string installs/updates the own data property.\n  err.stack = 'updated';\n  assert.sameValue(err.stack, 'updated', Ctor.name + ': string assignment is observable');\n}\n\n// Assigning to %Error.prototype%.stack always throws, because the setter\n// function itself throws via SetterThatIgnoresPrototypeProperties; the throw\n// originates inside the accessor function and propagates regardless of the\n// caller's strict-mode flag. (test262 runs this file in both strict and\n// sloppy modes by default, so the bare assignment exercises both.)\nassert.throws(TypeError, function () {\n  Error.prototype.stack = 'top-level';\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/stack/setter-via-assignment.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "error-stack-accessor"
+      ],
+      "includes": [
+        "propertyHelper.js",
+        "nativeErrors.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.15.11.4.4-10-1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar errObj = new Error(\"ErrorMessage\");\nerrObj.name = \"ErrorName\";\n\nassert.sameValue(errObj.toString(), \"ErrorName: ErrorMessage\", 'errObj.toString()');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/15.11.4.4-10-1.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.15.11.4.4-6-1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar errObj = new Error();\n\nassert.sameValue(errObj.toString(), \"Error\", 'errObj.toString()');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/15.11.4.4-6-1.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.15.11.4.4-6-2",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar errObj = new Error(\"ErrorMessage\");\n\nassert.sameValue(errObj.toString(), \"Error: ErrorMessage\", 'errObj.toString()');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/15.11.4.4-6-2.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.15.11.4.4-8-1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar errObj = new Error(\"ErrorMessage\");\nerrObj.name = \"\";\n\nassert.sameValue(errObj.toString(), \"ErrorMessage\", 'errObj.toString()');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/15.11.4.4-8-1.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.15.11.4.4-9-1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar errObj = new Error();\nerrObj.name = \"ErrorName\";\n\nassert.sameValue(errObj.toString(), \"ErrorName\", 'errObj.toString()');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/15.11.4.4-9-1.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.called-as-function",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\n[\"name\", \"message\"].forEach(function(key) {\n    Object.defineProperty(this, key, {\n        get: function() {\n            throw new Test262Error(key + \" lookup should not be performed\");\n        },\n    });\n}, this);\n\nvar toString = Error.prototype.toString;\nassert.throws(TypeError, function() {\n    toString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/called-as-function.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.prototype.tostring.invalid-receiver",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\n[undefined, null, 1, true, 'string', Symbol()].forEach((v) => {\n  try { (() => {\n    Error.prototype.toString.call(v);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n});\n}\nmain();\n",
+      "fixture": "function main(): void {\n[undefined, null, 1, true, 'string', Symbol()].forEach((v) => {\n  assert.throws(TypeError, () => {\n    Error.prototype.toString.call(v);\n  }, `Error.prototype.toString.call(${String(v)})`);\n});\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/toString/invalid-receiver.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.not-a-constructor",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Error.prototype.toString),\n  false,\n  'isConstructor(Error.prototype.toString) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Error.prototype.toString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.s15.11.4.4_a2",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.notSameValue(new Error(\"Error\").toString(), undefined, 'The value of toStr is expected to not equal ``undefined``');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/S15.11.4.4_A2.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.prototype.tostring.tostring-get-throws",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\n//Check #1\r\nassert.throws(Test262Error, function() {\r\n    Error.prototype.toString.call({get name () {throw new Test262Error;}});\r\n}, \"name field getter should throw to cover abrupt completion return case in step 3\")\r\n\r\n//Check #2\r\nassert.throws(Test262Error, function() {\r\n    Error.prototype.toString.call({get message () {throw new Test262Error;}});\r\n}, \"message field getter should throw to cover abrupt completion return case in step 5\")\n}\nmain();\n",
+      "origin": "test/built-ins/Error/prototype/toString/tostring-get-throws.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.prototype.tostring.tostring-message-throws-symbol",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function () {\n    Error.prototype.toString.call({message : Symbol()})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function () {\n    Error.prototype.toString.call({message : Symbol()})\n}, \"If message field is a symbol, Error.prototype.toString must throw a TypeError\")\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/toString/tostring-message-throws-symbol.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.prototype.tostring.tostring-message-throws-toprimitive",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n    Error.prototype.toString.call({message: {valueOf: undefined, toString: undefined}});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); }\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n    Error.prototype.toString.call({message: {valueOf: undefined, toString: undefined}});\n}, \"ToPrimitive(msg) called by ToString(msg) throws TypeError\")\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/toString/tostring-message-throws-toprimitive.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.prototype.tostring.undefined-props",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error.prototype.toString.call({}));\nconsole.log(Error.prototype.toString.call({ message: '42' }));\nconsole.log(Error.prototype.toString.call({ name: '24' }));\nconsole.log(Error.prototype.toString.call({ name: '24', message: '42' }));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Error.prototype.toString.call({}), 'Error');\nassert.sameValue(Error.prototype.toString.call({ message: '42' }), 'Error: 42');\nassert.sameValue(Error.prototype.toString.call({ name: '24' }), '24');\nassert.sameValue(Error.prototype.toString.call({ name: '24', message: '42' }), '24: 42');\n}\nmain();\n",
       "origin": "test/built-ins/Error/prototype/toString/undefined-props.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.the-initial-value-of-errorprototypemessage-is-the-empty-string",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Error('a').message, \"a\", 'The value of err1.message is \"a\"');\nassert.sameValue(new Error('a').message, \"a\", 'The value of err1.message is \"a\"');\nassert(!Error().hasOwnProperty('message'));\nassert(!new Error().hasOwnProperty('message'));\nassert.sameValue(new Error().message, Error.prototype.message, 'The value of new Error().message equals Error.prototype.message');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/the-initial-value-of-errorprototypemessage-is-the-empty-string.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.error.tostring-1",
+      "category": "error",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(new Error().toString(), 'Error', 'new Error.toString() returns \"Error\"');\n\nError.prototype.toString = Object.prototype.toString;\nassert.sameValue(new Error().toString(), '[object Error]', 'new Error.toString() returns \"[object Error]\" (Object.prototype.toString)');\n}\nmain();\n",
+      "origin": "test/built-ins/Error/tostring-1.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.error.tostring-2",
       "category": "error",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Error().toString());\n\nError.prototype.toString = Object.prototype.toString;\nconsole.log(Error().toString());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Error().toString(),\n  'Error',\n  'Error().toString() returns \"Error\"'\n);\n\nError.prototype.toString = Object.prototype.toString;\nassert.sameValue(\n  Error().toString(),\n  '[object Error]',\n  'Error().toString() returns \"[object Error]\" (Object.prototype.toString)'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Error/tostring-2.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     }
   ]
 }

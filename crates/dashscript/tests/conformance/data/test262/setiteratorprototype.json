@@ -1,0 +1,112 @@
+{
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.does-not-have-mapiterator-internal-slots-set",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set([1, 2]);\n\nvar iterator = set[Symbol.iterator]();\nassert.throws(TypeError, function() {\n  iterator.next.call(set);\n});\n\niterator = set.entries();\nassert.throws(TypeError, function() {\n  iterator.next.call(set);\n});\n\niterator = set.keys();\nassert.throws(TypeError, function() {\n  iterator.next.call(set);\n});\n\niterator = set.values();\nassert.throws(TypeError, function() {\n  iterator.next.call(set);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/does-not-have-mapiterator-internal-slots-set.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.does-not-have-mapiterator-internal-slots",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set([1, 2]);\n\nvar iterator = set[Symbol.iterator]();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\niterator = set.entries();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\niterator = set.keys();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\niterator = set.values();\nassert.throws(TypeError, function() {\n  iterator.next.call({});\n});\n\n// does not throw an Error\niterator.next.call(set[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/does-not-have-mapiterator-internal-slots.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.iteration-mutable",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set();\nset.add(1);\nset.add(2);\n\nvar iterator = set[Symbol.iterator]();\nvar result;\n\nresult = iterator.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nset.add(3);\n\nresult = iterator.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, 3, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, undefined, 'Exhausted result `value`');\nassert.sameValue(result.done, true, 'Exhausted result `done` flag');\n\nset.add(4);\n\nresult = iterator.next();\nassert.sameValue(\n  result.value, undefined, 'Exhausted result `value` (repeated request)'\n);\nassert.sameValue(\n  result.done, true, 'Exhausted result `done` flag (repeated request)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/iteration-mutable.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.iteration",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set();\nset.add(1);\nset.add(2);\nset.add(3);\n\nvar iterator = set[Symbol.iterator]();\nvar result;\n\nresult = iterator.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, 3, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, undefined, 'Exhausted result `value`');\nassert.sameValue(result.done, true, 'Exhausted result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(\n  result.value, undefined, 'Exhausted result `value` (repeated request)'\n);\nassert.sameValue(\n  result.done, true, 'Exhausted result `done` flag (repeated request)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/iteration.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.this-not-object-throw-entries",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set([1, 2]);\nvar iterator = set.entries();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(set[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/this-not-object-throw-entries.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.this-not-object-throw-keys",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set([\n  [1, 11],\n  [2, 22]\n]);\nvar iterator = set.keys();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(set[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/this-not-object-throw-keys.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.this-not-object-throw-prototype-iterator",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set([\n  [1, 11],\n  [2, 22]\n]);\nvar iterator = set[Symbol.iterator]();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(set[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/this-not-object-throw-prototype-iterator.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.next.this-not-object-throw-values",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set([\n  [1, 11],\n  [2, 22]\n]);\nvar iterator = set.values();\n\nassert.throws(TypeError, function() {\n  iterator.next.call(false);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(1);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call('');\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(null);\n});\n\nassert.throws(TypeError, function() {\n  iterator.next.call(Symbol());\n});\n\n// does not throw an Error\niterator.next.call(set[Symbol.iterator]());\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/next/this-not-object-throw-values.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.setiteratorprototype.symbol.tostringtag",
+      "category": "setiteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar SetIteratorProto = Object.getPrototypeOf(new Set()[Symbol.iterator]());\n\nassert.sameValue(\n  'Set Iterator',\n  SetIteratorProto[Symbol.toStringTag],\n  '`Set Iterator` is `SetIteratorProto[Symbol.toStringTag]`'\n);\n\nverifyProperty(SetIteratorProto, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SetIteratorPrototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    }
+  ]
+}

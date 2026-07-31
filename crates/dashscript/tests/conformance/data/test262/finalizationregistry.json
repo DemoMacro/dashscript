@@ -1,59 +1,522 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.finalizationregistry.constructor",
       "category": "finalizationregistry",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof FinalizationRegistry);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof FinalizationRegistry, 'function',\n  'typeof FinalizationRegistry is function'\n);\n}\nmain();\n",
       "origin": "test/built-ins/FinalizationRegistry/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.instance-extensible",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry = new FinalizationRegistry(function() {});\nassert.sameValue(Object.isExtensible(finalizationRegistry), true);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/instance-extensible.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.is-a-constructor",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(FinalizationRegistry), true, 'isConstructor(FinalizationRegistry) must return true');\nnew FinalizationRegistry(() => {});\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "FinalizationRegistry",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.newtarget-prototype-is-not-object",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry;\nfunction newTarget() {}\nfunction fn() {}\n\nnewTarget.prototype = undefined;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = 1;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/newtarget-prototype-is-not-object.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "Reflect.construct",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.proto-from-ctor-realm",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nfunction fn() {}\nvar finalizationRegistry;\n\nnewTarget.prototype = undefined;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), other.FinalizationRegistry.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), other.FinalizationRegistry.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), other.FinalizationRegistry.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), other.FinalizationRegistry.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), other.FinalizationRegistry.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = 1;\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [fn], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), other.FinalizationRegistry.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.finalizationregistry.proto",
       "category": "finalizationregistry",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(FinalizationRegistry));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(FinalizationRegistry),\n  Function.prototype,\n  'Object.getPrototypeOf(FinalizationRegistry) returns the value of `Function.prototype`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/FinalizationRegistry/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.finalizationregistry.prototype.proto",
       "category": "finalizationregistry",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(FinalizationRegistry.prototype);\nconsole.log(proto);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(FinalizationRegistry.prototype);\nassert.sameValue(proto, Object.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/FinalizationRegistry/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.custom-this",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar register = FinalizationRegistry.prototype.register;\nvar finalizationRegistry = new FinalizationRegistry(fn);\n\nvar target = {};\nassert.sameValue(register.call(finalizationRegistry, target), undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/custom-this.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.heldvalue-same-as-target",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry = new FinalizationRegistry(function() {});\n\nvar target = {};\nassert.throws(TypeError, () => finalizationRegistry.register(target, target));\n\n// The following will throw regardless of whether the implementation supports\n// Symbols as weak values. Step 3 if no, Step 4 if yes.\n\nvar symbolTarget = Symbol('a description');\nassert.throws(\n  TypeError,\n  () => finalizationRegistry.register(symbolTarget, symbolTarget),\n  'target and heldValue are the same regular symbol'\n);\n\nassert.throws(\n  TypeError,\n  () => finalizationRegistry.register(Symbol.hasInstance, Symbol.hasInstance),\n  'target and heldValue are the same well-known symbol'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/heldValue-same-as-target.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.holdings-any-value-type",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar finalizationRegistry = new FinalizationRegistry(fn);\n\nvar target = {};\nassert.sameValue(finalizationRegistry.register(target, undefined), undefined, 'undefined');\nassert.sameValue(finalizationRegistry.register(target, null), undefined, 'null');\nassert.sameValue(finalizationRegistry.register(target, false), undefined, 'false');\nassert.sameValue(finalizationRegistry.register(target, true), undefined, 'true');\nassert.sameValue(finalizationRegistry.register(target, Symbol()), undefined, 'symbol');\nassert.sameValue(finalizationRegistry.register(target, {}), undefined, 'object');\nassert.sameValue(finalizationRegistry.register(target, finalizationRegistry), undefined, 'same as finalizationRegistry instance');\nassert.sameValue(finalizationRegistry.register(target, 1), undefined, 'number');\nassert.sameValue(finalizationRegistry.register(target, 'holdings'), undefined, 'string');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/holdings-any-value-type.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.not-a-constructor",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(FinalizationRegistry.prototype.register),\n  false,\n  'isConstructor(FinalizationRegistry.prototype.register) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let fr = new FinalizationRegistry(() => {}); new fr.register({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "FinalizationRegistry",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.prop-desc",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.register, 'function');\n\nverifyProperty(FinalizationRegistry.prototype, 'register', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.return-undefined-register-itself",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar finalizationRegistry = new FinalizationRegistry(fn);\nvar holdings = {};\n\nassert.sameValue(finalizationRegistry.register(finalizationRegistry), undefined, 'Register itself');\nassert.sameValue(finalizationRegistry.register(finalizationRegistry, holdings), undefined, 'Register itself with holdings');\nassert.sameValue(finalizationRegistry.register(finalizationRegistry, holdings, finalizationRegistry), undefined, 'Register itself with holdings and unregisterToken');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/return-undefined-register-itself.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.return-undefined-register-object",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar finalizationRegistry = new FinalizationRegistry(fn);\n\nvar target = {};\nassert.sameValue(finalizationRegistry.register(target), undefined, 'Register a target');\nassert.sameValue(finalizationRegistry.register(target), undefined, 'Register the same target again');\nassert.sameValue(finalizationRegistry.register(target), undefined, 'Register the same target again and again');\n\nassert.sameValue(finalizationRegistry.register({}), undefined, 'Register other targets');\n\nassert.sameValue(finalizationRegistry.register(target, undefined, {}), undefined, 'Register target with unregisterToken');\nassert.sameValue(\n  finalizationRegistry.register(target, undefined, target),\n  undefined,\n  'Register target with unregisterToken being the registered target'\n);\n\nassert.sameValue(finalizationRegistry.register(target, undefined, undefined), undefined, 'Register target with explicit undefined unregisterToken');\n\nassert.sameValue(finalizationRegistry.register(fn), undefined, 'register the cleanup callback fn');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/return-undefined-register-object.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.return-undefined-register-symbol",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar reg = new FinalizationRegistry(fn);\n\nvar target = Symbol('a description');\nassert.sameValue(reg.register(target), undefined, 'Register a regular symbol');\nassert.sameValue(reg.register(target), undefined, 'Register the same symbol again');\nassert.sameValue(reg.register(target), undefined, 'Register the same symbol a third time');\n\nassert.sameValue(\n  reg.register(Symbol('a description')),\n  undefined,\n  'Register another symbol with the same description'\n);\nassert.sameValue(\n  reg.register(Symbol('a different description')),\n  undefined,\n  'Register another symbol with another description'\n);\n\nassert.sameValue(\n  reg.register(target, undefined, Symbol('unregister token')),\n  undefined,\n  'Register a regular symbol with a symbol unregister token'\n);\nassert.sameValue(\n  reg.register(target, undefined, target),\n  undefined,\n  'Register a regular symbol with itself as the unregister token'\n);\n\nassert.sameValue(\n  reg.register(target, undefined, undefined),\n  undefined,\n  'Register a regular symbol with explicit undefined unregister token'\n);\n\nassert.sameValue(reg.register(Symbol.hasInstance), undefined, 'Register a well-known symbol');\nassert.sameValue(reg.register(Symbol.hasInstance), undefined, 'Register the same well-known symbol again');\nassert.sameValue(reg.register(Symbol.hasInstance), undefined, 'Register the same well-known symbol a third time');\n\nassert.sameValue(\n  reg.register(target, undefined, Symbol.hasInstance),\n  undefined,\n  'Register a regular symbol with a well-known symbol unregister token'\n);\nassert.sameValue(\n  reg.register(Symbol.hasInstance, undefined, Symbol.iterator),\n  undefined,\n  'Register a well-known symbol with a different well-known symbol as unregister token'\n);\nassert.sameValue(\n  reg.register(Symbol.hasInstance, undefined, Symbol.hasInstance),\n  undefined,\n  'Register a well-known symbol with itself as the unregister token'\n);\n\nassert.sameValue(\n  reg.register(Symbol.hasInstance, undefined, undefined),\n  undefined,\n  'Register a well-known symbol with explicit undefined unregister token'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/return-undefined-register-symbol.js",
+      "n_asserts": 15,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "Symbol",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.this-does-not-have-internal-target-throws",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.register, 'function');\n\nvar register = FinalizationRegistry.prototype.register;\nvar target = {};\n\nassert.throws(TypeError, function() {\n  register.call({ ['[[Cells]]']: {} }, target);\n}, 'Ordinary object without [[Cells]]');\n\nassert.throws(TypeError, function() {\n  register.call(WeakRef.prototype, target);\n}, 'WeakRef.prototype does not have a [[Cells]] internal slot');\n\nassert.throws(TypeError, function() {\n  register.call(WeakRef, target);\n}, 'WeakRef does not have a [[Cells]] internal slot');\n\nvar wr = new WeakRef({});\nassert.throws(TypeError, function() {\n  register.call(wr, target);\n}, 'WeakRef instance');\n\nvar wm = new WeakMap();\nassert.throws(TypeError, function() {\n  register.call(wm, target);\n}, 'WeakMap instance');\n\nvar ws = new WeakSet();\nassert.throws(TypeError, function() {\n  register.call(ws, target);\n}, 'WeakSet instance');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/this-does-not-have-internal-target-throws.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "WeakSet",
+        "WeakMap",
+        "FinalizationRegistry",
+        "WeakRef"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.finalizationregistry.prototype.register.this-not-object-throws",
       "category": "finalizationregistry",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof FinalizationRegistry.prototype.register);\n\nvar register = FinalizationRegistry.prototype.register;\n\ntry { (function() {\n  register.call(undefined, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  register.call(null, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  register.call(true, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  register.call(false, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  register.call(1, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  register.call('object', {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  register.call(s, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.register, 'function');\n\nvar register = FinalizationRegistry.prototype.register;\n\nassert.throws(TypeError, function() {\n  register.call(undefined, {});\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  register.call(null, {});\n}, 'null');\n\nassert.throws(TypeError, function() {\n  register.call(true, {});\n}, 'true');\n\nassert.throws(TypeError, function() {\n  register.call(false, {});\n}, 'false');\n\nassert.throws(TypeError, function() {\n  register.call(1, {});\n}, 'number');\n\nassert.throws(TypeError, function() {\n  register.call('object', {});\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  register.call(s, {});\n}, 'symbol');\n}\nmain();\n",
       "origin": "test/built-ins/FinalizationRegistry/prototype/register/this-not-object-throws.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.throws-when-target-cannot-be-held-weakly",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.register, 'function');\n\nvar finalizationRegistry = new FinalizationRegistry(function() {});\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register('object');\n}, 'string');\n\nvar s = Symbol.for('registered symbol');\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(s);\n}, 'registered symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/throws-when-target-cannot-be-held-weakly.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.throws-when-unregistertoken-not-undefined-and-cannot-be-held-weakly",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.register, 'function');\n\nvar finalizationRegistry = new FinalizationRegistry(function() {});\nvar target = {};\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(target, undefined, null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(target, undefined, true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(target, undefined, false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(target, undefined, 1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(target, undefined, 'object');\n}, 'string');\n\nvar s = Symbol.for('registered symbol');\nassert.throws(TypeError, function() {\n  finalizationRegistry.register(target, undefined, s);\n}, 'registered symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/throws-when-unregisterToken-not-undefined-and-cannot-be-held-weakly.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.unregistertoken-same-as-holdings-and-target",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry = new FinalizationRegistry(function() {});\n\nvar target = {};\nassert.throws(TypeError, () => finalizationRegistry.register(target, target, target));\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/unregisterToken-same-as-holdings-and-target.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.unregistertoken-same-as-holdings",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry = new FinalizationRegistry(function() {});\n\nvar target = {};\nvar holdings = {};\nassert.sameValue(finalizationRegistry.register(target, holdings, holdings), undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/unregisterToken-same-as-holdings.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.register.unregistertoken-same-as-target",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry = new FinalizationRegistry(function() {});\n\nvar target = {};\nassert.sameValue(finalizationRegistry.register(target, '1', target), undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/register/unregisterToken-same-as-target.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.custom-this",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar unregister = FinalizationRegistry.prototype.unregister;\nvar finalizationRegistry = new FinalizationRegistry(fn);\n\nvar target1 = {};\nvar target2 = {};\nvar target3 = {};\nvar token1 = {};\nvar token2 = {};\n\nassert.sameValue(unregister.call(finalizationRegistry, token1), false, 'unregistering token1 from empty finalizationRegistry');\nassert.sameValue(unregister.call(finalizationRegistry, token2), false, 'unregistering token2 from empty finalizationRegistry');\n\nfinalizationRegistry.register(target1, undefined, token1);\nfinalizationRegistry.register(target2, undefined, token2);\nfinalizationRegistry.register(target3, undefined, token2);\n\nassert.sameValue(unregister.call(finalizationRegistry, target1), false, 'own target does not work on unregister, #1');\nassert.sameValue(unregister.call(finalizationRegistry, target2), false, 'own target does not work on unregister, #2');\nassert.sameValue(unregister.call(finalizationRegistry, target3), false, 'own target does not work on unregister, #3');\n\nassert.sameValue(unregister.call(finalizationRegistry, token1), true, 'unregistering token1 from finalizationRegistry');\nassert.sameValue(unregister.call(finalizationRegistry, token1), false, 'unregistering token1 again from finalizationRegistry');\nassert.sameValue(unregister.call(finalizationRegistry, token2), true, 'unregistering token2 to remove target2 and target3');\nassert.sameValue(unregister.call(finalizationRegistry, token2), false, 'unregistering token2 from empty finalizationRegistry');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/custom-this.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.not-a-constructor",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(FinalizationRegistry.prototype.unregister),\n  false,\n  'isConstructor(FinalizationRegistry.prototype.unregister) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let fr = new FinalizationRegistry(() => {}); let token = {}; fr.register(token); new fr.unregister(token);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "FinalizationRegistry",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.prop-desc",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.unregister, 'function');\n\nverifyProperty(FinalizationRegistry.prototype, 'unregister', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.this-does-not-have-internal-cells-throws",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.unregister, 'function');\n\nvar unregister = FinalizationRegistry.prototype.unregister;\nvar token = {};\n\nassert.throws(TypeError, function() {\n  unregister.call({ ['[[Cells]]']: {} }, token);\n}, 'Ordinary object without [[Cells]]');\n\nassert.throws(TypeError, function() {\n  unregister.call(WeakRef.prototype, token);\n}, 'WeakRef.prototype does not have a [[Cells]] internal slot');\n\nassert.throws(TypeError, function() {\n  unregister.call(WeakRef, token);\n}, 'WeakRef does not have a [[Cells]] internal slot');\n\nvar wr = new WeakRef({});\nassert.throws(TypeError, function() {\n  unregister.call(wr, token);\n}, 'WeakRef instance');\n\nvar wm = new WeakMap();\nassert.throws(TypeError, function() {\n  unregister.call(wm, token);\n}, 'WeakMap instance');\n\nvar ws = new WeakSet();\nassert.throws(TypeError, function() {\n  unregister.call(ws, token);\n}, 'WeakSet instance');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/this-does-not-have-internal-cells-throws.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "WeakSet",
+        "WeakMap",
+        "FinalizationRegistry",
+        "WeakRef"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.this-not-object-throws",
       "category": "finalizationregistry",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof FinalizationRegistry.prototype.unregister);\n\nvar unregister = FinalizationRegistry.prototype.unregister;\n\ntry { (function() {\n  unregister.call(undefined, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  unregister.call(null, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  unregister.call(true, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  unregister.call(false, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  unregister.call(1, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  unregister.call('object', {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol();\ntry { (function() {\n  unregister.call(s, {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.unregister, 'function');\n\nvar unregister = FinalizationRegistry.prototype.unregister;\n\nassert.throws(TypeError, function() {\n  unregister.call(undefined, {});\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  unregister.call(null, {});\n}, 'null');\n\nassert.throws(TypeError, function() {\n  unregister.call(true, {});\n}, 'true');\n\nassert.throws(TypeError, function() {\n  unregister.call(false, {});\n}, 'false');\n\nassert.throws(TypeError, function() {\n  unregister.call(1, {});\n}, 'number');\n\nassert.throws(TypeError, function() {\n  unregister.call('object', {});\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  unregister.call(s, {});\n}, 'symbol');\n}\nmain();\n",
       "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/this-not-object-throws.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.throws-when-unregistertoken-cannot-be-held-weakly",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof FinalizationRegistry.prototype.unregister, 'function');\n\nvar finalizationRegistry = new FinalizationRegistry(function() {});\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.unregister(undefined);\n}, 'undefined');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.unregister(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.unregister(true);\n}, 'true');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.unregister(false);\n}, 'false');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.unregister(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  finalizationRegistry.unregister('object');\n}, 'string');\n\nvar s = Symbol.for('registered symbol');\nassert.throws(TypeError, function() {\n  finalizationRegistry.unregister(s);\n}, 'registered symbol');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/throws-when-unregisterToken-cannot-be-held-weakly.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.unregister-object-token",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar finalizationRegistry = new FinalizationRegistry(fn);\n\nvar target1 = {};\nvar target2 = {};\nvar target3 = {};\nvar token1 = {};\nvar token2 = {};\n\nassert.sameValue(finalizationRegistry.unregister(token1), false, 'unregistering token1 from empty finalizationRegistry');\nassert.sameValue(finalizationRegistry.unregister(token2), false, 'unregistering token2 from empty finalizationRegistry');\n\nfinalizationRegistry.register(target1, undefined, token1);\nfinalizationRegistry.register(target1, undefined, token1); // Repeat registering un purpose\nfinalizationRegistry.register(target2, undefined, token2);\nfinalizationRegistry.register(target3, undefined, token2);\n\nassert.sameValue(finalizationRegistry.unregister(target1), false, 'own target does not work on unregister, #1');\nassert.sameValue(finalizationRegistry.unregister(target2), false, 'own target does not work on unregister, #2');\nassert.sameValue(finalizationRegistry.unregister(target3), false, 'own target does not work on unregister, #3');\n\nassert.sameValue(finalizationRegistry.unregister(token1), true, 'unregistering token1 from finalizationRegistry');\nassert.sameValue(finalizationRegistry.unregister(token1), false, 'unregistering token1 again from finalizationRegistry');\nassert.sameValue(finalizationRegistry.unregister(token2), true, 'unregistering token2 to remove target2 and target3');\nassert.sameValue(finalizationRegistry.unregister(token2), false, 'unregistering token2 from empty finalizationRegistry');\n\n// Notice these assertions take advantage of adding targets previously added with a token,\n// but now they got no token so it won't be used to remove them.\nfinalizationRegistry.register(target1, token1); // holdings, not unregisterToken\nfinalizationRegistry.register(target2, token2); // holdings, not unregisterToken\nfinalizationRegistry.register(target3);\n\nassert.sameValue(finalizationRegistry.unregister(token1), false, 'nothing to remove without a set unregisterToken #1');\nassert.sameValue(finalizationRegistry.unregister(token2), false, 'nothing to remove without a set unregisterToken #2');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/unregister-object-token.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype.unregister.unregister-symbol-token",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar fn = function() {};\nvar reg = new FinalizationRegistry(fn);\n\nvar target1 = {};\nvar target2 = {};\nvar target3 = {};\nvar token = Symbol('unregister');\n\nassert.sameValue(reg.unregister(token), false, 'unregistering regular symbol from empty registry');\nassert.sameValue(reg.unregister(Symbol.hasInstance), false, 'unregistering well-known symbol from empty registry');\n\nreg.register(target1, undefined, token);\nreg.register(target1, undefined, token); // Repeat registering on purpose\nreg.register(target2, undefined, Symbol.hasInstance);\nreg.register(target3, undefined, Symbol.hasInstance);\n\nassert.sameValue(reg.unregister(token), true, 'unregistering regular symbol from finalization registry');\nassert.sameValue(reg.unregister(token), false, 'unregistering regular symbol again from finalization registry');\nassert.sameValue(\n  reg.unregister(Symbol.hasInstance),\n  true,\n  'unregistering well-known symbol to remove target2 and target3'\n);\nassert.sameValue(\n  reg.unregister(Symbol.hasInstance),\n  false,\n  'unregistering well-known again from finalization registry'\n);\n\n// Notice these assertions take advantage of adding targets previously added\n// with a token, but now they have no token so it won't be used to remove them.\nreg.register(target1, token); // heldValue, not unregisterToken\nreg.register(target2, Symbol.hasInstance); // heldValue, not unregisterToken\nreg.register(target3);\n\nassert.sameValue(reg.unregister(token), false, 'nothing to remove with regular symbol unregister token');\nassert.sameValue(\n  reg.unregister(Symbol.hasInstance),\n  false,\n  'nothing to remove with well-known symbol unregister token'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype/unregister/unregister-symbol-token.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "Symbol",
+        "symbols-as-weakmap-keys"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype-from-newtarget-abrupt",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar calls = 0;\nvar newTarget = function() {}.bind(null);\nObject.defineProperty(newTarget, 'prototype', {\n  get: function() {\n    calls += 1;\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  Reflect.construct(FinalizationRegistry, [function() {}], newTarget);\n});\n\nassert.sameValue(calls, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype-from-newtarget-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype-from-newtarget-custom",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry;\n\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [function() {}], Object);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), Object.prototype, 'NewTarget is built-in Object constructor');\n\nvar newTarget = function() {}.bind(null);\nObject.defineProperty(newTarget, 'prototype', {\n  get: function() {\n    return Array.prototype;\n  }\n});\nfinalizationRegistry = Reflect.construct(FinalizationRegistry, [function() {}], newTarget);\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), Array.prototype, 'NewTarget is BoundFunction with accessor');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype-from-newtarget-custom.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.prototype-from-newtarget",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finalizationRegistry = new FinalizationRegistry(function() {});\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/prototype-from-newtarget.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.returns-new-object-from-constructor",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar cleanupCallback = function() {};\nvar finalizationRegistry = new FinalizationRegistry(cleanupCallback);\n\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype);\nassert.notSameValue(finalizationRegistry, cleanupCallback, 'does not return the same function');\nassert.sameValue(finalizationRegistry instanceof FinalizationRegistry, true, 'instanceof');\n\nfor (let key of Object.getOwnPropertyNames(finalizationRegistry)) {\n  assert(false, `should not set any own named properties: ${key}`);\n}\n\nfor (let key of Object.getOwnPropertySymbols(finalizationRegistry)) {\n  assert(false, `should not set any own symbol properties: ${String(key)}`);\n}\n\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/returns-new-object-from-constructor.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "for-of"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.target-not-callable-throws",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof FinalizationRegistry, 'function',\n  'typeof FinalizationRegistry is function'\n);\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry({});\n}, 'ordinary object');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(WeakRef.prototype);\n}, 'WeakRef.prototype');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(FinalizationRegistry.prototype);\n}, 'FinalizationRegistry.prototype');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry([]);\n}, 'Array');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry();\n}, 'implicit undefined');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(undefined);\n}, 'explicit undefined');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(null);\n}, 'null');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(1);\n}, 'number');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry('Object');\n}, 'string');\n\nvar s = Symbol();\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(s);\n}, 'symbol');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(true);\n}, 'Boolean, true');\n\nassert.throws(TypeError, function() {\n  new FinalizationRegistry(false);\n}, 'Boolean, false');\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/target-not-callable-throws.js",
+      "n_asserts": 13,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry",
+        "WeakRef"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.finalizationregistry.undefined-newtarget-throws",
       "category": "finalizationregistry",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof FinalizationRegistry);\n\ntry { (function() {\n  FinalizationRegistry();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  FinalizationRegistry(function() {});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof FinalizationRegistry, 'function',\n  'typeof FinalizationRegistry is function'\n);\n\nassert.throws(TypeError, function() {\n  FinalizationRegistry();\n});\n\nassert.throws(TypeError, function() {\n  FinalizationRegistry(function() {});\n});\n}\nmain();\n",
       "origin": "test/built-ins/FinalizationRegistry/undefined-newtarget-throws.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.finalizationregistry.unnaffected-by-poisoned-cleanupcallback",
+      "category": "finalizationregistry",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar cleanupCallback = function() { throw new Test262Error('should not throw yet'); };\nvar finalizationRegistry = new FinalizationRegistry(cleanupCallback);\n\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype);\nassert.notSameValue(finalizationRegistry, cleanupCallback, 'does not return the same function');\nassert.sameValue(finalizationRegistry instanceof FinalizationRegistry, true, 'instanceof');\n\nfor (let key of Object.getOwnPropertyNames(finalizationRegistry)) {\n  assert(false, `should not set any own named properties: ${key}`);\n}\n\nfor (let key of Object.getOwnPropertySymbols(finalizationRegistry)) {\n  assert(false, `should not set any own symbol properties: ${String(key)}`);\n}\n\nassert.sameValue(Object.getPrototypeOf(finalizationRegistry), FinalizationRegistry.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/FinalizationRegistry/unnaffected-by-poisoned-cleanupCallback.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "FinalizationRegistry"
+      ],
+      "includes": []
     }
   ]
 }

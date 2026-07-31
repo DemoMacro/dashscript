@@ -1,50 +1,607 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.absent-value-not-passed",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar nextArgumentsLength;\nvar syncIterator = {\n  [Symbol.iterator]() {\n    return this;\n  },\n  next() {\n    nextArgumentsLength = arguments.length;\n    return {done: true};\n  },\n};\n\nasyncTest(async function () {\n  for await (let _ of syncIterator);\n\n  assert.sameValue(nextArgumentsLength, 0);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/absent-value-not-passed.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.for-await-iterator-next-rejected-promise-close",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finallyCount = 0;\nvar caught = false;\n\nfunction* iterator() {\n  try {\n    yield Promise.reject(\"reject\");\n  } finally {\n    finallyCount += 1;\n  }\n}\n\nasyncTest(async () => {\n  try {\n    for await (const x of iterator());\n  } catch (e) {\n    caught = true;\n    assert.sameValue(e, \"reject\");\n  }\n\n  assert.sameValue(finallyCount, 1);\n  assert(caught);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/for-await-iterator-next-rejected-promise-close.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.for-await-next-rejected-promise-close",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\nvar caught = false;\n\nconst syncIterator = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: Promise.reject(\"reject\"), done: false };\n      },\n      return() {\n        returnCount += 1;\n      }\n    };\n  }\n}\n\nasyncTest(async () => {\n  try {\n    for await (let _ of syncIterator);\n  } catch (e) {\n    caught = true;\n    assert.sameValue(e, \"reject\");\n  }\n\n  assert.sameValue(returnCount, 1);\n  assert(caught);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/for-await-next-rejected-promise-close.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-poisoned-done",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {\n          get done() {\n            throw thrownError;\n          },\n          value: 1\n        }\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nasyncg().next().then(\n  function (result) {\n    throw new Test262Error(\"Promise should be rejected.\");\n  },\n  function (err) {\n    assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n  }\n).then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-poisoned-done.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-poisoned-value",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {\n          get value() {\n            throw thrownError;\n          },\n          done: false\n        }\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nasyncg().next().then(\n  function (result) {\n    throw new Test262Error(\"Promise should be rejected.\");\n  },\n  function (err) {\n    assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n  }\n).then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-poisoned-value.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-poisoned-wrapper",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finallyCount = 0;\nfunction CatchError() {}\nvar thrownError = new CatchError();\n\nfunction* gen() {\n  try {\n    const p = Promise.resolve('FAIL');\n    Object.defineProperty(p, 'constructor', {\n      get() {\n        throw thrownError;\n      }\n    });\n    yield p;\n  } finally {\n    finallyCount += 1;\n  }\n}\n\nasync function* iter() {\n  yield* gen();\n}\n\nasyncTest(async function () {\n  await assert.throwsAsync(CatchError, async () => iter().next(), \"Promise should be rejected\");\n  assert.sameValue(finallyCount, 1, 'iterator closed properly');\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-poisoned-wrapper.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
     {
       "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-prototype",
       "category": "asyncfromsynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nasyncg().next().then(function (result) {\n  console.log(Object.prototype.hasOwnProperty.call(result, 'value'));\n  console.log(Object.prototype.hasOwnProperty.call(result, 'done'));\n  console.log(Object.getPrototypeOf(result));\n}).then($DONE, $DONE);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nasyncg().next().then(function (result) {\n  assert(\n    Object.prototype.hasOwnProperty.call(result, 'value'), 'Has \"own\" property `value`'\n  );\n  assert(\n    Object.prototype.hasOwnProperty.call(result, 'done'), 'Has \"own\" property `done`'\n  );\n  assert.sameValue(Object.getPrototypeOf(result), Object.prototype);\n}).then($DONE, $DONE);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-prototype.js",
       "n_asserts": 3,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-rejected",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nfunction* g() {\n  throw thrownError;\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nasyncg().next().then(\n  function (result) {\n    throw new Test262Error(\"Promise should be rejected.\");\n  },\n  function (err) {\n    assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n  }\n).then($DONE, $DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-rejected.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.iterator-result-unwrap-promise",
       "category": "asyncfromsynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {\n  yield Promise.resolve(1);\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nasyncg().next().then(function (result) {\n  console.log(result.value)\n}).then($DONE, $DONE);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield Promise.resolve(1);\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nasyncg().next().then(function (result) {\n  assert.sameValue(result.value, 1, \"result.value should be unwrapped promise, got: \" + result.value)\n}).then($DONE, $DONE);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/iterator-result-unwrap-promise.js",
       "n_asserts": 1,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.next-result-poisoned-wrapper",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\nfunction CatchError() {}\nvar thrownError = new CatchError();\n\nconst obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        const p = Promise.resolve('FAIL');\n        Object.defineProperty(p, 'constructor', {\n          get() {\n            throw thrownError;\n          }\n        });\n        return { value: p, done: false };\n      },\n      return() {\n        returnCount += 1;\n      }\n    };\n  }\n};\n\nasync function* iter() {\n  yield* obj;\n}\n\nasyncTest(async function () {\n  await assert.throwsAsync(CatchError, async () => iter().next(), \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1, 'iterator closed properly');\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/next-result-poisoned-wrapper.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.return-promise",
       "category": "asyncfromsynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nvar result = asyncg().next();\nconsole.log(result instanceof Promise)\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nvar result = asyncg().next();\nassert(result instanceof Promise)\n}\nmain();\n",
       "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/return-promise.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.yield-iterator-next-rejected-promise-close",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar finallyCount = 0;\nfunction Reject() {}\n\nfunction* iterator() {\n  try {\n    yield Promise.reject(new Reject());\n  } finally {\n    finallyCount += 1;\n  }\n}\n\nasync function* asyncIterator() {\n  yield* iterator()\n}\n\nasyncTest(async () => {\n  await assert.throwsAsync(Reject, async () => asyncIterator().next(), \"Promise should be rejected\");\n  assert.sameValue(finallyCount, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/yield-iterator-next-rejected-promise-close.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.next.yield-next-rejected-promise-close",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\nfunction Reject() {}\n\nconst syncIterator = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: Promise.reject(new Reject()), done: false };\n      },\n      return() {\n        returnCount += 1;\n      }\n    };\n  }\n}\n\nasync function* asyncIterator() {\n  yield* syncIterator;\n}\n\nasyncTest(async () => {\n  await assert.throwsAsync(Reject, async () => asyncIterator().next(), \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/next/yield-next-rejected-promise-close.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.absent-value-not-passed",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnArgumentsLength;\nvar syncIterator = {\n  [Symbol.iterator]() {\n    return this;\n  },\n  next() {\n    return {done: false};\n  },\n  return() {\n    returnArgumentsLength = arguments.length;\n    return {done: true};\n  },\n};\n\nasyncTest(async function () {\n  for await (let _ of syncIterator) {\n    break;\n  }\n\n  assert.sameValue(returnArgumentsLength, 0);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/absent-value-not-passed.js",
+      "n_asserts": 1,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.iterator-result-poisoned-done",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      return() {\n        return {\n          get done() {\n            throw thrownError;\n          },\n          value: 1\n        }\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/iterator-result-poisoned-done.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.iterator-result-poisoned-value",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      return() {\n        return {\n          get value() {\n            throw thrownError;\n          },\n          done: false\n        }\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/iterator-result-poisoned-value.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.iterator-result-unwrap-promise",
       "category": "asyncfromsynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      return() {\n        return {\n          value: Promise.resolve(42),\n          done: true\n        };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nlet iter = asyncg();\n\niter.next().then(function (result) {\n  iter.return().then(\n    function (result) {\n      console.log(result.value);\n\n      iter.next().then(({ done, value }) => {\n        console.log(done);\n        console.log(value);\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      return() {\n        return {\n          value: Promise.resolve(42),\n          done: true\n        };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nlet iter = asyncg();\n\niter.next().then(function (result) {\n  iter.return().then(\n    function (result) {\n      assert.sameValue(result.value, 42, \"Result.value should be unwrapped, got: \" + result.value);\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/iterator-result-unwrap-promise.js",
       "n_asserts": 3,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.iterator-result",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 42;\n  throw new Test262Error('return closes iter');\n  yield 43;\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nvar iter = asyncg();\nvar val = 'some specific return value'\n\niter.next().then(function(result) {\n\n  // return will call sync generator prototype built-in function return\n  iter.return(val).then(function(result) {\n\n    assert.sameValue(result.done, true, 'the iterator is completed');\n    assert.sameValue(result.value, val, 'expect agrument to `return`');\n\n    iter.next().then(({ done, value }) => {\n      assert.sameValue(done, true, 'the iterator is completed');\n      assert.sameValue(value, undefined, 'value is undefined');\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/iterator-result.js",
+      "n_asserts": 4,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.poisoned-get-return",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      get return() {\n        throw thrownError;\n      }\n    }\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/poisoned-get-return.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.poisoned-return",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      return() {\n        throw thrownError;\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/poisoned-return.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.result-object-error",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      return() {\n        return 1;\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      let typeerror = err instanceof TypeError;\n      assert(typeerror, \"Expect TypeError, got: \" + err);\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/result-object-error.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.return-null",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterationCount = 0;\nvar returnGets = 0;\n\nvar syncIterator = {\n  [Symbol.iterator]() {\n    return this;\n  },\n  next() {\n    return {value: 1, done: false};\n  },\n  get return() {\n    returnGets += 1;\n    return null;\n  },\n};\n\nasyncTest(async function() {\n  for await (let _ of syncIterator) {\n    iterationCount += 1;\n    break;\n  }\n\n  assert.sameValue(iterationCount, 1);\n  assert.sameValue(returnGets, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/return-null.js",
+      "n_asserts": 2,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.asyncfromsynciteratorprototype.return.return-undefined",
       "category": "asyncfromsynciteratorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(function(result) {\n\n    console.log(result.done);\n    console.log(result.value);\n\n    iter.next().then(({ done, value }) => {\n      console.log(done);\n      console.log(value);\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.return().then(function(result) {\n\n    assert.sameValue(result.done, true, 'the iterator is completed');\n    assert.sameValue(result.value, undefined, 'expect value to be undefined');\n\n    iter.next().then(({ done, value }) => {\n      assert.sameValue(done, true, 'the iterator is completed');\n      assert.sameValue(value, undefined, 'value is undefined');\n    }).then($DONE, $DONE);\n\n  }).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
       "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/return/return-undefined.js",
       "n_asserts": 4,
-      "flags": ["async"]
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.iterator-result-poisoned-done",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      throw() {\n        return {\n          get done() {\n            throw thrownError;\n          },\n          value: 1\n        };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.throw().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/iterator-result-poisoned-done.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.iterator-result-poisoned-value",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      throw() {\n        return {\n          get value() {\n            throw thrownError;\n          },\n          done: false\n        };\n      }\n    }\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.throw().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/iterator-result-poisoned-value.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.iterator-result-rejected-promise-close",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\nfunction Reject() {}\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      throw() {\n        return {\n          value: Promise.reject(new Reject()),\n          done: false\n        };\n      },\n      return() {\n        returnCount += 1;\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  return yield* obj;\n}\n\nlet iter = asyncg();\n\nasyncTest(async function () {\n  await assert.throwsAsync(Reject, async () => {\n    await iter.next();\n    return iter.throw();\n  }, \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1);\n  const result = await iter.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/iterator-result-rejected-promise-close.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.iterator-result-unwrap-promise",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Don't catch me.\")\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      throw() {\n        return {\n          value: Promise.resolve(42),\n          done: true\n        };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  return yield* obj;\n}\n\nlet iter = asyncg();\n\niter.next().then(function (result) {\n  iter.throw(thrownError).then(\n    function (result) {\n      assert.sameValue(result.value, 42, \"Result.value should be unwrapped, got: \" + result.value);\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/iterator-result-unwrap-promise.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.iterator-result",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\")\n\nfunction* g() {\n  yield 42;\n  throw new Test262Error('throw closes iter');\n  yield 43;\n}\n\nasync function* asyncg() {\n  yield* g();\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  // throw will call sync generator prototype built-in function throw\n  iter.throw(thrownError).then(\n    function(result) {\n      throw new Test262Error('throw should cause rejection of promise');\n    },\n    function(err) {\n      assert.sameValue(err, thrownError, \"promise should be reject with custom error, got: \" + err)\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/iterator-result.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.poisoned-get-throw",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      get throw() {\n        throw thrownError;\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.throw().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/poisoned-get-throw.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.poisoned-throw",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Catch me.\");\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      throw() {\n        throw thrownError;\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.throw().then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      assert.sameValue(err, thrownError, \"Promise should be rejected with thrown error\");\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/poisoned-throw.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.result-object-error",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar thrownError = new Error(\"Don't catch me.\")\n\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      throw() {\n        return 1;\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\niter.next().then(function(result) {\n\n  iter.throw(thrownError).then(\n    function (result) {\n      throw new Test262Error(\"Promise should be rejected, got: \" + result.value);\n    },\n    function (err) {\n      let typeerror = err instanceof TypeError;\n      assert(typeerror, \"Expect TypeError, got: \" + err);\n\n      iter.next().then(({ done, value }) => {\n        assert.sameValue(done, true, 'the iterator is completed');\n        assert.sameValue(value, undefined, 'value is undefined');\n      }).then($DONE, $DONE);\n    }\n  ).catch($DONE);\n\n}).catch($DONE);\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/result-object-error.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.throw-null",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar throwGets = 0;\nvar syncIterator = {\n  [Symbol.iterator]() {\n    return this;\n  },\n  next() {\n    return {value: 1, done: false};\n  },\n  get throw() {\n    throwGets += 1;\n    return null;\n  },\n};\n\nasync function* asyncGenerator() {\n  yield* syncIterator;\n}\n\nvar asyncIterator = asyncGenerator();\nvar thrownError = { name: \"err\" };\n\nasyncTest(async function () {\n  await assert.throwsAsync(TypeError, async () => {\n    await asyncIterator.next();\n    return asyncIterator.throw(thrownError);\n  }, \"Promise should be rejected\");\n  const result = await asyncIterator.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/throw-null.js",
+      "n_asserts": 2,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.throw-result-poisoned-wrapper",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\nfunction CatchError() {}\nvar thrownError = new CatchError();\nvar uncaughtError = new Error(\"Don't catch me\");\n\nconst obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      },\n      throw() {\n        const p = Promise.resolve('FAIL');\n        Object.defineProperty(p, 'constructor', {\n          get() {\n            throw thrownError;\n          }\n        });\n        return { value: p, done: false };\n      },\n      return() {\n        returnCount += 1;\n        return { value: undefined, done: true };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  return yield* obj;\n}\n\nlet iter = asyncg();\n\nasyncTest(async function () {\n  await assert.throwsAsync(CatchError, async () => {\n    await iter.next();\n    return iter.throw(uncaughtError);\n  }, \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1, 'iterator closed properly');\n  const result = await iter.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/throw-result-poisoned-wrapper.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.throw-undefined-get-return-undefined",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\n\nconst obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {value: 1, done: false};\n      },\n      get return() {\n        returnCount += 1;\n        return undefined;\n      }\n    };\n  }\n};\n\nasync function* wrapper() {\n  yield* obj;\n}\n\nvar iter = wrapper();\n\nasyncTest(async function () {\n  await assert.throwsAsync(TypeError, async () => {\n    await iter.next();\n    return iter.throw();\n  }, \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1, 'iterator closed properly');\n  const result = await iter.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/throw-undefined-get-return-undefined.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.throw-undefined-poisoned-return",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\nfunction CatchError() {}\nvar thrownError = new CatchError();\n\nconst obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {value: 1, done: false};\n      },\n      get return() {\n        returnCount += 1;\n        throw thrownError;\n      }\n    };\n  }\n};\n\nasync function* wrapper() {\n  yield* obj;\n}\n\nvar iter = wrapper();\n\nasyncTest(async function () {\n  await assert.throwsAsync(CatchError, async () => {\n    await iter.next();\n    return iter.throw();\n  }, \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1, 'iterator closed properly');\n  const result = await iter.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/throw-undefined-poisoned-return.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.throw-undefined-return-not-object",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\n\nconst obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {value: 1, done: false};\n      },\n      return() {\n        returnCount += 1;\n        return 2;\n      }\n    };\n  }\n};\n\nasync function* wrapper() {\n  yield* obj;\n}\n\nvar iter = wrapper();\n\nasyncTest(async function () {\n  await assert.throwsAsync(TypeError, async () => {\n    await iter.next();\n    return iter.throw();\n  }, \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1, 'iterator closed properly');\n  const result = await iter.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/throw-undefined-return-not-object.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.throw-undefined-return-object",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar returnCount = 0;\n\nconst obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {value: 1, done: false};\n      },\n      return() {\n        returnCount += 1;\n        return {value: 2, done: true};\n      }\n    };\n  }\n};\n\nasync function* wrapper() {\n  yield* obj;\n}\n\nvar iter = wrapper();\n\nasyncTest(async function () {\n  await assert.throwsAsync(TypeError, async () => {\n    await iter.next();\n    return iter.throw();\n  }, \"Promise should be rejected\");\n  assert.sameValue(returnCount, 1, 'iterator closed properly');\n  const result = await iter.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/throw-undefined-return-object.js",
+      "n_asserts": 3,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.asyncfromsynciteratorprototype.throw.throw-undefined",
+      "category": "asyncfromsynciteratorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return { value: 1, done: false };\n      }\n    };\n  }\n};\n\nasync function* asyncg() {\n  yield* obj;\n}\n\nvar iter = asyncg();\n\nasyncTest(async function () {\n  await assert.throwsAsync(TypeError, async () => {\n    await iter.next();\n    return iter.throw();\n  }, \"Promise should be rejected\");\n  const result = await iter.next();\n  assert(result.done, \"the iterator is completed\");\n  assert.sameValue(result.value, undefined, \"value is undefined\");\n})\n}\nmain();\n",
+      "origin": "test/built-ins/AsyncFromSyncIteratorPrototype/throw/throw-undefined.js",
+      "n_asserts": 2,
+      "flags": [
+        "async"
+      ],
+      "features": [
+        "async-iteration"
+      ],
+      "includes": [
+        "asyncHelpers.js"
+      ]
     }
   ]
 }

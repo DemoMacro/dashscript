@@ -1,104 +1,139 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.throwtypeerror.distinct-cross-realm",
+      "category": "throwtypeerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar localArgs = function() {\n  \"use strict\";\n  return arguments;\n}();\nvar otherArgs = (new other.Function('\"use strict\"; return arguments;'))();\nvar otherArgs2 = (new other.Function('\"use strict\"; return arguments;'))();\nvar localThrowTypeError = Object.getOwnPropertyDescriptor(localArgs, \"callee\").get;\nvar otherThrowTypeError = Object.getOwnPropertyDescriptor(otherArgs, \"callee\").get;\nvar otherThrowTypeError2 = Object.getOwnPropertyDescriptor(otherArgs, \"callee\").get;\n\nassert.throws(TypeError, function() {\n  localThrowTypeError();\n});\nassert.throws(other.TypeError, function() {\n  otherThrowTypeError();\n});\n\nassert.notSameValue(localThrowTypeError, otherThrowTypeError);\nassert.sameValue(otherThrowTypeError, otherThrowTypeError2);\n}\nmain();\n",
+      "origin": "test/built-ins/ThrowTypeError/distinct-cross-realm.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "cross-realm"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.throwtypeerror.extensible",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nconsole.log(Object.isExtensible(ThrowTypeError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nassert.sameValue(Object.isExtensible(ThrowTypeError), false);\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/extensible.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.forbidden-arguments",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nconsole.log(Object.prototype.hasOwnProperty.call(ThrowTypeError, \"arguments\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nassert.sameValue(Object.prototype.hasOwnProperty.call(ThrowTypeError, \"arguments\"), false);\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/forbidden-arguments.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.forbidden-caller",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nconsole.log(Object.prototype.hasOwnProperty.call(ThrowTypeError, \"caller\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nassert.sameValue(Object.prototype.hasOwnProperty.call(ThrowTypeError, \"caller\"), false);\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/forbidden-caller.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.frozen",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nconsole.log(Object.isFrozen(ThrowTypeError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nassert.sameValue(Object.isFrozen(ThrowTypeError), true);\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/frozen.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.is-function",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nconsole.log(typeof ThrowTypeError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nassert.sameValue(typeof ThrowTypeError, \"function\");\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/is-function.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.property-order",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nvar propNames = Object.getOwnPropertyNames(ThrowTypeError);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nconsole.log(lengthIndex >= 0 && nameIndex === lengthIndex + 1);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nvar propNames = Object.getOwnPropertyNames(ThrowTypeError);\nvar lengthIndex = propNames.indexOf(\"length\");\nvar nameIndex = propNames.indexOf(\"name\");\n\nassert(lengthIndex >= 0 && nameIndex === lengthIndex + 1,\n  \"The `length` property comes before the `name` property on built-in functions\");\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/property-order.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.prototype",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nconsole.log(Object.getPrototypeOf(ThrowTypeError));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nassert.sameValue(Object.getPrototypeOf(ThrowTypeError), Function.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/prototype.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.throws-type-error",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\ntry { (function() {\n  ThrowTypeError();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\nassert.throws(TypeError, function() {\n  ThrowTypeError();\n});\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/throws-type-error.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.unique-per-realm-function-proto",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\n// Test with Function.prototype.arguments and Function.prototype.caller properties.\nvar argumentsDesc = Object.getOwnPropertyDescriptor(Function.prototype, \"arguments\");\nvar callerDesc = Object.getOwnPropertyDescriptor(Function.prototype, \"caller\");\n\nconsole.log(ThrowTypeError);\nconsole.log(ThrowTypeError);\nconsole.log(ThrowTypeError);\nconsole.log(ThrowTypeError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\n// Test with Function.prototype.arguments and Function.prototype.caller properties.\nvar argumentsDesc = Object.getOwnPropertyDescriptor(Function.prototype, \"arguments\");\nvar callerDesc = Object.getOwnPropertyDescriptor(Function.prototype, \"caller\");\n\nassert.sameValue(ThrowTypeError, argumentsDesc.get, \"arguments.get\");\nassert.sameValue(ThrowTypeError, argumentsDesc.set, \"arguments.set\");\nassert.sameValue(ThrowTypeError, callerDesc.set, \"caller.set\");\nassert.sameValue(ThrowTypeError, callerDesc.get, \"caller.get\");\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/unique-per-realm-function-proto.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.unique-per-realm-non-simple",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\n// Test with unmapped arguments object from function with non-simple parameters list.\nfunction nonSimple(a = 0) {\n  return arguments;\n}\nvar unmappedCalleeDesc = Object.getOwnPropertyDescriptor(nonSimple(), \"callee\");\n\nconsole.log(ThrowTypeError);\nconsole.log(ThrowTypeError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\n// Test with unmapped arguments object from function with non-simple parameters list.\nfunction nonSimple(a = 0) {\n  return arguments;\n}\nvar unmappedCalleeDesc = Object.getOwnPropertyDescriptor(nonSimple(), \"callee\");\n\nassert.sameValue(ThrowTypeError, unmappedCalleeDesc.get, \"callee.get\");\nassert.sameValue(ThrowTypeError, unmappedCalleeDesc.set, \"callee.set\");\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/unique-per-realm-non-simple.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.throwtypeerror.unique-per-realm-unmapped-args",
       "category": "throwtypeerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\n// Test with unmapped arguments object from strict-mode function.\nfunction strictFn() {\n  \"use strict\";\n  return arguments;\n}\nvar unmappedCalleeDesc = Object.getOwnPropertyDescriptor(strictFn(), \"callee\");\n\nconsole.log(ThrowTypeError);\nconsole.log(ThrowTypeError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar ThrowTypeError = Object.getOwnPropertyDescriptor(function() {\n  \"use strict\";\n  return arguments;\n}(), \"callee\").get;\n\n// Test with unmapped arguments object from strict-mode function.\nfunction strictFn() {\n  \"use strict\";\n  return arguments;\n}\nvar unmappedCalleeDesc = Object.getOwnPropertyDescriptor(strictFn(), \"callee\");\n\nassert.sameValue(ThrowTypeError, unmappedCalleeDesc.get, \"callee.get\");\nassert.sameValue(ThrowTypeError, unmappedCalleeDesc.set, \"callee.set\");\n}\nmain();\n",
       "origin": "test/built-ins/ThrowTypeError/unique-per-realm-unmapped-args.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     }
   ]
 }

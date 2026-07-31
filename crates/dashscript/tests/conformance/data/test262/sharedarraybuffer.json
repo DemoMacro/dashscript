@@ -1,149 +1,1275 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.allocation-limit",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(RangeError, function() {\n  // Allocating 7 PiB should fail with a RangeError.\n  // Math.pow(1024, 5) = 1125899906842624\n  new SharedArrayBuffer(7 * 1125899906842624);\n}, \"`length` parameter is 7 PiB\");\n\nassert.throws(RangeError, function() {\n  // Allocating almost 8 PiB should fail with a RangeError.\n  // Math.pow(2, 53) = 9007199254740992\n  new SharedArrayBuffer(9007199254740992 - 1);\n}, \"`length` parameter is Math.pow(2, 53) - 1\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/allocation-limit.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.data-allocation-after-object-creation",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction DummyError() {}\n\nvar newTarget = function() {}.bind(null);\nObject.defineProperty(newTarget, \"prototype\", {\n  get: function() {\n    throw new DummyError();\n  }\n});\n\nassert.throws(DummyError, function() {\n  // Allocating 7 PiB should fail with a RangeError.\n  // Math.pow(1024, 5) = 1125899906842624\n  Reflect.construct(SharedArrayBuffer, [7 * 1125899906842624], newTarget);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/data-allocation-after-object-creation.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.init-zero",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar view = new DataView(new SharedArrayBuffer(9));\n\nassert.sameValue(view.getUint8(0), 0, 'index 0');\nassert.sameValue(view.getUint8(1), 0, 'index 1');\nassert.sameValue(view.getUint8(2), 0, 'index 2');\nassert.sameValue(view.getUint8(3), 0, 'index 3');\nassert.sameValue(view.getUint8(4), 0, 'index 4');\nassert.sameValue(view.getUint8(5), 0, 'index 5');\nassert.sameValue(view.getUint8(6), 0, 'index 6');\nassert.sameValue(view.getUint8(7), 0, 'index 7');\nassert.sameValue(view.getUint8(8), 0, 'index 8');\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/init-zero.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "DataView"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.is-a-constructor",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(SharedArrayBuffer), true, 'isConstructor(SharedArrayBuffer) must return true');\nnew SharedArrayBuffer(1);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "SharedArrayBuffer"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.length-is-absent",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar buffer = new SharedArrayBuffer();\n\nassert.sameValue(buffer.byteLength, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/length-is-absent.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.length-is-too-large-throws",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(RangeError, function() {\n  // Math.pow(2, 53) = 9007199254740992\n  new SharedArrayBuffer(9007199254740992);\n}, \"`length` parameter is too large\");\n\nassert.throws(RangeError, function() {\n  new SharedArrayBuffer(Infinity);\n}, \"`length` parameter is positive Infinity\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/length-is-too-large-throws.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.negative-length-throws",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(RangeError, function() {\n  new SharedArrayBuffer(-1);\n});\n\nassert.throws(RangeError, function() {\n  new SharedArrayBuffer(-1.1);\n});\n\nassert.throws(RangeError, function() {\n  new SharedArrayBuffer(-Infinity);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/negative-length-throws.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.newtarget-prototype-is-not-object",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction newTarget() {}\n\nnewTarget.prototype = undefined;\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [1], newTarget);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), SharedArrayBuffer.prototype, \"newTarget.prototype is undefined\");\n\nnewTarget.prototype = null;\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [2], newTarget);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), SharedArrayBuffer.prototype, \"newTarget.prototype is null\");\n\nnewTarget.prototype = true;\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [3], newTarget);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), SharedArrayBuffer.prototype, \"newTarget.prototype is a Boolean\");\n\nnewTarget.prototype = \"\";\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [4], newTarget);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), SharedArrayBuffer.prototype, \"newTarget.prototype is a String\");\n\nnewTarget.prototype = Symbol();\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [5], newTarget);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), SharedArrayBuffer.prototype, \"newTarget.prototype is a Symbol\");\n\nnewTarget.prototype = 1;\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [6], newTarget);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), SharedArrayBuffer.prototype, \"newTarget.prototype is a Number\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/newtarget-prototype-is-not-object.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-allocation-limit",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(RangeError, function() {\n  // Allocating 7 PiB should fail with a RangeError.\n  // Math.pow(1024, 5) = 1125899906842624\n  new SharedArrayBuffer(0, {maxByteLength: 7 * 1125899906842624});\n}, \"`maxByteLength` option is 7 PiB\");\n\nassert.throws(RangeError, function() {\n  // Allocating almost 8 PiB should fail with a RangeError.\n  // Math.pow(2, 53) = 9007199254740992\n  new SharedArrayBuffer(0, {maxByteLength: 9007199254740992 - 1});\n}, \"`maxByteLength` option is Math.pow(2, 53) - 1\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-allocation-limit.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-compared-before-object-creation",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet newTarget = Object.defineProperty(function(){}.bind(null), \"prototype\", {\n  get() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(RangeError, function() {\n  let byteLength = 10;\n  let options = {\n    maxByteLength: 0,\n  };\n\n  // Throws a RangeError, because `byteLength` is larger than `options.maxByteLength`.\n  Reflect.construct(SharedArrayBuffer, [byteLength, options], newTarget);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-compared-before-object-creation.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-data-allocation-after-object-creation",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction DummyError() {}\n\nlet newTarget = Object.defineProperty(function(){}.bind(null), \"prototype\", {\n  get() {\n    throw new DummyError();\n  }\n});\n\nassert.throws(DummyError, function() {\n  let byteLength = 0;\n  let options = {\n    maxByteLength: 7 * 1125899906842624\n  };\n\n  // Allocating 7 PiB should fail with a RangeError.\n  // Math.pow(1024, 5) = 1125899906842624\n  Reflect.construct(SharedArrayBuffer, [], newTarget);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-data-allocation-after-object-creation.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-diminuitive",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(RangeError, function() {\n  new SharedArrayBuffer(1, {maxByteLength: 0});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-diminuitive.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-excessive",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(RangeError, function() {\n  // Math.pow(2, 53) = 9007199254740992\n  new SharedArrayBuffer(0, { maxByteLength: 9007199254740992 });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-excessive.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-negative",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(RangeError, function() {\n  new SharedArrayBuffer(0, { maxByteLength: -1 });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-negative.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-object",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar log = [];\nvar options = {\n  maxByteLength: {\n    toString: function() {\n      log.push('toString');\n      return {};\n    },\n    valueOf: function() {\n      log.push('valueOf');\n      return {};\n    }\n  }\n};\n\nassert.throws(TypeError, function() {\n  new SharedArrayBuffer(0, options);\n});\n\nassert.sameValue(log.length, 2);\nassert.sameValue(log[0], 'valueOf');\nassert.sameValue(log[1], 'toString');\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-object.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-poisoned",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar options = {\n  get maxByteLength() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  new SharedArrayBuffer(0, options);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-poisoned.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-undefined",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(new SharedArrayBuffer(0, {}).growable, false);\nassert.sameValue(new SharedArrayBuffer(0, {maxByteLength: undefined}).growable, false);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-maxbytelength-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.options-non-object",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(new SharedArrayBuffer(0, null).growable, false, 'null');\nassert.sameValue(new SharedArrayBuffer(0, true).growable, false, 'boolean');\nassert.sameValue(new SharedArrayBuffer(0, Symbol(3)).growable, false, 'symbol');\nassert.sameValue(new SharedArrayBuffer(0, 1n).growable, false, 'bigint');\nassert.sameValue(new SharedArrayBuffer(0, 'string').growable, false, 'string');\nassert.sameValue(new SharedArrayBuffer(0, 9).growable, false, 'number');\nassert.sameValue(new SharedArrayBuffer(0, undefined).growable, false, 'undefined');\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/options-non-object.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "BigInt",
+        "SharedArrayBuffer",
+        "Symbol",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.proto-from-ctor-realm",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar C = new other.Function();\nC.prototype = null;\n\nvar o = Reflect.construct(SharedArrayBuffer, [], C);\n\nassert.sameValue(Object.getPrototypeOf(o), other.SharedArrayBuffer.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/proto-from-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.invoked-as-accessor",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  SharedArrayBuffer.prototype.byteLength;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.byteLength;\n});\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/byteLength/invoked-as-accessor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.invoked-as-func",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"byteLength\"\n).get;\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"byteLength\"\n).get;\n\nassert.throws(TypeError, function() {\n  getter();\n});\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/byteLength/invoked-as-func.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.prop-desc",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(SharedArrayBuffer.prototype, \"byteLength\");\n\nassert.sameValue(desc.set, undefined);\nassert.sameValue(typeof desc.get, \"function\");\n\nverifyNotEnumerable(SharedArrayBuffer.prototype, \"byteLength\");\nverifyConfigurable(SharedArrayBuffer.prototype, \"byteLength\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/byteLength/prop-desc.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.return-bytelength",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar ab1 = new SharedArrayBuffer(0);\nassert.sameValue(ab1.byteLength, 0);\n\nvar ab2 = new SharedArrayBuffer(42);\nassert.sameValue(ab2.byteLength, 42);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/byteLength/return-bytelength.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.this-has-no-typedarrayname-internal",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"byteLength\"\n).get;\n\nassert.throws(TypeError, function() {\n  getter.call({});\n});\n\nassert.throws(TypeError, function() {\n  getter.call([]);\n});\n\nvar ta = new Int8Array(new SharedArrayBuffer(8));\nassert.throws(TypeError, function() {\n  getter.call(ta);\n});\n\nvar dv = new DataView(new SharedArrayBuffer(8), 0);\nassert.throws(TypeError, function() {\n  getter.call(dv);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/byteLength/this-has-no-typedarrayname-internal.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "DataView",
+        "Int8Array"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.this-is-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"byteLength\"\n).get;\n\nassert.throws(TypeError, function() {\n  var ab = new ArrayBuffer(4);\n  getter.call(ab);\n}, \"`this` cannot be an ArrayBuffer\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/byteLength/this-is-arraybuffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.this-is-not-object",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"byteLength\"\n).get;\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"byteLength\"\n).get;\n\nassert.throws(TypeError, function() {\n  getter.call(undefined);\n}, \"this is undefined\");\n\nassert.throws(TypeError, function() {\n  getter.call(null);\n}, \"this is null\");\n\nassert.throws(TypeError, function() {\n  getter.call(42);\n}, \"this is 42\");\n\nassert.throws(TypeError, function() {\n  getter.call(\"1\");\n}, \"this is a string\");\n\nassert.throws(TypeError, function() {\n  getter.call(true);\n}, \"this is true\");\n\nassert.throws(TypeError, function() {\n  getter.call(false);\n}, \"this is false\");\n\nvar s = Symbol(\"s\");\nassert.throws(TypeError, function() {\n  getter.call(s);\n}, \"this is a Symbol\");\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/byteLength/this-is-not-object.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.constructor",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(SharedArrayBuffer.prototype.constructor, SharedArrayBuffer);\n\nverifyProperty(SharedArrayBuffer.prototype, \"constructor\", {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.extensible",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(SharedArrayBuffer.prototype.grow));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Object.isExtensible(SharedArrayBuffer.prototype.grow));\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/extensible.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-larger-size",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar sab = new SharedArrayBuffer(4, {maxByteLength: 5});\nvar result;\n\n// If the host chooses to throw as allowed by the specification, the observed\n// behavior will be identical to the case where\n// `SharedArrayBuffer.prototype.grow` has not been implemented. The following\n// assertion prevents this test from passing in runtimes which have not\n// implemented the method.\nassert.sameValue(typeof sab.grow, 'function');\n\ntry {\n  result = ab.grow(5);\n} catch (_) {}\n\n// One of the following three conditions must be met:\n//\n// - HostGrowSharedArrayBuffer returns an abrupt completion\n// - HostGrowSharedArrayBuffer handles the grow operation, and the `grow`\n//   method returns early\n// - HostGrowSharedArrayBuffer does not handle the grow operation, and the\n//   `grow` method executes its final steps\n//\n// All three conditions have the same effect on the value of `result`.\nassert.sameValue(result, undefined, 'normal completion value');\n\n// Neither the length nor the contents of the SharedArrayBuffer are guaranteed\n// by the host-defined abstract operation, so they are not asserted in this\n// test.\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/grow-larger-size.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-same-size",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar sab = new SharedArrayBuffer(4, {maxByteLength: 5});\nvar result;\n\n// If the host chooses to throw as allowed by the specification, the observed\n// behavior will be identical to the case where\n// `SharedArrayBuffer.prototype.grow` has not been implemented. The following\n// assertion prevents this test from passing in runtimes which have not\n// implemented the method.\nassert.sameValue(typeof sab.grow, 'function');\n\ntry {\n  result = ab.grow(4);\n} catch (_) {}\n\n// One of the following three conditions must be met:\n//\n// - HostGrowSharedArrayBuffer returns an abrupt completion\n// - HostGrowSharedArrayBuffer handles the grow operation, and the `grow`\n//   method returns early\n// - HostGrowSharedArrayBuffer does not handle the grow operation, and the\n//   `grow` method executes its final steps\n//\n// All three conditions have the same effect on the value of `result`.\nassert.sameValue(result, undefined, 'normal completion value');\n\n// Neither the length nor the contents of the SharedArrayBuffer are guaranteed\n// by the host-defined abstract operation, so they are not asserted in this\n// test.\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/grow-same-size.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-smaller-size",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar sab = new SharedArrayBuffer(4, {maxByteLength: 5});\nvar result;\n\n// If the host chooses to throw as allowed by the specification, the observed\n// behavior will be identical to the case where\n// `SharedArrayBuffer.prototype.grow` has not been implemented. The following\n// assertion prevents this test from passing in runtimes which have not\n// implemented the method.\nassert.sameValue(typeof sab.grow, 'function');\n\ntry {\n  result = ab.grow(3);\n} catch (_) {}\n\n// One of the following three conditions must be met:\n//\n// - HostGrowSharedArrayBuffer returns an abrupt completion\n// - HostGrowSharedArrayBuffer handles the grow operation, and the `grow`\n//   method returns early\n// - HostGrowSharedArrayBuffer does not handle the grow operation, and the\n//   `grow` method executes its final steps\n//\n// All three conditions have the same effect on the value of `result`.\nassert.sameValue(result, undefined, 'normal completion value');\n\n// Neither the length nor the contents of the SharedArrayBuffer are guaranteed\n// by the host-defined abstract operation, so they are not asserted in this\n// test.\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/grow-smaller-size.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-excessive",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar ab = new SharedArrayBuffer(4, {maxByteLength: 4});\n\nassert.throws(RangeError, function() {\n  ab.grow(5);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/new-length-excessive.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-negative",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar ab = new SharedArrayBuffer(4, {maxByteLength: 4});\n\nassert.throws(RangeError, function() {\n  ab.grow(-1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/new-length-negative.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-non-number",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar log = [];\nvar newLength = {\n  toString: function() {\n    log.push('toString');\n    return {};\n  },\n  valueOf: function() {\n    log.push('valueOf');\n    return {};\n  }\n};\nvar ab = new SharedArrayBuffer(0, {maxByteLength: 4});\n\nassert.throws(TypeError, function() {\n  ab.grow(newLength);\n});\n\nassert.sameValue(log.length, 2);\nassert.sameValue(log[0], 'valueOf');\nassert.sameValue(log[1], 'toString');\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/new-length-non-number.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.nonconstructor",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(SharedArrayBuffer.prototype.grow), \"SharedArrayBuffer.prototype.grow is not a constructor\");\n\nvar arrayBuffer = new SharedArrayBuffer(8);\nassert.throws(TypeError, function() {\n  new arrayBuffer.grow();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.this-is-not-arraybuffer-object",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof SharedArrayBuffer.prototype.grow);\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof SharedArrayBuffer.prototype.grow, 'function');\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow();\n}, '`this` value is the SharedArrayBuffer prototype');\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call({});\n}, '`this` value is an object');\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call([]);\n}, '`this` value is an array');\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/this-is-not-arraybuffer-object.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.this-is-not-object",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof SharedArrayBuffer.prototype.grow);\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar symbol = Symbol();\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call(symbol);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.grow.call(1n);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof SharedArrayBuffer.prototype.grow, \"function\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(undefined);\n}, \"`this` value is undefined\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(null);\n}, \"`this` value is null\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(true);\n}, \"`this` value is Boolean\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(\"\");\n}, \"`this` value is String\");\n\nvar symbol = Symbol();\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(symbol);\n}, \"`this` value is Symbol\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(1);\n}, \"`this` value is Number\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(1n);\n}, \"`this` value is bigint\");\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/this-is-not-object.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "BigInt",
+        "SharedArrayBuffer",
+        "Symbol",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.this-is-not-resizable-arraybuffer-object",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar ab;\n\nassert.sameValue(typeof SharedArrayBuffer.prototype.grow, 'function');\n\nab = new SharedArrayBuffer(4);\nassert.throws(TypeError, function() {\n  ab.grow(0);\n}, 'zero byte length');\n\nab = new SharedArrayBuffer(4);\nassert.throws(TypeError, function() {\n  ab.grow(3);\n}, 'smaller byte length');\n\nab = new SharedArrayBuffer(4);\nassert.throws(TypeError, function() {\n  ab.grow(4);\n}, 'same byte length');\n\nab = new SharedArrayBuffer(4);\nassert.throws(TypeError, function() {\n  ab.grow(5);\n}, 'larger byte length');\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/this-is-not-resizable-arraybuffer-object.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.this-is-sharedarraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar ab = new ArrayBuffer(0);\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.grow.call(ab);\n}, '`this` value cannot be an ArrayBuffer');\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/grow/this-is-sharedarraybuffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "ArrayBuffer",
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.invoked-as-accessor",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  SharedArrayBuffer.prototype.growable;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.growable;\n});\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/growable/invoked-as-accessor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.invoked-as-func",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, 'growable'\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, 'growable'\n).get;\n\nassert.sameValue(typeof getter, 'function');\n\nassert.throws(TypeError, function() {\n  getter();\n});\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/growable/invoked-as-func.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.prop-desc",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(SharedArrayBuffer.prototype, 'growable');\n\nassert.sameValue(desc.set, undefined);\nassert.sameValue(typeof desc.get, 'function');\n\nverifyProperty(SharedArrayBuffer.prototype, 'growable', {\n  enumerable: false,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/growable/prop-desc.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.return-growable",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar sab1 = new SharedArrayBuffer(1);\n\nassert.sameValue(sab1.growable, false);\n\nvar sab2 = new SharedArrayBuffer(1, {maxByteLength: 1});\n\nassert.sameValue(sab2.growable, true);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/growable/return-growable.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.this-has-no-arraybufferdata-internal",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"growable\"\n).get;\n\nassert.sameValue(typeof getter, \"function\");\n\nassert.throws(TypeError, function() {\n  getter.call({});\n});\n\nassert.throws(TypeError, function() {\n  getter.call([]);\n});\n\nvar ta = new Int8Array(8);\nassert.throws(TypeError, function() {\n  getter.call(ta);\n});\n\nvar dv = new DataView(new SharedArrayBuffer(8), 0);\nassert.throws(TypeError, function() {\n  getter.call(dv);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/growable/this-has-no-arraybufferdata-internal.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "DataView",
+        "SharedArrayBuffer",
+        "TypedArray",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.this-is-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar growable = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"growable\"\n);\n\nvar getter = growable.get;\nvar ab = new ArrayBuffer(4);\n\nassert.sameValue(typeof getter, \"function\");\n\nassert.throws(TypeError, function() {\n  getter.call(ab);\n}, \"`this` cannot be an ArrayBuffer\");\n\nObject.defineProperties(ab, { growable: growable });\n\nassert.throws(TypeError, function() {\n  ab.growable;\n}, \"`this` cannot be an ArrayBuffer\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/growable/this-is-arraybuffer.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ArrayBuffer",
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.this-is-not-object",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"growable\"\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"growable\"\n).get;\n\nassert.sameValue(typeof getter, \"function\");\n\nassert.throws(TypeError, function() {\n  getter.call(undefined);\n}, \"this is undefined\");\n\nassert.throws(TypeError, function() {\n  getter.call(null);\n}, \"this is null\");\n\nassert.throws(TypeError, function() {\n  getter.call(42);\n}, \"this is 42\");\n\nassert.throws(TypeError, function() {\n  getter.call(\"1\");\n}, \"this is a string\");\n\nassert.throws(TypeError, function() {\n  getter.call(true);\n}, \"this is true\");\n\nassert.throws(TypeError, function() {\n  getter.call(false);\n}, \"this is false\");\n\nvar s = Symbol(\"s\");\nassert.throws(TypeError, function() {\n  getter.call(s);\n}, \"this is a Symbol\");\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/growable/this-is-not-object.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.invoked-as-accessor",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  SharedArrayBuffer.prototype.maxByteLength;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.maxByteLength;\n});\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/invoked-as-accessor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.invoked-as-func",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, 'maxByteLength'\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, 'maxByteLength'\n).get;\n\nassert.sameValue(typeof getter, 'function');\n\nassert.throws(TypeError, function() {\n  getter();\n});\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/invoked-as-func.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.prop-desc",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(SharedArrayBuffer.prototype, 'maxByteLength');\n\nassert.sameValue(desc.set, undefined);\nassert.sameValue(typeof desc.get, 'function');\n\nverifyProperty(SharedArrayBuffer.prototype, 'maxByteLength', {\n  enumerable: false,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/prop-desc.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.return-maxbytelength-growable",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar ab1 = new SharedArrayBuffer(0, { maxByteLength: 0 });\nassert.sameValue(ab1.maxByteLength, 0);\n\nvar ab2 = new SharedArrayBuffer(0, { maxByteLength: 23 });\nassert.sameValue(ab2.maxByteLength, 23);\n\nvar ab3 = new SharedArrayBuffer(42, { maxByteLength: 42 });\nassert.sameValue(ab3.maxByteLength, 42);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/return-maxbytelength-growable.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.return-maxbytelength-non-growable",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar ab1 = new SharedArrayBuffer(0);\nassert.sameValue(ab1.maxByteLength, 0);\n\nvar ab2 = new SharedArrayBuffer(42);\nassert.sameValue(ab2.maxByteLength, 42);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/return-maxbytelength-non-growable.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.this-has-no-arraybufferdata-internal",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"maxByteLength\"\n).get;\n\nassert.sameValue(typeof getter, \"function\");\n\nassert.throws(TypeError, function() {\n  getter.call({});\n});\n\nassert.throws(TypeError, function() {\n  getter.call([]);\n});\n\nvar ta = new Int8Array(8);\nassert.throws(TypeError, function() {\n  getter.call(ta);\n});\n\nvar dv = new DataView(new SharedArrayBuffer(8), 0);\nassert.throws(TypeError, function() {\n  getter.call(dv);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/this-has-no-arraybufferdata-internal.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "DataView",
+        "SharedArrayBuffer",
+        "TypedArray",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.this-is-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar maxByteLength = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"maxByteLength\"\n);\n\nvar getter = maxByteLength.get;\nvar ab = new ArrayBuffer(4);\n\nassert.sameValue(typeof getter, \"function\");\n\nassert.throws(TypeError, function() {\n  getter.call(ab);\n}, \"`this` cannot be an ArrayBuffer\");\n\nObject.defineProperties(ab, { maxByteLength: maxByteLength });\n\nassert.throws(TypeError, function() {\n  ab.maxByteLength;\n}, \"`this` cannot be an ArrayBuffer\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/this-is-arraybuffer.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "ArrayBuffer",
+        "SharedArrayBuffer",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.this-is-not-object",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"maxByteLength\"\n).get;\n\nconsole.log(typeof getter);\n\ntry { (function() {\n  getter.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(42);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(\"1\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  getter.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nvar s = Symbol(\"s\");\ntry { (function() {\n  getter.call(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar getter = Object.getOwnPropertyDescriptor(\n  SharedArrayBuffer.prototype, \"maxByteLength\"\n).get;\n\nassert.sameValue(typeof getter, \"function\");\n\nassert.throws(TypeError, function() {\n  getter.call(undefined);\n}, \"this is undefined\");\n\nassert.throws(TypeError, function() {\n  getter.call(null);\n}, \"this is null\");\n\nassert.throws(TypeError, function() {\n  getter.call(42);\n}, \"this is 42\");\n\nassert.throws(TypeError, function() {\n  getter.call(\"1\");\n}, \"this is a string\");\n\nassert.throws(TypeError, function() {\n  getter.call(true);\n}, \"this is true\");\n\nassert.throws(TypeError, function() {\n  getter.call(false);\n}, \"this is false\");\n\nvar s = Symbol(\"s\");\nassert.throws(TypeError, function() {\n  getter.call(s);\n}, \"this is a Symbol\");\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/maxByteLength/this-is-not-object.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol",
+        "resizable-arraybuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.context-is-not-arraybuffer-object",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call({});\n}, \"`this` value is Object\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call([]);\n}, \"`this` value is Array\");\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/context-is-not-arraybuffer-object.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.context-is-not-object",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call(\"\");\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer.prototype.slice.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call(undefined);\n}, \"`this` value is undefined\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call(null);\n}, \"`this` value is null\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call(true);\n}, \"`this` value is Boolean\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call(\"\");\n}, \"`this` value is String\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call(Symbol());\n}, \"`this` value is Symbol\");\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer.prototype.slice.call(1);\n}, \"`this` value is Number\");\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/context-is-not-object.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.end-default-if-absent",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar start = 6;\nvar result = arrayBuffer.slice(start);\nassert.sameValue(result.byteLength, 2);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/end-default-if-absent.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.end-default-if-undefined",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar start = 6,\n  end = undefined;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 2);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/end-default-if-undefined.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.end-exceeds-length",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar start = 1,\n  end = 12;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 7, \"slice(1, 12)\");\n\nvar start = 2,\n  end = 0x100000000;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 6, \"slice(2, 0x100000000)\");\n\nvar start = 3,\n  end = +Infinity;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 5, \"slice(3, Infinity)\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/end-exceeds-length.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.extensible",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.isExtensible(SharedArrayBuffer.prototype.slice));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Object.isExtensible(SharedArrayBuffer.prototype.slice));\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/extensible.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.negative-end",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar start = 2,\n  end = -4;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 2, \"slice(2, -4)\");\n\nvar start = 2,\n  end = -10;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 0, \"slice(2, -10)\");\n\nvar start = 2,\n  end = -Infinity;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 0, \"slice(2, -Infinity)\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/negative-end.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.negative-start",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar start = -5,\n  end = 6;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 3, \"slice(-5, 6)\");\n\nvar start = -12,\n  end = 6;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 6, \"slice(-12, 6)\");\n\nvar start = -Infinity,\n  end = 6;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 6, \"slice(-Infinity, 6)\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/negative-start.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.nonconstructor",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert(!isConstructor(SharedArrayBuffer.prototype.slice), \"SharedArrayBuffer.prototype.slice is not a constructor\");\n\nvar arrayBuffer = new SharedArrayBuffer(8);\nassert.throws(TypeError, function() {\n  new arrayBuffer.slice();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/nonconstructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.not-a-constructor",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(SharedArrayBuffer.prototype.slice),\n  false,\n  'isConstructor(SharedArrayBuffer.prototype.slice) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let sab = new SharedArrayBuffer(1); new sab.slice();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "SharedArrayBuffer",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.number-conversion",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar log = \"\";\nvar start = {\n  valueOf: function() {\n    log += \"start-\";\n    return 0;\n  }\n};\nvar end = {\n  valueOf: function() {\n    log += \"end\";\n    return 8;\n  }\n};\n\narrayBuffer.slice(start, end);\nassert.sameValue(log, \"start-end\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/number-conversion.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-constructor-is-not-object",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nfunction callSlice() {\n  arrayBuffer.slice();\n}\n\narrayBuffer.constructor = null;\nassert.throws(TypeError, callSlice, \"`constructor` value is null\");\n\narrayBuffer.constructor = true;\nassert.throws(TypeError, callSlice, \"`constructor` value is Boolean\");\n\narrayBuffer.constructor = \"\";\nassert.throws(TypeError, callSlice, \"`constructor` value is String\");\n\narrayBuffer.constructor = Symbol();\nassert.throws(TypeError, callSlice, \"`constructor` value is Symbol\");\n\narrayBuffer.constructor = 1;\nassert.throws(TypeError, callSlice, \"`constructor` value is Number\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-constructor-is-not-object.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-constructor-is-undefined",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = undefined;\n\nvar result = arrayBuffer.slice();\nassert.sameValue(Object.getPrototypeOf(result), SharedArrayBuffer.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-constructor-is-undefined.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-not-constructor",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nfunction callSlice() {\n  arrayBuffer.slice();\n}\n\nspeciesConstructor[Symbol.species] = {};\nassert.throws(TypeError, callSlice, \"`constructor[Symbol.species]` value is Object\");\n\nspeciesConstructor[Symbol.species] = Function.prototype;\nassert.throws(TypeError, callSlice, \"`constructor[Symbol.species]` value is Function.prototype\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-is-not-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-not-object",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nfunction callSlice() {\n  arrayBuffer.slice();\n}\n\nspeciesConstructor[Symbol.species] = true;\nassert.throws(TypeError, callSlice, \"`constructor[Symbol.species]` value is Boolean\");\n\nspeciesConstructor[Symbol.species] = \"\";\nassert.throws(TypeError, callSlice, \"`constructor[Symbol.species]` value is String\");\n\nspeciesConstructor[Symbol.species] = Symbol();\nassert.throws(TypeError, callSlice, \"`constructor[Symbol.species]` value is Symbol\");\n\nspeciesConstructor[Symbol.species] = 1;\nassert.throws(TypeError, callSlice, \"`constructor[Symbol.species]` value is Number\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-is-not-object.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-null",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\nspeciesConstructor[Symbol.species] = null;\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nvar result = arrayBuffer.slice();\nassert.sameValue(Object.getPrototypeOf(result), SharedArrayBuffer.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-is-null.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-undefined",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\nspeciesConstructor[Symbol.species] = undefined;\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nvar result = arrayBuffer.slice();\nassert.sameValue(Object.getPrototypeOf(result), SharedArrayBuffer.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-is-undefined.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-larger-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\nspeciesConstructor[Symbol.species] = function(length) {\n  return new SharedArrayBuffer(10);\n};\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nvar result = arrayBuffer.slice();\nassert.sameValue(result.byteLength, 10);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-returns-larger-arraybuffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-not-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\nspeciesConstructor[Symbol.species] = function(length) {\n  return {};\n};\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nassert.throws(TypeError, function() {\n  arrayBuffer.slice();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-returns-not-arraybuffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-same-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\nspeciesConstructor[Symbol.species] = function(length) {\n  return arrayBuffer;\n};\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nassert.throws(TypeError, function() {\n  arrayBuffer.slice();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-returns-same-arraybuffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-smaller-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar speciesConstructor = {};\nspeciesConstructor[Symbol.species] = function(length) {\n  return new SharedArrayBuffer(4);\n};\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nassert.throws(TypeError, function() {\n  arrayBuffer.slice();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species-returns-smaller-arraybuffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar resultBuffer;\n\nvar speciesConstructor = {};\nspeciesConstructor[Symbol.species] = function(length) {\n  return resultBuffer = new SharedArrayBuffer(length);\n};\n\nvar arrayBuffer = new SharedArrayBuffer(8);\narrayBuffer.constructor = speciesConstructor;\n\nvar result = arrayBuffer.slice();\nassert.sameValue(result, resultBuffer);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/species.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-default-if-absent",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar result = arrayBuffer.slice();\nassert.sameValue(result.byteLength, 8);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/start-default-if-absent.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-default-if-undefined",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar start = undefined,\n  end = 6;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 6);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/start-default-if-undefined.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-exceeds-end",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\n\nvar start = 5,\n  end = 4;\nvar result = arrayBuffer.slice(start, end);\nassert.sameValue(result.byteLength, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/start-exceeds-end.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-exceeds-length",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\nvar result;\n\nresult = arrayBuffer.slice(10, 8);\nassert.sameValue(result.byteLength, 0, \"slice(10, 8)\");\n\nresult = arrayBuffer.slice(0x100000000, 7);\nassert.sameValue(result.byteLength, 0, \"slice(0x100000000, 7)\");\n\nresult = arrayBuffer.slice(+Infinity, 6);\nassert.sameValue(result.byteLength, 0, \"slice(+Infinity, 6)\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/start-exceeds-length.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.this-is-arraybuffer",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  var ab = new ArrayBuffer(0);\n  SharedArrayBuffer.prototype.slice.call(ab);\n}, \"`this` value cannot be an ArrayBuffer\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/this-is-arraybuffer.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "ArrayBuffer",
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.tointeger-conversion-end",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\nvar result;\n\nresult = arrayBuffer.slice(0, 4.5);\nassert.sameValue(result.byteLength, 4, \"slice(0, 4.5)\");\n\nresult = arrayBuffer.slice(0, NaN);\nassert.sameValue(result.byteLength, 0, \"slice(0, NaN)\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/tointeger-conversion-end.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.tointeger-conversion-start",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = new SharedArrayBuffer(8);\nvar result;\n\nresult = arrayBuffer.slice(4.5, 8);\nassert.sameValue(result.byteLength, 4, \"slice(4.5, 8)\");\n\nresult = arrayBuffer.slice(NaN, 8);\nassert.sameValue(result.byteLength, 8, \"slice(NaN, 8)\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/slice/tointeger-conversion-start.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype.symbol.tostringtag",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(SharedArrayBuffer.prototype[Symbol.toStringTag], 'SharedArrayBuffer');\n\nverifyProperty(SharedArrayBuffer.prototype, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.prototype-from-newtarget",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [8], Object);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), Object.prototype, \"NewTarget is built-in Object constructor\");\n\nvar newTarget = function() {}.bind(null);\nObject.defineProperty(newTarget, \"prototype\", {\n  get: function() {\n    return Array.prototype;\n  }\n});\nvar arrayBuffer = Reflect.construct(SharedArrayBuffer, [16], newTarget);\nassert.sameValue(Object.getPrototypeOf(arrayBuffer), Array.prototype, \"NewTarget is BoundFunction with accessor\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/prototype-from-newtarget.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect",
+        "Reflect.construct",
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.return-abrupt-from-length-symbol",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = Symbol();\n\nassert.throws(TypeError, function() {\n  new SharedArrayBuffer(s);\n}, \"`length` parameter is a Symbol\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/return-abrupt-from-length-symbol.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.return-abrupt-from-length",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar len = {\n  valueOf: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  new SharedArrayBuffer(len);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/return-abrupt-from-length.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.toindex-length",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj1 = {\n  valueOf: function() {\n    return 42;\n  }\n};\n\nvar obj2 = {\n  toString: function() {\n    return 42;\n  }\n};\n\nvar buffer;\n\nbuffer = new SharedArrayBuffer(obj1);\nassert.sameValue(buffer.byteLength, 42, \"object's valueOf\");\n\nbuffer = new SharedArrayBuffer(obj2);\nassert.sameValue(buffer.byteLength, 42, \"object's toString\");\n\nbuffer = new SharedArrayBuffer(\"\");\nassert.sameValue(buffer.byteLength, 0, \"the Empty string\");\n\nbuffer = new SharedArrayBuffer(\"0\");\nassert.sameValue(buffer.byteLength, 0, \"string '0'\");\n\nbuffer = new SharedArrayBuffer(\"1\");\nassert.sameValue(buffer.byteLength, 1, \"string '1'\");\n\nbuffer = new SharedArrayBuffer(true);\nassert.sameValue(buffer.byteLength, 1, \"true\");\n\nbuffer = new SharedArrayBuffer(false);\nassert.sameValue(buffer.byteLength, 0, \"false\");\n\nbuffer = new SharedArrayBuffer(NaN);\nassert.sameValue(buffer.byteLength, 0, \"NaN\");\n\nbuffer = new SharedArrayBuffer(null);\nassert.sameValue(buffer.byteLength, 0, \"null\");\n\nbuffer = new SharedArrayBuffer(undefined);\nassert.sameValue(buffer.byteLength, 0, \"undefined\");\n\nbuffer = new SharedArrayBuffer(0.1);\nassert.sameValue(buffer.byteLength, 0, \"0.1\");\n\nbuffer = new SharedArrayBuffer(0.9);\nassert.sameValue(buffer.byteLength, 0, \"0.9\");\n\nbuffer = new SharedArrayBuffer(1.1);\nassert.sameValue(buffer.byteLength, 1, \"1.1\");\n\nbuffer = new SharedArrayBuffer(1.9);\nassert.sameValue(buffer.byteLength, 1, \"1.9\");\n\nbuffer = new SharedArrayBuffer(-0.1);\nassert.sameValue(buffer.byteLength, 0, \"-0.1\");\n\nbuffer = new SharedArrayBuffer(-0.99999);\nassert.sameValue(buffer.byteLength, 0, \"-0.99999\");\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/toindex-length.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.sharedarraybuffer.undefined-newtarget-throws",
       "category": "sharedarraybuffer",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  SharedArrayBuffer();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  SharedArrayBuffer(10);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  SharedArrayBuffer();\n});\n\nassert.throws(TypeError, function() {\n  SharedArrayBuffer(10);\n});\n}\nmain();\n",
       "origin": "test/built-ins/SharedArrayBuffer/undefined-newtarget-throws.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.sharedarraybuffer.zero-length",
+      "category": "sharedarraybuffer",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar positiveZero = new SharedArrayBuffer(+0);\nassert.sameValue(positiveZero.byteLength, 0);\n\nvar negativeZero = new SharedArrayBuffer(-0);\nassert.sameValue(negativeZero.byteLength, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/SharedArrayBuffer/zero-length.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "SharedArrayBuffer"
+      ],
+      "includes": []
     }
   ]
 }

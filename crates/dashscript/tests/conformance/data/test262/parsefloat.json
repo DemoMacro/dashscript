@@ -1,203 +1,416 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.parsefloat.15.1.2.3-2-1",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"\"), NaN, 'parseFloat(\"\")');\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/15.1.2.3-2-1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.not-a-constructor",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(parseFloat), false, 'isConstructor(parseFloat) must return false');\n\nassert.throws(TypeError, () => {\n  new parseFloat(1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t1",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(true));\nconsole.log(parseFloat(false));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(true), NaN, \"true\");\nassert.sameValue(parseFloat(false), NaN, \"false\");\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/S15.1.2.3_A1_T1.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t3",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(undefined));\nconsole.log(parseFloat(null));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(undefined), NaN, \"undefined\");\nassert.sameValue(parseFloat(null), NaN, \"null\");\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/S15.1.2.3_A1_T3.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t4",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(new Boolean(true)), NaN, \"new Boolean(true)\");\nassert.sameValue(parseFloat(new Boolean(false)), NaN, \"new Boolean(false)\");\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A1_T4.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t7",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nvar object = {\n  valueOf: function() {\n    return 1\n  }\n};\nassert.sameValue(parseFloat(object), NaN, \"{valueOf: function() {return 1}}\");\n\n//CHECK#2\nvar object = {\n  valueOf: function() {\n    return 1\n  },\n  toString: function() {\n    return 0\n  }\n};\nif (parseFloat(object) !== 0) {\n  throw new Test262Error('#2: var object = {valueOf: function() {return 1}, toString: function() {return 0}}; parseFloat(object) === 0. Actual: ' + (parseFloat(object)));\n}\n\n//CHECK#3\nvar object = {\n  valueOf: function() {\n    return 1\n  },\n  toString: function() {\n    return {}\n  }\n};\nif (parseFloat(object) !== 1) {\n  throw new Test262Error('#3: var object = {valueOf: function() {return 1}, toString: function() {return {}}}; parseFloat(object) === 1. Actual: ' + (parseFloat(object)));\n}\n\n//CHECK#4\ntry {\n  var object = {\n    valueOf: function() {\n      throw \"error\"\n    },\n    toString: function() {\n      return 1\n    }\n  };\n  if (parseFloat(object) !== 1) {\n    throw new Test262Error('#4.1: var object = {valueOf: function() {throw \"error\"}, toString: function() {return 1}}; parseFloat(object) === 1. Actual: ' + (parseFloat(object)));\n  }\n}\ncatch (e) {\n  if (e === \"error\") {\n    throw new Test262Error('#4.2: var object = {valueOf: function() {throw \"error\"}, toString: function() {return 1}}; parseFloat(object) not throw \"error\"');\n  } else {\n    throw new Test262Error('#4.3: var object = {valueOf: function() {throw \"error\"}, toString: function() {return 1}}; parseFloat(object) not throw Error. Actual: ' + (e));\n  }\n}\n\n//CHECK#5\nvar object = {\n  toString: function() {\n    return 1\n  }\n};\nif (parseFloat(object) !== 1) {\n  throw new Test262Error('#5: var object = {toString: function() {return 1}}; parseFloat(object) === 1. Actual: ' + (parseFloat(object)));\n}\n\n//CHECK#6\nvar object = {\n  valueOf: function() {\n    return {}\n  },\n  toString: function() {\n    return 1\n  }\n}\nif (parseFloat(object) !== 1) {\n  throw new Test262Error('#6: var object = {valueOf: function() {return {}}, toString: function() {return 1}}; parseFloat(object) === 1. Actual: ' + (parseFloat(object)));\n}\n\n//CHECK#7\ntry {\n  var object = {\n    valueOf: function() {\n      return 1\n    },\n    toString: function() {\n      throw \"error\"\n    }\n  };\n  parseFloat(object);\n  throw new Test262Error('#7.1: var object = {valueOf: function() {return 1}, toString: function() {throw \"error\"}}; parseFloat(object) throw \"error\". Actual: ' + (parseFloat(object)));\n}\ncatch (e) {\n  if (e !== \"error\") {\n    throw new Test262Error('#7.2: var object = {valueOf: function() {return 1}, toString: function() {throw \"error\"}}; parseFloat(object) throw \"error\". Actual: ' + (e));\n  }\n}\n\n//CHECK#8\ntry {\n  var object = {\n    valueOf: function() {\n      return {}\n    },\n    toString: function() {\n      return {}\n    }\n  };\n  parseFloat(object);\n  throw new Test262Error('#8.1: var object = {valueOf: function() {return {}}, toString: function() {return {}}}; parseFloat(object) throw TypeError. Actual: ' + (parseFloat(object)));\n}\ncatch (e) {\n  if ((e instanceof TypeError) !== true) {\n    throw new Test262Error('#8.2: var object = {valueOf: function() {return {}}, toString: function() {return {}}}; parseFloat(object) throw TypeError. Actual: ' + (e));\n  }\n}\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A1_T7.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t1",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u00091.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u00091.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u00091.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u0009\\u0009-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u0009\\\\u0009-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u0009\\u0009-1.1\")));\n}\n\n//CHECK#3\nif (parseFloat(\"\t1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#3: parseFloat(\"\t1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\t1.1\")));\n}\n\n//CHECK#4\nif (parseFloat(\"\t\t\t1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#4: parseFloat(\"\t\t\t1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\t\t\t1.1\")));\n}\n\n//CHECK#5\nif (parseFloat(\"\t\t\t\\u0009\t\t\t\\u0009-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#5: parseFloat(\"\t\t\t\\\\u0009\t\t\t\\\\u0009-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\t\t\t\\u0009\t\t\t\\u0009-1.1\")));\n}\n\n//CHECK#6\nassert.sameValue(parseFloat(\"\\u0009\"), NaN, \"'\\u0009'\");\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T1.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t10_u180e",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nvar mongolianVowelSeparator = \"\\u180E\";\n\nconsole.log(parseFloat(mongolianVowelSeparator + \"1.1\"));\nconsole.log(parseFloat(mongolianVowelSeparator + mongolianVowelSeparator + mongolianVowelSeparator + \"1.1\"));\nconsole.log(parseFloat(mongolianVowelSeparator));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar mongolianVowelSeparator = \"\\u180E\";\n\nassert.sameValue(parseFloat(mongolianVowelSeparator + \"1.1\"), NaN, \"Single leading U+180E\");\nassert.sameValue(parseFloat(mongolianVowelSeparator + mongolianVowelSeparator + mongolianVowelSeparator + \"1.1\"), NaN, \"Multiple leading U+180E\");\nassert.sameValue(parseFloat(mongolianVowelSeparator), NaN, \"Only U+180E\");\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T10_U180E.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "u180e"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t2",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u00201.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u00201.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u00201.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u0020\\u0020-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u0020\\\\u0020-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u0020\\u0020-1.1\")));\n}\n\n//CHECK#3\nif (parseFloat(\" 1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#3: parseFloat(\" 1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\" 1.1\")));\n}\n\n//CHECK#4\nif (parseFloat(\"       1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#4: parseFloat(\"       1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"       1.1\")));\n}\n\n//CHECK#5\nif (parseFloat(\"       \\u0020       \\u0020-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#5: parseFloat(\"       \\\\u0020       \\\\u0020-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"       \\u0020       \\u0020-1.1\")));\n}\n\n//CHECK#6\nassert.sameValue(parseFloat(\"\\u0020\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T2.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t3",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u00A01.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u00A01.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u00A01.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u00A0\\u00A0-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u00A0\\\\u00A0-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u00A0\\u00A0-1.1\")));\n}\n\n//CHECK#3\nassert.sameValue(parseFloat(\"\\u00A0\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T3.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t4",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u000C1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u000C1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u000C1.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u000C\\u000C-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u000C\\\\u000C-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u000C\\u000C-1.1\")));\n}\n\n//CHECK#3\nassert.sameValue(parseFloat(\"\\u000C\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T4.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t5",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u000B1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u000B1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u000B1.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u000B\\u000B-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u000B\\\\u000B-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u000B\\u000B-1.1\")));\n}\n\n//CHECK#3\nassert.sameValue(parseFloat(\"\\u000B\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T5.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t6",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u000D1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u000D1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u000D1.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u000D\\u000D-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u000D\\\\u000D-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u000D\\u000D-1.1\")));\n}\n\n//CHECK#3\nassert.sameValue(parseFloat(\"\\u000D\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T6.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t7",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u000A1.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u000A1.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u000A1.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u000A\\u000A-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u000A\\\\u000A-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u000A\\u000A-1.1\")));\n}\n\n//CHECK#3\nassert.sameValue(parseFloat(\"\\u000A\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T7.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t8",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u20281.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u20281.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u20281.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u2028\\u2028-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u2028\\\\u2028-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u2028\\u2028-1.1\")));\n}\n\n//CHECK#3\nassert.sameValue(parseFloat(\"\\u2028\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T8.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t9",
+      "category": "parsefloat",
+      "source": "test262",
+      "fixture": "function main(): void {\n//CHECK#1\nif (parseFloat(\"\\u20291.1\") !== parseFloat(\"1.1\")) {\n  throw new Test262Error('#1: parseFloat(\"\\\\u20291.1\") === parseFloat(\"1.1\"). Actual: ' + (parseFloat(\"\\u20291.1\")));\n}\n\n//CHECK#2\nif (parseFloat(\"\\u2029\\u2029-1.1\") !== parseFloat(\"-1.1\")) {\n  throw new Test262Error('#2: parseFloat(\"\\\\u2029\\\\u2029-1.1\") === parseFloat(\"-1.1\"). Actual: ' + (parseFloat(\"\\u2029\\u2029-1.1\")));\n}\n\n//CHECK#3\nassert.sameValue(parseFloat(\"\\u2029\"), NaN);\n}\nmain();\n",
+      "origin": "test/built-ins/parseFloat/S15.1.2.3_A2_T9.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a3_t1",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"str\"));\nconsole.log(parseFloat(\"s1\"));\nconsole.log(parseFloat(\"\"));\nconsole.log(parseFloat(\"+\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"str\"), NaN, \"str\");\nassert.sameValue(parseFloat(\"s1\"), NaN, \"s1\");\nassert.sameValue(parseFloat(\"\"), NaN, \"\");\nassert.sameValue(parseFloat(\"+\"), NaN, \"+\");\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/S15.1.2.3_A3_T1.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a3_t2",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"e1\"));\nconsole.log(parseFloat(\"e-1\"));\nconsole.log(parseFloat(\"E+1\"));\nconsole.log(parseFloat(\"E0\"));\nconsole.log(parseFloat(\"-.e-1\"));\nconsole.log(parseFloat(\".e1\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"e1\"), NaN, \"e1\");\nassert.sameValue(parseFloat(\"e-1\"), NaN, \"e-1\");\nassert.sameValue(parseFloat(\"E+1\"), NaN, \"E+1\");\nassert.sameValue(parseFloat(\"E0\"), NaN, \"E0\");\nassert.sameValue(parseFloat(\"-.e-1\"), NaN, \"-.e-1\");\nassert.sameValue(parseFloat(\".e1\"), NaN, \".e1\");\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/S15.1.2.3_A3_T2.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a3_t3",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\".x\"));\nconsole.log(parseFloat(\"+x\"));\nconsole.log(parseFloat(\"infinity\"));\nconsole.log(parseFloat(\"A\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\".x\"), NaN, \".x\");\nassert.sameValue(parseFloat(\"+x\"), NaN, \"+x\");\nassert.sameValue(parseFloat(\"infinity\"), NaN, \"infinity\");\nassert.sameValue(parseFloat(\"A\"), NaN, \"A\");\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/S15.1.2.3_A3_T3.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dd-nsl-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1.0e-1_0\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1.0e-1_0\"), 1.0e-1);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dd-nsl-dd.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dds-nsl-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1.0e-10_0\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1.0e-10_0\"), 1.0e-10);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-minus-dds-nsl-dd.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dd-nsl-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1.0e+1_0\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1.0e+1_0\"), 1.0e+1);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dd-nsl-dd.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dds-nsl-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1.0e+10_0\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1.0e+10_0\"), 1.0e+10);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dd-dot-dd-ep-sign-plus-dds-nsl-dd.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dd-nsl-dd-one-of",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1_0\"));\nconsole.log(parseFloat(\"1_1\"));\nconsole.log(parseFloat(\"1_2\"));\nconsole.log(parseFloat(\"1_3\"));\nconsole.log(parseFloat(\"1_4\"));\nconsole.log(parseFloat(\"1_5\"));\nconsole.log(parseFloat(\"1_6\"));\nconsole.log(parseFloat(\"1_7\"));\nconsole.log(parseFloat(\"1_8\"));\nconsole.log(parseFloat(\"1_9\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1_0\"), 1);\nassert.sameValue(parseFloat(\"1_1\"), 1);\nassert.sameValue(parseFloat(\"1_2\"), 1);\nassert.sameValue(parseFloat(\"1_3\"), 1);\nassert.sameValue(parseFloat(\"1_4\"), 1);\nassert.sameValue(parseFloat(\"1_5\"), 1);\nassert.sameValue(parseFloat(\"1_6\"), 1);\nassert.sameValue(parseFloat(\"1_7\"), 1);\nassert.sameValue(parseFloat(\"1_8\"), 1);\nassert.sameValue(parseFloat(\"1_9\"), 1);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dd-nsl-dd-one-of.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dds-dot-dd-nsl-dd-ep-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"10.00_01e2\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"10.00_01e2\"), 10.00);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dds-dot-dd-nsl-dd-ep-dd.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dds-nsl-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"123456789_0\"));\nconsole.log(parseFloat(\"123456789_1\"));\nconsole.log(parseFloat(\"123456789_2\"));\nconsole.log(parseFloat(\"123456789_3\"));\nconsole.log(parseFloat(\"123456789_4\"));\nconsole.log(parseFloat(\"123456789_5\"));\nconsole.log(parseFloat(\"123456789_6\"));\nconsole.log(parseFloat(\"123456789_7\"));\nconsole.log(parseFloat(\"123456789_8\"));\nconsole.log(parseFloat(\"123456789_9\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"123456789_0\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_1\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_2\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_3\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_4\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_5\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_6\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_7\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_8\"), 123456789);\nassert.sameValue(parseFloat(\"123456789_9\"), 123456789);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dds-nsl-dd.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dd-nsl-dd-ep",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\".0_1e2\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\".0_1e2\"), .0);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dot-dd-nsl-dd-ep.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dd-nsl-dds-ep",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\".1_01e2\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\".1_01e2\"), .1);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dot-dd-nsl-dds-ep.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dds-nsl-dd-ep",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\".10_1e2\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\".10_1e2\"), .10);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dot-dds-nsl-dd-ep.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-dot-dds-nsl-dds-ep",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\".00_01e2\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\".00_01e2\"), .00);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-dot-dds-nsl-dds-ep.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-nzd-nsl-dd-one-of",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1_0\"));\nconsole.log(parseFloat(\"1_1\"));\nconsole.log(parseFloat(\"2_2\"));\nconsole.log(parseFloat(\"3_3\"));\nconsole.log(parseFloat(\"4_4\"));\nconsole.log(parseFloat(\"5_5\"));\nconsole.log(parseFloat(\"6_6\"));\nconsole.log(parseFloat(\"7_7\"));\nconsole.log(parseFloat(\"8_8\"));\nconsole.log(parseFloat(\"9_9\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1_0\"), 1);\nassert.sameValue(parseFloat(\"1_1\"), 1);\nassert.sameValue(parseFloat(\"2_2\"), 2);\nassert.sameValue(parseFloat(\"3_3\"), 3);\nassert.sameValue(parseFloat(\"4_4\"), 4);\nassert.sameValue(parseFloat(\"5_5\"), 5);\nassert.sameValue(parseFloat(\"6_6\"), 6);\nassert.sameValue(parseFloat(\"7_7\"), 7);\nassert.sameValue(parseFloat(\"8_8\"), 8);\nassert.sameValue(parseFloat(\"9_9\"), 9);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-nzd-nsl-dd-one-of.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-nzd-nsl-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1_1\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1_1\"), 1);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-nzd-nsl-dd.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-nzd-nsl-dds",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"1_0123456789\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"1_0123456789\"), 1);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-nzd-nsl-dds.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.parsefloat.tonumber-numeric-separator-literal-sign-plus-dds-nsl-dd",
       "category": "parsefloat",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(parseFloat(\"+123456789_0\"));\nconsole.log(parseFloat(\"+123456789_1\"));\nconsole.log(parseFloat(\"+123456789_2\"));\nconsole.log(parseFloat(\"+123456789_3\"));\nconsole.log(parseFloat(\"+123456789_4\"));\nconsole.log(parseFloat(\"+123456789_5\"));\nconsole.log(parseFloat(\"+123456789_6\"));\nconsole.log(parseFloat(\"+123456789_7\"));\nconsole.log(parseFloat(\"+123456789_8\"));\nconsole.log(parseFloat(\"+123456789_9\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(parseFloat(\"+123456789_0\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_1\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_2\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_3\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_4\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_5\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_6\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_7\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_8\"), +123456789);\nassert.sameValue(parseFloat(\"+123456789_9\"), +123456789);\n}\nmain();\n",
       "origin": "test/built-ins/parseFloat/tonumber-numeric-separator-literal-sign-plus-dds-nsl-dd.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [
+        "numeric-separator-literal"
+      ],
+      "includes": []
     }
   ]
 }

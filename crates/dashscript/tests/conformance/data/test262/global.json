@@ -1,41 +1,77 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
     {
       "id": "test262.test.built-ins.global.10.2.1.1.3-4-16-s",
       "category": "global",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  NaN = 12;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  NaN = 12;\n});\n}\nmain();\n",
       "origin": "test/built-ins/global/10.2.1.1.3-4-16-s.js",
       "n_asserts": 1,
-      "flags": ["onlyStrict"]
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.global.10.2.1.1.3-4-18-s",
       "category": "global",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  undefined = 12;\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  undefined = 12;\n});\n}\nmain();\n",
       "origin": "test/built-ins/global/10.2.1.1.3-4-18-s.js",
       "n_asserts": 1,
-      "flags": ["onlyStrict"]
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.global.global-object",
       "category": "global",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(this);\nconsole.log(globalThis.globalThis);\n\nconsole.log(Array);\nconsole.log(Boolean);\nconsole.log(Date);\nconsole.log(Error);\nconsole.log(Function);\nconsole.log(JSON);\nconsole.log(Math);\nconsole.log(Number);\nconsole.log(RegExp);\nconsole.log(String);\n\nvar globalVariable = {};\nconsole.log(globalVariable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(this, globalThis);\nassert.sameValue(globalThis.globalThis, globalThis);\n\nassert.sameValue(Array, globalThis.Array);\nassert.sameValue(Boolean, globalThis.Boolean);\nassert.sameValue(Date, globalThis.Date);\nassert.sameValue(Error, globalThis.Error);\nassert.sameValue(Function, globalThis.Function);\nassert.sameValue(JSON, globalThis.JSON);\nassert.sameValue(Math, globalThis.Math);\nassert.sameValue(Number, globalThis.Number);\nassert.sameValue(RegExp, globalThis.RegExp);\nassert.sameValue(String, globalThis.String);\n\nvar globalVariable = {};\nassert.sameValue(globalVariable, globalThis.globalVariable);\n}\nmain();\n",
       "origin": "test/built-ins/global/global-object.js",
       "n_asserts": 13,
-      "flags": []
+      "flags": [],
+      "features": [
+        "globalThis"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.global.s15.1_a1_t1",
+      "category": "global",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar global = this;\n\nassert.throws(TypeError, function() {\n  new global;\n});\n}\nmain();\n",
+      "origin": "test/built-ins/global/S15.1_A1_T1.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.global.s15.1_a1_t2",
+      "category": "global",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar global = this;\n\nassert.throws(TypeError, function() {\n  new global();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/global/S15.1_A1_T2.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.global.s15.1_a2_t1",
       "category": "global",
       "source": "test262",
-      "fixture": "function main(): void {\nvar global = this;\n\ntry { (function() {\n  global();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar global = this;\n\nassert.throws(TypeError, function() {\n  global();\n});\n}\nmain();\n",
       "origin": "test/built-ins/global/S15.1_A2_T1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     }
   ]
 }

@@ -1,77 +1,180 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.isnan.not-a-constructor",
+      "category": "isnan",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(isNaN), false, 'isConstructor(isNaN) must return false');\n\nassert.throws(TypeError, () => {\n  new isNaN(1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/isNaN/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
     {
       "id": "test262.test.built-ins.isnan.return-abrupt-from-tonumber-number-symbol",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nvar s = Symbol(1);\n\ntry { (function() {\n  isNaN(s);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar s = Symbol(1);\n\nassert.throws(TypeError, function() {\n  isNaN(s);\n});\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/return-abrupt-from-tonumber-number-symbol.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.isnan.return-abrupt-from-tonumber-number",
+      "category": "isnan",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj1 = {\n  valueOf: function() {\n    throw new Test262Error();\n  }\n};\n\nvar obj2 = {\n  toString: function() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, function() {\n  isNaN(obj1);\n}, \"valueOf\");\n\nassert.throws(Test262Error, function() {\n  isNaN(obj2);\n}, \"toString\");\n}\nmain();\n",
+      "origin": "test/built-ins/isNaN/return-abrupt-from-tonumber-number.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.isnan.return-false-not-nan-numbers",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(isNaN(0));\nconsole.log(isNaN(-0));\nconsole.log(isNaN(Math.pow(2, 53)));\nconsole.log(isNaN(-Math.pow(2, 53)));\nconsole.log(isNaN(1));\nconsole.log(isNaN(-1));\nconsole.log(isNaN(0.000001));\nconsole.log(isNaN(-0.000001));\nconsole.log(isNaN(1e42));\nconsole.log(isNaN(-1e42));\nconsole.log(isNaN(Infinity));\nconsole.log(isNaN(-Infinity));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(isNaN(0), false, \"0\");\nassert.sameValue(isNaN(-0), false, \"-0\");\nassert.sameValue(isNaN(Math.pow(2, 53)), false, \"Math.pow(2, 53)\");\nassert.sameValue(isNaN(-Math.pow(2, 53)), false, \"-Math.pow(2, 53)\");\nassert.sameValue(isNaN(1), false, \"1\");\nassert.sameValue(isNaN(-1), false, \"-1\");\nassert.sameValue(isNaN(0.000001), false, \"0.000001\");\nassert.sameValue(isNaN(-0.000001), false, \"-0.000001\");\nassert.sameValue(isNaN(1e42), false, \"1e42\");\nassert.sameValue(isNaN(-1e42), false, \"-1e42\");\nassert.sameValue(isNaN(Infinity), false, \"Infinity\");\nassert.sameValue(isNaN(-Infinity), false, \"-Infinity\");\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/return-false-not-nan-numbers.js",
       "n_asserts": 12,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.isnan.return-true-nan",
+      "category": "isnan",
+      "source": "test262",
+      "fixture": "function main(): void {\nNaNs.forEach(function(v, i) {\n  assert.sameValue(isNaN(v), true, \"value on position: \" + i);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/isNaN/return-true-nan.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "nans.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.isnan.s15.1.2.4_a2.6",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(isNaN.prototype);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(isNaN.prototype, undefined, 'The value of isNaN.prototype is expected to equal undefined');\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/S15.1.2.4_A2.6.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.isnan.s15.1.2.4_a2.7",
+      "category": "isnan",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  new isNaN();\n  throw new Test262Error();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/isNaN/S15.1.2.4_A2.7.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.isnan.tonumber-operations",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(isNaN(\"0\"));\nconsole.log(isNaN(\"\"));\nconsole.log(isNaN(\"Infinity\"));\nconsole.log(isNaN(\"this is not a number\"));\nconsole.log(isNaN(true));\nconsole.log(isNaN(false));\nconsole.log(isNaN([1]));\nconsole.log(isNaN([Infinity]));\nconsole.log(isNaN([NaN]));\nconsole.log(isNaN(null));\nconsole.log(isNaN(undefined));\nconsole.log(isNaN());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(isNaN(\"0\"), false, \"'0'\");\nassert.sameValue(isNaN(\"\"), false, \"the empty string\");\nassert.sameValue(isNaN(\"Infinity\"), false, \"'Infinity'\");\nassert.sameValue(isNaN(\"this is not a number\"), true, \"string\");\nassert.sameValue(isNaN(true), false, \"true\");\nassert.sameValue(isNaN(false), false, \"false\");\nassert.sameValue(isNaN([1]), false, \"Object [1]\");\nassert.sameValue(isNaN([Infinity]), false, \"Object [Infinity]\");\nassert.sameValue(isNaN([NaN]), true, \"Object [NaN]\");\nassert.sameValue(isNaN(null), false, \"null\");\nassert.sameValue(isNaN(undefined), true, \"undefined\");\nassert.sameValue(isNaN(), true, \"no arg\");\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/tonumber-operations.js",
       "n_asserts": 12,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.isnan.toprimitive-call-abrupt",
+      "category": "isnan",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\nobj[Symbol.toPrimitive] = function() {\n  throw new Test262Error();\n};\n\nassert.throws(Test262Error, function() {\n  isNaN(obj);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/isNaN/toprimitive-call-abrupt.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.isnan.toprimitive-get-abrupt",
+      "category": "isnan",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = Object.defineProperty({}, Symbol.toPrimitive, {\n  get: function() {\n    throw new Test262Error();\n  }\n});\n\nassert.throws(Test262Error, function() {\n  isNaN(obj);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/isNaN/toprimitive-get-abrupt.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.isnan.toprimitive-not-callable-throws",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {};\n\nobj[Symbol.toPrimitive] = 42;\ntry { (function() {\n  isNaN(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = \"\";\ntry { (function() {\n  isNaN(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = true;\ntry { (function() {\n  isNaN(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = Symbol.toPrimitive;\ntry { (function() {\n  isNaN(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nobj[Symbol.toPrimitive] = {};\ntry { (function() {\n  isNaN(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {};\n\nobj[Symbol.toPrimitive] = 42;\nassert.throws(TypeError, function() {\n  isNaN(obj);\n}, \"number\");\n\nobj[Symbol.toPrimitive] = \"\";\nassert.throws(TypeError, function() {\n  isNaN(obj);\n}, \"string\");\n\nobj[Symbol.toPrimitive] = true;\nassert.throws(TypeError, function() {\n  isNaN(obj);\n}, \"boolean\");\n\nobj[Symbol.toPrimitive] = Symbol.toPrimitive;\nassert.throws(TypeError, function() {\n  isNaN(obj);\n}, \"symbol\");\n\nobj[Symbol.toPrimitive] = {};\nassert.throws(TypeError, function() {\n  isNaN(obj);\n}, \"object\");\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/toprimitive-not-callable-throws.js",
       "n_asserts": 5,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.isnan.toprimitive-result-is-object-throws",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {};\nobj[Symbol.toPrimitive] = function() {\n  return [42];\n};\n\ntry { (function() {\n  isNaN(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {};\nobj[Symbol.toPrimitive] = function() {\n  return [42];\n};\n\nassert.throws(TypeError, function() {\n  isNaN(obj);\n});\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/toprimitive-result-is-object-throws.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.isnan.toprimitive-result-is-symbol-throws",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = {};\nobj[Symbol.toPrimitive] = function() {\n  return Symbol.toPrimitive;\n};\n\ntry { (function() {\n  isNaN(obj);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = {};\nobj[Symbol.toPrimitive] = function() {\n  return Symbol.toPrimitive;\n};\n\nassert.throws(TypeError, function() {\n  isNaN(obj);\n});\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/toprimitive-result-is-symbol-throws.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.isnan.toprimitive-valid-result",
       "category": "isnan",
       "source": "test262",
-      "fixture": "function main(): void {\nvar called = 0;\nvar obj = {\n  valueOf: function() {\n    called = NaN;\n    return Infinity;\n  },\n  toString: function() {\n    called = NaN;\n    return Infinity;\n  }\n};\n\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return 42;\n};\nconsole.log(isNaN(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return \"this is not a number\";\n};\nconsole.log(isNaN(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return true;\n};\nconsole.log(isNaN(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return false;\n};\nconsole.log(isNaN(obj));\nconsole.log(called);\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return NaN;\n};\nconsole.log(isNaN(obj));\nconsole.log(called);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar called = 0;\nvar obj = {\n  valueOf: function() {\n    called = NaN;\n    return Infinity;\n  },\n  toString: function() {\n    called = NaN;\n    return Infinity;\n  }\n};\n\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return 42;\n};\nassert.sameValue(isNaN(obj), false, \"use returned value - non-NaN number\");\nassert.sameValue(called, 1, \"toPrimitive is called - non-NaN number\");\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return \"this is not a number\";\n};\nassert.sameValue(isNaN(obj), true, \"use returned value - string to NaN\");\nassert.sameValue(called, 1, \"toPrimitive is called - string to NaN\");\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return true;\n};\nassert.sameValue(isNaN(obj), false, \"use returned value - boolean true\");\nassert.sameValue(called, 1, \"toPrimitive is called - boolean true\");\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return false;\n};\nassert.sameValue(isNaN(obj), false, \"use returned value - boolean false\");\nassert.sameValue(called, 1, \"toPrimitive is called - boolean false\");\n\ncalled = 0;\nobj[Symbol.toPrimitive] = function() {\n  called += 1;\n  return NaN;\n};\nassert.sameValue(isNaN(obj), true, \"use returned value - NaN\");\nassert.sameValue(called, 1, \"toPrimitive is called - NaN\");\n}\nmain();\n",
       "origin": "test/built-ins/isNaN/toprimitive-valid-result.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
     }
   ]
 }

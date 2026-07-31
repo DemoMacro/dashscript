@@ -1,248 +1,701 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.generatorprototype.constructor",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar Generator = Object.getPrototypeOf(g);\nvar GeneratorPrototype = Generator.prototype;\n\nassert.sameValue(GeneratorPrototype.constructor, Generator);\n\nverifyProperty(GeneratorPrototype, 'constructor', {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
     {
       "id": "test262.test.built-ins.generatorprototype.next.consecutive-yields",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 2;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n  yield 2;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, undefined, 'Third result `value`');\nassert.sameValue(result.done, true, 'Third result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/consecutive-yields.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.context-method-invocation",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar context;\n\nfunction* g() {\n  context = this;\n}\nvar obj = {\n  g: g\n};\nvar iter = obj.g();\n\niter.next();\n\nconsole.log(context);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar context;\n\nfunction* g() {\n  context = this;\n}\nvar obj = {\n  g: g\n};\nvar iter = obj.g();\n\niter.next();\n\nassert.sameValue(context, obj);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/context-method-invocation.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.from-state-executing",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar iter, result;\n\nfunction* withoutVal() {\n  iter.next();\n}\n\nfunction* withVal() {\n  iter.next(42);\n}\n\niter = withoutVal();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n\niter = withVal();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar iter, result;\n\nfunction* withoutVal() {\n  iter.next();\n}\n\nfunction* withVal() {\n  iter.next(42);\n}\n\niter = withoutVal();\nassert.throws(TypeError, function() {\n  iter.next();\n}, 'Error when invoked without value');\n\nresult = iter.next();\n\nassert.sameValue(\n  typeof result, 'object', 'type following invocation without value'\n);\nassert.sameValue(\n  result.value, undefined, '`value` following invocation without value'\n);\nassert.sameValue(\n  result.done, true, '`done` following invocation without value'\n);\n\niter = withVal();\nassert.throws(TypeError, function() {\n  iter.next();\n}, 'Error when invoked with value');\n\nresult = iter.next();\n\nassert.sameValue(\n  typeof result, 'object', 'type following invocation with value'\n);\nassert.sameValue(\n  result.value, undefined, '`value` following invocation with value'\n);\nassert.sameValue(\n  result.done, true, '`done` following invocation with value'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/from-state-executing.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.lone-return",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {\n  return 23;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {\n  return 23;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 23, 'Result value');\nassert.sameValue(result.done, true, 'Result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/lone-return.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.lone-yield",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {\n  yield 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, undefined, 'Second result `value`');\nassert.sameValue(result.done, true, 'Second result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/lone-yield.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.no-control-flow",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, undefined, 'First result `value`');\nassert.sameValue(result.done, true, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, undefined, 'Second result `value`');\nassert.sameValue(result.done, true, 'Second result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/no-control-flow.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.next.not-a-constructor",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Object.getPrototypeOf((function* g() {}).prototype).next),\n  false,\n  'isConstructor(Object.getPrototypeOf((function* g() {}).prototype).next) must return false'\n);\n\nassert.throws(TypeError, () => {\n  function* g() {} let iterator = g(); new iterator.next();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/next/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "generators",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.result-prototype",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar result = g().next();\n\nconsole.log(Object.prototype.hasOwnProperty.call(result, 'value'));\nconsole.log(Object.prototype.hasOwnProperty.call(result, 'done'));\nconsole.log(Object.getPrototypeOf(result));\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar result = g().next();\n\nassert(\n  Object.prototype.hasOwnProperty.call(result, 'value'), 'Has \"own\" property `value`'\n);\nassert(\n  Object.prototype.hasOwnProperty.call(result, 'done'), 'Has \"own\" property `done`'\n);\nassert.sameValue(Object.getPrototypeOf(result), Object.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/result-prototype.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.return-yield-expr",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {\n  return yield 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next(3);\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {\n  return yield 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next(3);\nassert.sameValue(result.value, 3, 'Final result `value`');\nassert.sameValue(result.done, true, 'Final result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/return-yield-expr.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.this-val-not-generator",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\ntry { (function() {\n    GeneratorPrototype.next.call({});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call({}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(function() {});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(function() {}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(g);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(g, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(g.prototype);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(g.prototype, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call({});\n  },\n  'ordinary object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call({}, 1);\n  },\n  'ordinary object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(function() {});\n  },\n  'function object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(function() {}, 1);\n  },\n  'function object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(g);\n  },\n  'generator function object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(g, 1);\n  },\n  'generator function object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(g.prototype);\n  },\n  'generator function prototype object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(g.prototype, 1);\n  },\n  'generator function prototype object (with value)'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/this-val-not-generator.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.next.this-val-not-object",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\ntry { (function() {\n    GeneratorPrototype.next.call(undefined);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(undefined, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(null);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(null, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(true);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(true, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call('s');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call('s', 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(1, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.next.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.next.call(symbol, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(undefined);\n  },\n  'undefined (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(undefined, 1);\n  },\n  'undefined (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(null);\n  },\n  'null (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(null, 1);\n  },\n  'null (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(true);\n  },\n  'boolean (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(true, 1);\n  },\n  'boolean (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call('s');\n  },\n  'string (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call('s', 1);\n  },\n  'string (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(1);\n  },\n  'number (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(1, 1);\n  },\n  'number (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(symbol);\n  },\n  'symbol (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.next.call(symbol, 1);\n  },\n  'symbol (with value)'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/next/this-val-not-object.js",
       "n_asserts": 12,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.from-state-completed",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* G() {}\nvar iter, result;\n\niter = G();\niter.next();\n\nresult = iter.return(33);\n\nconsole.log(result.value);\nconsole.log(result.done);\n\nresult = iter.next();\n\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* G() {}\nvar iter, result;\n\niter = G();\niter.next();\n\nresult = iter.return(33);\n\nassert.sameValue(result.value, 33, 'return: result `value`');\nassert.sameValue(result.done, true, 'return: result `done` flag');\n\nresult = iter.next();\n\nassert.sameValue(result.value, undefined, 'next: result `value`');\nassert.sameValue(result.done, true, 'next: result `done` flag');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/from-state-completed.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.from-state-executing",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar iter, result;\nfunction* g() {\n  iter.return(42);\n}\n\niter = g();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar iter, result;\nfunction* g() {\n  iter.return(42);\n}\n\niter = g();\nassert.throws(TypeError, function() {\n  iter.next();\n});\n\nresult = iter.next();\n\nassert.sameValue(typeof result, 'object');\nassert.sameValue(result.value, undefined);\nassert.sameValue(result.done, true);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/from-state-executing.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.from-state-suspended-start",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar bodyCount = 0;\nfunction* G() {\n  bodyCount += 1;\n}\nvar iter = G();\nvar result;\n\nresult = iter.return(56);\n\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(bodyCount);\n\nresult = iter.next();\n\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(bodyCount);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar bodyCount = 0;\nfunction* G() {\n  bodyCount += 1;\n}\nvar iter = G();\nvar result;\n\nresult = iter.return(56);\n\nassert.sameValue(result.value, 56);\nassert.sameValue(result.done, true);\nassert.sameValue(\n  bodyCount, 0, 'body not evaluated during processing of `return` method'\n);\n\nresult = iter.next();\n\nassert.sameValue(result.value, undefined, 'Result `value`');\nassert.sameValue(result.done, true, 'Result `done` flag');\nassert.sameValue(\n  bodyCount, 0, 'body not evaluated when \"completed\" generator is advanced'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/from-state-suspended-start.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.not-a-constructor",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Object.getPrototypeOf((function* g() {}).prototype).return),\n  false,\n  'isConstructor(Object.getPrototypeOf((function* g() {}).prototype).return) must return false'\n);\n\nassert.throws(TypeError, () => {\n  function* g() {} let iterator = g(); new iterator.return();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "generators",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.this-val-not-generator",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\ntry { (function() {\n    GeneratorPrototype.return.call({});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call({}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(function() {});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(function() {}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(g);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(g, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(g.prototype);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(g.prototype, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call({});\n  },\n  'ordinary object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call({}, 1);\n  },\n  'ordinary object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(function() {});\n  },\n  'function object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(function() {}, 1);\n  },\n  'function object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(g);\n  },\n  'generator function object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(g, 1);\n  },\n  'generator function object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(g.prototype);\n  },\n  'generator function prototype object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(g.prototype, 1);\n  },\n  'generator function prototype object (with value)'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/this-val-not-generator.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.this-val-not-object",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\ntry { (function() {\n    GeneratorPrototype.return.call(undefined);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(undefined, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(null);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(null, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(true);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(true, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call('s');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call('s', 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(1, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.return.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.return.call(symbol, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(undefined);\n  },\n  'undefined (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(undefined, 1);\n  },\n  'undefined (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(null);\n  },\n  'null (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(null, 1);\n  },\n  'null (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(true);\n  },\n  'boolean (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(true, 1);\n  },\n  'boolean (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call('s');\n  },\n  'string (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call('s', 1);\n  },\n  'string (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(1);\n  },\n  'number (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(1, 1);\n  },\n  'number (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(symbol);\n  },\n  'symbol (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.return.call(symbol, 1);\n  },\n  'symbol (with value)'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/this-val-not-object.js",
       "n_asserts": 12,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-catch-before-try",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar unreachable = 0;\nfunction* g() {\n  yield;\n  try {\n    unreachable += 1;\n  } catch (e) {\n    throw e;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\nconsole.log(unreachable);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar unreachable = 0;\nfunction* g() {\n  yield;\n  try {\n    unreachable += 1;\n  } catch (e) {\n    throw e;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (paused at yield)'\n);\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(result.value,\n  undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-catch-before-try.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-catch-following-catch",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar afterCatch = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    throw new Error();\n  } catch (e) {}\n  afterCatch += 1;\n  yield;\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\n\nassert.sameValue(afterCatch, 1);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (paused at yield)'\n);\n\nresult = iter.return(45);\nassert.sameValue(\n  result.value, 45, 'Result `value` following `return`'\n);\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-catch-following-catch.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-catch-within-catch",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inCatch = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    throw new Error();\n  } catch (e) {\n    inCatch += 1;\n    yield;\n    unreachable += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\n\nassert.sameValue(inCatch, 1);\n\nresult = iter.return(45);\nassert.sameValue(\n  result.value, 45, 'Result `value` following `return`'\n);\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-catch-within-catch.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-catch-within-try",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar inTry = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    unreachable += 1;\n  } catch (e) {\n    throw e;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\n\nconsole.log(inTry);\n\nresult = iter.return(44);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    unreachable += 1;\n  } catch (e) {\n    throw e;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\n\nassert.sameValue(inTry, 1);\n\nresult = iter.return(44);\nassert.sameValue(result.value, 44, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-catch-within-try.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-finally-before-try",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield;\n  unreachable += 1;\n  try {} finally {}\n}\nvar iter = g();\nvar result;\n\niter.next();\nconsole.log(unreachable);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield;\n  unreachable += 1;\n  try {} finally {}\n}\nvar iter = g();\nvar result;\n\niter.next();\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (paused at yield)'\n);\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-finally-before-try.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-finally-following-finally",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar afterFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {} finally {}\n  afterFinally += 1;\n  yield;\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(afterFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar afterFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {} finally {}\n  afterFinally += 1;\n  yield;\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nassert.sameValue(afterFinally, 1);\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-finally-following-finally.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-catch",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inCatch = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    try {\n      throw new Error();\n    } catch (e) {\n      inCatch += 1;\n      yield;\n      unreachable += 1;\n    }\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\n\nassert.sameValue(inCatch, 1, '`catch` code patch executed');\nassert.sameValue(inFinally, 0, '`finally` code path not executed');\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\nassert.sameValue(inFinally, 1, '`finally` code path executed');\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when compelete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-nested-try-catch-within-catch.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-finally",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {\n    throw new Error();\n    try {} catch (e) {}\n  } finally {\n    inFinally += 1;\n    yield;\n    unreachable += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\n\nassert.sameValue(inFinally, 1, '`finally` code path executed');\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-nested-try-catch-within-finally.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-inner-try",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    try {\n      inTry += 1;\n      yield;\n      unreachable += 1;\n    } catch (e) {\n      throw e;\n    }\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inTry);\nconsole.log(inFinally);\n\nresult = iter.return(45);\n\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(inFinally);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    try {\n      inTry += 1;\n      yield;\n      unreachable += 1;\n    } catch (e) {\n      throw e;\n    }\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nassert.sameValue(inTry, 1, 'Nested `try` code patch executed');\nassert.sameValue(inFinally, 0, '`finally` code path not executed');\n\nresult = iter.return(45);\n\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\nassert.sameValue(inFinally, 1, '`finally` code path executed');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-finally-nested-try-catch-within-inner-try.js",
       "n_asserts": 9,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-outer-try-after-nested",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar inCatch = 0;\nvar inFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {\n    try {\n      throw new Error();\n    } catch (e) {\n      inCatch += 1;\n    }\n  } finally {\n    inFinally += 1;\n  }\n  yield;\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nassert.sameValue(inCatch, 1, '`catch` code path executed');\nassert.sameValue(inFinally, 1, '`finally` code path executed');\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/return/try-finally-nested-try-catch-within-outer-try-after-nested.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-finally-nested-try-catch-within-outer-try-before-nested",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    try {\n      unreachable += 1;\n    } catch (e) {\n      throw e;\n    }\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inTry);\nconsole.log(inFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(inFinally);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    try {\n      unreachable += 1;\n    } catch (e) {\n      throw e;\n    }\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nassert.sameValue(inTry, 1, '`try` code path executed');\nassert.sameValue(inFinally, 0, '`finally` code path not executed');\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Second result `value`');\nassert.sameValue(result.done, true, 'Second result `done` flag');\nassert.sameValue(inFinally, 1, '`finally` code path executed');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-finally-nested-try-catch-within-outer-try-before-nested.js",
       "n_asserts": 9,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-finally-set-property-within-try",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = { foo: 'not modified' };\nfunction* g() {\n  try {\n    obj.foo = yield;\n  } finally {\n    return 1;\n  }\n}\nvar iter = g();\nvar result;\n\niter.next();\nresult = iter.return(45).value;\nconsole.log(obj.foo);\nconsole.log(result);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = { foo: 'not modified' };\nfunction* g() {\n  try {\n    obj.foo = yield;\n  } finally {\n    return 1;\n  }\n}\nvar iter = g();\nvar result;\n\niter.next();\nresult = iter.return(45).value;\nassert.sameValue(obj.foo, 'not modified', '`obj.foo` must not be set');\nassert.sameValue(result, 1, 'finally block must supersede return value');\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-finally-set-property-within-try.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-finally-within-finally",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar inFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {} finally {\n    inFinally += 1;\n    yield;\n    unreachable += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar inFinally = 0;\nvar unreachable = 0;\n\nfunction* g() {\n  try {} finally {\n    inFinally += 1;\n    yield;\n    unreachable += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nassert.sameValue(inFinally, 1, '`finally` code path executed');\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-finally-within-finally.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.return.try-finally-within-try",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nconsole.log(inTry);\nconsole.log(inFinally);\n\nresult = iter.return(45);\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(inFinally);\n\nconsole.log(unreachable);\n\nresult = iter.next();\nconsole.log(result.value);\nconsole.log(result.done);\nconsole.log(unreachable);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar inTry = 0;\nvar inFinally = 0;\nvar unreachable = 0;\nfunction* g() {\n  try {\n    inTry += 1;\n    yield;\n    unreachable += 1;\n  } finally {\n    inFinally += 1;\n  }\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\niter.next();\n\nassert.sameValue(inTry, 1, '`try` block code path executed');\nassert.sameValue(inFinally, 0, '`finally` code path not executed');\n\nresult = iter.return(45);\nassert.sameValue(result.value, 45, 'Result `value` following `return`');\nassert.sameValue(result.done, true, 'Result `done` flag following `return`');\nassert.sameValue(inFinally, 1, '`finally` code path executed');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `return`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when complete'\n);\nassert.sameValue(\n  result.done, true, 'Result `done` flag is `true` when complete'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/return/try-finally-within-try.js",
       "n_asserts": 9,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.symbol.tostringtag",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar GeneratorPrototype = Object.getPrototypeOf(\n  Object.getPrototypeOf(function*() {}())\n);\n\nassert.sameValue(GeneratorPrototype[Symbol.toStringTag], 'Generator');\n\nverifyProperty(GeneratorPrototype, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "generators",
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.from-state-completed",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction E() {}\n\nfunction* G() {}\nvar iter;\n\niter = G();\niter.next();\n\nassert.throws(E, function() {\n  iter.throw(new E());\n});\n\nvar result = iter.next();\n\nassert.sameValue(result.value, undefined, 'Result `value`');\nassert.sameValue(result.done, true, 'Result `done` flag');\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/from-state-completed.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.throw.from-state-executing",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nvar iter, result;\nfunction* g() {\n  iter.throw(42);\n}\n\niter = g();\ntry { (function() {\n  iter.next();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\nresult = iter.next();\n\nconsole.log(typeof result);\nconsole.log(result.value);\nconsole.log(result.done);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar iter, result;\nfunction* g() {\n  iter.throw(42);\n}\n\niter = g();\nassert.throws(TypeError, function() {\n  iter.next();\n});\n\nresult = iter.next();\n\nassert.sameValue(typeof result, 'object');\nassert.sameValue(result.value, undefined);\nassert.sameValue(result.done, true);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/throw/from-state-executing.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.from-state-suspended-start",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nfunction E() {}\n\nfunction* G() {\n  yield 1;\n  yield 2;\n}\nvar iter;\n\niter = G();\nassert.throws(E, function() {\n  iter.throw(new E());\n});\n\nvar result = iter.next();\n\nassert.sameValue(result.value, undefined, 'Result `value`');\nassert.sameValue(result.done, true, 'Result `done` flag');\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/from-state-suspended-start.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.not-a-constructor",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Object.getPrototypeOf((function* g() {}).prototype).throw),\n  false,\n  'isConstructor(Object.getPrototypeOf((function* g() {}).prototype).throw) must return false'\n);\n\nassert.throws(TypeError, () => {\n  function* g() {} let expected = new Test262Error(); let iterator = g();try {new iterator.throw(expected);} catch (e) {if (e !== expected) {throw e;}}\n});\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "generators",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.generatorprototype.throw.this-val-not-generator",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\ntry { (function() {\n    GeneratorPrototype.throw.call({});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call({}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(function() {});\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(function() {}, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(g);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(g, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(g.prototype);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(g.prototype, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call({});\n  },\n  'ordinary object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call({}, 1);\n  },\n  'ordinary object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(function() {});\n  },\n  'function object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(function() {}, 1);\n  },\n  'function object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(g);\n  },\n  'generator function object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(g, 1);\n  },\n  'generator function object (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(g.prototype);\n  },\n  'generator function prototype object (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(g.prototype, 1);\n  },\n  'generator function prototype object (with value)'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/throw/this-val-not-generator.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.generatorprototype.throw.this-val-not-object",
       "category": "generatorprototype",
       "source": "test262",
-      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\ntry { (function() {\n    GeneratorPrototype.throw.call(undefined);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(undefined, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(null);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(null, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(true);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(true, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call('s');\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call('s', 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(1, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n    GeneratorPrototype.throw.call(symbol);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\ntry { (function() {\n    GeneratorPrototype.throw.call(symbol, 1);\n  })(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nfunction* g() {}\nvar GeneratorPrototype = Object.getPrototypeOf(g).prototype;\nvar symbol = Symbol();\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(undefined);\n  },\n  'undefined (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(undefined, 1);\n  },\n  'undefined (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(null);\n  },\n  'null (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(null, 1);\n  },\n  'null (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(true);\n  },\n  'boolean (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(true, 1);\n  },\n  'boolean (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call('s');\n  },\n  'string (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call('s', 1);\n  },\n  'string (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(1);\n  },\n  'number (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(1, 1);\n  },\n  'number (with value)'\n);\n\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(symbol);\n  },\n  'symbol (without value)'\n);\nassert.throws(\n  TypeError,\n  function() {\n    GeneratorPrototype.throw.call(symbol, 1);\n  },\n  'symbol (with value)'\n);\n}\nmain();\n",
       "origin": "test/built-ins/GeneratorPrototype/throw/this-val-not-object.js",
       "n_asserts": 12,
-      "flags": []
+      "flags": [],
+      "features": [
+        "generators",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-catch-before-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield 1;\n  unreachable += 1;\n  try {\n    yield 2;\n  } catch (e) {\n    yield e;\n  }\n  yield 3;\n}\nvar iter, result;\n\niter = g();\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (paused at yield)'\n);\n\nassert.throws(Test262Error, function() {\n  iter.throw(new Test262Error());\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(result.value,\n  undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-catch-before-try.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-catch-following-catch",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\nvar unreachable = 0;\n\nfunction* g() {\n  yield 1;\n  try {\n    yield 2;\n    throw obj;\n  } catch (e) {\n    yield e;\n  }\n  yield 3;\n  unreachable += 1;\n}\nvar iter, result;\n\niter = g();\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, obj, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 3, 'Fourth result `value`');\nassert.sameValue(result.done, false, 'Fourth result `done` flag');\n\nassert.throws(Test262Error, function() {\n  iter.throw(new Test262Error());\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-catch-following-catch.js",
+      "n_asserts": 13,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-catch-within-catch",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield 1;\n  try {\n    yield 2;\n    throw exception;\n  } catch (e) {\n    yield e;\n    unreachable += 1;\n  }\n  yield 3;\n}\nvar iter, result, exception;\n\nexception = new Test262Error();\niter = g();\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, exception, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nassert.throws(Test262Error, function() {\n  iter.throw(new Test262Error());\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-catch-within-catch.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-catch-within-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\nfunction* g() {\n  yield 1;\n  try {\n    yield 2;\n    unreachable += 1;\n  } catch (e) {\n    yield e;\n  }\n  yield 3;\n}\nvar iter, result, exception;\n\nexception = new Test262Error();\niter = g();\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.throw(exception);\nassert.sameValue(result.value, exception, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(result.value, 3, 'Fourth result `done` flag');\nassert.sameValue(result.done, false, 'Fourth result `value`');\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `catch`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-catch-within-try.js",
+      "n_asserts": 13,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-before-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield 1;\n  unreachable += 1;\n  try {\n    yield 2;\n  } finally {\n    yield 3;\n  }\n  yield 4;\n}\nvar iter, result;\n\niter = g();\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(\n  result.done, false, 'First result `done` flag'\n);\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (paused at yield)'\n);\n\nassert.throws(Test262Error, function() {\n  iter.throw(new Test262Error());\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-before-try.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-following-finally",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield 1;\n  try {\n    yield 2;\n  } finally {\n    yield 3;\n  }\n  yield 4;\n  unreachable += 1;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 3, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 4, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nassert.throws(Test262Error, function() {\n  iter.throw(new Test262Error());\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-following-finally.js",
+      "n_asserts": 13,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-nested-try-catch-within-catch",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  try {\n    yield 1;\n    try {\n      yield 2;\n      throw exception;\n    } catch (e) {\n      yield e;\n      unreachable += 1;\n    }\n    yield 3;\n  } finally {\n    yield 4;\n  }\n  yield 5;\n}\nvar exception = new Error();\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, exception, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iter.throw(new Test262Error());\nassert.sameValue(result.value, 4, 'Fourth result `value`');\nassert.sameValue(result.done, false, 'Fourth result `done` flag');\n\nassert.throws(Test262Error, function() {\n  iter.next();\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-nested-try-catch-within-catch.js",
+      "n_asserts": 13,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-nested-try-catch-within-finally",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  try {\n    yield 1;\n    throw new Error();\n    try {\n      yield 2;\n    } catch (e) {\n      yield e;\n    }\n    yield 3;\n  } finally {\n    yield 4;\n    unreachable += 1;\n  }\n  unreachable += 1;\n  yield 5;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 4, 'Second result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nassert.throws(Test262Error, function() {\n  iter.throw(new Test262Error());\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-nested-try-catch-within-finally.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-nested-try-catch-within-inner-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\nfunction* g() {\n  try {\n    yield 1;\n    try {\n      yield 2;\n      unreachable += 1;\n    } catch (e) {\n      yield e;\n    }\n    yield 3;\n  } finally {\n    yield 4;\n  }\n  yield 5;\n}\nvar iter = g();\nvar exception = new Error();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result value');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.throw(exception);\nassert.sameValue(result.value, exception, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(result.value, 3, 'Fourth result `value');\nassert.sameValue(result.done, false, 'Fourth result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 4, 'Fifth result `value`');\nassert.sameValue(result.done, false, 'Fifth result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 5, 'Sixth result `value`');\nassert.sameValue(result.done, false, 'Sixth result `done` flag');\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-nested-try-catch-within-inner-try.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-nested-try-catch-within-outer-try-after-nested",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  try {\n    yield 1;\n    try {\n      yield 2;\n      throw exception;\n    } catch (e) {\n      yield e;\n    }\n    yield 3;\n    unreachable += 1;\n  } finally {\n    yield 4;\n  }\n  yield 5;\n}\nvar exception = new Error();\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, exception, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 3, 'Fourth result `value`');\nassert.sameValue(result.done, false, 'Fourth result `done` flag');\n\nresult = iter.throw(new Test262Error());\nassert.sameValue(result.value, 4, 'Fifth result `value`');\nassert.sameValue(result.done, false, 'Fifth result `done` flag');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nassert.throws(Test262Error, function() {\n  iter.next();\n});\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-nested-try-catch-within-outer-try-after-nested.js",
+      "n_asserts": 15,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-nested-try-catch-within-outer-try-before-nested",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  try {\n    yield 1;\n    unreachable += 1;\n    try {\n      yield 2;\n    } catch (e) {\n      yield e;\n    }\n    yield 3;\n  } finally {\n    yield 4;\n  }\n  yield 5;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.throw(new Test262Error());\nassert.sameValue(result.value, 4, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nassert.throws(Test262Error, function() {\n  iter.next();\n});\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-nested-try-catch-within-outer-try-before-nested.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-within-finally",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield 1;\n  try {\n    yield 2;\n  } finally {\n    yield 3;\n    unreachable += 1;\n  }\n  yield 4;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 3, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nassert.throws(Test262Error, function() {\n  iter.throw(new Test262Error());\n});\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-within-finally.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.generatorprototype.throw.try-finally-within-try",
+      "category": "generatorprototype",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar unreachable = 0;\n\nfunction* g() {\n  yield 1;\n  try {\n    yield 2;\n    unreachable += 1;\n  } finally {\n    yield 3;\n  }\n  yield 4;\n}\nvar iter = g();\nvar result;\n\nresult = iter.next();\nassert.sameValue(result.value, 1, 'First result `value`');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iter.next();\nassert.sameValue(result.value, 2, 'Second result `value`');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iter.throw(new Test262Error());\nassert.sameValue(result.value, 3, 'Third result `value`');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nassert.sameValue(\n  unreachable,\n  0,\n  'statement following `yield` not executed (following `throw`)'\n);\n\nassert.throws(Test262Error, function() {\n  iter.next();\n});\n\nresult = iter.next();\nassert.sameValue(\n  result.value, undefined, 'Result `value` is undefined when done'\n);\nassert.sameValue(result.done, true, 'Result `done` flag is `true` when done');\nassert.sameValue(\n  unreachable, 0, 'statement following `yield` not executed (once \"completed\")'\n);\n\niter.next();\n}\nmain();\n",
+      "origin": "test/built-ins/GeneratorPrototype/throw/try-finally-within-try.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "generators"
+      ],
+      "includes": []
     }
   ]
 }

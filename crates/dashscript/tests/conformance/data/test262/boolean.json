@@ -1,203 +1,536 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.boolean.is-a-constructor",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Boolean), true, 'isConstructor(Boolean) must return true');\nnew Boolean();\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.boolean.proto-from-ctor-realm",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar C = new other.Function();\nC.prototype = null;\n\nvar o = Reflect.construct(Boolean, [], C);\n\nassert.sameValue(Object.getPrototypeOf(o), other.Boolean.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/proto-from-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.boolean.prototype.constructor.s15.6.4.1_a1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean.prototype.constructor);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Boolean.prototype.constructor,\n  Boolean,\n  'The value of Boolean.prototype.constructor is expected to equal the value of Boolean'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/constructor/S15.6.4.1_A1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean.prototype);\n\nconsole.log(Boolean.prototype == false);\n\ndelete Boolean.prototype.toString;\n\nconsole.log(Boolean.prototype.toString());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Boolean.prototype,\n  \"object\",\n  'The value of `typeof Boolean.prototype` is expected to be \"object\"'\n);\n\nassert(Boolean.prototype == false, 'The value of Boolean.prototype is expected to be false');\n\ndelete Boolean.prototype.toString;\n\nassert.sameValue(\n  Boolean.prototype.toString(),\n  \"[object Boolean]\",\n  'Boolean.prototype.toString() must return \"[object Boolean]\"'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/S15.6.3.1_A1.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a2",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\n// CHECK#1\nvar x = Boolean.prototype;\nverifyNotWritable(Boolean, \"prototype\", null, 1);\nassert.sameValue(Boolean.prototype, x, 'The value of Boolean.prototype is expected to equal the value of x');\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/S15.6.3.1_A2.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a3",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\n// CHECK#1\nverifyNotConfigurable(Boolean, \"prototype\");\n\nassert.throws(TypeError, () => {\n  delete Boolean.prototype;\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/S15.6.3.1_A3.js",
+      "n_asserts": 1,
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a4",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nfor (x in Boolean) {\n  console.log(x);\n}\n\nconsole.log(!Boolean.propertyIsEnumerable('prototype'));\n}\nmain();\n",
+      "fixture": "function main(): void {\nfor (x in Boolean) {\n  assert.notSameValue(x, \"prototype\", 'The value of x is not \"prototype\"');\n}\n\nassert(\n  !Boolean.propertyIsEnumerable('prototype'),\n  'The value of !Boolean.propertyIsEnumerable(\\'prototype\\') is expected to be true'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/S15.6.3.1_A4.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.prototype.s15.6.4_a2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.prototype.isPrototypeOf(Boolean.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(\n  Object.prototype.isPrototypeOf(Boolean.prototype),\n  'Object.prototype.isPrototypeOf(Boolean.prototype) must return true'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/S15.6.4_A2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.tostring.not-a-constructor",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Boolean.prototype.toString),\n  false,\n  'isConstructor(Boolean.prototype.toString) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Boolean.prototype.toString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/toString/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a1_t1",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean.prototype.toString(), \"false\", 'Boolean.prototype.toString() must return \"false\"');\nassert.sameValue((new Boolean()).toString(), \"false\", '(new Boolean()).toString() must return \"false\"');\nassert.sameValue((new Boolean(false)).toString(), \"false\", '(new Boolean(false)).toString() must return \"false\"');\nassert.sameValue((new Boolean(true)).toString(), \"true\", '(new Boolean(true)).toString() must return \"true\"');\nassert.sameValue((new Boolean(1)).toString(), \"true\", '(new Boolean(1)).toString() must return \"true\"');\nassert.sameValue((new Boolean(0)).toString(), \"false\", '(new Boolean(0)).toString() must return \"false\"');\n\nassert.sameValue(\n  (new Boolean(new Object())).toString(),\n  \"true\",\n  '(new Boolean(new Object())).toString() must return \"true\"'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A1_T1.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a1_t2",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean.prototype.toString(true), \"false\", 'Boolean.prototype.toString(true) must return \"false\"');\nassert.sameValue((new Boolean()).toString(true), \"false\", '(new Boolean()).toString(true) must return \"false\"');\n\nassert.sameValue(\n  (new Boolean(false)).toString(true),\n  \"false\",\n  '(new Boolean(false)).toString(true) must return \"false\"'\n);\n\nassert.sameValue(\n  (new Boolean(true)).toString(false),\n  \"true\",\n  '(new Boolean(true)).toString(false) must return \"true\"'\n);\n\nassert.sameValue((new Boolean(1)).toString(false), \"true\", '(new Boolean(1)).toString(false) must return \"true\"');\nassert.sameValue((new Boolean(0)).toString(true), \"false\", '(new Boolean(0)).toString(true) must return \"false\"');\n\nassert.sameValue(\n  (new Boolean(new Object())).toString(false),\n  \"true\",\n  '(new Boolean(new Object())).toString(false) must return \"true\"'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A1_T2.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t1",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = new String();\n  s1.toString = Boolean.prototype.toString;\n  var v1 = s1.toString();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = new String();\n  s2.myToString = Boolean.prototype.toString;\n  var v2 = s2.myToString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A2_T1.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t2",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = new Number();\n  s1.toString = Boolean.prototype.toString;\n  s1.toString();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = new Number();\n  s2.myToString = Boolean.prototype.toString;\n  s2.myToString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A2_T2.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t3",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s1 = new Date(0);\nObject.defineProperty(s1, \"toString\", {value: Boolean.prototype.toString});\nassert.throws(TypeError, () => {\n  s1.toString();\n});\n\nvar s2 = new Date(0);\ns2.myToString = Boolean.prototype.toString;\nassert.throws(TypeError, () => {\n  s2.myToString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A2_T3.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t4",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = new Object();\n  s1.toString = Boolean.prototype.toString;\n  s1.toString();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = new Object();\n  s2.myToString = Boolean.prototype.toString;\n  s2.myToString();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A2_T4.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t5",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => {\n  var s1 = {\n    x: 1\n  };\n  s1.toString = Boolean.prototype.toString;\n  s1.toString();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  var s2 = {\n    x: 1\n  };\n  s2.myToString = Boolean.prototype.toString;\n  s2.myToString();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = {\n    x: 1\n  };\n  s1.toString = Boolean.prototype.toString;\n  s1.toString();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = {\n    x: 1\n  };\n  s2.myToString = Boolean.prototype.toString;\n  s2.myToString();\n});\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/toString/S15.6.4.2_A2_T5.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.valueof.not-a-constructor",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Boolean.prototype.valueOf),\n  false,\n  'isConstructor(Boolean.prototype.valueOf) must return false'\n);\n\nassert.throws(TypeError, () => {\n  new Boolean.prototype.valueOf();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/valueOf/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a1_t1",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean.prototype.valueOf(), false, 'Boolean.prototype.valueOf() must return false');\nassert.sameValue((new Boolean()).valueOf(), false, '(new Boolean()).valueOf() must return false');\nassert.sameValue((new Boolean(0)).valueOf(), false, '(new Boolean(0)).valueOf() must return false');\nassert.sameValue((new Boolean(-1)).valueOf(), true, '(new Boolean(-1)).valueOf() must return true');\nassert.sameValue((new Boolean(1)).valueOf(), true, '(new Boolean(1)).valueOf() must return true');\n\nassert.sameValue(\n  (new Boolean(new Object())).valueOf(),\n  true,\n  '(new Boolean(new Object())).valueOf() must return true'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A1_T1.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a1_t2",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean.prototype.valueOf(true), false, 'Boolean.prototype.valueOf(true) must return false');\nassert.sameValue((new Boolean()).valueOf(true), false, '(new Boolean()).valueOf(true) must return false');\nassert.sameValue((new Boolean(0)).valueOf(true), false, '(new Boolean(0)).valueOf(true) must return false');\nassert.sameValue((new Boolean(-1)).valueOf(false), true, '(new Boolean(-1)).valueOf(false) must return true');\nassert.sameValue((new Boolean(1)).valueOf(false), true, '(new Boolean(1)).valueOf(false) must return true');\n\nassert.sameValue(\n  (new Boolean(new Object())).valueOf(false),\n  true,\n  '(new Boolean(new Object())).valueOf(false) must return true'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A1_T2.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t1",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = new String();\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = new String();\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A2_T1.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t2",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = new Number();\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = new Number();\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A2_T2.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t3",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = new Date();\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = new Date();\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A2_T3.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t4",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = new Object();\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = new Object();\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A2_T4.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t5",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (() => {\n  var s1 = {\n    x: 1\n  };\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (() => {\n  var s2 = {\n    x: 1\n  };\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, () => {\n  var s1 = {\n    x: 1\n  };\n  s1.valueOf = Boolean.prototype.valueOf;\n  s1.valueOf();\n});\n\nassert.throws(TypeError, () => {\n  var s2 = {\n    x: 1\n  };\n  s2.myvalueOf = Boolean.prototype.valueOf;\n  s2.myvalueOf();\n});\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/prototype/valueOf/S15.6.4.3_A2_T5.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t1",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Boolean(), \"boolean\", 'The value of `typeof Boolean()` is expected to be \"boolean\"');\nassert.sameValue(typeof Boolean(1), \"boolean\", 'The value of `typeof Boolean(1)` is expected to be \"boolean\"');\n\nassert.sameValue(\n  typeof Boolean(new String(\"1\")),\n  \"boolean\",\n  'The value of `typeof Boolean(new String(\"1\"))` is expected to be \"boolean\"'\n);\n\nassert.sameValue(\n  typeof Boolean(new Object(1)),\n  \"boolean\",\n  'The value of `typeof Boolean(new Object(1))` is expected to be \"boolean\"'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T1.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean(0));\nconsole.log(Boolean(0));\nconsole.log(typeof Boolean(-1));\nconsole.log(Boolean(-1));\n\nconsole.log(typeof Boolean(-Infinity));\n\nconsole.log(Boolean(-Infinity));\nconsole.log(typeof Boolean(NaN));\nconsole.log(Boolean(NaN));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Boolean(0), \"boolean\", 'The value of `typeof Boolean(0)` is expected to be \"boolean\"');\nassert.sameValue(Boolean(0), false, 'Boolean(0) must return false');\nassert.sameValue(typeof Boolean(-1), \"boolean\", 'The value of `typeof Boolean(-1)` is expected to be \"boolean\"');\nassert.sameValue(Boolean(-1), true, 'Boolean(-1) must return true');\n\nassert.sameValue(\n  typeof Boolean(-Infinity),\n  \"boolean\",\n  'The value of `typeof Boolean(-Infinity)` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(-Infinity), true, 'Boolean(-Infinity) must return true');\nassert.sameValue(typeof Boolean(NaN), \"boolean\", 'The value of `typeof Boolean(NaN)` is expected to be \"boolean\"');\nassert.sameValue(Boolean(NaN), false, 'Boolean(NaN) must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T2.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean(\"0\"));\nconsole.log(Boolean(\"0\"));\nconsole.log(typeof Boolean(\"-1\"));\nconsole.log(Boolean(\"-1\"));\nconsole.log(typeof Boolean(\"1\"));\nconsole.log(Boolean(\"1\"));\n\nconsole.log(typeof Boolean(\"false\"));\n\nconsole.log(Boolean(\"false\"));\n\nconsole.log(typeof Boolean(\"true\"));\n\nconsole.log(Boolean(\"true\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Boolean(\"0\"), \"boolean\", 'The value of `typeof Boolean(\"0\")` is expected to be \"boolean\"');\nassert.sameValue(Boolean(\"0\"), true, 'Boolean(\"0\") must return true');\nassert.sameValue(typeof Boolean(\"-1\"), \"boolean\", 'The value of `typeof Boolean(\"-1\")` is expected to be \"boolean\"');\nassert.sameValue(Boolean(\"-1\"), true, 'Boolean(\"-1\") must return true');\nassert.sameValue(typeof Boolean(\"1\"), \"boolean\", 'The value of `typeof Boolean(\"1\")` is expected to be \"boolean\"');\nassert.sameValue(Boolean(\"1\"), true, 'Boolean(\"1\") must return true');\n\nassert.sameValue(\n  typeof Boolean(\"false\"),\n  \"boolean\",\n  'The value of `typeof Boolean(\"false\")` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(\"false\"), true, 'Boolean(\"false\") must return true');\n\nassert.sameValue(\n  typeof Boolean(\"true\"),\n  \"boolean\",\n  'The value of `typeof Boolean(\"true\")` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(\"true\"), true, 'Boolean(\"true\") must return true');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T3.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t4",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean(undefined));\n\nconsole.log(Boolean(undefined));\n\nconsole.log(typeof Boolean(void 0));\n\nconsole.log(Boolean(void 0));\n\nconsole.log(typeof Boolean(function() {}()));\n\nconsole.log(Boolean(function() {}()));\nconsole.log(typeof Boolean(null));\nconsole.log(Boolean(null));\nconsole.log(typeof Boolean(x));\nconsole.log(Boolean(x));\nvar x;\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Boolean(undefined),\n  \"boolean\",\n  'The value of `typeof Boolean(undefined)` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(undefined), false, 'Boolean(undefined) must return false');\n\nassert.sameValue(\n  typeof Boolean(void 0),\n  \"boolean\",\n  'The value of `typeof Boolean(void 0)` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(void 0), false, 'Boolean(void 0) must return false');\n\nassert.sameValue(\n  typeof Boolean(function() {}()),\n  \"boolean\",\n  'The value of `typeof Boolean(function() {}())` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(function() {}()), false, 'Boolean(function() {}()) must return false');\nassert.sameValue(typeof Boolean(null), \"boolean\", 'The value of `typeof Boolean(null)` is expected to be \"boolean\"');\nassert.sameValue(Boolean(null), false, 'Boolean(null) must return false');\nassert.sameValue(typeof Boolean(x), \"boolean\", 'The value of `typeof Boolean(x)` is expected to be \"boolean\"');\nassert.sameValue(Boolean(x), false, 'Boolean() must return false');\nvar x;\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T4.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a1_t5",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nvar x;\n\nconsole.log(typeof Boolean(x = 0));\nconsole.log(Boolean(x = 0));\nconsole.log(typeof Boolean(x = 1));\nconsole.log(Boolean(x = 1));\n\nconsole.log(typeof Boolean(x = false));\n\nconsole.log(Boolean(x = false));\n\nconsole.log(typeof Boolean(x = true));\n\nconsole.log(Boolean(x = true));\n\nconsole.log(typeof Boolean(x = null));\n\nconsole.log(Boolean(x = null));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar x;\n\nassert.sameValue(typeof Boolean(x = 0), \"boolean\", 'The value of `typeof Boolean(x = 0)` is expected to be \"boolean\"');\nassert.sameValue(Boolean(x = 0), false, 'Boolean(x = 0) must return false');\nassert.sameValue(typeof Boolean(x = 1), \"boolean\", 'The value of `typeof Boolean(x = 1)` is expected to be \"boolean\"');\nassert.sameValue(Boolean(x = 1), true, 'Boolean(x = 1) must return true');\n\nassert.sameValue(\n  typeof Boolean(x = false),\n  \"boolean\",\n  'The value of `typeof Boolean(x = false)` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(x = false), false, 'Boolean(x = false) must return false');\n\nassert.sameValue(\n  typeof Boolean(x = true),\n  \"boolean\",\n  'The value of `typeof Boolean(x = true)` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(x = true), true, 'Boolean(x = true) must return true');\n\nassert.sameValue(\n  typeof Boolean(x = null),\n  \"boolean\",\n  'The value of `typeof Boolean(x = null)` is expected to be \"boolean\"'\n);\n\nassert.sameValue(Boolean(x = null), false, 'Boolean(x = null) must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A1_T5.js",
       "n_asserts": 10,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.1.1_a2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Boolean());\nconsole.log(Boolean());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Boolean(), \"boolean\", 'The value of `typeof Boolean()` is expected to be \"boolean\"');\nassert.sameValue(Boolean(), false, 'Boolean() must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.1.1_A2.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.s15.6.2.1_a1",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof new Boolean(), \"object\", 'The value of `typeof new Boolean()` is expected to be \"object\"');\nassert.notSameValue(new Boolean(), undefined, 'new Boolean() is expected to not equal ``undefined``');\n\nvar x3 = new Boolean();\nassert.sameValue(typeof x3, \"object\", 'The value of `typeof x3` is expected to be \"object\"');\n\nvar x4 = new Boolean();\nassert.notSameValue(x4, undefined, 'The value of x4 is expected to not equal ``undefined``');\nassert.sameValue(typeof new Boolean(1), \"object\", 'The value of `typeof new Boolean(1)` is expected to be \"object\"');\nassert.notSameValue(new Boolean(1), undefined, 'new Boolean(1) is expected to not equal ``undefined``');\n\nvar x7 = new Boolean(1);\nassert.sameValue(typeof x7, \"object\", 'The value of `typeof x7` is expected to be \"object\"');\n\nvar x8 = new Boolean(1);\nassert.notSameValue(x8, undefined, 'The value of x8 is expected to not equal ``undefined``');\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/S15.6.2.1_A1.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.s15.6.2.1_a2",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\n// CHECK#1\nvar x1 = new Boolean(1);\n\nassert.sameValue(\n  typeof x1.constructor.prototype,\n  \"object\",\n  'The value of `typeof x1.constructor.prototype` is expected to be \"object\"'\n);\n\nvar x2 = new Boolean(2);\nassert(Boolean.prototype.isPrototypeOf(x2), 'Boolean.prototype.isPrototypeOf(x2) must return true');\n\nvar x3 = new Boolean(3);\n\nassert.sameValue(\n  Boolean.prototype,\n  x3.constructor.prototype,\n  'The value of Boolean.prototype is expected to equal the value of x3.constructor.prototype'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/S15.6.2.1_A2.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.s15.6.2.1_a3",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\n// CHECK#1\nvar x1 = new Boolean(1);\nassert.sameValue(x1.valueOf(), true, 'x1.valueOf() must return true');\n\nvar x2 = new Boolean();\nassert.sameValue(x2.valueOf(), false, 'x2.valueOf() must return false');\n\nvar x2 = new Boolean(0);\nassert.sameValue(x2.valueOf(), false, 'x2.valueOf() must return false');\n\nvar x2 = new Boolean(new Object());\nassert.sameValue(x2.valueOf(), true, 'x2.valueOf() must return true');\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/S15.6.2.1_A3.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.s15.6.2.1_a4",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\ndelete Boolean.prototype.toString;\n\nvar obj = new Boolean();\n\nassert.sameValue(obj.toString(), \"[object Boolean]\", 'obj.toString() must return \"[object Boolean]\"');\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/S15.6.2.1_A4.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.3_a1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean.hasOwnProperty(\"prototype\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Boolean.hasOwnProperty(\"prototype\"), 'Boolean.hasOwnProperty(\"prototype\") must return true');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.3_A1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.3_a2",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Function.prototype.isPrototypeOf(Boolean));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(\n  Function.prototype.isPrototypeOf(Boolean),\n  'Function.prototype.isPrototypeOf(Boolean) must return true'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.3_A2.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s15.6.3_a3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean.hasOwnProperty(\"length\"));\nconsole.log(Boolean.length);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert(Boolean.hasOwnProperty(\"length\"), 'Boolean.hasOwnProperty(\"length\") must return true');\nassert.sameValue(Boolean.length, 1, 'The value of Boolean.length is expected to be 1');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S15.6.3_A3.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s9.2_a1_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(undefined));\nconsole.log(Boolean(void 0));\nconsole.log(Boolean(eval(\"var x\")));\nconsole.log(Boolean());\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(undefined), false, 'Boolean(undefined) must return false');\nassert.sameValue(Boolean(void 0), false, 'Boolean(void 0) must return false');\nassert.sameValue(Boolean(eval(\"var x\")), false, 'Boolean(eval(\"var x\")) must return false');\nassert.sameValue(Boolean(), false, 'Boolean() must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A1_T1.js",
       "n_asserts": 4,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s9.2_a2_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(null));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(null), false, 'Boolean(null) must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A2_T1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s9.2_a3_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(true));\nconsole.log(Boolean(false));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(true), true, 'Boolean(true) must return true');\nassert.sameValue(Boolean(false), false, 'Boolean(false) must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A3_T1.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s9.2_a4_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(+0));\nconsole.log(Boolean(-0));\nconsole.log(Boolean(Number.NaN));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(+0), false, 'Boolean(+0) must return false');\nassert.sameValue(Boolean(-0), false, 'Boolean(-0) must return false');\nassert.sameValue(Boolean(Number.NaN), false, 'Boolean(Number.NaN) must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A4_T1.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s9.2_a4_t3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(Number.POSITIVE_INFINITY));\nconsole.log(Boolean(Number.NEGATIVE_INFINITY));\nconsole.log(Boolean(Number.MAX_VALUE));\nconsole.log(Boolean(Number.MIN_VALUE));\nconsole.log(Boolean(13));\nconsole.log(Boolean(-13));\nconsole.log(Boolean(1.3));\nconsole.log(Boolean(-1.3));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(Number.POSITIVE_INFINITY), true, 'Boolean(Number.POSITIVE_INFINITY) must return true');\nassert.sameValue(Boolean(Number.NEGATIVE_INFINITY), true, 'Boolean(Number.NEGATIVE_INFINITY) must return true');\nassert.sameValue(Boolean(Number.MAX_VALUE), true, 'Boolean(Number.MAX_VALUE) must return true');\nassert.sameValue(Boolean(Number.MIN_VALUE), true, 'Boolean(Number.MIN_VALUE) must return true');\nassert.sameValue(Boolean(13), true, 'Boolean(13) must return true');\nassert.sameValue(Boolean(-13), true, 'Boolean(-13) must return true');\nassert.sameValue(Boolean(1.3), true, 'Boolean(1.3) must return true');\nassert.sameValue(Boolean(-1.3), true, 'Boolean(-1.3) must return true');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A4_T3.js",
       "n_asserts": 8,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s9.2_a5_t1",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(\"\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(\"\"), false, 'Boolean(\"\") must return false');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A5_T1.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.s9.2_a5_t3",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Boolean(\" \"));\nconsole.log(Boolean(\"Nonempty String\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(\" \"), true, 'Boolean(\" \") must return true');\nassert.sameValue(Boolean(\"Nonempty String\"), true, 'Boolean(\"Nonempty String\") must return true');\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/S9.2_A5_T3.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.boolean.s9.2_a6_t1",
+      "category": "boolean",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Boolean(new Object()), true, 'Boolean(new Object()) must return true');\nassert.sameValue(Boolean(new String(\"\")), true, 'Boolean(new String(\"\")) must return true');\nassert.sameValue(Boolean(new String()), true, 'Boolean(new String()) must return true');\nassert.sameValue(Boolean(new Boolean(true)), true, 'Boolean(new Boolean(true)) must return true');\nassert.sameValue(Boolean(new Boolean(false)), true, 'Boolean(new Boolean(false)) must return true');\nassert.sameValue(Boolean(new Boolean()), true, 'Boolean(new Boolean()) must return true');\nassert.sameValue(Boolean(new Array()), true, 'Boolean(new Array()) must return true');\nassert.sameValue(Boolean(new Number()), true, 'Boolean(new Number()) must return true');\nassert.sameValue(Boolean(new Number(-0)), true, 'Boolean(new Number(-0)) must return true');\nassert.sameValue(Boolean(new Number(0)), true, 'Boolean(new Number(0)) must return true');\nassert.sameValue(Boolean(new Number()), true, 'Boolean(new Number()) must return true');\nassert.sameValue(Boolean(new Number(Number.NaN)), true, 'Boolean(new Number(Number.NaN)) must return true');\nassert.sameValue(Boolean(new Number(-1)), true, 'Boolean(new Number(-1)) must return true');\nassert.sameValue(Boolean(new Number(1)), true, 'Boolean(new Number(1)) must return true');\n\nassert.sameValue(\n  Boolean(new Number(Number.POSITIVE_INFINITY)),\n  true,\n  'Boolean(new Number(Number.POSITIVE_INFINITY)) must return true'\n);\n\nassert.sameValue(\n  Boolean(new Number(Number.NEGATIVE_INFINITY)),\n  true,\n  'Boolean(new Number(Number.NEGATIVE_INFINITY)) must return true'\n);\n\nassert.sameValue(Boolean(new Function()), true, 'Boolean(new Function()) must return true');\nassert.sameValue(Boolean(new Date()), true, 'Boolean(new Date()) must return true');\nassert.sameValue(Boolean(new Date(0)), true, 'Boolean(new Date(0)) must return true');\n}\nmain();\n",
+      "origin": "test/built-ins/Boolean/S9.2_A6_T1.js",
+      "n_asserts": 19,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.boolean.symbol-coercion",
       "category": "boolean",
       "source": "test262",
-      "fixture": "function main(): void {\nvar sym = Symbol();\n\nconsole.log(Boolean(sym).valueOf());\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar sym = Symbol();\n\nassert.sameValue(Boolean(sym).valueOf(), true, \"`Boolean(sym).valueOf()` returns `true`\");\n}\nmain();\n",
       "origin": "test/built-ins/Boolean/symbol-coercion.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
     }
   ]
 }

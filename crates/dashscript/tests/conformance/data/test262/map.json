@@ -1,131 +1,2218 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.map.bigint-number-same-value",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst number = 9007199254740991;\nconst bigint = 9007199254740991n;\n\nconst m = new Map([\n  [number, number],\n  [bigint, bigint],\n]);\n\nassert.sameValue(m.size, 2);\nassert.sameValue(m.has(number), true);\nassert.sameValue(m.has(bigint), true);\n\nassert.sameValue(m.get(number), number);\nassert.sameValue(m.get(bigint), bigint);\n\nm.delete(number);\nassert.sameValue(m.size, 1);\nassert.sameValue(m.has(number), false);\nm.delete(bigint);\nassert.sameValue(m.size, 0);\nassert.sameValue(m.has(bigint), false);\n\nm.set(number, number);\nassert.sameValue(m.size, 1);\nm.set(bigint, bigint);\nassert.sameValue(m.size, 2);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/bigint-number-same-value.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "BigInt"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.map.constructor",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(typeof Map);\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(typeof Map, 'function', 'typeof Map is \"function\"');\n}\nmain();\n",
       "origin": "test/built-ins/Map/constructor.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.does-not-throw-when-set-is-not-callable",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nMap.prototype.set = null;\n\nvar m = new Map();\n\nassert.sameValue(m.size, 0, 'The value of `m.size` is `0`');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/does-not-throw-when-set-is-not-callable.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.get-set-method-failure",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nObject.defineProperty(Map.prototype, 'set', {\n  get: function() {\n    throw new Test262Error();\n  }\n});\n\nnew Map();\n\nassert.throws(Test262Error, function() {\n  new Map([]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/get-set-method-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.groupby.callback-arg",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nconst arr = [-0, 0, 1, 2, 3];\n\nlet calls = 0;\n\nMap.groupBy(arr, function (n, i) {\n  calls++;\n  console.log(n);\n  console.log(arguments.length);\n  return null;\n});\n\nconsole.log(calls);\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst arr = [-0, 0, 1, 2, 3];\n\nlet calls = 0;\n\nMap.groupBy(arr, function (n, i) {\n  calls++;\n  assert.sameValue(n, arr[i], \"selected element aligns with index\");\n  assert.sameValue(arguments.length, 2, \"only two arguments are passed\");\n  return null;\n});\n\nassert.sameValue(calls, 5, 'called for all 5 elements');\n}\nmain();\n",
       "origin": "test/built-ins/Map/groupBy/callback-arg.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.groupby.callback-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(Test262Error, function() {\n  const array = [1];\n  Map.groupBy(array, function() {\n    throw new Test262Error('throw in callback');\n  })\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/groupBy/callback-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.groupby.emptylist",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst original = [];\n\nconst map = Map.groupBy(original, function () {\n  throw new Test262Error('callback function should not be called')\n});\n\nassert.notSameValue(original, map, 'Map.groupBy returns a map');\nassert.sameValue(map.size, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/groupBy/emptyList.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.groupby.invalid-callback",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Map.groupBy([], null)\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.groupBy([], undefined)\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.groupBy([], {})\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.groupBy([], null)\n}, \"null callback throws TypeError\");\n\nassert.throws(TypeError, function() {\n  Map.groupBy([], undefined)\n}, \"undefined callback throws TypeError\");\n\nassert.throws(TypeError, function() {\n  Map.groupBy([], {})\n}, \"object callback throws TypeError\");\n}\nmain();\n",
       "origin": "test/built-ins/Map/groupBy/invalid-callback.js",
       "n_asserts": 3,
-      "flags": []
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.groupby.invalid-iterable",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst throws = function () {\n  throw new Test262Error('callback function should not be called')\n};\n\nfunction makeIterable(obj, iteratorFn) {\n  obj[Symbol.iterator] = iteratorFn;\n  return obj;\n}\n\nassert.throws(TypeError, function () {\n  Map.groupBy(makeIterable({}, undefined), throws);\n}, 'undefined Symbol.iterator');\n\nassert.throws(TypeError, function () {\n  Map.groupBy(makeIterable({}, null), throws);\n}, 'null Symbol.iterator');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/groupBy/invalid-iterable.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.groupby.iterator-next-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst throwingIterator = {\n  [Symbol.iterator]: function () {\n    return this;\n  },\n  next: function next() {\n    throw new Test262Error('next() method was called');\n  }\n};\n\nassert.throws(Test262Error, function () {\n  Map.groupBy(throwingIterator, function () {\n    return 'key';\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/groupBy/iterator-next-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map",
+        "Symbol.iterator"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.groupby.map-instance",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nconst array = [1, 2, 3];\n\nconst map = Map.groupBy(array, function (i) {\n  return i % 2 === 0 ? 'even' : 'odd';\n});\n\nconsole.log(map instanceof Map);\n}\nmain();\n",
+      "fixture": "function main(): void {\nconst array = [1, 2, 3];\n\nconst map = Map.groupBy(array, function (i) {\n  return i % 2 === 0 ? 'even' : 'odd';\n});\n\nassert.sameValue(map instanceof Map, true);\n}\nmain();\n",
       "origin": "test/built-ins/Map/groupBy/map-instance.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.groupby.negativezero",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst arr = [-0, +0];\n\nconst map = Map.groupBy(arr, function (i) { return i; });\n\nassert.sameValue(map.size, 1);\nassert.compareArray(map.get(0), [-0, 0]);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/groupBy/negativeZero.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "array-grouping",
+        "Map"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.is-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map), true, 'isConstructor(Map) must return true');\nnew Map();\n}\nmain();\n",
+      "origin": "test/built-ins/Map/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.iterable-calls-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar mapSet = Map.prototype.set;\nvar counter = 0;\n\nvar iterable = [\n  [\"foo\", 1],\n  [\"bar\", 2]\n];\nvar results = [];\nvar _this = [];\n\nMap.prototype.set = function(k, v) {\n  counter++;\n  results.push([k, v]);\n  _this.push(this);\n  mapSet.call(this, k, v);\n};\n\nvar map = new Map(iterable);\n\nassert.sameValue(counter, 2, \"`Map.prototype.set` called twice.\");\n\nassert.compareArray(results[0], iterable[0]);\nassert.compareArray(results[1], iterable[1]);\nassert.sameValue(_this[0], map);\nassert.sameValue(_this[1], map);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterable-calls-set.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-close-after-set-failure",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: [],\n        done: false\n      };\n    },\n    return: function() {\n      count += 1;\n    }\n  };\n};\nMap.prototype.set = function() {\n  throw new Test262Error();\n}\n\nassert.throws(Test262Error, function() {\n  new Map(iterable);\n});\n\nassert.sameValue(count, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-close-after-set-failure.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-close-failure-after-set-failure",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return { value: [], done: false };\n    },\n    return: function() {\n        throw new TypeError('ignore');\n    }\n  };\n};\nMap.prototype.set = function() { throw new Test262Error(); }\n\nassert.throws(Test262Error, function() {\n  new Map(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-close-failure-after-set-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-is-undefined-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterable  = { [Symbol.iterator]: undefined };\n\nassert.throws(TypeError,\n  function () {\n    new Map(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-is-undefined-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-item-first-entry-returns-abrupt",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar item = ['foo', 'bar'];\nObject.defineProperty(item, 0, {\n  get: function() {\n    throw new Test262Error();\n  }\n});\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: item,\n        done: false\n      };\n    },\n    return: function() {\n      count++;\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new Map(iterable);\n});\n\nassert.sameValue(count, 1, 'The get error closed the iterator');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-item-first-entry-returns-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-item-second-entry-returns-abrupt",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar item = ['foo', 'bar'];\nObject.defineProperty(item, 1, {\n  get: function() {\n    throw new Test262Error();\n  }\n});\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: item,\n        done: false\n      };\n    },\n    return: function() {\n      count++;\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new Map(iterable);\n});\n\nassert.sameValue(count, 1, 'The get error closed the iterator');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-item-second-entry-returns-abrupt.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-items-are-not-object-close-iterator",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar nextItem;\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        value: nextItem,\n        done: false\n      };\n    },\n    return: function() {\n      count += 1;\n    }\n  };\n};\n\nnextItem = 1;\nassert.throws(TypeError, function() {\n  new Map(iterable);\n});\nassert.sameValue(count, 1);\n\nnextItem = true;\nassert.throws(TypeError, function() {\n  new Map(iterable);\n});\nassert.sameValue(count, 2);\n\nnextItem = '';\nassert.throws(TypeError, function() {\n  new Map(iterable);\n});\nassert.sameValue(count, 3);\n\nnextItem = null;\nassert.throws(TypeError, function() {\n  new Map(iterable);\n});\nassert.sameValue(count, 4);\n\nnextItem = undefined;\nassert.throws(TypeError, function() {\n  new Map(iterable);\n});\nassert.sameValue(count, 5);\n\nnextItem = Symbol('a');\nassert.throws(TypeError, function() {\n  new Map(iterable);\n});\nassert.sameValue(count, 6);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-items-are-not-object-close-iterator.js",
+      "n_asserts": 12,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-items-are-not-object",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  new Map([1]);\n});\n\nassert.throws(TypeError, function() {\n  new Map(['']);\n});\n\nassert.throws(TypeError, function() {\n  new Map([true]);\n});\n\nassert.throws(TypeError, function() {\n  new Map([null]);\n});\n\nassert.throws(TypeError, function() {\n  new Map([Symbol('a')]);\n});\n\nassert.throws(TypeError, function() {\n  new Map([undefined]);\n});\n\nassert.throws(TypeError, function() {\n  new Map([\n    ['a', 1],\n    2\n  ]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-items-are-not-object.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-next-failure",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      throw new Test262Error();\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new Map(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-next-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.iterator-value-failure",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar iterable = {};\niterable[Symbol.iterator] = function() {\n  return {\n    next: function() {\n      return {\n        get value() {\n          throw new Test262Error();\n        },\n        done: false\n      };\n    }\n  };\n};\n\nassert.throws(Test262Error, function() {\n  new Map(iterable);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/iterator-value-failure.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.map-iterable-empty-does-not-call-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Map.prototype.set;\nvar counter = 0;\n\nMap.prototype.set = function(value) {\n  counter++;\n  set.call(this, value);\n};\n\nnew Map([]);\n\nassert.sameValue(counter, 0, '`Map.prototype.set` was not called.');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/map-iterable-empty-does-not-call-set.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.map-iterable-throws-when-set-is-not-callable",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nMap.prototype.set = null;\n\nassert.throws(TypeError, function() {\n  new Map([\n    [1, 1],\n    [2, 2]\n  ]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/map-iterable-throws-when-set-is-not-callable.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.map-iterable",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map([\n  [\"attr\", 1],\n  [\"foo\", 2]\n]);\n\nassert.sameValue(m.size, 2, 'The value of `m.size` is `2`');\nassert.sameValue(m.get(\"attr\"), 1);\nassert.sameValue(m.get(\"foo\"), 2);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/map-iterable.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.map-no-iterable-does-not-call-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = Map.prototype.set;\nvar counter = 0;\n\nMap.prototype.set = function(value) {\n  counter++;\n  set.call(this, value);\n};\n\nnew Map();\n\nassert.sameValue(counter, 0, '`Map.prototype.set` was not called.');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/map-no-iterable-does-not-call-set.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.map-no-iterable",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m1 = new Map();\nvar m2 = new Map(undefined);\nvar m3 = new Map(null);\n\nassert.sameValue(m1.size, 0, 'The value of `new Map().size` is `0`');\nassert.sameValue(m2.size, 0, 'The value of `new Map(undefined).size` is `0`');\nassert.sameValue(m3.size, 0, 'The value of `new Map(null).size` is `0`');\n\nassert(m1 instanceof Map);\nassert(m2 instanceof Map);\nassert(m3 instanceof Map);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/map-no-iterable.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.newtarget",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m1 = new Map();\n\nassert.sameValue(\n  Object.getPrototypeOf(m1),\n  Map.prototype,\n  \"`Object.getPrototypeOf(m1)` returns `Map.prototype`\"\n);\n\nvar m2 = new Map([\n  [1, 1],\n  [2, 2]\n]);\n\nassert.sameValue(\n  Object.getPrototypeOf(m2),\n  Map.prototype,\n  \"`Object.getPrototypeOf(m2)` returns `Map.prototype`\"\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/newtarget.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.properties-of-map-instances",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(new Map()),\n  Map.prototype,\n  '`Object.getPrototypeOf(new Map())` returns `Map.prototype`'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/properties-of-map-instances.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.properties-of-the-map-prototype-object",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Map.prototype));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(Map.prototype),\n  Object.prototype,\n  'Object.getPrototypeOf(Map.prototype) returns Object.prototype'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Map/properties-of-the-map-prototype-object.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.proto-from-ctor-realm",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar C = new other.Function();\nC.prototype = null;\n\nvar o = Reflect.construct(Map, [], C);\n\nassert.sameValue(Object.getPrototypeOf(o), other.Map.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/proto-from-ctor-realm.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "cross-realm",
+        "Reflect"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.clear.clear-map",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m1 = new Map([\n  ['foo', 'bar'],\n  [1, 1]\n]);\nvar m2 = new Map();\nvar m3 = new Map();\nm2.set('foo', 'bar');\nm2.set(1, 1);\nm2.set(Symbol('a'), Symbol('a'));\n\nm1.clear();\nm2.clear();\nm3.clear();\n\nassert.sameValue(m1.size, 0);\nassert.sameValue(m2.size, 0);\nassert.sameValue(m3.size, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/clear/clear-map.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.clear.clear",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.clear,\n  'function',\n  'typeof Map.prototype.clear is \"function\"'\n);\n\nverifyProperty(Map.prototype, 'clear', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/clear/clear.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.map.prototype.clear.context-is-not-map-object",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Map.prototype.clear.call({});\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.clear.call([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call({});\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call([]);\n});\n}\nmain();\n",
       "origin": "test/built-ins/Map/prototype/clear/context-is-not-map-object.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.prototype.clear.context-is-not-object",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Map.prototype.clear.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.clear.call(true);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.clear.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.clear.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.clear.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.clear.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call(1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call(true);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call('');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call(null);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call(Symbol());\n});\n}\nmain();\n",
       "origin": "test/built-ins/Map/prototype/clear/context-is-not-object.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.clear.context-is-set-object-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call(new Set());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/clear/context-is-set-object-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.clear.context-is-weakmap-object-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.clear.call(new WeakMap());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/clear/context-is-weakmap-object-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.clear.map-data-list-is-preserved",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map([\n  [1, 1],\n  [2, 2],\n  [3, 3]\n]);\nvar e = m.entries();\n\ne.next();\nm.clear();\n\nvar n = e.next();\nassert.sameValue(n.value, undefined);\nassert.sameValue(n.done, true);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/clear/map-data-list-is-preserved.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.clear.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.clear), false, 'isConstructor(Map.prototype.clear) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.clear();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/clear/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.clear.returns-undefined",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m1 = new Map([\n  ['foo', 'bar'],\n  [1, 1]\n]);\n\nassert.sameValue(m1.clear(), undefined, 'clears a map and returns undefined');\nassert.sameValue(m1.clear(), undefined, 'returns undefined on an empty map');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/clear/returns-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Map.prototype.constructor, Map);\nassert.sameValue((new Map()).constructor, Map);\n\nverifyProperty(Map.prototype, 'constructor', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.map.prototype.delete.context-is-not-map-object",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Map.prototype.delete.call({}, 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.delete.call([], 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call({}, 'attr');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call([], 'attr');\n});\n}\nmain();\n",
       "origin": "test/built-ins/Map/prototype/delete/context-is-not-map-object.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.prototype.delete.context-is-not-object",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Map.prototype.delete.call(1, 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.delete.call(true, 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.delete.call('', 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.delete.call(null, 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.delete.call(undefined, 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map.prototype.delete.call(Symbol(), 'attr');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call(1, 'attr');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call(true, 'attr');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call('', 'attr');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call(null, 'attr');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call(undefined, 'attr');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call(Symbol(), 'attr');\n});\n}\nmain();\n",
       "origin": "test/built-ins/Map/prototype/delete/context-is-not-object.js",
       "n_asserts": 6,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.delete.context-is-set-object-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call(new Set(), 'attr');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/delete/context-is-set-object-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.delete.context-is-weakmap-object-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.delete.call(new WeakMap(), 'attr');\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/delete/context-is-weakmap-object-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.delete.delete",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.delete,\n  'function',\n  'typeof Map.prototype.delete is \"function\"'\n);\n\nverifyProperty(Map.prototype, 'delete', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/delete/delete.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.delete.does-not-break-iterators",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map([\n  ['a', 1],\n  ['b', 2],\n  ['c', 3]\n]);\nvar e = m.entries();\n\ne.next();\nm.delete('b');\n\nvar n = e.next();\n\nassert.sameValue(n.value[0], 'c');\nassert.sameValue(n.value[1], 3);\n\nn = e.next();\nassert.sameValue(n.value, undefined);\nassert.sameValue(n.done, true);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/delete/does-not-break-iterators.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.delete.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.delete), false, 'isConstructor(Map.prototype.delete) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.delete();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/delete/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.delete.returns-false",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map([\n  ['a', 1],\n  ['b', 2]\n]);\n\nassert.sameValue(m.delete('not-in-the-map'), false);\n\nm.delete('a');\nassert.sameValue(m.delete('a'), false);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/delete/returns-false.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.delete.returns-true-for-deleted-entry",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map([\n  ['a', 1],\n  ['b', 2]\n]);\n\nvar result = m.delete('a');\n\nassert(result);\nassert.sameValue(m.size, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/delete/returns-true-for-deleted-entry.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call(new Set());\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.entries.call(new Set());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call(new WeakMap());\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.entries.call(new WeakMap());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call([]);\n});\n\nassert.throws(TypeError, function() {\n  m.entries.call([]);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call({});\n});\n\nassert.throws(TypeError, function() {\n  m.entries.call({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.entries",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.entries,\n  'function',\n  '`typeof Map.prototype.entries` is `function`'\n);\n\nverifyProperty(Map.prototype, 'entries', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/entries.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Map.prototype.entries),\n  false,\n  'isConstructor(Map.prototype.entries) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.entries();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.returns-iterator-empty",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nvar iterator = map.entries();\nvar result = iterator.next();\n\nassert.sameValue(\n  result.value, undefined,\n  'The value of `result.value` is `undefined`'\n);\nassert.sameValue(result.done, true, 'The value of `result.done` is `true`');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/returns-iterator-empty.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.returns-iterator",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set('a',1);\nmap.set('b',2);\nmap.set('c',3);\n\nvar iterator = map.entries();\nvar result;\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 'a', 'First result `value` (\"key\")');\nassert.sameValue(result.value[1], 1, 'First result `value` (\"value\")');\nassert.sameValue(result.value.length, 2, 'First result `value` (length)');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 'b', 'Second result `value` (\"key\")');\nassert.sameValue(result.value[1], 2, 'Second result `value` (\"value\")');\nassert.sameValue(result.value.length, 2, 'Second result `value` (length)');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value[0], 'c', 'Third result `value` (\"key\")');\nassert.sameValue(result.value[1], 3, 'Third result `value` (\"value\")');\nassert.sameValue(result.value.length, 2, 'Third result `value` (length)');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, undefined, 'Exhausted result `value`');\nassert.sameValue(result.done, true, 'Exhausted result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(\n  result.value, undefined, 'Exhausted result `value` (repeated request)'\n);\nassert.sameValue(\n  result.done, true, 'Exhausted result `done` flag (repeated request)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/returns-iterator.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.entries.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call(false);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call(1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call('');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call(null);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.entries.call(Symbol());\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.entries.call(false);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/entries/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.callback-parameters",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set('foo', 42);\nmap.set('bar', 'baz');\n\nvar results = [];\n\nvar callback = function(value, key, thisArg) {\n  results.push({\n    value: value,\n    key: key,\n    thisArg: thisArg\n  });\n};\n\nmap.forEach(callback);\n\nassert.sameValue(results[0].value, 42);\nassert.sameValue(results[0].key, 'foo');\nassert.sameValue(results[0].thisArg, map);\n\nassert.sameValue(results[1].value, 'baz');\nassert.sameValue(results[1].key, 'bar');\nassert.sameValue(results[1].thisArg, map);\n\nassert.sameValue(results.length, 2);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/callback-parameters.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.callback-result-is-abrupt",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[0, 0]]);\n\nassert.throws(Test262Error, function() {\n  map.forEach(function() {\n    throw new Test262Error();\n  });\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/callback-result-is-abrupt.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.callback-this-non-strict",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar _this = [];\nvar map = new Map();\n\nmap.set(0, 0);\nmap.set(1, 1);\nmap.set(2, 2);\n\nmap.forEach(function() {\n  _this.push(this);\n});\n\nassert.sameValue(_this[0], this);\nassert.sameValue(_this[1], this);\nassert.sameValue(_this[2], this);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/callback-this-non-strict.js",
+      "n_asserts": 3,
+      "flags": [
+        "noStrict"
+      ],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.callback-this-strict",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar _this = [];\nvar map = new Map();\n\nmap.set(0, 0);\nmap.set(1, 1);\nmap.set(2, 2);\n\nmap.forEach(function() {\n  _this.push(this);\n});\n\nassert.sameValue(_this[0], undefined);\nassert.sameValue(_this[1], undefined);\nassert.sameValue(_this[2], undefined);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/callback-this-strict.js",
+      "n_asserts": 3,
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.deleted-values-during-foreach",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set('foo', 0);\nmap.set('bar', 1);\n\nvar count = 0;\nvar results = [];\n\nmap.forEach(function(value, key) {\n  if (count === 0) {\n    map.delete('bar');\n  }\n  results.push({\n    value: value,\n    key: key\n  });\n  count++;\n});\n\nassert.sameValue(results.length, 1);\nassert.sameValue(results[0].key, 'foo');\nassert.sameValue(results[0].value, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/deleted-values-during-foreach.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call(new Set(), function() {});\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.forEach.call(new Set(), function() {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call(new WeakMap(), function() {});\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.forEach.call(new WeakMap(), function() {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call([], function() {});\n});\n\nassert.throws(TypeError, function() {\n  m.forEach.call([], function() {});\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call({}, function() {});\n});\n\nassert.throws(TypeError, function() {\n  m.forEach.call({}, function() {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.first-argument-is-not-callable",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.throws(TypeError, function() {\n  map.forEach({});\n});\n\nassert.throws(TypeError, function() {\n  map.forEach([]);\n});\n\nassert.throws(TypeError, function() {\n  map.forEach(1);\n});\n\nassert.throws(TypeError, function() {\n  map.forEach('');\n});\n\nassert.throws(TypeError, function() {\n  map.forEach(null);\n});\n\nassert.throws(TypeError, function() {\n  map.forEach(undefined);\n});\n\nassert.throws(TypeError, function() {\n  map.forEach(Symbol());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/first-argument-is-not-callable.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.foreach",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.forEach,\n  'function',\n  '`typeof Map.prototype.forEach` is `function`'\n);\n\nverifyProperty(Map.prototype, 'forEach', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/forEach.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.iterates-in-key-insertion-order",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([\n  ['foo', 'valid foo'],\n  ['bar', false],\n  ['baz', 'valid baz']\n]);\nmap.set(0, false);\nmap.set(1, false);\nmap.set(2, 'valid 2');\nmap.delete(1);\nmap.delete('bar');\n\n// Not setting a new key, just changing the value\nmap.set(0, 'valid 0');\n\nvar results = [];\nvar callback = function(value) {\n  results.push(value);\n};\n\nmap.forEach(callback);\n\nassert.sameValue(results[0], 'valid foo');\nassert.sameValue(results[1], 'valid baz');\nassert.sameValue(results[2], 'valid 0');\nassert.sameValue(results[3], 'valid 2');\nassert.sameValue(results.length, 4);\n\nmap.clear();\nresults = [];\n\nmap.forEach(callback);\nassert.sameValue(results.length, 0);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/iterates-in-key-insertion-order.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.iterates-values-added-after-foreach-begins",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set('foo', 0);\nmap.set('bar', 1);\n\nvar count = 0;\nvar results = [];\n\nmap.forEach(function(value, key) {\n  if (count === 0) {\n    map.set('baz', 2);\n  }\n  results.push({\n    value: value,\n    key: key\n  });\n  count++;\n});\n\nassert.sameValue(count, 3);\nassert.sameValue(map.size, 3);\n\nassert.sameValue(results[0].key, 'foo');\nassert.sameValue(results[0].value, 0);\n\nassert.sameValue(results[1].key, 'bar');\nassert.sameValue(results[1].value, 1);\n\nassert.sameValue(results[2].key, 'baz');\nassert.sameValue(results[2].value, 2);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/iterates-values-added-after-foreach-begins.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.iterates-values-deleted-then-readded",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set('foo', 0);\nmap.set('bar', 1);\n\nvar count = 0;\nvar results = [];\n\nmap.forEach(function(value, key) {\n  if (count === 0) {\n    map.delete('foo');\n    map.set('foo', 'baz');\n  }\n  results.push({\n    value: value,\n    key: key\n  });\n  count++;\n});\n\nassert.sameValue(count, 3);\nassert.sameValue(map.size, 2);\n\nassert.sameValue(results[0].key, 'foo');\nassert.sameValue(results[0].value, 0);\n\nassert.sameValue(results[1].key, 'bar');\nassert.sameValue(results[1].value, 1);\n\nassert.sameValue(results[2].key, 'foo');\nassert.sameValue(results[2].value, 'baz');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/iterates-values-deleted-then-readded.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Map.prototype.forEach),\n  false,\n  'isConstructor(Map.prototype.forEach) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.forEach();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.return-undefined",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nvar result = map.forEach(function() {\n  return true;\n});\n\nassert.sameValue(result, undefined, 'Empty map#forEach returns undefined');\n\nmap.set(1, 1);\nresult = map.forEach(function() {\n  return true;\n});\n\nassert.sameValue(result, undefined, 'map#forEach returns undefined');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/return-undefined.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.second-parameter-as-callback-context",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar expectedThis = {};\nvar _this = [];\n\nvar map = new Map();\nmap.set(0, 0);\nmap.set(1, 1);\nmap.set(2, 2);\n\nvar callback = function() {\n  _this.push(this);\n};\n\nmap.forEach(callback, expectedThis);\n\nassert.sameValue(_this[0], expectedThis);\nassert.sameValue(_this[1], expectedThis);\nassert.sameValue(_this[2], expectedThis);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/second-parameter-as-callback-context.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.foreach.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call(false, function() {});\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call(1, function() {});\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call('', function() {});\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call(undefined, function() {});\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call(null, function() {});\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.forEach.call(Symbol(), function() {});\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.forEach.call(false, function() {});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/forEach/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.get.call(new Set(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.get.call(new Set(), 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.get.call(new WeakMap(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.get.call(new WeakMap(), 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function() {\n  Map.prototype.get.call([], 1);\n});\n\nassert.throws(TypeError, function() {\n  m.get.call([], 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.get.call({}, 1);\n});\n\nassert.throws(TypeError, function() {\n  m.get.call({}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.get",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.get,\n  'function',\n  '`typeof Map.prototype.get` is `function`'\n);\n\nverifyProperty(Map.prototype, 'get', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/get.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.get), false, 'isConstructor(Map.prototype.get) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.get();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.returns-undefined",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.sameValue(\n  map.get('item'), undefined,\n 'returns undefined if key is not on the map'\n);\n\nmap.set('item', 1);\nmap.set('another_item', 2);\nmap.delete('item');\n\nassert.sameValue(\n  map.get('item'), undefined,\n  'returns undefined if key was deleted'\n);\n\nmap.set('item', 1);\nmap.clear();\n\nassert.sameValue(\n  map.get('item'), undefined,\n  'returns undefined after map is cleared'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/returns-undefined.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.returns-value-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.set('bar', 0);\nassert.sameValue(map.get('bar'), 0);\n\nmap.set(1, 42);\nassert.sameValue(map.get(1), 42);\n\nmap.set(NaN, 1);\nassert.sameValue(map.get(NaN), 1);\n\nvar item = {};\nmap.set(item, 2);\nassert.sameValue(map.get(item), 2);\n\nitem = [];\nmap.set(item, 3);\nassert.sameValue(map.get(item), 3);\n\nitem = Symbol('item');\nmap.set(item, 4);\nassert.sameValue(map.get(item), 4);\n\nitem = null;\nmap.set(item, 5);\nassert.sameValue(map.get(item), 5);\n\nitem = undefined;\nmap.set(item, 6);\nassert.sameValue(map.get(item), 6);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/returns-value-different-key-types.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.returns-value-normalized-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.set(+0, 42);\nassert.sameValue(map.get(-0), 42);\n\nmap = new Map();\nmap.set(-0, 43);\nassert.sameValue(map.get(+0), 43);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/returns-value-normalized-zero-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.get.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.get.call(false, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.get.call(1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.get.call('', 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.get.call(undefined, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.get.call(null, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.get.call(Symbol(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.get.call(false, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/get/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.append-new-values-normalizes-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.getOrInsert(-0, 42);\nassert.sameValue(map.get(0), 42);\n\nmap = new Map();\nmap.getOrInsert(+0, 43);\nassert.sameValue(map.get(0), 43);\nassert.sameValue(map.get(-0), 43);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/append-new-values-normalizes-zero-key.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.append-new-values",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = Symbol(2);\nvar map = new Map([[4, 4], ['foo3', 3], [s, 2]]);\n\nmap.getOrInsert(null, 42);\nmap.getOrInsert(1, 'valid');\n\nassert.sameValue(map.size, 5);\nassert.sameValue(map.get(1), 'valid');\n\nvar results = [];\n\nmap.forEach(function(value, key) {\n  results.push({\n    value: value,\n    key: key\n  });\n});\n\nvar result = results.pop();\nassert.sameValue(result.value, 'valid');\nassert.sameValue(result.key, 1);\n\nresult = results.pop();\nassert.sameValue(result.value, 42);\nassert.sameValue(result.key, null);\n\nresult = results.pop();\nassert.sameValue(result.value, 2);\nassert.sameValue(result.key, s);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/append-new-values.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.append-value-if-key-is-not-present-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.getOrInsert('bar', 0);\nassert.sameValue(map.get('bar'), 0);\n\nmap.getOrInsert(1, 42);\nassert.sameValue(map.get(1), 42);\n\nmap.getOrInsert(NaN, 1);\nassert.sameValue(map.get(NaN), 1);\n\nvar item = {};\nmap.getOrInsert(item, 2);\nassert.sameValue(map.get(item), 2);\n\nitem = [];\nmap.getOrInsert(item, 3);\nassert.sameValue(map.get(item), 3);\n\nitem = Symbol('item');\nmap.getOrInsert(item, 4);\nassert.sameValue(map.get(item), 4);\n\nitem = null;\nmap.getOrInsert(item, 5);\nassert.sameValue(map.get(item), 5);\n\nitem = undefined;\nmap.getOrInsert(item, 6);\nassert.sameValue(map.get(item), 6);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/append-value-if-key-is-not-present-different-key-types.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function () {\n  Map.prototype.getOrInsert.call(new Set(), 1, 1);\n});\n\nassert.throws(TypeError, function () {\n  var map = new Map();\n  map.getOrInsert.call(new Set(), 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.getOrInsert.call(new WeakMap(), 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.getOrInsert.call(new WeakMap(), 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.throws(TypeError, function () {\n    Map.prototype.getOrInsert.call([], 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    map.getOrInsert.call([], 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    Map.prototype.getOrInsert.call({}, 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    map.getOrInsert.call({}, 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.getorinsert",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.getOrInsert,\n  'function',\n  '`typeof Map.prototype.getOrInsert` is `function`'\n);\n\n\nverifyProperty(Map.prototype, \"getOrInsert\", {\n  value: Map.prototype.getOrInsert,\n  writable: true,\n  enumerable: false,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/getOrInsert.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.getOrInsert), false, 'isConstructor(Map.prototype.getOrInsert) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.getOrInsert();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Map",
+        "Reflect.construct",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-not-present-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.sameValue(map.getOrInsert('bar', 0), 0);\n\nassert.sameValue(map.getOrInsert(1, 42), 42);\n\nassert.sameValue(map.getOrInsert(NaN, 1), 1);\n\nvar item = {};\nassert.sameValue(map.getOrInsert(item, 2), 2);\n\nitem = [];\nassert.sameValue(map.getOrInsert(item, 3), 3);\n\nitem = Symbol('item');\nassert.sameValue(map.getOrInsert(item, 4), 4);\n\nitem = null;\nassert.sameValue(map.getOrInsert(item, 5), 5);\n\nitem = undefined;\nassert.sameValue(map.getOrInsert(item, 6), 6);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/returns-value-if-key-is-not-present-different-key-types.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-present-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.set('bar', 0);\nassert.sameValue(map.get('bar'), map.getOrInsert('bar', 1));\nassert.sameValue(0, map.getOrInsert('bar', 1));\n\nmap.set(1, 42);\nassert.sameValue(map.get(1), map.getOrInsert(1, 43));\nassert.sameValue(42, map.getOrInsert(1, 43));\n\nmap.set(NaN, 1);\nassert.sameValue(map.get(NaN), map.getOrInsert(NaN, 2));\nassert.sameValue(1, map.getOrInsert(NaN, 2));\n\nvar item = {};\nmap.set(item, 2);\nassert.sameValue(map.get(item), map.getOrInsert(item, 3));\nassert.sameValue(2, map.getOrInsert(item, 3));\n\nitem = [];\nmap.set(item, 3);\nassert.sameValue(map.get(item), map.getOrInsert(item, 4));\nassert.sameValue(3, map.getOrInsert(item, 4));\n\nitem = Symbol('item');\nmap.set(item, 4);\nassert.sameValue(map.get(item), map.getOrInsert(item, 5));\nassert.sameValue(4, map.getOrInsert(item, 5));\n\nitem = null;\nmap.set(item, 5);\nassert.sameValue(map.get(item), map.getOrInsert(item, 6));\nassert.sameValue(5, map.getOrInsert(item, 6));\n\nitem = undefined;\nmap.set(item, 6);\nassert.sameValue(map.get(item), map.getOrInsert(item, 7));\nassert.sameValue(6, map.getOrInsert(item, 7));\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/returns-value-if-key-is-present-different-key-types.js",
+      "n_asserts": 16,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.returns-value-normalized-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.set(+0, 42);\nassert.sameValue(map.getOrInsert(-0, 1), 42);\n\nmap = new Map();\nmap.set(-0, 43);\nassert.sameValue(map.getOrInsert(+0, 1), 43);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/returns-value-normalized-zero-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsert.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(false, 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(1, 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(\"\", 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(undefined, 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(null, 1, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsert.call(Symbol(), 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsert/this-not-object-throw.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values-normalizes-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.getOrInsertComputed(-0, () => 42);\nassert.sameValue(map.get(0), 42);\n\nmap = new Map();\nmap.getOrInsertComputed(+0, () => 43);\nassert.sameValue(map.get(0), 43);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/append-new-values-normalizes-zero-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = Symbol(2);\nvar map = new Map([[4, 4], ['foo3', 3], [s, 2]]);\n\nmap.getOrInsertComputed(null, () => 42);\nmap.getOrInsertComputed(1, () => 'valid');\n\nassert.sameValue(map.size, 5);\nassert.sameValue(map.get(1), 'valid');\n\nvar results = [];\n\nmap.forEach(function(value, key) {\n  results.push({\n    value: value,\n    key: key\n  });\n});\n\nvar result = results.pop();\nassert.sameValue(result.value, 'valid');\nassert.sameValue(result.key, 1);\n\nresult = results.pop();\nassert.sameValue(result.value, 42);\nassert.sameValue(result.key, null);\n\nresult = results.pop();\nassert.sameValue(result.value, 2);\nassert.sameValue(result.key, s);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/append-new-values.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.append-value-if-key-is-not-present-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nvar item = 'bar';\nmap.getOrInsertComputed(item, () => 0);\nassert.sameValue(map.get(item), 0);\n\nitem = 1;\nmap.getOrInsertComputed(item, () => 42);\nassert.sameValue(map.get(item), 42);\n\nitem = NaN;\nmap.getOrInsertComputed(item, () => 1);\nassert.sameValue(map.get(item), 1);\n\nitem = {};\nmap.getOrInsertComputed(item, () => 2);\nassert.sameValue(map.get(item), 2);\n\nitem = [];\nmap.getOrInsertComputed(item, () => 3);\nassert.sameValue(map.get(item), 3);\n\nitem = Symbol('item');\nmap.getOrInsertComputed(item, () => 4);\nassert.sameValue(map.get(item), 4);\n\nitem = null;\nmap.getOrInsertComputed(item, () => 5);\nassert.sameValue(map.get(item), 5);\n\nitem = undefined;\nmap.getOrInsertComputed(item, () => 6);\nassert.sameValue(map.get(item), 6);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/append-value-if-key-is-not-present-different-key-types.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.callbackfn-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(1, function() {\n    throw new Error('throw in callback');\n  })\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/callbackfn-throws.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.canonical-key-passed-to-callback",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nfor (var key of [-0, +0]) {\n  var map = new Map();\n\n  var canonicalKey;\n  map.getOrInsertComputed(key, function(keyArg) {\n    canonicalKey = keyArg;\n  });\n\n  assert.sameValue(+0, canonicalKey);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/canonical-key-passed-to-callback.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.check-callback-fn-args",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.getOrInsertComputed(1, function(...args) {\n  assert.sameValue(this, undefined);\n  assert.sameValue(args.length, 1);\n  assert.sameValue(args[0], 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/check-callback-fn-args.js",
+      "n_asserts": 3,
+      "flags": [
+        "onlyStrict"
+      ],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.check-state-after-callback-fn-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set(0, 'zero');\nmap.set(1, 'one');\nmap.set(2, 'two');\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(3, function() {\n    throw new Error('throw in callback');\n  })\n});\n\n// Check the values after throwing in callbackfn.\nassert.sameValue(map.get(0), 'zero');\nassert.sameValue(map.get(1), 'one');\nassert.sameValue(map.get(2), 'two');\nassert.sameValue(map.has(3), false)\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(3, function() {\n    map.set(1, 'mutated');\n    throw new Error('throw in callback');\n  })\n});\n\n// Check the values after throwing in callbackfn, with mutation.\nassert.sameValue(map.get(0), 'zero');\nassert.sameValue(map.get(1), 'mutated',);\nassert.sameValue(map.get(2), 'two');\nassert.sameValue(map.has(3), false)\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(3, function() {\n    map.set(3, 'mutated');\n    throw new Error('throw in callback');\n  })\n});\n\n// Check the values after throwing in callbackfn, with mutation.\nassert.sameValue(map.get(0), 'zero');\nassert.sameValue(map.get(1), 'mutated',);\nassert.sameValue(map.get(2), 'two');\nassert.sameValue(map.get(3), 'mutated')\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/check-state-after-callback-fn-throws.js",
+      "n_asserts": 15,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.different-types-function-callbackfn-does-not-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.sameValue(m.getOrInsertComputed(1, function () { return 1; }), 1);\nassert.sameValue(m.get(1), 1);\n\nassert.sameValue(m.getOrInsertComputed(2, () => 2), 2);\nassert.sameValue(m.get(2), 2);\n\nfunction three() { return 3; }\nassert.sameValue(m.getOrInsertComputed(3, three), 3);\nassert.sameValue(m.get(3), 3);\n\nassert.sameValue(m.getOrInsertComputed(4, new Function()), undefined);\nassert.sameValue(m.get(4), undefined);\n\nassert.sameValue(m.getOrInsertComputed(5, (function () { return 5; }).bind(m)), 5);\nassert.sameValue(m.get(5), 5);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/different-types-function-callbackfn-does-not-throw.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-evaluate-callbackfn-if-key-present",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([\n  [1, 0]\n]);\n\nvar callbackCalls = 0;\nfunction callback() {\n    callbackCalls += 1;\n    throw new Error('Callbackfn should not be evaluated if key is present');\n}\n\nassert.sameValue(map.getOrInsertComputed(1, callback), 0);\n\nmap.set(2, 1);\nassert.sameValue(map.getOrInsertComputed(2, callback), 1);\n\nmap.set(3, 2);\nassert.sameValue(map.getOrInsertComputed(3, callback), 2);\n\nassert.throws(Error, function() {\n  map.getOrInsertComputed(4, callback)}\n, Error);\n\nassert.sameValue(callbackCalls, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/does-not-evaluate-callbackfn-if-key-present.js",
+      "n_asserts": 5,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar set = new Set();\nassert.throws(TypeError, function () {\n  Map.prototype.getOrInsertComputed.call(set, 1, () => 1);\n});\n\nvar map = new Map();\nassert.throws(TypeError, function () {\n  map.getOrInsertComputed.call(set, 1, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar weakmap = new WeakMap();\nassert.throws(TypeError, function() {\n  Map.prototype.getOrInsertComputed.call(weakmap, 1, () => 1);\n});\n\nvar map = new Map();\nassert.throws(TypeError, function() {\n  map.getOrInsertComputed.call(weakmap, 1, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.getOrInsertComputed), false, 'isConstructor(Map.prototype.getOrInsertComputed) must return false');\n\nvar m = new Map();\nassert.throws(TypeError, () => {\n    new m.getOrInsertComputed();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Map",
+        "Reflect.construct",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-function-callbackfn-throws",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, \"\");\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, true);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, undefined);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, null);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, {});\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, []);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, Symbol());\n});\n\n// Check that it also throws if the key is already present (thus it does not try to call the callback)\nm.set(1, \"foo\");\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed(1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/not-a-function-callbackfn-throws.js",
+      "n_asserts": 9,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.overwrites-mutation-from-callbackfn",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nvar foo = 1;\nvar bar = 2;\nvar baz = 3;\n\nmap.getOrInsertComputed(foo, () => {map.set(foo, 0); return 3;});\nmap.getOrInsertComputed(bar, () => {map.set(bar, 1)});\nmap.getOrInsertComputed(baz, () => {map.set(baz, 2); return 'string';});\n\nassert.sameValue(map.get(foo), 3);\nassert.sameValue(map.get(bar), undefined);\nassert.sameValue(map.get(baz), 'string');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/overwrites-mutation-from-callbackfn.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-not-present-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nvar item = 'bar';\nassert.sameValue(map.getOrInsertComputed(item, () => 0), 0);\n\nitem = 1;\nassert.sameValue(map.getOrInsertComputed(item, () => 42), 42);\n\nitem = NaN;\nassert.sameValue(map.getOrInsertComputed(item, () => 1), 1);\n\nitem = {};\nassert.sameValue(map.getOrInsertComputed(item, () => 2), 2);\n\nitem = [];\nassert.sameValue(map.getOrInsertComputed(item, () => 3), 3);\n\nitem = Symbol('item');\nassert.sameValue(map.getOrInsertComputed(item, () => 4), 4);\n\nitem = null;\nassert.sameValue(map.getOrInsertComputed(item, () => 5), 5);\n\nitem = undefined;\nassert.sameValue(map.getOrInsertComputed(item, () => 6), 6);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/returns-value-if-key-is-not-present-different-key-types.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-present-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nvar item = 'bar';\nmap.set(item, 0);\nassert.sameValue(map.getOrInsertComputed(item, () => 1), 0);\n\nitem = 1;\nmap.set(item, 42);\nassert.sameValue(map.getOrInsertComputed(item, () => 43), 42);\n\nitem = NaN;\nmap.set(item, 1);\nassert.sameValue(map.getOrInsertComputed(item, () => 2), 1);\n\nitem = {};\nmap.set(item, 2);\nassert.sameValue(map.getOrInsertComputed(item, () => 3), 2);\n\nitem = [];\nmap.set(item, 3);\nassert.sameValue(map.getOrInsertComputed(item, () => 4), 3);\n\nitem = Symbol('item');\nmap.set(item, 4);\nassert.sameValue(map.getOrInsertComputed(item, () => 5), 4);\n\nitem = null;\nmap.set(item, 5);\nassert.sameValue(map.getOrInsertComputed(item, () => 6), 5);\n\nitem = undefined;\nmap.set(item, 6);\nassert.sameValue(map.getOrInsertComputed(item, () => 7), 6);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/returns-value-if-key-is-present-different-key-types.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-normalized-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.set(+0, 42);\nassert.sameValue(map.getOrInsertComputed(-0, () => 1), 42);\n\nmap = new Map();\nmap.set(-0, 43);\nassert.sameValue(map.getOrInsertComputed(+0, () => 1), 43);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/returns-value-normalized-zero-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(false, 1, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(1, 1, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(\"\", 1, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(undefined, 1, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(null, 1, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(Symbol(), 1, () => 1);\n});\n\nassert.throws(TypeError, function () {\n    m.getOrInsertComputed.call(1n, 1, () => 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/getOrInsertComputed/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol",
+        "arrow-function",
+        "upsert"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.has.call(new Set(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.has.call(new Set(), 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.has.call(new WeakMap(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.has.call(new WeakMap(), 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function() {\n  Map.prototype.has.call([], 1);\n});\n\nassert.throws(TypeError, function() {\n  m.has.call([], 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.has.call({}, 1);\n});\n\nassert.throws(TypeError, function() {\n  m.has.call({}, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.has",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.has,\n  'function',\n  '`typeof Map.prototype.has` is `function`'\n);\n\nverifyProperty(Map.prototype, 'has', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/has.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.normalizes-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.sameValue(map.has(-0), false);\nassert.sameValue(map.has(+0), false);\n\nmap.set(-0, 42);\nassert.sameValue(map.has(-0), true);\nassert.sameValue(map.has(+0), true);\n\nmap.clear();\n\nmap.set(+0, 42);\nassert.sameValue(map.has(-0), true);\nassert.sameValue(map.has(+0), true);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/normalizes-zero-key.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.has), false, 'isConstructor(Map.prototype.has) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.has();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.return-false-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.sameValue(map.has('str'), false);\nassert.sameValue(map.has(1),  false);\nassert.sameValue(map.has(NaN), false);\nassert.sameValue(map.has(true), false);\nassert.sameValue(map.has(false), false);\nassert.sameValue(map.has({}), false);\nassert.sameValue(map.has([]), false);\nassert.sameValue(map.has(Symbol()), false);\nassert.sameValue(map.has(null), false);\nassert.sameValue(map.has(undefined), false);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/return-false-different-key-types.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.return-true-different-key-types",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nvar obj = {};\nvar arr = [];\nvar symb = Symbol();\n\nmap.set('str', undefined);\nmap.set(1, undefined);\nmap.set(NaN, undefined);\nmap.set(true, undefined);\nmap.set(false, undefined);\nmap.set(obj, undefined);\nmap.set(arr, undefined);\nmap.set(symb, undefined);\nmap.set(null, undefined);\nmap.set(undefined, undefined);\n\nassert.sameValue(map.has('str'), true);\nassert.sameValue(map.has(1),  true);\nassert.sameValue(map.has(NaN), true);\nassert.sameValue(map.has(true), true);\nassert.sameValue(map.has(false), true);\nassert.sameValue(map.has(obj), true);\nassert.sameValue(map.has(arr), true);\nassert.sameValue(map.has(symb), true);\nassert.sameValue(map.has(null), true);\nassert.sameValue(map.has(undefined), true);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/return-true-different-key-types.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.has.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.has.call(false, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.has.call(1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.has.call('', 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.has.call(undefined, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.has.call(null, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.has.call(Symbol(), 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.has.call(false, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/has/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call(new Set());\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.keys.call(new Set());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call(new WeakMap());\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.keys.call(new WeakMap());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call([]);\n});\n\nassert.throws(TypeError, function() {\n  m.keys.call([]);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call({});\n});\n\nassert.throws(TypeError, function() {\n  m.keys.call({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.keys",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.keys,\n  'function',\n  '`typeof Map.prototype.keys` is `function`'\n);\n\nverifyProperty(Map.prototype, 'keys', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/keys.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.keys), false, 'isConstructor(Map.prototype.keys) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.keys();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.returns-iterator-empty",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nvar iterator = map.keys();\nvar result = iterator.next();\n\nassert.sameValue(\n  result.value, undefined,\n  'The value of `result.value` is `undefined`'\n);\nassert.sameValue(result.done, true, 'The value of `result.done` is `true`');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/returns-iterator-empty.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.returns-iterator",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\nvar map = new Map();\nmap.set('foo', 1);\nmap.set(obj, 2);\nmap.set(map, 3);\n\nvar iterator = map.keys();\nvar result;\n\nresult = iterator.next();\nassert.sameValue(result.value, 'foo', 'First result `value` (\"key\")');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, obj, 'Second result `value` (\"key\")');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, map, 'Third result `value` (\"key\")');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, undefined, 'Exhausted result `value`');\nassert.sameValue(result.done, true, 'Exhausted result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(\n  result.value, undefined, 'Exhausted result `value` (repeated request)'\n);\nassert.sameValue(\n  result.done, true, 'Exhausted result `done` flag (repeated request)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/returns-iterator.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.keys.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call(false);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call(1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call('');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call(null);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.keys.call(Symbol());\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.keys.call(false);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/keys/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.append-new-values-normalizes-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nmap.set(-0, 42);\n\nassert.sameValue(map.get(0), 42);\n\nmap = new Map();\nmap.set(+0, 43);\nassert.sameValue(map.get(0), 43);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/append-new-values-normalizes-zero-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.append-new-values-return-map",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nvar result = map.set(1, 1);\n\nassert.sameValue(result, map);\n\nresult = map.set(1,1).set(2,2).set(3,3);\n\nassert.sameValue(result, map, 'Map.prototype.set is chainable');\n\nvar map2 = new Map();\nresult = map2.set.call(map, 4, 4);\n\nassert.sameValue(result, map);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/append-new-values-return-map.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.append-new-values",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar s = Symbol(2);\nvar map = new Map([[4, 4], ['foo3', 3], [s, 2]]);\n\nmap.set(null, 42);\nmap.set(1, 'valid');\n\nassert.sameValue(map.size, 5);\nassert.sameValue(map.get(1), 'valid');\n\nvar results = [];\n\nmap.forEach(function(value, key) {\n  results.push({\n    value: value,\n    key: key\n  });\n});\n\nvar result = results.pop();\nassert.sameValue(result.value, 'valid');\nassert.sameValue(result.key, 1);\n\nresult = results.pop();\nassert.sameValue(result.value, 42);\nassert.sameValue(result.key, null);\n\nresult = results.pop();\nassert.sameValue(result.value, 2);\nassert.sameValue(result.key, s);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/append-new-values.js",
+      "n_asserts": 8,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.set.call(new Set(), 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.set.call(new Set(), 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.set.call(new WeakMap(), 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.set.call(new WeakMap(), 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function() {\n  Map.prototype.set.call([], 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  m.set.call([], 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.set.call({}, 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  m.set.call({}, 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.set), false, 'isConstructor(Map.prototype.set) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.set();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.replaces-a-value-normalizes-zero-key",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([[+0, 1]]);\n\nmap.set(-0, 42);\nassert.sameValue(map.get(+0), 42, 'zero key is normalized in SameValueZero');\n\nmap = new Map([[-0, 1]]);\nmap.set(+0, 42);\nassert.sameValue(map.get(-0), 42, 'zero key is normalized in SameValueZero');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/replaces-a-value-normalizes-zero-key.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.replaces-a-value-returns-map",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([['item', 0]]);\nvar map2 = new Map();\n\nvar x = map.set('item', 42);\nassert.sameValue(x, map);\n\nx = Map.prototype.set.call(map, 'item', 0);\nassert.sameValue(x, map);\n\nx = map2.set.call(map, 'item', 0);\nassert.sameValue(x, map, 'Map#set returns the map `this` value');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/replaces-a-value-returns-map.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.replaces-a-value",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map([['item', 1]]);\n\nm.set('item', 42);\nassert.sameValue(m.get('item'), 42);\nassert.sameValue(m.size, 1);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/replaces-a-value.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.set,\n  'function',\n  '`typeof Map.prototype.set` is `function`'\n);\n\nverifyProperty(Map.prototype, 'set', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/set.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.set.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.set.call(false, 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.set.call(1, 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.set.call('', 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.set.call(undefined, 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.set.call(null, 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.set.call(Symbol(), 1, 1);\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.set.call(false, 1, 1);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/set/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map.prototype, 'size');\n\nvar map = new Map();\n\n// Does not throw\ndescriptor.get.call(map);\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(new Set());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map.prototype, 'size');\n\nvar map = new Map();\n\n// Does not throw\ndescriptor.get.call(map);\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(new WeakMap());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map.prototype, 'size');\n\nvar map = new Map();\n\n// Does not throw\ndescriptor.get.call(map);\n\nassert.throws(TypeError, function() {\n  descriptor.get.call([]);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-clear",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.sameValue(map.size, 0, 'The value of `map.size` is `0`');\n\nmap.set(1, 1);\nmap.set(2, 2);\nassert.sameValue(\n  map.size, 2,\n  'The value of `map.size` is `2`'\n);\n\nmap.clear();\nassert.sameValue(\n  map.size, 0,\n  'The value of `map.size` is `0`, after executing `map.clear()`'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/returns-count-of-present-values-before-after-set-clear.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-delete",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nassert.sameValue(map.size, 0, 'The value of `map.size` is `0`');\n\nmap.set(1, 1);\nassert.sameValue(\n  map.size, 1,\n  'The value of `map.size` is `1`, after executing `map.set(1, 1)`'\n);\n\nmap.delete(1);\nassert.sameValue(\n  map.size, 0,\n  'The value of `map.size` is `0`, after executing `map.delete(1)`'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/returns-count-of-present-values-before-after-set-delete.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-insertion",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\n\nmap.set(0, undefined);\nmap.set(undefined, undefined);\nmap.set(false, undefined);\nmap.set(NaN, undefined);\nmap.set(null, undefined);\nmap.set('', undefined);\nmap.set(Symbol(), undefined);\n\nassert.sameValue(map.size, 7, 'The value of `map.size` is `7`');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/returns-count-of-present-values-by-insertion.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-iterable",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map([\n  [0, undefined],\n  [undefined, undefined],\n  [false, undefined],\n  [NaN, undefined],\n  [null, undefined],\n  ['', undefined],\n  [Symbol(), undefined],\n]);\n\nassert.sameValue(map.size, 7, 'The value of `map.size` is `7`');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/returns-count-of-present-values-by-iterable.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.size.size",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map.prototype, 'size');\n\nassert.sameValue(\n  typeof descriptor.get,\n  'function',\n  'typeof descriptor.get is function'\n);\nassert.sameValue(\n  typeof descriptor.set,\n  'undefined',\n  'typeof descriptor.set is undefined'\n);\n\nverifyNotEnumerable(Map.prototype, 'size');\nverifyConfigurable(Map.prototype, 'size');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/size/size.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.map.prototype.size.this-not-object-throw",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map.prototype, 'size');\n\ntry { (function() {\n  descriptor.get.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(false);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(1);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call('');\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(undefined);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(null);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  descriptor.get.call(Symbol());\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map.prototype, 'size');\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(1);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(false);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(1);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call('');\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(null);\n});\n\nassert.throws(TypeError, function() {\n  descriptor.get.call(Symbol());\n});\n}\nmain();\n",
       "origin": "test/built-ins/Map/prototype/size/this-not-object-throw.js",
       "n_asserts": 7,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.symbol.iterator.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  isConstructor(Map.prototype[Symbol.iterator]),\n  false,\n  'isConstructor(Map.prototype[Symbol.iterator]) must return false'\n);\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m[Symbol.iterator]();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/Symbol.iterator/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Symbol",
+        "Symbol.iterator",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.symbol.iterator",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Map.prototype[Symbol.iterator], Map.prototype.entries);\nverifyProperty(Map.prototype, Symbol.iterator, {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/Symbol.iterator.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.iterator"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.symbol.tostringtag",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(Map.prototype[Symbol.toStringTag], 'Map');\n\nverifyProperty(Map.prototype, Symbol.toStringTag, {\n  writable: false,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/Symbol.toStringTag.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Symbol.toStringTag"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-set",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.values.call(new Set());\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.values.call(new Set());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/does-not-have-mapdata-internal-slot-set.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Set"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-weakmap",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.values.call(new WeakMap());\n});\n\nassert.throws(TypeError, function() {\n  var m = new Map();\n  m.values.call(new WeakMap());\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/does-not-have-mapdata-internal-slot-weakmap.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "WeakMap"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar m = new Map();\n\nassert.throws(TypeError, function() {\n  Map.prototype.values.call([]);\n});\n\nassert.throws(TypeError, function() {\n  m.values.call([]);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.values.call({});\n});\n\nassert.throws(TypeError, function() {\n  m.values.call({});\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/does-not-have-mapdata-internal-slot.js",
+      "n_asserts": 4,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.not-a-constructor",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(Map.prototype.values), false, 'isConstructor(Map.prototype.values) must return false');\n\nassert.throws(TypeError, () => {\n  let m = new Map(); new m.values();\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/not-a-constructor.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "Map",
+        "arrow-function"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.returns-iterator-empty",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar map = new Map();\nvar iterator = map.values();\nvar result = iterator.next();\n\nassert.sameValue(\n  result.value, undefined,\n  'The value of `result.value` is `undefined`'\n);\nassert.sameValue(result.done, true, 'The value of `result.done` is `true`');\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/returns-iterator-empty.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.returns-iterator",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = {};\nvar map = new Map();\nmap.set(1, 'foo');\nmap.set(2, obj);\nmap.set(3, map);\n\nvar iterator = map.values();\nvar result;\n\nresult = iterator.next();\nassert.sameValue(result.value, 'foo', 'First result `value` (\"value\")');\nassert.sameValue(result.done, false, 'First result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, obj, 'Second result `value` (\"value\")');\nassert.sameValue(result.done, false, 'Second result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, map, 'Third result `value` (\"value\")');\nassert.sameValue(result.done, false, 'Third result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(result.value, undefined, 'Exhausted result `value`');\nassert.sameValue(result.done, true, 'Exhausted result `done` flag');\n\nresult = iterator.next();\nassert.sameValue(\n  result.value, undefined, 'Exhausted result `value` (repeated request)'\n);\nassert.sameValue(\n  result.done, true, 'Exhausted result `done` flag (repeated request)'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/returns-iterator.js",
+      "n_asserts": 10,
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.this-not-object-throw",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map.prototype.values.call(false);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.values.call(1);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.values.call('');\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.values.call(undefined);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.values.call(null);\n});\n\nassert.throws(TypeError, function() {\n  Map.prototype.values.call(Symbol());\n});\n\nassert.throws(TypeError, function() {\n  var map = new Map();\n  map.values.call(false);\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/this-not-object-throw.js",
+      "n_asserts": 7,
+      "flags": [],
+      "features": [
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.prototype.values.values",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(\n  typeof Map.prototype.values,\n  'function',\n  '`typeof Map.prototype.values` is `function`'\n);\n\nverifyProperty(Map.prototype, 'values', {\n  writable: true,\n  enumerable: false,\n  configurable: true,\n});\n}\nmain();\n",
+      "origin": "test/built-ins/Map/prototype/values/values.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.map.prototype-of-map",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(Object.getPrototypeOf(Map));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(\n  Object.getPrototypeOf(Map),\n  Function.prototype,\n  '`Object.getPrototypeOf(Map)` returns `Function.prototype`'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Map/prototype-of-map.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.symbol.species.return-value",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nvar thisVal = {};\nvar accessor = Object.getOwnPropertyDescriptor(Map, Symbol.species).get;\n\nconsole.log(accessor.call(thisVal));\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar thisVal = {};\nvar accessor = Object.getOwnPropertyDescriptor(Map, Symbol.species).get;\n\nassert.sameValue(accessor.call(thisVal), thisVal);\n}\nmain();\n",
       "origin": "test/built-ins/Map/Symbol.species/return-value.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.species"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.map.symbol.species.symbol-species-name",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map, Symbol.species);\n\nconsole.log(descriptor.get.name);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar descriptor = Object.getOwnPropertyDescriptor(Map, Symbol.species);\n\nassert.sameValue(\n  descriptor.get.name,\n  'get [Symbol.species]'\n);\n}\nmain();\n",
       "origin": "test/built-ins/Map/Symbol.species/symbol-species-name.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "Symbol.species"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.symbol.species.symbol-species",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar desc = Object.getOwnPropertyDescriptor(Map, Symbol.species);\n\nassert.sameValue(desc.set, undefined);\nassert.sameValue(typeof desc.get, 'function');\n\nverifyNotWritable(Map, Symbol.species, Symbol.species);\nverifyNotEnumerable(Map, Symbol.species);\nverifyConfigurable(Map, Symbol.species);\n}\nmain();\n",
+      "origin": "test/built-ins/Map/Symbol.species/symbol-species.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "Symbol.species"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.map.undefined-newtarget",
       "category": "map",
       "source": "test262",
-      "fixture": "function main(): void {\ntry { (function() {\n  Map();\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n\ntry { (function() {\n  Map([]);\n})(); console.log(\"__OK__\"); } catch (e) { console.log(e.constructor.name); };\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.throws(TypeError, function() {\n  Map();\n});\n\nassert.throws(TypeError, function() {\n  Map([]);\n});\n}\nmain();\n",
       "origin": "test/built-ins/Map/undefined-newtarget.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.map.valid-keys",
+      "category": "map",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst negativeZero = -0;\nconst positiveZero = +0;\nconst zero = 0;\nconst one = 1;\nconst twoRaisedToFiftyThreeMinusOne = 2 ** 53 - 1;\nconst int32Array = new Int32Array([zero, one]);\nconst uint32Array = new Uint32Array([zero, one]);\nconst n = 100000000000000000000000000000000000000000000000000000000000000000000000000000000001n;\nconst bigInt = BigInt('100000000000000000000000000000000000000000000000000000000000000000000000000000000001');\nconst n1 = 1n;\nconst n53 = 9007199254740991n;\nconst fiftyThree = BigInt('9007199254740991');\nconst bigInt64Array = new BigInt64Array([n1, n53]);\nconst bigUint64Array = new BigUint64Array([n1, n53]);\nconst symbol = Symbol('');\nconst object = {};\nconst array = [];\nconst string = '';\nconst booleanTrue = true;\nconst booleanFalse = true;\nconst functionExprValue = function() {};\nconst arrowFunctionValue = () => {};\nconst classValue = class {};\nconst map = new Map();\nconst set = new Set();\nconst weakMap = new WeakMap();\nconst weakRef = new WeakRef({});\nconst weakSet = new WeakSet();\nconst nullValue = null;\nconst undefinedValue = undefined;\nlet unassigned;\n\n{\n  const m = new Map([[negativeZero, negativeZero]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(negativeZero), true);\n  assert.sameValue(m.get(negativeZero), negativeZero);\n  m.delete(negativeZero);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(negativeZero), false);\n  m.set(negativeZero, negativeZero);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(negativeZero), true);\n  assert.sameValue(m.get(negativeZero), negativeZero);\n};\n\n{\n  const m = new Map([[positiveZero, positiveZero]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(positiveZero), true);\n  assert.sameValue(m.get(positiveZero), positiveZero);\n  m.delete(positiveZero);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(positiveZero), false);\n  m.set(positiveZero, positiveZero);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(positiveZero), true);\n  assert.sameValue(m.get(positiveZero), positiveZero);\n};\n\n{\n  const m = new Map([[zero, zero]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(zero), true);\n  assert.sameValue(m.get(zero), zero);\n  m.delete(zero);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(zero), false);\n  m.set(zero, zero);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(zero), true);\n  assert.sameValue(m.get(zero), zero);\n};\n\n{\n  const m = new Map([[one, one]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(one), true);\n  assert.sameValue(m.get(one), one);\n  m.delete(one);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(one), false);\n  m.set(one, one);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(one), true);\n  assert.sameValue(m.get(one), one);\n};\n\n{\n  const m = new Map([[twoRaisedToFiftyThreeMinusOne, twoRaisedToFiftyThreeMinusOne]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(twoRaisedToFiftyThreeMinusOne), true);\n  assert.sameValue(m.get(twoRaisedToFiftyThreeMinusOne), twoRaisedToFiftyThreeMinusOne);\n  m.delete(twoRaisedToFiftyThreeMinusOne);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(twoRaisedToFiftyThreeMinusOne), false);\n  m.set(twoRaisedToFiftyThreeMinusOne, twoRaisedToFiftyThreeMinusOne);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(twoRaisedToFiftyThreeMinusOne), true);\n  assert.sameValue(m.get(twoRaisedToFiftyThreeMinusOne), twoRaisedToFiftyThreeMinusOne);\n};\n\n{\n  const m = new Map([[int32Array, int32Array]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(int32Array), true);\n  assert.sameValue(m.get(int32Array), int32Array);\n  m.delete(int32Array);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(int32Array), false);\n  m.set(int32Array, int32Array);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(int32Array), true);\n  assert.sameValue(m.get(int32Array), int32Array);\n};\n\n{\n  const m = new Map([[uint32Array, uint32Array]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(uint32Array), true);\n  assert.sameValue(m.get(uint32Array), uint32Array);\n  m.delete(uint32Array);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(uint32Array), false);\n  m.set(uint32Array, uint32Array);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(uint32Array), true);\n  assert.sameValue(m.get(uint32Array), uint32Array);\n};\n\n{\n  const m = new Map([[n, n]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(n), true);\n  assert.sameValue(m.get(n), n);\n  m.delete(n);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(n), false);\n  m.set(n, n);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(n), true);\n  assert.sameValue(m.get(n), n);\n};\n\n{\n  const m = new Map([[bigInt, bigInt]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(bigInt), true);\n  assert.sameValue(m.get(bigInt), bigInt);\n  m.delete(bigInt);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(bigInt), false);\n  m.set(bigInt, bigInt);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(bigInt), true);\n  assert.sameValue(m.get(bigInt), bigInt);\n};\n\n{\n  const m = new Map([[n1, n1]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(n1), true);\n  assert.sameValue(m.get(n1), n1);\n  m.delete(n1);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(n1), false);\n  m.set(n1, n1);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(n1), true);\n  assert.sameValue(m.get(n1), n1);\n};\n\n{\n  const m = new Map([[n53, n53]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(n53), true);\n  assert.sameValue(m.get(n53), n53);\n  m.delete(n53);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(n53), false);\n  m.set(n53, n53);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(n53), true);\n  assert.sameValue(m.get(n53), n53);\n};\n\n{\n  const m = new Map([[fiftyThree, fiftyThree]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(fiftyThree), true);\n  assert.sameValue(m.get(fiftyThree), fiftyThree);\n  m.delete(fiftyThree);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(fiftyThree), false);\n  m.set(fiftyThree, fiftyThree);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(fiftyThree), true);\n  assert.sameValue(m.get(fiftyThree), fiftyThree);\n};\n\n{\n  const m = new Map([[bigInt64Array, bigInt64Array]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(bigInt64Array), true);\n  assert.sameValue(m.get(bigInt64Array), bigInt64Array);\n  m.delete(bigInt64Array);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(bigInt64Array), false);\n  m.set(bigInt64Array, bigInt64Array);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(bigInt64Array), true);\n  assert.sameValue(m.get(bigInt64Array), bigInt64Array);\n};\n\n{\n  const m = new Map([[bigUint64Array, bigUint64Array]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(bigUint64Array), true);\n  assert.sameValue(m.get(bigUint64Array), bigUint64Array);\n  m.delete(bigUint64Array);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(bigUint64Array), false);\n  m.set(bigUint64Array, bigUint64Array);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(bigUint64Array), true);\n  assert.sameValue(m.get(bigUint64Array), bigUint64Array);\n};\n\n{\n  const m = new Map([[symbol, symbol]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(symbol), true);\n  assert.sameValue(m.get(symbol), symbol);\n  m.delete(symbol);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(symbol), false);\n  m.set(symbol, symbol);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(symbol), true);\n  assert.sameValue(m.get(symbol), symbol);\n};\n\n{\n  const m = new Map([[object, object]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(object), true);\n  assert.sameValue(m.get(object), object);\n  m.delete(object);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(object), false);\n  m.set(object, object);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(object), true);\n  assert.sameValue(m.get(object), object);\n};\n\n{\n  const m = new Map([[array, array]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(array), true);\n  assert.sameValue(m.get(array), array);\n  m.delete(array);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(array), false);\n  m.set(array, array);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(array), true);\n  assert.sameValue(m.get(array), array);\n};\n\n{\n  const m = new Map([[string, string]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(string), true);\n  assert.sameValue(m.get(string), string);\n  m.delete(string);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(string), false);\n  m.set(string, string);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(string), true);\n  assert.sameValue(m.get(string), string);\n};\n\n{\n  const m = new Map([[booleanTrue, booleanTrue]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(booleanTrue), true);\n  assert.sameValue(m.get(booleanTrue), booleanTrue);\n  m.delete(booleanTrue);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(booleanTrue), false);\n  m.set(booleanTrue, booleanTrue);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(booleanTrue), true);\n  assert.sameValue(m.get(booleanTrue), booleanTrue);\n};\n\n{\n  const m = new Map([[booleanFalse, booleanFalse]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(booleanFalse), true);\n  assert.sameValue(m.get(booleanFalse), booleanFalse);\n  m.delete(booleanFalse);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(booleanFalse), false);\n  m.set(booleanFalse, booleanFalse);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(booleanFalse), true);\n  assert.sameValue(m.get(booleanFalse), booleanFalse);\n};\n\n{\n  const m = new Map([[functionExprValue, functionExprValue]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(functionExprValue), true);\n  assert.sameValue(m.get(functionExprValue), functionExprValue);\n  m.delete(functionExprValue);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(functionExprValue), false);\n  m.set(functionExprValue, functionExprValue);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(functionExprValue), true);\n  assert.sameValue(m.get(functionExprValue), functionExprValue);\n};\n\n{\n  const m = new Map([[arrowFunctionValue, arrowFunctionValue]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(arrowFunctionValue), true);\n  assert.sameValue(m.get(arrowFunctionValue), arrowFunctionValue);\n  m.delete(arrowFunctionValue);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(arrowFunctionValue), false);\n  m.set(arrowFunctionValue, arrowFunctionValue);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(arrowFunctionValue), true);\n  assert.sameValue(m.get(arrowFunctionValue), arrowFunctionValue);\n};\n\n{\n  const m = new Map([[classValue, classValue]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(classValue), true);\n  assert.sameValue(m.get(classValue), classValue);\n  m.delete(classValue);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(classValue), false);\n  m.set(classValue, classValue);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(classValue), true);\n  assert.sameValue(m.get(classValue), classValue);\n};\n\n{\n  const m = new Map([[map, map]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(map), true);\n  assert.sameValue(m.get(map), map);\n  m.delete(map);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(map), false);\n  m.set(map, map);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(map), true);\n  assert.sameValue(m.get(map), map);\n};\n\n{\n  const m = new Map([[set, set]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(set), true);\n  assert.sameValue(m.get(set), set);\n  m.delete(set);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(set), false);\n  m.set(set, set);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(set), true);\n  assert.sameValue(m.get(set), set);\n};\n\n{\n  const m = new Map([[weakMap, weakMap]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(weakMap), true);\n  assert.sameValue(m.get(weakMap), weakMap);\n  m.delete(weakMap);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(weakMap), false);\n  m.set(weakMap, weakMap);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(weakMap), true);\n  assert.sameValue(m.get(weakMap), weakMap);\n};\n\n{\n  const m = new Map([[weakRef, weakRef]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(weakRef), true);\n  assert.sameValue(m.get(weakRef), weakRef);\n  m.delete(weakRef);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(weakRef), false);\n  m.set(weakRef, weakRef);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(weakRef), true);\n  assert.sameValue(m.get(weakRef), weakRef);\n};\n\n{\n  const m = new Map([[weakSet, weakSet]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(weakSet), true);\n  assert.sameValue(m.get(weakSet), weakSet);\n  m.delete(weakSet);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(weakSet), false);\n  m.set(weakSet, weakSet);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(weakSet), true);\n  assert.sameValue(m.get(weakSet), weakSet);\n};\n\n{\n  const m = new Map([[nullValue, nullValue]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(nullValue), true);\n  assert.sameValue(m.get(nullValue), nullValue);\n  m.delete(nullValue);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(nullValue), false);\n  m.set(nullValue, nullValue);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(nullValue), true);\n  assert.sameValue(m.get(nullValue), nullValue);\n};\n\n{\n  const m = new Map([[undefinedValue, undefinedValue]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(undefinedValue), true);\n  assert.sameValue(m.get(undefinedValue), undefinedValue);\n  m.delete(undefinedValue);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(undefinedValue), false);\n  m.set(undefinedValue, undefinedValue);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(undefinedValue), true);\n  assert.sameValue(m.get(undefinedValue), undefinedValue);\n};\n\n{\n  const m = new Map([[unassigned, unassigned]]);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(unassigned), true);\n  assert.sameValue(m.get(unassigned), unassigned);\n  m.delete(unassigned);\n  assert.sameValue(m.size, 0);\n  assert.sameValue(m.has(unassigned), false);\n  m.set(unassigned, unassigned);\n  assert.sameValue(m.size, 1);\n  assert.sameValue(m.has(unassigned), true);\n  assert.sameValue(m.get(unassigned), unassigned);\n};\n}\nmain();\n",
+      "origin": "test/built-ins/Map/valid-keys.js",
+      "n_asserts": 248,
+      "flags": [],
+      "features": [
+        "BigInt",
+        "Symbol",
+        "TypedArray",
+        "WeakRef",
+        "exponentiation"
+      ],
+      "includes": []
     }
   ]
 }

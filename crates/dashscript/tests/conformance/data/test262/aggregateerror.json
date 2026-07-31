@@ -1,41 +1,248 @@
 {
-  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's asserts in `function main(): void { … }` with assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). DO NOT edit by hand.",
+  "_comment": "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance harness injects on the engine path. DO NOT edit by hand.",
   "features": [
+    {
+      "id": "test262.test.built-ins.aggregateerror.errors-iterabletolist-failures",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar case1 = {\n  get [Symbol.iterator]() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, () => {\n  var obj = new AggregateError(case1);\n}, 'get Symbol.iterator');\n\nvar case2 = {\n  get [Symbol.iterator]() {\n    return {};\n  }\n};\n\nassert.throws(TypeError, () => {\n  var obj = new AggregateError(case2);\n}, 'GetMethod(obj, @@iterator) abrupts from non callable');\n\nvar case3 = {\n  [Symbol.iterator]() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, () => {\n  var obj = new AggregateError(case3);\n}, 'Abrupt from @@iterator call');\n\nvar case4 = {\n  [Symbol.iterator]() {\n    return 'a string';\n  }\n};\n\nassert.throws(TypeError, () => {\n  var obj = new AggregateError(case4);\n}, '@@iterator call returns a string');\n\nvar case5 = {\n  [Symbol.iterator]() {\n    return undefined;\n  }\n};\n\nassert.throws(TypeError, () => {\n  var obj = new AggregateError(case5);\n}, '@@iterator call returns undefined');\n\nvar case6 = {\n  [Symbol.iterator]() {\n    return {\n      get next() {\n        throw new Test262Error();\n      }\n    }\n  }\n};\n\nassert.throws(Test262Error, () => {\n  var obj = new AggregateError(case6);\n}, 'GetV(iterator, next) returns abrupt');\n\nvar case7 = {\n  [Symbol.iterator]() {\n    return {\n      get next() {\n        return {};\n      }\n    }\n  }\n};\n\nassert.throws(TypeError, () => {\n  var obj = new AggregateError(case7);\n}, 'GetV(iterator, next) returns a non callable');\n\nvar case8 = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        throw new Test262Error();\n      }\n    }\n  }\n};\n\nassert.throws(Test262Error, () => {\n  var obj = new AggregateError(case8);\n}, 'abrupt from iterator.next()');\n\nvar case9 = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return undefined;\n      }\n    }\n  }\n};\n\nassert.throws(TypeError, () => {\n  var obj = new AggregateError(case9);\n}, 'iterator.next() returns undefined');\n\nvar case10 = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return 'a string';\n      }\n    }\n  }\n};\n\nassert.throws(TypeError, () => {\n  var obj = new AggregateError(case10);\n}, 'iterator.next() returns a string');\n\nvar case11 = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        return {\n          get done() {\n            throw new Test262Error();\n          }\n        };\n      }\n    }\n  }\n};\n\nassert.throws(Test262Error, () => {\n  var obj = new AggregateError(case11);\n}, 'IteratorCompete abrupts getting the done property');\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/errors-iterabletolist-failures.js",
+      "n_asserts": 11,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "Symbol.iterator"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.errors-iterabletolist",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar count = 0;\nvar values = [];\nvar case1 = {\n  [Symbol.iterator]() {\n    return {\n      next() {\n        count += 1;\n        return {\n          done: count === 3,\n          get value() {\n            values.push(count)\n          }\n        };\n      }\n    };\n  }\n};\n\nnew AggregateError(case1);\n\nassert.sameValue(count, 3);\nassert.compareArray(values, [1, 2]);\n\nassert.throws(TypeError, () => {\n  new AggregateError();\n}, 'GetMethod(obj, @@iterator) returns undefined');\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/errors-iterabletolist.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "Symbol.iterator"
+      ],
+      "includes": [
+        "compareArray.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.is-a-constructor",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(isConstructor(AggregateError), true, 'isConstructor(AggregateError) must return true');\nnew AggregateError([]);\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/is-a-constructor.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "Reflect.construct",
+        "AggregateError"
+      ],
+      "includes": [
+        "isConstructor.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.message-tostring-abrupt-symbol",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar case1 = Symbol();\n\nassert.throws(TypeError, () => {\n  new AggregateError([], case1);\n}, 'toPrimitive');\n\nvar case2 = {\n  [Symbol.toPrimitive]() {\n    return Symbol();\n  },\n  toString() {\n    throw new Test262Error();\n  },\n  valueOf() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(TypeError, () => {\n  new AggregateError([], case2);\n}, 'from ToPrimitive');\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/message-tostring-abrupt-symbol.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "Symbol",
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.message-tostring-abrupt",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar case1 = {\n  [Symbol.toPrimitive]() {\n    throw new Test262Error();\n  },\n  toString() {\n    throw 'toString called';\n  },\n  valueOf() {\n    throw 'valueOf called';\n  }\n};\n\nassert.throws(Test262Error, () => {\n  new AggregateError([], case1);\n}, 'toPrimitive');\n\nvar case2 = {\n  [Symbol.toPrimitive]: undefined,\n  toString() {\n    throw new Test262Error();\n  },\n  valueOf() {\n    throw 'valueOf called';\n  }\n};\n\nassert.throws(Test262Error, () => {\n  new AggregateError([], case2);\n}, 'toString');\n\nvar case3 = {\n  [Symbol.toPrimitive]: undefined,\n  toString: undefined,\n  valueOf() {\n    throw new Test262Error();\n  }\n};\n\nassert.throws(Test262Error, () => {\n  new AggregateError([], case3);\n}, 'valueOf');\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/message-tostring-abrupt.js",
+      "n_asserts": 3,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "Symbol.toPrimitive"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.message-undefined-no-prop",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar case1 = new AggregateError([], undefined);\n\nassert.sameValue(\n  Object.prototype.hasOwnProperty.call(case1, 'message'),\n  false,\n  'explicit'\n);\n\nvar case2 = new AggregateError([]);\n\nassert.sameValue(\n  Object.prototype.hasOwnProperty.call(case2, 'message'),\n  false,\n  'implicit'\n);\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/message-undefined-no-prop.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": []
+    },
     {
       "id": "test262.test.built-ins.aggregateerror.newtarget-is-undefined",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar obj = AggregateError([], '');\n\nconsole.log(Object.getPrototypeOf(obj));\nconsole.log(obj instanceof AggregateError);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar obj = AggregateError([], '');\n\nassert.sameValue(Object.getPrototypeOf(obj), AggregateError.prototype);\nassert(obj instanceof AggregateError);\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/newtarget-is-undefined.js",
       "n_asserts": 2,
-      "flags": []
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.newtarget-proto-custom",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar custom = { x: 42 };\nvar newt = new Proxy(function() {}, {\n  get(t, p) {\n    if (p === 'prototype') {\n      return custom;\n    }\n\n    return t[p];\n  }\n});\n\nvar obj = Reflect.construct(AggregateError, [[]], newt);\n\nassert.sameValue(Object.getPrototypeOf(obj), custom);\nassert.sameValue(obj.x, 42);\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/newtarget-proto-custom.js",
+      "n_asserts": 2,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "Reflect.construct"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.newtarget-proto-fallback",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nconst values = [\n  undefined,\n  null,\n  42,\n  false,\n  true,\n  Symbol(),\n  'string',\n  AggregateError.prototype,\n];\n\nconst NewTarget = new Function();\n\nfor (const value of values) {\n  const NewTargetProxy = new Proxy(NewTarget, {\n    get(t, p) {\n      if (p === 'prototype') {\n        return value;\n      }\n      return t[p];\n    }\n  });\n\n  const error = Reflect.construct(AggregateError, [[]], NewTargetProxy);\n  assert.sameValue(Object.getPrototypeOf(error), AggregateError.prototype);\n}\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/newtarget-proto-fallback.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "Symbol"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.newtarget-proto",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar obj = new AggregateError([]);\n\nassert.sameValue(Object.getPrototypeOf(obj), AggregateError.prototype);\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/newtarget-proto.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.order-of-args-evaluation",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nlet sequence = [];\nconst message = {\n  toString() {\n    sequence.push(1);\n    return '';\n  }\n};\nconst errors = {\n  [Symbol.iterator]() {\n    sequence.push(2);\n    return {\n      next() {\n        sequence.push(3);\n        return {\n          done: true\n        };\n      }\n    };\n  }\n};\n\nnew AggregateError(errors, message);\n\nassert.sameValue(sequence.length, 3);\ncheckSequence(sequence);\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/order-of-args-evaluation.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "Symbol.iterator"
+      ],
+      "includes": [
+        "promiseHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.prop-desc",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AggregateError, 'function');\n\nverifyProperty(this, 'AggregateError', {\n  enumerable: false,\n  writable: true,\n  configurable: true\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.proto-from-ctor-realm",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nvar other = $262.createRealm().global;\nvar newTarget = new other.Function();\nvar err;\n\nnewTarget.prototype = undefined;\nerr = Reflect.construct(AggregateError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.AggregateError.prototype, 'newTarget.prototype is undefined');\n\nnewTarget.prototype = null;\nerr = Reflect.construct(AggregateError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.AggregateError.prototype, 'newTarget.prototype is null');\n\nnewTarget.prototype = true;\nerr = Reflect.construct(AggregateError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.AggregateError.prototype, 'newTarget.prototype is a Boolean');\n\nnewTarget.prototype = '';\nerr = Reflect.construct(AggregateError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.AggregateError.prototype, 'newTarget.prototype is a String');\n\nnewTarget.prototype = Symbol();\nerr = Reflect.construct(AggregateError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.AggregateError.prototype, 'newTarget.prototype is a Symbol');\n\nnewTarget.prototype = -1;\nerr = Reflect.construct(AggregateError, [[]], newTarget);\nassert.sameValue(Object.getPrototypeOf(err), other.AggregateError.prototype, 'newTarget.prototype is a Number');\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/proto-from-ctor-realm.js",
+      "n_asserts": 6,
+      "flags": [],
+      "features": [
+        "AggregateError",
+        "cross-realm",
+        "Reflect",
+        "Symbol"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.aggregateerror.proto",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError);\n\nconsole.log(proto);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError);\n\nassert.sameValue(proto, Error);\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": []
     },
     {
       "id": "test262.test.built-ins.aggregateerror.prototype.errors-absent-on-prototype",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nconsole.log(AggregateError.prototype.hasOwnProperty(\"errors\"));\n}\nmain();\n",
+      "fixture": "function main(): void {\nassert.sameValue(AggregateError.prototype.hasOwnProperty(\"errors\"), false);\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/prototype/errors-absent-on-prototype.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": []
+    },
+    {
+      "id": "test262.test.built-ins.aggregateerror.prototype.prop-desc",
+      "category": "aggregateerror",
+      "source": "test262",
+      "fixture": "function main(): void {\nassert.sameValue(typeof AggregateError.prototype, 'object');\n\nverifyProperty(AggregateError, 'prototype', {\n  enumerable: false,\n  writable: false,\n  configurable: false\n});\n}\nmain();\n",
+      "origin": "test/built-ins/AggregateError/prototype/prop-desc.js",
+      "n_asserts": 1,
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": [
+        "propertyHelper.js"
+      ]
     },
     {
       "id": "test262.test.built-ins.aggregateerror.prototype.proto",
       "category": "aggregateerror",
       "source": "test262",
-      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError.prototype);\n\nconsole.log(proto);\n}\nmain();\n",
+      "fixture": "function main(): void {\nvar proto = Object.getPrototypeOf(AggregateError.prototype);\n\nassert.sameValue(proto, Error.prototype);\n}\nmain();\n",
       "origin": "test/built-ins/AggregateError/prototype/proto.js",
       "n_asserts": 1,
-      "flags": []
+      "flags": [],
+      "features": [
+        "AggregateError"
+      ],
+      "includes": []
     }
   ]
 }
