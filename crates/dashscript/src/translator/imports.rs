@@ -47,6 +47,38 @@ pub(crate) fn clear_workspace_deps() {
     WORKSPACE_DEPS.with(|c| c.borrow_mut().clear());
 }
 
+thread_local! {
+    /// The workspace member the file currently being translated lives in
+    /// (`Some("member_crate")` while translating a file reached through a
+    /// workspace-member barrel; `None` for the entry's own package). A
+    /// relative import (`./types`) inside a member carries the member prefix so
+    /// two same-stem files in different members lower to distinct mods
+    /// (`crate::member_crate_types` vs the entry's own `crate::types`), the
+    /// cross-package stem-collision fix. A bare workspace specifier already
+    /// encodes its member, so it is unaffected. Set by
+    /// `project::translate_dep` around each dep's translate; cleared after.
+    static CURRENT_MEMBER: std::cell::RefCell<Option<String>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Set the workspace member the next dep translate runs under. See
+/// [`CURRENT_MEMBER`].
+pub(crate) fn set_current_member(member: Option<String>) {
+    CURRENT_MEMBER.with(|c| *c.borrow_mut() = member);
+}
+
+/// Clear the member when a dep translate ends (success or error), so it does
+/// not leak into a later translate. See [`CURRENT_MEMBER`].
+pub(crate) fn clear_current_member() {
+    CURRENT_MEMBER.with(|c| *c.borrow_mut() = None);
+}
+
+/// The workspace member the file currently being translated lives in, or
+/// `None` for the entry's own package. See [`CURRENT_MEMBER`].
+pub(crate) fn current_member() -> Option<String> {
+    CURRENT_MEMBER.with(|c| c.borrow().clone())
+}
+
 /// A `.ts` import of a local module: the Rust module name (`other`) and the
 /// original source string (`"./other"`).
 #[derive(Debug, Clone)]
@@ -141,6 +173,18 @@ pub(crate) fn is_local_module(source: &str) -> bool {
 /// module, bare `mod` for a `cargo:` crate or npm bare specifier.
 pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
     if is_local_module(source) {
+        // A relative import inside a workspace member is prefixed with the
+        // member so same-stem files in different members do not collide
+        // (a member's `./types` → `crate::member_crate_types`; the entry's own
+        // `./types` → `crate::types`). A bare workspace specifier already
+        // encodes its member (`@scope/member` → `crate::member_crate`),
+        // so only a relative source is prefixed.
+        if source.starts_with('.') {
+            if let Some(member) = current_member() {
+                let prefixed = Ident::new(&format!("{member}_{mod_ident}"), mod_ident.span());
+                return parse_quote!(crate::#prefixed);
+            }
+        }
         parse_quote!(crate::#mod_ident)
     } else {
         parse_quote!(#mod_ident)

@@ -57,8 +57,21 @@ fn translate_dep(
     dep_path: &Path,
     kind: DepKind,
     import_specifier: &str,
+    member: Option<String>,
     deps: &mut RuntimeDeps,
 ) -> Result<String, Box<dyn Error>> {
+    // The workspace member this dep lives in, so its relative imports carry the
+    // member prefix (`./types` → `crate::<member>_types`) and do not collide
+    // with a same-stem file in another package. Cleared on return (success or
+    // error) so it does not leak into the next dep's translate.
+    crate::translator::imports::set_current_member(member);
+    struct MemberGuard;
+    impl Drop for MemberGuard {
+        fn drop(&mut self) {
+            crate::translator::imports::clear_current_member();
+        }
+    }
+    let _member_guard = MemberGuard;
     match kind {
         DepKind::Ts | DepKind::Js => {
             // Transpile-first: a `.js` file is JS-flavored TypeScript, and the
@@ -390,16 +403,21 @@ fn collect_package_optionals(
         .map_err(|e| format!("collect optionals {}: {e}", src_path.display()))?;
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: HashSet<String> = HashSet::new();
-    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    // (path, member): `member` is the workspace member the dep lives in (`Some`
+    // for a cross-package dep, `None` for the entry's own package), so `seen`
+    // dedupes by the dep's mod name ([`dep_mod_name`]) and two same-stem files
+    // in different packages are both visited.
+    let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
     for imp in collector.imports(src) {
-        if seen.insert(imp.module.clone()) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
             let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
             if !matches!(kind, DepKind::Js) {
-                worklist.push_back((imp.module, dep_path));
+                worklist.push_back((dep_path, member));
             }
         }
     }
-    while let Some((_module, path)) = worklist.pop_front() {
+    while let Some((path, member)) = worklist.pop_front() {
         let dep_src = fs::read_to_string(&path)
             .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
         for (k, v) in collector
@@ -410,10 +428,11 @@ fn collect_package_optionals(
         }
         let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
         for imp in collector.imports(&dep_src) {
-            if seen.insert(imp.module.clone()) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
                 let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
                 if !matches!(kind, DepKind::Js) {
-                    worklist.push_back((imp.module, dep_path));
+                    worklist.push_back((dep_path, child_member));
                 }
             }
         }
@@ -439,16 +458,19 @@ fn collect_package_fields(
         .map_err(|e| format!("collect fields {}: {e}", src_path.display()))?;
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: HashSet<String> = HashSet::new();
-    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    // (path, member): see [`collect_package_optionals`] — `seen` dedupes by the
+    // dep's mod name ([`dep_mod_name`]) so cross-package same-stem files differ.
+    let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
     for imp in collector.imports(src) {
-        if seen.insert(imp.module.clone()) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
             let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
             if !matches!(kind, DepKind::Js) {
-                worklist.push_back((imp.module, dep_path));
+                worklist.push_back((dep_path, member));
             }
         }
     }
-    while let Some((_module, path)) = worklist.pop_front() {
+    while let Some((path, member)) = worklist.pop_front() {
         let dep_src = fs::read_to_string(&path)
             .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
         for (k, v) in collector
@@ -459,10 +481,11 @@ fn collect_package_fields(
         }
         let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
         for imp in collector.imports(&dep_src) {
-            if seen.insert(imp.module.clone()) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
                 let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
                 if !matches!(kind, DepKind::Js) {
-                    worklist.push_back((imp.module, dep_path));
+                    worklist.push_back((dep_path, child_member));
                 }
             }
         }
@@ -488,16 +511,19 @@ fn collect_package_union_enums(
         .map_err(|e| format!("collect unions {}: {e}", src_path.display()))?;
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
     let mut seen: HashSet<String> = HashSet::new();
-    let mut worklist: VecDeque<(String, PathBuf)> = VecDeque::new();
+    // (path, member): see [`collect_package_optionals`] — `seen` dedupes by the
+    // dep's mod name ([`dep_mod_name`]) so cross-package same-stem files differ.
+    let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
     for imp in collector.imports(src) {
-        if seen.insert(imp.module.clone()) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
             let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
             if !matches!(kind, DepKind::Js) {
-                worklist.push_back((imp.module, dep_path));
+                worklist.push_back((dep_path, member));
             }
         }
     }
-    while let Some((_module, path)) = worklist.pop_front() {
+    while let Some((path, member)) = worklist.pop_front() {
         let dep_src = fs::read_to_string(&path)
             .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
         for (k, v) in collector
@@ -508,10 +534,11 @@ fn collect_package_union_enums(
         }
         let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
         for imp in collector.imports(&dep_src) {
-            if seen.insert(imp.module.clone()) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
                 let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
                 if !matches!(kind, DepKind::Js) {
-                    worklist.push_back((imp.module, dep_path));
+                    worklist.push_back((dep_path, child_member));
                 }
             }
         }
@@ -543,10 +570,10 @@ fn collect_package_function_signatures(
     // `./opc/packer`) still carries the `core` member, not the relative hop.
     let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
     for imp in collector.imports(src) {
-        if seen.insert(imp.module.clone()) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
             let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
             if !matches!(kind, DepKind::Js) {
-                let member = workspace_member_crate(base, &imp.source);
                 worklist.push_back((dep_path, member));
             }
         }
@@ -567,13 +594,12 @@ fn collect_package_function_signatures(
         }
         let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
         for imp in collector.imports(&dep_src) {
-            if seen.insert(imp.module.clone()) {
+            // A bare workspace specifier enters that member; a relative import
+            // stays in the current member.
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
                 let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
                 if !matches!(kind, DepKind::Js) {
-                    // A bare workspace specifier enters that member; a relative
-                    // import stays in the current member.
-                    let child_member =
-                        workspace_member_crate(dep_base, &imp.source).or(member.clone());
                     worklist.push_back((dep_path, child_member));
                 }
             }
@@ -595,6 +621,27 @@ fn workspace_member_crate(dir: &Path, source: &str) -> Option<String> {
     resolve_workspace_dep(dir, source)
         .and_then(|_| crate::translator::imports::module_ident(source))
         .map(|i| i.to_string())
+}
+
+/// The unique Rust mod name for a dep, disambiguating cross-package same-stem
+/// files. A relative import inside a workspace member carries the member prefix
+/// (`member_crate` + `./types` → `member_crate_types`); a relative
+/// import in the entry's own package stays bare (`./types` → `types`); a bare
+/// specifier already encodes its member (`@scope/member` →
+/// `member_crate`), so it is returned as-is. Without this, two packages'
+/// `types.ts` both lower to `crate::types` and the second clobbers the first
+/// (the cross-package stem collision between two same-stem members). The emit filename,
+/// `mod` declaration, and `use` path ([`mod_use_path`]) all derive from this so
+/// they agree.
+fn dep_mod_name(source: &str, module: &str, member: &Option<String>) -> String {
+    if source.starts_with('.') {
+        match member {
+            Some(m) => format!("{m}_{module}"),
+            None => module.to_string(),
+        }
+    } else {
+        module.to_string()
+    }
 }
 
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
@@ -679,33 +726,52 @@ pub fn translate_sources(
         .map(|(name, _)| name)
         .collect();
     let mut extra_enum_text = String::new();
-    // Worklist of `(module, source_spec, base_dir, specifier)` — each popped
-    // dep is translated once, then its own imports extend the worklist. A cycle
-    // (a.ts ↔ b.ts) terminates: `seen` dedupes by module name. `specifier` is
-    // the dep's DsResolver specifier (bare verbatim, relative joined onto the
-    // importer's), so a degraded `.js` registers under the key the runtime
-    // resolver finds it under. The entry's own specifier is its file stem.
+    // Worklist of `(module, source_spec, base_dir, specifier, member)` — each
+    // popped dep is translated once, then its own imports extend the worklist.
+    // A cycle (a.ts ↔ b.ts) terminates: `seen` dedupes by the dep's mod name.
+    // `specifier` is the dep's DsResolver specifier (bare verbatim, relative
+    // joined onto the importer's), so a degraded `.js` registers under the key
+    // the runtime resolver finds it under. `member` is the workspace member the
+    // dep lives in (`Some("member_crate")` for a file reached through a
+    // workspace-member barrel; `None` for the entry's own package): the emit
+    // filename and `mod` decl use [`dep_mod_name`] so a relative import inside a
+    // member carries the member prefix and does not collide with a same-stem
+    // file in another package. The entry's own specifier is its file stem.
     let entry_spec = src_path
         .file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("")
         .to_string();
-    let mut worklist: std::collections::VecDeque<(String, String, PathBuf, String)> =
-        std::collections::VecDeque::new();
+    let mut worklist: std::collections::VecDeque<(
+        String,
+        String,
+        PathBuf,
+        String,
+        Option<String>,
+    )> = std::collections::VecDeque::new();
     for imp in translator.imports(src) {
-        if seen.insert(imp.module.clone()) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
             let spec = ds_resolve_specifier(&entry_spec, &imp.source);
-            worklist.push_back((imp.module, imp.source, base.to_path_buf(), spec));
+            worklist.push_back((imp.module, imp.source, base.to_path_buf(), spec, member));
         }
     }
-    while let Some((module, source, dir, spec)) = worklist.pop_front() {
+    while let Some((module, source, dir, spec, member)) = worklist.pop_front() {
         let (dep_path, kind) = resolve_local_module(&dir, &source)?;
-        let dep_rust = translate_dep(&translator, &dep_path, kind, &spec, &mut deps)?;
+        let dep_rust = translate_dep(
+            &translator,
+            &dep_path,
+            kind,
+            &spec,
+            member.clone(),
+            &mut deps,
+        )?;
+        let emit_name = dep_mod_name(&source, &module, &member);
         fs::write(
-            project_dir.join("src").join(format!("{module}.rs")),
+            project_dir.join("src").join(format!("{emit_name}.rs")),
             dep_rust,
         )?;
-        mod_decls.push_str(&format!("mod {module};\n"));
+        mod_decls.push_str(&format!("mod {emit_name};\n"));
         let dep_src = fs::read_to_string(&dep_path)
             .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
         for (name, text) in translator.union_enum_items(&dep_src) {
@@ -716,9 +782,16 @@ pub fn translate_sources(
         }
         let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
         for imp in translator.imports(&dep_src) {
-            if seen.insert(imp.module.clone()) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
                 let child_spec = ds_resolve_specifier(&spec, &imp.source);
-                worklist.push_back((imp.module, imp.source, dep_base.to_path_buf(), child_spec));
+                worklist.push_back((
+                    imp.module,
+                    imp.source,
+                    dep_base.to_path_buf(),
+                    child_spec,
+                    child_member,
+                ));
             }
         }
     }
@@ -866,7 +939,7 @@ fn translate_one_with_mods(
         let scanned_by_walk = imp.source.starts_with('.') && matches!(kind, DepKind::Ts);
         if !scanned_by_walk {
             let spec = ds_resolve_specifier(&entry_spec, &imp.source);
-            let dep_rust = translate_dep(&translator, &dep_path, kind, &spec, &mut deps)?;
+            let dep_rust = translate_dep(&translator, &dep_path, kind, &spec, None, &mut deps)?;
             fs::write(
                 project_dir.join("src").join(format!("{}.rs", imp.module)),
                 dep_rust,
@@ -1835,6 +1908,7 @@ mod tests {
             &root.join("dep.js"),
             DepKind::Js,
             "dep.js",
+            None,
             &mut deps,
         )
         .expect("a class-extends .js degrades");
@@ -1867,6 +1941,7 @@ mod tests {
             &root.join("dep.js"),
             DepKind::Js,
             "dep.js",
+            None,
             &mut deps,
         )
         .expect("a plain .js transpiles");
@@ -1896,6 +1971,7 @@ mod tests {
             &root.join("dep.js"),
             DepKind::Js,
             "@scope/pkg/dep.js",
+            None,
             &mut deps,
         )
         .expect("a class-extends .js degrades");
@@ -1932,6 +2008,7 @@ mod tests {
             &root.join("a.js"),
             DepKind::Js,
             "pkg/a.js",
+            None,
             &mut deps,
         )
         .expect("a.js degrades");
@@ -2261,6 +2338,78 @@ mod tests {
         assert_eq!(
             fs::canonicalize(&resolved).unwrap(),
             fs::canonicalize(pkg_b.join("src").join("index.ts")).unwrap()
+        );
+    }
+
+    #[test]
+    fn translate_sources_disambiguates_cross_package_same_stem() {
+        // Two workspace packages both ship a `types.ts`. Without the member
+        // prefix both lower to `crate::types` and the second clobbers the first
+        // (the cross-package stem collision between two same-stem members); with it, package
+        // `b`'s file becomes `crate::scope_b_types` while the entry's own stays
+        // `crate::types`. The emit filename, `mod` decl, and `use` path all
+        // derive from `dep_mod_name` so they agree.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg_a = root.join("packages").join("a");
+        let pkg_b = root.join("packages").join("b");
+        fs::create_dir_all(pkg_a.join("src")).unwrap();
+        fs::create_dir_all(pkg_b.join("src")).unwrap();
+        write(&pkg_a, "package.json", r#"{ "name": "@scope/a" }"#);
+        write(&pkg_b, "package.json", r#"{ "name": "@scope/b" }"#);
+        write(
+            &pkg_a.join("src"),
+            "index.ts",
+            "import { X } from \"./types\";\nimport { Y } from \"@scope/b\";\nfunction main() {}",
+        );
+        write(
+            &pkg_a.join("src"),
+            "types.ts",
+            "export interface X { a: number }",
+        );
+        write(&pkg_b.join("src"), "index.ts", "export * from \"./types\";");
+        write(
+            &pkg_b.join("src"),
+            "types.ts",
+            "export interface Y { b: number }",
+        );
+        let scope_nm = root.join("node_modules").join("@scope");
+        fs::create_dir_all(&scope_nm).unwrap();
+        if make_symlink(&pkg_b, &scope_nm.join("b")).is_err() {
+            eprintln!(
+                "translate_sources_disambiguates_cross_package_same_stem: skipped (no symlink privilege)"
+            );
+            return;
+        }
+        let out = tmp.path().join("out");
+        fs::create_dir_all(out.join("src")).unwrap();
+        let entry = pkg_a.join("src").join("index.ts");
+        let src = fs::read_to_string(&entry).unwrap();
+        translate_sources(&src, &entry, &out).expect("translate");
+        let dir = out.join("src");
+        // Entry's own types.ts → src/types.rs (no prefix).
+        assert!(dir.join("types.rs").exists(), "entry types.rs missing");
+        // Package b's types.ts → src/scope_b_types.rs (member prefix).
+        assert!(
+            dir.join("scope_b_types.rs").exists(),
+            "cross-package types.rs should be prefixed; src has: {:?}",
+            fs::read_dir(&dir)
+                .unwrap()
+                .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
+                .collect::<Vec<_>>()
+        );
+        let main = fs::read_to_string(dir.join("main.rs")).unwrap();
+        assert!(main.contains("mod types;"), "entry mod decl: {main}");
+        assert!(
+            main.contains("mod scope_b_types;"),
+            "prefixed mod decl: {main}"
+        );
+        // The barrel (b/index.ts) reaches its own `./types` via the prefixed
+        // path too — `use crate::scope_b_types::*`, not `crate::types::*`.
+        let barrel = fs::read_to_string(dir.join("scope_b.rs")).unwrap();
+        assert!(
+            barrel.contains("crate::scope_b_types"),
+            "barrel uses the member-prefixed use path: {barrel}"
         );
     }
 
