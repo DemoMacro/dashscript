@@ -63,6 +63,16 @@ thread_local! {
     /// project emitter sets this once after probing all files, so a file that
     /// is not itself degraded still derives serde on its types.
     static FORCE_SERDE_DERIVE: Cell<bool> = const { Cell::new(false) };
+    /// True when this file's degraded-function bodies route to the engine via
+    /// `call_module_fn` (module mode) rather than `call_fn` (script-eval mode).
+    /// A per-function-degraded `.ts` module whose annotation-stripped JS still
+    /// carries ESM `import`/`export … from` cannot run under `call_fn`'s
+    /// script-mode `ctx.eval` (ESM imports are not parsed in script mode), so
+    /// the translator switches its degraded bodies to `call_module_fn` keyed by
+    /// the module's import specifier — the module loader resolves the imports.
+    /// Set once by `Translator::translate_with_deps_as` before any statement is
+    /// translated.
+    static MODULE_MODE: Cell<bool> = const { Cell::new(false) };
 }
 
 /// Record the file's per-function engine degradation sites (TS function names),
@@ -92,6 +102,20 @@ pub(crate) fn set_force_serde_derive(b: bool) {
 /// derive `Serialize`/`Deserialize` even if it is not itself degraded.
 pub(in crate::translator) fn force_serde_derive() -> bool {
     FORCE_SERDE_DERIVE.with(|c| c.get())
+}
+
+/// Set whether this file's degraded bodies route to `call_module_fn` (module
+/// mode) instead of `call_fn` (script-eval mode). Set once per
+/// `translate_with_deps_as` before any statement is translated. See
+/// [`MODULE_MODE`].
+pub(in crate::translator) fn set_module_mode(on: bool) {
+    MODULE_MODE.with(|c| c.set(on));
+}
+
+/// Whether this file's degraded bodies route to `call_module_fn` (module mode).
+/// See [`MODULE_MODE`].
+pub(in crate::translator) fn module_mode() -> bool {
+    MODULE_MODE.with(|c| c.get())
 }
 
 /// Translate a top-level statement into a `syn::Item`, if mapped.
@@ -613,16 +637,29 @@ fn engine_fn_item(
         })
         .collect();
     let ts_lit = syn::LitStr::new(ts_name, proc_macro2::Span::call_site());
+    // Module mode: the file's annotation-stripped JS carries ESM imports, so
+    // `call_fn`'s script-mode `eval` cannot run it (ESM imports are not parsed
+    // in script mode) — route to `call_module_fn` (the module loader resolves
+    // the imports), keyed by the file's import specifier. Script-eval mode
+    // keeps `call_fn` with the `__DS_MODULE_JS` const.
+    let call: syn::Expr = if module_mode() {
+        let spec = crate::translator::imports::current_module_specifier()
+            .unwrap_or_else(|| "__ds_entry".to_string());
+        let spec_lit = syn::LitStr::new(&spec, proc_macro2::Span::call_site());
+        parse_quote!(crate::__ds_engine::call_module_fn(#spec_lit, #ts_lit, &__ds_args))
+    } else {
+        parse_quote!(crate::__ds_engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args))
+    };
     // A unit/void return discards the engine's `Value`; a typed return
     // deserializes it back to the signature's Rust type.
     let block: Block = match &output {
         ReturnType::Default => parse_quote!({
             let __ds_args: Vec<serde_json::Value> = vec![#(#args),*];
-            let _ = crate::__ds_engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args);
+            let _ = #call;
         }),
         ReturnType::Type(_, ret_ty) => parse_quote!({
             let __ds_args: Vec<serde_json::Value> = vec![#(#args),*];
-            let __ds_ret = crate::__ds_engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args);
+            let __ds_ret = #call;
             serde_json::from_value::<#ret_ty>(__ds_ret)
                 .expect("engine return value did not deserialize to the declared return type")
         }),

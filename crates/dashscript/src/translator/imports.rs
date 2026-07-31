@@ -166,6 +166,39 @@ pub(crate) fn current_member() -> Option<String> {
     CURRENT_MEMBER.with(|c| c.borrow().clone())
 }
 
+thread_local! {
+    /// The DsResolver specifier the file currently being translated is imported
+    /// under (e.g. `Some("@scope/pkg")` while translating a dep reached via that
+    /// import specifier). A per-function-degraded `.ts` module whose
+    /// annotation-stripped JS still carries ESM `import`/`export … from` cannot
+    /// run under `call_fn`'s script-mode `ctx.eval` (ESM imports are not parsed
+    /// in script mode), so the translator switches its degraded bodies to
+    /// `call_module_fn` keyed by this specifier — the module loader resolves the
+    /// imports. Set by `project::translate_dep` around each dep's translate;
+    /// cleared after.
+    static CURRENT_MODULE_SPECIFIER: std::cell::RefCell<Option<String>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Set the import specifier the next dep translate runs under. See
+/// [`CURRENT_MODULE_SPECIFIER`].
+pub(crate) fn set_current_module_specifier(spec: Option<String>) {
+    CURRENT_MODULE_SPECIFIER.with(|c| *c.borrow_mut() = spec);
+}
+
+/// Clear the specifier when a dep translate ends (success or error), so it
+/// does not leak into a later translate. See [`CURRENT_MODULE_SPECIFIER`].
+pub(crate) fn clear_current_module_specifier() {
+    CURRENT_MODULE_SPECIFIER.with(|c| *c.borrow_mut() = None);
+}
+
+/// The import specifier the file currently being translated is reached under,
+/// or `None` when it has none (an entry, or a translate outside `ds build`).
+/// See [`CURRENT_MODULE_SPECIFIER`].
+pub(crate) fn current_module_specifier() -> Option<String> {
+    CURRENT_MODULE_SPECIFIER.with(|c| c.borrow().clone())
+}
+
 /// A `.ts` import of a local module: the Rust module name (`other`) and the
 /// original source string (`"./other"`).
 #[derive(Debug, Clone)]

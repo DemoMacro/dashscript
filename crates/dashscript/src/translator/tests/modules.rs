@@ -1118,3 +1118,58 @@ fn export_const_arrow_type_predicate_returns_bool() {
     assert!(rust.contains("pub fn is_str("), "no pub fn: {rust}");
     assert!(rust.contains("-> bool"), "predicate not bool: {rust}");
 }
+
+#[test]
+fn per_function_degraded_module_with_esm_import_uses_call_module_fn() {
+    // A per-function-degraded `.ts` module whose annotation-stripped JS still
+    // carries an ESM `import` cannot run under `call_fn`'s script-mode `eval`
+    // (ESM imports are not parsed in script mode), so its degraded body routes
+    // to `call_module_fn` keyed by the module's import specifier, and the
+    // module source lands in the runtime dep's static source table. An
+    // `unknown` param forces per-function degradation (the signature is
+    // unmappable); the `import` is the ESM binding that triggers module mode.
+    use crate::translator::imports;
+    imports::set_current_module_specifier(Some("mod_spec".to_string()));
+    struct Guard;
+    impl Drop for Guard {
+        fn drop(&mut self) {
+            imports::clear_current_module_specifier();
+        }
+    }
+    let _g = Guard;
+    let src = "import { x } from \"./other\";\nexport function f(v: unknown): number { return 1; }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate");
+    assert!(
+        rust.contains("call_module_fn"),
+        "module mode should route to call_module_fn:\n{rust}"
+    );
+    assert!(
+        !rust.contains("__DS_MODULE_JS"),
+        "module mode should not emit the script-eval const:\n{rust}"
+    );
+    assert!(
+        deps.js_module_sources()
+            .iter()
+            .any(|(s, _)| s == "mod_spec"),
+        "module source should be in the static table: {:?}",
+        deps.js_module_sources()
+    );
+}
+
+#[test]
+fn per_function_degraded_without_specifier_keeps_call_fn() {
+    // No import specifier (an entry, or a translate outside `ds build`) keeps
+    // the script-eval `call_fn` path — module mode needs a specifier to key
+    // the loader. So a degraded file with no specifier still emits
+    // `__DS_MODULE_JS` + `call_fn` (the established per-function behavior).
+    let rust = Translator::new()
+        .translate("export function f(v: unknown): number { return 1; }")
+        .expect("should translate");
+    assert!(rust.contains("call_fn"), "no specifier → call_fn:\n{rust}");
+    assert!(
+        rust.contains("__DS_MODULE_JS"),
+        "no specifier → script-eval const:\n{rust}"
+    );
+}

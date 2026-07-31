@@ -72,6 +72,19 @@ fn translate_dep(
         }
     }
     let _member_guard = MemberGuard;
+    // The import specifier this dep is reached under, so a per-function-
+    // degraded `.ts` module whose annotation-stripped JS still carries ESM
+    // imports routes its degraded bodies to `call_module_fn` keyed by this
+    // specifier (the loader resolves the imports). Cleared on return like the
+    // member guard.
+    crate::translator::imports::set_current_module_specifier(Some(import_specifier.to_string()));
+    struct SpecifierGuard;
+    impl Drop for SpecifierGuard {
+        fn drop(&mut self) {
+            crate::translator::imports::clear_current_module_specifier();
+        }
+    }
+    let _specifier_guard = SpecifierGuard;
     match kind {
         DepKind::Ts | DepKind::Js => {
             // Transpile-first: a `.js` file is JS-flavored TypeScript, and the

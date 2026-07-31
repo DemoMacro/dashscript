@@ -1760,6 +1760,22 @@ impl Translator {
         // stale set that rewrites the next fixture's `main` as an engine call,
         // emitting `__ds_engine` references while `needs_engine` stays false.
         functions::set_dynamic_fns(sites.dynamic_fns.clone());
+        // B6-5b: a per-function-degraded module whose annotation-stripped JS
+        // still carries ESM `import`/`export` cannot run under `call_fn`'s
+        // script-mode `eval` (ESM syntax is rejected in script mode). When such
+        // a module also has a known import specifier (it is a dep reached via
+        // that specifier), its degraded bodies route to `call_module_fn` keyed
+        // by the specifier — the module loader resolves the imports — and the
+        // module source lands in the runtime dep's static table. Gated on
+        // `per_function` (only degraded bodies switch) and a known specifier
+        // (the loader keys the module by it).
+        let has_esm_binding = program
+            .body
+            .iter()
+            .any(|s| s.as_module_declaration().is_some());
+        functions::set_module_mode(
+            per_function && has_esm_binding && imports::current_module_specifier().is_some(),
+        );
 
         // Record the file's namespace-import bindings (`import * as ns`) so a
         // reference to `ns` is recognized as a module-path prefix (`ns.foo` →
@@ -2040,21 +2056,30 @@ impl Translator {
                 // with no `fn main`, brought in by the entry via `mod <stem>;`.
             }
         }
-        // Per-function degradation: emit the file's annotation-stripped JS as a
-        // module-level const. `__ds_engine::call_fn` evals it before each
-        // degraded-function call so the function's module-scoped helpers are
-        // defined. `engine_js_source` strips the TS annotations (QuickJS parses
-        // JS). It consumes `scoping`/`program` (the static pass above is done),
+        // Per-function degradation: emit the file's annotation-stripped JS.
+        // Module mode carries an ESM `import`/`export`, so it cannot live in a
+        // `__DS_MODULE_JS` const eval'd by `call_fn`'s script mode — instead the
+        // source is collected into the runtime dep's static table (read by the
+        // loader at runtime), and degraded bodies call `call_module_fn`.
+        // Script-eval mode keeps the `__DS_MODULE_JS` const that `call_fn`
+        // evals before each degraded invocation so the function's helpers are
+        // in scope. `engine_js_source` strips the TS annotations (QuickJS parses
+        // JS); it consumes `scoping`/`program` (the static pass above is done),
         // so it runs last among the item-emitting passes.
+        let mut module_source: Option<String> = None;
         if per_function {
             let module_js = engine_js_source(program, &allocator, scoping);
-            let js_lit = syn::LitStr::new(&module_js, proc_macro2::Span::call_site());
-            items.push(syn::parse_quote! {
-                /// The whole module's annotation-stripped JS — `__ds_engine::call_fn`
-                /// evals this before each degraded-function invocation so the
-                /// function's helper dependencies are in scope.
-                const __DS_MODULE_JS: &str = #js_lit;
-            });
+            if functions::module_mode() {
+                module_source = Some(module_js);
+            } else {
+                let js_lit = syn::LitStr::new(&module_js, proc_macro2::Span::call_site());
+                items.push(syn::parse_quote! {
+                    /// The whole module's annotation-stripped JS — `__ds_engine::call_fn`
+                    /// evals this before each degraded-function invocation so the
+                    /// function's helper dependencies are in scope.
+                    const __DS_MODULE_JS: &str = #js_lit;
+                });
+            }
         }
         let mut file = syn::File {
             shebang: None,
@@ -2095,6 +2120,14 @@ impl Translator {
         // path), so it is inserted explicitly when the route is per-function.
         if per_function {
             deps.insert(RuntimeDep::Engine);
+        }
+        // Module mode: the per-function-degraded module's source goes into the
+        // static table the engine loader reads at runtime (no `__DS_MODULE_JS`
+        // const is emitted in this mode), keyed by the module's import
+        // specifier so the loader's `DsResolver` reaches it.
+        if let Some(js) = module_source {
+            let spec = imports::current_module_specifier().unwrap_or_default();
+            deps.add_js_module(&spec, &js);
         }
         // A file that defines a user struct/enum forces the `Truthy` dep even
         // if this file never tests truthiness itself: another module may call
