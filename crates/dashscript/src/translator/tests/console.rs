@@ -23,6 +23,21 @@ fn console_log_container_routes_through_inspect() {
 }
 
 #[test]
+fn console_log_json_parse_routes_through_inspect() {
+    // `JSON.parse` returns a `serde_json::Value`; `console.log` of it must
+    // route through `__ds::inspect` so a parsed string prints verbatim (`abc`)
+    // rather than via `Value`'s JSON `Display` (`"abc"`). The routing needs
+    // `callee_return_path` to record `serde_json::Value` for the unannotated
+    // `var v = JSON.parse(...)` declarator.
+    let src = "function f(): void {\n  var v = JSON.parse(\"\\\"abc\\\"\");\n  console.log(v);\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("__ds::inspect"),
+        "JSON.parse console.log should inspect: {rust}"
+    );
+}
+
+#[test]
 fn console_log_primitive_identifier_stays_display() {
     // A `console.log` of a scalar identifier (`number`/`string`/`boolean`)
     // keeps the `{}` Display path — no inspect needed, matches Node verbatim.

@@ -198,7 +198,7 @@ impl RuntimeDep {
             RuntimeDep::Display => None,
             RuntimeDep::Encoding => None,
             RuntimeDep::Error => None,
-            RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\"")]),
+            RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\""), ("serde_json", "\"1\"")]),
         }
     }
 
@@ -819,14 +819,21 @@ fn inspect_quote(s: &str) -> String {
     out
 }
 
+/// Render an `f64` as an ES `Number` string (ryu-js: `1.0` → "1", `1e21` →
+/// "1e+21"). Shared by the scalar `f64` impl and the `serde_json::Value`
+/// `Number` arm.
+fn inspect_num(n: f64) -> String {
+    if n == 0.0 {
+        "0".to_string()
+    } else {
+        ryu_js::Buffer::new().format(n).to_string()
+    }
+}
+
 impl DsInspect for f64 {
     #[inline]
     fn ds_inspect(&self, _recurse: u32, _depth: i32) -> String {
-        if *self == 0.0 {
-            "0".to_string()
-        } else {
-            ryu_js::Buffer::new().format(*self).to_string()
-        }
+        inspect_num(*self)
     }
 }
 
@@ -930,6 +937,81 @@ impl<T: DsInspect> DsInspect for HashSet<T> {
         }
         s.push_str(" }");
         s
+    }
+}
+
+/// A `serde_json::Value` (a `JSON.parse` result) renders the way Node prints
+/// the parsed JS value: a top-level string prints verbatim (`abc`, not the
+/// JSON `"abc"` a bare `Value: Display` would emit), while a string nested in
+/// an array/object quotes (`'abc'`). Without this, `console.log(JSON.parse(
+/// '"abc"'))` printed `"abc"` — a `serde_json::Value` has no other
+/// `Display`-free path. Key order follows `serde_json`'s default `Map`
+/// (sorted), which diverges from Node's insertion order — the same limitation
+/// as the `HashMap` impl above.
+impl DsInspect for serde_json::Value {
+    fn ds_inspect(&self, recurse: u32, depth: i32) -> String {
+        // Fully-qualified variants: a `use serde_json::Value::*` glob would
+        // shadow the `String` *type* with the `Value::String` *variant*, so
+        // `String::from(...)` below would resolve to the variant.
+        match self {
+            serde_json::Value::Null => "null".to_string(),
+            serde_json::Value::Bool(b) => {
+                if *b {
+                    "true".to_string()
+                } else {
+                    "false".to_string()
+                }
+            }
+            serde_json::Value::Number(n) => inspect_num(n.as_f64().unwrap_or(f64::NAN)),
+            serde_json::Value::String(s) => {
+                // Top-level: raw (Node prints the string as-is). Nested: quoted.
+                if recurse == 0 {
+                    s.clone()
+                } else {
+                    inspect_quote(s)
+                }
+            }
+            serde_json::Value::Array(arr) => {
+                if arr.is_empty() {
+                    return "[]".to_string();
+                }
+                if depth >= 0 && recurse > depth as u32 {
+                    return "[Array]".to_string();
+                }
+                let mut s = String::from("[ ");
+                for (i, e) in arr.iter().enumerate() {
+                    if i > 0 {
+                        s.push_str(", ");
+                    }
+                    s.push_str(&e.ds_inspect(recurse + 1, depth));
+                }
+                s.push_str(" ]");
+                s
+            }
+            serde_json::Value::Object(obj) => {
+                if obj.is_empty() {
+                    return "{}".to_string();
+                }
+                if depth >= 0 && recurse > depth as u32 {
+                    return "[Object]".to_string();
+                }
+                let mut s = String::from("{ ");
+                for (i, (k, v)) in obj.iter().enumerate() {
+                    if i > 0 {
+                        s.push_str(", ");
+                    }
+                    // Node prints an object key bare when it is a valid
+                    // identifier, quoted otherwise; the common JSON-parse case
+                    // is identifier keys, so print bare (consistent with the
+                    // `HashMap<String, V>` impl above).
+                    s.push_str(k);
+                    s.push_str(": ");
+                    s.push_str(&v.ds_inspect(recurse + 1, depth));
+                }
+                s.push_str(" }");
+                s
+            }
+        }
     }
 }
 "#;

@@ -1125,14 +1125,24 @@ fn callee_return_path(
     registry: &TypeRegistry,
 ) -> Option<Path> {
     use oxc_ast::ast::Expression;
-    let Expression::Identifier(id) = &call.callee else {
-        return None;
-    };
-    registry
-        .function_returns
-        .get(id.name.as_str())
-        .cloned()
-        .flatten()
+    match &call.callee {
+        Expression::Identifier(id) => registry
+            .function_returns
+            .get(id.name.as_str())
+            .cloned()
+            .flatten(),
+        // `JSON.parse(s)` → `serde_json::Value` (the dynamic parse result), so
+        // an unannotated `var v = JSON.parse(...)` records its type and a later
+        // `console.log(v)` routes through `__ds::inspect` (rendering the parsed
+        // value the way Node prints it) instead of `Value`'s JSON `Display`,
+        // which would double-quote a string (`"abc"` vs Node's `abc`).
+        Expression::StaticMemberExpression(sm)
+            if super::builtins::is_ident(&sm.object, "JSON") && sm.property.name == "parse" =>
+        {
+            Some(parse_quote!(serde_json::Value))
+        }
+        _ => None,
+    }
 }
 
 pub(in crate::translator) fn translate_body(

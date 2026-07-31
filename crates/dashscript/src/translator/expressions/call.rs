@@ -130,18 +130,36 @@ fn is_reg_exp_ctor(expr: &Expression) -> bool {
 /// (Node's `console.log` inspect format). Only an identifier whose type is
 /// known via `Ctx::local_type`; inline container expressions widen later.
 fn is_container_arg(arg: &Argument, ctx: &Ctx<'_>) -> bool {
-    let Argument::Identifier(id) = arg else {
+    match arg {
+        // A local whose type is a non-primitive container (`Vec`/`HashMap`/
+        // `HashSet`/`Option`) or a `serde_json::Value` (a `JSON.parse` result)
+        // — none have a Rust `Display` matching Node's console.log format.
+        Argument::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name).is_some_and(|p| {
+                p.segments.last().is_some_and(|s| {
+                    matches!(
+                        s.ident.to_string().as_str(),
+                        "Vec" | "HashMap" | "HashSet" | "Option" | "Value"
+                    )
+                })
+            })
+        }
+        // An inline `JSON.parse(...)` call returns `serde_json::Value` — route
+        // through `inspect` so the parsed value renders as Node prints it
+        // (a string verbatim, an array `[ a, 'b' ]`, …) rather than via the
+        // `Value`'s JSON `Display`.
+        Argument::CallExpression(c) => is_json_parse_call(&c.callee),
+        _ => false,
+    }
+}
+
+/// True when `callee` is the `JSON.parse` member expression.
+fn is_json_parse_call(callee: &Expression) -> bool {
+    let Expression::StaticMemberExpression(sm) = callee else {
         return false;
     };
-    let name = bindings::snake(&id.name).to_string();
-    ctx.local_type(&name).is_some_and(|p| {
-        p.segments.last().is_some_and(|s| {
-            matches!(
-                s.ident.to_string().as_str(),
-                "Vec" | "HashMap" | "HashSet" | "Option"
-            )
-        })
-    })
+    builtins::is_ident(&sm.object, "JSON") && sm.property.name == "parse"
 }
 
 /// (which fails to compile: `Option<DsMatch>` has no `Display`, blocked by the
