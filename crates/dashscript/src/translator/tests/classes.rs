@@ -124,6 +124,22 @@ fn flags_private_field() {
 }
 
 #[test]
+fn ts_private_modifier_lowers_to_pub() {
+    // A TS `private`/`protected` modifier is access control only; Rust struct
+    // fields / impl methods are all `pub`, so it lowers as a normal member (no
+    // `compile_error!`). Only a `#private` identifier stays unsupported.
+    let rust = Translator::new()
+        .translate("class C { private x: number = 0; protected y: number = 0; }")
+        .expect("should translate");
+    assert!(
+        !rust.contains("compile_error"),
+        "ts private lowered: {rust}"
+    );
+    assert!(rust.contains("pub x"), "private field -> pub: {rust}");
+    assert!(rust.contains("pub y"), "protected field -> pub: {rust}");
+}
+
+#[test]
 fn flags_abstract_class() {
     let rust = Translator::new()
         .translate("abstract class C { x: number; }")

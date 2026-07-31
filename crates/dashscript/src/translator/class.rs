@@ -9,7 +9,7 @@ use std::collections::HashSet;
 
 use oxc_ast::ast::{
     AssignmentTarget, Class, ClassElement, Expression, Function, MethodDefinition,
-    MethodDefinitionKind, PropertyDefinition, PropertyKey, Statement, TSAccessibility, TSType,
+    MethodDefinitionKind, PropertyDefinition, PropertyKey, Statement, TSType,
 };
 use oxc_syntax::operator::AssignmentOperator;
 use proc_macro2::TokenStream;
@@ -82,9 +82,10 @@ pub(in crate::translator) fn translate_class(
                     diags.push(compile_error_item(
                         "DashScript does not support computed property names in classes",
                     ));
-                } else if is_private_member(&pd.key, pd.accessibility.as_ref()) {
+                } else if is_private_member(&pd.key) {
                     diags.push(compile_error_item(
-                        "DashScript does not support private (`#`/`private`) class fields",
+                        "DashScript does not support `#private` class fields (a TS \
+                         `private`/`protected` modifier lowers as `pub`)",
                     ));
                 } else if let Some(f) = instance_field(pd, registry, names) {
                     fields.push(f);
@@ -99,9 +100,10 @@ pub(in crate::translator) fn translate_class(
                     diags.push(compile_error_item(
                         "DashScript does not support computed method names in classes",
                     ));
-                } else if is_private_member(&md.key, md.accessibility.as_ref()) {
+                } else if is_private_member(&md.key) {
                     diags.push(compile_error_item(
-                        "DashScript does not support private (`#`/`private`) class methods",
+                        "DashScript does not support `#private` class methods (a TS \
+                         `private`/`protected` modifier lowers as `pub`)",
                     ));
                 } else {
                     match md.kind {
@@ -148,14 +150,12 @@ pub(in crate::translator) fn translate_class(
     result
 }
 
-/// Whether a class member is private: a `#private` key, or a TS `private`/
-/// `protected` accessibility modifier (Rust struct fields are all `pub`).
-fn is_private_member(key: &PropertyKey, accessibility: Option<&TSAccessibility>) -> bool {
+/// Whether a class member is a `#private` identifier — the only private form
+/// with no Rust analogue (no runtime name mangling). A TS `private`/`protected`
+/// modifier is access control only, and Rust struct fields / impl methods are
+/// all `pub`, so it lowers as a normal member.
+fn is_private_member(key: &PropertyKey) -> bool {
     matches!(key, PropertyKey::PrivateIdentifier(_))
-        || matches!(
-            accessibility,
-            Some(TSAccessibility::Private | TSAccessibility::Protected)
-        )
 }
 
 /// `#[derive(Clone)] struct Name { pub field: ty, … }`.
