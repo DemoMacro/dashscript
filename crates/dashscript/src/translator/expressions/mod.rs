@@ -30,6 +30,7 @@ pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
 pub(in crate::translator) use member::{
     is_hashmap_local, is_hashset_local, is_vec_u8_local, option_unwrap_object,
+    temporal_type_of_local,
 };
 pub(in crate::translator) use unary::typeof_operand_is_runtime;
 

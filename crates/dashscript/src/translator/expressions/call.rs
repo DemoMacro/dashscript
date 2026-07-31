@@ -429,6 +429,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::typed_array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `d.toString()` / `d.toJSON()` / `d.equals(o)` on a `Temporal.<Type>`
+        // local (`temporal_rs::<Type>`). Dispatched on the receiver's resolved
+        // type; a non-Temporal receiver or unmapped name falls through.
+        if let Some(expr) = builtins::temporal_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(method) = builtins::map_method(&sm.property.name) {
             // `obj.opt_field.push(..)` — the field is `Option<Vec<..>>`; route
             // through `get_or_insert_with(Default::default)` so the method lands

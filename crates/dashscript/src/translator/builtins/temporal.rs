@@ -11,13 +11,13 @@
 //! `RangeError`/`SyntaxError`, not a bare unwrap panic) — see
 //! `RuntimeDep::Error` + `try`/`catch` in `functions/try_throw.rs`.
 
-use oxc_ast::ast::Argument;
+use oxc_ast::ast::{Argument, StaticMemberExpression};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::super::expressions::translate_argument;
+use super::super::expressions::{temporal_type_of_local, translate_argument, translate_expr};
 
 /// The Temporal types that share an infallible `from_utf8` constructor and the
 /// same calendar/time accessor shape. `Temporal.<Type>.from(s)` lowers to
@@ -128,4 +128,34 @@ fn plain_date_compare(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
             ::core::cmp::Ordering::Greater => 1_f64,
         }
     }))
+}
+
+/// A `Temporal.<Type>` instance method on a `temporal_rs::<Type>` receiver —
+/// `d.toString()` / `d.toJSON()` / `d.equals(other)`. Dispatched on the
+/// receiver resolving to a Temporal date/time type; returns `None` for a
+/// non-Temporal receiver or an unmapped name (falls through to a plain call →
+/// `cargo check` rejects it honestly). `toString`/`toJSON` lower to `Display`
+/// (PlainTime has no `Display` impl in temporal_rs, so it falls through);
+/// `equals` to `PartialEq` (derived on every date/time type).
+pub(in crate::translator) fn temporal_method(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let ty = temporal_type_of_local(&sm.object, ctx)?;
+    let obj = translate_expr(&sm.object, ctx);
+    Some(match sm.property.name.as_str() {
+        // `d.toString()` / `d.toJSON()` → ISO string via `Display`. PlainTime
+        // has no `Display` impl in temporal_rs, so it falls through (a plain
+        // `pt.toString()` → cargo check rejects it honestly, staying partial).
+        "toString" | "toJSON" if ty != "PlainTime" => {
+            parse_quote!(::std::string::ToString::to_string(&(#obj)))
+        }
+        // `d.equals(other)` → bool (`PartialEq`, derived on every date/time type).
+        "equals" => {
+            let other = translate_argument(args.first()?, ctx);
+            parse_quote!((#obj) == (#other))
+        }
+        _ => return None,
+    })
 }

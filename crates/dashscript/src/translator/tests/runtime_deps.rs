@@ -811,6 +811,39 @@ fn temporal_plain_date_time_from_and_time_accessors_route_through_temporal_rs() 
 }
 
 #[test]
+fn temporal_plain_date_to_string_and_equals_route_through_traits() {
+    // `d.toString()` / `d.toJSON()` → `::std::string::ToString::to_string` (Display);
+    // `d.equals(other)` → `==` (PartialEq, derived on every date/time type).
+    let src = "function main(): void {\n  const a = Temporal.PlainDate.from(\"2024-03-15\");\n  const b = Temporal.PlainDate.from(\"2024-03-15\");\n  console.log(a.toString());\n  console.log(a.toJSON());\n  console.log(a.equals(b));\n}";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("::std::string::ToString::to_string("),
+        "toString/toJSON route through Display, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("a == b") || rust.contains("(a) =="),
+        "equals routes through PartialEq (==), got:\n{rust}"
+    );
+}
+
+#[test]
+fn temporal_plain_time_to_string_falls_through() {
+    // PlainTime has no `Display` impl in temporal_rs, so `t.toString()` must NOT
+    // route through `ToString` — it falls through to a plain call (cargo check
+    // rejects it honestly, staying partial). Guards the `ty != "PlainTime"` arm.
+    let src = "function main(): void {\n  const t = Temporal.PlainTime.from(\"10:30:45\");\n  console.log(t.toString());\n}";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !rust.contains("ToString::to_string"),
+        "PlainTime toString must fall through (no Display impl), got:\n{rust}"
+    );
+}
+
+#[test]
 fn regex_literal_flags_and_source_are_static() {
     // `/abc/gi.flags` / `.source` / `.global` / `.ignoreCase` → bare literals
     // (the flags are known at translate time), not a runtime `Regex` field —

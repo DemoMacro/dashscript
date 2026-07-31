@@ -390,46 +390,60 @@ fn is_match_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     ctx.local_type(&name).is_some_and(is_option_ds_match)
 }
 
+/// The specific `temporal_rs::<Type>` (e.g. `PlainDate`) a Temporal local or
+/// inline `Temporal.<Type>.from(…)` resolves to, or `None` if `expr` is not a
+/// Temporal date/time value. The single resolver behind `is_temporal_local`
+/// (accessor dispatch) and `temporal_method` (instance methods whose mapping
+/// depends on the type's trait impls — `PlainTime` has no `Display` in
+/// temporal_rs, so `toString` is excluded for it while `equals` is not).
+pub(in crate::translator) fn temporal_type_of_local(
+    expr: &Expression,
+    ctx: &Ctx<'_>,
+) -> Option<String> {
+    match expr {
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            let ty = ctx.local_type(&name)?;
+            let seg = ty.segments.last()?;
+            let ident = seg.ident.to_string();
+            builtins::TEMPORAL_DATE_TIME_TYPES
+                .contains(&ident.as_str())
+                .then_some(ident)
+        }
+        // `Temporal.<Type>.from(…).field` — the receiver is an inline from()
+        // call rather than a local; recognize it so the accessor dispatches.
+        Expression::CallExpression(c) => temporal_type_of_from_call(&c.callee),
+        _ => None,
+    }
+}
+
+/// Whether `callee` is `Temporal.<Type>.from` for a type in
+/// `TEMPORAL_DATE_TIME_TYPES`, and if so which one. The call yields
+/// `temporal_rs::<Type>`, so a following `.field`/`.method` routes through the
+/// accessor/method tables just like a local.
+fn temporal_type_of_from_call(callee: &Expression) -> Option<String> {
+    let Expression::StaticMemberExpression(m) = callee else {
+        return None;
+    };
+    if m.property.name.as_str() != "from" {
+        return None;
+    }
+    let Expression::StaticMemberExpression(t) = &m.object else {
+        return None;
+    };
+    let ty = t.property.name.as_str();
+    let is_temporal = matches!(&t.object, Expression::Identifier(id) if id.name.as_str() == "Temporal")
+        && builtins::TEMPORAL_DATE_TIME_TYPES.contains(&ty);
+    is_temporal.then_some(ty.to_string())
+}
+
 /// Whether `expr` is a `Temporal.<Type>` local (a
 /// `let x = Temporal.<Type>.from(…)` result) whose slots are private, so
 /// `x.year`/`x.hour`/… route to `temporal_rs::<Type>`'s accessor methods
 /// instead of failing on a missing struct field (E0609). Covers the calendar
 /// and date/time types that share the same accessor shape.
 fn is_temporal_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
-    match expr {
-        Expression::Identifier(id) => {
-            let name = bindings::snake(&id.name).to_string();
-            let Some(ty) = ctx.local_type(&name) else {
-                return false;
-            };
-            let Some(seg) = ty.segments.last() else {
-                return false;
-            };
-            let ident = seg.ident.to_string();
-            builtins::TEMPORAL_DATE_TIME_TYPES.contains(&ident.as_str())
-        }
-        // `Temporal.<Type>.from(…).field` — the receiver is an inline from()
-        // call rather than a local; recognize it so the accessor dispatches.
-        Expression::CallExpression(c) => is_temporal_from_call(&c.callee),
-        _ => false,
-    }
-}
-
-/// Whether `callee` is `Temporal.<Type>.from` for a type in
-/// `TEMPORAL_DATE_TIME_TYPES` — the call yields `temporal_rs::<Type>`, so a
-/// following `.field` routes through the accessor table just like a local.
-fn is_temporal_from_call(callee: &Expression) -> bool {
-    let Expression::StaticMemberExpression(m) = callee else {
-        return false;
-    };
-    if m.property.name.as_str() != "from" {
-        return false;
-    }
-    let Expression::StaticMemberExpression(t) = &m.object else {
-        return false;
-    };
-    builtins::TEMPORAL_DATE_TIME_TYPES.contains(&t.property.name.as_str())
-        && matches!(&t.object, Expression::Identifier(id) if id.name.as_str() == "Temporal")
+    temporal_type_of_local(expr, ctx).is_some()
 }
 
 /// Whether `expr` is a `DsError` local (a `catch (e)` binding) — the panic
