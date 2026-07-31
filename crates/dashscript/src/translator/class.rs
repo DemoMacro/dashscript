@@ -9,7 +9,7 @@ use std::collections::HashSet;
 
 use oxc_ast::ast::{
     AssignmentTarget, Class, ClassElement, Expression, Function, MethodDefinition,
-    MethodDefinitionKind, PropertyDefinition, PropertyKey, Statement, TSType,
+    MethodDefinitionKind, NewExpression, PropertyDefinition, PropertyKey, Statement, TSType,
 };
 use oxc_syntax::operator::AssignmentOperator;
 use proc_macro2::TokenStream;
@@ -392,10 +392,16 @@ fn instance_field(
         return None;
     }
     let name = bindings::property_key_name(&pd.key)?;
+    // A field with no annotation falls back to its initializer's type — an
+    // initializer-only field (`map = new Map<string, T>()`) is common in TS, and
+    // a Rust struct field cannot be `_`, so the collection/literal cases infer a
+    // concrete type; an unknown initializer stays `_` (a later `cargo check`
+    // error, never a silent mis-type).
     let ty = pd
         .type_annotation
         .as_ref()
         .map(|ta| types::translate_type(&ta.type_annotation))
+        .or_else(|| pd.value.as_ref().map(infer_field_type))
         .unwrap_or_else(|| parse_quote!(_));
     let ty = if pd.optional {
         parse_quote!(Option<#ty>)
@@ -411,6 +417,49 @@ fn instance_field(
         expressions::translate_expr(e, &ctx)
     });
     Some(Field { name, ty, default })
+}
+
+/// Infer a field's type from its initializer when the field has no annotation
+/// (an initializer-only class field). The common collection and literal cases
+/// lower to their concrete Rust type; an unknown initializer falls back to `_`.
+fn infer_field_type(default: &Expression) -> Type {
+    match default {
+        Expression::NewExpression(n) => infer_ctor_type(n),
+        Expression::NumericLiteral(_) => parse_quote!(f64),
+        Expression::StringLiteral(_) => parse_quote!(String),
+        Expression::BooleanLiteral(_) => parse_quote!(bool),
+        _ => parse_quote!(_),
+    }
+}
+
+/// `new Map<K, V>()` / `new WeakMap<K, V>()` → `HashMap<K, V>`, and
+/// `new Set<E>()` / `new WeakSet<E>()` → `HashSet<E>` — the field type of an
+/// initializer-only collection field, read off the constructor's type arguments.
+/// `WeakMap`/`WeakSet` use the same strong-collection backing (no GC-precise
+/// weak refs; a `WeakMap` keyed by `Uint8Array` is a `HashMap<Vec<u8>, V>`).
+fn infer_ctor_type(n: &NewExpression) -> Type {
+    let Expression::Identifier(id) = &n.callee else {
+        return parse_quote!(_);
+    };
+    let targs = n.type_arguments.as_deref();
+    match id.name.as_str() {
+        "Map" | "WeakMap" => match targs.map(|a| &a.params).filter(|p| p.len() == 2) {
+            Some(p) => {
+                let k = types::translate_type(&p[0]);
+                let v = types::translate_type(&p[1]);
+                parse_quote!(::std::collections::HashMap<#k, #v>)
+            }
+            None => parse_quote!(_),
+        },
+        "Set" | "WeakSet" => match targs.and_then(|a| a.params.first()) {
+            Some(e) => {
+                let e = types::translate_type(e);
+                parse_quote!(::std::collections::HashSet<#e>)
+            }
+            None => parse_quote!(_),
+        },
+        _ => parse_quote!(_),
+    }
 }
 
 /// A `compile_error!` item carrying `message`, so unsupported features fail

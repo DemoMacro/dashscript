@@ -140,6 +140,28 @@ fn ts_private_modifier_lowers_to_pub() {
 }
 
 #[test]
+fn infers_initializer_only_field_type() {
+    // An initializer-only field (no annotation) infers its type from the
+    // initializer: `new Map<string, number>()` → `HashMap<String, f64>`,
+    // `new WeakMap<Uint8Array, string>()` → `HashMap<Vec<u8>, String>` (a
+    // `WeakMap` uses the same strong-collection backing — no GC-precise weak
+    // refs).
+    let rust = Translator::new()
+        .translate(
+            "class C { m = new Map<string, number>(); w = new WeakMap<Uint8Array, string>(); }",
+        )
+        .expect("should translate");
+    assert!(
+        rust.contains("HashMap<String, f64>"),
+        "map field inferred: {rust}"
+    );
+    assert!(
+        rust.contains("HashMap<Vec<u8>, String>"),
+        "weakmap field inferred: {rust}"
+    );
+}
+
+#[test]
 fn flags_abstract_class() {
     let rust = Translator::new()
         .translate("abstract class C { x: number; }")

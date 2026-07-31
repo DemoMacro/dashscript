@@ -82,9 +82,28 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         return parse_quote!(::core::todo!());
     };
     if n.arguments.is_empty() {
+        // `WeakMap`/`WeakSet` lower to the same strong-collection backing as
+        // `Map`/`Set` — DashScript has no GC-precise weak refs (a `WeakMap`
+        // keyed by `Uint8Array` is a `HashMap<Vec<u8>, V>`). The constructor's
+        // type arguments carry over as a turbofish so an unannotated binding
+        // (`let m = new Map<string, T>()`) infers its type.
+        let targs = n.type_arguments.as_deref();
         match name.to_string().as_str() {
-            "Map" => return parse_quote!(::std::collections::HashMap::new()),
-            "Set" => return parse_quote!(::std::collections::HashSet::new()),
+            "Map" | "WeakMap" => match targs.map(|a| &a.params).filter(|p| p.len() == 2) {
+                Some(p) => {
+                    let k = types::translate_type(&p[0]);
+                    let v = types::translate_type(&p[1]);
+                    return parse_quote!(::std::collections::HashMap::<#k, #v>::new());
+                }
+                None => return parse_quote!(::std::collections::HashMap::new()),
+            },
+            "Set" | "WeakSet" => match targs.and_then(|a| a.params.first()) {
+                Some(e) => {
+                    let e = types::translate_type(e);
+                    return parse_quote!(::std::collections::HashSet::<#e>::new());
+                }
+                None => return parse_quote!(::std::collections::HashSet::new()),
+            },
             _ => {}
         }
     }
