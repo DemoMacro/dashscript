@@ -741,6 +741,27 @@ fn module_delayed_binding_fn_optional_call_unwraps() {
 }
 
 #[test]
+fn module_as_const_array_lazy_static_infers_vec_type() {
+    // `const X = [...] as const` — the `as const` is a TS literal-type marker
+    // (runtime no-op), not a real type: oxc parses it as a `TSTypeReference`
+    // named `const` (a Rust keyword that would panic `reference_type`). The
+    // OnceLock now holds the inner array's inferred element type — `Vec<String>`
+    // for a string-literal array, `Vec<Vec<…>>` for a nested one — instead.
+    let src =
+        "const NAMES = [\"a\", \"b\"] as const;\nexport function has(): boolean { return true; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(diags.is_empty(), "as const lazy static flagged: {diags:?}");
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("OnceLock<Vec<String>>"),
+        "as const array not lowered to OnceLock<Vec<String>>: {rust}"
+    );
+}
+
+#[test]
 fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
     // B3-1a (entry path, via promotable relaxation): a top-level non-mutated
     // `let` literal referenced from a function promotes to a crate `const` item

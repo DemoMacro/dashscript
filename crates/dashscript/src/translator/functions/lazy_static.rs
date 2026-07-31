@@ -263,44 +263,21 @@ pub(in crate::translator) fn lazy_static_items(
     let ty: Type = if let Some(ta) = d.type_annotation.as_ref() {
         types::translate_type(&ta.type_annotation)
     } else if let Expression::TSAsExpression(as_expr) = init {
-        // `const X = expr as T` — the `as T` assertion is the type to put on
-        // the OnceLock. The init translates as the inner `expr` (the assertion
-        // is stripped, see `translate_expr`), so only the type feeds the cell.
-        types::translate_type(&as_expr.type_annotation)
+        if is_const_assertion(&as_expr.type_annotation) {
+            // `expr as const` — a TS literal-type marker (runtime no-op); the
+            // cell type is the inner expression's inferred shape, not the
+            // (Rust-keyword) `const` marker.
+            infer_init_type(&as_expr.expression, registry)
+        } else {
+            // `expr as T` — the assertion type goes on the OnceLock; the init
+            // translates as the inner `expr` (assertion stripped, see
+            // `translate_expr`), so only the type feeds the cell.
+            types::translate_type(&as_expr.type_annotation)
+        }
     } else if let Expression::TSTypeAssertion(t) = init {
         types::translate_type(&t.type_annotation)
-    } else if let Expression::CallExpression(call) = init {
-        // A factory or method call with no annotation — infer the return type:
-        // an identifier factory call resolves via its cross-file signature
-        // (`createFactory<TFile>` ← `createFactory<Opts>`); a method call via its
-        // builtin return type (`arr.join("")` → `String`).
-        infer_call_return_type(call, registry).unwrap_or_else(|| parse_quote!(_))
-    } else if let Expression::NewExpression(new) = init {
-        // A constructor with no annotation — `new Set([literal])` infers its
-        // element type from the first array element (`HashSet<T>`), and a
-        // builtin ctor like `new TextEncoder()` maps to its `__ds::` type. The
-        // OnceLock holds that inferred type.
-        new_return_type(new).unwrap_or_else(|| parse_quote!(_))
-    } else if let Expression::ObjectExpression(obj) = init {
-        // An options/config object literal with no annotation — `const opts =
-        // { flag: true, … }` infers a uniform value type `V` from its properties
-        // so the OnceLock holds `HashMap<String, V>` (`{ a: true, b: true }` →
-        // `HashMap<String, bool>`). An anonymous object literal lowers to a
-        // `HashMap` (JS objects are dynamic maps); a uniform scalar value type
-        // is read off the properties so the cell has a concrete type.
-        let val =
-            object_literal_value_type(obj).unwrap_or_else(|| parse_quote!(::serde_json::Value));
-        parse_quote!(::std::collections::HashMap<String, #val>)
-    } else if let Expression::BinaryExpression(bin) = init {
-        // A string-concatenation `+` chain — `'<a>' + NS + '</a>'` — lowers to
-        // `String`: the init translates to `format!(...)` (Rust's `+` does not
-        // apply to `String`), so the OnceLock holds a `String`. A numeric `+`
-        // chain is not a candidate (`is_inferable_binary` requires a string leaf).
-        let _ = bin;
-        parse_quote!(String)
     } else {
-        // A regex literal with no annotation — `regress::Regex`.
-        parse_quote!(regress::Regex)
+        infer_init_type(init, registry)
     };
     // The initializer translates under a fresh empty-body context: a module
     // top-level binding has no locals/narrowing, only the type registry and
@@ -322,6 +299,63 @@ pub(in crate::translator) fn lazy_static_items(
             }
         },
     ])
+}
+
+/// The OnceLock cell type of an unannotated module-level initializer (B3-1 lazy
+/// static) — the `T` in `OnceLock<T>`, inferred from the initializer's shape: a
+/// factory call's return type, a constructor's type, an options object's
+/// `HashMap`, a string-concat chain's `String`, or an array literal's
+/// `Vec<elem>` (incl. an `as const` array). Anything else (a regex literal)
+/// falls back to `regress::Regex`.
+fn infer_init_type(init: &Expression, registry: &TypeRegistry) -> Type {
+    match init {
+        Expression::CallExpression(call) => {
+            infer_call_return_type(call, registry).unwrap_or_else(|| parse_quote!(_))
+        }
+        Expression::NewExpression(new) => new_return_type(new).unwrap_or_else(|| parse_quote!(_)),
+        Expression::ObjectExpression(obj) => {
+            let val =
+                object_literal_value_type(obj).unwrap_or_else(|| parse_quote!(::serde_json::Value));
+            parse_quote!(::std::collections::HashMap<String, #val>)
+        }
+        Expression::BinaryExpression(_) => parse_quote!(String),
+        Expression::ArrayExpression(arr) => infer_array_type(arr),
+        _ => parse_quote!(regress::Regex),
+    }
+}
+
+/// The element type of an array-literal initializer — `Vec<T>` where `T` is read
+/// off the first element: a string-literal array → `Vec<String>`, a numeric one
+/// → `Vec<f64>`, a nested literal array → `Vec<Vec<…>>`; a non-uniform or empty
+/// array falls back to `Vec<Value>`.
+fn infer_array_type(arr: &ArrayExpression) -> Type {
+    use oxc_ast::ast::ArrayExpressionElement;
+    let Some(first) = arr.elements.first() else {
+        return parse_quote!(Vec<::serde_json::Value>);
+    };
+    match first {
+        ArrayExpressionElement::StringLiteral(_) => parse_quote!(Vec<String>),
+        ArrayExpressionElement::NumericLiteral(_) => parse_quote!(Vec<f64>),
+        ArrayExpressionElement::ArrayExpression(inner) => {
+            let inner_ty = infer_array_type(inner);
+            parse_quote!(Vec<#inner_ty>)
+        }
+        _ => parse_quote!(Vec<::serde_json::Value>),
+    }
+}
+
+/// Whether a type-annotation is the `const` marker of an `as const` assertion —
+/// oxc parses `expr as const` with a `TSTypeReference` named `const` (a Rust
+/// keyword, which would panic `reference_type`). It is a TS literal-type marker
+/// (runtime no-op), not a real type, so the cell type comes from the inner
+/// expression instead.
+fn is_const_assertion(ta: &oxc_ast::ast::TSType) -> bool {
+    use oxc_ast::ast::{TSType, TSTypeName};
+    matches!(
+        ta,
+        TSType::TSTypeReference(r)
+            if matches!(&r.type_name, TSTypeName::IdentifierReference(id) if id.name == "const")
+    )
 }
 
 /// The scalar value type of a mutable module-global's initializer — the `T` in
