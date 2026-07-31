@@ -73,7 +73,7 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         // emit `TextEncoder::new` (E0425 — no such Rust type). The `Encoding`
         // runtime dep is flagged by the `__ds::TextEncoder` marker probe, which
         // injects both struct defs into `__ds.rs`.
-        if matches!(id.name.as_str(), "TextEncoder" | "TextDecoder") {
+        if builtins::encoding_ctor_type(id.name.as_str()).is_some() {
             let name = bindings::type_ident(&id.name);
             return parse_quote!(crate::__ds::#name::new());
         }

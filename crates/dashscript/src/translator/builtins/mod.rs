@@ -15,6 +15,7 @@
 mod array;
 mod collection;
 mod console;
+mod encoding;
 mod global;
 mod json;
 mod math;
@@ -31,6 +32,7 @@ mod drift_guard;
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
 pub(in crate::translator) use collection::collection_method;
 pub(in crate::translator) use console::console_method;
+pub(in crate::translator) use encoding::encoding_ctor_type;
 pub(in crate::translator) use global::{
     global_function, reg_exp_constructor, reg_exp_static, to_number_expr,
 };

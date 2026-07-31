@@ -19,6 +19,7 @@ use syn::{
 };
 
 use super::super::analysis;
+use super::super::builtins;
 use super::super::context::{Ctx, Locals, Narrow};
 use super::super::expressions;
 use super::super::name_table::NameTable;
@@ -275,10 +276,11 @@ pub(in crate::translator) fn lazy_static_items(
         // builtin return type (`arr.join("")` → `String`).
         infer_call_return_type(call, registry).unwrap_or_else(|| parse_quote!(_))
     } else if let Expression::NewExpression(new) = init {
-        // A collection constructor with no annotation — `new Set([literal])`
-        // infers its element type from the first array element so the OnceLock
-        // holds `HashSet<T>` (`["jpg", …]` → `HashSet<String>`).
-        new_collection_return_type(new).unwrap_or_else(|| parse_quote!(_))
+        // A constructor with no annotation — `new Set([literal])` infers its
+        // element type from the first array element (`HashSet<T>`), and a
+        // builtin ctor like `new TextEncoder()` maps to its `__ds::` type. The
+        // OnceLock holds that inferred type.
+        new_return_type(new).unwrap_or_else(|| parse_quote!(_))
     } else if let Expression::ObjectExpression(obj) = init {
         // An options/config object literal with no annotation — `const opts =
         // { flag: true, … }` infers a uniform value type `V` from its properties
@@ -567,7 +569,7 @@ fn is_inferable_new(init: &Expression) -> bool {
     let Expression::NewExpression(new) = init else {
         return false;
     };
-    new_collection_return_type(new).is_some()
+    new_return_type(new).is_some()
 }
 
 /// Whether `init` is an object literal whose value type the translator can infer
@@ -661,6 +663,19 @@ fn operand_is_str_literal(expr: &Expression) -> bool {
         Expression::ParenthesizedExpression(p) => operand_is_str_literal(&p.expression),
         _ => false,
     }
+}
+
+/// The inferred Rust type of a `new` expression's result, for a module-global
+/// singleton's `OnceLock<T>`: a builtin ctor (`new TextEncoder()` →
+/// `crate::__ds::TextEncoder`) or a collection (`new Set([…])` →
+/// `HashSet<T>`). `None` if the type cannot be inferred without an annotation.
+fn new_return_type(new: &NewExpression) -> Option<Type> {
+    if let Expression::Identifier(id) = &new.callee {
+        if let Some(t) = builtins::encoding_ctor_type(id.name.as_str()) {
+            return Some(t);
+        }
+    }
+    new_collection_return_type(new)
 }
 
 /// The collection type of a `new Set([literal array])` initializer, inferred

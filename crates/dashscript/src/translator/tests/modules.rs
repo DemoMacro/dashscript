@@ -607,6 +607,42 @@ fn module_non_mutated_let_runtime_init_emits_lazy_static() {
 }
 
 #[test]
+fn module_new_textencoder_referenced_by_fn_hoists_to_oncelock() {
+    // A module-level `new TextEncoder()` (the WHATWG Encoding API, a WinterTC
+    // Web API) referenced from a top-level function hoists behind a
+    // `static OnceLock<crate::__ds::TextEncoder>` + accessor `fn`, just like a
+    // `number[]` runtime init — the constructor is not a const-expression
+    // literal, and the stateless builtin ctor's Rust type is known
+    // (`encoding_ctor_type`). Previously `is_inferable_new` only recognized
+    // `new Set([…])`, so this fell through to `unsupported`. The OnceLock
+    // carries the `__ds::TextEncoder` type, which also flags the Encoding dep
+    // via the marker probe.
+    let src =
+        "const encoder = new TextEncoder();\nexport function encLen(s: string): number { return encoder.encode(s).length; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(
+        diags.is_empty(),
+        "module-level new TextEncoder flagged: {diags:?}"
+    );
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("OnceLock") && rust.contains("get_or_init"),
+        "module-level new TextEncoder not lowered to lazy static: {rust}"
+    );
+    assert!(
+        rust.contains("crate::__ds::TextEncoder"),
+        "OnceLock type is not the encoding ctor type: {rust}"
+    );
+    assert!(
+        rust.contains("fn encoder()"),
+        "lazy-static accessor for the encoder not emitted: {rust}"
+    );
+}
+
+#[test]
 fn module_mutable_let_value_reassigned_by_fn_emits_thread_local_refcell() {
     // B3-2a: a module-level `let` (a value type: a number) rebound from a
     // top-level function cannot live in `fn main` (a Rust fn item cannot close
