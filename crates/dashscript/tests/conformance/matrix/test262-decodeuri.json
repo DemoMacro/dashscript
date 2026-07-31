@@ -1,0 +1,10 @@
+[
+  {
+    "id": "test262.test.built-ins.decodeuri.not-a-constructor",
+    "layer": "test262",
+    "category": "decodeuri",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  }
+]

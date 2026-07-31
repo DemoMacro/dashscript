@@ -5,21 +5,54 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.15.7.3-2",
     "layer": "test262",
     "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.15.7.4-1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.bigint-conversion",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.epsilon",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.is-a-constructor",
+    "layer": "test262",
+    "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isfinite.arg-is-not-number",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -28,9 +61,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -39,9 +69,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -50,9 +77,22 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isfinite.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isinteger.arg-is-not-number",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -61,9 +101,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -72,9 +109,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -83,9 +117,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -94,9 +125,22 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isinteger.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isnan.arg-is-not-number",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -105,9 +149,14 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.isnan.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -116,9 +165,14 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.issafeinteger.arg-is-not-number",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -127,9 +181,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -138,9 +189,14 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.issafeinteger.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -149,9 +205,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -160,9 +213,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -171,9 +221,30 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.max_safe_integer",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:25: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a3",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -182,9 +253,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -192,10 +260,31 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.min_safe_integer",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:4:25: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a3",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -204,21 +293,22 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.min_value.value",
     "layer": "test262",
     "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.nan",
+    "layer": "test262",
+    "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 4: ds=\"0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011125369292536007\" node=\"0\""
-    },
+    "detail": "src\\main.rs:5:9: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -227,9 +317,14 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.negative_infinity.s15.7.3.5_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -238,9 +333,38 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.parsefloat",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:61: error[E0425]: cannot find value `parse_float` in this scope: not found in this scope\nsrc\\main.rs:5:9: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.parsefloat.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.parseint",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:59: error[E0425]: cannot find value `parse_int` in this scope: not found in this scope\nsrc\\main.rs:5:9: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.parseint.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -249,9 +373,14 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.positive_infinity.s15.7.3.6_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -260,9 +389,30 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.proto-from-ctor-realm",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.15.7.3.1-2",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -271,9 +421,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -282,17 +429,14 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a3",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find value `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -301,9 +445,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -312,9 +453,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -323,9 +461,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -334,9 +469,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -345,9 +477,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -356,9 +485,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -367,9 +493,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -378,9 +501,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -389,9 +509,30 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.infinity",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:18:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:49:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.nan",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:18:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -400,9 +541,14 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toexponential.return-abrupt-tointeger-fractiondigits",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -411,9 +557,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -421,11 +564,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 41: ds=\"2e+1\" node=\"3e+1\"; line 42: ds=\"1.234e+4\" node=\"1.235e+4\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 41: ds=\"2e+1\" node=\"3e+1\"; line 42: ds=\"1.234e+4\" node=\"1.235e+4\""
-    },
+    "detail": "Test262Error: \nthread 'main' (25228) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -434,20 +573,14 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toexponential.this-is-0-fractiondigits-is-not-0",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (38412) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"-0.0e+0\"», «\"0.0e+0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -456,9 +589,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -466,7 +596,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:38:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:43:45: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:48:45: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:53:45: error[E0605]: non-primitive cast: `Vec<_>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:58:45: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:63:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less",
+    "detail": "src\\main.rs:110:41: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:125:41: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:140:41: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:155:41: error[E0605]: non-primitive cast: `Vec<_>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:170:41: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:185:41: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less",
     "note": ""
   },
   {
@@ -474,7 +604,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:18:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:35:45: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:5:41: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:51:27: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:99:41: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -483,9 +613,14 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -494,21 +629,54 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tofixed.return-type",
     "layer": "test262",
     "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a1.1_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a1.1_t02",
+    "layer": "test262",
+    "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"string\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"string\""
-    },
+    "detail": "src\\main.rs:3:38: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:5:44: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:9:44: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:13:46: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:17:46: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:21:54: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a1.3_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a1.3_t02",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tofixed.s15.7.4.5_a1.4_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -517,9 +685,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -528,9 +693,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -539,9 +701,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -550,9 +709,46 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tolocalestring.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.exponential",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:1983:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:2569:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.infinity",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:48:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:139:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.nan",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:50:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:97:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:97:46: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:98:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:145:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:145:46: error[E0308]: mismatched types: expected `&i64`, found `&f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -561,9 +757,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -572,9 +765,14 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.return-abrupt-tointeger-precision",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -583,9 +781,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -594,9 +789,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -605,9 +797,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -616,9 +805,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -627,9 +813,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -637,7 +820,15 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:53:58: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:70:58: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:141:30: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:186:30: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.toprecision.undefined-precision-arg",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -646,20 +837,22 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-default-radix",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (35332) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -668,9 +861,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -679,9 +869,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -690,9 +877,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -701,9 +885,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -712,9 +893,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -723,9 +901,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -734,9 +909,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -745,9 +917,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -756,9 +925,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -767,9 +933,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -778,9 +941,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -789,9 +949,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -800,9 +957,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -811,9 +965,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -822,9 +973,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -833,9 +981,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -844,9 +989,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -855,9 +997,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -866,9 +1005,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -877,9 +1013,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -888,9 +1021,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -899,9 +1029,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -910,9 +1037,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -921,9 +1045,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -932,9 +1053,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -943,9 +1061,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -954,9 +1069,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -965,9 +1077,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -976,9 +1085,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -987,9 +1093,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -998,9 +1101,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1009,9 +1109,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1020,9 +1117,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1031,9 +1125,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1042,9 +1133,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1053,9 +1141,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1064,17 +1149,478 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-poisoned",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a1_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a1_t02",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a1_t03",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t02",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t03",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t04",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t05",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t06",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t07",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t08",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t09",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t10",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t11",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t12",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t13",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t14",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t15",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t16",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t17",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t18",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t19",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t20",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t21",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t22",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t23",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t24",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t25",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t26",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t27",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t28",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t29",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t30",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t31",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t32",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t33",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a2_t34",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a4_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a4_t02",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a4_t03",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a4_t04",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.tostring.s15.7.4.2_a4_t05",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.not-a-constructor",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.s15.7.4.4_a1_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.s15.7.4.4_a1_t02",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.s15.7.4.4_a2_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.s15.7.4.4_a2_t02",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.s15.7.4.4_a2_t03",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.s15.7.4.4_a2_t04",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.prototype.valueof.s15.7.4.4_a2_t05",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.return-abrupt-tonumber-value",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.return-abrupt-tonumber-value-symbol",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.1.1_a1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.1.1_a2",
     "layer": "test262",
     "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.2.1_a1",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.2.1_a2",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.2.1_a3",
+    "layer": "test262",
+    "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:4:58: error[E0425]: cannot find function `number` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:5:14: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.2.1_a4",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1083,9 +1629,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1094,9 +1637,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1105,9 +1645,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1116,9 +1653,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1127,9 +1661,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1138,9 +1669,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1149,9 +1677,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1160,9 +1685,78 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.5_a1_t01",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.5_a1_t02",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.5_a1_t03",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.5_a1_t04",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.5_a1_t05",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.5_a1_t06",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s15.7.5_a1_t07",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s8.12.8_a3",
+    "layer": "test262",
+    "category": "number",
+    "status": "partial",
+    "detail": "src\\main.rs:6:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:13: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`\nsrc\\main.rs:9:54: error[E0308]: mismatched types: expected `&HashMap<String, _>`, found `&f64`\nsrc\\main.rs:21:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s8.12.8_a4",
+    "layer": "test262",
+    "category": "number",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1170,7 +1764,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:58: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:58: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:5: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`\nsrc\\main.rs:7:47: error[E0308]: mismatched types: expected `&HashMap<String, _>`, found `&f64`\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression",
     "note": ""
   },
   {
@@ -1179,9 +1773,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1190,9 +1781,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1201,9 +1789,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1212,9 +1797,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1223,9 +1805,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1234,9 +1813,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1245,9 +1821,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1256,9 +1829,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1267,9 +1837,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1278,9 +1845,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1289,9 +1853,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1300,9 +1861,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1311,9 +1869,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1322,9 +1877,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1333,9 +1885,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1344,9 +1893,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1355,9 +1901,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1366,9 +1909,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1377,9 +1917,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1388,9 +1925,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1399,9 +1933,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1410,9 +1941,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1421,9 +1949,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1432,9 +1957,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1443,9 +1965,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1454,9 +1973,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1465,9 +1981,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1476,9 +1989,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1487,9 +1997,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1498,9 +2005,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1509,9 +2013,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1520,9 +2021,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1531,9 +2029,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1542,9 +2037,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1553,9 +2045,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1564,9 +2053,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1575,9 +2061,6 @@
     "category": "number",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1586,9 +2069,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1597,9 +2077,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1608,9 +2085,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1618,7 +2092,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:58: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:3:45: error[E0308]: mismatched types: expected `&Option<_>`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1626,7 +2100,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:58: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:3:45: error[E0308]: mismatched types: expected `&Option<_>`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1634,7 +2108,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:58: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:4:58: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:46: error[E0308]: mismatched types: expected `&bool`, found `&f64`\nsrc\\main.rs:4:45: error[E0308]: mismatched types: expected `&bool`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1643,21 +2117,22 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s9.3_a4.2_t1",
     "layer": "test262",
     "category": "number",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.number.s9.3_a5_t1",
+    "layer": "test262",
+    "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 7: ds=\"2.2250738585072014e-308\" node=\"5e-324\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 7: ds=\"2.2250738585072014e-308\" node=\"5e-324\""
-    },
+    "detail": "src\\main.rs:3:38: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:4:38: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:5:38: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:6:38: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:7:38: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:7:38: warning: unreachable call: unreachable call",
     "note": ""
   },
   {
@@ -1666,9 +2141,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1676,11 +2148,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 4: ds=\"1\" node=\"NaN\"; line 5: ds=\"-1\" node=\"NaN\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 4: ds=\"1\" node=\"NaN\"; line 5: ds=\"-1\" node=\"NaN\""
-    },
+    "detail": "Test262Error: \nthread 'main' (9492) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«1.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1688,11 +2156,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 4: ds=\"16\" node=\"NaN\"; line 5: ds=\"-16\" node=\"NaN\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 4: ds=\"16\" node=\"NaN\"; line 5: ds=\"-16\" node=\"NaN\""
-    },
+    "detail": "Test262Error: \nthread 'main' (36764) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«16.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1701,9 +2165,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1712,9 +2173,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1723,9 +2181,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1734,9 +2189,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1745,9 +2197,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1756,9 +2205,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1767,9 +2213,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1778,9 +2221,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1789,9 +2229,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1800,9 +2237,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1811,9 +2245,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1822,9 +2253,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1833,9 +2261,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1844,9 +2269,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1855,9 +2277,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1866,9 +2285,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1877,9 +2293,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1888,9 +2301,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1899,9 +2309,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1910,9 +2317,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1921,9 +2325,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1932,9 +2333,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1943,9 +2341,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1954,9 +2349,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1965,9 +2357,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1976,9 +2365,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1987,9 +2373,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1998,9 +2381,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -2009,9 +2389,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -2020,9 +2397,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -2031,9 +2405,6 @@
     "category": "number",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -2041,11 +2412,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "oracle diff: line 4: ds=\"8\" node=\"NaN\"; line 5: ds=\"-8\" node=\"NaN\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 4: ds=\"8\" node=\"NaN\"; line 5: ds=\"-8\" node=\"NaN\""
-    },
+    "detail": "Test262Error: \nthread 'main' (15788) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«8.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   }
 ]

@@ -5,9 +5,14 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.not-a-constructor",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16,9 +21,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -26,7 +28,31 @@
     "layer": "test262",
     "category": "parsefloat",
     "status": "partial",
-    "detail": "src\\main.rs:18:10: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:35:10: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:51:25: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:103:25: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t4",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:50:25: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nsrc\\main.rs:102:25: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t7",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t1",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:357:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:482:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:607:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -35,9 +61,70 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t2",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:357:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:482:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:607:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t3",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t4",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t5",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t6",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t7",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t8",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t9",
+    "layer": "test262",
+    "category": "parsefloat",
+    "status": "partial",
+    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -46,9 +133,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -57,9 +141,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -68,9 +149,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -79,9 +157,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -90,9 +165,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -101,9 +173,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -112,9 +181,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -123,9 +189,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -134,9 +197,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -145,9 +205,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -156,9 +213,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -167,9 +221,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -178,9 +229,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -189,9 +237,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -200,9 +245,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -211,9 +253,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -222,9 +261,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -233,9 +269,6 @@
     "category": "parsefloat",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   }
 ]

@@ -632,7 +632,6 @@ fn translate_catch(source: &str) -> Result<(String, RuntimeDeps), String> {
     .and_then(|r| r.map_err(|e| format!("translate error: {e}")))
 }
 
-/// Whether `node` is on PATH (the test262 oracle). Probed once per run.
 /// Build and run the compiled probe, returning an assert-driven verdict.
 ///
 /// Build and run are split so a hanging fixture (catastrophic regexp
@@ -1231,7 +1230,8 @@ fn render_overview_from_disk(dir: &Path) -> String {
     let mut s = String::new();
     s.push_str("# DashScript ECMAScript Conformance\n\n");
     s.push_str(
-        "Per-category conformance vs tc39 test262 (Node oracle differential), plus the \
+        "Per-category conformance vs tc39 test262 — assert-driven (a fixture passes \
+         when its asserts all hold under DashScript; no Node oracle), plus the \
          translator's own unit-test fixtures and hand-written correctness cases.\n\n",
     );
     s.push_str(

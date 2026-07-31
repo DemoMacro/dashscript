@@ -1,13 +1,34 @@
 [
   {
+    "id": "test262.test.built-ins.map.bigint-number-same-value",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
     "id": "test262.test.built-ins.map.constructor",
     "layer": "test262",
     "category": "map",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.does-not-throw-when-set-is-not-callable",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.get-set-method-failure",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16,9 +37,22 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.groupby.callback-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.groupby.emptylist",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -27,9 +61,22 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.groupby.invalid-iterable",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.groupby.iterator-next-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -38,33 +85,198 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.groupby.negativezero",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.is-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `map` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterable-calls-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-close-after-set-failure",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-close-failure-after-set-failure",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-is-undefined-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-item-first-entry-returns-abrupt",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-item-second-entry-returns-abrupt",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-items-are-not-object",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-items-are-not-object-close-iterator",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-next-failure",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.iterator-value-failure",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.map-iterable",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:13: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:39: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:4:71: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.map-iterable-empty-does-not-call-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.map-iterable-throws-when-set-is-not-callable",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.map-no-iterable",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.map-no-iterable-does-not-call-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.newtarget",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.properties-of-map-instances",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.map.properties-of-the-map-prototype-object",
     "layer": "test262",
     "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.proto-from-ctor-realm",
+    "layer": "test262",
+    "category": "map",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{}\" node=\"[Object: null prototype] {}\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{}\" node=\"[Object: null prototype] {}\""
-    },
+    "detail": "engine error: Exception generated by QuickJS",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.map.prototype-of-map",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.clear.clear",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.clear.clear-map",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -73,9 +285,6 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -84,9 +293,54 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.clear.context-is-set-object-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.clear.context-is-weakmap-object-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.clear.map-data-list-is-preserved",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:10:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.clear.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.clear.returns-undefined",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:63: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -95,9 +349,6 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -106,9 +357,870 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.delete.context-is-set-object-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.delete.context-is-weakmap-object-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.delete.delete",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.delete.does-not-break-iterators",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:5:35: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:65: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:27: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:16:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.delete.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.delete.returns-false",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:36: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:4:66: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.delete.returns-true-for-deleted-entry",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.entries",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.returns-iterator",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:9:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:25:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.returns-iterator-empty",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.entries.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.callback-parameters",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:9: error[E0599]: the method `for_each` exists for struct `HashMap<_, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<_, _>` due to unsatisfied trait bounds\nsrc\\main.rs:14:5: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nsrc\\main.rs:23:5: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.callback-result-is-abrupt",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.callback-this-non-strict",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.callback-this-strict",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.deleted-values-during-foreach",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.first-argument-is-not-callable",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.foreach",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.iterates-in-key-insertion-order",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:19: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:6:13: error[E0308]: mismatched types: expected `String`, found `bool`\nsrc\\main.rs:17:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.iterates-values-added-after-foreach-begins",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.iterates-values-deleted-then-readded",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.return-undefined",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.second-parameter-as-callback-context",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:9: error[E0599]: the method `for_each` exists for struct `HashMap<_, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<_, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:5: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.foreach.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.get",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.returns-undefined",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:46: error[E0308]: mismatched types: expected `&_`, found `String`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `String`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.returns-value-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.returns-value-normalized-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:5:56: error[E0308]: mismatched types: expected `&Option<&_>`, found `&f64`\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.get.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.append-new-values",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.append-new-values-normalizes-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:5:55: error[E0308]: mismatched types: expected `&Option<&_>`, found `&f64`\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.append-value-if-key-is-not-present-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.getorinsert",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-not-present-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-present-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.returns-value-normalized-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:42: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:42: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsert.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values-normalizes-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:5:55: error[E0308]: mismatched types: expected `&Option<&_>`, found `&f64`\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.append-value-if-key-is-not-present-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.callbackfn-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.canonical-key-passed-to-callback",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.check-callback-fn-args",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.check-state-after-callback-fn-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.different-types-function-callbackfn-does-not-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-evaluate-callbackfn-if-key-present",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-function-callbackfn-throws",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.overwrites-mutation-from-callbackfn",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:14:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:17:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:20:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:23:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-not-present-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-present-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-normalized-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:15: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:12:15: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.has",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.normalizes-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.return-false-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.return-true-different-key-types",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.has.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.keys",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.returns-iterator",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:11:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:12:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.returns-iterator-empty",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.keys.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.append-new-values",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.append-new-values-normalizes-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:5:55: error[E0308]: mismatched types: expected `&Option<&_>`, found `&f64`\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.append-new-values-return-map",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:26: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:5: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nsrc\\main.rs:6:18: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:5: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nsrc\\main.rs:9:19: error[E0609]: no field `set` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:10:5: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.replaces-a-value",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:3:56: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.replaces-a-value-normalizes-zero-key",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:3:19: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:6:11: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.replaces-a-value-returns-map",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.set.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-clear",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:9:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-delete",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:4:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:7:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-insertion",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-iterable",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.size.size",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -117,9 +1229,94 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.symbol.iterator",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.symbol.iterator.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.symbol.tostringtag",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-set",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-weakmap",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.not-a-constructor",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.returns-iterator",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:11:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:12:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.returns-iterator-empty",
+    "layer": "test262",
+    "category": "map",
+    "status": "partial",
+    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.this-not-object-throw",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.prototype.values.values",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -128,9 +1325,14 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.symbol.species.symbol-species",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -139,9 +1341,6 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -150,9 +1349,14 @@
     "category": "map",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.map.valid-keys",
+    "layer": "test262",
+    "category": "map",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   }
 ]

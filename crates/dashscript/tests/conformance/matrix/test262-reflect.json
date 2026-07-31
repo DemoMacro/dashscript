@@ -1,0 +1,874 @@
+[
+  {
+    "id": "test262.test.built-ins.reflect.apply.arguments-list-is-not-array-like",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.apply.arguments-list-is-not-array-like-but-still-valid",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.apply.call-target",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.apply.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.apply.return-target-call-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.apply.target-is-not-callable-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.construct.arguments-list-is-not-array-like",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.construct.newtarget-is-not-constructor-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.construct.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.construct.return-with-newtarget-argument",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.construct.return-without-newtarget-argument",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.construct.target-is-not-constructor-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.construct.use-arguments-list",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.define-properties",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.define-symbol-properties",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.return-abrupt-from-attributes",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.return-abrupt-from-property-key",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.return-boolean",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.defineproperty.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.delete-properties",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.delete-symbol-properties",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.return-abrupt-from-property-key",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.return-boolean",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.deleteproperty.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.enumerate.undefined",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.return-abrupt-from-property-key",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.return-value",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.return-value-from-receiver",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.return-value-from-symbol-key",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.get.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-abrupt-from-property-key",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-from-accessor-descriptor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.return-from-data-descriptor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.symbol-property",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.undefined-own-property",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getownpropertydescriptor.undefined-property",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getprototypeof.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getprototypeof.null-prototype",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getprototypeof.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getprototypeof.return-prototype",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getprototypeof.skip-own-properties",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getprototypeof.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.getprototypeof.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.has.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.has.return-abrupt-from-property-key",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.has.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.has.return-boolean",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.has.symbol-property",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.has.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.has.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.isextensible.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.isextensible.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.isextensible.return-boolean",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.isextensible.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.isextensible.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.object-prototype",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.ownkeys.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.ownkeys.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.ownkeys.return-on-corresponding-order",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.ownkeys.return-on-corresponding-order-large-index",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.ownkeys.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.ownkeys.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.preventextensions.always-return-true-from-ordinary-object",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.preventextensions.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.preventextensions.prevent-extensions",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.preventextensions.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.preventextensions.return-boolean-from-proxy-object",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.preventextensions.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.preventextensions.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.prop-desc",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.call-prototype-property-set",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.creates-a-data-descriptor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.different-property-descriptors",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.receiver-is-not-object",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.return-abrupt-from-property-key",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.return-false-if-receiver-is-not-writable",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.return-false-if-target-is-not-writable",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.set-value-on-accessor-descriptor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.set-value-on-accessor-descriptor-with-receiver",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.set-value-on-data-descriptor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.symbol-property",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.set.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.not-a-constructor",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.proto-is-not-object-and-not-null-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.proto-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.return-abrupt-from-result",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.return-false-if-target-and-proto-are-the-same",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.return-false-if-target-is-not-extensible",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.return-false-if-target-is-prototype-of-proto",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.return-true-if-new-prototype-is-set",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.return-true-if-proto-is-current",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.target-is-not-object-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.reflect.setprototypeof.target-is-symbol-throws",
+    "layer": "test262",
+    "category": "reflect",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  }
+]

@@ -1,13 +1,170 @@
 [
   {
+    "id": "test262.test.built-ins.sharedarraybuffer.allocation-limit",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.data-allocation-after-object-creation",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.init-zero",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `DataView` in this scope: use of undeclared type `DataView`\nsrc\\main.rs:3:30: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.is-a-constructor",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `shared_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.length-is-absent",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.length-is-too-large-throws",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.negative-length-throws",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.newtarget-prototype-is-not-object",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-allocation-limit",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-compared-before-object-creation",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-data-allocation-after-object-creation",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-diminuitive",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-excessive",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-negative",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-object",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-poisoned",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-undefined",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.options-non-object",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.proto-from-ctor-realm",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype-from-newtarget",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.invoked-as-accessor",
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -16,9 +173,38 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.prop-desc",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.return-bytelength",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:5:15: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.this-has-no-typedarrayname-internal",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.this-is-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -27,9 +213,14 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.constructor",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -37,10 +228,63 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-larger-size",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-same-size",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-smaller-size",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-excessive",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-negative",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-non-number",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.nonconstructor",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -49,9 +293,6 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -60,9 +301,22 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.this-is-not-resizable-arraybuffer-object",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.this-is-sharedarraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -71,9 +325,6 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -82,9 +333,38 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.prop-desc",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.return-growable",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:5:16: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.this-has-no-arraybufferdata-internal",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.this-is-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -93,9 +373,6 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -104,9 +381,6 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -115,9 +389,46 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.prop-desc",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.return-maxbytelength-growable",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:8:15: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:13:15: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.return-maxbytelength-non-growable",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:5:15: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.this-has-no-arraybufferdata-internal",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.this-is-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -126,9 +437,6 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -137,9 +445,6 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -148,9 +453,30 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.end-default-if-absent",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.end-default-if-undefined",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:15:20: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.end-exceeds-length",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -158,10 +484,223 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.negative-end",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.negative-start",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.nonconstructor",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.not-a-constructor",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.number-conversion",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:16:18: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nsrc\\main.rs:16:60: error[E0599]: the method `min` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:20:18: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-constructor-is-not-object",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-constructor-is-undefined",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-not-constructor",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-not-object",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-null",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-is-undefined",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-larger-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-not-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-same-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.species-returns-smaller-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-default-if-absent",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-default-if-undefined",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:11:20: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-exceeds-end",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.start-exceeds-length",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.this-is-arraybuffer",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.tointeger-conversion-end",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.tointeger-conversion-start",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.prototype.symbol.tostringtag",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.return-abrupt-from-length",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.return-abrupt-from-length-symbol",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.toindex-length",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:14: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:12:14: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:14:14: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:16:14: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`",
     "note": ""
   },
   {
@@ -170,9 +709,14 @@
     "category": "sharedarraybuffer",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.sharedarraybuffer.zero-length",
+    "layer": "test262",
+    "category": "sharedarraybuffer",
+    "status": "partial",
+    "detail": "src\\main.rs:3:25: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nsrc\\main.rs:5:25: error[E0433]: cannot find type `SharedArrayBuffer` in this scope: use of undeclared type `SharedArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   }
 ]

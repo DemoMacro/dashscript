@@ -5,9 +5,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.abs.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16,9 +21,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -27,9 +29,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -38,9 +37,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acos.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -49,9 +53,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -60,9 +61,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -71,9 +69,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -82,9 +77,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -93,9 +85,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -104,9 +93,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -115,9 +101,22 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.acosh.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asin.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -126,9 +125,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -137,9 +133,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -148,9 +141,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -159,9 +149,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -170,9 +157,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -181,9 +165,22 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.asinh.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -192,9 +189,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -203,9 +197,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -214,9 +205,46 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a1",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:33:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a14",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a16",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a4",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -225,9 +253,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a8",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -236,9 +269,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -247,9 +277,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.atanh.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -258,9 +293,22 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cbrt.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.ceil.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -269,9 +317,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -280,9 +325,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -291,9 +333,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -302,9 +341,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -313,9 +349,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -324,9 +357,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -335,9 +365,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -346,9 +373,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -357,9 +381,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -368,9 +389,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -379,9 +397,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -390,9 +405,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -401,9 +413,22 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.clz32.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cos.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -412,9 +437,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -423,9 +445,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -434,9 +453,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -445,9 +461,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -456,9 +469,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -467,9 +477,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.cosh.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -478,9 +493,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.exp.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -489,9 +509,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -500,9 +517,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -511,9 +525,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -522,9 +533,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -533,9 +541,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -544,9 +549,38 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.expm1.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.f16round.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.f16round.value-conversion",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.floor.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -555,9 +589,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -566,9 +597,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -577,9 +605,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -588,9 +613,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -599,9 +621,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -610,9 +629,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -621,9 +637,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -632,9 +645,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -643,9 +653,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -654,20 +661,22 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.fround.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.fround.ties",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "src\\main.rs:10:66: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:11:59: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:17:69: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:18:60: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -676,9 +685,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -687,9 +693,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -698,9 +701,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -709,9 +709,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -720,9 +717,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -731,9 +725,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -742,9 +733,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.math.hypot_tonumbererr",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -753,9 +749,22 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.hypot.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.imul.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -764,9 +773,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -775,9 +781,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -786,9 +789,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -797,9 +805,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -808,9 +813,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -819,9 +821,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -830,9 +829,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -841,9 +837,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -852,9 +845,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log10.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -863,9 +861,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log1p.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -874,9 +877,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -885,9 +885,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.log2.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -896,9 +901,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -907,9 +909,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -917,7 +916,15 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:8:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:8:55: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -926,9 +933,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.max.s15.8.2.11_a2",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:34:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -937,20 +949,14 @@
     "category": "math",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.max.zeros",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (5820) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -959,9 +965,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -969,7 +972,15 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:8:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:8:55: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -978,9 +989,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.min.s15.8.2.12_a2",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:34:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -989,20 +1005,14 @@
     "category": "math",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.min.zeros",
     "layer": "test262",
     "category": "math",
-    "status": "supported",
-    "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (26664) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«0.0», «-0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1011,9 +1021,110 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a1",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a12",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a15",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a16",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a17",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a19",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a20",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a23",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a4",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a6",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a7",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a8",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a9",
+    "layer": "test262",
+    "category": "math",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1022,21 +1133,54 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.pow.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.prop-desc",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.proto",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{}\" node=\"[Object: null prototype] {}\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{}\" node=\"[Object: null prototype] {}\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.random.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.random.s15.8.2.14_a1",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.round.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1045,9 +1189,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1056,9 +1197,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1067,9 +1205,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1078,9 +1213,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1089,9 +1221,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1099,7 +1228,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:19:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:21:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:24:67: error[E0425]: cannot find value `x` in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:26:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:28:17: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:32:32: error[E0425]: cannot find value `x` in this scope\nsrc\\main.rs:47:20: error[E0425]: cannot find value `x` in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1108,9 +1237,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sign.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1119,9 +1253,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sin.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1130,9 +1269,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1141,9 +1277,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1152,9 +1285,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1163,9 +1293,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sinh.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1174,9 +1309,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sqrt.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1185,9 +1325,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1196,9 +1333,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1207,9 +1341,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1218,9 +1349,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1229,9 +1357,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1240,9 +1365,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1251,9 +1373,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1262,9 +1381,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1272,59 +1396,63 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              ",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2, 3]));\r\n              "
-    },
+    "detail": "Test262Error: \nthread 'main' (38568) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backt",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sumprecise.sum-is-infinite",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             ",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([Infinity]));\r\n             "
-    },
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sumprecise.sum-is-minus-zero",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([]));\r\n                 ^\r\n\r"
-    },
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sumprecise.sum-is-nan",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([NaN]));\r\n                 ^"
-    },
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.sumprecise.takes-iterable",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 ",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: <path>oracle.ts:2\r\nconsole.log(Math.sumPrecise([1, 2]));\r\n                 "
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.sumprecise.throws-on-non-number",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.symbol.tostringtag",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tan.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1333,9 +1461,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1344,9 +1469,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1355,9 +1477,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1366,9 +1485,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1377,9 +1493,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.tanh.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1388,9 +1509,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1399,9 +1517,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1410,9 +1525,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1421,9 +1533,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1432,9 +1541,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1443,9 +1549,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1454,9 +1557,14 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.math.trunc.not-a-constructor",
+    "layer": "test262",
+    "category": "math",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1465,9 +1573,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1476,9 +1581,6 @@
     "category": "math",
     "status": "supported",
     "detail": "",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   }
 ]

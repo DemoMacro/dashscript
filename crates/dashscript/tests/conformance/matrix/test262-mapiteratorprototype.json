@@ -1,0 +1,74 @@
+[
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.does-not-have-mapiterator-internal-slots",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.does-not-have-mapiterator-internal-slots-map",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.iteration",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.iteration-mutable",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-entries",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-keys",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-prototype-iterator",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.next.this-not-object-throw-values",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.mapiteratorprototype.symbol.tostringtag",
+    "layer": "test262",
+    "category": "mapiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  }
+]

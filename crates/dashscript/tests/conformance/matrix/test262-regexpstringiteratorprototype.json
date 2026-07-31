@@ -3,12 +3,8 @@
     "id": "test262.test.built-ins.regexpstringiteratorprototype.ancestry",
     "layer": "test262",
     "category": "regexpstringiteratorprototype",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{}\" node=\"Object [Iterator] {}\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{}\" node=\"Object [Iterator] {}\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17,21 +13,62 @@
     "category": "regexpstringiteratorprototype",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.custom-regexpexec-call-throws",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.custom-regexpexec-get-throws",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.custom-regexpexec-match-get-0-throws",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexpstringiteratorprototype.next.custom-regexpexec-match-get-0-tostring",
     "layer": "test262",
     "category": "regexpstringiteratorprototype",
-    "status": "partial",
-    "detail": "oracle diff: line 2: ds=\"{ 0: { toString: [Function: toString] } }\" node=\"{ '0': [Getter] }\"; line 5: ds=\"{ 0: { toString: [Function: toString] } }\" node=\"{ '0': [Getter] }\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 2: ds=\"{ 0: { toString: [Function: toString] } }\" node=\"{ '0': [Getter] }\"; line 5: ds=\"{ 0: { toString: [Function: toString] } }\" node=\"{ '0': [Getter] }\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.custom-regexpexec-match-get-0-tostring-throws",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.next-iteration",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.next-iteration-global",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -40,9 +77,22 @@
     "category": "regexpstringiteratorprototype",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.prop-desc",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.next.regexp-tolength-lastindex-throws",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -51,9 +101,14 @@
     "category": "regexpstringiteratorprototype",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.regexpstringiteratorprototype.symbol.tostringtag",
+    "layer": "test262",
+    "category": "regexpstringiteratorprototype",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   }
 ]

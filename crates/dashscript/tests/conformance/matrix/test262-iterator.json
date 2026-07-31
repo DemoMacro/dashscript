@@ -1,10 +1,34 @@
 [
   {
+    "id": "test262.test.built-ins.iterator.concat.arguments-checked-in-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
     "id": "test262.test.built-ins.iterator.concat.fresh-iterator-result",
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:10:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:12:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:31: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:55: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`",
+    "detail": "src\\main.rs:11:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:13:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:31: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:8:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:55: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.get-iterator-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.get-iterator-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13,21 +37,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.inner-iterator-created-in-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.concat.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -35,7 +60,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:6:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:6:63: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:6:63: warning: unreachable call: unreachable call\nsrc\\main.rs:9:47: error[E0599]: no method named `as_slice` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:9:47: warning: unreachable call: unreachable call\nsrc\\main.rs:14:40: error[E0599]: no method named `next` found for struct `String` in the current scope",
+    "detail": "src\\main.rs:7:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:7:63: error[E0599]: no method named `as_str` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:7:63: warning: unreachable call: unreachable call\nsrc\\main.rs:10:47: error[E0599]: no method named `as_slice` found for type `!` in the current scope: method not found in `!`\nsrc\\main.rs:10:47: warning: unreachable call: unreachable call\nsrc\\main.rs:15:40: error[E0599]: no method named `next` found for struct `String` in the current scope",
     "note": ""
   },
   {
@@ -44,9 +69,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -55,21 +77,54 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.next-method-returns-throwing-value-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.concat.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.concat.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -78,9 +133,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -97,9 +149,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -107,7 +156,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:3:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:3:52: error[E0599]: no method named `as_str` found for struct `Vec<f64>` in the current scope\nsrc\\main.rs:7:40: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:13:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:4:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:52: error[E0599]: no method named `as_str` found for struct `Vec<f64>` in the current scope\nsrc\\main.rs:8:40: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:14:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:16:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -116,9 +165,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -127,9 +173,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -138,9 +181,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -149,9 +189,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -160,9 +197,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -170,31 +204,63 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:2:34: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:3:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:34: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.constructor",
     "layer": "test262",
     "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "detail": "src\\main.rs:5:24: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.from.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.iterable-primitives",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.iterable-to-iterator-fallback",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -203,33 +269,30 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.from.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.from.result-proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{}\" node=\"Object [Iterator] {}\"; line 2: ds=\"{}\" node=\"Object [Iterator] {}\"; line 3: ds=\"{}\" node=\"Object [Generator] {}\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{}\" node=\"Object [Iterator] {}\"; line 2: ds=\"{}\" node=\"Object [Iterator] {}\"; line 3: ds=\"{}\" node=\"Object [Generator] {}\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.return-method-calls-base-return-method",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -238,21 +301,38 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.from.return-method-throws-for-invalid-this",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.newtarget-or-active-function-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.proto",
     "layer": "test262",
     "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.proto-from-ctor-realm",
+    "layer": "test262",
+    "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "detail": "engine error: Exception generated by QuickJS",
     "note": ""
   },
   {
@@ -261,9 +341,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -272,21 +349,54 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.drop.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -295,9 +405,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -306,9 +413,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -317,9 +421,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -328,9 +429,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -339,21 +437,62 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.limit-tonumber-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.drop.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -362,9 +501,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.return-is-forwarded",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.return-is-not-forwarded-after-exhaustion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -373,9 +525,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -384,9 +541,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.drop.throws-typeerror-when-generator-is-running",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -395,9 +557,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -406,9 +565,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -417,21 +573,54 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.every.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -440,9 +629,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -451,9 +637,46 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.iterator-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -462,9 +685,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-args",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -473,9 +709,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -484,9 +717,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -495,9 +725,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -506,33 +733,38 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.every.predicate-this",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103430674.306 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103430674.306 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.predicate-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.every.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -541,9 +773,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -552,9 +781,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.every.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -563,21 +797,54 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.filter.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -586,9 +853,46 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.iterator-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -597,9 +901,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.predicate-args",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -608,9 +925,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -619,33 +933,38 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.filter.predicate-this",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103436010.6943 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103436010.6943 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.predicate-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.predicate-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.filter.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -654,9 +973,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.return-is-forwarded",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.return-is-not-forwarded-after-exhaustion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -665,9 +997,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.filter.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -676,9 +1013,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -687,9 +1021,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -698,9 +1029,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -709,9 +1037,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -720,21 +1045,54 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.find.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -743,9 +1101,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -754,9 +1109,46 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.iterator-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -765,9 +1157,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-args",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -776,9 +1181,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -787,9 +1189,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -798,9 +1197,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -809,33 +1205,38 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.find.predicate-this",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103444038.3677 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103444038.3677 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.predicate-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.find.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -844,9 +1245,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.find.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -855,21 +1261,70 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.flatmap.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.iterable-primitives-are-not-flattened",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.iterable-to-iterator-fallback",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -878,9 +1333,30 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.iterator-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-args",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-returns-closed-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -889,21 +1365,62 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-this",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4877 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4877 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.mapper-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -912,21 +1429,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.flatmap.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -935,9 +1453,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -946,9 +1461,30 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.return-is-forwarded-to-underlying-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.return-is-not-forwarded-after-exhaustion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.strings-are-not-flattened",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -957,9 +1493,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.flatmap.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -968,9 +1509,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -979,9 +1517,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -990,9 +1525,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1001,9 +1533,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1012,33 +1541,118 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.fn-args",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.foreach.fn-this",
     "layer": "test262",
     "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.fn-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.fn-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103428117.397 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103428117.397 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"undefined\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
-    },
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.foreach.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1047,21 +1661,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.foreach.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1070,9 +1685,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1081,9 +1693,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.foreach.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1092,21 +1709,54 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.map.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1115,21 +1765,78 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.iterator-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.mapper-args",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.map.mapper-this",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103434706.4124 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103434706.4124 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"1\" node=\"  global: [Circular *1],\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.mapper-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.mapper-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1138,21 +1845,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.map.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1161,9 +1869,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.return-is-forwarded-to-underlying-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.return-is-not-forwarded-after-exhaustion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1172,9 +1893,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.map.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1183,9 +1909,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1194,9 +1917,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1205,9 +1925,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1216,9 +1933,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1227,21 +1941,46 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.reduce.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1250,9 +1989,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1261,9 +1997,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.iterator-yields-once-initial-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1272,9 +2013,38 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1283,45 +2053,70 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.reduce.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-args-initial-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-args-no-initial-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-memo-can-be-any-type",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 16: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)]\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 16: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)]\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-this",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103442847.127 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103442847.127 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"0\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.reducer-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1330,21 +2125,70 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.reduce.this-plain-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.some.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1353,9 +2197,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1364,9 +2205,46 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.iterator-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1375,9 +2253,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-args",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1386,9 +2277,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1397,9 +2285,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1408,9 +2293,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1419,33 +2301,38 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.some.predicate-this",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4724 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{ performance: { now: [Function: now], timeOrigin: 103424801.4724 }, __ds_print_line: [Function: (anonymous)], __ds_inspect: [Function: __ds_inspect], __ds_format_key: [Function: __ds_format_key], console: { log: [Function: log] }, main: [Function: main] }\" node=\"<ref *1> Object [global] {\"; line 2: ds=\"true\" node=\"  global: [Circular *1],\"; line 3: ds=\"1\" node=\"  clearImmediate: [Function: clearImmediate],\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.predicate-throws-then-closing-iterator-also-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.some.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1454,9 +2341,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1465,9 +2349,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.some.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1476,9 +2365,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1487,9 +2373,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1498,9 +2381,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1509,9 +2389,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1520,9 +2397,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1531,9 +2405,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1542,9 +2413,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1553,21 +2421,62 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.argument-effect-order",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.argument-validation-failure-closes-underlying",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.exhaustion-calls-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.get-return-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.take.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1576,21 +2485,70 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.limit-tonumber-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.next-method-returns-throwing-value-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.take.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1599,9 +2557,22 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.return-is-forwarded",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.return-is-not-forwarded-after-exhaustion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1610,9 +2581,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1621,9 +2597,14 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.take.throws-typeerror-when-generator-is-running",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1632,9 +2613,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1643,9 +2621,6 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -1654,33 +2629,86 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.get-next-method-only-once",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.get-next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.toarray.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"function\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"function\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.iterator-already-exhausted",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.next-method-returns-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.next-method-returns-throwing-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.next-method-returns-throwing-value",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.next-method-throws",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.prototype.toarray.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1689,21 +2717,78 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.prototype.toarray.this-non-object",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.subclassable",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.basic-strict",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zip.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"undefined\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"undefined\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterables-containing-string-objects",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterables-iteration",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterables-iteration-get-iterator-flattenable-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterables-iteration-iterator-step-value-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterables-primitive",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1712,93 +2797,430 @@
     "category": "iterator",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-iterator-close-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-iterator-step-value-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-longest-iterator-close-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-shortest-iterator-close-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-strict-checks-remaining-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-strict-iterator-close-i-is-not-zero-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-strict-iterator-close-i-is-zero-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.iterator-zip-iteration-strict-iterator-step-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zip.options",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zip([]);\r\n         ^\r\n\r\nTypeError: Ite",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zip([]);\r\n         ^\r\n\r\nTypeError: Ite"
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.options-mode",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zip.options-padding",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:18\r\nIterator.zip([], {mode: \"longest\"});\r\n         ",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:18\r\nIterator.zip([], {mode: \"longest\"});\r\n         "
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.padding-iteration",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.padding-iteration-get-iterator-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.padding-iteration-iterator-close-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.padding-iteration-iterator-step-value-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zip.proto",
     "layer": "test262",
     "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.result-arrays-are-fresh",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.suspended-start-iterator-close-calls-next",
+    "layer": "test262",
+    "category": "iterator",
     "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zip))",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zip))"
-    },
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:9:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:11:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.suspended-start-iterator-close-calls-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:9:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:11:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.suspended-yield-iterator-close-calls-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zip.suspended-yield-iterator-close-calls-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.basic-strict",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zipkeyed.is-function",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"object\" node=\"undefined\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"object\" node=\"undefined\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-containing-string-objects",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration-enumerable",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration-get-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration-get-iterator-flattenable-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration-get-own-property-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration-inherited",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration-symbol-key",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-iteration-undefined",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterables-primitive",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-iterator-close-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-iterator-step-value-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-longest-iterator-close-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-shortest-iterator-close-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-strict-checks-remaining-done",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-strict-iterator-close-i-is-not-zero-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-strict-iterator-close-i-is-zero-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.iterator-zip-iteration-strict-iterator-step-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.non-constructible",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zipkeyed.options",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({});\r\n         ^\r\n\r\nTypeError",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({});\r\n         ^\r\n\r\nTypeError"
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.options-mode",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zipkeyed.options-padding",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({}, {mode: \"longest\"});\r\n    ",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:17\r\nIterator.zipKeyed({}, {mode: \"longest\"});\r\n    "
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.padding-iteration",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.padding-iteration-get-abrupt-completion",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zipkeyed.proto",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zipKe",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:2\r\nconsole.log(Object.getPrototypeOf(Iterator.zipKe"
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.result-is-iterator",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1806,7 +3228,23 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:2:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.results-object-from-array",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.results-object-has-default-attributes",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1814,31 +3252,39 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:7:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0308]: mismatched types: expected `Vec<String>`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0308]: mismatched types: expected `Vec<String>`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.suspended-start-iterator-close-calls-next",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:10:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:12:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.iterator.zipkeyed.suspended-start-iterator-close-calls-return",
+    "layer": "test262",
+    "category": "iterator",
+    "status": "partial",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:10:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:12:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zipkeyed.suspended-yield-iterator-close-calls-next",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n ",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n "
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.iterator.zipkeyed.suspended-yield-iterator-close-calls-return",
     "layer": "test262",
     "category": "iterator",
-    "status": "partial",
-    "detail": "node oracle error: exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n ",
-    "oracle": {
-      "status": "node-error",
-      "detail": "exit exit code: 1: fil<path>oracle.ts:21\r\nvar it = Iterator.zipKeyed({a: underlying});\r\n "
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   }
 ]

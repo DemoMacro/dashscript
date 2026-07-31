@@ -5,9 +5,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.asintn",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16,9 +21,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -27,9 +29,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bigint-tobigint-toprimitive",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -38,9 +45,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -49,9 +53,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -60,9 +61,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.bits-toindex-toprimitive",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -71,9 +77,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asintn.not-a-constructor",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -82,9 +93,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -93,9 +101,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.asuintn",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -104,9 +117,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -115,9 +125,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bigint-tobigint-toprimitive",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -126,9 +141,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -137,9 +149,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -148,9 +157,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.bits-toindex-toprimitive",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -159,9 +173,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.asuintn.not-a-constructor",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -170,49 +189,62 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.call-value-of-when-to-string-present",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.constructor-coercion",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.constructor-empty-string",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.constructor-from-binary-string",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:14:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:15:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.constructor-from-decimal-string",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.constructor-from-hex-string",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.constructor-from-octal-string",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -221,25 +253,22 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.constructor-integer",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:7:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.constructor-trailing-leading-spaces",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "src\\main.rs:2:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:5:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nsrc\\main.rs:6:27: error[E0425]: cannot find function `big_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -248,9 +277,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.is-a-constructor",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -259,9 +293,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -270,9 +301,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -281,9 +309,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -292,33 +317,30 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.proto",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"[Function: (anonymous)]\" node=\"[Function (anonymous)] Object\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.bigint.prototype.proto",
     "layer": "test262",
     "category": "bigint",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{}\" node=\"[Object: null prototype] {}\"",
-    "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"{}\" node=\"[Object: null prototype] {}\""
-    },
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tolocalestring.not-a-constructor",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -327,9 +349,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -338,9 +357,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.not-a-constructor",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -349,9 +373,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -360,9 +381,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -371,9 +389,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -382,9 +397,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -393,9 +405,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -404,9 +413,14 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.tostring.thisbigintvalue-not-valid-throws",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -414,7 +428,15 @@
     "layer": "test262",
     "category": "bigint",
     "status": "partial",
-    "detail": "src\\main.rs:2:17: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `big_int` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "engine error: Exception generated by QuickJS",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.prototype.valueof.not-a-constructor",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -423,9 +445,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -434,9 +453,6 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
     "note": ""
   },
   {
@@ -445,9 +461,30 @@
     "category": "bigint",
     "status": "supported",
     "detail": "via rquickjs engine",
-    "oracle": {
-      "status": "matched"
-    },
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.tostring-throws",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.valueof-throws",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
+    "note": ""
+  },
+  {
+    "id": "test262.test.built-ins.bigint.wrapper-object-ordinary-toprimitive",
+    "layer": "test262",
+    "category": "bigint",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   }
 ]
