@@ -834,6 +834,41 @@ fn imported_lazy_static_uses_accessor_name_and_hashmap_get() {
 }
 
 #[test]
+fn file_local_lazy_static_alias_indexes_via_get() {
+    // A file-local alias of an imported lazy static (`const N = M;`) lowers to
+    // its own OnceLock accessor whose cell type is the aliased static's cell
+    // type (read from the cross-file export table), initialized by cloning
+    // through the accessor's `&'static T` return. An index `N["k"]` then routes
+    // to `n().get(k)` — the alias's cell type is not in the cross-file export
+    // table, so it is resolved via the per-symbol NameTable recorded in the
+    // lazy-static pre-pass. Previously the index fell through to a numeric
+    // index because the alias was not recognized as a HashMap local.
+    let mut exports: std::collections::HashMap<String, syn::Type> =
+        std::collections::HashMap::new();
+    exports.insert(
+        "m".to_string(),
+        syn::parse_quote!(::std::collections::HashMap<String, String>),
+    );
+    crate::translator::imports::set_lazy_static_exports(exports);
+    let src = "import { M } from \"./a\";\nexport const N = M;\nexport function use(): string { return N[\"a\"]; }";
+    let result = Translator::new().translate_with_deps_as(src, FileRole::Module);
+    crate::translator::imports::clear_lazy_static_exports();
+    let rust = result.expect("should translate").0;
+    assert!(
+        rust.contains("use crate::a::m;"),
+        "use path not the accessor name: {rust}"
+    );
+    assert!(
+        rust.contains("(*m()).clone()"),
+        "alias init not cloning through the accessor ref: {rust}"
+    );
+    assert!(
+        rust.contains("n().get(\"a\")"),
+        "alias index not a HashMap get: {rust}"
+    );
+}
+
+#[test]
 fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
     // B3-1a (entry path, via promotable relaxation): a top-level non-mutated
     // `let` literal referenced from a function promotes to a crate `const` item

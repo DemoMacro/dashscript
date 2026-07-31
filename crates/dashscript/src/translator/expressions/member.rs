@@ -490,13 +490,21 @@ pub(in crate::translator) fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) 
     if ctx.local_type(&name).is_some_and(is_hashmap) {
         return true;
     }
-    // An imported (or same-module aliased) lazy static whose `OnceLock` cell
-    // holds a `HashMap` — `m["k"]` lowers to `m().get(k)`. The cell type comes
-    // from the cross-file lazy-static export table, since a `use`-imported
-    // accessor fn has no entry in this file's `local_type`.
-    super::super::imports::lazy_static_export_type(&name)
-        .map(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
-        .unwrap_or(false)
+    // An imported lazy static whose `OnceLock` cell holds a `HashMap` —
+    // `m["k"]` lowers to `m().get(k)`. The cell type comes from the
+    // cross-file lazy-static export table, since a `use`-imported accessor fn
+    // has no entry in this file's `local_type`.
+    if super::super::imports::lazy_static_export_type(&name)
+        .is_some_and(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
+    {
+        return true;
+    }
+    // A file-local lazy static (e.g. an alias `const n = m;`) whose cell type
+    // is a `HashMap` — not in the cross-file export table, so resolve it via
+    // the per-symbol NameTable recorded in the lazy-static pre-pass.
+    ctx.names()
+        .lazy_static_cell_type(id)
+        .is_some_and(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
 }
 
 /// True when `expr` is a local whose type is a `HashSet` (an ES `Set`).

@@ -20,9 +20,11 @@ use syn::{
 };
 
 use super::super::analysis;
+use super::super::bindings;
 use super::super::builtins;
 use super::super::context::{Ctx, Locals, Narrow};
 use super::super::expressions;
+use super::super::imports;
 use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
 use super::super::types;
@@ -106,10 +108,11 @@ pub(in crate::translator) fn lazy_static_candidate(
     // `regress::Regex`), a runtime factory call (`const p = createFactory<T>(...)`)
     // whose return type is inferred from the callee's cross-file signature, a
     // collection constructor (`const s = new Set([…])`) whose element type is
-    // inferred from the literal, or an options/config object literal
+    // inferred from the literal, an options/config object literal
     // (`const opts = { flag: true, … }`) whose uniform value type is inferred from
-    // its properties. Any other init without an annotation has no static type to
-    // put on the OnceLock — defer.
+    // its properties, or an alias of an imported lazy static (`const x = m;`).
+    // Any other init without an annotation has no static type to put on the
+    // OnceLock — defer.
     if d.type_annotation.is_none()
         && !matches!(init, Expression::RegExpLiteral(_))
         && !is_inferable_call(init)
@@ -117,6 +120,7 @@ pub(in crate::translator) fn lazy_static_candidate(
         && !is_inferable_object(init)
         && !is_inferable_binary(init)
         && !is_typed_assertion(init)
+        && !is_lazy_static_ref(init)
     {
         return false;
     }
@@ -280,7 +284,15 @@ pub(in crate::translator) fn lazy_static_items(
     let locals = Locals::new();
     let narrow = Narrow::default();
     let ctx = Ctx::new(&locals, registry, &narrow, names);
-    let init_expr = expressions::translate_expr(init, &ctx);
+    let base = expressions::translate_expr(init, &ctx);
+    // An alias of an imported lazy static initializes from an accessor call
+    // (`style_to_key_map()`) returning `&'static T`; `get_or_init` needs an
+    // owned `T`, so clone through the reference.
+    let init_expr: syn::Expr = if is_lazy_static_ref(init) {
+        parse_quote!((*#base).clone())
+    } else {
+        base
+    };
     // SCREAMING_SNAKE for the OnceLock cell (rustc convention); the accessor
     // keeps the snake name so references resolve to `name()` unchanged.
     let cell = format_ident!("{}_CELL", name.to_string().to_uppercase());
@@ -320,6 +332,11 @@ fn cell_type(d: &VariableDeclarator, init: &Expression, registry: &TypeRegistry)
         }
     } else if let Expression::TSTypeAssertion(t) = init {
         types::translate_type(&t.type_annotation)
+    } else if let Expression::Identifier(id) = init {
+        // An alias of an imported lazy static (`const x = m;`): the cell type
+        // is the aliased accessor's cell type, from the cross-file export table.
+        imports::lazy_static_export_type(&bindings::snake(&id.name).to_string())
+            .unwrap_or_else(|| parse_quote!(_))
     } else {
         infer_init_type(init, registry)
     }
@@ -732,6 +749,19 @@ fn is_typed_assertion(init: &Expression) -> bool {
         init,
         Expression::TSAsExpression(_) | Expression::TSTypeAssertion(_)
     )
+}
+
+/// Whether `init` is a bare identifier aliasing an imported lazy static
+/// (`const x = m;` where `m` is an exported lazy-static accessor) — so a
+/// module-global alias of an imported map/regex/call singleton lowers to a
+/// `OnceLock` whose cell type is the aliased static's cell type, even without
+/// an annotation. The identifier resolves to the accessor's snake name, looked
+/// up in the cross-file export table.
+fn is_lazy_static_ref(init: &Expression) -> bool {
+    let Expression::Identifier(id) = init else {
+        return false;
+    };
+    imports::is_lazy_static_export(&bindings::snake(&id.name).to_string())
 }
 
 /// Whether `init` is a `+` chain that is string concatenation — so a

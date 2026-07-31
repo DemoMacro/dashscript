@@ -1880,6 +1880,15 @@ impl Translator {
                 || functions::decl_name(s, &names).is_some_and(|n| escaped_lazy.contains(&n));
             if hoist {
                 names.register_lazy_static(sym);
+                // Record the cell type so a same-file `n["k"]` index on a
+                // file-local lazy static (e.g. an alias `const n = m;`) routes
+                // to `n().get(k)` — its cell type is not in the cross-file
+                // export table.
+                if let Some((_, ty)) =
+                    functions::lazy_static_export_info(s, &names, &registry, &mutable_top_level)
+                {
+                    names.register_lazy_static_cell_type(sym, ty);
+                }
             }
         }
         // Register imported lazy-static exports (a cross-file `const`/`let`

@@ -19,7 +19,7 @@ use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{BindingIdentifier, BindingPattern, IdentifierReference};
 use oxc_semantic::{ScopeId, Scoping, SymbolId};
-use syn::Ident;
+use syn::{Ident, Type};
 
 use super::bindings;
 
@@ -50,6 +50,11 @@ pub struct NameTable<'scoping> {
     /// which returns `&'static T`. Tracked per-symbol so the lowering is visible
     /// in every body, like `number_consts`.
     lazy_statics: HashSet<SymbolId>,
+    /// The OnceLock cell type (`T` in `OnceLock<T>`) of each file-local lazy
+    /// static, keyed by `SymbolId`. A file-local alias of an imported lazy
+    /// static (`const n = m;`) is not in the cross-file export table, so an
+    /// index `n["k"]` resolves its cell type here to route to `n().get(k)`.
+    lazy_static_cell_types: HashMap<SymbolId, Type>,
     /// The `SymbolId`s of mutable module-global `let` bindings lowered to
     /// thread-local `RefCell`s (B3-2): a top-level `let` rebound or
     /// member-mutated from a function cannot live in `fn main` (a Rust fn item
@@ -194,6 +199,22 @@ impl<'a> NameTable<'a> {
         self.lazy_statics.contains(&sid)
     }
 
+    /// Record the OnceLock cell type of a file-local lazy static — see
+    /// [`Self::lazy_static_cell_type`].
+    pub fn register_lazy_static_cell_type(&mut self, sym: SymbolId, ty: Type) {
+        self.lazy_static_cell_types.insert(sym, ty);
+    }
+
+    /// The OnceLock cell type (`T` in `OnceLock<T>`) of the file-local lazy
+    /// static `id` resolves to, or `None` for an unresolved reference or a
+    /// non-lazy-static binding. Used to route an index `n["k"]` on a file-local
+    /// lazy static (e.g. an alias `const n = m;`) to `n().get(k)` — its cell
+    /// type is not in the cross-file export table.
+    pub fn lazy_static_cell_type(&self, id: &IdentifierReference) -> Option<&Type> {
+        let sid = self.symbol_of_reference(id)?;
+        self.lazy_static_cell_types.get(&sid)
+    }
+
     /// Record a mutable module-global `let` lowered to a thread-local `RefCell`
     /// (B3-2) — `setter` is the set-accessor ident (`set_x`), and `optional`
     /// flags a B3-2c delayed-binding binding (`RefCell<Option<T>>`, no
@@ -294,6 +315,7 @@ pub fn build(scoping: &Scoping) -> NameTable<'_> {
         namespaces: HashSet::new(),
         number_consts: HashSet::new(),
         lazy_statics: HashSet::new(),
+        lazy_static_cell_types: HashMap::new(),
         mutable_statics: HashMap::new(),
     }
 }
