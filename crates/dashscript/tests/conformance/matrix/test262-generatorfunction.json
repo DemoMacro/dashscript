@@ -99,8 +99,8 @@
     "id": "test262.test.built-ins.generatorfunction.is-a-constructor",
     "layer": "test262",
     "category": "generatorfunction",
-    "status": "partial",
-    "detail": "src\\main.rs:3:30: error[E0425]: cannot find function `get_well_known_intrinsic_object` in this scope: not found in this scope\nsrc\\main.rs:6:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0433]: cannot find type `GeneratorFunction` in this scope: use of undeclared type `GeneratorFunction`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

@@ -22,7 +22,7 @@ use oxc_ast::ast::{
     ObjectPropertyKind, PropertyKind, UnaryOperator,
 };
 
-use super::globals::{is_global_receiver, is_static_only_global};
+use super::globals::{is_engine_value_global, is_global_receiver, is_static_only_global};
 
 /// How a single AST node lowers — the translator's translatability verdict,
 /// carrying the diagnostic message for a non-mapped outcome.
@@ -108,6 +108,9 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
             }
             "arguments" => reject("the `arguments` object is unsupported"),
             "eval" => reject("`eval` is unsupported"),
+            name if is_engine_value_global(name) => degrade_owned(format!(
+                "`{name}` has no static mapping — the function runs under the engine"
+            )),
             name if is_static_only_global(name) => reject_owned(format!(
                 "`{name}` as a value is unsupported (use it only as a static-call/new receiver or \
                  type annotation)"

@@ -11,8 +11,8 @@
     "id": "test262.test.built-ins.shadowrealm.extensibility",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "supported",
-    "detail": "",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: ShadowRealm is not defined",
     "note": ""
   },
   {
@@ -203,8 +203,8 @@
     "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-multiple-different-realms",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: error[E0425]: cannot find value `global_this` in this scope: not found in this scope\nsrc\\main.rs:42:38: error[E0425]: cannot find value `global_this` in this scope: not found in this scope\nsrc\\main.rs:3:18: error[E0433]: cannot find type `ShadowRealm` in this scope: use of undeclared type `ShadowRealm`\nsrc\\main.rs:4:18: error[E0433]: cannot find type `ShadowRealm` in this scope: use of undeclared type `ShadowRealm`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: ShadowRealm is not defined",
     "note": ""
   },
   {

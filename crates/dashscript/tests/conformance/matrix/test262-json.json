@@ -756,7 +756,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (15608) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"{\\\"a\\\":2.0,\\\"b\\\":1.0,\\\"c\\\":3.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` e",
+    "detail": "Test262Error: \nthread 'main' (31284) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"{\\\"a\\\":2.0,\\\"b\\\":1.0,\\\"c\\\":3.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` e",
     "note": ""
   },
   {
@@ -1124,7 +1124,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25164) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a bac",
+    "detail": "Test262Error: \nthread 'main' (24756) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a bac",
     "note": ""
   },
   {

@@ -44,6 +44,41 @@ pub const GLOBAL_RECEIVERS: &[&str] = &[
     "Array", "Object", "Math", "JSON", "Map", "Set", "Number", "String", "Boolean",
 ];
 
+/// Globals the static translator has no mapping for at all — not as a value, a
+/// `new` receiver, or a static-member root. A bare reference (or a `new`/
+/// member access on one) would otherwise snake-case the name and emit a phantom
+/// binding (E0425 `partial`); instead the enclosing function degrades to the
+/// embedded engine, where the global exists natively. Disjoint from
+/// [`STATIC_ONLY_GLOBALS`] (which carry call/new/type mappings) and from the
+/// reflection globals `Symbol`/`Proxy`/`WeakRef`/`FinalizationRegistry`
+/// (handled by an earlier explicit arm). The wrapper typed arrays
+/// `Uint8Array`/`Uint8ClampedArray`/`Int8Array` are absent — `new` on them
+/// maps to `Vec<u8>` (`expressions/new`) — as is `ArrayBuffer` (a
+/// type-annotation mapping) and `Temporal` (static members map to
+/// `temporal-rs`); flagging any of those would regress a static mapping.
+pub const ENGINE_VALUE_GLOBALS: &[&str] = &[
+    "Promise",
+    "DataView",
+    "Int16Array",
+    "Uint16Array",
+    "Int32Array",
+    "Uint32Array",
+    "Float32Array",
+    "Float64Array",
+    "BigInt64Array",
+    "BigUint64Array",
+    "SharedArrayBuffer",
+    "Atomics",
+    "ShadowRealm",
+    "AsyncFunction",
+    "GeneratorFunction",
+    "AsyncGeneratorFunction",
+    "DisposableStack",
+    "AsyncDisposableStack",
+    "$262",
+    "temporalHelpers",
+];
+
 /// True if `name` is a global DashScript models only as a static-call/new
 /// receiver — a bare value reference to it is unsupported reflection.
 #[inline]
@@ -56,4 +91,11 @@ pub fn is_static_only_global(name: &str) -> bool {
 #[inline]
 pub fn is_global_receiver(name: &str) -> bool {
     GLOBAL_RECEIVERS.contains(&name)
+}
+
+/// True if `name` is a global with no static mapping — a reference degrades the
+/// enclosing function to the engine. See [`ENGINE_VALUE_GLOBALS`].
+#[inline]
+pub fn is_engine_value_global(name: &str) -> bool {
+    ENGINE_VALUE_GLOBALS.contains(&name)
 }

@@ -256,3 +256,42 @@ fn translates_unary_plus_on_hex_string_to_number() {
         "unary + on hex string routes through ToNumber: {rust}"
     );
 }
+
+#[test]
+fn bare_engine_value_global_routes_to_engine() {
+    // A bare `Promise` value reference has no static mapping — classify marks
+    // it DegradeEngine so the enclosing function runs under the engine instead
+    // of emitting a phantom `promise` binding (E0425 `partial`). The same holds
+    // for the non-`Uint8` typed arrays (`Int32Array`, …), `DataView`, `Atomics`,
+    // `SharedArrayBuffer`, and `ShadowRealm`.
+    let src = "function f(): number { const p = Promise; const a = Int32Array; return 0; }";
+    let diags = Translator::new().check(src);
+    let msgs: Vec<String> = diags.iter().map(|d| format!("{d}")).collect();
+    assert!(
+        msgs.iter()
+            .any(|m| m.contains("no static mapping") && m.contains("Promise")),
+        "Promise as a value should flag for engine degrade: {msgs:?}"
+    );
+    assert!(
+        msgs.iter()
+            .any(|m| m.contains("no static mapping") && m.contains("Int32Array")),
+        "Int32Array as a value should flag for engine degrade: {msgs:?}"
+    );
+}
+
+#[test]
+fn new_uint8_array_stays_static() {
+    // `new Uint8Array(…)` maps to `Vec<u8>` (`expressions/new`) — it must NOT
+    // degrade to the engine. `Uint8Array`/`Uint8ClampedArray`/`Int8Array` are
+    // deliberately absent from `ENGINE_VALUE_GLOBALS` to protect that mapping.
+    let src = "function f(): Uint8Array { return new Uint8Array(4); }";
+    let diags = Translator::new().check(src);
+    let degraded = diags
+        .iter()
+        .map(|d| format!("{d}"))
+        .any(|m| m.contains("no static mapping"));
+    assert!(
+        !degraded,
+        "new Uint8Array must stay static (Vec<u8>), got: {diags:?}"
+    );
+}
