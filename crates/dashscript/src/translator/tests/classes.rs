@@ -108,11 +108,32 @@ fn flags_static_field() {
 }
 
 #[test]
-fn flags_get_accessor() {
+fn get_accessor_lowers_to_zero_arg_method() {
+    // A `get` accessor has no Rust property analogue, so it lowers as a zero-arg
+    // method: `get val()` → `pub fn val(&self) -> f64` (a property read rewrites
+    // to a call at the call site).
     let rust = Translator::new()
         .translate("class C { get val(): number { return 1; } }")
         .expect("should translate");
-    assert!(rust.contains("accessors"), "get diag: {rust}");
+    assert!(
+        !rust.contains("compile_error"),
+        "get accessor lowered: {rust}"
+    );
+    assert!(
+        rust.contains("fn val(&self)"),
+        "get -> fn val(&self): {rust}"
+    );
+}
+
+#[test]
+fn getter_property_read_rewrites_to_method_call() {
+    // `obj.val` where `val` is a `get` accessor of obj's class rewrites to
+    // `obj.val()` — a getter lowers to a zero-arg method, so a property read
+    // is a call, not a field access. The receiver's class is read off its
+    // declared parameter type, then checked against the class-getter table.
+    let src = "class C { n = 1; get val(): number { return this.n; } }\nfunction f(c: C): number { return c.val; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("c.val()"), "getter read -> c.val(): {rust}");
 }
 
 #[test]

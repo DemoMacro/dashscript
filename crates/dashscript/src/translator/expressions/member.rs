@@ -206,6 +206,19 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return p;
         }
     }
+    // `obj.foo` where `foo` is a `get` accessor of `obj`'s class → `obj.foo()`.
+    // A getter has no Rust property analogue, so it lowers to a zero-arg method
+    // and a property read rewrites to a call (a field of the same name cannot
+    // coexist with a getter in TS).
+    if let Some(class) = receiver_class_name(&sm.object, ctx) {
+        if let Some(getters) = ctx.registry().class_getters.get(&class) {
+            let field = bindings::snake(field_name);
+            if getters.contains(field.to_string().as_str()) {
+                let obj = translate_expr(&sm.object, ctx);
+                return parse_quote!(#obj.#field());
+            }
+        }
+    }
     // Inside a discriminated-union match arm, `s.field` reads as the `field`
     // binding the pattern destructured (TS narrowing).
     if let Expression::Identifier(id) = &sm.object {
@@ -499,6 +512,19 @@ fn self_member_field_type<'a>(expr: &Expression, ctx: &Ctx<'a>) -> Option<&'a sy
     }
     let field = bindings::snake(sm.property.name.as_str()).to_string();
     ctx.self_field_type(&field)
+}
+
+/// The class name (original `.ts` spelling) a local belongs to, when its type
+/// is a class struct path — so a `get`-accessor property read `obj.foo` can be
+/// rewritten to `obj.foo()` at the call site. `None` for a non-identifier
+/// receiver or a non-class-typed local (the field access then lowers normally).
+fn receiver_class_name(expr: &Expression, ctx: &Ctx<'_>) -> Option<String> {
+    let Expression::Identifier(id) = expr else {
+        return None;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    let path = ctx.local_type(&name)?;
+    path.segments.last().map(|s| s.ident.to_string())
 }
 
 /// True when `expr` is a local whose type is a `HashMap`, or a `this.<field>`

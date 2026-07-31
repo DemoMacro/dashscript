@@ -118,10 +118,14 @@ pub(in crate::translator) fn translate_class(
                 } else {
                     match md.kind {
                         MethodDefinitionKind::Constructor => ctor = Some(md),
-                        MethodDefinitionKind::Method => methods.push(md),
-                        MethodDefinitionKind::Get => diags.push(compile_error_item(
-                            "DashScript does not support `get` accessors — use a method",
-                        )),
+                        // A `get` accessor has no Rust property analogue, so it lowers
+                        // as a zero-arg method: `get array()` → `pub fn array(&self)`.
+                        // A read `obj.array` rewrites to `obj.array()` at the call site
+                        // (registry-tracked, see `expressions/member.rs`); a lone file
+                        // that only defines a getter compiles without that rewrite.
+                        MethodDefinitionKind::Method | MethodDefinitionKind::Get => {
+                            methods.push(md)
+                        }
                         MethodDefinitionKind::Set => diags.push(compile_error_item(
                             "DashScript does not support `set` accessors — use a method",
                         )),

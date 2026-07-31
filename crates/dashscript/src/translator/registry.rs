@@ -97,6 +97,11 @@ pub struct TypeRegistry {
     /// call `obj.m()` with `m` in this set marks the receiver `let mut` — the
     /// `&mut self` analogue of the built-in `MUTATORS` (`push`, `splice` …).
     pub mut_methods: HashSet<String>,
+    /// Class name (original `.ts` spelling) → its `get` accessor method names
+    /// (snake). A property read `obj.foo` where `foo` is a getter rewrites to
+    /// `obj.foo()` at the call site — a getter has no Rust property analogue,
+    /// so it lowers to a zero-arg method.
+    pub class_getters: HashMap<String, HashSet<String>>,
     /// Inline all-scalar-keyword unions (`string | number | undefined`, the
     /// XML-attribute / JSON-value shape) found in any type position, keyed by
     /// the generated enum name (`__DsUnion…`). One definition per unique shape
@@ -146,6 +151,7 @@ impl TypeRegistry {
             function_signatures: HashMap::new(),
             structs: HashMap::new(),
             mut_methods: HashSet::new(),
+            class_getters: HashMap::new(),
             union_enums: HashMap::new(),
             anon_structs: HashMap::new(),
             interface_extends: HashMap::new(),
@@ -398,6 +404,32 @@ fn register_variable_declaration(decl: &VariableDeclaration, registry: &mut Type
 
 fn register_class(class: &Class, names: &NameTable, registry: &mut TypeRegistry) {
     collect_mut_methods(class, names, &mut registry.mut_methods);
+    collect_class_getters(class, &mut registry.class_getters);
+}
+
+/// Collect every `get` accessor name (original `.ts` spelling, snake) on a
+/// class, so a property read `obj.foo` where `foo` is a getter rewrites to
+/// `obj.foo()` at the call site (a getter lowers to a zero-arg method, not a
+/// field).
+fn collect_class_getters(class: &Class, out: &mut HashMap<String, HashSet<String>>) {
+    let Some(id) = class.id.as_ref() else {
+        return;
+    };
+    let mut getters = HashSet::new();
+    for elem in &class.body.body {
+        let ClassElement::MethodDefinition(md) = elem else {
+            continue;
+        };
+        if md.kind != MethodDefinitionKind::Get {
+            continue;
+        }
+        if let Some(name) = bindings::property_key_name(&md.key) {
+            getters.insert(name.to_string());
+        }
+    }
+    if !getters.is_empty() {
+        out.insert(id.name.to_string(), getters);
+    }
 }
 
 /// Recursively collect every inline type definition nested in a type
