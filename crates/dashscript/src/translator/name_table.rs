@@ -50,6 +50,15 @@ pub struct NameTable<'scoping> {
     /// which returns `&'static T`. Tracked per-symbol so the lowering is visible
     /// in every body, like `number_consts`.
     lazy_statics: HashSet<SymbolId>,
+    /// The `SymbolId`s of mutable module-global `let` bindings lowered to
+    /// thread-local `RefCell`s (B3-2): a top-level `let` rebound or
+    /// member-mutated from a function cannot live in `fn main` (a Rust fn item
+    /// cannot close over a `main` local), so it hoists behind a `RefCell` with a
+    /// get/set accessor pair. The value is the set-accessor ident (`set_x`), so a
+    /// reassignment/update lowers to `set_x(v)` rather than `x() = v` (the get
+    /// accessor returns a clone, not an lvalue). Tracked per-symbol, like
+    /// `lazy_statics`.
+    mutable_statics: HashMap<SymbolId, Ident>,
 }
 
 impl<'a> NameTable<'a> {
@@ -181,6 +190,32 @@ impl<'a> NameTable<'a> {
         };
         self.lazy_statics.contains(&sid)
     }
+
+    /// Record a mutable module-global `let` lowered to a thread-local `RefCell`
+    /// (B3-2) — `setter` is the set-accessor ident (`set_x`).
+    pub fn register_mutable_static(&mut self, sym: SymbolId, setter: Ident) {
+        self.mutable_statics.insert(sym, setter);
+    }
+
+    /// Whether `id` resolves to a mutable module-global `RefCell` (B3-2). A read
+    /// emits the get accessor (`x()`), the same shape as a lazy static; this mark
+    /// drives the reassignment/update rewrite (`set_x(v)`), since the get accessor
+    /// returns a clone, not an lvalue. Returns `false` for any unresolved ref.
+    #[must_use]
+    pub fn is_mutable_static(&self, id: &IdentifierReference) -> bool {
+        let Some(sid) = self.symbol_of_reference(id) else {
+            return false;
+        };
+        self.mutable_statics.contains_key(&sid)
+    }
+
+    /// The set-accessor ident for a mutable module-global `RefCell` (B3-2), so a
+    /// reassignment `x = v` lowers to `set_x(v)`. `None` for any non-mutable ref.
+    #[must_use]
+    pub fn mutable_static_setter(&self, id: &IdentifierReference) -> Option<Ident> {
+        let sid = self.symbol_of_reference(id)?;
+        self.mutable_statics.get(&sid).cloned()
+    }
 }
 
 /// Build a name table for one file's symbols — see the module doc for the
@@ -239,5 +274,6 @@ pub fn build(scoping: &Scoping) -> NameTable<'_> {
         namespaces: HashSet::new(),
         number_consts: HashSet::new(),
         lazy_statics: HashSet::new(),
+        mutable_statics: HashMap::new(),
     }
 }

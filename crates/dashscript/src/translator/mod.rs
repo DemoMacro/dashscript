@@ -1794,6 +1794,16 @@ impl Translator {
             &registry,
             &mutable_top_level,
         );
+        // Entry-file mutable-static hoist set (B3-2): the mutable value `let`
+        // candidates a top-level function references — these hoist to a
+        // thread-local `RefCell` so the function can see them. A module hoists
+        // every candidate (no `fn main`), so it ignores this set.
+        let escaped_mutable = functions::escaped_mutable_static_names(
+            &program.body,
+            &names,
+            &registry,
+            &mutable_top_level,
+        );
         let promoted = if matches!(role, FileRole::Module) {
             functions::all_promotable_const_names(&program.body, &names, &mutable_top_level)
         } else {
@@ -1884,6 +1894,22 @@ impl Translator {
                     functions::lazy_static_items(s, &names, &registry, &mutable_top_level)
                 {
                     items.extend(lazy_items);
+                    continue;
+                }
+            }
+            // A mutable module-global value `let` (B3-2) hoists to a thread-local
+            // `RefCell` + get/set accessors — a module hoists every candidate, an
+            // entry hoists only the ones a function references.
+            let hoist_mutable = matches!(role, FileRole::Module)
+                || functions::decl_name(s, &names).is_some_and(|n| escaped_mutable.contains(&n));
+            if hoist_mutable {
+                if let Some((ms_items, setter)) =
+                    functions::mutable_static_items(s, &names, &registry, &mutable_top_level)
+                {
+                    if let Some(sym) = functions::lazy_static_sym(s, &names) {
+                        names.register_mutable_static(sym, setter);
+                    }
+                    items.extend(ms_items);
                     continue;
                 }
             }

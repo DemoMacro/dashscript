@@ -607,6 +607,41 @@ fn module_non_mutated_let_runtime_init_emits_lazy_static() {
 }
 
 #[test]
+fn module_mutable_let_value_reassigned_by_fn_emits_thread_local_refcell() {
+    // B3-2a: a module-level `let` (a value type: a number) rebound from a
+    // top-level function cannot live in `fn main` (a Rust fn item cannot close
+    // over a `main` local) and cannot live behind an immutable OnceLock (B3-1),
+    // so it hoists behind a thread-local `RefCell` with a get/set accessor pair —
+    // matching TS's single-threaded module-global semantics. The `x++` in the
+    // function rewrites to a block that reads via the get accessor, writes via
+    // the set accessor, and yields the old value (the get accessor returns a
+    // clone, not an lvalue, so `x() += 1` would not compile).
+    let src = "let counter = 0;\nexport function next(): number { return counter++; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(
+        diags.is_empty(),
+        "mutable module-global value let flagged: {diags:?}"
+    );
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("thread_local!") && rust.contains("RefCell"),
+        "mutable module-global not lowered to thread_local RefCell: {rust}"
+    );
+    assert!(
+        rust.contains("fn counter()") && rust.contains("fn set_counter"),
+        "mutable-static get/set accessors not emitted: {rust}"
+    );
+    // `counter++` rewrites to a block that calls set_counter.
+    assert!(
+        rust.contains("set_counter"),
+        "x++ not rewritten to the set accessor: {rust}"
+    );
+}
+
+#[test]
 fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
     // B3-1a (entry path, via promotable relaxation): a top-level non-mutated
     // `let` literal referenced from a function promotes to a crate `const` item

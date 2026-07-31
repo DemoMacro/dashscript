@@ -1,7 +1,8 @@
 //! Assignment (`x = …`, `x += …`) and update (`i++`) expressions.
 
 use oxc_ast::ast::{
-    AssignmentExpression, AssignmentTarget, Expression, SimpleAssignmentTarget, UpdateExpression,
+    AssignmentExpression, AssignmentTarget, Expression, IdentifierReference,
+    SimpleAssignmentTarget, UpdateExpression,
 };
 use oxc_syntax::operator::{AssignmentOperator, BinaryOperator, UpdateOperator};
 use quote::quote;
@@ -44,6 +45,15 @@ enum AssignTarget {
 /// take every compound op; a `m["k"]` HashMap index becomes `m.insert(k, v)`
 /// (only `=` — HashMap has no compound-assign semantics).
 pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Expr {
+    // A mutable module-global `RefCell` (B3-2) reassigns through its set
+    // accessor: `x = v` → `set_x(v)`, `x += v` → `set_x(x() + v)`. The get
+    // accessor returns a clone (not an lvalue), so a bare `x() = v` would not
+    // compile.
+    if let AssignmentTarget::AssignmentTargetIdentifier(id) = &a.left {
+        if let Some(setter) = ctx.names().mutable_static_setter(id) {
+            return mutable_static_assign(a, id, &setter, ctx);
+        }
+    }
     let right = translate_expr(&a.right, ctx);
     // Arithmetic (and plain `=`) compound assignments must match the target's
     // flavor — an `i64` counter `= 5_f64` is a type error. A literal re-emits
@@ -197,6 +207,15 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
 /// The step matches the target's flavor: an `i64` counter steps by `1_i64`,
 /// an `f64` local by `1_f64` (a mismatch is a type error).
 pub(super) fn update_expr(u: &UpdateExpression, ctx: &Ctx<'_>) -> Expr {
+    // A mutable module-global `RefCell` (B3-2) cannot be `+=`'d in place — the
+    // get accessor returns a clone — so `x++` lowers to a block that reads via
+    // the get accessor, writes via the set accessor, and yields the old
+    // (postfix) or new (prefix) value.
+    if let SimpleAssignmentTarget::AssignmentTargetIdentifier(id) = &u.argument {
+        if let Some(setter) = ctx.names().mutable_static_setter(id) {
+            return mutable_static_update(u, id, &setter, ctx);
+        }
+    }
     let Some(target) = simple_target(&u.argument, ctx) else {
         return parse_quote!(::core::todo!());
     };
@@ -210,6 +229,66 @@ pub(super) fn update_expr(u: &UpdateExpression, ctx: &Ctx<'_>) -> Expr {
         UpdateOperator::Decrement => quote!(#target -= #step),
     };
     syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+}
+
+/// `x++`/`++x`/`x--`/`--x` on a mutable module-global `RefCell` (B3-2): read the
+/// get accessor, write the new value via the set accessor, and yield the old
+/// (postfix) or new (prefix) value — the get accessor returns a clone, so the
+/// usual `x += 1` in-place form does not apply.
+fn mutable_static_update(
+    u: &UpdateExpression,
+    id: &IdentifierReference,
+    setter: &Ident,
+    ctx: &Ctx<'_>,
+) -> Expr {
+    let getter = ctx.names().of_reference(id);
+    // The number type of a value-initialized mutable static is `f64` (the only
+    // numeric `value_init_type`), so the step is `1_f64`. A mutable static is
+    // not a local, so `target_is_i64`'s local-flavor lookup does not apply.
+    let step = quote!(1_f64);
+    let new_val: Expr = match u.operator {
+        UpdateOperator::Increment => parse_quote!(#getter() + #step),
+        UpdateOperator::Decrement => parse_quote!(#getter() - #step),
+    };
+    if u.prefix {
+        parse_quote!({
+            #setter(#new_val);
+            #getter()
+        })
+    } else {
+        parse_quote!({
+            let __ds_old = #getter();
+            #setter(#new_val);
+            __ds_old
+        })
+    }
+}
+
+/// `x = v` / `x += v` / … on a mutable module-global `RefCell` (B3-2): `x = v`
+/// lowers to `set_x(v)`; a compound `x += v` reads the current value via the get
+/// accessor and writes back via the set accessor. Limited to `=` and the
+/// arithmetic ops a numeric counter uses; rarer ops (bitwise, logical) fall back
+/// to `todo!`.
+fn mutable_static_assign(
+    a: &AssignmentExpression,
+    id: &IdentifierReference,
+    setter: &Ident,
+    ctx: &Ctx<'_>,
+) -> Expr {
+    let right = translate_expr(&a.right, ctx);
+    if matches!(a.operator, AssignmentOperator::Assign) {
+        return parse_quote!(#setter(#right));
+    }
+    let getter = ctx.names().of_reference(id);
+    let combined: Expr = match a.operator {
+        AssignmentOperator::Addition => parse_quote!(#getter() + #right),
+        AssignmentOperator::Subtraction => parse_quote!(#getter() - #right),
+        AssignmentOperator::Multiplication => parse_quote!(#getter() * #right),
+        AssignmentOperator::Division => parse_quote!(#getter() / #right),
+        AssignmentOperator::Remainder => parse_quote!(#getter() % #right),
+        _ => return parse_quote!(::core::todo!()),
+    };
+    parse_quote!(#setter(#combined))
 }
 
 /// True when an update target (`i++`) is an `i64`-flavored local — so the step

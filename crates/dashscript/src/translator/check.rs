@@ -142,7 +142,12 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
                 // `fn main` needed.
                 let lazy_static =
                     functions::lazy_static_candidate(stmt, &mutable_top_level, &names);
-                if promotable || lazy_static {
+                // A mutable module-global value `let` (rebound/mutated from a
+                // function) lowers to a thread-local `RefCell` + get/set
+                // accessors (B3-2) — no `fn main` needed, so a module may carry it.
+                let mutable_static =
+                    functions::mutable_static_candidate(stmt, &mutable_top_level, &names);
+                if promotable || lazy_static || mutable_static {
                     collect_unsupported(stmt, &mut diagnostics, &mut state);
                 } else {
                     diagnostics.push(err(

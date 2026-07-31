@@ -857,8 +857,10 @@ fn ident_expr(id: &IdentifierReference, ctx: &Ctx<'_>) -> Expr {
             let ident = ctx.names().of_reference(id);
             // A module-level non-const-expr `const` lowered to a lazy static is
             // read through its accessor fn (`name()` → `&'static T`), not a
-            // bare identifier.
-            if ctx.names().is_lazy_static(id) {
+            // bare identifier. A mutable module-global `let` lowered to a
+            // thread-local `RefCell` (B3-2) is read the same way (`name()` → T,
+            // a clone) — the get accessor shares the binding name.
+            if ctx.names().is_lazy_static(id) || ctx.names().is_mutable_static(id) {
                 parse_quote!(#ident())
             } else {
                 parse_quote!(#ident)

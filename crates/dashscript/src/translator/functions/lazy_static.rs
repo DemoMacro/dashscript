@@ -7,15 +7,15 @@ use std::collections::HashSet;
 
 use oxc_ast::ast::{
     ArrayExpression, ArrayExpressionElement, BinaryExpression, BinaryOperator, BindingPattern,
-    CallExpression, Expression, NewExpression, ObjectExpression, ObjectPropertyKind, Statement,
-    TSTypeParameterInstantiation, VariableDeclarationKind,
+    CallExpression, Declaration, Expression, NewExpression, ObjectExpression, ObjectPropertyKind,
+    Statement, TSTypeParameterInstantiation, VariableDeclarationKind,
 };
 use oxc_semantic::SymbolId;
 use quote::format_ident;
 use syn::{
     parse_quote,
     visit_mut::{self, VisitMut},
-    Type,
+    Ident, Type,
 };
 
 use super::super::analysis;
@@ -24,6 +24,22 @@ use super::super::expressions;
 use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
 use super::super::types;
+
+/// The body of a top-level `function` — a bare `function f() {}` or an `export
+/// function f() {}` (an `ExportNamedDeclaration` wrapping the declaration).
+/// `None` for any other statement. Shared by the mutation/escape passes so an
+/// `export function` rebinding a module-global is recognized the same as a bare
+/// one (B3-2).
+fn function_body<'a>(stmt: &'a Statement<'a>) -> Option<&'a oxc_ast::ast::FunctionBody<'a>> {
+    match stmt {
+        Statement::FunctionDeclaration(f) => f.body.as_deref(),
+        Statement::ExportNamedDeclaration(e) => match &e.declaration {
+            Some(Declaration::FunctionDeclaration(f)) => f.body.as_deref(),
+            _ => None,
+        },
+        _ => None,
+    }
+}
 
 /// Whether `stmt` is a module-level `const` or non-mutated `let` that lowers to
 /// a lazy static (OnceLock + accessor fn) — see [`lazy_static_items`]. A
@@ -124,10 +140,7 @@ pub(in crate::translator) fn mutable_top_level_names(
     }
     let mut mutable = HashSet::new();
     for stmt in program_body {
-        let Statement::FunctionDeclaration(f) = stmt else {
-            continue;
-        };
-        let Some(body) = f.body.as_deref() else {
+        let Some(body) = function_body(stmt) else {
             continue;
         };
         let analysis = analysis::analyze(
@@ -183,10 +196,7 @@ pub(in crate::translator) fn escaped_lazy_static_names(
     }
     let mut escaped = HashSet::new();
     for stmt in program_body {
-        let Statement::FunctionDeclaration(f) = stmt else {
-            continue;
-        };
-        let Some(body) = f.body.as_deref() else {
+        let Some(body) = function_body(stmt) else {
             continue;
         };
         let analysis = analysis::analyze(
@@ -310,6 +320,159 @@ pub(in crate::translator) fn lazy_static_items(
             }
         },
     ])
+}
+
+/// The scalar value type of a mutable module-global's initializer — the `T` in
+/// `thread_local! { RefCell<T> }` (B3-2). A value type only (a number/string/
+/// boolean literal), so the get accessor clones the whole value in and out. A
+/// collection (`Map`/`Set`/`WeakMap`) or non-literal init is not a value type →
+/// `None` (it needs the borrow/borrow_mut path, B3-2b, not get/set accessors).
+fn value_init_type(init: &Expression) -> Option<Type> {
+    match init {
+        Expression::NumericLiteral(_) => Some(parse_quote!(f64)),
+        Expression::StringLiteral(_) => Some(parse_quote!(String)),
+        Expression::BooleanLiteral(_) => Some(parse_quote!(bool)),
+        _ => None,
+    }
+}
+
+/// Whether `stmt` is a mutable module-global `let` that lowers to a thread-local
+/// `RefCell` + get/set accessors (B3-2) — see [`mutable_static_items`]. A `let`
+/// rebound or member-mutated from a top-level `function` (per
+/// [`mutable_top_level_names`]) whose initializer is a scalar value literal — a
+/// value type clones in and out of the `RefCell`, so get/set suffice. A `const`
+/// is never mutated; a collection init is not a value type (B3-2b).
+pub(in crate::translator) fn mutable_static_candidate(
+    stmt: &Statement,
+    mutable_names: &HashSet<String>,
+    names: &NameTable<'_>,
+) -> bool {
+    let Statement::VariableDeclaration(decl) = stmt else {
+        return false;
+    };
+    if !matches!(decl.kind, VariableDeclarationKind::Let) {
+        return false;
+    }
+    if decl.declarations.len() != 1 {
+        return false;
+    }
+    let d = &decl.declarations[0];
+    let BindingPattern::BindingIdentifier(id) = &d.id else {
+        return false;
+    };
+    let Some(init) = d.init.as_ref() else {
+        return false;
+    };
+    // A scalar value type only — a collection (B3-2b) defers.
+    if value_init_type(init).is_none() {
+        return false;
+    }
+    // Must be mutated from a function — else it stays a plain `fn main` local.
+    let name = names.of_binding(id).to_string();
+    mutable_names.contains(&name)
+}
+
+/// Emit a thread-local `RefCell` + get/set accessors for a mutable module-global
+/// value `let` (B3-2) — see [`mutable_static_candidate`]. A top-level `let`
+/// mutated from a function cannot live in `fn main` (a Rust fn item cannot close
+/// over a `main` local) and cannot live behind an immutable `OnceLock` (B3-1), so
+/// it hoists behind a per-thread `RefCell` — matching TS's single-threaded
+/// module-global semantics, lock-free. The get accessor clones the value out
+/// (`name() -> T`); the set accessor writes it back (`set_name(v)`). Returns the
+/// emitted items + the set-accessor ident, so a reassignment `x = v` lowers to
+/// `set_x(v)` (the get accessor returns a clone, not an lvalue).
+pub(in crate::translator) fn mutable_static_items(
+    stmt: &Statement,
+    names: &NameTable<'_>,
+    registry: &TypeRegistry,
+    mutable_names: &HashSet<String>,
+) -> Option<(Vec<syn::Item>, Ident)> {
+    if !mutable_static_candidate(stmt, mutable_names, names) {
+        return None;
+    }
+    let Statement::VariableDeclaration(decl) = stmt else {
+        return None;
+    };
+    let d = &decl.declarations[0];
+    let BindingPattern::BindingIdentifier(id) = &d.id else {
+        return None;
+    };
+    let init = d.init.as_ref()?;
+    let name = names.of_binding(id);
+    let ty = value_init_type(init)?;
+    let setter = format_ident!("set_{}", name);
+    // The initializer translates under a fresh empty-body context, the way a
+    // lazy static's does — a module top-level binding has no locals/narrowing.
+    let locals = Locals::new();
+    let narrow = Narrow::default();
+    let ctx = Ctx::new(&locals, registry, &narrow, names);
+    let init_expr = expressions::translate_expr(init, &ctx);
+    let cell = format_ident!("{}_CELL", name.to_string().to_uppercase());
+    Some((
+        vec![
+            parse_quote! {
+                thread_local! {
+                    static #cell: ::std::cell::RefCell<#ty> = const { ::std::cell::RefCell::new(#init_expr) };
+                }
+            },
+            parse_quote! {
+                pub fn #name() -> #ty {
+                    #cell.with(|c| c.borrow().clone())
+                }
+            },
+            parse_quote! {
+                pub fn #setter(v: #ty) {
+                    #cell.with(|c| *c.borrow_mut() = v)
+                }
+            },
+        ],
+        setter,
+    ))
+}
+
+/// The rust names of mutable module-global value `let` candidates (per
+/// [`mutable_static_candidate`]) that are referenced — read or written — from
+/// any top-level `function`. An entry file runs its executables in `fn main`, so
+/// an *unreferenced* binding stays a plain local; a *referenced* one hoists to a
+/// `RefCell` (B3-2). A module file hoists every candidate (no `fn main`), so
+/// this set is the entry-file filter only. Mirrors [`escaped_lazy_static_names`].
+pub(in crate::translator) fn escaped_mutable_static_names(
+    program_body: &[Statement],
+    names: &NameTable<'_>,
+    registry: &TypeRegistry,
+    mutable_names: &HashSet<String>,
+) -> HashSet<String> {
+    let candidates: HashSet<String> = program_body
+        .iter()
+        .filter(|s| mutable_static_candidate(s, mutable_names, names))
+        .filter_map(|s| decl_name(s, names))
+        .collect();
+    if candidates.is_empty() {
+        return HashSet::new();
+    }
+    let mut escaped = HashSet::new();
+    for stmt in program_body {
+        let Some(body) = function_body(stmt) else {
+            continue;
+        };
+        let analysis = analysis::analyze(
+            &body.statements,
+            names,
+            &registry.mut_methods,
+            &registry.ref_params,
+        );
+        for k in analysis
+            .use_counts
+            .keys()
+            .chain(analysis.mutated.iter())
+            .chain(analysis.member_mutated.iter())
+        {
+            if candidates.contains(k) {
+                escaped.insert(k.clone());
+            }
+        }
+    }
+    escaped
 }
 
 /// Whether `init` is a call whose return type the translator can infer without
