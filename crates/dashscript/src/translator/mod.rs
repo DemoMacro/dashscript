@@ -114,12 +114,18 @@ pub enum RuntimeDep {
     /// "[object Object]"): `console.log` inspects, `${obj}` displays. Flags
     /// `ryu-js` (an `f64` element formats via `ryu_js`).
     Inspect,
+    /// test262 `assert.sameValue(a, b)` / `notSameValue` — lowers to a Rust
+    /// SameValue check (`__ds::assert_same_value`) that panics a `Test262Error`
+    /// on mismatch. Pure `std` — no cargo dep. Reflection asserts
+    /// (`throws`/`compareArray`/`verifyProperty`/…) degrade to the engine
+    /// (`RuntimeDep::Engine`), where the test262 harness runs natively.
+    Assert,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 12] = [
+    const ALL: [RuntimeDep; 13] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -132,6 +138,7 @@ impl RuntimeDep {
         RuntimeDep::Encoding,
         RuntimeDep::Error,
         RuntimeDep::Inspect,
+        RuntimeDep::Assert,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -150,6 +157,7 @@ impl RuntimeDep {
             RuntimeDep::Encoding => Some("__ds::TextEncoder"),
             RuntimeDep::Error => Some("__ds::DsError"),
             RuntimeDep::Inspect => Some("__ds::inspect"),
+            RuntimeDep::Assert => Some("__ds::assert_same_value"),
             RuntimeDep::Engine => None,
         }
     }
@@ -198,6 +206,7 @@ impl RuntimeDep {
             RuntimeDep::Display => None,
             RuntimeDep::Encoding => None,
             RuntimeDep::Error => None,
+            RuntimeDep::Assert => None,
             RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\""), ("serde_json", "\"1\"")]),
         }
     }
@@ -214,6 +223,7 @@ impl RuntimeDep {
             RuntimeDep::Display => Some(DISPLAY_HELPER),
             RuntimeDep::Encoding => Some(ENCODING_HELPER),
             RuntimeDep::Error => Some(ERROR_HELPER),
+            RuntimeDep::Assert => Some(ASSERT_HELPER),
             RuntimeDep::Inspect => Some(INSPECT_HELPER),
         }
     }
@@ -701,6 +711,78 @@ impl DsTruthy for bool {
     }
 }
 ";
+
+const ASSERT_HELPER: &str = r#"
+/// test262 SameValue (Object.is): `===` plus distinct +0/-0 and NaN===NaN.
+/// A scalar-only trait — composite operands route to the engine, where ES
+/// reference-SameValue runs natively.
+pub trait DsSameValue {
+    fn ds_same_value(&self, other: &Self) -> bool;
+}
+
+/// test262 `assert.sameValue(a, b)` — panics a `Test262Error` on mismatch.
+/// The `Test262Error:` prefix lets the conformance harness distinguish an
+/// assert failure (partial) from a build error (unsupported).
+#[inline]
+pub fn assert_same_value<T: DsSameValue + std::fmt::Debug>(a: &T, b: &T) {
+    if !a.ds_same_value(b) {
+        panic!(
+            "Test262Error: Expected SameValue(«{:?}», «{:?}») to be true",
+            a, b
+        );
+    }
+}
+
+/// test262 `assert.notSameValue(a, b)` — panics if the values are SameValue.
+#[inline]
+pub fn assert_not_same_value<T: DsSameValue + std::fmt::Debug>(a: &T, b: &T) {
+    if a.ds_same_value(b) {
+        panic!(
+            "Test262Error: Expected SameValue(«{:?}», «{:?}») to be false",
+            a, b
+        );
+    }
+}
+
+impl DsSameValue for f64 {
+    #[inline]
+    fn ds_same_value(&self, other: &Self) -> bool {
+        // Object.is: `===` but +0 !== -0 (Rust `==` treats them equal) and
+        // NaN === NaN (Rust `==` says false).
+        (*self == *other
+            && (*self != 0.0 || self.is_sign_negative() == other.is_sign_negative()))
+            || (self.is_nan() && other.is_nan())
+    }
+}
+
+impl DsSameValue for bool {
+    #[inline]
+    fn ds_same_value(&self, other: &Self) -> bool {
+        self == other
+    }
+}
+
+impl DsSameValue for String {
+    #[inline]
+    fn ds_same_value(&self, other: &Self) -> bool {
+        self == other
+    }
+}
+
+impl DsSameValue for str {
+    #[inline]
+    fn ds_same_value(&self, other: &Self) -> bool {
+        self == other
+    }
+}
+
+impl DsSameValue for () {
+    #[inline]
+    fn ds_same_value(&self, _other: &Self) -> bool {
+        true
+    }
+}
+"#;
 
 const DISPLAY_HELPER: &str = r#"
 pub trait DsDisplay {

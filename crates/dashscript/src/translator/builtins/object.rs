@@ -31,7 +31,9 @@ pub(in crate::translator) fn object_method(
         // both operands are numeric — `.is_nan()` exists solely on `f64`, so a
         // blanket emit fails to compile for `Object.is(true, false)` /
         // `Object.is("a", "b")` / Record operands. `+0`/`-0` differ in TS but
-        // not under Rust `==` — that edge is not honored.
+        // The `+0`/`-0` edge (`Object.is(0, -0) === false`) is honored via a
+        // sign check — Rust `==` treats `+0 == -0`, so an explicit
+        // `is_sign_negative` comparison distinguishes them.
         "is" if args.len() == 2 => {
             let a = args.first()?;
             let b_arg = args.get(1)?;
@@ -41,7 +43,7 @@ pub(in crate::translator) fn object_method(
                 // may be `i64`; `i64 → f64` is exact below 2^53).
                 let r = translate_number_to(a.as_expression()?, NumberFlavor::F64, ctx);
                 let b = translate_number_to(b_arg.as_expression()?, NumberFlavor::F64, ctx);
-                parse_quote!((#r == #b) || (#r.is_nan() && #b.is_nan()))
+                parse_quote!((#r == #b && (#r != 0.0 || #r.is_sign_negative() == #b.is_sign_negative())) || (#r.is_nan() && #b.is_nan()))
             } else {
                 let b = translate_argument(b_arg, ctx);
                 parse_quote!(#r == #b)

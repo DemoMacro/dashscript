@@ -13,6 +13,7 @@
 //! `node:fs`) will live under `node/`, parallel to the ES built-ins.
 
 mod array;
+mod assert;
 mod collection;
 mod console;
 mod encoding;
@@ -30,6 +31,7 @@ mod typed_array;
 mod drift_guard;
 
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
+pub(in crate::translator) use assert::assert_method;
 pub(in crate::translator) use collection::collection_method;
 pub(in crate::translator) use console::console_method;
 pub(in crate::translator) use encoding::encoding_ctor_type;

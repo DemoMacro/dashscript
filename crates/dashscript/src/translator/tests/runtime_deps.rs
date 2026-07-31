@@ -978,3 +978,61 @@ fn engine_source_strips_ts_type_annotations() {
         "main return type not stripped: got:\n{js}"
     );
 }
+
+#[test]
+fn assert_same_value_emits_helper_and_flags_dep() {
+    // `assert.sameValue(a, b)` (test262 harness) lowers to
+    // `__ds::assert_same_value`, which panics a `Test262Error` on a SameValue
+    // mismatch. The `Assert` dep ships the `DsSameValue` trait + f64/bool/
+    // String/() impls in `__ds.rs` (pure std — Object.is semantics: `===` plus
+    // distinct +0/-0, NaN===NaN). A scalar pair stays on the static path.
+    let src = "function main(): void { assert.sameValue(1, 1); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("__ds::assert_same_value"),
+        "assert.sameValue should lower to __ds::assert_same_value, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Assert),
+        "Assert dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module()
+            .is_some_and(|s| s.contains("pub trait DsSameValue")),
+        "Assert dep ships the DsSameValue trait, got helper: {:?}",
+        deps.helper_module()
+    );
+}
+
+#[test]
+fn assert_same_value_on_composite_routes_to_engine() {
+    // `assert.sameValue({}, {})` — ES SameValue on objects is reference identity,
+    // which the static translator cannot express; a composite operand routes the
+    // fixture to the engine, where the test262 harness's reference SameValue
+    // runs natively.
+    let src = "function main(): void { assert.sameValue({}, {}); }";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "assert.sameValue on a composite should flip needs_engine, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn object_is_distinguishes_neg_zero() {
+    // `Object.is(0, -0)` → false: ES SameValue treats +0 and -0 as distinct,
+    // where Rust `==` says `0.0 == -0.0`. The f64 lowering emits a sign check
+    // (`is_sign_negative`) so the ±0 edge matches the spec.
+    let src = "function main(): void { console.log(Object.is(0, -0)); }";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("is_sign_negative"),
+        "Object.is should emit a sign check for ±0, got:\n{rust}"
+    );
+}

@@ -409,6 +409,17 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `assert.sameValue(a, b)` / `assert.notSameValue(a, b)` — the test262
+        // harness (a host object). Reflection asserts (`throws`/`compareArray`/
+        // `verifyProperty`/…) are routed to the engine by `classify` before
+        // dispatch reaches here, so an unmapped name surfaces honestly.
+        if builtins::is_ident(&sm.object, "assert") {
+            if let Some(expr) =
+                builtins::assert_method(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
+                return expr;
+            }
+        }
         // `RegExp.escape(s)` (TC39 Stage 3).
         if builtins::is_ident(&sm.object, "RegExp") {
             if let Some(expr) =

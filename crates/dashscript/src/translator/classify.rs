@@ -267,6 +267,13 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
              (no static lowering)",
         );
     }
+    // Bare `assert(x)` — test262's shorthand for `assert.sameValue(x, true)`.
+    // No static lowering yet; degrade so the engine's `assert.js` runs it.
+    if let Expression::Identifier(id) = &c.callee {
+        if id.name.as_str() == "assert" {
+            return degrade("`assert(x)` needs the engine (test262 harness)");
+        }
+    }
     let Expression::StaticMemberExpression(sm) = &c.callee else {
         return Mapping::Mapped;
     };
@@ -357,8 +364,44 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
                 "`JSON.{prop}` has no static mapping (only parse/stringify)"
             ));
         }
+        // `assert.<m>` — sameValue/notSameValue lower statically; the rest
+        // degrades to the engine (assert.js/propertyHelper.js run natively).
+        if obj.name.as_str() == "assert" {
+            return classify_assert(prop, &c.arguments);
+        }
     }
     Mapping::Mapped
+}
+
+/// `assert.<m>(…)` — test262's harness. `sameValue`/`notSameValue` on scalar
+/// operands lower to a Rust SameValue check; everything else (`throws`,
+/// `compareArray`, reflection helpers, or a composite operand whose ES
+/// SameValue is reference identity) degrades to the engine, where `assert.js`
+/// and `propertyHelper.js` run natively.
+fn classify_assert(prop: &str, args: &[Argument]) -> Mapping {
+    match prop {
+        "sameValue" | "notSameValue" => {
+            let composite = args.iter().take(2).any(|a| {
+                matches!(
+                    a,
+                    Argument::ObjectExpression(_) | Argument::ArrayExpression(_)
+                )
+            });
+            if composite {
+                degrade_owned(format!(
+                    "`assert.{prop}` on a composite needs the engine (ES reference SameValue)"
+                ))
+            } else {
+                Mapping::Mapped
+            }
+        }
+        // `throws`/`compareArray`/`verifyProperty`/… — the engine runs the
+        // test262 harness (`assert.js`/`propertyHelper.js`/`compareArray.js`)
+        // natively. `throws` gets a static form in a later batch.
+        _ => degrade_owned(format!(
+            "`assert.{prop}` needs the engine (test262 harness)"
+        )),
+    }
 }
 
 /// True when a regex method's first argument is plainly not a string — either
