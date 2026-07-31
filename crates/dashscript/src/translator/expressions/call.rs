@@ -560,6 +560,16 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
             args.push(parse_quote!(None));
         }
     }
+    // A closure callee (`(() => …)()` / `(function () { … })()`) needs parens —
+    // a bare `|| …(args)` parses as a closure whose body is the call, not a
+    // call on the closure (E0618 on the IIFE's returned-`!` body). Other
+    // callees (idents, member access, a returned closure `f()()`) are fine
+    // unparenthesized.
+    let callee = if matches!(callee, syn::Expr::Closure(_)) {
+        parse_quote!((#callee))
+    } else {
+        callee
+    };
     parse_quote!(#callee(#(#args),*))
 }
 

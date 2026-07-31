@@ -15,6 +15,7 @@ use oxc_ast::ast::Argument;
 use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
+use super::super::bindings;
 use super::super::context::Ctx;
 use super::super::expressions::translate_argument;
 
@@ -50,20 +51,32 @@ pub(in crate::translator) fn temporal_static(
     }
 }
 
-/// `Temporal.<Type>.from(s)` → `temporal_rs::<Type>::from_utf8(s.as_bytes())`.
-/// `from_utf8` is an inherent constructor (no `FromStr` trait import needed);
-/// a string literal stays a bare `&str` so `.as_bytes()` yields a `&'static [u8]`.
-/// `<Type>` is any `temporal_rs` type with an infallible-`from_utf8` constructor
-/// (PlainDate / PlainDateTime / PlainTime / PlainYearMonth / PlainMonthDay).
+/// `Temporal.<Type>.from(item)`.
+///
+/// ES semantics: a string parses via `from_utf8`; a non-string non-object
+/// (number/boolean) is a `TypeError` (`ToTemporalDate`/`ToTemporalTime`/…
+/// reject it); an object goes through the property-bag coercion. The static
+/// path covers the string + throws cases — a string literal or a known-string
+/// local parses (a malformed ISO string lowers to a `DsError`, the ES error
+/// class); anything else lowers to a `TypeError` so `assert.throws(TypeError,…)`
+/// matches. Full property-bag coercion is a larger batch.
 fn temporal_from(ty: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     let a = args.first()?;
+    let ty = syn::Ident::new(ty, Span::call_site());
+    if !is_string_arg(a, ctx) {
+        return Some(parse_quote! {
+            ::std::panic::panic_any(crate::__ds::DsError::new(
+                "TypeError",
+                "Temporal.from requires a string or Temporal object",
+            ))
+        });
+    }
     let e = if let Argument::StringLiteral(s) = a {
         let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
         parse_quote!(#lit)
     } else {
         translate_argument(a, ctx)
     };
-    let ty = syn::Ident::new(ty, Span::call_site());
     Some(parse_quote!({
         // A malformed ISO string is an ES `RangeError`/`SyntaxError`, not a
         // panic — lower the `TemporalResult::Err` to a `DsError` so `catch (e)`
@@ -83,6 +96,19 @@ fn temporal_from(ty: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
             )),
         }
     }))
+}
+
+/// Whether `arg` is a string for `Temporal.<Type>.from` — a string literal or a
+/// local inferred to be `String` (a string variable parses; a non-string local
+/// or any other expression lowers to the `TypeError` path above).
+fn is_string_arg(a: &Argument, ctx: &Ctx<'_>) -> bool {
+    match a {
+        Argument::StringLiteral(_) => true,
+        Argument::Identifier(id) => ctx
+            .local_type(&bindings::snake(&id.name).to_string())
+            .is_some_and(|p| p.is_ident("String")),
+        _ => false,
+    }
 }
 
 /// `Temporal.PlainDate.compare(a, b)` → -1/0/1 (ES Temporal's

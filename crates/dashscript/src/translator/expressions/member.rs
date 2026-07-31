@@ -396,18 +396,40 @@ fn is_match_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
 /// instead of failing on a missing struct field (E0609). Covers the calendar
 /// and date/time types that share the same accessor shape.
 fn is_temporal_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
-    let Expression::Identifier(id) = expr else {
+    match expr {
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            let Some(ty) = ctx.local_type(&name) else {
+                return false;
+            };
+            let Some(seg) = ty.segments.last() else {
+                return false;
+            };
+            let ident = seg.ident.to_string();
+            builtins::TEMPORAL_DATE_TIME_TYPES.contains(&ident.as_str())
+        }
+        // `Temporal.<Type>.from(…).field` — the receiver is an inline from()
+        // call rather than a local; recognize it so the accessor dispatches.
+        Expression::CallExpression(c) => is_temporal_from_call(&c.callee),
+        _ => false,
+    }
+}
+
+/// Whether `callee` is `Temporal.<Type>.from` for a type in
+/// `TEMPORAL_DATE_TIME_TYPES` — the call yields `temporal_rs::<Type>`, so a
+/// following `.field` routes through the accessor table just like a local.
+fn is_temporal_from_call(callee: &Expression) -> bool {
+    let Expression::StaticMemberExpression(m) = callee else {
         return false;
     };
-    let name = bindings::snake(&id.name).to_string();
-    let Some(ty) = ctx.local_type(&name) else {
+    if m.property.name.as_str() != "from" {
+        return false;
+    }
+    let Expression::StaticMemberExpression(t) = &m.object else {
         return false;
     };
-    let Some(seg) = ty.segments.last() else {
-        return false;
-    };
-    let ident = seg.ident.to_string();
-    builtins::TEMPORAL_DATE_TIME_TYPES.contains(&ident.as_str())
+    builtins::TEMPORAL_DATE_TIME_TYPES.contains(&t.property.name.as_str())
+        && matches!(&t.object, Expression::Identifier(id) if id.name.as_str() == "Temporal")
 }
 
 /// Whether `expr` is a `DsError` local (a `catch (e)` binding) — the panic

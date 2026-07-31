@@ -64,7 +64,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -80,7 +80,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:79:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:79:43: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:5:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:8:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:12:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:16:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`",
+    "detail": "src\\main.rs:79:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:79:44: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:5:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:8:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:12:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:16:14: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`",
     "note": ""
   },
   {
@@ -108,7 +108,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:33:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:46:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:19:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:33:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:47:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -116,7 +116,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:10:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -124,7 +124,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:22:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:22:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -132,7 +132,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:21:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:36:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:51:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:66:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:81:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:7:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:24:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:41:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:58:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:75:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:92:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -152,7 +152,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:34:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:46:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:36:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -160,7 +160,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:3:23: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:22: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:19:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:3:23: error[E0425]: cannot find function `symbol` in this scope: not found in this scope\nsrc\\main.rs:3:22: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -168,7 +168,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:34:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:46:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:36:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -176,7 +176,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:29:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:32:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -892,7 +892,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:17:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:20:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:32:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:31:9: error[E0609]: no field `to_string` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:31:5: warning: unreachable expression: unreachable expression",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:17:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:20:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:32:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:31:9: error[E0609]: no field `to_string` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:31:5: warning: unreachable expression: unreachable expression",
     "note": ""
   },
   {
@@ -920,7 +920,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:14:46: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:14:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:14:47: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -928,7 +928,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -936,7 +936,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:20:22: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:32:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:20:22: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:32:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -944,7 +944,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:29:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:29:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -952,7 +952,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:9: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:23:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:10:9: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:23:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -960,7 +960,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:13:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -968,7 +968,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -976,7 +976,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1056,7 +1056,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:20:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:32:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:35:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:38:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:41:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:20:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:32:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:35:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:38:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:41:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -1072,7 +1072,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:55:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:55:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1088,7 +1088,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:10:42: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:10:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:10:43: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1104,7 +1104,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:13:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1144,7 +1144,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:18:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:31:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:44:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:57:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:70:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:18:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:31:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:44:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:57:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:70:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -1208,7 +1208,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:33:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:35:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1216,7 +1216,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:33:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:35:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1396,7 +1396,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:33:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:35:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1404,7 +1404,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:33:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "src\\main.rs:7:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:35:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1564,7 +1564,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:4:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:14:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:35:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:56:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:77:60: error[E0308]: mismatched types: expected `String`, found `f64`",
+    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:4:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:15:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:38:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:61:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:84:64: error[E0308]: mismatched types: expected `String`, found `f64`",
     "note": ""
   },
   {
@@ -1687,7 +1687,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:74:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:74:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -1695,7 +1695,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1703,7 +1703,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:9:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1711,7 +1711,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:12:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1750,7 +1750,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:74:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:74:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -1758,7 +1758,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1766,7 +1766,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:9:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1774,7 +1774,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:12:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1794,7 +1794,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:74:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:74:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -1802,7 +1802,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1810,7 +1810,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:9:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1818,7 +1818,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:12:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1904,7 +1904,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:60:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:63:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:66:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:69:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:43:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:60:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:63:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:66:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:69:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -1912,7 +1912,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:9:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:9:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1928,7 +1928,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:9:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1936,7 +1936,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:12:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2016,15 +2016,18 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-number",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:8:67: error[E0599]: no method named `as_bytes` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:20: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2032,7 +2035,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:18:67: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:17:20: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -2040,7 +2043,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:21:71: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:20:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2048,7 +2051,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:66: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:10:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nsrc\\main.rs:13:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:10:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2064,7 +2067,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:62: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:13:20: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2072,7 +2079,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2080,7 +2091,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:24:20: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:21:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:21:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -2088,7 +2099,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:37:20: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:7:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:19:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:7:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nsrc\\main.rs:19:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -2096,7 +2107,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2104,7 +2119,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2112,7 +2131,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2131,8 +2154,11 @@
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-trailing-junk",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -2140,7 +2166,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2172,7 +2202,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:45: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:11:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, String>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:50:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:44:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:87:52: error[E0308]: mismatched types: expected `f64`, found `String`",
+    "detail": "oracle diff: line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\"; line 6: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\"; line 6: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2204,7 +2238,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:52:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2212,7 +2250,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:62: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:10:20: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2220,7 +2262,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:58: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:31:58: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:53:58: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:75:58: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line count: ds=0 node=4",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=4"
+    },
     "note": ""
   },
   {
@@ -2228,7 +2274,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:52: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:12:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:49:52: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:52:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:16: error[E0618]: expected function, found `temporal_rs::PlainDate`",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2236,7 +2286,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:52:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:92:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:85:16: error[E0618]: expected function, found `temporal_rs::PlainDate`",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2244,7 +2298,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -2264,7 +2322,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:42:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:46:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:45:32: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nsrc\\main.rs:71:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:78:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -2272,7 +2330,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:54:30: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:53:28: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nsrc\\main.rs:78:30: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:77:28: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:55:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:81:34: error[E0308]: arguments to this method are incorrect\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -2280,7 +2338,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:42:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:46:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:45:32: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nsrc\\main.rs:71:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:78:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -2456,7 +2514,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:103:32: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:116:32: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:10:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:33:25: error[E0599]: no method named `equals` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`\nsrc\\main.rs:47:18: error[E0599]: no method named `equals` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`\nsrc\\main.rs:66:18: error[E0599]: no method named `equals` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`",
+    "detail": "src\\main.rs:87:33: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:100:33: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:9:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:11:26: error[E0599]: no method named `equals` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`\nsrc\\main.rs:26:22: error[E0599]: no method named `equals` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`\nsrc\\main.rs:47:22: error[E0599]: no method named `equals` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`",
     "note": ""
   },
   {
@@ -2584,7 +2642,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:35:40: error[E0615]: attempted to take value of method `month_code` on type `temporal_rs::PlainDate`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:13:13: warning: unreachable statement: unreachable statement\nsrc\\main.rs:13:40: error[E0615]: attempted to take value of method `month_code` on type `temporal_rs::PlainDate`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -2652,7 +2710,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:42:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:46:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:45:32: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nsrc\\main.rs:71:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:78:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -2660,7 +2718,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:54:30: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:53:28: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nsrc\\main.rs:78:30: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:77:28: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:55:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:81:34: error[E0308]: arguments to this method are incorrect\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -2668,7 +2726,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:42:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:46:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:45:32: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nsrc\\main.rs:71:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:78:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -2676,7 +2734,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:27:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:26:16: error[E0618]: expected function, found `Result<temporal_rs::PlainDate, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:28:22: error[E0308]: arguments to this method are incorrect\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2872,7 +2930,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:47:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:60:29: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:73:30: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:86:29: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:99:30: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:60:28: error[E0369]: binary operation `<` cannot be applied to type `temporal_rs::PlainDate`\nsrc\\main.rs:73:28: error[E0369]: binary operation `<=` cannot be applied to type `temporal_rs::PlainDate`\nsrc\\main.rs:86:28: error[E0369]: binary operation `>` cannot be applied to type `temporal_rs::PlainDate`\nsrc\\main.rs:99:28: error[E0369]: binary operation `>=` cannot be applied to type `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -2976,7 +3034,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:32:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:57:49: error[E0308]: mismatched types: expected `Calendar`, found `String`\nsrc\\main.rs:58:42: error[E0609]: no field `calendar_id` on type `temporal_rs::PlainDate`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:31:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:35:49: error[E0308]: mismatched types: expected `Calendar`, found `String`\nsrc\\main.rs:36:42: error[E0609]: no field `calendar_id` on type `temporal_rs::PlainDate`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -2984,7 +3042,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:26:27: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:26:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nsrc\\main.rs:39:41: error[E0308]: mismatched types: expected `Calendar`, found `Option<_>`\nsrc\\main.rs:39:16: error[E0618]: expected function, found `temporal_rs::PlainDate`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:26:28: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:39:42: error[E0308]: mismatched types: expected `Calendar`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -3096,15 +3154,18 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-number",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:8:71: error[E0599]: no method named `as_bytes` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:20: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -3112,7 +3173,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:52: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:13:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainDateTime`\nsrc\\main.rs:50:47: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:51:52: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:54:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3120,7 +3185,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:18:71: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:17:20: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -3128,7 +3193,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:21:75: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:20:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -3136,7 +3201,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:18:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:21:74: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:42:70: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:62:42: error[E0599]: no method named `equals` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:18:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:26:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:32:42: error[E0599]: no method named `equals` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -3144,7 +3209,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:70: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nsrc\\main.rs:14:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -3160,7 +3225,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:66: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:13:20: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3168,7 +3237,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3176,7 +3249,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:29:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3184,7 +3261,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:37:20: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:7:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:19:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:7:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nsrc\\main.rs:19:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -3192,7 +3269,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3200,7 +3281,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3208,15 +3293,22 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-out-of-range",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `PlainDateTime`\nsrc\\main.rs:40:16: error[E0618]: expected function, found `PlainDateTime`\nsrc\\main.rs:75:16: error[E0618]: expected function, found `PlainDateTime`\nsrc\\main.rs:110:16: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -3236,7 +3328,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3268,7 +3364,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:45: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:10:46: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:12:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, String>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainDateTime`\nsrc\\main.rs:52:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:16: error[E0618]: expected function, found `PlainDateTime`",
+    "detail": "oracle diff: line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\"; line 6: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\"; line 6: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3300,7 +3400,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainDateTime`\nsrc\\main.rs:52:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:16: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3308,7 +3412,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:66: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:10:20: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3316,7 +3424,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:62: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:31:62: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:53:62: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "oracle diff: line count: ds=0 node=3",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=3"
+    },
     "note": ""
   },
   {
@@ -3324,7 +3436,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -3344,7 +3460,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:21:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:47:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:51:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:50:32: error[E0618]: expected function, found `Result<PlainDateTime, TemporalError>`\nsrc\\main.rs:76:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:83:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -3352,7 +3468,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:21:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:47:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:51:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:50:32: error[E0618]: expected function, found `Result<PlainDateTime, TemporalError>`\nsrc\\main.rs:76:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:83:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -3744,7 +3860,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:37:40: error[E0615]: attempted to take value of method `month_code` on type `PlainDateTime`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:13:13: warning: unreachable statement: unreachable statement\nsrc\\main.rs:13:40: error[E0615]: attempted to take value of method `month_code` on type `PlainDateTime`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -3884,7 +4000,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:21:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:47:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:51:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:50:32: error[E0618]: expected function, found `Result<PlainDateTime, TemporalError>`\nsrc\\main.rs:76:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:83:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -3892,7 +4008,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:21:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:47:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:51:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:50:32: error[E0618]: expected function, found `Result<PlainDateTime, TemporalError>`\nsrc\\main.rs:76:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:83:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -4152,7 +4268,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:34:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:59:49: error[E0308]: mismatched types: expected `Calendar`, found `String`\nsrc\\main.rs:60:42: error[E0609]: no field `calendar_id` on type `PlainDateTime`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:31:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:35:49: error[E0308]: mismatched types: expected `Calendar`, found `String`\nsrc\\main.rs:36:42: error[E0609]: no field `calendar_id` on type `PlainDateTime`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -4160,7 +4276,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:26:32: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:26:16: error[E0618]: expected function, found `PlainDateTime`\nsrc\\main.rs:39:46: error[E0308]: mismatched types: expected `Calendar`, found `Option<_>`\nsrc\\main.rs:39:16: error[E0618]: expected function, found `PlainDateTime`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:26:33: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:39:47: error[E0308]: mismatched types: expected `Calendar`, found `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -4252,15 +4368,18 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-number",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:8:71: error[E0599]: no method named `as_bytes` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:20: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4268,7 +4387,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:18:71: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:17:20: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -4276,7 +4395,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:21:75: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:20:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4284,7 +4403,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:70: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nsrc\\main.rs:14:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4300,7 +4419,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:66: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:13:20: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4308,7 +4431,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4316,7 +4443,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4324,7 +4455,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4332,7 +4467,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4352,7 +4491,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4384,7 +4527,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:8:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:46:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, String>`\nsrc\\main.rs:41:16: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:83:45: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:85:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, String>`",
+    "detail": "oracle diff: line 3: ds=\"TypeError\" node=\"RangeError\"; line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"TypeError\" node=\"RangeError\"; line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4392,15 +4539,22 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:7:37: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, String>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line count: ds=0 node=1",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=1"
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainmonthday.from.fields-missing-properties",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:7:61: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:43:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:40:16: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:79:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:76:16: error[E0618]: expected function, found `PlainMonthDay`",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4420,7 +4574,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:50:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:44:16: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4428,7 +4586,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:66: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:10:20: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4448,7 +4610,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4636,7 +4802,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:47:16: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:60:34: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:73:35: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:86:34: error[E0618]: expected function, found `PlainMonthDay`\nsrc\\main.rs:99:35: error[E0618]: expected function, found `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:60:33: error[E0369]: binary operation `<` cannot be applied to type `PlainMonthDay`\nsrc\\main.rs:73:33: error[E0369]: binary operation `<=` cannot be applied to type `PlainMonthDay`\nsrc\\main.rs:86:33: error[E0369]: binary operation `>` cannot be applied to type `PlainMonthDay`\nsrc\\main.rs:99:33: error[E0369]: binary operation `>=` cannot be applied to type `PlainMonthDay`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -4704,7 +4870,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:46:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:49:27: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:52:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:69:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:73:27: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:76:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:46:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:49:27: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:53:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:73:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:77:27: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:81:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -4764,15 +4930,18 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-number",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:10:67: error[E0599]: no method named `as_bytes` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:9:20: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4780,7 +4949,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:70: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:36:66: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:56:42: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:20:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:26:42: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -4788,7 +4957,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:25:66: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:21:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nsrc\\main.rs:24:24: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:21:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4796,7 +4965,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:24: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4804,7 +4977,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:17:20: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:14:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:14:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -4812,7 +4985,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4820,7 +4997,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:24: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4828,15 +5009,22 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:24: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-no-implicit-midnight",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4855,8 +5043,11 @@
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-trailing-junk",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -4864,7 +5055,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4896,7 +5091,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:62: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:10:20: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4916,7 +5115,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:8:58: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:30:58: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:52:58: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "oracle diff: line count: ds=0 node=3",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=3"
+    },
     "note": ""
   },
   {
@@ -4924,7 +5127,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -4944,7 +5151,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:49:34: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:48:32: error[E0618]: expected function, found `Result<PlainTime, TemporalError>`\nsrc\\main.rs:74:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:81:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied",
     "note": ""
   },
   {
@@ -4952,7 +5159,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:49:34: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:48:32: error[E0618]: expected function, found `Result<PlainTime, TemporalError>`\nsrc\\main.rs:74:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:81:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied",
     "note": ""
   },
   {
@@ -4960,7 +5167,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:25:18: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:30:18: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:34:30: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:35:30: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:38:19: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:52:18: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`",
+    "detail": "src\\main.rs:25:18: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:30:18: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:34:30: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:35:30: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:38:20: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:53:22: error[E0599]: no method named `equals` found for struct `PlainTime` in the current scope: method not found in `PlainTime`",
     "note": ""
   },
   {
@@ -5132,7 +5339,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:30:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:28:21: error[E0308]: mismatched types: expected `RoundingOptions`, found `HashMap<String, String>`\nsrc\\main.rs:26:16: error[E0618]: expected function, found `Result<PlainTime, TemporalError>`\nsrc\\main.rs:49:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:47:21: error[E0308]: mismatched types: expected `RoundingOptions`, found `HashMap<String, String>`\nsrc\\main.rs:45:16: error[E0618]: expected function, found `Result<PlainTime, TemporalError>`",
+    "detail": "src\\main.rs:31:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:29:25: error[E0308]: mismatched types: expected `RoundingOptions`, found `HashMap<String, String>`\nsrc\\main.rs:52:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:50:25: error[E0308]: mismatched types: expected `RoundingOptions`, found `HashMap<String, String>`\nsrc\\main.rs:73:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:71:25: error[E0308]: mismatched types: expected `RoundingOptions`, found `HashMap<String, String>`",
     "note": ""
   },
   {
@@ -5176,7 +5383,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:52:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:48:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:47:16: error[E0618]: expected function, found `Result<temporal_rs::Duration, TemporalError>`\nsrc\\main.rs:72:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:68:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:67:16: error[E0618]: expected function, found `Result<temporal_rs::Duration, TemporalError>`",
+    "detail": "src\\main.rs:53:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:49:22: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:75:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:71:22: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:97:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:93:22: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -5196,7 +5403,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:49:34: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:48:32: error[E0618]: expected function, found `Result<PlainTime, TemporalError>`\nsrc\\main.rs:74:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:81:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied",
     "note": ""
   },
   {
@@ -5204,7 +5411,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:45:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:49:34: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:48:32: error[E0618]: expected function, found `Result<PlainTime, TemporalError>`\nsrc\\main.rs:74:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:81:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0061]: this method takes 1 argument but 2 arguments were supplied",
     "note": ""
   },
   {
@@ -5296,7 +5503,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:54: error[E0425]: cannot find value `input` in this scope: not found in this scope\nsrc\\main.rs:33:20: error[E0599]: no method named `is_nan` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:35:27: error[E0599]: no method named `is_infinite` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:36:26: error[E0308]: mismatched types: expected `PlainTime`, found `f64`\nsrc\\main.rs:62:29: error[E0599]: `PlainTime` doesn't implement `std::fmt::Display`\nsrc\\main.rs:67:20: error[E0599]: no method named `is_nan` found for struct `PlainTime` in the current scope: method not found in `PlainTime`",
+    "detail": "src\\main.rs:15:9: warning: unreachable statement: unreachable statement\nsrc\\main.rs:18:20: error[E0599]: no method named `is_nan` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:20:27: error[E0599]: no method named `is_infinite` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:21:26: error[E0308]: mismatched types: expected `PlainTime`, found `f64`\nsrc\\main.rs:47:29: error[E0599]: `PlainTime` doesn't implement `std::fmt::Display`\nsrc\\main.rs:52:20: error[E0599]: no method named `is_nan` found for struct `PlainTime` in the current scope: method not found in `PlainTime`",
     "note": ""
   },
   {
@@ -5316,7 +5523,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:52:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:48:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:47:16: error[E0618]: expected function, found `Result<temporal_rs::Duration, TemporalError>`\nsrc\\main.rs:72:60: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:68:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:67:16: error[E0618]: expected function, found `Result<temporal_rs::Duration, TemporalError>`",
+    "detail": "src\\main.rs:53:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:49:22: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:75:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:71:22: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:97:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:93:22: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -5324,7 +5531,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:47:16: error[E0618]: expected function, found `PlainTime`\nsrc\\main.rs:60:29: error[E0618]: expected function, found `PlainTime`\nsrc\\main.rs:73:30: error[E0618]: expected function, found `PlainTime`\nsrc\\main.rs:86:29: error[E0618]: expected function, found `PlainTime`\nsrc\\main.rs:99:30: error[E0618]: expected function, found `PlainTime`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "oracle diff: line 1: ds=\"__OK__\" node=\"TypeError\"; line 2: ds=\"__OK__\" node=\"TypeError\"; line 3: ds=\"__OK__\" node=\"TypeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"__OK__\" node=\"TypeError\"; line 2: ds=\"__OK__\" node=\"TypeError\"; line 3: ds=\"__OK__\" node=\"TypeError\""
+    },
     "note": ""
   },
   {
@@ -5392,7 +5603,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:46:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:51:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:55:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:72:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:77:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:81:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:46:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:51:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:56:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:76:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:81:15: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:86:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -5444,15 +5655,18 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-number",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:8:72: error[E0599]: no method named `as_bytes` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:7:20: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5460,7 +5674,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:18:72: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:17:20: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:13:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -5468,7 +5682,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:21:76: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:20:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -5476,7 +5690,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:71: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nsrc\\main.rs:14:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -5492,7 +5706,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:67: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:13:20: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5500,7 +5718,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5508,7 +5730,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:39:20: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:8:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:21:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:8:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nsrc\\main.rs:21:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -5516,7 +5738,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5524,7 +5750,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:19:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5532,7 +5762,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5551,8 +5785,11 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-trailing-junk",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5560,7 +5797,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5592,15 +5833,22 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, String>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:46:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:43:16: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:83:52: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:85:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`",
+    "detail": "oracle diff: line 3: ds=\"TypeError\" node=\"RangeError\"; line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 3: ds=\"TypeError\" node=\"RangeError\"; line 4: ds=\"TypeError\" node=\"RangeError\"; line 5: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.fields-missing-properties",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:7:61: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:43:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:40:16: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:79:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:76:16: error[E0618]: expected function, found `PlainYearMonth`",
+    "status": "supported",
+    "detail": "",
+    "oracle": {
+      "status": "matched"
+    },
     "note": ""
   },
   {
@@ -5644,7 +5892,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:5:16: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5652,7 +5904,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:67: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:10:20: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5660,7 +5916,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:8:63: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:30:63: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:52:63: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "oracle diff: line count: ds=0 node=3",
+    "oracle": {
+      "status": "diff",
+      "detail": "line count: ds=0 node=3"
+    },
     "note": ""
   },
   {
@@ -5668,7 +5928,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:68: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:9:16: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:55:38: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:48:28: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5676,7 +5940,11 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "oracle diff: line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"TypeError\" node=\"RangeError\"; line 2: ds=\"TypeError\" node=\"RangeError\"; line 3: ds=\"TypeError\" node=\"RangeError\""
+    },
     "note": ""
   },
   {
@@ -5708,7 +5976,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:41:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:45:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:44:32: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nsrc\\main.rs:70:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:77:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -5716,7 +5984,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:28:22: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:27:20: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:29:26: error[E0308]: arguments to this method are incorrect\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -5724,7 +5992,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:41:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:45:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:44:32: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nsrc\\main.rs:70:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:77:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -5816,7 +6084,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:25:21: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:29:21: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:32:33: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:33:33: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:37:18: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:25:21: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:29:21: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:32:33: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:33:33: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:38:22: error[E0599]: no method named `equals` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -5952,7 +6220,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:26: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:34:40: error[E0615]: attempted to take value of method `month_code` on type `PlainYearMonth`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:13:13: warning: unreachable statement: unreachable statement\nsrc\\main.rs:13:40: error[E0615]: attempted to take value of method `month_code` on type `PlainYearMonth`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -6032,7 +6300,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:41:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:45:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:44:32: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nsrc\\main.rs:70:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:77:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -6040,7 +6308,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:28:22: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:27:20: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:29:26: error[E0308]: arguments to this method are incorrect\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6048,7 +6316,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:18: error[E0599]: no method named `as_bytes` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, f64>`\nsrc\\main.rs:41:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:45:34: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:44:32: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nsrc\\main.rs:70:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:77:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator",
+    "detail": "src\\main.rs:15:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:25:38: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:51:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:58:18: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:64:38: error[E0308]: arguments to this method are incorrect",
     "note": ""
   },
   {
@@ -6176,7 +6444,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:47:16: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:60:35: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:73:36: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:86:35: error[E0618]: expected function, found `PlainYearMonth`\nsrc\\main.rs:99:36: error[E0618]: expected function, found `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:60:34: error[E0369]: binary operation `<` cannot be applied to type `PlainYearMonth`\nsrc\\main.rs:73:34: error[E0369]: binary operation `<=` cannot be applied to type `PlainYearMonth`\nsrc\\main.rs:86:34: error[E0369]: binary operation `>` cannot be applied to type `PlainYearMonth`\nsrc\\main.rs:99:34: error[E0369]: binary operation `>=` cannot be applied to type `PlainYearMonth`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -6208,7 +6476,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:30:50: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:27:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:26:16: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:31:54: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:28:22: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6216,7 +6484,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:26:19: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:26:16: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nsrc\\main.rs:40:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:39:16: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:26:20: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:41:22: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6224,7 +6492,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:30:51: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:27:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:26:16: error[E0618]: expected function, found `Result<PlainYearMonth, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:31:55: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:28:22: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6356,7 +6624,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:16:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:6:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:8:35: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:9:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:13:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field",
+    "detail": "src\\main.rs:11:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:16:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:6:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:8:35: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:9:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:13:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field",
     "note": ""
   },
   {
@@ -6364,7 +6632,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:18:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:12:40: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:14:38: error[E0425]: cannot find value `cal` in this scope: not found in this scope\nsrc\\main.rs:18:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:12:40: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -6396,7 +6664,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:20:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:20:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:16:42: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6404,7 +6672,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6424,7 +6692,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:26:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:9:35: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:13:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:27:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:9:35: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -6440,7 +6708,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:27:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:49:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:71:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:12:51: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:34:51: error[E0308]: mismatched types: expected `f64`, found `String`",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:30:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:54:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:78:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:13:55: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:37:55: error[E0308]: mismatched types: expected `f64`, found `String`",
     "note": ""
   },
   {
@@ -6448,7 +6716,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:10:47: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:11:52: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:13:51: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:11:51: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:12:56: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:14:55: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -6464,7 +6732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:52:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:78:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:90:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:102:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:114:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:7:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:55:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:82:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:94:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:106:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:118:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -6472,7 +6740,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:18:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:11:43: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:25:51: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:19:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:11:43: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:26:55: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -6488,7 +6756,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:9:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:16:55: error[E0308]: mismatched types: expected `f64`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:10:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:17:59: error[E0308]: mismatched types: expected `f64`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6496,7 +6764,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:12:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:19:59: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:13:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:20:63: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6512,7 +6780,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:14:54: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:33:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:36:33: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:14:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:14:55: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:34:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:37:37: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nsrc\\main.rs:11:10: error[E0599]: no method named `for_each` found for struct `Vec<Vec<String>>` in the current scope: `Vec<Vec<String>>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -6528,7 +6796,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:14:50: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:14:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:14:51: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6536,7 +6804,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6544,7 +6812,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:17:22: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:28:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:17:22: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:28:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6552,7 +6820,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:16:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:16:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6560,7 +6828,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:11:13: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:30:13: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:40:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:77:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:11:13: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:30:13: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:41:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:80:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -6568,7 +6836,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6576,7 +6844,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:14:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6584,7 +6852,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:15:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:15:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6592,7 +6860,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6600,7 +6868,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:18:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:18:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6608,7 +6876,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:7:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:7:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6664,7 +6932,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:28: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:14:29: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6684,7 +6952,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:26:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:50:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:71:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:93:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:116:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:29:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:55:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:78:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:102:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:127:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -6692,7 +6960,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6700,7 +6968,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:9:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:9:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6732,7 +7000,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:5:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:27:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:11:51: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:33:51: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:30:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:12:55: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:36:55: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -6740,7 +7008,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:10:20: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:10:50: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:10:21: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:10:51: error[E0425]: cannot find value `arg` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -6748,7 +7016,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:26:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:46:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:61:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:9:35: error[E0308]: mismatched types: expected `f64`, found `String`",
+    "detail": "src\\main.rs:13:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:27:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:49:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:64:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:9:35: error[E0308]: mismatched types: expected `f64`, found `String`",
     "note": ""
   },
   {
@@ -6776,7 +7044,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:14:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:7:31: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:8:29: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:30: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:10:32: error[E0308]: mismatched types: expected `String`, found `f64`",
+    "detail": "src\\main.rs:15:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:7:31: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:8:29: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:30: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:10:32: error[E0308]: mismatched types: expected `String`, found `f64`",
     "note": ""
   },
   {
@@ -6800,7 +7068,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:13:25: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -6808,7 +7076,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:6:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:20:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:34:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:46:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:50:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:54:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
+    "detail": "src\\main.rs:6:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:20:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:34:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:46:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:50:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:54:19: error[E0425]: cannot find value `temporal` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -6816,7 +7084,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:9:16: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:18: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nsrc\\main.rs:9:17: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
