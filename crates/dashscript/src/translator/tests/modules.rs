@@ -678,6 +678,69 @@ fn module_mutable_let_value_reassigned_by_fn_emits_thread_local_refcell() {
 }
 
 #[test]
+fn module_delayed_binding_optional_let_hoists_to_refcell_option() {
+    // B3-2c: a module-level `let x: T | undefined;` with no initializer is a
+    // delayed-binding slot (TS breaks a circular dependency by declaring first,
+    // assigning later — e.g. a lazy parse-table). It hoists behind a thread-local
+    // `RefCell<Option<T>>` seeded `None`; a later `x = v` rewrites to
+    // `set_x(Some(v))`, and `if (x)` truthiness to `x().is_some()`. The
+    // annotation `T | undefined` lowers to `Option<T>`, so the cell holds it
+    // directly. Here T is `number` → `Option<f64>`.
+    let src = "let slot: number | undefined;\nexport function has(): boolean { if (slot) { return true; } return false; }\nexport function fill(): void { slot = 1; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(
+        diags.is_empty(),
+        "delayed-binding optional let flagged: {diags:?}"
+    );
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains("RefCell") && rust.contains("None"),
+        "delayed-binding not RefCell<Option> None-seeded: {rust}"
+    );
+    assert!(
+        rust.contains("fn slot()") && rust.contains("fn set_slot"),
+        "delayed-binding get/set accessors missing: {rust}"
+    );
+    // `slot = 1` → `set_slot(Some(1.0))`.
+    assert!(
+        rust.contains("set_slot(::std::option::Option::Some"),
+        "assign not rewritten to set_slot(Some(..)): {rust}"
+    );
+    // `if (slot)` truthiness → `slot().is_some()`.
+    assert!(
+        rust.contains(".is_some()"),
+        "truthiness not lowered to is_some(): {rust}"
+    );
+}
+
+#[test]
+fn module_delayed_binding_fn_optional_call_unwraps() {
+    // B3-2c (callable slot): a delayed-binding `Option<fn …>` slot called as
+    // `parse(args)` lowers to `(parse().expect("parse"))(args)` — ES throws on a
+    // nullish call, here it panics with the source name (fail-loud). The slot is
+    // assigned a fn item (`parse = inc`), which coerces to the
+    // `Option<fn(f64) -> f64>` the cell holds.
+    let src = "let parse: ((n: number) => number) | undefined;\nfunction inc(n: number): number { return n + 1; }\nexport function run(n: number): number { parse = inc; if (parse) { return parse(n); } return 0; }";
+    let diags = Translator::new().check_as(src, FileRole::Module);
+    assert!(diags.is_empty(), "callable optional let flagged: {diags:?}");
+    let rust = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate")
+        .0;
+    assert!(
+        rust.contains(".expect(\"parse\")"),
+        "callable slot not unwrapped via expect: {rust}"
+    );
+    assert!(
+        rust.contains("set_parse(::std::option::Option::Some"),
+        "fn assign not Some-wrapped: {rust}"
+    );
+}
+
+#[test]
 fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
     // B3-1a (entry path, via promotable relaxation): a top-level non-mutated
     // `let` literal referenced from a function promotes to a crate `const` item

@@ -180,6 +180,23 @@ fn is_match_local(id: &IdentifierReference, ctx: &Ctx<'_>) -> bool {
 /// `console.log(x)` → `println!("{}", x)`; any other call maps the callee and
 /// its arguments to a plain Rust call expression.
 pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
+    // A delayed-binding mutable global holds `Option<fn …>` behind its accessor;
+    // calling it as `x(args)` lowers to `(x().expect("x"))(args)` — ES throws on
+    // a nullish call, here it panics with the source name (the same fail-loud
+    // contract as a deref of `None`). Checked before namespace/builtin dispatch
+    // so the callee path is one branch.
+    if let Expression::Identifier(id) = &call.callee {
+        if ctx.names().is_optional_mutable_static(id) {
+            let getter = ctx.names().of_reference(id);
+            let label_lit = syn::LitStr::new(id.name.as_str(), Span::call_site());
+            let args: Vec<Expr> = call
+                .arguments
+                .iter()
+                .map(|a| translate_argument(a, ctx))
+                .collect();
+            return parse_quote!((#getter().expect(#label_lit))(#(#args),*));
+        }
+    }
     // `ns.foo(…)` where `ns` is a namespace import → the free function
     // `ns::foo(…)`. Guarded before any builtin / method dispatch so a member
     // name that collides with a mapped method (`ns.push`) is not mis-routed to a

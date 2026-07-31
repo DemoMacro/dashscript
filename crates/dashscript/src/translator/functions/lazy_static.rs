@@ -362,11 +362,14 @@ pub(in crate::translator) fn mutable_static_candidate(
     let BindingPattern::BindingIdentifier(id) = &d.id else {
         return false;
     };
-    let Some(init) = d.init.as_ref() else {
-        return false;
-    };
-    // A scalar value type only — a collection (B3-2b) defers.
-    if value_init_type(init).is_none() {
+    let init = d.init.as_ref();
+    // Two candidate shapes: a scalar value literal (B3-2a, `let x = 0`), or a
+    // delayed-binding binding with no initializer but a type annotation (B3-2c,
+    // `let x: T | undefined;` → `RefCell<Option<T>>` seeded `None`). A collection
+    // init (B3-2b) and an untyped `let x;` both defer.
+    let is_value = init.is_some_and(|i| value_init_type(i).is_some());
+    let is_optional_uninit = init.is_none() && d.type_annotation.is_some();
+    if !is_value && !is_optional_uninit {
         return false;
     }
     // Must be mutated from a function — else it stays a plain `fn main` local.
@@ -388,7 +391,7 @@ pub(in crate::translator) fn mutable_static_items(
     names: &NameTable<'_>,
     registry: &TypeRegistry,
     mutable_names: &HashSet<String>,
-) -> Option<(Vec<syn::Item>, Ident)> {
+) -> Option<(Vec<syn::Item>, Ident, bool)> {
     if !mutable_static_candidate(stmt, mutable_names, names) {
         return None;
     }
@@ -399,19 +402,21 @@ pub(in crate::translator) fn mutable_static_items(
     let BindingPattern::BindingIdentifier(id) = &d.id else {
         return None;
     };
-    let init = d.init.as_ref()?;
+    let init = d.init.as_ref();
     let name = names.of_binding(id);
-    let ty = value_init_type(init)?;
     let setter = format_ident!("set_{}", name);
-    // The initializer translates under a fresh empty-body context, the way a
-    // lazy static's does — a module top-level binding has no locals/narrowing.
+    let cell = format_ident!("{}_CELL", name.to_string().to_uppercase());
+    // The initializer (if any) translates under a fresh empty-body context —
+    // a module top-level binding has no locals/narrowing.
     let locals = Locals::new();
     let narrow = Narrow::default();
     let ctx = Ctx::new(&locals, registry, &narrow, names);
-    let init_expr = expressions::translate_expr(init, &ctx);
-    let cell = format_ident!("{}_CELL", name.to_string().to_uppercase());
-    Some((
-        vec![
+    if let Some(init) = init {
+        // B3-2a value type: `let x = <scalar literal>` → `RefCell<T>`, the get
+        // accessor clones the value out, the set accessor writes it back.
+        let ty = value_init_type(init)?;
+        let init_expr = expressions::translate_expr(init, &ctx);
+        let items = vec![
             parse_quote! {
                 thread_local! {
                     static #cell: ::std::cell::RefCell<#ty> = const { ::std::cell::RefCell::new(#init_expr) };
@@ -427,9 +432,34 @@ pub(in crate::translator) fn mutable_static_items(
                     #cell.with(|c| *c.borrow_mut() = v)
                 }
             },
-        ],
-        setter,
-    ))
+        ];
+        return Some((items, setter, false));
+    }
+    // B3-2c delayed binding: `let x: T | undefined;` → `RefCell<Option<T>>`
+    // seeded `None`, set later via `set_x(Some(v))`. The annotation lowers to
+    // `Option<T>` (a nullable union), so the cell holds it directly and the get
+    // accessor returns the `Option`; a read wraps in `.expect(..)` for a call,
+    // `is_some()`/`is_none()` for truthiness (see the read rewrite).
+    let ta = d.type_annotation.as_ref()?;
+    let ty = types::translate_type(&ta.type_annotation);
+    let items = vec![
+        parse_quote! {
+            thread_local! {
+                static #cell: ::std::cell::RefCell<#ty> = const { ::std::cell::RefCell::new(::core::option::Option::None) };
+            }
+        },
+        parse_quote! {
+            pub fn #name() -> #ty {
+                #cell.with(|c| c.borrow().clone())
+            }
+        },
+        parse_quote! {
+            pub fn #setter(v: #ty) {
+                #cell.with(|c| *c.borrow_mut() = v)
+            }
+        },
+    ];
+    Some((items, setter, true))
 }
 
 /// The rust names of mutable module-global value `let` candidates (per

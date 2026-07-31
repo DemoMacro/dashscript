@@ -275,9 +275,21 @@ fn mutable_static_assign(
     setter: &Ident,
     ctx: &Ctx<'_>,
 ) -> Expr {
+    let optional = ctx.names().is_optional_mutable_static(id);
     let right = translate_expr(&a.right, ctx);
     if matches!(a.operator, AssignmentOperator::Assign) {
+        // A delayed-binding binding holds `Option<T>` behind its setter, so
+        // `x = v` lowers to `set_x(Some(v))` (a `let x: T | undefined;` slot
+        // receives a concrete value). The setter writes `Option<T>` directly.
+        if optional {
+            return parse_quote!(#setter(::std::option::Option::Some(#right)));
+        }
         return parse_quote!(#setter(#right));
+    }
+    // Compound ops on an `Option` slot make no sense (it is value-or-absent, not
+    // a counter); fall back honestly rather than miscompile.
+    if optional {
+        return parse_quote!(::core::todo!());
     }
     let getter = ctx.names().of_reference(id);
     let combined: Expr = match a.operator {

@@ -54,11 +54,14 @@ pub struct NameTable<'scoping> {
     /// thread-local `RefCell`s (B3-2): a top-level `let` rebound or
     /// member-mutated from a function cannot live in `fn main` (a Rust fn item
     /// cannot close over a `main` local), so it hoists behind a `RefCell` with a
-    /// get/set accessor pair. The value is the set-accessor ident (`set_x`), so a
-    /// reassignment/update lowers to `set_x(v)` rather than `x() = v` (the get
-    /// accessor returns a clone, not an lvalue). Tracked per-symbol, like
-    /// `lazy_statics`.
-    mutable_statics: HashMap<SymbolId, Ident>,
+    /// get/set accessor pair. The value is `(set-accessor ident, optional)`:
+    /// `set_x` drives the reassignment rewrite, and `optional` flags a B3-2c
+    /// delayed-binding binding (declared without an initializer —
+    /// `let x: T | undefined;` → `RefCell<Option<T>>` seeded `None`, set later
+    /// via `set_x(v)`), whose read rewrite differs (a call `x(a)` →
+    /// `x().expect(..)(a)`, truthiness `if (x)` → `x().is_some()`). Tracked
+    /// per-symbol, like `lazy_statics`.
+    mutable_statics: HashMap<SymbolId, (Ident, bool)>,
 }
 
 impl<'a> NameTable<'a> {
@@ -192,9 +195,11 @@ impl<'a> NameTable<'a> {
     }
 
     /// Record a mutable module-global `let` lowered to a thread-local `RefCell`
-    /// (B3-2) — `setter` is the set-accessor ident (`set_x`).
-    pub fn register_mutable_static(&mut self, sym: SymbolId, setter: Ident) {
-        self.mutable_statics.insert(sym, setter);
+    /// (B3-2) — `setter` is the set-accessor ident (`set_x`), and `optional`
+    /// flags a B3-2c delayed-binding binding (`RefCell<Option<T>>`, no
+    /// initializer, seeded `None`).
+    pub fn register_mutable_static(&mut self, sym: SymbolId, setter: Ident, optional: bool) {
+        self.mutable_statics.insert(sym, (setter, optional));
     }
 
     /// Whether `id` resolves to a mutable module-global `RefCell` (B3-2). A read
@@ -214,7 +219,22 @@ impl<'a> NameTable<'a> {
     #[must_use]
     pub fn mutable_static_setter(&self, id: &IdentifierReference) -> Option<Ident> {
         let sid = self.symbol_of_reference(id)?;
-        self.mutable_statics.get(&sid).cloned()
+        self.mutable_statics
+            .get(&sid)
+            .map(|(setter, _)| setter.clone())
+    }
+
+    /// Whether `id` is a B3-2c delayed-binding mutable static — declared with no
+    /// initializer (`let x: T | undefined;` → `RefCell<Option<T>>`), whose read
+    /// rewrite differs from a value-type mutable static (a call wraps in
+    /// `.expect(..)`, truthiness maps to `is_some()`/`is_none()`). `false` for
+    /// any non-mutable or value-typed ref.
+    #[must_use]
+    pub fn is_optional_mutable_static(&self, id: &IdentifierReference) -> bool {
+        let Some(sid) = self.symbol_of_reference(id) else {
+            return false;
+        };
+        self.mutable_statics.get(&sid).is_some_and(|(_, opt)| *opt)
     }
 }
 

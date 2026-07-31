@@ -1947,11 +1947,11 @@ impl Translator {
             let hoist_mutable = matches!(role, FileRole::Module)
                 || functions::decl_name(s, &names).is_some_and(|n| escaped_mutable.contains(&n));
             if hoist_mutable {
-                if let Some((ms_items, setter)) =
+                if let Some((ms_items, setter, optional)) =
                     functions::mutable_static_items(s, &names, &registry, &mutable_top_level)
                 {
                     if let Some(sym) = functions::lazy_static_sym(s, &names) {
-                        names.register_mutable_static(sym, setter);
+                        names.register_mutable_static(sym, setter, optional);
                     }
                     items.extend(ms_items);
                     continue;

@@ -281,6 +281,18 @@ fn truthiness(expr: &Expression, negated: bool, ctx: &Ctx<'_>) -> Option<Expr> {
     let Expression::Identifier(id) = expr else {
         return None;
     };
+    // A delayed-binding mutable global's accessor returns `Option<T>` (it is
+    // `RefCell<Option<T>>` seeded `None`), so its ES truthiness is presence:
+    // `if (x)` → `x().is_some()`, `if (!x)` → `x().is_none()`. It is not a
+    // local, so the `local_type` path below does not reach it.
+    if ctx.names().is_optional_mutable_static(id) {
+        let getter = ctx.names().of_reference(id);
+        return Some(if negated {
+            parse_quote!(#getter().is_none())
+        } else {
+            parse_quote!(#getter().is_some())
+        });
+    }
     let ident = ctx.names().of_reference(id);
     let last = ctx
         .local_type(&ident.to_string())?
