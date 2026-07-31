@@ -8,7 +8,7 @@
 use oxc_ast::ast::{Argument, BindingPattern, Expression, Statement, TryStatement};
 use proc_macro2::TokenStream;
 use quote::quote;
-use syn::{parse_quote, LitStr, Path, Stmt};
+use syn::{parse_quote, Expr, Path, Stmt};
 
 use super::super::context::{Ctx, Locals, Narrow};
 use super::super::expressions;
@@ -53,6 +53,16 @@ pub(super) fn translate_try(
 
     let catch_arm: TokenStream = match &t.handler {
         Some(handler) => {
+            // Register the catch param as a `DsError` before translating the
+            // body, so `e.constructor.name`/`e.name`/`e.message` route to the
+            // `DsError`'s fields (the panic payload is a `DsError`, bound
+            // below via `DsError::from_panic`).
+            if let Some(cp) = handler.param.as_ref() {
+                if let BindingPattern::BindingIdentifier(id) = &cp.pattern {
+                    let param = names.of_binding(id);
+                    locals.insert(param.to_string(), parse_quote!(__ds::DsError));
+                }
+            }
             let catch_body: Vec<Stmt> = handler
                 .body
                 .body
@@ -66,10 +76,8 @@ pub(super) fn translate_try(
                         let param = names.of_binding(id);
                         quote! {
                             Err(__panic) => {
-                                let #param = __panic
-                                    .downcast_ref::<&'static str>().copied().map(|s| s.to_string())
-                                    .or_else(|| __panic.downcast_ref::<String>().map(|s| s.clone()))
-                                    .unwrap_or_else(|| "panic".to_string());
+                                let #param = crate::__ds::DsError::from_panic(&__panic)
+                                    .unwrap_or_else(|| crate::__ds::DsError::new("Error", "panic"));
                                 #(#catch_body)*
                             }
                         }
@@ -86,7 +94,7 @@ pub(super) fn translate_try(
     };
 
     let mut result = vec![parse_quote! {
-        match ::std::panic::catch_unwind(::std::panic::AssertUnwindSafe(|| {
+        match crate::__ds::catch_quiet(::std::panic::AssertUnwindSafe(|| {
             #(#body)*
         })) {
             Ok(_) => {},
@@ -117,9 +125,13 @@ fn control_flow_in(stmts: &[Statement]) -> bool {
     })
 }
 
-/// `throw new Error("msg")` / `throw "msg"` → `panic!("msg")`; any other
-/// `throw expr` → `panic!("{}", expr)` (Rust has no `throw`; `.ts` errors are
-/// treated as unrecoverable panics, since there is no `try`/`catch` yet).
+/// `throw new RangeError("msg")` / `throw new Error("msg")` →
+/// `panic_any(DsError::new("RangeError", "msg"))`; `throw "msg"` →
+/// `panic_any(DsError::new("Error", "msg"))`; any other `throw expr` →
+/// `panic_any(DsError::new("Error", <expr>.to_string()))`. `panic_any` carries
+/// the `DsError` (Send + 'static) as the payload, so `catch (e)` downcasts it
+/// back and `e.constructor.name`/`e.name`/`e.message` work without
+/// string-matching panic messages.
 pub(super) fn throw_stmt(
     arg: &Expression,
     locals: &Locals,
@@ -127,30 +139,49 @@ pub(super) fn throw_stmt(
     narrow: &Narrow,
     names: &NameTable<'_>,
 ) -> Stmt {
-    if let Some(lit) = thrown_message(arg) {
-        return parse_quote!(panic!(#lit););
+    if let Some((name, message)) = thrown_error(arg) {
+        return parse_quote!(::std::panic::panic_any(crate::__ds::DsError::new(#name, #message)););
     }
     let ctx = Ctx::new(locals, registry, narrow, names);
     let e = expressions::translate_expr(arg, &ctx);
-    parse_quote!(panic!("{}", #e);)
+    parse_quote!(::std::panic::panic_any(crate::__ds::DsError::new("Error", format!("{}", #e)));)
 }
 
-/// The string literal carried by `throw new Error("msg")` or `throw "msg"`.
-fn thrown_message(arg: &Expression) -> Option<LitStr> {
+/// `(name, message)` for `throw new X("msg")` / `throw "msg"` — `name` is the
+/// ES error class ("RangeError"/"Error"/…), `message` the rendered string
+/// expression. `None` for a non-literal message or an unrecognized error
+/// class, so the caller falls back to `throw expr` → `DsError { "Error", … }`.
+fn thrown_error(arg: &Expression) -> Option<(&'static str, Expr)> {
+    use syn::parse_quote;
     if let Expression::StringLiteral(s) = arg {
-        return Some(LitStr::new(
-            s.value.as_str(),
-            proc_macro2::Span::call_site(),
-        ));
+        let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+        return Some(("Error", parse_quote!(#lit)));
     }
     let Expression::NewExpression(new) = arg else {
         return None;
     };
-    if let Argument::StringLiteral(s) = new.arguments.first()? {
-        return Some(LitStr::new(
-            s.value.as_str(),
-            proc_macro2::Span::call_site(),
-        ));
-    }
-    None
+    let name = match &new.callee {
+        Expression::Identifier(id) => match id.name.as_str() {
+            "Error" => "Error",
+            "RangeError" => "RangeError",
+            "TypeError" => "TypeError",
+            "SyntaxError" => "SyntaxError",
+            "ReferenceError" => "ReferenceError",
+            "EvalError" => "EvalError",
+            "URIError" => "URIError",
+            _ => return None,
+        },
+        _ => return None,
+    };
+    let message: Expr = match new.arguments.first() {
+        Some(Argument::StringLiteral(s)) => {
+            let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+            parse_quote!(#lit)
+        }
+        // A non-string-literal message (a variable, a template) — let the
+        // caller render it via the `throw expr` fallback.
+        Some(_) => return None,
+        None => parse_quote!(""),
+    };
+    Some((name, message))
 }

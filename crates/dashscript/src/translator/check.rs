@@ -726,14 +726,20 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut Wal
         Expression::ParenthesizedExpression(p) => collect_expr(&p.expression, out, state),
         Expression::TSNonNullExpression(nn) => collect_expr(&nn.expression, out, state),
         Expression::StaticMemberExpression(sm) => {
-            // A mapped static read (`Math.PI`, `Number.MAX_VALUE`,
-            // `Array.prototype`) takes a global receiver but is not a value
-            // reference to it — don't recurse (it would trip the identifier
-            // rule). A method name or arity on a global receiver
-            // (`Object.create`, `Math.floor.length`) is reflection: recurse so
-            // the global name is reached and flagged. Arity `.length` is also
-            // caught directly by `classify`.
-            if !is_static_value_read(expr) {
+            // `e.constructor.name` / `e.constructor.message` — the ES
+            // error-class idiom on a `catch (e)` binding, lowered to the
+            // `DsError`'s `name`/`message` field. The inner `e.constructor` is
+            // otherwise `.constructor` reflection (Reject), so short-circuit
+            // it: don't recurse (a non-`DsError` receiver surfaces honestly as
+            // a cargo error — `x.constructor` has no field).
+            let is_error_prop_chain = (sm.property.name.as_str() == "name"
+                || sm.property.name.as_str() == "message")
+                && matches!(
+                    &sm.object,
+                    Expression::StaticMemberExpression(inner)
+                        if inner.property.name.as_str() == "constructor",
+                );
+            if !is_error_prop_chain && !is_static_value_read(expr) {
                 collect_expr(&sm.object, out, state);
             }
         }

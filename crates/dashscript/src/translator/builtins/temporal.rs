@@ -5,9 +5,11 @@
 //! `temporal_rs` is statically typed and its calendar accessors are infallible
 //! (`.year()` returns `i32`, not `TemporalResult<i32>`), so a
 //! `Temporal.PlainDate` maps directly to `temporal_rs::PlainDate` — no `__ds`
-//! helper slice. The `from` constructor returns `TemporalResult`, lowered with
-//! `.unwrap()` (a malformed ISO string panics, matching ES Temporal's throw —
-//! `ds build` sets `panic=unwind` for try/catch).
+//! helper slice. The `from` constructor returns `TemporalResult`; its `Err` is
+//! lowered by `panic_any`-ing a `DsError` whose `name` is the temporal-rs
+//! `ErrorKind` mapped to its ES error class (a malformed ISO string is an ES
+//! `RangeError`/`SyntaxError`, not a bare unwrap panic) — see
+//! `RuntimeDep::Error` + `try`/`catch` in `functions/try_throw.rs`.
 
 use oxc_ast::ast::Argument;
 use proc_macro2::Span;
@@ -44,7 +46,25 @@ fn plain_date_from(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     } else {
         translate_argument(a, ctx)
     };
-    Some(parse_quote!(temporal_rs::PlainDate::from_utf8((#e).as_bytes()).unwrap()))
+    Some(parse_quote!({
+        // A malformed ISO string is an ES `RangeError`/`SyntaxError`, not a
+        // panic — lower the `TemporalResult::Err` to a `DsError` so `catch (e)`
+        // recovers `e.constructor.name`/`e.name`/`e.message` (the temporal-rs
+        // `ErrorKind` is the ES error class; `into_message` is the text).
+        match temporal_rs::PlainDate::from_utf8((#e).as_bytes()) {
+            Ok(__d) => __d,
+            Err(__err) => ::std::panic::panic_any(crate::__ds::DsError::new(
+                match __err.kind() {
+                    temporal_rs::error::ErrorKind::Generic => "Error",
+                    temporal_rs::error::ErrorKind::Type => "TypeError",
+                    temporal_rs::error::ErrorKind::Range => "RangeError",
+                    temporal_rs::error::ErrorKind::Syntax => "SyntaxError",
+                    temporal_rs::error::ErrorKind::Assert => "ImplementationError",
+                },
+                __err.into_message(),
+            )),
+        }
+    }))
 }
 
 /// `Temporal.PlainDate.compare(a, b)` → -1/0/1 (ES Temporal's

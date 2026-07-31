@@ -135,6 +135,22 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#ns::#member);
         }
     }
+    // `e.constructor.name` / `e.constructor.message` on a `DsError` local (a
+    // `catch (e)` binding whose panic payload is a `DsError`) → `e.name` /
+    // `e.message`. `throw new RangeError("m")` panics a `DsError { name,
+    // message }`; `e.constructor` has no Rust field, so the ES idiom rewrites
+    // to the `DsError`'s own `name`/`message` field.
+    if field_name == "name" || field_name == "message" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "constructor"
+                && is_ds_error_local(&inner.object, ctx)
+            {
+                let obj = translate_expr(&inner.object, ctx);
+                let field = bindings::snake(field_name);
+                return parse_quote!(#obj.#field);
+            }
+        }
+    }
     // `m.size` on a Map/Set (HashMap/HashSet) → `.len()` — a property, not a
     // key lookup. Checked before the `is_hashmap_local` arm below, which would
     // otherwise lower it to `m.get("size")`. A user struct with a `size` field
@@ -385,6 +401,19 @@ fn is_plain_date_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
         .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "PlainDate"))
+}
+
+/// Whether `expr` is a `DsError` local (a `catch (e)` binding) — the panic
+/// payload bound by `DsError::from_panic` in `try`/`catch`. Used so
+/// `e.constructor.name`/`e.constructor.message` route to the `DsError`'s
+/// `name`/`message` fields (`e.constructor` has no Rust analogue).
+fn is_ds_error_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|ty| ty.segments.last().is_some_and(|s| s.ident == "DsError"))
 }
 
 /// The `temporal_rs::PlainDate` accessor method for an ES Temporal calendar

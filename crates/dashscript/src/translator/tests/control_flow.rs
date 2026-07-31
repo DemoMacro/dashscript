@@ -92,14 +92,20 @@ fn translates_if_option_truthiness() {
 fn translates_throw_new_error_to_panic() {
     let src = "function f(): void { throw new Error(\"boom\"); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("panic!(\"boom\")"), "got:\n{rust}");
+    assert!(
+        rust.contains("panic_any(crate::__ds::DsError::new(\"Error\", \"boom\"))"),
+        "got:\n{rust}"
+    );
 }
 
 #[test]
 fn translates_throw_string_to_panic() {
     let src = "function f(): void { throw \"oops\"; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("panic!(\"oops\")"), "got:\n{rust}");
+    assert!(
+        rust.contains("panic_any(crate::__ds::DsError::new(\"Error\", \"oops\"))"),
+        "got:\n{rust}"
+    );
 }
 
 #[test]
@@ -107,21 +113,18 @@ fn translates_try_catch_to_catch_unwind() {
     let src =
         "function f(): void { try { throw new Error(\"oops\"); } catch (e) { console.log(e); } }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("catch_unwind"), "got:\n{rust}");
+    assert!(rust.contains("catch_quiet"), "got:\n{rust}");
     assert!(rust.contains("AssertUnwindSafe"), "got:\n{rust}");
-    // The catch param `e` is bound as the panic payload's message (String).
+    // The catch param `e` is bound as a `DsError` (the `panic_any` payload).
     assert!(rust.contains("let e ="), "got:\n{rust}");
-    assert!(
-        rust.contains("downcast_ref::<&'static str>"),
-        "got:\n{rust}"
-    );
+    assert!(rust.contains("DsError::from_panic"), "got:\n{rust}");
 }
 
 #[test]
 fn translates_try_finally_runs_after_match() {
     let src = "function f(): void { try { console.log(\"a\"); } catch (e) {} finally { console.log(\"b\"); } }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("catch_unwind"), "got:\n{rust}");
+    assert!(rust.contains("catch_quiet"), "got:\n{rust}");
     assert!(rust.contains("\"b\""), "got:\n{rust}");
 }
 

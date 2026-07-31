@@ -97,12 +97,19 @@ pub enum RuntimeDep {
     /// `__ds::TextEncoder`; the helper slice defines both structs, so a file
     /// that uses either gets both.
     Encoding,
+    /// An ECMAScript error object lowered through `panic!`/`catch_unwind` —
+    /// `throw new RangeError("msg")` panics a `DsError`, and `catch (e)`
+    /// downcasts it back. Carries the error class `name` + `message`, so
+    /// `e.constructor.name`/`e.name`/`e.message`/`e.toString()`/`instanceof`
+    /// work without string-matching panic messages. Pure `std` — no cargo
+    /// dep. Routes through `__ds::DsError`.
+    Error,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 10] = [
+    const ALL: [RuntimeDep; 11] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -113,6 +120,7 @@ impl RuntimeDep {
         RuntimeDep::Truthy,
         RuntimeDep::Display,
         RuntimeDep::Encoding,
+        RuntimeDep::Error,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -129,6 +137,7 @@ impl RuntimeDep {
             RuntimeDep::Truthy => Some("__ds::truthy"),
             RuntimeDep::Display => Some("__ds::display"),
             RuntimeDep::Encoding => Some("__ds::TextEncoder"),
+            RuntimeDep::Error => Some("__ds::DsError"),
             RuntimeDep::Engine => None,
         }
     }
@@ -176,6 +185,7 @@ impl RuntimeDep {
             RuntimeDep::Truthy => None,
             RuntimeDep::Display => None,
             RuntimeDep::Encoding => None,
+            RuntimeDep::Error => None,
         }
     }
 
@@ -190,6 +200,7 @@ impl RuntimeDep {
             RuntimeDep::Truthy => Some(TRUTHY_HELPER),
             RuntimeDep::Display => Some(DISPLAY_HELPER),
             RuntimeDep::Encoding => Some(ENCODING_HELPER),
+            RuntimeDep::Error => Some(ERROR_HELPER),
         }
     }
 }
@@ -450,6 +461,69 @@ fn ds_display_impl(item: &syn::Item, display_types: &[String]) -> Option<syn::It
 /// the conformance harness (lib test) — so the helper text lives in the library
 /// rather than either consumer. [`RuntimeDeps::helper_module`] concatenates
 /// whichever slices a translation flagged.
+const ERROR_HELPER: &str = r##"/// An ECMAScript error object lowered through Rust `panic!`/`catch_unwind`.
+/// `throw new RangeError("msg")` panics a `DsError`; `catch (e)` downcasts it
+/// back. Carries the error class `name` ("RangeError"/"TypeError"/…) and
+/// `message`, so `e.constructor.name`/`e.name`/`e.message`/`e.toString()`
+/// work without string-matching panic messages.
+#[derive(Clone)]
+pub struct DsError {
+    pub name: &'static str,
+    pub message: String,
+}
+
+impl DsError {
+    #[inline]
+    pub fn new(name: &'static str, message: impl Into<String>) -> Self {
+        DsError { name, message: message.into() }
+    }
+
+    /// Recover a `DsError` from a `catch_unwind` panic payload, accepting a
+    /// `DsError`, a `String`, or a `&'static str` (a bare `panic!("msg")`).
+    #[inline]
+    pub fn from_panic(payload: &Box<dyn std::any::Any + Send>) -> Option<Self> {
+        if let Some(e) = payload.downcast_ref::<DsError>() {
+            return Some(e.clone());
+        }
+        if let Some(s) = payload.downcast_ref::<String>() {
+            return Some(DsError::new("Error", s.clone()));
+        }
+        if let Some(s) = payload.downcast_ref::<&'static str>() {
+            return Some(DsError::new("Error", (*s).to_string()));
+        }
+        None
+    }
+}
+
+impl std::fmt::Display for DsError {
+    #[inline]
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.message.is_empty() {
+            write!(f, "{}", self.name)
+        } else {
+            write!(f, "{}: {}", self.name, self.message)
+        }
+    }
+}
+
+/// Run `f` under `catch_unwind`, suppressing the panic hook while the body
+/// runs. A `.ts` `throw` inside `try` is control flow, not a diagnostic — but
+/// Rust's panic hook fires before `catch_unwind` catches, so the default hook
+/// would print `Box<dyn Any>` for every caught throw. The hook is taken before
+/// and restored after, so an uncaught panic still prints normally.
+#[inline]
+pub fn catch_quiet<F, R>(f: F) -> std::thread::Result<R>
+where
+    F: FnOnce() -> R + std::panic::UnwindSafe,
+{
+    let prev = std::panic::take_hook();
+    std::panic::set_hook(Box::new(|_| {}));
+    let r = std::panic::catch_unwind(f);
+    std::panic::set_hook(prev);
+    r
+}
+"##;
+
 const RYUJS_HELPERS: &str = "\
 use ryu_js::Buffer;
 
