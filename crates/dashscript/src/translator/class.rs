@@ -146,16 +146,40 @@ pub(in crate::translator) fn translate_class(
         }
     }
 
-    let struct_item = build_struct(&name, &fields);
-    let ctor_item = build_constructor(ctor, &fields, &name, registry, names);
+    // A class type parameter (`class C<T extends …>`) lowers to a Rust generic
+    // on both the struct and the impl. `T extends X` carries no Rust trait bound
+    // (X is a struct, not a trait), but the class derives `Clone` and its
+    // methods clone field values, so `T: Clone` is the bound the lowered Rust
+    // needs — added once on the impl, not on the struct or per method.
+    let type_params: Vec<Ident> = class
+        .type_parameters
+        .as_deref()
+        .map_or_else(Vec::new, |tp| {
+            tp.params
+                .iter()
+                .map(|p| bindings::type_ident(&p.name.name))
+                .collect()
+        });
+
+    let struct_item = build_struct(&name, &fields, &type_params);
+    let ctor_item = build_constructor(ctor, &fields, &name, &type_params, registry, names);
     let method_items: Vec<syn::ImplItem> = methods
         .iter()
         .map(|md| build_method(md, &fields, registry, names))
         .collect();
-    let impl_item: Item = parse_quote! {
-        impl #name {
-            #ctor_item
-            #(#method_items)*
+    let impl_item: Item = if type_params.is_empty() {
+        parse_quote! {
+            impl #name {
+                #ctor_item
+                #(#method_items)*
+            }
+        }
+    } else {
+        parse_quote! {
+            impl<#(#type_params: Clone),*> #name<#(#type_params),*> {
+                #ctor_item
+                #(#method_items)*
+            }
         }
     };
 
@@ -172,8 +196,10 @@ fn is_private_member(key: &PropertyKey) -> bool {
     matches!(key, PropertyKey::PrivateIdentifier(_))
 }
 
-/// `#[derive(Clone)] struct Name { pub field: ty, … }`.
-fn build_struct(name: &Ident, fields: &[Field]) -> Item {
+/// `#[derive(Clone)] struct Name<P, …> { pub field: ty, … }` — generic over
+/// the class's type parameters (if any); no bound on the struct itself (the
+/// bound lives on the impl).
+fn build_struct(name: &Ident, fields: &[Field], type_params: &[Ident]) -> Item {
     let field_lines: Vec<TokenStream> = fields
         .iter()
         .map(|f| {
@@ -182,9 +208,16 @@ fn build_struct(name: &Ident, fields: &[Field]) -> Item {
             quote!(pub #n: #t,)
         })
         .collect();
-    parse_quote! {
-        #[derive(Clone)]
-        struct #name { #(#field_lines)* }
+    if type_params.is_empty() {
+        parse_quote! {
+            #[derive(Clone)]
+            struct #name { #(#field_lines)* }
+        }
+    } else {
+        parse_quote! {
+            #[derive(Clone)]
+            struct #name<#(#type_params),*> { #(#field_lines)* }
+        }
     }
 }
 
@@ -199,6 +232,7 @@ fn build_constructor(
     ctor: Option<&MethodDefinition>,
     fields: &[Field],
     type_name: &Ident,
+    type_params: &[Ident],
     registry: &TypeRegistry,
     names: &NameTable<'_>,
 ) -> syn::ImplItem {
@@ -278,7 +312,18 @@ fn build_constructor(
         })
         .collect();
 
-    let init: Stmt = parse_quote!(let mut #self_name = #type_name { #(#field_inits),* };);
+    // `fn new` returns `Name<P>` (a generic path type), but a struct literal of
+    // a generic type needs turbofish — `Name::<P> { … }` — so the two spellings
+    // diverge when the class is generic.
+    let (ret_ty, lit_ty): (TokenStream, TokenStream) = if type_params.is_empty() {
+        (quote!(#type_name), quote!(#type_name))
+    } else {
+        (
+            quote!(#type_name<#(#type_params),*>),
+            quote!(#type_name::<#(#type_params),*>),
+        )
+    };
+    let init: Stmt = parse_quote!(let mut #self_name = #lit_ty { #(#field_inits),* };);
     // A bare trailing `__ds_self` (no semicolon) is the block's value — syn's
     // Stmt parser demands a semicolon for a bare path, so build it directly.
     let trailing = Stmt::Expr(parse_quote!(#self_name), None);
@@ -288,7 +333,7 @@ fn build_constructor(
     all.push(trailing);
 
     parse_quote! {
-        pub fn new(#(#params),*) -> #type_name { #(#all)* }
+        pub fn new(#(#params),*) -> #ret_ty { #(#all)* }
     }
 }
 

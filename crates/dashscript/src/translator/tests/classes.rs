@@ -229,3 +229,18 @@ fn flags_abstract_class() {
         .expect("should translate");
     assert!(rust.contains("abstract"), "abstract diag: {rust}");
 }
+
+#[test]
+fn generic_class_lowers_generic_struct_and_impl() {
+    // `class C<T>` → `struct C<T>` + `impl<T: Clone> C<T>`. The Clone bound is
+    // added on the impl because the class derives Clone and its methods clone
+    // field values; `T extends X` itself has no Rust trait analogue (X is a
+    // struct, not a trait).
+    let src = "class C<T> { items: number[] = []; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("struct C<T>"), "generic struct: {rust}");
+    assert!(
+        rust.contains("impl<T: Clone> C<T>"),
+        "generic impl + Clone bound: {rust}"
+    );
+}

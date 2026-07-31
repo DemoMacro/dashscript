@@ -370,12 +370,26 @@ fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str) {
 /// the impl is `true` regardless of the type. Emitted for every user type in a
 /// file that lowered an `__ds::truthy` call, so a member access on a user-type
 /// field in a condition (`if (opts.config)`) resolves instead of E0277.
-fn ds_truthy_impl(name: &syn::Ident) -> syn::Item {
-    syn::parse_quote! {
-        impl crate::__ds::DsTruthy for #name {
-            #[inline]
-            fn ds_truthy(&self) -> bool {
-                true
+fn ds_truthy_impl(name: &syn::Ident, generics: &syn::Generics) -> syn::Item {
+    // A generic struct/enum's `DsTruthy` impl carries the type params (with the
+    // same `Clone` bound the class impl uses) on both the impl and the self type.
+    let params: Vec<syn::Ident> = generics.type_params().map(|p| p.ident.clone()).collect();
+    if params.is_empty() {
+        syn::parse_quote! {
+            impl crate::__ds::DsTruthy for #name {
+                #[inline]
+                fn ds_truthy(&self) -> bool {
+                    true
+                }
+            }
+        }
+    } else {
+        syn::parse_quote! {
+            impl<#(#params: Clone),*> crate::__ds::DsTruthy for #name<#(#params),*> {
+                #[inline]
+                fn ds_truthy(&self) -> bool {
+                    true
+                }
             }
         }
     }
@@ -388,29 +402,43 @@ fn ds_truthy_impl(name: &syn::Ident) -> syn::Item {
 /// "[object Object]"; a union enum forwards to the translator-generated
 /// `Display` impl it already carries, so the active scalar variant renders.
 fn ds_display_impl(item: &syn::Item, display_types: &[String]) -> Option<syn::Item> {
-    let (name, body): (&syn::Ident, syn::Expr) = match item {
-        syn::Item::Struct(s) => (&s.ident, syn::parse_quote!("[object Object]".to_string())),
+    let (name, generics, body): (&syn::Ident, &syn::Generics, syn::Expr) = match item {
+        syn::Item::Struct(s) => (
+            &s.ident,
+            &s.generics,
+            syn::parse_quote!("[object Object]".to_string()),
+        ),
         syn::Item::Enum(e) => {
             // A union enum carries a translator-generated `Display` impl, so it
             // forwards to `to_string` and the active scalar variant renders. A
             // user enum without `Display` (e.g. a TS union type alias lowered
             // to a named enum) falls back to ES "[object Object]".
-            if display_types.contains(&e.ident.to_string()) {
-                (
-                    &e.ident,
-                    syn::parse_quote!(::std::string::ToString::to_string(self)),
-                )
+            let body = if display_types.contains(&e.ident.to_string()) {
+                syn::parse_quote!(::std::string::ToString::to_string(self))
             } else {
-                (&e.ident, syn::parse_quote!("[object Object]".to_string()))
-            }
+                syn::parse_quote!("[object Object]".to_string())
+            };
+            (&e.ident, &e.generics, body)
         }
         _ => return None,
     };
-    Some(syn::parse_quote! {
-        impl crate::__ds::DsDisplay for #name {
-            #[inline]
-            fn ds_display(&self) -> String {
-                #body
+    let params: Vec<syn::Ident> = generics.type_params().map(|p| p.ident.clone()).collect();
+    Some(if params.is_empty() {
+        syn::parse_quote! {
+            impl crate::__ds::DsDisplay for #name {
+                #[inline]
+                fn ds_display(&self) -> String {
+                    #body
+                }
+            }
+        }
+    } else {
+        syn::parse_quote! {
+            impl<#(#params: Clone),*> crate::__ds::DsDisplay for #name<#(#params),*> {
+                #[inline]
+                fn ds_display(&self) -> String {
+                    #body
+                }
             }
         }
     })
@@ -2189,8 +2217,8 @@ impl Translator {
                 .items
                 .iter()
                 .filter_map(|item| match item {
-                    syn::Item::Struct(s) => Some(ds_truthy_impl(&s.ident)),
-                    syn::Item::Enum(e) => Some(ds_truthy_impl(&e.ident)),
+                    syn::Item::Struct(s) => Some(ds_truthy_impl(&s.ident, &s.generics)),
+                    syn::Item::Enum(e) => Some(ds_truthy_impl(&e.ident, &e.generics)),
                     _ => None,
                 })
                 .collect();
