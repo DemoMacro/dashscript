@@ -12,7 +12,7 @@ use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::IdentifierReference;
 use oxc_semantic::SymbolId;
-use syn::{parse_quote, Expr, Ident, Path};
+use syn::{parse_quote, Expr, Ident, Path, Type};
 
 use super::flavor::NumberFlavor;
 use super::registry::{TypeRegistry, VariantShape};
@@ -82,6 +82,13 @@ pub struct Narrow {
     /// method. Threaded through `Narrow` because it already reaches every
     /// expression in a body, so `this` needs no new parameter plumbing.
     self_recv: Option<Ident>,
+    /// The instance fields of the class whose method/constructor body this
+    /// scope belongs to: snake-cased Rust field name → translated type. Lets a
+    /// `this.<field>` receiver resolve its type (e.g. `this.map` is a
+    /// `HashMap`) without a registry lookup, so collection methods dispatch on
+    /// a `this.<field>` receiver the same way they do on a local. Empty at
+    /// module scope / in a free function.
+    self_fields: HashMap<String, Type>,
 }
 
 impl Narrow {
@@ -94,18 +101,22 @@ impl Narrow {
             fields,
             option_some: HashSet::new(),
             self_recv: None,
+            self_fields: HashMap::new(),
         }
     }
 
     /// A method-body scope: `this` maps to `self_name` (`self` for a method,
-    /// `__ds_self` for a constructor). No discriminated-union narrowing.
+    /// `__ds_self` for a constructor), and `self_fields` are that class's
+    /// instance fields (snake-cased name → type) so a `this.<field>` receiver
+    /// resolves its type. No discriminated-union narrowing.
     #[must_use]
-    pub fn in_method(self_name: Ident) -> Self {
+    pub fn in_method(self_name: Ident, self_fields: HashMap<String, Type>) -> Self {
         Self {
             scrut: None,
             fields: HashSet::new(),
             option_some: HashSet::new(),
             self_recv: Some(self_name),
+            self_fields,
         }
     }
 
@@ -344,6 +355,15 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn this_receiver(&self) -> Option<Ident> {
         self.narrow.self_recv.clone()
+    }
+
+    /// The translated type of an instance field of the class whose method/
+    /// constructor body this is, looked up by its snake-cased Rust field name —
+    /// so a `this.<field>` receiver resolves its type (e.g. `this.map` is a
+    /// `HashMap`). `None` outside a method/constructor or for an unknown field.
+    #[must_use]
+    pub fn self_field_type(&self, field: &str) -> Option<&'a Type> {
+        self.narrow.self_fields.get(field)
     }
 }
 

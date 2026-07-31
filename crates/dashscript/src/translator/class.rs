@@ -5,7 +5,7 @@
 //! constructor body, then field default initializers); instance methods become
 //! `pub fn method(&self | &mut self)`. `this` → `self` (method) / `__ds_self`
 //! (constructor).
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
     AssignmentTarget, Class, ClassElement, Expression, Function, MethodDefinition,
@@ -30,6 +30,16 @@ struct Field {
     name: Ident,
     ty: Type,
     default: Option<Expr>,
+}
+
+/// A class's instance fields as a `HashMap` keyed by snake-cased Rust field name
+/// → translated type, the form [`Narrow::in_method`] consumes so a
+/// `this.<field>` receiver resolves its type inside a method/constructor body.
+fn self_field_map(fields: &[Field]) -> HashMap<String, Type> {
+    fields
+        .iter()
+        .map(|f| (f.name.to_string(), f.ty.clone()))
+        .collect()
 }
 
 /// Translate a `class` declaration into its `struct` plus `impl` items.
@@ -136,7 +146,7 @@ pub(in crate::translator) fn translate_class(
     let ctor_item = build_constructor(ctor, &fields, &name, registry, names);
     let method_items: Vec<syn::ImplItem> = methods
         .iter()
-        .map(|md| build_method(md, registry, names))
+        .map(|md| build_method(md, &fields, registry, names))
         .collect();
     let impl_item: Item = parse_quote! {
         impl #name {
@@ -195,7 +205,8 @@ fn build_constructor(
     let mut body_stmts: Vec<Stmt> = Vec::new();
 
     let self_name = format_ident!("__ds_self");
-    let narrow = Narrow::in_method(self_name.clone());
+    let self_fields = self_field_map(fields);
+    let narrow = Narrow::in_method(self_name.clone(), self_fields);
 
     if let Some(md) = ctor {
         let func = &md.value;
@@ -281,6 +292,7 @@ fn build_constructor(
 /// the body assigns/updates a member of `this`.
 fn build_method(
     md: &MethodDefinition,
+    fields: &[Field],
     registry: &TypeRegistry,
     names: &NameTable<'_>,
 ) -> syn::ImplItem {
@@ -310,7 +322,8 @@ fn build_method(
     }
     let params = translate_params(&func.params, &locals, registry, names);
 
-    let narrow = Narrow::in_method(format_ident!("self"));
+    let self_fields = self_field_map(fields);
+    let narrow = Narrow::in_method(format_ident!("self"), self_fields);
     let return_path = func.return_type.as_deref().and_then(return_path_of);
     let body_stmts: &[Statement] = func.body.as_deref().map_or(&[], |b| &b.statements[..]);
     let block = translate_body(

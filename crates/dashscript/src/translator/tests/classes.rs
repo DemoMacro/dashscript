@@ -162,6 +162,24 @@ fn infers_initializer_only_field_type() {
 }
 
 #[test]
+fn collection_method_dispatches_on_this_field() {
+    // Inside a method, a `this.<field>` receiver resolves its type from the
+    // class's instance fields, so a `Map`/`Set` method dispatches on it the
+    // same way it does on a local: `this.m.set(k, v)` → `self.m.insert(k, v)`,
+    // `this.m.has(k)` → `self.m.contains_key(&k)`.
+    let src = "class C { m = new Map<string, number>(); add(k: string, v: number): void { this.m.set(k, v); } has(k: string): boolean { return this.m.has(k); } }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("self.m.insert"),
+        "this.m.set -> insert: {rust}"
+    );
+    assert!(
+        rust.contains("self.m.contains_key(&"),
+        "this.m.has -> contains_key: {rust}"
+    );
+}
+
+#[test]
 fn flags_abstract_class() {
     let rust = Translator::new()
         .translate("abstract class C { x: number; }")

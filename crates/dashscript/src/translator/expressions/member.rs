@@ -485,39 +485,70 @@ fn hashmap_access_method(expr: &Expression, ctx: &Ctx<'_>) -> syn::Ident {
     syn::Ident::new(if copy { "copied" } else { "cloned" }, Span::call_site())
 }
 
-/// True when `expr` is a local whose type is a `HashMap`.
-pub(in crate::translator) fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
-    let Expression::Identifier(id) = expr else {
-        return false;
+/// The translated type of a `this.<field>` receiver inside a class method or
+/// constructor body — the class instance field's type, looked up via the
+/// per-scope `self_fields` table threaded through `Narrow`. `None` for a
+/// non-`this.<field>` expression or an unknown field, so collection-method
+/// dispatch falls through to the local-identifier path.
+fn self_member_field_type<'a>(expr: &Expression, ctx: &Ctx<'a>) -> Option<&'a syn::Type> {
+    let Expression::StaticMemberExpression(sm) = expr else {
+        return None;
     };
-    let name = bindings::snake(&id.name).to_string();
-    if ctx.local_type(&name).is_some_and(is_hashmap) {
-        return true;
+    if !matches!(&sm.object, Expression::ThisExpression(_)) {
+        return None;
     }
-    // An imported lazy static whose `OnceLock` cell holds a `HashMap` —
-    // `m["k"]` lowers to `m().get(k)`. The cell type comes from the
-    // cross-file lazy-static export table, since a `use`-imported accessor fn
-    // has no entry in this file's `local_type`.
-    if super::super::imports::lazy_static_export_type(&name)
-        .is_some_and(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
-    {
-        return true;
-    }
-    // A file-local lazy static (e.g. an alias `const n = m;`) whose cell type
-    // is a `HashMap` — not in the cross-file export table, so resolve it via
-    // the per-symbol NameTable recorded in the lazy-static pre-pass.
-    ctx.names()
-        .lazy_static_cell_type(id)
-        .is_some_and(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
+    let field = bindings::snake(sm.property.name.as_str()).to_string();
+    ctx.self_field_type(&field)
 }
 
-/// True when `expr` is a local whose type is a `HashSet` (an ES `Set`).
+/// True when `expr` is a local whose type is a `HashMap`, or a `this.<field>`
+/// receiver inside a class method whose instance field type is a `HashMap`.
+pub(in crate::translator) fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    if let Expression::Identifier(id) = expr {
+        let name = bindings::snake(&id.name).to_string();
+        if ctx.local_type(&name).is_some_and(is_hashmap) {
+            return true;
+        }
+        // An imported lazy static whose `OnceLock` cell holds a `HashMap` —
+        // `m["k"]` lowers to `m().get(k)`. The cell type comes from the
+        // cross-file lazy-static export table, since a `use`-imported accessor fn
+        // has no entry in this file's `local_type`.
+        if super::super::imports::lazy_static_export_type(&name)
+            .is_some_and(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
+        {
+            return true;
+        }
+        // A file-local lazy static (e.g. an alias `const n = m;`) whose cell type
+        // is a `HashMap` — not in the cross-file export table, so resolve it via
+        // the per-symbol NameTable recorded in the lazy-static pre-pass.
+        if ctx
+            .names()
+            .lazy_static_cell_type(id)
+            .is_some_and(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
+        {
+            return true;
+        }
+    }
+    // A `this.<field>` receiver inside a method/constructor: a class instance
+    // field whose translated type is a `HashMap` (`this.map.set(…)` → insert).
+    self_member_field_type(expr, ctx)
+        .and_then(types::type_path)
+        .is_some_and(is_hashmap)
+}
+
+/// True when `expr` is a local whose type is a `HashSet` (an ES `Set`), or a
+/// `this.<field>` receiver inside a class method whose instance field type is
+/// a `HashSet`.
 pub(in crate::translator) fn is_hashset_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
-    let Expression::Identifier(id) = expr else {
-        return false;
-    };
-    let name = bindings::snake(&id.name).to_string();
-    ctx.local_type(&name).is_some_and(is_hashset)
+    if let Expression::Identifier(id) = expr {
+        let name = bindings::snake(&id.name).to_string();
+        if ctx.local_type(&name).is_some_and(is_hashset) {
+            return true;
+        }
+    }
+    self_member_field_type(expr, ctx)
+        .and_then(types::type_path)
+        .is_some_and(is_hashset)
 }
 
 /// True when `expr` is a local whose type is `Vec<u8>` (a `Uint8Array` byte
