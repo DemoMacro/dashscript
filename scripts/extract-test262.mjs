@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // Extracts DashScript differential fixtures from tc39/test262 into per-category
 // files under `tests/conformance/data/test262/<category>.json`. Each test262
-// file's asserts are rewritten (`assert.sameValue(a,b)` → `console.log(a)`,
-// `assert.throws(C,fn)` → try/catch + console.log) and wrapped in
-// `function main(): void { … }`, preserving the file's setup. The conformance
-// harness then runs Node (oracle) vs `ds` (actual) on the same source and
-// diffs stdout — a differential test.
+// Each test262 file's body is wrapped verbatim in `function main(): void { … }`
+// — assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue
+// check / the engine). The conformance harness runs `ds` and judges by exit
+// code + Test262Error detection (no Node oracle): a fixture whose asserts all
+// hold passes (supported); a thrown Test262Error fails it (partial).
 //
 // Per-category files (not one giant test262.json) so the harness can run a
 // single builtin end-to-end (`DASH_TEST262_CATEGORIES=math`) and write a
@@ -103,9 +103,11 @@ function frontmatter(src) {
 
 const ASSERTS = new Set(["sameValue", "notSameValue", "throws"]);
 
-// Rewrite every assert.{sameValue,notSameValue,throws} call in `body` to a
-// console.log / try-catch, using source slices (no AST generator needed).
-// Returns { ok, body, n } or { ok: false, reason }.
+// Parse `body`, count its asserts, and detect reflection. The body is returned
+// verbatim — DashScript lowers `assert.sameValue`/`notSameValue` to a static
+// SameValue check, while `assert.throws`, reflection, and composite operands
+// route to the embedded engine, where the test262 harness's reference semantics
+// run natively. Returns { ok, body, n } or { ok: false, reason }.
 function rewrite(body) {
   let ast;
   try {
@@ -117,64 +119,32 @@ function rewrite(body) {
   } catch (e) {
     return { ok: false, reason: `parse error: ${e.message}` };
   }
-  const edits = [];
   let n = 0;
-  // DashScript has Rust semantics — no `[[Construct]]`, no `Reflect`, no
-  // prototype chain. `new X(...)` / `new.target` / `Reflect.*` are JS
-  // object-model reflection that never maps to Rust; flag them so extract()
-  // skips the fixture instead of recording a fake "unsupported translator TODO".
+  // `new X(...)` / `new.target` / `Reflect.*` are JS object-model reflection.
+  // Recorded for the tally but no longer excluded — such a fixture routes to
+  // the engine, where the reflection runs natively under the test262 harness.
   let inapplicable = false;
   const visit = (node) => {
     if (!node || typeof node.type !== "string") return;
+    const isAssertMember =
+      node.type === "CallExpression" &&
+      node.callee?.type === "MemberExpression" &&
+      !node.callee.computed &&
+      node.callee.object?.type === "Identifier" &&
+      node.callee.object.name === "assert" &&
+      ASSERTS.has(node.callee.property.name);
+    const isBareAssert =
+      node.type === "CallExpression" &&
+      node.callee?.type === "Identifier" &&
+      node.callee.name === "assert" &&
+      node.arguments[0];
+    if (isAssertMember || isBareAssert) n++;
     if (
       node.type === "NewExpression" ||
       node.type === "MetaProperty" ||
       (node.type === "Identifier" && node.name === "Reflect")
     ) {
       inapplicable = true;
-    }
-    if (
-      node.type === "CallExpression" &&
-      node.callee?.type === "MemberExpression" &&
-      !node.callee.computed &&
-      node.callee.object?.type === "Identifier" &&
-      node.callee.object.name === "assert" &&
-      ASSERTS.has(node.callee.property.name)
-    ) {
-      const kind = node.callee.property.name;
-      const args = node.arguments;
-      if (kind === "throws" && args[1]) {
-        const fn = body.slice(args[1].start, args[1].end);
-        edits.push({
-          start: node.start,
-          end: node.end,
-          // Wrap the callable in parens: an anonymous `function () { … }`
-          // emitted bare in statement position is parsed as a
-          // `FunctionDeclaration` (which requires a name) by oxc's TS
-          // SourceType → "Expected function name". `(fn)()` forces the
-          // expression form so it parses as a call.
-          repl: `try { (${fn})(); console.log("__OK__"); } catch (e) { console.log(e.constructor.name); }`,
-        });
-      } else if (args[0]) {
-        // sameValue / notSameValue: log the actual (left) operand.
-        const actual = body.slice(args[0].start, args[0].end);
-        edits.push({ start: node.start, end: node.end, repl: `console.log(${actual})` });
-      }
-      if (args[0] || (kind === "throws" && args[1])) n++;
-    }
-    // `assert(x)` (a direct call, not `assert.sameValue`) is test262's shorthand
-    // for `assert.sameValue(x, true)` — rewrite it the same way (log the
-    // operand) so ds and Node emit identical stdout. Unrewritten, the bare
-    // `assert(...)` lowers to Rust's `assert` macro (E0423 expected function).
-    if (
-      node.type === "CallExpression" &&
-      node.callee?.type === "Identifier" &&
-      node.callee.name === "assert" &&
-      node.arguments[0]
-    ) {
-      const actual = body.slice(node.arguments[0].start, node.arguments[0].end);
-      edits.push({ start: node.start, end: node.end, repl: `console.log(${actual})` });
-      n++;
     }
     for (const k in node) {
       const v = node[k];
@@ -184,10 +154,7 @@ function rewrite(body) {
   };
   visit(ast);
   if (n === 0) return { ok: false, reason: "no asserts" };
-  edits.sort((a, b) => b.start - a.start);
-  let out = body;
-  for (const e of edits) out = out.slice(0, e.start) + e.repl + out.slice(e.end);
-  return { ok: true, body: out, n, inapplicable };
+  return { ok: true, body, n, inapplicable };
 }
 
 function extract() {
@@ -210,7 +177,7 @@ function extract() {
   mkdirSync(OUT_DIR, { recursive: true });
   // Per-category feature lists + global skip tallies.
   const byCat = new Map();
-  const tally = { parse: 0, noassert: 0, harness: 0, reflect: 0 };
+  const tally = { parse: 0, noassert: 0 };
   for (const { dir, category } of SCOPE) {
     const root = resolve(TEST262, dir);
     if (!existsSync(root)) continue;
@@ -229,19 +196,10 @@ function extract() {
         else tally.noassert++;
         continue;
       }
-      // frontmatter `includes:` lists $INCLUDE harness files the extractor
-      // does not inline (isConstructor.js, byteConversionValues.js, …); their
-      // identifiers are undefined in the fixture, so skip rather than translate.
-      if (includes.length > 0) {
-        tally.harness++;
-        continue;
-      }
-      // `new` / `Reflect` / `new.target` — JS object-model reflection;
-      // DashScript has Rust semantics, so these never apply.
-      if (r.inapplicable) {
-        tally.reflect++;
-        continue;
-      }
+      // frontmatter `includes:` lists $INCLUDE harness files (isConstructor.js,
+      // propertyHelper.js, …) the extractor does not inline; the conformance
+      // harness injects them on the engine path, so carry them through rather
+      // than skip. `new`/`Reflect`/`new.target` likewise route to the engine.
       const fixture = `function main(): void {\n${r.body.trim()}\n}\nmain();\n`;
       const id = "test262." + rel.replace(/\.js$/, "").replace(/[/.]/g, ".").toLowerCase();
       if (seen.has(id)) continue;
@@ -255,6 +213,7 @@ function extract() {
         n_asserts: r.n,
         flags,
         features,
+        includes,
       });
     }
     if (feats.length > 0) byCat.set(category, feats);
@@ -262,10 +221,10 @@ function extract() {
 
   const comment =
     "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). " +
-    "Each fixture wraps a test262 file's asserts in `function main(): void { … }` with " +
-    "assert.sameValue(a,b)→console.log(a) / assert.throws→try-catch. The conformance " +
-    "harness runs Node (oracle) vs ds (actual) and diffs stdout (differential test). " +
-    "DO NOT edit by hand.";
+    "Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` " +
+    "— assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / " +
+    "the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance " +
+    "harness injects on the engine path. DO NOT edit by hand.";
   let total = 0;
   const summary = [];
   for (const [cat, feats] of [...byCat.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
@@ -279,7 +238,7 @@ function extract() {
   console.log(
     `extract-test262: wrote ${total} fixtures across ${byCat.size} categories to ${OUT_DIR}\n` +
       `  ${summary.join("  ")}\n` +
-      `  skipped: parse=${tally.parse} noassert=${tally.noassert} harness($INCLUDE)=${tally.harness} reflect(new/Reflect)=${tally.reflect}`,
+      `  skipped: parse=${tally.parse} noassert=${tally.noassert}`,
   );
 }
 
