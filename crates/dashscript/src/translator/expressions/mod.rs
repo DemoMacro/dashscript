@@ -1068,6 +1068,10 @@ pub(in crate::translator) fn is_number_expr(e: &Expression, ctx: &Ctx<'_>) -> bo
         // `.length` is numeric (array/string length); other members are not
         // tracked, so they fall back to `Display`.
         Expression::StaticMemberExpression(sm) => sm.property.name.as_str() == "length",
+        // `++x` / `x++` / `--x` / `x--` — an ES update expression always yields
+        // a number (the operator coerces), so `${++i}` routes through
+        // number_to_string, not Display.
+        Expression::UpdateExpression(_) => true,
         _ => false,
     }
 }

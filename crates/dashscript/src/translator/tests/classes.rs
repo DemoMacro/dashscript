@@ -180,6 +180,28 @@ fn collection_method_dispatches_on_this_field() {
 }
 
 #[test]
+fn prefix_increment_this_field_yields_number() {
+    // `++this.counter` inside a template literal routes through
+    // `number_to_string` (an ES update expression always yields a number), and
+    // lowers to a block that mutates the field and returns the new value — not
+    // a `todo!()` and not the `()` of a bare `+=` statement.
+    let src = "class C { counter = 0; inc(): string { return `n${++this.counter}`; } }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("number_to_string"),
+        "++this.counter -> number_to_string: {rust}"
+    );
+    assert!(
+        rust.contains("self.counter += 1_f64"),
+        "++this.counter mutates the field: {rust}"
+    );
+    assert!(
+        !rust.contains("todo!()"),
+        "no todo!() for ++this.counter: {rust}"
+    );
+}
+
+#[test]
 fn flags_abstract_class() {
     let rust = Translator::new()
         .translate("abstract class C { x: number; }")

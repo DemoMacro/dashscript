@@ -216,6 +216,16 @@ pub(super) fn update_expr(u: &UpdateExpression, ctx: &Ctx<'_>) -> Expr {
             return mutable_static_update(u, id, &setter, ctx);
         }
     }
+    // A member target (`this.field`, `obj.field`): a block that mutates the
+    // field and yields the new (prefix) or old (postfix) value. A member
+    // target appears in expression context (e.g. `++this.counter` inside a
+    // template literal), where the `()` of a plain `+=` statement would not
+    // typecheck — so, unlike a local counter (`i++;`), the value is returned.
+    if let SimpleAssignmentTarget::StaticMemberExpression(_) = &u.argument {
+        if let Some(block) = member_update(u, ctx) {
+            return block;
+        }
+    }
     let Some(target) = simple_target(&u.argument, ctx) else {
         return parse_quote!(::core::todo!());
     };
@@ -229,6 +239,38 @@ pub(super) fn update_expr(u: &UpdateExpression, ctx: &Ctx<'_>) -> Expr {
         UpdateOperator::Decrement => quote!(#target -= #step),
     };
     syn::parse2(tokens).unwrap_or_else(|_| parse_quote!(::core::todo!()))
+}
+
+/// `++this.field` / `this.field++` / `--this.field` / `this.field--` on a
+/// static member target: a block that mutates the field and yields the new
+/// (prefix) or old (postfix) value. Only a static `obj.field` (or `this.field`)
+/// member maps; a computed `arr[i]++` falls through to `todo!()`. The step is
+/// `1_f64` (a member field's flavor is not tracked; a numeric class field
+/// lowers as `f64`).
+fn member_update(u: &UpdateExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    let SimpleAssignmentTarget::StaticMemberExpression(sm) = &u.argument else {
+        return None;
+    };
+    let obj = translate_expr(&sm.object, ctx);
+    let field = bindings::snake(&sm.property.name);
+    let step = if target_is_i64(&u.argument, ctx) {
+        quote!(1_i64)
+    } else {
+        quote!(1_f64)
+    };
+    let op = match u.operator {
+        UpdateOperator::Increment => quote!(+=),
+        UpdateOperator::Decrement => quote!(-=),
+    };
+    if u.prefix {
+        Some(parse_quote!({ #obj.#field #op #step; #obj.#field }))
+    } else {
+        Some(parse_quote!({
+            let __ds_old = #obj.#field;
+            #obj.#field #op #step;
+            __ds_old
+        }))
+    }
 }
 
 /// `x++`/`++x`/`x--`/`--x` on a mutable module-global `RefCell` (B3-2): read the
