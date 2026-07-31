@@ -608,6 +608,52 @@ fn collect_package_function_signatures(
     Ok(shared)
 }
 
+/// Aggregate the lazy-static exports across the whole import graph (the
+/// entry and each recursive `.ts` dep) into one accessor-name to cell-type
+/// map, set on the translator before the entry translates so every consumer
+/// file recognizes an imported lazy static. Mirrors
+/// [`collect_package_function_signatures`]'s worklist (member tracking, `.js`
+/// skip). A lone file (no `package.json`) is translated single-file and never
+/// calls this, so its empty table leaves single-file translation untouched.
+fn collect_package_lazy_statics(
+    src: &str,
+    src_path: &Path,
+) -> Result<std::collections::HashMap<String, syn::Type>, Box<dyn Error>> {
+    use std::collections::{HashSet, VecDeque};
+    let collector = Translator::new();
+    let mut shared = collector.collect_lazy_static_exports(src);
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
+    for imp in collector.imports(src) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            if !matches!(kind, DepKind::Js) {
+                worklist.push_back((dep_path, member));
+            }
+        }
+    }
+    while let Some((path, member)) = worklist.pop_front() {
+        let dep_src = fs::read_to_string(&path)
+            .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
+        for (k, v) in collector.collect_lazy_static_exports(&dep_src) {
+            shared.entry(k).or_insert(v);
+        }
+        let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&dep_src) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
+                let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
+                if !matches!(kind, DepKind::Js) {
+                    worklist.push_back((dep_path, child_member));
+                }
+            }
+        }
+    }
+    Ok(shared)
+}
+
 /// The workspace-member crate a bare import `source` resolves to, or `None`
 /// for a relative import (same package) or a `cargo:`/npm extern. Mirrors
 /// [`record_workspace_dep`]: a bare specifier that maps to a local `src/` is a
@@ -703,11 +749,24 @@ pub fn translate_sources(
     let shared_fields = collect_package_fields(src, src_path)?;
     let shared_unions = collect_package_union_enums(src, src_path)?;
     let shared_signatures = collect_package_function_signatures(src, src_path)?;
+    let shared_lazy_statics = collect_package_lazy_statics(src, src_path)?;
     let translator = Translator::new()
         .with_extra_optionals(shared_optionals)
         .with_extra_fields(shared_fields)
         .with_extra_union_enums(shared_unions)
         .with_extra_function_signatures(shared_signatures);
+    // Publish the import graph's lazy-static exports so every consumer file
+    // recognizes an imported lazy static (accessor-name `use`, accessor-call
+    // reference, `HashMap` index). Cleared on translate end (the guard) so it
+    // does not leak into a later translate.
+    crate::translator::imports::set_lazy_static_exports(shared_lazy_statics);
+    struct LazyStaticGuard;
+    impl Drop for LazyStaticGuard {
+        fn drop(&mut self) {
+            crate::translator::imports::clear_lazy_static_exports();
+        }
+    }
+    let _lazy_static_guard = LazyStaticGuard;
     let (rust, mut deps) = translator
         .translate_with_deps(src)
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;

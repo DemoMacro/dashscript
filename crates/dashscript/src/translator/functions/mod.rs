@@ -28,8 +28,8 @@ pub(in crate::translator) use escape::{
 };
 pub(in crate::translator) use lazy_static::{
     decl_name, escaped_lazy_static_names, escaped_mutable_static_names, lazy_static_candidate,
-    lazy_static_items, lazy_static_sym, mutable_static_candidate, mutable_static_items,
-    mutable_top_level_names,
+    lazy_static_export_info, lazy_static_items, lazy_static_sym, mutable_static_candidate,
+    mutable_static_items, mutable_top_level_names,
 };
 
 use oxc_ast::ast::{

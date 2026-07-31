@@ -48,6 +48,93 @@ pub(crate) fn clear_workspace_deps() {
 }
 
 thread_local! {
+    /// Cross-file lazy-static exports visible to the file being translated:
+    /// each export's accessor name (`snake(TS export name)` — the name the
+    /// `OnceLock` accessor fn takes) mapped to its cell value type (the `T` in
+    /// `OnceLock<T>`). Set once by `project::translate_sources`, aggregated
+    /// across the whole import graph before the entry translates, so a consumer
+    /// file recognizes an imported lazy static instead of treating the export
+    /// name as a type or a plain `const` item: the `use` path takes the snake
+    /// accessor name (`use crate::a::m`, not `use crate::a::M`), a reference
+    /// emits the accessor call, and a `HashMap` index lowers to `.get(…)`.
+    /// Cleared when the translate ends. A lone file (no `package.json`) never
+    /// sets this, so single-file translation is unaffected.
+    static LAZY_STATIC_EXPORTS: std::cell::RefCell<std::collections::HashMap<String, syn::Type>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// Record the import graph's lazy-static exports (set once before the entry
+/// translates), so [`named_use_tree`] routes a value import to its accessor fn
+/// and [`is_hashmap_local`] recognizes an imported `HashMap` cell. See
+/// [`LAZY_STATIC_EXPORTS`].
+pub(crate) fn set_lazy_static_exports(map: std::collections::HashMap<String, syn::Type>) {
+    LAZY_STATIC_EXPORTS.with(|c| {
+        let mut m = c.borrow_mut();
+        m.clear();
+        m.extend(map);
+    });
+}
+
+/// Clear the lazy-static export map when a `translate_sources` run ends
+/// (success or error), so it does not leak into a later translate. See
+/// [`LAZY_STATIC_EXPORTS`].
+pub(crate) fn clear_lazy_static_exports() {
+    LAZY_STATIC_EXPORTS.with(|c| c.borrow_mut().clear());
+}
+
+/// Whether `accessor_name` (the snake-folded export name) names a cross-file
+/// lazy-static export visible to the current file. The accessor fn a
+/// `use crate::…::name;` imports is named `snake(TS export name)`, so the
+/// caller passes that folded form.
+pub(crate) fn is_lazy_static_export(accessor_name: &str) -> bool {
+    LAZY_STATIC_EXPORTS.with(|c| c.borrow().contains_key(accessor_name))
+}
+
+/// The cell value type (`T` in `OnceLock<T>`) of a cross-file lazy-static
+/// export, so a consumer can lower `m["k"]` to `m().get(k)` when the cell holds
+/// a `HashMap`, or annotate a same-module alias `const x = m;` with the cell
+/// type. `None` for any name that is not a lazy-static export.
+pub(crate) fn lazy_static_export_type(accessor_name: &str) -> Option<syn::Type> {
+    LAZY_STATIC_EXPORTS.with(|c| c.borrow().get(accessor_name).cloned())
+}
+
+/// Register each imported lazy-static export's local binding as a lazy static,
+/// so a reference emits the accessor call (`name()`) rather than a bare
+/// identifier. Walked from the parsed statements after `build` (each import
+/// specifier's `local` carries the `BindingIdentifier` whose `symbol_id` cell
+/// `SemanticBuilder` filled) — mirrors `NameTable::register_namespaces`. A
+/// lone-file translate (empty export table) registers nothing.
+pub(crate) fn register_imported_lazy_statics(
+    body: &[Statement],
+    names: &mut super::name_table::NameTable<'_>,
+) {
+    use oxc_ast::ast::ImportDeclarationSpecifier;
+    let map = LAZY_STATIC_EXPORTS.with(|c| c.borrow().clone());
+    if map.is_empty() {
+        return;
+    }
+    for stmt in body {
+        let Statement::ImportDeclaration(imp) = stmt else {
+            continue;
+        };
+        let Some(specs) = imp.specifiers.as_ref() else {
+            continue;
+        };
+        for spec in specs {
+            let ImportDeclarationSpecifier::ImportSpecifier(s) = spec else {
+                continue;
+            };
+            let imported = module_export_name_str(&s.imported);
+            if map.contains_key(bindings::snake(&imported).to_string().as_str()) {
+                if let Some(sym) = s.local.symbol_id.get() {
+                    names.register_lazy_static(sym);
+                }
+            }
+        }
+    }
+}
+
+thread_local! {
     /// The workspace member the file currently being translated lives in
     /// (`Some("member_crate")` while translating a file reached through a
     /// workspace-member barrel; `None` for the entry's own package). A
@@ -257,7 +344,16 @@ pub(crate) fn named_use_tree(spec: &ImportDeclarationSpecifier) -> Option<syn::U
         }
         ImportDeclarationSpecifier::ImportSpecifier(s) => {
             let imported = module_export_name_str(&s.imported);
-            Some(use_tree_from(&imported, &s.local.name))
+            // An imported lazy static's accessor fn is `snake(imported)`, not
+            // the type-cased export name — `use crate::a::m`, not
+            // `use crate::a::M`. The local binding snake-folds too: it names a
+            // value (the accessor fn), not a type, so the body reference
+            // (`of_reference` → snake) resolves to the accessor call site.
+            if is_lazy_static_export(&bindings::snake(&imported).to_string()) {
+                Some(snake_use_tree(&imported, &s.local.name))
+            } else {
+                Some(use_tree_from(&imported, &s.local.name))
+            }
         }
     }
 }
@@ -297,6 +393,27 @@ fn use_tree_from(path: &str, alias: &str) -> syn::UseTree {
     use syn::UseTree;
     let path_ident = casing_ident(path);
     let alias_ident = casing_ident(alias);
+    if path_ident == alias_ident {
+        UseTree::Name(syn::UseName { ident: alias_ident })
+    } else {
+        UseTree::Rename(syn::UseRename {
+            ident: path_ident,
+            as_token: Default::default(),
+            rename: alias_ident,
+        })
+    }
+}
+
+/// A `use` tree for an imported lazy-static accessor — both the path (the
+/// accessor fn name) and the alias (the local binding) are *value* names, so
+/// both snake-fold. Unlike [`use_tree_from`] (type-vs-value casing), a
+/// lazy-static export name like `M` lowers to the accessor `m`, and the local
+/// binding — also a value, not a type — snake-folds too, so the body reference
+/// (`of_reference` → snake) resolves to the accessor call site.
+fn snake_use_tree(path: &str, alias: &str) -> syn::UseTree {
+    use syn::UseTree;
+    let path_ident = bindings::snake(path);
+    let alias_ident = bindings::snake(alias);
     if path_ident == alias_ident {
         UseTree::Name(syn::UseName { ident: alias_ident })
     } else {

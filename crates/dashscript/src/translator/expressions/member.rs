@@ -487,7 +487,16 @@ pub(in crate::translator) fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) 
         return false;
     };
     let name = bindings::snake(&id.name).to_string();
-    ctx.local_type(&name).is_some_and(is_hashmap)
+    if ctx.local_type(&name).is_some_and(is_hashmap) {
+        return true;
+    }
+    // An imported (or same-module aliased) lazy static whose `OnceLock` cell
+    // holds a `HashMap` — `m["k"]` lowers to `m().get(k)`. The cell type comes
+    // from the cross-file lazy-static export table, since a `use`-imported
+    // accessor fn has no entry in this file's `local_type`.
+    super::super::imports::lazy_static_export_type(&name)
+        .map(|ty| matches!(ty, syn::Type::Path(ref tp) if is_hashmap(&tp.path)))
+        .unwrap_or(false)
 }
 
 /// True when `expr` is a local whose type is a `HashSet` (an ES `Set`).

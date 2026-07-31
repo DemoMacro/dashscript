@@ -785,6 +785,55 @@ fn module_export_const_object_lazy_static_emits_accessor() {
 }
 
 #[test]
+fn collect_lazy_static_exports_maps_accessor_to_cell_type() {
+    // A cross-file consumer recognizes an imported lazy static by its accessor
+    // name (`snake(export name)`) and cell type — `collect_lazy_static_exports`
+    // is the per-file half `project::translate_sources` aggregates across the
+    // import graph. `export const M = {...}` lowers to accessor `m` holding a
+    // `HashMap<String, String>`.
+    let src = "export const M: Record<string, string> = { a: \"1\", b: \"2\" };";
+    let map = Translator::new().collect_lazy_static_exports(src);
+    let ty = map
+        .get("m")
+        .expect("accessor name `m` (snake of export `M`)");
+    let ty_text = quote::quote!(#ty).to_string();
+    assert!(
+        ty_text.contains("HashMap"),
+        "cell type not a HashMap: {ty_text}"
+    );
+}
+
+#[test]
+fn imported_lazy_static_uses_accessor_name_and_hashmap_get() {
+    // With the cross-file lazy-static export table published (the way
+    // `project::translate_sources` publishes it before a package translate), a
+    // consumer's `import { M }` lowers to `use crate::a::m` — the accessor fn,
+    // snake-folded, not the type-cased `M` — a reference emits the accessor
+    // call, and a `HashMap` index lowers to `.get(…)`. Without the table the
+    // use path was `M` (unresolved), the reference a bare `m`, and the index a
+    // `usize` cast.
+    let mut exports: std::collections::HashMap<String, syn::Type> =
+        std::collections::HashMap::new();
+    exports.insert(
+        "m".to_string(),
+        syn::parse_quote!(::std::collections::HashMap<String, String>),
+    );
+    crate::translator::imports::set_lazy_static_exports(exports);
+    let src = "import { M } from \"./a\";\nexport function use(): string { return M[\"a\"]; }";
+    let result = Translator::new().translate_with_deps_as(src, FileRole::Module);
+    crate::translator::imports::clear_lazy_static_exports();
+    let rust = result.expect("should translate").0;
+    assert!(
+        rust.contains("use crate::a::m;"),
+        "use path not the accessor name: {rust}"
+    );
+    assert!(
+        rust.contains("m().get(\"a\")"),
+        "not a HashMap get on the accessor call: {rust}"
+    );
+}
+
+#[test]
 fn entry_non_mutated_let_literal_referenced_by_fn_promotes() {
     // B3-1a (entry path, via promotable relaxation): a top-level non-mutated
     // `let` literal referenced from a function promotes to a crate `const` item

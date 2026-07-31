@@ -9,6 +9,7 @@ use oxc_ast::ast::{
     ArrayExpression, ArrayExpressionElement, BinaryExpression, BinaryOperator, BindingPattern,
     CallExpression, Declaration, Expression, NewExpression, ObjectExpression, ObjectPropertyKind,
     Statement, TSTypeParameterInstantiation, VariableDeclaration, VariableDeclarationKind,
+    VariableDeclarator,
 };
 use oxc_semantic::SymbolId;
 use quote::format_ident;
@@ -272,25 +273,7 @@ pub(in crate::translator) fn lazy_static_items(
     };
     let init = d.init.as_ref()?;
     let name = names.of_binding(id);
-    let ty: Type = if let Some(ta) = d.type_annotation.as_ref() {
-        types::translate_type(&ta.type_annotation)
-    } else if let Expression::TSAsExpression(as_expr) = init {
-        if is_const_assertion(&as_expr.type_annotation) {
-            // `expr as const` — a TS literal-type marker (runtime no-op); the
-            // cell type is the inner expression's inferred shape, not the
-            // (Rust-keyword) `const` marker.
-            infer_init_type(&as_expr.expression, registry)
-        } else {
-            // `expr as T` — the assertion type goes on the OnceLock; the init
-            // translates as the inner `expr` (assertion stripped, see
-            // `translate_expr`), so only the type feeds the cell.
-            types::translate_type(&as_expr.type_annotation)
-        }
-    } else if let Expression::TSTypeAssertion(t) = init {
-        types::translate_type(&t.type_annotation)
-    } else {
-        infer_init_type(init, registry)
-    };
+    let ty: Type = cell_type(d, init, registry);
     // The initializer translates under a fresh empty-body context: a module
     // top-level binding has no locals/narrowing, only the type registry and
     // name table — enough for a literal or a constructor call.
@@ -319,6 +302,55 @@ pub(in crate::translator) fn lazy_static_items(
 /// `HashMap`, a string-concat chain's `String`, or an array literal's
 /// `Vec<elem>` (incl. an `as const` array). Anything else (a regex literal)
 /// falls back to `regress::Regex`.
+/// The `OnceLock` cell value type (the `T` in `OnceLock<T>`) of a lazy-static
+/// declarator: an explicit annotation, a type assertion (`expr as T`), or —
+/// for an unannotated initializer — the inferred shape ([`infer_init_type`]).
+/// `as const` is a TS literal-type marker (runtime no-op), so the cell type is
+/// the inner expression's inferred shape, not the (Rust-keyword) `const`
+/// marker. Shared by [`lazy_static_items`] (emit) and
+/// [`lazy_static_export_info`] (cross-file table).
+fn cell_type(d: &VariableDeclarator, init: &Expression, registry: &TypeRegistry) -> Type {
+    if let Some(ta) = d.type_annotation.as_ref() {
+        types::translate_type(&ta.type_annotation)
+    } else if let Expression::TSAsExpression(as_expr) = init {
+        if is_const_assertion(&as_expr.type_annotation) {
+            infer_init_type(&as_expr.expression, registry)
+        } else {
+            types::translate_type(&as_expr.type_annotation)
+        }
+    } else if let Expression::TSTypeAssertion(t) = init {
+        types::translate_type(&t.type_annotation)
+    } else {
+        infer_init_type(init, registry)
+    }
+}
+
+/// The `(accessor name, cell type)` of a top-level lazy-static export, or
+/// `None` for any other statement / a non-candidate. The accessor name is
+/// `snake(TS export name)` (the `OnceLock` accessor fn's name); the cell type
+/// is the `T` in `OnceLock<T>` ([`cell_type`]). Used by
+/// `collect_lazy_static_exports` to build the cross-file export table a
+/// consumer file reads to recognize an imported lazy static.
+pub(in crate::translator) fn lazy_static_export_info(
+    stmt: &Statement,
+    names: &NameTable<'_>,
+    registry: &TypeRegistry,
+    mutable_names: &HashSet<String>,
+) -> Option<(String, Type)> {
+    if !lazy_static_candidate(stmt, mutable_names, names) {
+        return None;
+    }
+    let decl = variable_decl(stmt)?;
+    let d = decl.declarations.first()?;
+    let BindingPattern::BindingIdentifier(id) = &d.id else {
+        return None;
+    };
+    let init = d.init.as_ref()?;
+    let name = names.of_binding(id).to_string();
+    let ty = cell_type(d, init, registry);
+    Some((name, ty))
+}
+
 fn infer_init_type(init: &Expression, registry: &TypeRegistry) -> Type {
     match init {
         Expression::CallExpression(call) => {

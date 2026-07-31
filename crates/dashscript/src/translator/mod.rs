@@ -1882,6 +1882,13 @@ impl Translator {
                 names.register_lazy_static(sym);
             }
         }
+        // Register imported lazy-static exports (a cross-file `const`/`let`
+        // lowered to an accessor fn in another module) so a reference emits
+        // the accessor call (`name()`) rather than a bare identifier. The
+        // export table is populated by `project::translate_sources` before the
+        // entry translates; a lone-file translate (empty table) registers
+        // nothing.
+        imports::register_imported_lazy_statics(&program.body, &mut names);
         // Pure-TS execution semantics: a top-level statement that *runs* in
         // source order (a `const`, an expression, control flow, a throw) does
         // not map to a Rust item — it belongs inside the entry point, the way
@@ -2320,6 +2327,36 @@ impl Translator {
         let names = name_table::build(sret.semantic.scoping());
         let registry = registry::build_registry(&program.body, &names);
         Ok(registry.function_signatures)
+    }
+
+    /// The lazy-static exports of a `.ts` source — each export's accessor name
+    /// (`snake(TS export name)`) mapped to its `OnceLock` cell value type (the
+    /// `T` in `OnceLock<T>`). `project::translate_sources` aggregates these
+    /// across the import graph so a consumer file recognizes an imported lazy
+    /// static (the `use` path, the accessor call, a `HashMap` index). A parse
+    /// error yields an empty map.
+    #[must_use]
+    pub fn collect_lazy_static_exports(&self, source: &str) -> HashMap<String, syn::Type> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return HashMap::new();
+        }
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        let mutable_top_level =
+            functions::mutable_top_level_names(&program.body, &names, &registry);
+        let mut out = HashMap::new();
+        for stmt in &program.body {
+            if let Some((name, ty)) =
+                functions::lazy_static_export_info(stmt, &names, &registry, &mutable_top_level)
+            {
+                out.insert(name, ty);
+            }
+        }
+        out
     }
 
     /// Translate a `.d.ts` declaration source to a Rust module body — each
