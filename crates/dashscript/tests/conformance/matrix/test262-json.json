@@ -180,11 +180,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-1",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"\\\"abc\\\"\" node=\"abc\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"\\\"abc\\\"\" node=\"abc\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -225,11 +224,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g2-5",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=1 node=0",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=1 node=0"
+      "status": "matched"
     },
     "note": ""
   },
@@ -281,11 +279,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g5-1",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"\\\"X\\\"\" node=\"X\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"\\\"X\\\"\" node=\"X\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -315,11 +312,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-1",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"\\\"/\\\"\" node=\"/\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"\\\"/\\\"\" node=\"/\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -327,11 +323,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-2",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"\\\"\\\\\\\\\\\"\" node=\"\\\\\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"\\\"\\\\\\\\\\\"\" node=\"\\\\\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -339,11 +334,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-3",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"\\\"\\\\b\\\"\" node=\"\\u{8}\"",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line 1: ds=\"\\\"\\\\b\\\"\" node=\"\\u{8}\""
+      "status": "matched"
     },
     "note": ""
   },
@@ -351,11 +345,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-4",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=1 node=0",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=1 node=0"
+      "status": "matched"
     },
     "note": ""
   },
@@ -363,11 +356,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-5",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=1 node=0",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=1 node=0"
+      "status": "matched"
     },
     "note": ""
   },
@@ -375,11 +367,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-6",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=1 node=0",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=1 node=0"
+      "status": "matched"
     },
     "note": ""
   },
@@ -387,11 +378,10 @@
     "id": "test262.test.built-ins.json.parse.15.12.1.1-g6-7",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "oracle diff: line count: ds=1 node=0",
+    "status": "supported",
+    "detail": "",
     "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=1 node=0"
+      "status": "matched"
     },
     "note": ""
   },
@@ -542,7 +532,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:6:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:18: error[E0599]: the method `to_string` exists for struct `HashMap<std::string::String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<std::string::String, _>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "detail": "src\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:18: error[E0599]: the method `to_string` exists for struct `HashMap<std::string::String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<std::string::String, _>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
     "note": ""
   },
   {
@@ -640,11 +630,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=3",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=3"
-    },
+    "detail": "src\\main.rs:9:49: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:13:51: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -652,10 +638,10 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "oracle diff: line 1: ds=\"{}\" node=\"{\\\"0\\\":0,\\\"1\\\":1,\\\"-4\\\":2,\\\"0.3\\\":3,\\\"-Infinity\\\":4,\\\"NaN\\\":5}\"",
+    "detail": "oracle diff: line 1: ds=\"{\\\"-Infinity\\\":4.0,\\\"0\\\":0.0,\\\"0.3\\\":3.0,\\\"1\\\":1.0,\\\"NaN\\\":5.0,\\\"-4\\\":2.0}\" node=\"{\\\"0\\\":0,\\\"1\\\":1,\\\"-4\\\":2,\\\"0.3\\\":3,\\\"-Infinity\\\":4,\\\"NaN\\\":5}\"",
     "oracle": {
       "status": "diff",
-      "detail": "line 1: ds=\"{}\" node=\"{\\\"0\\\":0,\\\"1\\\":1,\\\"-4\\\":2,\\\"0.3\\\":3,\\\"-Infinity\\\":4,\\\"NaN\\\":5}\""
+      "detail": "line 1: ds=\"{\\\"-Infinity\\\":4.0,\\\"0\\\":0.0,\\\"0.3\\\":3.0,\\\"1\\\":1.0,\\\"NaN\\\":5.0,\\\"-4\\\":2.0}\" node=\"{\\\"0\\\":0,\\\"1\\\":1,\\\"-4\\\":2,\\\"0.3\\\":3,\\\"-Infinity\\\":4,\\\"NaN\\\":5}\""
     },
     "note": ""
   },
@@ -664,7 +650,11 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:9:74: warning: unreachable expression: unreachable expression\nsrc\\main.rs:1:1: error: this function depends on never type fallback being `()`\nsrc\\main.rs:2:9: warning: unused variable: `replacer`: help: if this is intentional, prefix it with an underscore: `_replacer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "detail": "oracle diff: line 1: ds=\"{\\\"c\\\":3.0,\\\"b\\\":1.0,\\\"a\\\":2.0}\" node=\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"; line 2: ds=\"{\\\"a\\\":{\\\"c\\\":3.0,\\\"b\\\":2.0}}\" node=\"{\\\"a\\\":{\\\"c\\\":3,\\\"b\\\":2}}\"",
+    "oracle": {
+      "status": "diff",
+      "detail": "line 1: ds=\"{\\\"c\\\":3.0,\\\"b\\\":1.0,\\\"a\\\":2.0}\" node=\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"; line 2: ds=\"{\\\"a\\\":{\\\"c\\\":3.0,\\\"b\\\":2.0}}\" node=\"{\\\"a\\\":{\\\"c\\\":3,\\\"b\\\":2}}\""
+    },
     "note": ""
   },
   {
@@ -746,11 +736,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=16",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=16"
-    },
+    "detail": "src\\main.rs:9:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:16:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -758,11 +744,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=16",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=16"
-    },
+    "detail": "src\\main.rs:9:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:16:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -770,11 +752,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "oracle diff: line count: ds=0 node=15",
-    "oracle": {
-      "status": "diff",
-      "detail": "line count: ds=0 node=15"
-    },
+    "detail": "src\\main.rs:9:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:16:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -927,7 +905,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:8:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:14:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nsrc\\main.rs:19:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:25:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nsrc\\main.rs:37:52: error[E0277]: the trait bound `std::string::String: Copy` is not satisfied: the trait `Copy` is not implemented for `std::string::String`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:43:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:49:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nsrc\\main.rs:54:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:60:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
