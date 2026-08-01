@@ -175,6 +175,10 @@ fn conformance_matrix() {
         .map(|n| n.get())
         .unwrap_or(1)
         .clamp(1, 8);
+    let n_workers = std::env::var("DASH_CONF_WORKERS")
+        .ok()
+        .and_then(|s| s.parse::<usize>().ok())
+        .unwrap_or(n_workers);
     let tmp = TempDir::new().expect("tempdir");
     let workers: Vec<(PathBuf, PathBuf)> = (0..n_workers)
         .map(|i| {
@@ -618,8 +622,22 @@ fn warm_cargo_cache(seed_project: &Path) -> bool {
 /// reported as `partial` instead of aborting the whole matrix run. `translate`
 /// itself returns `Result`; this wraps its panicking paths behind the same
 /// error channel (`translate error: …` / `translate panic: …`).
+/// The translator reaches into process-global state (the `JS_MODULES` registry,
+/// `whole_module_degrade`'s thread-local, the rquickjs runtime lazily
+/// initialised along the engine path). Under the matrix's parallel workers two
+/// fixtures translating concurrently can observe each other's partial writes —
+/// a data race that flips a handful of fixtures' `needs_engine()` verdict
+/// (`false`→`true`), surfacing as ~11 phantom `supported` results that vanish
+/// under single-threaded runs or any `eprintln` that serialises workers via the
+/// stdout lock. The translation itself is millisecond-scale (oxc parse +
+/// translate; the slow `cargo build`/run happens *outside* this lock), so
+/// serialising just the translate step removes the race without starving the
+/// parallel build workers that dominate wall-clock.
+static TRANSLATE_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
 fn translate_catch(source: &str) -> Result<(String, RuntimeDeps), String> {
     use std::panic::AssertUnwindSafe;
+    let _guard = TRANSLATE_LOCK.lock().expect("TRANSLATE_LOCK poisoned");
     std::panic::catch_unwind(AssertUnwindSafe(|| {
         Translator::new().translate_with_deps(source)
     }))
