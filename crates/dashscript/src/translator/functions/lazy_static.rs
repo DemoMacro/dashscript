@@ -818,25 +818,39 @@ fn new_return_type(new: &NewExpression) -> Option<Type> {
 /// without an annotation: `HashSet<T>` where `T` is the first scalar element's
 /// type (`["jpg", …]` → `HashSet<String>`). A non-Set `new`, a non-array arg,
 /// or a non-scalar first element yields `None`.
-fn new_collection_return_type(new: &NewExpression) -> Option<Type> {
+///
+/// A number element/key (`Set<number>`, `Set([1, 2])`, `Map<number, _>`) wraps
+/// in `DsF64Key` — `f64` lacks `Eq`/`Hash`, so the SameValueZero newtype is the
+/// only way to house one in a `HashSet`/`HashMap`. Shared by the module-global
+/// `OnceLock<T>` inference and `register_declarator`'s function-local path.
+pub(in crate::translator) fn new_collection_return_type(new: &NewExpression) -> Option<Type> {
     let Expression::Identifier(id) = &new.callee else {
         return None;
+    };
+    // `f64` → `DsF64Key` so a number element/key satisfies `Eq` + `Hash`.
+    let keywrap = |ty: Type| -> Type {
+        if super::super::types::is_f64_type(&ty) {
+            parse_quote!(crate::__ds::DsF64Key)
+        } else {
+            ty
+        }
     };
     match id.name.as_str() {
         "Set" => {
             // `new Set([literal])` → HashSet<T> (T from the first array element);
             // `new Set<T>()` → HashSet<T> (T from the single type argument).
             if let Some(elem) = set_array_elem_type(new) {
+                let elem = keywrap(elem);
                 return Some(parse_quote!(::std::collections::HashSet<#elem>));
             }
             let mut args = new_type_args(new)?.into_iter();
-            let elem = args.next()?;
+            let elem = keywrap(args.next()?);
             Some(parse_quote!(::std::collections::HashSet<#elem>))
         }
         "Map" => {
             // `new Map<K, V>()` → HashMap<K, V> (K, V from the two type args).
             let mut args = new_type_args(new)?.into_iter();
-            let key = args.next()?;
+            let key = keywrap(args.next()?);
             let val = args.next()?;
             Some(parse_quote!(::std::collections::HashMap<#key, #val>))
         }

@@ -7,14 +7,30 @@
 //! matching DashScript's nullable→`Option` mapping — so a `console.log` of it
 //! prints `Some(…)`/`None`, not the ES `…`/`undefined` (a general nullable
 //! display limit, not Map-specific).
+//!
+//! A `Set<number>` / `Map<number, _>` lowers to `HashSet<DsF64Key>` /
+//! `HashMap<DsF64Key, V>` — `f64` lacks `Eq`/`Hash`, so each key wraps in
+//! `DsF64Key` (SameValueZero). The `f64key` flag below threads that wrap from
+//! the receiver's resolved type into each `insert`/`contains`/`get`/`remove`.
 
 use oxc_ast::ast::{Argument, StaticMemberExpression};
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
 use super::super::expressions::{
-    is_hashmap_local, is_hashset_local, translate_argument, translate_expr,
+    hashmap_uses_f64_key, hashset_uses_f64_key, is_hashmap_local, is_hashset_local,
+    translate_argument, translate_expr,
 };
+
+/// Wrap a key/value expression in `DsF64Key(…)` when the receiver is a
+/// number-keyed collection (a `Set<number>`/`Map<number, _>`).
+fn keyed(f64key: bool, e: Expr) -> Expr {
+    if f64key {
+        parse_quote!(crate::__ds::DsF64Key(#e))
+    } else {
+        e
+    }
+}
 
 /// A `Map` / `Set` instance method, dispatched on the receiver's type. Returns
 /// `None` for a non-collection receiver or an unmapped name (falls through to a
@@ -27,46 +43,48 @@ pub(in crate::translator) fn collection_method(
     let name = sm.property.name.as_str();
     let obj = translate_expr(&sm.object, ctx);
     if is_hashmap_local(&sm.object, ctx) {
+        let f64key = hashmap_uses_f64_key(&sm.object, ctx);
         Some(match name {
             // `m.set(k, v)` → `m.insert(k, v)`. ES returns the map for chaining;
             // the insert's `Option<V>` is dropped (chaining is not yet mapped),
             // so the call lowers to a statement block.
             "set" => {
-                let k = translate_argument(args.first()?, ctx);
+                let k = keyed(f64key, translate_argument(args.first()?, ctx));
                 let v = translate_argument(args.get(1)?, ctx);
                 parse_quote!({ #obj.insert(#k, #v); })
             }
             // `m.get(k)` → `Option<V>` (ES returns `V | undefined`).
             "get" => {
-                let k = translate_argument(args.first()?, ctx);
+                let k = keyed(f64key, translate_argument(args.first()?, ctx));
                 parse_quote!(#obj.get(&#k).cloned())
             }
             "has" => {
-                let k = translate_argument(args.first()?, ctx);
+                let k = keyed(f64key, translate_argument(args.first()?, ctx));
                 parse_quote!(#obj.contains_key(&#k))
             }
             // `m.delete(k)` → `bool` (whether a value was removed).
             "delete" => {
-                let k = translate_argument(args.first()?, ctx);
+                let k = keyed(f64key, translate_argument(args.first()?, ctx));
                 parse_quote!(#obj.remove(&#k).is_some())
             }
             "clear" if args.is_empty() => parse_quote!(#obj.clear()),
             _ => return None,
         })
     } else if is_hashset_local(&sm.object, ctx) {
+        let f64key = hashset_uses_f64_key(&sm.object, ctx);
         Some(match name {
             // `s.add(v)` → `s.insert(v)` (statement; ES chaining unmapped).
             "add" => {
-                let v = translate_argument(args.first()?, ctx);
+                let v = keyed(f64key, translate_argument(args.first()?, ctx));
                 parse_quote!({ #obj.insert(#v); })
             }
             "has" => {
-                let v = translate_argument(args.first()?, ctx);
+                let v = keyed(f64key, translate_argument(args.first()?, ctx));
                 parse_quote!(#obj.contains(&#v))
             }
             // `s.delete(v)` → `bool` (`HashSet::remove` returns bool directly).
             "delete" => {
-                let v = translate_argument(args.first()?, ctx);
+                let v = keyed(f64key, translate_argument(args.first()?, ctx));
                 parse_quote!(#obj.remove(&#v))
             }
             "clear" if args.is_empty() => parse_quote!(#obj.clear()),

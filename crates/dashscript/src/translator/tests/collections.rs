@@ -9,9 +9,14 @@ fn translates_map_type_to_hashmap() {
 
 #[test]
 fn translates_set_type_to_hashset() {
+    // `Set<number>` → `HashSet<DsF64Key>` — f64 lacks Eq/Hash, so a number
+    // element wraps in the SameValueZero newtype.
     let src = "function f(s: Set<number>): void {}";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("HashSet<f64>"), "Set type: {rust}");
+    assert!(
+        rust.contains("HashSet<crate::__ds::DsF64Key>"),
+        "Set<number>: {rust}"
+    );
 }
 
 #[test]
@@ -137,4 +142,86 @@ fn translates_set_methods() {
     assert!(rust.contains(".insert("), "add→insert: {rust}");
     assert!(rust.contains(".contains("), "has→contains: {rust}");
     assert!(rust.contains(".len() as f64"), "size→len: {rust}");
+}
+
+#[test]
+fn translates_set_number_methods_wrap_f64_key() {
+    // `Set<number>` methods wrap each value in `DsF64Key` — `s.add(1)` →
+    // `s.insert(DsF64Key(1))`, `s.has(1)` → `s.contains(&DsF64Key(1))`.
+    let src = "function f(): void {\n\
+        \x20    let s: Set<number> = new Set();\n\
+        \x20    s.add(1);\n\
+        \x20    console.log(s.has(1));\n\
+        }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("DsF64Key"),
+        "Set<number> wraps DsF64Key: {rust}"
+    );
+    assert!(
+        rust.contains("insert(crate::__ds::DsF64Key"),
+        "add wraps the value: {rust}"
+    );
+    // prettyplease renders `&crate::…` as `& crate ::…` (it spaces `&` before a
+    // path), so verify the `has` wrap by counting `DsF64Key` (add + has = 2).
+    assert!(
+        rust.matches("DsF64Key").count() >= 2,
+        "add + has both wrap in DsF64Key: {rust}"
+    );
+}
+
+#[test]
+fn translates_set_string_methods_do_not_wrap() {
+    // `Set<string>` keeps `String` directly (string implements Eq+Hash), so no
+    // `DsF64Key` wrap appears.
+    let src = "function f(): void {\n\
+        \x20    let s: Set<string> = new Set();\n\
+        \x20    s.add(\"x\");\n\
+        }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("DsF64Key"),
+        "Set<string> must not wrap: {rust}"
+    );
+}
+
+#[test]
+fn translates_map_number_key_wraps_f64_key() {
+    // `Map<number, V>` wraps the key (not the value) in `DsF64Key`.
+    let src = "function f(): void {\n\
+        \x20    let m: Map<number, string> = new Map();\n\
+        \x20    m.set(1, \"a\");\n\
+        \x20    console.log(m.get(1));\n\
+        }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("HashMap<crate::__ds::DsF64Key, String>"),
+        "Map<number, string> type: {rust}"
+    );
+    assert!(
+        rust.contains("insert(crate::__ds::DsF64Key"),
+        "set wraps the key: {rust}"
+    );
+}
+
+#[test]
+fn translates_inferred_set_literal_wraps_f64_key() {
+    // An unannotated `let s = new Set([1, 2])` infers `HashSet<DsF64Key>` (the
+    // element type from the literal), so `s.add(…)` / `s.has(…)` wrap each
+    // value too — the f64-Eq/Hash gap closed for the inferred-literal path, not
+    // just the annotated `Set<number>` one.
+    let src = "function f(): void {\n\
+        \x20    let s = new Set([1, 2]);\n\
+        \x20    s.add(3);\n\
+        \x20    console.log(s.has(3));\n\
+        }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("insert"),
+        "add → insert on an inferred HashSet: {rust}"
+    );
+    assert!(
+        rust.matches("DsF64Key").count() >= 3,
+        "inferred Set([1, 2]) + add(3) + has(3) all thread DsF64Key: {rust}"
+    );
 }

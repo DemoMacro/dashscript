@@ -29,8 +29,8 @@ pub(in crate::translator) use array::{array_owned_expr, array_slice_expr};
 pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
 pub(in crate::translator) use member::{
-    is_hashmap_local, is_hashset_local, is_vec_u8_local, option_unwrap_object,
-    temporal_type_of_local,
+    hashmap_uses_f64_key, hashset_uses_f64_key, is_hashmap_local, is_hashset_local,
+    is_vec_u8_local, option_unwrap_object, temporal_type_of_local,
 };
 pub(in crate::translator) use unary::typeof_operand_is_runtime;
 
@@ -916,6 +916,30 @@ pub(in crate::translator) fn is_hashmap(path: &syn::Path) -> bool {
 /// True when `path` names a `HashSet` (the target of an ES `Set<T>`).
 pub(in crate::translator) fn is_hashset(path: &syn::Path) -> bool {
     path.segments.last().is_some_and(|s| s.ident == "HashSet")
+}
+
+/// True when `path` is `Container<Inner, …>` — e.g. `HashSet<DsF64Key>` is a
+/// number-keyed `Set` whose methods wrap each value in `DsF64Key`. Only the
+/// first generic argument is inspected (a `Map<K, V>` key is the first arg).
+pub(in crate::translator) fn first_generic_is(
+    path: &syn::Path,
+    container: &str,
+    inner: &str,
+) -> bool {
+    let Some(seg) = path.segments.last() else {
+        return false;
+    };
+    if seg.ident != container {
+        return false;
+    }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return false;
+    };
+    matches!(
+        args.args.first(),
+        Some(syn::GenericArgument::Type(syn::Type::Path(tp)))
+            if tp.path.segments.last().is_some_and(|s| s.ident == inner)
+    )
 }
 
 /// True when `path` names a `Vec<u8>` (the target of a `Uint8Array` byte

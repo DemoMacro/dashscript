@@ -1039,9 +1039,12 @@ fn register_declarator(
     let path = match &decl.init {
         Some(Expression::CallExpression(call)) => callee_return_path(call, registry),
         // `new Uint8Array(…)` → `Vec<u8>` (typed_array_path), so a later
-        // `x[0] = v` stores with a `u8` cast. Any other `new` callee falls
-        // through to the element-path probe (which yields `None` for it).
-        Some(Expression::NewExpression(n)) => typed_array_path(n),
+        // `x[0] = v` stores with a `u8` cast. A `new Set(…)` / `new Map(…)`
+        // falls back to the inferred collection type (so `s.add(…)` later
+        // resolves the receiver); any other `new` yields `None`.
+        Some(Expression::NewExpression(n)) => {
+            typed_array_path(n).or_else(|| collection_local_path(n))
+        }
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1067,6 +1070,15 @@ fn typed_array_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     } else {
         None
     }
+}
+
+/// `new Set(…)` / `new Map(…)` → the inferred `HashSet<E>` / `HashMap<K, V>`
+/// path (reusing module-global inference), so an unannotated `let s = new
+/// Set([1])` records its type and a later `s.add(…)` / `s.has(…)` resolves the
+/// receiver. `None` for a non-collection `new`.
+fn collection_local_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    let ty = lazy_static::new_collection_return_type(new_expr)?;
+    types::type_path(&ty).cloned()
 }
 
 /// `arr[i]` where `arr` is a tracked `Vec<T>` (or `Option<Vec<T>>`) local → `T`,

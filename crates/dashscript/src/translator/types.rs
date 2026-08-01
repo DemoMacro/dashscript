@@ -471,14 +471,24 @@ fn reference_type(r: &TSTypeReference) -> Type {
             if ps.len() == 2 {
                 let k_ty = translate_type(&ps[0]);
                 let v_ty = translate_type(&ps[1]);
+                // A `number` key (`f64`) wraps in `DsF64Key` (SameValueZero
+                // Eq+Hash — f64 lacks both); the value type is unaffected.
+                if is_f64_type(&k_ty) {
+                    return parse_quote!(::std::collections::HashMap<crate::__ds::DsF64Key, #v_ty>);
+                }
                 return parse_quote!(::std::collections::HashMap<#k_ty, #v_ty>);
             }
         }
     }
-    // `Set<T>` → `HashSet<T>` (the ES `Set`).
+    // `Set<T>` → `HashSet<T>` (the ES `Set`). A `number` element (`f64`) wraps
+    // in `DsF64Key` — f64 lacks Eq/Hash, so `Set<number>` is a
+    // `HashSet<DsF64Key>` keyed by SameValueZero.
     if name == "Set" {
         if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
             let inner_ty = translate_type(inner);
+            if is_f64_type(&inner_ty) {
+                return parse_quote!(::std::collections::HashSet<crate::__ds::DsF64Key>);
+            }
             return parse_quote!(::std::collections::HashSet<#inner_ty>);
         }
     }
@@ -542,6 +552,13 @@ pub fn type_path(ty: &Type) -> Option<&syn::Path> {
     } else {
         None
     }
+}
+
+/// True when `ty` is `f64` (the ES `number` lowering) — a `Set<T>`/`Map<K, _>`
+/// element/key of `f64` wraps in `DsF64Key` (f64 lacks Eq/Hash, so it cannot
+/// back a `HashSet`/`HashMap` directly).
+pub(in crate::translator) fn is_f64_type(ty: &Type) -> bool {
+    type_path(ty).is_some_and(|p| p.is_ident("f64"))
 }
 
 /// True when a type path is `Copy`: the scalar numerics and `bool`, or

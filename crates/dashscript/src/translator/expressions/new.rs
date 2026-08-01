@@ -1,5 +1,5 @@
 //! `new Foo(args)` → `Foo::new(args)`.
-use oxc_ast::ast::{Argument, Expression, NewExpression};
+use oxc_ast::ast::{Argument, ArrayExpressionElement, Expression, NewExpression};
 use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
@@ -103,6 +103,9 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 Some(p) => {
                     let k = types::translate_type(&p[0]);
                     let v = types::translate_type(&p[1]);
+                    if types::is_f64_type(&k) {
+                        return parse_quote!(::std::collections::HashMap::<crate::__ds::DsF64Key, #v>::new());
+                    }
                     return parse_quote!(::std::collections::HashMap::<#k, #v>::new());
                 }
                 None => return parse_quote!(::std::collections::HashMap::new()),
@@ -110,6 +113,11 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             "Set" | "WeakSet" => match targs.and_then(|a| a.params.first()) {
                 Some(e) => {
                     let e = types::translate_type(e);
+                    if types::is_f64_type(&e) {
+                        return parse_quote!(
+                            ::std::collections::HashSet::<crate::__ds::DsF64Key>::new()
+                        );
+                    }
                     return parse_quote!(::std::collections::HashSet::<#e>::new());
                 }
                 None => return parse_quote!(::std::collections::HashSet::new()),
@@ -179,6 +187,22 @@ fn set_from_array_arg(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
         return None;
     };
     let arr_expr = array_owned_expr(arr, ctx)?;
+    // A number-element literal `new Set([1, 2, …])` would infer `HashSet<f64>`,
+    // but `f64` lacks `Eq`/`Hash` — wrap each element in `DsF64Key` (SameValueZero)
+    // so the set compiles. Detected by the first element being a numeric literal.
+    if arr
+        .elements
+        .first()
+        .is_some_and(|e| matches!(e, ArrayExpressionElement::NumericLiteral(_)))
+    {
+        return Some(parse_quote!(
+            #arr_expr
+                .iter()
+                .copied()
+                .map(crate::__ds::DsF64Key)
+                .collect::<::std::collections::HashSet<crate::__ds::DsF64Key>>()
+        ));
+    }
     Some(parse_quote!(::std::collections::HashSet::from(#arr_expr)))
 }
 

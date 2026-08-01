@@ -509,14 +509,22 @@ fn infer_ctor_type(n: &NewExpression) -> Type {
             Some(p) => {
                 let k = types::translate_type(&p[0]);
                 let v = types::translate_type(&p[1]);
-                parse_quote!(::std::collections::HashMap<#k, #v>)
+                if types::is_f64_type(&k) {
+                    parse_quote!(::std::collections::HashMap<crate::__ds::DsF64Key, #v>)
+                } else {
+                    parse_quote!(::std::collections::HashMap<#k, #v>)
+                }
             }
             None => parse_quote!(_),
         },
         "Set" | "WeakSet" => match targs.and_then(|a| a.params.first()) {
             Some(e) => {
                 let e = types::translate_type(e);
-                parse_quote!(::std::collections::HashSet<#e>)
+                if types::is_f64_type(&e) {
+                    parse_quote!(::std::collections::HashSet<crate::__ds::DsF64Key>)
+                } else {
+                    parse_quote!(::std::collections::HashSet<#e>)
+                }
             }
             None => parse_quote!(_),
         },

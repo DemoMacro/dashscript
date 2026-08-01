@@ -659,6 +659,30 @@ pub(in crate::translator) fn is_hashset_local(expr: &Expression, ctx: &Ctx<'_>) 
         .is_some_and(is_hashset)
 }
 
+/// True when `expr` is a `HashSet<DsF64Key>` local — a `Set<number>` whose
+/// methods wrap each value in `DsF64Key` (f64 lacks Eq/Hash).
+pub(in crate::translator) fn hashset_uses_f64_key(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    if let Expression::Identifier(id) = expr {
+        let name = bindings::snake(&id.name).to_string();
+        if let Some(path) = ctx.local_type(&name) {
+            return super::first_generic_is(path, "HashSet", "DsF64Key");
+        }
+    }
+    false
+}
+
+/// True when `expr` is a `HashMap<DsF64Key, V>` local — a `Map<number, _>`
+/// whose methods wrap each key in `DsF64Key`.
+pub(in crate::translator) fn hashmap_uses_f64_key(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    if let Expression::Identifier(id) = expr {
+        let name = bindings::snake(&id.name).to_string();
+        if let Some(path) = ctx.local_type(&name) {
+            return super::first_generic_is(path, "HashMap", "DsF64Key");
+        }
+    }
+    false
+}
+
 /// True when `expr` is a local whose type is `Vec<u8>` (a `Uint8Array` byte
 /// buffer).
 pub(in crate::translator) fn is_vec_u8_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {

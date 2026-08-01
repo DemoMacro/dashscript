@@ -120,12 +120,18 @@ pub enum RuntimeDep {
     /// (`throws`/`compareArray`/`verifyProperty`/…) degrade to the engine
     /// (`RuntimeDep::Engine`), where the test262 harness runs natively.
     Assert,
+    /// A `number` as a `Set`/`Map` key. ES `Set`/`Map` compare keys by
+    /// SameValueZero, but Rust `f64` lacks `Eq`/`Hash` (NaN breaks reflexivity),
+    /// so `Set<number>`/`Map<number, _>` wrap each key in `DsF64Key` — a
+    /// `#[derive(Clone, Copy)]` newtype implementing SameValueZero `Eq`+`Hash`
+    /// (+0 === -0, NaN === NaN). Pure `std`; marker `__ds::DsF64Key`.
+    CollectionKey,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 13] = [
+    const ALL: [RuntimeDep; 14] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -139,6 +145,7 @@ impl RuntimeDep {
         RuntimeDep::Error,
         RuntimeDep::Inspect,
         RuntimeDep::Assert,
+        RuntimeDep::CollectionKey,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -161,6 +168,7 @@ impl RuntimeDep {
             // `assert_throws`, so a fixture using any one `assert.*` form pulls
             // ASSERT_HELPER (each is a sibling free fn in the slice).
             RuntimeDep::Assert => Some("__ds::assert_"),
+            RuntimeDep::CollectionKey => Some("__ds::DsF64Key"),
             RuntimeDep::Engine => None,
         }
     }
@@ -211,6 +219,7 @@ impl RuntimeDep {
             RuntimeDep::Error => None,
             RuntimeDep::Assert => None,
             RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\""), ("serde_json", "\"1\"")]),
+            RuntimeDep::CollectionKey => None,
         }
     }
 
@@ -228,6 +237,7 @@ impl RuntimeDep {
             RuntimeDep::Error => Some(ERROR_HELPER),
             RuntimeDep::Assert => Some(ASSERT_HELPER),
             RuntimeDep::Inspect => Some(INSPECT_HELPER),
+            RuntimeDep::CollectionKey => Some(COLLECTION_KEY_HELPER),
         }
     }
 }
@@ -876,6 +886,43 @@ impl DsSameValue for () {
     #[inline]
     fn ds_cmp(&self) -> DsCmp<'_> {
         DsCmp::Unit
+    }
+}
+"#;
+
+const COLLECTION_KEY_HELPER: &str = r#"
+/// A `number` used as a `Set`/`Map` key. ES `Set`/`Map` compare keys by
+/// SameValueZero, but Rust `f64` lacks `Eq`/`Hash` (NaN breaks reflexivity), so
+/// `Set<number>`/`Map<number, _>` lower to `HashSet<DsF64Key>`/`HashMap<DsF64Key, V>`.
+/// SameValueZero: `+0 === -0` (sign collapsed) and `NaN === NaN` (all NaN bit
+/// patterns collapse to one), so values that are SameValueZero-equal hash equal.
+#[derive(Clone, Copy)]
+pub struct DsF64Key(pub f64);
+
+impl PartialEq for DsF64Key {
+    fn eq(&self, other: &Self) -> bool {
+        let (a, b) = (self.0, other.0);
+        (a.is_nan() && b.is_nan()) || a == b || (a == 0.0 && b == 0.0)
+    }
+}
+impl Eq for DsF64Key {}
+
+impl std::hash::Hash for DsF64Key {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        let bits = if self.0 == 0.0 {
+            0u64
+        } else if self.0.is_nan() {
+            0x7ff8_0000_0000_0000u64
+        } else {
+            self.0.to_bits()
+        };
+        bits.hash(state);
+    }
+}
+
+impl std::fmt::Debug for DsF64Key {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
     }
 }
 "#;
