@@ -154,7 +154,10 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         {
             reject("`<builtin>.<method>.length` arity reflection is unsupported")
         }
-        // `<Global>.prototype.<method>` — a prototype method read as a value.
+        // `<Global>.prototype.<method>` — a prototype method read as a value
+        // (e.g. `Array.prototype.map` passed as a callback or `.call`'d). No
+        // static lowering exists, but the engine ships every builtin's
+        // prototype method verbatim, so the enclosing function degrades.
         Expression::StaticMemberExpression(sm)
             if sm.property.name.as_str() != "prototype"
                 && matches!(
@@ -164,7 +167,7 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
                             && is_global_object_receiver(&outer.object),
                 ) =>
         {
-            reject("`<builtin>.prototype.<method>` reflection is unsupported")
+            degrade("`<builtin>.prototype.<method>` reflection needs the engine")
         }
         // `{ get x() { … } }` / `{ set x(v) { … } }` — accessor properties.
         Expression::ObjectExpression(o) => {
@@ -819,10 +822,12 @@ mod tests {
     }
 
     #[test]
-    fn rejects_prototype_method_value() {
+    fn degrades_prototype_method_value() {
+        // `<builtin>.prototype.<method>` reads a builtin method as a value — no
+        // static lowering, but the engine ships it, so the function degrades.
         assert!(matches!(
             classify_first_expr("Object.prototype.toString"),
-            Mapping::Reject(_)
+            Mapping::DegradeEngine(_)
         ));
     }
 

@@ -422,16 +422,16 @@ fn translates_array_every_with_named_callback() {
 }
 
 #[test]
-fn translates_array_prototype_call_to_method() {
+fn translates_array_prototype_call_to_engine() {
     // `Array.prototype.map.call(xs, cb)` — borrowing an Array prototype method
-    // via `.call` — lowers like `xs.map(cb)` (the Vec receiver is the first arg).
+    // via `.call`. The static `array_method_on` lowering cannot compile the
+    // array-like receivers test262 drives (0/790), so the function routes to
+    // the engine rather than lowering to a static `.map`.
     let src = "function f(): void { const xs: number[] = [1, 2]; const ys = Array.prototype.map.call(xs, n => n * 2); }";
-    let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains(".iter().cloned().map(|n| n * 2_f64)"),
-        "got:\n{rust}"
+        Translator::new().uses_engine(src),
+        "Array prototype borrow call should route to the engine"
     );
-    assert!(!rust.contains("prototype"), "got:\n{rust}");
 }
 
 #[test]

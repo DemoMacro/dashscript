@@ -916,19 +916,18 @@ fn is_global_object_receiver(expr: &Expression) -> bool {
 /// — the single structural matcher, so check.rs and the translator cannot drift
 /// on the AST shape (the bug that made the prior local matcher miss a layer).
 ///
-/// Which builtins whitelist is caller-dependent (the [`FOR_ENGINE`] thread
-/// local): `check` whitelists only `String` — the translator's `array_method_on`
-/// lowers Array borrows too, but 0/790 test262 Array borrows compile (non-`Vec`
-/// receivers), so `check` keeps them `unsupported` rather than `partial`
-/// (honest binary). The engine detector whitelists `String` + `Array` — every
-/// borrow the translator *attempts* — so the engine fallback (a last resort for
-/// constructs with no lowering at all) does not steal a borrow the translator
-/// can lower. Only `.call` is mapped; `.apply`/`.bind` fall through.
+/// Only `String` prototype borrows (`String.prototype.X.call(s, …)`) whitelist:
+/// the static lowering (`str::X`) compiles for the common `&str`/`String`
+/// receivers. `Array` prototype borrows (`Array.prototype.X.call(arr-like, …)`)
+/// are not whitelisted — test262 drives them with non-`Vec` array-like
+/// receivers the static `array_method_on` lowering cannot compile (0/790 in
+/// test262), so flagging the `<builtin>.prototype.<method>` reflection routes
+/// the enclosing function to the engine (which ships the builtin verbatim)
+/// instead of a guaranteed-static `partial`. `check` and the engine detector
+/// agree on this. Only `.call` is mapped; `.apply`/`.bind` fall through.
 fn is_borrow_call(callee: &Expression) -> bool {
-    let for_engine = FOR_ENGINE.with(|c| c.get());
-    match super::expressions::call::prototype_method_call(callee) {
-        Some(("String", _)) => true,
-        Some(("Array", _)) => for_engine,
-        _ => false,
-    }
+    matches!(
+        super::expressions::call::prototype_method_call(callee),
+        Some(("String", _))
+    )
 }
