@@ -70,6 +70,12 @@ pub(in crate::translator) enum LocalKind {
     /// a `.test(x)`/`.exec(x)` on it needs the engine (ES coerces via ToString;
     /// regress takes `&str`).
     NonString,
+    /// A string-literal initializer (`const s = "…"`). The emit's `is_string_arg`
+    /// infers `String` for it, so `Temporal.<Type>.from(s)` stays on the static
+    /// `from_utf8` path; an untracked local (an untyped callback parameter, an
+    /// unknown) does not — it degrades so the polyfill carries the real coercion
+    /// instead of the emit throwing a spurious `TypeError`.
+    String,
     /// A `Temporal.<Type>.from(…)` / `new Temporal.<Type>(…)` initializer —
     /// carries the `<Type>` so `compare(a, b)` stays on the static
     /// `compare_iso(&a, &b)` path only when both operands are the same `<Type>`
@@ -308,12 +314,21 @@ fn from_arg_needs_engine(arg: Option<&Argument>, ctx: &ClassifyCtx) -> bool {
             if id.name.as_str() == "undefined" {
                 return true;
             }
-            ctx.local_kinds.get(id.name.as_str()).is_some()
+            // Only a local bound to a string literal stays on the static
+            // `from_utf8` path (the emit's `is_string_arg` infers `String` for
+            // it); a Temporal/NonString local, or an untracked local (an
+            // untyped callback parameter, an unknown) needs the polyfill — the
+            // emit would otherwise throw a spurious `TypeError`.
+            !matches!(
+                ctx.local_kinds.get(id.name.as_str()),
+                Some(LocalKind::String)
+            )
         }
-        // Any other expression (a call, a member access, …) — its type is
-        // unknown to the walk; let the emit's `is_string_arg` decide, treating
-        // it optimistically as a string so a known-string call result parses.
-        _ => false,
+        // Any other expression (a template literal, a call, a member access, …)
+        // — the emit's `is_string_arg` only parses a `StringLiteral`/`String`-
+        // inferred identifier, so it would throw a spurious `TypeError` for
+        // these. Degrade so the polyfill carries the real ToTemporal coercion.
+        _ => true,
     }
 }
 
@@ -329,7 +344,7 @@ fn compare_operand_type(arg: Option<&Argument>, ctx: &ClassifyCtx) -> Option<Str
     };
     match ctx.local_kinds.get(id.name.as_str())? {
         LocalKind::Temporal(ty) => Some(ty.clone()),
-        LocalKind::NonString => None,
+        LocalKind::NonString | LocalKind::String => None,
     }
 }
 
@@ -1174,10 +1189,15 @@ mod tests {
     }
 
     #[test]
-    fn maps_temporal_from_untracked_local() {
-        // An untracked local may still be a string — let the emit's
-        // `is_string_arg` decide (it parses if the local infers as `String`).
-        assert!(classify_first_expr("Temporal.PlainDate.from(s)").is_mapped());
+    fn degrades_temporal_from_untracked_local() {
+        // An untracked local's type is unknown to the walk; the emit's
+        // `is_string_arg` would throw a spurious `TypeError`, so degrade and let
+        // the polyfill carry the real ToTemporal coercion. A local bound to a
+        // string literal stays on the static path (`local_kinds` carries it).
+        assert!(matches!(
+            classify_first_expr("Temporal.PlainDate.from(s)"),
+            Mapping::DegradeEngine(_)
+        ));
     }
 
     #[test]

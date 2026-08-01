@@ -404,7 +404,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -460,15 +460,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.duration.from.argument-string-is-infinity",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (14680) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2732,7 +2732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40912) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
+    "detail": "Test262Error: \nthread 'main' (19984) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -3244,15 +3244,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.instant.from.argument-string-critical-unknown-annotation",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35048) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3268,7 +3268,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "static build: src\\main.rs:26:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:26:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted | engine: Test262Error: Test262Error: \"2025-01-01T00:00:00+00:0000\" should not be a valid ISO string for an Instant Expected a RangeError to be thrown but no exception was thrown at all",
+    "detail": "Test262Error: Test262Error: \"2025-01-01T00:00:00+00:0000\" should not be a valid ISO string for an Instant Expected a RangeError to be thrown but no exception was thrown at all",
     "note": ""
   },
   {
@@ -3276,31 +3276,31 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.instant.from.argument-string-minus-sign",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36932) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.instant.from.argument-string-multiple-calendar",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (18784) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.instant.from.argument-string-multiple-time-zone",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3324) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3403,8 +3403,8 @@
     "id": "test262.test.built-ins.temporal.instant.from.no-fractional-minutes-hours",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41700) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3443,8 +3443,8 @@
     "id": "test262.test.built-ins.temporal.instant.from.year-zero",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35892) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6244,7 +6244,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36684) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (14728) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -6588,7 +6588,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6668,7 +6668,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6683,16 +6683,16 @@
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-calendar-invalid-iso-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25440) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-critical-unknown-annotation",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (21892) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6708,7 +6708,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6716,31 +6716,31 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-minus-sign",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (15744) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-multiple-calendar",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35016) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-multiple-time-zone",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32044) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6763,8 +6763,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-with-utc-designator",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35288) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6843,8 +6843,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.from.no-fractional-minutes-hours",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42248) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6947,8 +6947,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.from.year-zero",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (21816) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9772,7 +9772,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41988) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (34736) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -10140,7 +10140,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10236,7 +10236,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10251,16 +10251,16 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-calendar-invalid-iso-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39948) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-critical-unknown-annotation",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19040) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10276,7 +10276,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30828) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: Test262Error: invalid date-time string (2025-01-01T00:00:00+00:0000) Expected a RangeError to be thrown but no exception was thrown at all",
     "note": ""
   },
   {
@@ -10284,31 +10284,31 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-minus-sign",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3052) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-multiple-calendar",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42432) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-multiple-time-zone",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (16700) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10339,8 +10339,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-with-utc-designator",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10904) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10427,8 +10427,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.from.no-fractional-minutes-hours",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38940) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10523,8 +10523,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.from.year-zero",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30224) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13948,7 +13948,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14012,7 +14012,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14020,23 +14020,23 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "static build: src\\main.rs:25:45: error[E0615]: attempted to take value of method `calendar_id` on type `PlainMonthDay`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: RangeError: MM-DD format is only valid with iso8601 calendar",
+    "detail": "static build: src\\main.rs:14:45: error[E0615]: attempted to take value of method `calendar_id` on type `PlainMonthDay`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: RangeError: MM-DD format is only valid with iso8601 calendar",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-calendar-invalid-iso-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37600) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-critical-unknown-annotation",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38128) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14051,24 +14051,24 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-minus-sign",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22700) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-multiple-calendar",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23188) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-multiple-time-zone",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39336) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14083,8 +14083,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-with-utc-designator",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30636) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14195,8 +14195,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.from.no-fractional-minutes-hours",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38848) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14283,8 +14283,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.from.year-zero",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40480) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15364,7 +15364,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15412,15 +15412,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-critical-unknown-annotation",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41200) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15436,31 +15436,31 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "static build: src\\main.rs:14:17: error[E0507]: cannot move out of a shared reference\nsrc\\main.rs:14:10: warning: unused variable: `arg`: help: if this is intentional, prefix it with an underscore: `_arg`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted | engine: Test262Error: Test262Error: \"00:00:00+00:0000\" should not be a valid ISO string for a PlainTime Expected a RangeError to be thrown but no exception was thrown at all",
+    "detail": "Test262Error: Test262Error: \"00:00:00+00:0000\" should not be a valid ISO string for a PlainTime Expected a RangeError to be thrown but no exception was thrown at all",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-minus-sign",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (16252) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-multiple-calendar",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (24312) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-multiple-time-zone",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42280) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15476,7 +15476,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15499,8 +15499,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-with-utc-designator",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (240) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15539,8 +15539,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.from.no-fractional-minutes-hours",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (26648) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15604,7 +15604,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15635,8 +15635,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.from.year-zero",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40116) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16844,7 +16844,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17260,7 +17260,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (16132) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
+    "detail": "Test262Error: \nthread 'main' (6004) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
     "note": ""
   },
   {
@@ -17476,7 +17476,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37992) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (35844) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -17732,7 +17732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13608) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (33720) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17804,7 +17804,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17892,7 +17892,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17900,23 +17900,23 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "static build: src\\main.rs:25:45: error[E0615]: attempted to take value of method `calendar_id` on type `PlainYearMonth`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: RangeError: YYYY-MM format is only valid with iso8601 calendar",
+    "detail": "static build: src\\main.rs:14:45: error[E0615]: attempted to take value of method `calendar_id` on type `PlainYearMonth`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: RangeError: YYYY-MM format is only valid with iso8601 calendar",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-calendar-invalid-iso-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (18000) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-critical-unknown-annotation",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20240) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17932,7 +17932,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17940,31 +17940,31 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-minus-sign",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (4088) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-multiple-calendar",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (31756) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-multiple-time-zone",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39852) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17987,8 +17987,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-with-utc-designator",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20988) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -18083,8 +18083,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.no-fractional-minutes-hours",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34156) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -18164,7 +18164,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -18187,8 +18187,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.year-zero",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40500) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -18748,7 +18748,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3660) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (25228) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -20892,7 +20892,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20900,7 +20900,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20915,16 +20915,16 @@
     "id": "test262.test.built-ins.temporal.zoneddatetime.from.argument-string-calendar-invalid-iso-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19400) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.zoneddatetime.from.argument-string-critical-unknown-annotation",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39712) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20932,7 +20932,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20940,7 +20940,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11500) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: Test262Error: invalid date-time string (2025-01-01T00:00:00+00:0000[UTC]) Expected a RangeError to be thrown but no exception was thrown at all",
     "note": ""
   },
   {
@@ -20948,31 +20948,31 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.zoneddatetime.from.argument-string-minus-sign",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40988) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.zoneddatetime.from.argument-string-multiple-calendar",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34208) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.zoneddatetime.from.argument-string-multiple-time-zone",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32892) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -21004,7 +21004,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -21012,7 +21012,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -21052,7 +21052,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34136) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (38880) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -21147,8 +21147,8 @@
     "id": "test262.test.built-ins.temporal.zoneddatetime.from.no-fractional-minutes-hours",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10944) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -21315,8 +21315,8 @@
     "id": "test262.test.built-ins.temporal.zoneddatetime.from.year-zero",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9512) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

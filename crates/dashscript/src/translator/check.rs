@@ -473,6 +473,7 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &m
                     // of unknown type is left unrecorded (no false route).
                     if let BindingPattern::BindingIdentifier(id) = &d.id {
                         let kind = match init {
+                            Expression::StringLiteral(_) => Some(LocalKind::String),
                             Expression::NumericLiteral(_)
                             | Expression::BooleanLiteral(_)
                             | Expression::ObjectExpression(_)

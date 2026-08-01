@@ -208,7 +208,7 @@ fn temporal_from(ty: &str, args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     } else {
         translate_argument(a, ctx)
     };
-    let err_rhs = ds_panic_temporal_err();
+    let err_rhs = ds_panic_temporal_range_err();
     Some(parse_quote!({
         // A malformed ISO string is an ES `RangeError`/`SyntaxError`, not a
         // panic — lower the `TemporalResult::Err` to a `DsError` so `catch (e)`
@@ -242,7 +242,7 @@ fn zoned_date_time_from(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     } else {
         translate_argument(a, ctx)
     };
-    let err_rhs = ds_panic_temporal_err();
+    let err_rhs = ds_panic_temporal_range_err();
     Some(parse_quote!({
         match temporal_rs::ZonedDateTime::from_utf8(
             (#e).as_bytes(),
@@ -335,6 +335,23 @@ fn ds_panic_temporal_err() -> Expr {
             temporal_rs::error::ErrorKind::Syntax => "SyntaxError",
             temporal_rs::error::ErrorKind::Assert => "ImplementationError",
         },
+        __err.into_message(),
+    )))
+}
+
+/// Like `ds_panic_temporal_err` but forces the ES class to `RangeError`. The
+/// Temporal spec mandates `RangeError` — never `TypeError`/`SyntaxError` — for
+/// every `Temporal.<Type>.from(«string»)` failure: a malformed ISO string, an
+/// unrecognized critical annotation, a duplicate calendar/time-zone annotation,
+/// year 0, fractional minutes/hours, etc. `temporal-rs` sometimes classifies
+/// these as `ErrorKind::Type`/`Syntax`, which would lower to the wrong ES class;
+/// the string-`from` path is always a parse/annotation failure, so the class is
+/// forced. The non-string `from` argument stays `TypeError` (its own fast path);
+/// `instant_from_epoch_millis` keeps `ds_panic_temporal_err` (a number argument,
+/// where Range vs Type is a real distinction).
+fn ds_panic_temporal_range_err() -> Expr {
+    parse_quote!(::std::panic::panic_any(crate::__ds::DsError::new(
+        "RangeError",
         __err.into_message(),
     )))
 }
