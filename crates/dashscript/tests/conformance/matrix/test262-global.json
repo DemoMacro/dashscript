@@ -19,8 +19,8 @@
     "id": "test262.test.built-ins.global.global-object",
     "layer": "test262",
     "category": "global",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«[object Object]», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

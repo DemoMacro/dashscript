@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 6 features: **3** supported, **3** partial, **0** unsupported, **0** untested
+- 6 features: **4** supported, **2** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## global
@@ -9,7 +9,7 @@
 | ----------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
 | test262.test.built-ins.global.10.2.1.1.3-4-16-s | 🟡 partial   | Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all |
 | test262.test.built-ins.global.10.2.1.1.3-4-18-s | 🟡 partial   | Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all |
-| test262.test.built-ins.global.global-object     | 🟡 partial   | Test262Error: Test262Error: Expected SameValue(«[object Object]», «undefined») to be true        |
+| test262.test.built-ins.global.global-object     | 🟢 supported | via rquickjs engine                                                                              |
 | test262.test.built-ins.global.s15.1_a1_t1       | 🟢 supported | via rquickjs engine                                                                              |
 | test262.test.built-ins.global.s15.1_a1_t2       | 🟢 supported | via rquickjs engine                                                                              |
 | test262.test.built-ins.global.s15.1_a2_t1       | 🟢 supported | via rquickjs engine                                                                              |

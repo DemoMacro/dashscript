@@ -1603,6 +1603,18 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
     EngineOutcome::Ok
 }
 
+/// Recover the raw test262 body from a harness-wrapped fixture. The extractor
+/// (scripts/extract-test262.mjs) wraps every body verbatim as
+/// `function main(): void {\n<body>\n}\nmain();\n`; on the engine path we strip
+/// that wrapper so the body evals at global scope (see [`run_test262`]).
+/// Returns the input unchanged if it is not the wrapped form.
+fn strip_main_wrapper(fixture: &str) -> &str {
+    const PREFIX: &str = "function main(): void {\n";
+    const SUFFIX: &str = "\n}\nmain();\n";
+    let s = fixture.strip_prefix(PREFIX).unwrap_or(fixture);
+    s.strip_suffix(SUFFIX).unwrap_or(s)
+}
+
 /// Run one test262 fixture through the assert-driven pipeline. Returns
 /// `(status, detail)`.
 ///
@@ -1631,7 +1643,25 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     // source in-process under QuickJS with the test262 harness injected, so
     // reflection + the full assert family run with reference semantics.
     if deps.needs_engine() {
-        let js_source = match Translator::new().engine_source(&raw.fixture) {
+        // The extractor wraps every body verbatim as
+        // `function main(): void {\n<body>\n}\nmain();\n` for the *static* path
+        // (DashScript's implicit `fn main`). On the engine path we eval the raw
+        // body at global scope instead — mirroring how test262 runs a fixture as
+        // a script — so top-level `var` declarations are globals and the
+        // `Function()` constructor's global-scope capture resolves them per spec
+        // (the wrapper would otherwise make them `main`-locals, e.g. the planet
+        // fixture `Function("return planet;")` would throw ReferenceError).
+        // Fall back to the wrapped fixture if the unwrapped body's engine verdict
+        // disagrees, so this never perturbs a fixture's routing.
+        let body = strip_main_wrapper(&raw.fixture);
+        let js_source = if body.len() < raw.fixture.len() {
+            Translator::new()
+                .engine_source(body)
+                .or_else(|| Translator::new().engine_source(&raw.fixture))
+        } else {
+            Translator::new().engine_source(&raw.fixture)
+        };
+        let js_source = match js_source {
             Some(s) => s,
             None => {
                 return (

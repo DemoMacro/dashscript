@@ -51,8 +51,8 @@
     "id": "test262.test.built-ins.function.15.3.5.4_2-10gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -67,8 +67,8 @@
     "id": "test262.test.built-ins.function.15.3.5.4_2-13gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -451,16 +451,16 @@
     "id": "test262.test.built-ins.function.15.3.5.4_2-58gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.function.15.3.5.4_2-59gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -603,16 +603,16 @@
     "id": "test262.test.built-ins.function.15.3.5.4_2-7gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.function.15.3.5.4_2-8gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -627,8 +627,8 @@
     "id": "test262.test.built-ins.function.15.3.5.4_2-95gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -651,8 +651,8 @@
     "id": "test262.test.built-ins.function.15.3.5.4_2-9gs",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3131,8 +3131,8 @@
     "id": "test262.test.built-ins.function.s15.3_a3_t3",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: planet is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
