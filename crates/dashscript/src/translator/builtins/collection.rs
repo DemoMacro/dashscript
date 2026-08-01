@@ -18,7 +18,7 @@ use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
 use super::super::expressions::{
-    hashmap_uses_f64_key, hashset_uses_f64_key, is_hashmap_local, is_hashset_local,
+    hashmap_uses_f64_key, hashset_uses_f64_key, is_hashmap_local, is_hashset_local, is_number_arg,
     translate_argument, translate_expr,
 };
 
@@ -43,7 +43,12 @@ pub(in crate::translator) fn collection_method(
     let name = sm.property.name.as_str();
     let obj = translate_expr(&sm.object, ctx);
     if is_hashmap_local(&sm.object, ctx) {
-        let f64key = hashmap_uses_f64_key(&sm.object, ctx);
+        // `f64` lacks `Eq`/`Hash`: an annotated `Map<number, _>` wraps each key
+        // in `DsF64Key` (detected via the receiver type), and an unannotated
+        // `new Map()` whose first key argument is a number wraps too — the
+        // inferred `HashMap<K, V>` would otherwise fail to compile.
+        let f64key = hashmap_uses_f64_key(&sm.object, ctx)
+            || args.first().is_some_and(|a| is_number_arg(a, ctx));
         Some(match name {
             // `m.set(k, v)` → `m.insert(k, v)`. ES returns the map for chaining;
             // the insert's `Option<V>` is dropped (chaining is not yet mapped),
@@ -71,7 +76,10 @@ pub(in crate::translator) fn collection_method(
             _ => return None,
         })
     } else if is_hashset_local(&sm.object, ctx) {
-        let f64key = hashset_uses_f64_key(&sm.object, ctx);
+        // As above: an annotated `Set<number>` wraps via the receiver type, and
+        // an unannotated `new Set()` whose first element is a number wraps too.
+        let f64key = hashset_uses_f64_key(&sm.object, ctx)
+            || args.first().is_some_and(|a| is_number_arg(a, ctx));
         Some(match name {
             // `s.add(v)` → `s.insert(v)` (statement; ES chaining unmapped).
             "add" => {

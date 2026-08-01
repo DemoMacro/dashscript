@@ -187,8 +187,8 @@
     "id": "test262.test.built-ins.map.map-iterable",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:39: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:4:71: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -316,7 +316,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:8:19: error[E0308]: mismatched types: expected `&DsF64Key`, found `&str`\nsrc\\main.rs:8:13: error[E0618]: expected function, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -332,7 +332,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:63: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:10: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:17: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -388,7 +388,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:5:35: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:65: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:27: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:8:13: error[E0618]: expected function, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -403,8 +403,8 @@
     "id": "test262.test.built-ins.map.prototype.delete.returns-false",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:36: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:4:66: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -460,7 +460,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:9:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:13:20: error[E0618]: expected function, found `f64`\nsrc\\main.rs:15:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -468,7 +468,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:9: error[E0599]: the method `for_each` exists for struct `HashMap<_, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<_, _>` due to unsatisfied trait bounds\nsrc\\main.rs:14:81: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nsrc\\main.rs:23:81: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`",
+    "detail": "src\\main.rs:8:39: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:12:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:12:5: error[E0618]: expected function, found `f64`\nsrc\\main.rs:18:81: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nsrc\\main.rs:27:81: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -564,7 +564,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:6:13: error[E0308]: mismatched types: expected `String`, found `bool`\nsrc\\main.rs:17:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:5:29: error[E0308]: mismatched types: expected `String`, found `bool`\nsrc\\main.rs:9:13: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:12:13: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:15:20: error[E0308]: mismatched types: expected `String`, found `DsF64Key`\nsrc\\main.rs:17:16: error[E0277]: the trait bound `String: Borrow<DsF64Key>` is not satisfied: the trait `Borrow<DsF64Key>` is not implemented for `String`\nsrc\\main.rs:20:20: error[E0308]: mismatched types: expected `String`, found `DsF64Key`",
     "note": ""
   },
   {
@@ -604,7 +604,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:9: error[E0599]: the method `for_each` exists for struct `HashMap<_, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<_, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:70: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`",
+    "detail": "src\\main.rs:16:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:16:13: error[E0308]: mismatched types: expected `&DsF64Key`, found `&str`\nsrc\\main.rs:16:5: error[E0618]: expected function, found `f64`\nsrc\\main.rs:17:70: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nsrc\\main.rs:18:70: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nsrc\\main.rs:19:70: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`",
     "note": ""
   },
   {
@@ -660,7 +660,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:46: error[E0308]: mismatched types: expected `&_`, found `String`\nsrc\\main.rs:4:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`\nsrc\\main.rs:7:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
+    "detail": "src\\main.rs:4:79: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -675,8 +675,8 @@
     "id": "test262.test.built-ins.map.prototype.get.returns-value-normalized-zero-key",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -700,7 +700,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
+    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -772,7 +772,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:42: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:42: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:8:19: error[E0308]: mismatched types: expected `&DsF64Key`, found `&str`\nsrc\\main.rs:8:11: error[E0618]: expected function, found `f64`\nsrc\\main.rs:16:19: error[E0308]: mismatched types: expected `&DsF64Key`, found `&str`\nsrc\\main.rs:16:11: error[E0618]: expected function, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -796,7 +796,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
+    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -892,7 +892,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:14:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:17:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:20:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:23:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashMap<_, _>`\nsrc\\main.rs:37:42: error[E0308]: mismatched types: expected `f64`, found `i64`\nsrc\\main.rs:41:42: error[E0308]: mismatched types: expected `f64`, found `i64`\nsrc\\main.rs:45:42: error[E0308]: mismatched types: expected `f64`, found `i64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -916,7 +916,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:15: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:12:15: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:8:19: error[E0308]: mismatched types: expected `&DsF64Key`, found `&str`\nsrc\\main.rs:8:11: error[E0618]: expected function, found `f64`\nsrc\\main.rs:16:19: error[E0308]: mismatched types: expected `&DsF64Key`, found `&str`\nsrc\\main.rs:16:11: error[E0618]: expected function, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -963,8 +963,8 @@
     "id": "test262.test.built-ins.map.prototype.has.normalizes-zero-key",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:4:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1044,7 +1044,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:11:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:12:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field",
+    "detail": "src\\main.rs:9:20: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:12:20: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:14:20: error[E0618]: expected function, found `f64`\nsrc\\main.rs:16:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:53: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nsrc\\main.rs:23:53: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`",
     "note": ""
   },
   {
@@ -1052,7 +1052,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1075,8 +1075,8 @@
     "id": "test262.test.built-ins.map.prototype.set.append-new-values-normalizes-zero-key",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1084,7 +1084,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:47: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nsrc\\main.rs:6:18: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:47: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nsrc\\main.rs:9:19: error[E0609]: no field `set` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:10:47: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`",
+    "detail": "src\\main.rs:7:47: error[E0277]: the trait bound `HashMap<DsF64Key, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<DsF64Key, f64>`\nsrc\\main.rs:11:10: error[E0599]: no method named `set` found for unit type `()` in the current scope: method not found in `()`\nsrc\\main.rs:13:47: error[E0277]: the trait bound `HashMap<DsF64Key, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<DsF64Key, f64>`\nsrc\\main.rs:16:47: error[E0277]: the trait bound `HashMap<DsF64Key, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<DsF64Key, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1123,8 +1123,8 @@
     "id": "test262.test.built-ins.map.prototype.set.replaces-a-value",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:3:56: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1132,7 +1132,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:6:11: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:19: error[E0277]: the trait bound `f64: Eq` is not satisfied: the trait `Eq` is not implemented for `f64`\nsrc\\main.rs:3:19: error[E0277]: the trait bound `f64: Hash` is not satisfied: the trait `Hash` is not implemented for `f64`\nsrc\\main.rs:5:13: error[E0599]: the method `insert` exists for struct `HashMap<f64, f64>`, but its trait bounds were not satisfied\nsrc\\main.rs:8:15: error[E0599]: the method `get` exists for struct `HashMap<f64, f64>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<f64, f64>` due to unsatisfied trait bounds\nsrc\\main.rs:11:11: error[E0277]: the trait bound `f64: Eq` is not satisfied: the trait `Eq` is not implemented for `f64`\nsrc\\main.rs:11:11: error[E0277]: the trait bound `f64: Hash` is not satisfied: the trait `Hash` is not implemented for `f64`",
     "note": ""
   },
   {
@@ -1187,16 +1187,16 @@
     "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-clear",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:4:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:9:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-delete",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "src\\main.rs:4:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:7:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:42: error[E0609]: no field `size` on type `HashMap<_, _>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1292,7 +1292,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:10:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:11:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:12:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field",
+    "detail": "src\\main.rs:9:50: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nsrc\\main.rs:12:50: error[E0308]: mismatched types: expected `String`, found `HashMap<DsF64Key, String>`\nsrc\\main.rs:14:28: error[E0308]: mismatched types: expected `&DsF64Key`, found `&str`\nsrc\\main.rs:14:20: error[E0618]: expected function, found `String`\nsrc\\main.rs:16:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:20:53: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`",
     "note": ""
   },
   {
@@ -1300,7 +1300,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {

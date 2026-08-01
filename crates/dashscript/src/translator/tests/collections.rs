@@ -225,3 +225,66 @@ fn translates_inferred_set_literal_wraps_f64_key() {
         "inferred Set([1, 2]) + add(3) + has(3) all thread DsF64Key: {rust}"
     );
 }
+
+#[test]
+fn translates_bare_new_map_methods_dispatch() {
+    // An unannotated `let map = new Map()` records the bare `HashMap` type, so
+    // `map.set/get/has/size` dispatch on the receiver — K/V are inferred at the
+    // insert sites by Rust (`HashMap::new()` + `insert("a", 1_f64)` ⇒
+    // `HashMap<String, f64>`).
+    let src = "function f(): void {\
+                 let map = new Map();\
+                 map.set(\"a\", 1);\
+                 console.log(map.get(\"a\"));\
+                 console.log(map.has(\"a\"));\
+                 console.log(map.size);\
+             }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains(".insert("), "bare Map.set → insert: {rust}");
+    assert!(rust.contains(".contains_key("), "bare Map.has: {rust}");
+    assert!(rust.contains(".len() as f64"), "bare Map.size: {rust}");
+}
+
+#[test]
+fn translates_new_map_from_array_literal() {
+    // `new Map([["k", 1], ["k2", 2]])` → `HashMap::from([("k".to_string(), 1_f64), …])`
+    // — a literal initial map of [key, value] pairs, mirroring `new Set([a, b])`.
+    let src = "function f(): void { let m = new Map([[\"k\", 1], [\"k2\", 2]]); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("HashMap::from(["),
+        "new Map([[k,v],…]) → HashMap::from: {rust}"
+    );
+    assert!(
+        !rust.contains("Map::new"),
+        "must not fall through to Map::new: {rust}"
+    );
+}
+
+#[test]
+fn translates_new_map_from_number_key_array_wraps_f64_key() {
+    // `new Map([[1, 1], [2, 2]])` — a number key wraps in `DsF64Key` (f64 lacks
+    // Eq/Hash), so the inferred `HashMap<DsF64Key, f64>` compiles.
+    let src = "function f(): void { let m = new Map([[1, 1], [2, 2]]); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("DsF64Key"),
+        "new Map([[number, …]]) wraps the key: {rust}"
+    );
+}
+
+#[test]
+fn translates_bare_map_number_key_wraps_f64_key() {
+    // An unannotated `new Map()` whose first `set` key is a number wraps the
+    // key in `DsF64Key` — the inferred `HashMap<f64, V>` would otherwise fail.
+    let src = "function f(): void {\
+                 let map = new Map();\
+                 map.set(0, 1);\
+                 console.log(map.has(0));\
+             }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("insert(crate::__ds::DsF64Key"),
+        "bare Map number key wraps DsF64Key: {rust}"
+    );
+}

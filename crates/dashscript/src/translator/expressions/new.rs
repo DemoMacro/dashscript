@@ -6,7 +6,7 @@ use super::super::bindings;
 use super::super::builtins;
 use super::super::context::Ctx;
 use super::super::types;
-use super::{array_elem_arg, array_owned_expr};
+use super::{array_elem_arg, array_elem_expr, array_owned_expr};
 
 /// `new Foo(args)` → `Foo::new(args)`. Only an identifier callee (a user class)
 /// maps; `new foo.Bar()` or `new (factory())()` fall back to `todo!()`.
@@ -125,6 +125,16 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             _ => {}
         }
     }
+    // `new Map([[k, v], …])` → `HashMap::from([(k, v), …])` — a literal initial
+    // map of [key, value] pairs, the common module-constant case. ES Map
+    // accepts any iterable of pairs; a spread or non-array arg falls through to
+    // the generic `Map::new(…)` path (a `cargo check` error honestly),
+    // matching `new Set([a, b, …])`.
+    if name.to_string().as_str() == "Map" {
+        if let Some(e) = map_from_array_arg(&n.arguments, ctx) {
+            return e;
+        }
+    }
     // `new Set([a, b, …])` → `HashSet::from([a, b, …])` — a literal initial set
     // of scalar values, the common module-constant case. ES Set accepts any
     // iterable; a spread or a non-array arg falls through to the generic
@@ -173,6 +183,52 @@ fn worker_ctor(arg: &Argument, handler: Expr) -> Expr {
         Some(ty) => parse_quote!(crate::__ds::Worker::new_with_reply::<#ty, _>(#handler)),
         None => parse_quote!(crate::__ds::Worker::new_with_reply(#handler)),
     }
+}
+
+/// `new Map([[k, v], …])` → `HashMap::from([(k, v), …])` — a literal initial
+/// map of [key, value] pairs. Each element must be a 2-element array literal;
+/// `None` otherwise (spread / non-array / wrong arity), so anything else falls
+/// through to the generic `Map::new(…)` path. A numeric key (detected from the
+/// first pair's first element) wraps each key in `DsF64Key` — `f64` lacks
+/// `Eq`/`Hash`, so the SameValueZero newtype is the only way to house one in a
+/// `HashMap`.
+fn map_from_array_arg(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    use oxc_ast::ast::{ArrayExpressionElement, Expression};
+    if args.len() != 1 {
+        return None;
+    }
+    let Expression::ArrayExpression(arr) = args[0].as_expression()? else {
+        return None;
+    };
+    // A `Map<number, _>` (first pair's key is a numeric literal) wraps each key
+    // in `DsF64Key` so the `HashMap` compiles.
+    let f64key = matches!(
+        arr.elements.first(),
+        Some(ArrayExpressionElement::ArrayExpression(inner))
+            if matches!(
+                inner.elements.first(),
+                Some(ArrayExpressionElement::NumericLiteral(_))
+            )
+    );
+    let mut pairs: Vec<Expr> = Vec::with_capacity(arr.elements.len());
+    for el in &arr.elements {
+        let Expression::ArrayExpression(inner) = el.as_expression()? else {
+            return None;
+        };
+        if inner.elements.len() != 2 {
+            return None;
+        }
+        let k = array_elem_expr(inner.elements[0].as_expression()?, ctx);
+        let v = array_elem_expr(inner.elements[1].as_expression()?, ctx);
+        pairs.push(if f64key {
+            parse_quote!((crate::__ds::DsF64Key(#k), #v))
+        } else {
+            parse_quote!((#k, #v))
+        });
+    }
+    Some(parse_quote!(
+        ::std::collections::HashMap::from([#(#pairs),*])
+    ))
 }
 
 /// `new Set([a, b, …])` → `HashSet::from([a, b, …])` — a literal initial set of

@@ -838,22 +838,31 @@ pub(in crate::translator) fn new_collection_return_type(new: &NewExpression) -> 
     match id.name.as_str() {
         "Set" => {
             // `new Set([literal])` → HashSet<T> (T from the first array element);
-            // `new Set<T>()` → HashSet<T> (T from the single type argument).
+            // `new Set<T>()` → HashSet<T> (T from the single type argument);
+            // bare `new Set()` → HashSet (element type inferred at each insert).
             if let Some(elem) = set_array_elem_type(new) {
                 let elem = keywrap(elem);
                 return Some(parse_quote!(::std::collections::HashSet<#elem>));
             }
-            let mut args = new_type_args(new)?.into_iter();
-            let elem = keywrap(args.next()?);
-            Some(parse_quote!(::std::collections::HashSet<#elem>))
+            match new_type_args(new) {
+                Some(args) => {
+                    let elem = keywrap(args.into_iter().next()?);
+                    Some(parse_quote!(::std::collections::HashSet<#elem>))
+                }
+                None => Some(parse_quote!(::std::collections::HashSet)),
+            }
         }
-        "Map" => {
-            // `new Map<K, V>()` → HashMap<K, V> (K, V from the two type args).
-            let mut args = new_type_args(new)?.into_iter();
-            let key = keywrap(args.next()?);
-            let val = args.next()?;
-            Some(parse_quote!(::std::collections::HashMap<#key, #val>))
-        }
+        "Map" => match new_type_args(new) {
+            // `new Map<K, V>()` → HashMap<K, V> (K, V from the two type args);
+            // bare `new Map()` → HashMap (K, V inferred at each insert).
+            Some(args) if args.len() >= 2 => {
+                let mut iter = args.into_iter();
+                let key = keywrap(iter.next()?);
+                let val = iter.next()?;
+                Some(parse_quote!(::std::collections::HashMap<#key, #val>))
+            }
+            _ => Some(parse_quote!(::std::collections::HashMap)),
+        },
         _ => None,
     }
 }
