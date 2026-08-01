@@ -1047,6 +1047,147 @@ fn harness_source(name: &str) -> Option<&'static str> {
         .map(|(_, s)| *s)
 }
 
+/// Minimal `ShadowRealm` polyfill. QuickJS-NG ships no ShadowRealm, so a fixture
+/// touching it would ReferenceError. `new ShadowRealm()` allocates an isolated
+/// rquickjs `Context` (a separate realm with its own intrinsics and
+/// globalThis), held in a per-`engine_eval` registry keyed by an opaque id the
+/// instance carries as `__ds_realm`. `evaluate(src)` evals in that realm and
+/// returns the result only when it is a spec-primitive — a non-primitive, or an
+/// error thrown inside the realm, is wrapped into a `TypeError`, matching the
+/// spec's "evaluate resolves to a non-primitive" / "error from the other realm
+/// is wrapped into a TypeError" semantics. Cross-realm WrappedFunction
+/// (`evaluate` returning a callable that round-trips into the inner realm) and
+/// `importValue` (async module loading) are out of scope: fixtures needing them
+/// honestly degrade rather than fake a pass. The registry is cleared at the end
+/// of each `engine_eval` (`RealmsGuard`) so inner realms (and their runtimes)
+/// drop with the fixture — no cross-fixture residue.
+const SHADOWREALM_PRELUDE: &str = r#"
+function ShadowRealm() { this.__ds_realm = __ds_sr_create(); }
+ShadowRealm.prototype = {
+  constructor: ShadowRealm,
+  evaluate(src) { return __ds_sr_evaluate(this.__ds_realm, src); },
+};
+"#;
+
+/// A primitive lifted out of a ShadowRealm's `evaluate`, or a signal that the
+/// evaluation did not resolve to a primitive. Marshalled across realms:
+/// extracted in the inner realm, rebuilt in the outer realm during
+/// [`rquickjs::IntoJs`] conversion (a JS value cannot be shared across
+/// runtimes — undefined behavior — so only primitives cross).
+enum SrPrim {
+    Und,
+    Null,
+    Bool(bool),
+    Num(f64),
+    Str(String),
+    /// Non-primitive result, or an error thrown inside the realm — both must
+    /// surface as a `TypeError` to the outer realm per the ShadowRealm spec.
+    TypeError,
+}
+
+impl<'js> rquickjs::IntoJs<'js> for SrPrim {
+    fn into_js(self, ctx: &rquickjs::Ctx<'js>) -> rquickjs::Result<rquickjs::Value<'js>> {
+        use rquickjs::{Exception, Value};
+        Ok(match self {
+            SrPrim::Und => Value::new_undefined(ctx.clone()),
+            SrPrim::Null => Value::new_null(ctx.clone()),
+            SrPrim::Bool(b) => Value::new_bool(ctx.clone(), b),
+            SrPrim::Num(n) => Value::new_float(ctx.clone(), n),
+            SrPrim::Str(s) => return s.into_js(ctx),
+            SrPrim::TypeError => {
+                return Err(Exception::throw_type(
+                    ctx,
+                    "ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+                ))
+            }
+        })
+    }
+}
+
+thread_local! {
+    /// ShadowRealm inner realms, keyed by the opaque id each JS ShadowRealm
+    /// instance carries. A `Context` keeps its `Runtime` alive, so a realm
+    /// persists across `evaluate` calls on the same instance. Cleared at the
+    /// end of every `engine_eval` (`RealmsGuard`) so inner runtimes drop with
+    /// the fixture — no cross-fixture residue.
+    static DS_REALMS: std::cell::RefCell<std::collections::HashMap<u32, rquickjs::Context>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+    static DS_REALM_NEXT: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
+}
+
+/// Install the ShadowRealm polyfill (constructor + `evaluate`) on the engine
+/// context. `importValue` is deliberately absent — its async-module semantics
+/// are out of scope, so fixtures using it degrade honestly.
+fn sr_install(ctx: &rquickjs::Ctx) -> rquickjs::Result<()> {
+    use rquickjs::{Context, FromJs, Function, Runtime, Type, Value};
+    ctx.globals().set(
+        "__ds_sr_create",
+        Function::new(ctx.clone(), || -> rquickjs::Result<u32> {
+            let rt = Runtime::new()?;
+            let inner = Context::full(&rt)?;
+            let id = DS_REALM_NEXT.with(|c| {
+                let v = c.get();
+                c.set(v.checked_add(1).unwrap_or(1));
+                v
+            });
+            DS_REALMS.with(|m| m.borrow_mut().insert(id, inner));
+            Ok(id)
+        })?,
+    )?;
+    ctx.globals().set(
+        "__ds_sr_evaluate",
+        Function::new(
+            ctx.clone(),
+            |id: u32, src: String| -> rquickjs::Result<SrPrim> {
+                let inner = DS_REALMS.with(|m| m.borrow().get(&id).cloned());
+                let Some(inner) = inner else {
+                    return Ok(SrPrim::TypeError);
+                };
+                inner.with(|ic| -> rquickjs::Result<SrPrim> {
+                    let v: Value = match ic.eval_with_options::<Value, _>(src.as_str(), sr_sloppy())
+                    {
+                        Ok(v) => v,
+                        // An error thrown inside the realm is wrapped into a TypeError.
+                        Err(_) => {
+                            let _ = ic.catch();
+                            return Ok(SrPrim::TypeError);
+                        }
+                    };
+                    Ok(match v.type_of() {
+                        Type::Uninitialized | Type::Undefined => SrPrim::Und,
+                        Type::Null => SrPrim::Null,
+                        Type::Bool => SrPrim::Bool(bool::from_js(&ic, v)?),
+                        Type::Int | Type::Float => SrPrim::Num(f64::from_js(&ic, v)?),
+                        Type::String => SrPrim::Str(String::from_js(&ic, v)?),
+                        // Object/function/symbol/bigint: non-primitive (symbol/bigint
+                        // cross-realm marshalling is out of scope) → TypeError.
+                        _ => SrPrim::TypeError,
+                    })
+                })
+            },
+        )?,
+    )?;
+    ctx.eval_with_options::<(), _>(SHADOWREALM_PRELUDE, sr_sloppy())?;
+    Ok(())
+}
+
+/// Sloppy-mode `EvalOptions` for ShadowRealm polyfill evals (the spec runs
+/// `evaluate` source as a global-scope script, not a strict module).
+fn sr_sloppy() -> rquickjs::context::EvalOptions {
+    let mut o = rquickjs::context::EvalOptions::default();
+    o.strict = false;
+    o
+}
+
+/// Drops all ShadowRealm inner realms when `engine_eval` returns (or unwinds),
+/// so each fixture starts and ends with an empty registry.
+struct RealmsGuard;
+impl Drop for RealmsGuard {
+    fn drop(&mut self) {
+        DS_REALMS.with(|m| m.borrow_mut().clear());
+    }
+}
+
 /// Run an engine-gated fixture's ECMAScript under an embedded QuickJS engine —
 /// the same engine `__ds_engine` embeds for `ds build`, but in-process. Skips
 /// the cargo compile entirely: the engine Rust template (`fn main() {
@@ -1079,6 +1220,9 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
         }
     }
     let _gc_guard = GcOnDrop(&runtime);
+    // Drop ShadowRealm inner realms when engine_eval returns so each fixture
+    // starts and ends with an empty registry (no cross-fixture residue).
+    let _realms_guard = RealmsGuard;
     let sloppy = || {
         let mut o = EvalOptions::default();
         o.strict = false;
@@ -1135,6 +1279,12 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
                 })?,
             )?;
             ctx.eval_with_options::<(), _>(AGENT_262_PRELUDE, sloppy())?;
+            // ShadowRealm polyfill: QuickJS-NG lacks ShadowRealm, so inject a
+            // Rust-backed one (isolated rquickjs Context per instance) only for
+            // fixtures that reference it — skips the registration cost otherwise.
+            if js_source.contains("ShadowRealm") {
+                sr_install(&ctx)?;
+            }
             for inc in includes {
                 if let Some(src) = harness_source(inc) {
                     ctx.eval_with_options::<(), _>(src, sloppy())?;
