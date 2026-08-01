@@ -112,6 +112,90 @@ pub const ENGINE_VALUE_GLOBALS: &[&str] = &[
     "Intl",
 ];
 
+/// test262 harness helper functions — defined only in the harness `$INCLUDE`
+/// files (propertyHelper.js, isConstructor.js, testTypedArray.js, compareArray.js,
+/// …) the engine path injects before a fixture. They have no static mapping (and
+/// no standard-ES analogue), so a bare call `isConstructor(x)` or a value read
+/// `arr.map(compareArray)` would otherwise snake-case the name into a phantom
+/// binding (E0425) — an honest `partial` that never reaches the harness. Listing
+/// them here routes any fixture that references one onto the engine path, where
+/// the `$INCLUDE` defines them and the assert family runs with reference
+/// semantics. `assert` (already special-cased in `classify_call`) and
+/// `Test262Error` (a constructor with its own `throw new Test262Error` mapping)
+/// are intentionally absent. A fixture that locally re-declares one of these
+/// names shadows the global — rare in test262, and the engine still runs the
+/// fixture correctly when it does degrade.
+pub const HARNESS_HELPER_GLOBALS: &[&str] = &[
+    "CollectValuesAndResize",
+    "CreateRabForTest",
+    "CreateResizableArrayBuffer",
+    "MayNeedBigInt",
+    "TestIterationAndResize",
+    "ToNumbers",
+    "allowProxyTraps",
+    "assertIsPackedArray",
+    "assertIteratorResult",
+    "assertZipped",
+    "assertZippedKeyed",
+    "asyncTest",
+    "buildString",
+    "checkSequence",
+    "checkSettledPromises",
+    "compareArray",
+    "compareIterator",
+    "ctorArgFactoryMatchesSome",
+    "escapeKey",
+    "floatTypedArrayConstructorPrecision",
+    "forEachSequenceCombination",
+    "forEachSequenceCombinationKeyed",
+    "formatIdentityFreeValue",
+    "formatPropertyName",
+    "formatSimpleValue",
+    "getWellKnownIntrinsicObject",
+    "isConfigurable",
+    "isConstructor",
+    "isEnumerable",
+    "isFloatTypedArrayConstructor",
+    "isNegativeZero",
+    "isPrimitive",
+    "isSameValue",
+    "isWritable",
+    "makeArray",
+    "makeArrayBuffer",
+    "makeArrayLike",
+    "makeNativeError",
+    "makePassthrough",
+    "matchValidator",
+    "printCodePoint",
+    "printStringCodePoints",
+    "stringFromTemplate",
+    "subClass",
+    "testAtomics",
+    "testPropertyEscapes",
+    "testPropertyOfStrings",
+    "testTypedArrayConversions",
+    "testWithAllTypedArrayConstructors",
+    "testWithAtomicsFriendlyTypedArrayConstructors",
+    "testWithAtomicsInBoundsIndices",
+    "testWithAtomicsNonViewValues",
+    "testWithAtomicsOutOfBoundsIndices",
+    "testWithBigIntTypedArrayConstructors",
+    "testWithNonAtomicsFriendlyTypedArrayConstructors",
+    "testWithTypedArrayConstructors",
+    "verifyAccessorProperty",
+    "verifyCallableProperty",
+    "verifyConfigurable",
+    "verifyEnumerable",
+    "verifyEqualTo",
+    "verifyNotConfigurable",
+    "verifyNotEnumerable",
+    "verifyNotWritable",
+    "verifyPrimordialAccessorProperty",
+    "verifyPrimordialCallableProperty",
+    "verifyProperty",
+    "verifyWritable",
+];
+
 /// True if `name` is a global DashScript models only as a static-call/new
 /// receiver — a bare value reference to it is unsupported reflection.
 #[inline]
@@ -131,4 +215,12 @@ pub fn is_global_receiver(name: &str) -> bool {
 #[inline]
 pub fn is_engine_value_global(name: &str) -> bool {
     ENGINE_VALUE_GLOBALS.contains(&name)
+}
+
+/// True if `name` is a test262 harness helper function (defined only in a
+/// `$INCLUDE` the engine injects). A call or value read degrades the enclosing
+/// function to the engine. See [`HARNESS_HELPER_GLOBALS`].
+#[inline]
+pub fn is_harness_helper(name: &str) -> bool {
+    HARNESS_HELPER_GLOBALS.contains(&name)
 }

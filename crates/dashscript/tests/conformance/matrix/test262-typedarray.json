@@ -131,8 +131,8 @@
     "id": "test262.test.built-ins.typedarray.from.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -171,8 +171,8 @@
     "id": "test262.test.built-ins.typedarray.of.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -203,8 +203,8 @@
     "id": "test262.test.built-ins.typedarray.out-of-bounds-get-and-set",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:25: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:13:23: error[E0425]: cannot find function `convert` in this scope: not found in this scope\nsrc\\main.rs:23:34: error[E0425]: cannot find function `may_need_big_int` in this scope: not found in this scope\nsrc\\main.rs:33:23: error[E0425]: cannot find function `convert` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -507,16 +507,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.bytelength.resized-out-of-bounds-1",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:11:15: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:12:15: error[E0425]: cannot find value `length` in this scope\nsrc\\main.rs:12:24: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:17:42: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:22:15: error[E0425]: cannot find value `ta` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.bytelength.resized-out-of-bounds-2",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:11:15: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:12:15: error[E0425]: cannot find value `length` in this scope\nsrc\\main.rs:12:24: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:17:42: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:22:15: error[E0425]: cannot find value `ta` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -627,8 +627,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.byteoffset.resized-out-of-bounds",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:10:42: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:14:42: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:18:42: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:22:42: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1043,8 +1043,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.copywithin.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1211,8 +1211,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.entries.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1227,8 +1227,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.entries.resizable-buffer-shrink-mid-iteration",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:19:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:39:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:50:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_rab_for_test` in this scope: not found in this scope\nsrc\\main.rs:5:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1515,8 +1515,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.every.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1899,8 +1899,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.fill.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2411,8 +2411,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.filter.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2771,8 +2771,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2835,8 +2835,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.resizable-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:27:60: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:29:45: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:33:36: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:37:48: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:44:35: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3051,8 +3051,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3115,8 +3115,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.resizable-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:28:39: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:32:51: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:36:42: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:40:54: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:47:41: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3331,24 +3331,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.length",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:12: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:8:9: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.findlast.name",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:8:9: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.findlast.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3411,8 +3411,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.resizable-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:28:38: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:32:50: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:36:41: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:40:53: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:47:40: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3627,24 +3627,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.length",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:12: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:8:9: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.name",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:8:9: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3707,8 +3707,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.resizable-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:28:44: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:32:56: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:36:47: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:40:59: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope\nsrc\\main.rs:47:46: error[E0425]: cannot find value `is_two_or_four` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4019,8 +4019,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.foreach.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4291,8 +4291,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.includes.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4531,8 +4531,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.indexof.coerced-searchelement-fromindex-grow",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:45:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:35: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:13:34: error[E0425]: cannot find function `may_need_big_int` in this scope: not found in this scope\nsrc\\main.rs:28:18: error[E0425]: cannot find function `may_need_big_int` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4635,8 +4635,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.indexof.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4651,8 +4651,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.indexof.resizable-buffer-special-float-values",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `float_ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:35: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:35:45: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:42:44: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:49:39: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4803,16 +4803,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.join.coerced-separator-grow",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:23:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:24:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:28:31: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.join.coerced-separator-shrink",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:20:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:21:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:25:31: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4883,16 +4883,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.join.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.join.resizable-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:9:40: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:14:31: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:15:43: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5027,8 +5027,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.keys.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5043,8 +5043,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.keys.resizable-buffer-shrink-mid-iteration",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:19:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:39:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:50:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_rab_for_test` in this scope: not found in this scope\nsrc\\main.rs:5:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5195,8 +5195,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.coerced-position-grow",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:38:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:35: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:13:34: error[E0425]: cannot find function `may_need_big_int` in this scope: not found in this scope\nsrc\\main.rs:28:18: error[E0425]: cannot find function `may_need_big_int` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5299,8 +5299,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5315,8 +5315,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.resizable-buffer-special-float-values",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `float_ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:35: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:35:46: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:42:45: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:49:40: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5483,16 +5483,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.length.resized-out-of-bounds-1",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:10:43: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:10:64: error[E0425]: cannot find value `length` in this scope\nsrc\\main.rs:14:43: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:18:43: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:18:64: error[E0425]: cannot find value `length` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.length.resized-out-of-bounds-2",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:10:43: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:10:64: error[E0425]: cannot find value `length` in this scope\nsrc\\main.rs:14:43: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:18:43: error[E0425]: cannot find value `ta` in this scope: not found in this scope\nsrc\\main.rs:18:64: error[E0425]: cannot find value `length` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5931,8 +5931,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.map.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6451,8 +6451,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduce.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6811,8 +6811,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduceright.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6883,8 +6883,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.resizable-and-fixed-have-same-prototype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:4:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:6:22: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:7:21: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6979,8 +6979,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reverse.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7619,8 +7619,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.set.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8275,8 +8275,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.slice.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8803,8 +8803,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.some.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9035,8 +9035,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.sort.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9395,8 +9395,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.subarray.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9931,16 +9931,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.tolocalestring.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.tolocalestring.resizable-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:9:40: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:14:31: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:15:43: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10067,8 +10067,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.toreversed.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10099,8 +10099,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.tosorted.comparefn-stop-after-error",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:14:47: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10131,8 +10131,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.tosorted.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10179,8 +10179,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.tostring.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10267,8 +10267,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.values.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10283,8 +10283,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.values.resizable-buffer-shrink-mid-iteration",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:19:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:39:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:50:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_rab_for_test` in this scope: not found in this scope\nsrc\\main.rs:5:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10403,8 +10403,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.with.not-a-constructor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `typed_array` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10427,8 +10427,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.with.valid-typedarray-index-checked-after-coercions",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:23: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:11:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:14:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10443,16 +10443,16 @@
     "id": "test262.test.built-ins.typedarray.resizable-buffer-length-tracking-1",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:6:18: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.resizable-buffer-length-tracking-2",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:6:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:7:18: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

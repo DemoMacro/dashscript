@@ -1323,8 +1323,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.ctors.buffer-arg.resizable-out-of-bounds",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:4:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:17: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:14:17: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:20:17: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:27:21: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2675,8 +2675,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.int8array.bytes_per_element",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:5:25: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:6:29: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_enumerable` in this scope: not found in this scope\nsrc\\main.rs:5:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2691,8 +2691,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.int8array.is-a-constructor",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2715,8 +2715,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.int8array.prototype.bytes_per_element",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:5:25: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:6:29: error[E0425]: cannot find value `int8_array` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_enumerable` in this scope: not found in this scope\nsrc\\main.rs:5:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5507,8 +5507,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.uint8array.bytes_per_element",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:5:25: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:6:29: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_enumerable` in this scope: not found in this scope\nsrc\\main.rs:5:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5523,8 +5523,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.uint8array.is-a-constructor",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5547,8 +5547,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.uint8array.prototype.bytes_per_element",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:5:25: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:6:29: error[E0425]: cannot find value `uint8_array` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_enumerable` in this scope: not found in this scope\nsrc\\main.rs:5:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5579,8 +5579,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.uint8clampedarray.bytes_per_element",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:4:27: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:5:25: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:6:29: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_enumerable` in this scope: not found in this scope\nsrc\\main.rs:5:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5595,8 +5595,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.uint8clampedarray.is-a-constructor",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5619,8 +5619,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.uint8clampedarray.prototype.bytes_per_element",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:8:9: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:11:25: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:13:9: error[E0425]: cannot find value `uint8_clamped_array` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find function `verify_not_enumerable` in this scope: not found in this scope\nsrc\\main.rs:11:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

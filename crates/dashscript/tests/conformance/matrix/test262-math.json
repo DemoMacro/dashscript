@@ -956,7 +956,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34612) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (40856) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1012,7 +1012,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40588) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (25284) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1396,7 +1396,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38888) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a back",
+    "detail": "Test262Error: \nthread 'main' (38028) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a back",
     "note": ""
   },
   {

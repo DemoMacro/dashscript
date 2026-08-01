@@ -3,8 +3,8 @@
     "id": "test262.test.built-ins.boolean.is-a-constructor",
     "layer": "test262",
     "category": "boolean",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -35,8 +35,8 @@
     "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a2",
     "layer": "test262",
     "category": "boolean",
-    "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:4:25: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:5:38: error[E0425]: cannot find value `boolean` in this scope: not found in this scope, help: perhaps you intended to use this type: `bool`\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_not_writable` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

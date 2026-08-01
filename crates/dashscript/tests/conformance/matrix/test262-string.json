@@ -115,8 +115,8 @@
     "id": "test262.test.built-ins.string.fromcharcode.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -171,8 +171,8 @@
     "id": "test262.test.built-ins.string.fromcodepoint.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -203,24 +203,24 @@
     "id": "test262.test.built-ins.string.is-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.length",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:14:11: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:16:11: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:18:11: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.numeric-properties",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:42: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:5:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:14:42: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:15:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nsrc\\main.rs:24:42: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -476,7 +476,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3384) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (7004) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38828) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (5000) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1564,7 +1564,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (14736) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (39436) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -1644,7 +1644,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40472) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (9492) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -1940,7 +1940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (36584) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (42716) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1948,7 +1948,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (3384) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (11044) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1956,7 +1956,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (41908) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (23064) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1964,7 +1964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (3040) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (11884) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1980,7 +1980,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (41308) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (21460) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2092,7 +2092,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (34252) panicked at src\\main.rs:3:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (32796) panicked at src\\main.rs:3:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3868,7 +3868,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42112) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42464) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3876,7 +3876,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (29524) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-inf\"», «\"-Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (41364) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-inf\"», «\"-Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -3892,7 +3892,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (4988) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (42712) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
     "note": ""
   },
   {
@@ -3900,7 +3900,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30352) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
+    "detail": "Test262Error: \nthread 'main' (37700) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
     "note": ""
   },
   {
@@ -3916,7 +3916,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42112) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
+    "detail": "Test262Error: \nthread 'main' (6992) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -3924,7 +3924,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (2992) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
+    "detail": "Test262Error: \nthread 'main' (37784) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
     "note": ""
   },
   {
@@ -3940,7 +3940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (16100) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (7696) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3956,7 +3956,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41188) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.00000001\"», «\"1e-8\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (11384) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.00000001\"», «\"1e-8\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -3964,7 +3964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11548) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (37820) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -4228,7 +4228,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (2516) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-0\"», «\"0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (23832) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-0\"», «\"0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4252,7 +4252,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40808) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (40492) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4308,7 +4308,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9180) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (16128) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4316,7 +4316,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23488) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (33540) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4324,7 +4324,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38268) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable t",
+    "detail": "Test262Error: \nthread 'main' (38340) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable t",
     "note": ""
   },
   {
@@ -4332,7 +4332,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39968) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u{2006}\\u{2007}\\u{2008}\\u{20",
+    "detail": "Test262Error: \nthread 'main' (4592) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u{2006}\\u{2007}\\u{2008}\\u{200",
     "note": ""
   },
   {
@@ -4340,7 +4340,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (28812) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\",
+    "detail": "Test262Error: \nthread 'main' (39276) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\",
     "note": ""
   },
   {
@@ -4380,7 +4380,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34008) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (18276) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -4428,7 +4428,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19868) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\u{feff}\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (35304) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\u{feff}\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -4532,7 +4532,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35676) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtr",
+    "detail": "Test262Error: \nthread 'main' (22276) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtr",
     "note": ""
   },
   {
@@ -5163,8 +5163,8 @@
     "id": "test262.test.built-ins.string.raw.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

@@ -19,8 +19,8 @@
     "id": "test262.test.built-ins.nativeerrors.evalerror.is-a-constructor",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `eval_error` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `EvalError` in this scope: use of undeclared type `EvalError`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -67,8 +67,8 @@
     "id": "test262.test.built-ins.nativeerrors.evalerror.prototype.message",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `eval_error` in this scope: not found in this scope\nsrc\\main.rs:5:9: error[E0425]: cannot find value `eval_error` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -123,8 +123,8 @@
     "id": "test262.test.built-ins.nativeerrors.rangeerror.is-a-constructor",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `RangeError` in this scope: use of undeclared type `RangeError`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -171,8 +171,8 @@
     "id": "test262.test.built-ins.nativeerrors.rangeerror.prototype.message",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:5:9: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -211,8 +211,8 @@
     "id": "test262.test.built-ins.nativeerrors.referenceerror.is-a-constructor",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reference_error` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `ReferenceError` in this scope: use of undeclared type `ReferenceError`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -259,8 +259,8 @@
     "id": "test262.test.built-ins.nativeerrors.referenceerror.prototype.message",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0425]: cannot find value `reference_error` in this scope: not found in this scope\nsrc\\main.rs:8:9: error[E0425]: cannot find value `reference_error` in this scope: not found in this scope\nsrc\\main.rs:7:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -299,8 +299,8 @@
     "id": "test262.test.built-ins.nativeerrors.syntaxerror.is-a-constructor",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `syntax_error` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `SyntaxError` in this scope: use of undeclared type `SyntaxError`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -347,8 +347,8 @@
     "id": "test262.test.built-ins.nativeerrors.syntaxerror.prototype.message",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `syntax_error` in this scope: not found in this scope\nsrc\\main.rs:5:9: error[E0425]: cannot find value `syntax_error` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -387,8 +387,8 @@
     "id": "test262.test.built-ins.nativeerrors.typeerror.is-a-constructor",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `TypeError` in this scope: use of undeclared type `TypeError`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -435,8 +435,8 @@
     "id": "test262.test.built-ins.nativeerrors.typeerror.prototype.message",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:5:9: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -475,8 +475,8 @@
     "id": "test262.test.built-ins.nativeerrors.urierror.is-a-constructor",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `uri_error` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `URIError` in this scope: use of undeclared type `URIError`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -523,8 +523,8 @@
     "id": "test262.test.built-ins.nativeerrors.urierror.prototype.message",
     "layer": "test262",
     "category": "nativeerrors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `uri_error` in this scope: not found in this scope\nsrc\\main.rs:5:9: error[E0425]: cannot find value `uri_error` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `verify_property` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

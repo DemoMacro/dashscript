@@ -83,96 +83,96 @@
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-digit-class-escape-negative-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:21:40: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:23:48: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-digit-class-escape-positive-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:15:42: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:17:50: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-non-digit-class-escape-negative-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:15:40: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:17:48: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-non-digit-class-escape-positive-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:21:42: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:23:50: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-non-whitespace-class-escape-negative-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:12:21: error[E0308]: mismatched types: expected `f64`, found `Vec<f64>`\nsrc\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:24:40: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:26:48: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-non-whitespace-class-escape-positive-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:24:42: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:26:50: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-non-word-class-escape-negative-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:8:22: error[E0308]: mismatched types: expected `f64`, found `Vec<f64>`\nsrc\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:18:40: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:20:48: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-non-word-class-escape-positive-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:9:21: error[E0308]: mismatched types: expected `f64`, found `Vec<f64>`\nsrc\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:22:42: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:24:50: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-whitespace-class-escape-negative-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:24:40: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:26:48: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-whitespace-class-escape-positive-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:12:21: error[E0308]: mismatched types: expected `f64`, found `Vec<f64>`\nsrc\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:24:42: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:26:50: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-word-class-escape-negative-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:9:21: error[E0308]: mismatched types: expected `f64`, found `Vec<f64>`\nsrc\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:22:40: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:24:48: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.characterclassescapes.character-class-word-class-escape-positive-cases",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:8:22: error[E0308]: mismatched types: expected `f64`, found `Vec<f64>`\nsrc\\main.rs:3:15: error[E0425]: cannot find function `build_string` in this scope: not found in this scope\nsrc\\main.rs:18:42: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:20:50: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41236) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
+    "detail": "Test262Error: \nthread 'main' (34540) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41792) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "detail": "Test262Error: \nthread 'main' (32176) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (12572) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (42424) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38584) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (21916) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (704) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (41164) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42368) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (13488) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32844) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (32976) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -587,8 +587,8 @@
     "id": "test262.test.built-ins.regexp.is-a-constructor",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39868) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (40408) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42812) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34416) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {

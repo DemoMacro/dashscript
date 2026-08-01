@@ -25,7 +25,9 @@ use oxc_ast::ast::{
 use super::builtins::{
     temporal_callee_split, temporal_new_maps, temporal_static_maps, temporal_type_of_callee,
 };
-use super::globals::{is_engine_value_global, is_global_receiver, is_static_only_global};
+use super::globals::{
+    is_engine_value_global, is_global_receiver, is_harness_helper, is_static_only_global,
+};
 
 /// How a single AST node lowers — the translator's translatability verdict,
 /// carrying the diagnostic message for a non-mapped outcome.
@@ -129,6 +131,12 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
             "eval" => reject("`eval` is unsupported"),
             name if is_engine_value_global(name) => degrade_owned(format!(
                 "`{name}` has no static mapping — the function runs under the engine"
+            )),
+            // A harness helper read as a value (`arr.map(compareArray)`,
+            // `Reflect.apply(isConstructor, …)`) — same engine-only story as a
+            // call to one.
+            name if is_harness_helper(name) => degrade_owned(format!(
+                "`{name}` is a test262 harness helper — runs under the engine"
             )),
             name if is_static_only_global(name) => reject_owned(format!(
                 "`{name}` as a value is unsupported (use it only as a static-call/new receiver or \
@@ -432,6 +440,17 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
     if let Expression::Identifier(id) = &c.callee {
         if id.name.as_str() == "assert" {
             return degrade("`assert(x)` needs the engine (test262 harness)");
+        }
+        // A test262 harness helper (`isConstructor`, `compareArray`,
+        // `verifyProperty`, `testWithTypedArrayConstructors`, …) is defined only
+        // in a `$INCLUDE` the engine injects; the static emit would snake-case
+        // the name into a phantom binding (E0425). Degrade so the engine runs it
+        // with the harness injected.
+        if is_harness_helper(id.name.as_str()) {
+            return degrade_owned(format!(
+                "`{name}` is a test262 harness helper — runs under the engine",
+                name = id.name.as_str()
+            ));
         }
     }
     let Expression::StaticMemberExpression(sm) = &c.callee else {

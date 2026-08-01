@@ -67,8 +67,8 @@
     "id": "test262.test.built-ins.arrayiteratorprototype.next.detach-typedarray-in-progress",
     "layer": "test262",
     "category": "arrayiteratorprototype",
-    "status": "partial",
-    "detail": "src\\main.rs:5:31: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:11:25: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_all_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
