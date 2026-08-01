@@ -377,10 +377,11 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
 }
 
 /// `assert.<m>(…)` — test262's harness. `sameValue`/`notSameValue` on scalar
-/// operands lower to a Rust SameValue check; everything else (`throws`,
-/// `compareArray`, reflection helpers, or a composite operand whose ES
-/// SameValue is reference identity) degrades to the engine, where `assert.js`
-/// and `propertyHelper.js` run natively.
+/// operands lower to a Rust SameValue check; `throws(constructor, fn)` lowers
+/// to a catch_unwind + error-class check; everything else (`compareArray`,
+/// reflection helpers, or a composite operand whose ES SameValue is reference
+/// identity) degrades to the engine, where `assert.js`/`propertyHelper.js` run
+/// natively.
 fn classify_assert(prop: &str, args: &[Argument]) -> Mapping {
     match prop {
         "sameValue" | "notSameValue" => {
@@ -398,9 +399,35 @@ fn classify_assert(prop: &str, args: &[Argument]) -> Mapping {
                 Mapping::Mapped
             }
         }
-        // `throws`/`compareArray`/`verifyProperty`/… — the engine runs the
-        // test262 harness (`assert.js`/`propertyHelper.js`/`compareArray.js`)
-        // natively. `throws` gets a static form in a later batch.
+        // `assert.throws(Ctor, fn[, msg])` — the static `__ds::assert_throws`
+        // catch_unwinds `fn` and checks the panic's `DsError` class matches
+        // `Ctor`. test262 invokes `fn` with zero arguments, so only a zero-param
+        // arrow callback lowers (to a `FnOnce() -> R` closure); a parametrized
+        // callback (its param would be `undefined`) needs the engine. A `function`
+        // callback never reaches here — `classify_call` degrades any call with a
+        // function-expression argument first. A non-Identifier constructor (e.g.
+        // a member expression) likewise degrades.
+        "throws" => {
+            let ctor_is_ident = matches!(
+                args.first().and_then(|a| a.as_expression()),
+                Some(Expression::Identifier(_))
+            );
+            let fn_is_zero_param_arrow = args.get(1).is_some_and(|a| {
+                matches!(
+                    a.as_expression(),
+                    Some(Expression::ArrowFunctionExpression(arrow)) if arrow.params.items.is_empty()
+                )
+            });
+            if ctor_is_ident && fn_is_zero_param_arrow {
+                Mapping::Mapped
+            } else {
+                degrade(
+                    "`assert.throws` non-Identifier constructor or non-zero-param callback needs the engine",
+                )
+            }
+        }
+        // `compareArray`/`verifyProperty`/… — the engine runs the test262
+        // harness (`assert.js`/`propertyHelper.js`/`compareArray.js`) natively.
         _ => degrade_owned(format!(
             "`assert.{prop}` needs the engine (test262 harness)"
         )),
@@ -872,6 +899,38 @@ mod tests {
         assert!(matches!(
             classify_fn("function f(x: ReturnType<typeof g>): void {}"),
             Mapping::Mapped
+        ));
+    }
+
+    #[test]
+    fn maps_assert_throws_zero_param_arrow() {
+        // test262 invokes the callback with zero args, so a zero-param arrow
+        // lowers to a `FnOnce() -> R` closure → static `__ds::assert_throws`.
+        assert!(matches!(
+            classify_first_expr(
+                "assert.throws(RangeError, () => Temporal.Duration.from('garbage'))"
+            ),
+            Mapping::Mapped
+        ));
+    }
+
+    #[test]
+    fn degrades_assert_throws_param_callback() {
+        // A parametrized callback (its param would be `undefined` when test262
+        // calls it) cannot lower to `FnOnce() -> R` → engine.
+        assert!(matches!(
+            classify_first_expr("assert.throws(RangeError, (e) => 1)"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn degrades_assert_throws_non_identifier_ctor() {
+        // A non-Identifier constructor (a member expression) carries no static
+        // class name → engine.
+        assert!(matches!(
+            classify_first_expr("assert.throws(Error.SubType, () => 1)"),
+            Mapping::DegradeEngine(_)
         ));
     }
 }

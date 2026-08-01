@@ -157,7 +157,10 @@ impl RuntimeDep {
             RuntimeDep::Encoding => Some("__ds::TextEncoder"),
             RuntimeDep::Error => Some("__ds::DsError"),
             RuntimeDep::Inspect => Some("__ds::inspect"),
-            RuntimeDep::Assert => Some("__ds::assert_same_value"),
+            // Common prefix of `assert_same_value`/`assert_not_same_value`/
+            // `assert_throws`, so a fixture using any one `assert.*` form pulls
+            // ASSERT_HELPER (each is a sibling free fn in the slice).
+            RuntimeDep::Assert => Some("__ds::assert_"),
             RuntimeDep::Engine => None,
         }
     }
@@ -773,6 +776,37 @@ pub fn assert_not_same_value<A: DsSameValue, B: DsSameValue>(a: &A, b: &B) {
             "Test262Error: Expected SameValue(«{:?}», «{:?}») to be false",
             a, b
         );
+    }
+}
+
+/// test262 `assert.throws(Ctor, fn)` — catch_unwinds `fn` and checks the thrown
+/// error's class (`DsError.name`) equals `Ctor`. Passes silently on a match; a
+/// mismatch or a no-throw return panics a `Test262Error`. `R` is the closure's
+/// return type (discarded — `assert.throws` only inspects the thrown class), so
+/// `() => Temporal.Duration.from("garbage")` (returning a `Duration`) satisfies
+/// `FnOnce() -> R`. `AssertUnwindSafe` wraps the closure the way `try` does — a
+/// capturing closure is not `UnwindSafe` on its own. `catch_quiet` + `DsError`
+/// live in the Error slice; a fixture using `assert_throws` pulls it via the
+/// dep scan (`__ds::assert_throws` ⇒ `RuntimeDep::Error`).
+#[inline]
+pub fn assert_throws<R>(expected: &str, f: impl FnOnce() -> R) {
+    match catch_quiet(::std::panic::AssertUnwindSafe(f)) {
+        Err(payload) => {
+            let got = DsError::from_panic(&payload)
+                .map(|e| e.name.to_string())
+                .unwrap_or_else(|| "Error".to_string());
+            if got == expected {
+                return;
+            }
+            panic!(
+                "Test262Error: Expected a {expected} to be thrown but got a {got}"
+            );
+        }
+        Ok(_) => {
+            panic!(
+                "Test262Error: Expected a {expected} to be thrown but no exception was thrown"
+            )
+        }
     }
 }
 
@@ -2642,6 +2676,15 @@ impl Translator {
             if d.marker().is_some_and(|m| probe.contains(m)) {
                 deps.insert(d);
             }
+        }
+        // ASSERT_HELPER is emitted as one slice for any `assert.*` use (the
+        // `__ds::assert_` marker), and that slice carries `assert_throws`, which
+        // catch_unwinds via `catch_quiet` and panics a `DsError` on a class
+        // mismatch. Both live in ERROR_HELPER — so every assert-bearing fixture
+        // pulls ERROR_HELPER alongside, even a `sameValue`-only one (whose
+        // `assert_throws` is unused but still must type-check).
+        if deps.has(RuntimeDep::Assert) {
+            deps.insert(RuntimeDep::Error);
         }
         // Per-function degradation pulls the engine runtime (`rquickjs` + the
         // serde marshal layer) plus `serde` with `derive` (every struct/enum is
