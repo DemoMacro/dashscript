@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 54 features: **41** supported, **13** partial, **0** unsupported, **0** untested
+- 54 features: **43** supported, **11** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## shadowrealm
@@ -56,9 +56,9 @@
 | test262.test.built-ins.shadowrealm.prototype.importvalue.throws-typeerror-import-throws                                    | 🟢 supported | via rquickjs engine                                                                                                             |
 | test262.test.built-ins.shadowrealm.prototype.importvalue.validates-realm-object                                            | 🟢 supported | via rquickjs engine                                                                                                             |
 | test262.test.built-ins.shadowrealm.prototype.proto                                                                         | 🟢 supported | via rquickjs engine                                                                                                             |
-| test262.test.built-ins.shadowrealm.wrappedfunction.length                                                                  | 🟡 partial   | Test262Error: Test262Error: length descriptor value should be 2; length value should be 2                                       |
+| test262.test.built-ins.shadowrealm.wrappedfunction.length                                                                  | 🟢 supported | via rquickjs engine                                                                                                             |
 | test262.test.built-ins.shadowrealm.wrappedfunction.length-throws-typeerror                                                 | 🟢 supported | via rquickjs engine                                                                                                             |
-| test262.test.built-ins.shadowrealm.wrappedfunction.name                                                                    | 🟡 partial   | Test262Error: Test262Error: name should be an own property                                                                      |
+| test262.test.built-ins.shadowrealm.wrappedfunction.name                                                                    | 🟢 supported | via rquickjs engine                                                                                                             |
 | test262.test.built-ins.shadowrealm.wrappedfunction.name-throws-typeerror                                                   | 🟢 supported | via rquickjs engine                                                                                                             |
 | test262.test.built-ins.shadowrealm.wrappedfunction.throws-typeerror-on-revoked-proxy                                       | 🟡 partial   | Test262Error: Test262Error: Thrown value was not an object!                                                                     |
 

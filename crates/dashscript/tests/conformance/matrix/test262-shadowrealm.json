@@ -395,8 +395,8 @@
     "id": "test262.test.built-ins.shadowrealm.wrappedfunction.length",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: length descriptor value should be 2; length value should be 2",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -411,8 +411,8 @@
     "id": "test262.test.built-ins.shadowrealm.wrappedfunction.name",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: name should be an own property",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

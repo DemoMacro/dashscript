@@ -1088,20 +1088,43 @@ ShadowRealm.prototype = {
 };
 "#;
 
-/// Per-inner-realm helper for the ShadowRealm polyfill: the spec-faithful
-/// `CopyNameAndLength` read (HasOwnProperty + length + name) run before a
-/// callable is wrapped. A throwing property access — a revoked Proxy, a
-/// throwing `name`/`length` accessor, or a `getOwnPropertyDescriptor` trap
-/// that throws — surfaces here; the Rust caller catches it and converts the
-/// throw to a TypeError at the `evaluate` boundary. `hasOwnProperty` (not
-/// `[[HasProperty]]`) is what reaches a proxy's `[[GetOwnProperty]]`: QuickJS's
-/// proxy `[[Get]]` recurses on the target when no `get` trap is set, so a plain
-/// `.length`/`.name` would miss a `getOwnPropertyDescriptor`-trap throw.
+/// Per-realm helpers for the ShadowRealm polyfill, implementing
+/// `CopyNameAndLength` (sec-copynameandlength). `__ds_wfn_read_meta` runs in
+/// the *inner* realm where the wrapped callable lives: it reads the target's
+/// `length` (HasOwnProperty + Get; the spec algorithm with argCount=0 —
+/// +Infinity→+∞, -Infinity/negative→0, else max(ToIntegerOrInfinity, 0)) and
+/// `name` (coerced to String, empty if absent/non-String), returning `[length,
+/// name]`. A throwing access — a revoked Proxy, a throwing `length`/`name`
+/// accessor, or a `getOwnPropertyDescriptor` trap that throws — surfaces here;
+/// the Rust caller catches it and converts the throw to a TypeError at the
+/// `evaluate` boundary. `hasOwnProperty` (not `[[HasProperty]]`) is what
+/// reaches a proxy's `[[GetOwnProperty]]`: QuickJS's proxy `[[Get]]` recurses
+/// on the target when no `get` trap is set, so a plain `.length`/`.name` would
+/// miss a `getOwnPropertyDescriptor`-trap throw. `__ds_wfn_set_meta` runs in
+/// the *outer* realm: it stamps the copied length/name onto the wrapper as own
+/// data properties with SetFunctionLength/SetFunctionName descriptors (writable
+/// false, enumerable false, configurable true).
 const SR_INNER_PRELUDE: &str = r#"
-globalThis.__ds_wfn_check = function (fn) {
-  Object.prototype.hasOwnProperty.call(fn, "length");
-  fn.length;
-  fn.name;
+globalThis.__ds_wfn_read_meta = function (fn) {
+  var L = 0;
+  if (Object.prototype.hasOwnProperty.call(fn, "length")) {
+    var tl = fn.length;
+    if (typeof tl === "number") {
+      if (tl === Infinity) L = Infinity;
+      else if (tl === -Infinity) L = 0;
+      else { var ti = Math.trunc(tl); L = ti < 0 ? 0 : ti; }
+    }
+  }
+  var name = "";
+  if (Object.prototype.hasOwnProperty.call(fn, "name")) {
+    var tn = fn.name;
+    name = (typeof tn === "string") ? tn : "";
+  }
+  return [L, name];
+};
+globalThis.__ds_wfn_set_meta = function (fn, len, name) {
+  Object.defineProperty(fn, "length", {value: len, writable: false, enumerable: false, configurable: true});
+  Object.defineProperty(fn, "name", {value: name, writable: false, enumerable: false, configurable: true});
 };
 "#;
 
@@ -1126,6 +1149,10 @@ enum SrPrim {
     WrappedFn {
         realm: u32,
         fn_id: u32,
+        /// Copied from the inner-realm target via CopyNameAndLength — stamped
+        /// onto the outer wrapper as its own `length`/`name` data properties.
+        length: f64,
+        name: String,
     },
     /// Non-primitive result, or a runtime error thrown inside the realm — both
     /// must surface as a `TypeError` to the outer realm per the ShadowRealm spec.
@@ -1146,7 +1173,12 @@ impl<'js> rquickjs::IntoJs<'js> for SrPrim {
             SrPrim::Bool(b) => Value::new_bool(ctx.clone(), b),
             SrPrim::Num(n) => Value::new_float(ctx.clone(), n),
             SrPrim::Str(s) => return s.into_js(ctx),
-            SrPrim::WrappedFn { realm, fn_id } => {
+            SrPrim::WrappedFn {
+                realm,
+                fn_id,
+                length,
+                name,
+            } => {
                 // Build a fresh outer-realm function that re-enters the inner
                 // realm on each call. Args are marshalled to primitives on the
                 // way in (a non-primitive arg throws `TypeError`); the inner
@@ -1203,6 +1235,12 @@ impl<'js> rquickjs::IntoJs<'js> for SrPrim {
                         }
                     },
                 )?;
+                // CopyNameAndLength: stamp the target's length/name onto the
+                // outer-realm wrapper as own data properties (writable false,
+                // enumerable false, configurable true — SetFunctionLength/Name).
+                if let Ok(setter) = ctx.globals().get::<_, Function>("__ds_wfn_set_meta") {
+                    let _ = setter.call::<_, ()>((wrapper.clone(), length, name.as_str()));
+                }
                 return Ok(wrapper.into_value());
             }
             SrPrim::TypeError => {
@@ -1297,8 +1335,9 @@ fn sr_evaluate_fn(id: u32, src: String) -> rquickjs::Result<SrPrim> {
 
 /// Install the ShadowRealm polyfill on a context: register the host
 /// `__ds_sr_create`/`__ds_sr_evaluate` (so the realm can allocate nested
-/// realms and evaluate in them), install `__ds_wfn_check` (the
-/// CopyNameAndLength read used before wrapping a callable), and define the
+/// realms and evaluate in them), install `__ds_wfn_read_meta`/
+/// `__ds_wfn_set_meta` (the CopyNameAndLength read/write used to copy a wrapped
+/// callable's `length`/`name` onto the outer-realm wrapper), and define the
 /// global `ShadowRealm`. Called on the engine context for fixtures that
 /// reference ShadowRealm, and recursively on every inner realm [`sr_create_fn`]
 /// allocates — so nested `new ShadowRealm()` works at any depth.
@@ -1351,21 +1390,32 @@ fn sr_value_to_prim<'js>(
             // revoked Proxy, a throwing accessor, or a throwing
             // `getOwnPropertyDescriptor` trap makes that read throw, and the
             // ShadowRealm `evaluate` boundary surfaces it as a TypeError.
-            // `__ds_wfn_check` (installed in each inner realm) runs that read;
-            // a throw here becomes `TypeError` instead of a handle. The pending
-            // exception is cleared so it can't leak into a later eval.
-            let check: rquickjs::Function = ic.globals().get("__ds_wfn_check")?;
-            if check.call::<_, ()>((v.clone(),)).is_err() {
-                let _ = ic.catch();
-                return Ok(SrPrim::TypeError);
-            }
+            // `__ds_wfn_read_meta` (installed in each inner realm) runs that
+            // read and returns the copied `[length, name]`; a throw here
+            // becomes `TypeError` instead of a handle. The pending exception is
+            // cleared so it can't leak into a later eval.
+            let read_meta: rquickjs::Function = ic.globals().get("__ds_wfn_read_meta")?;
+            let meta: rquickjs::Array = match read_meta.call::<_, rquickjs::Array>((v.clone(),)) {
+                Ok(m) => m,
+                Err(_) => {
+                    let _ = ic.catch();
+                    return Ok(SrPrim::TypeError);
+                }
+            };
+            let length: f64 = meta.get(0)?;
+            let name: String = meta.get(1)?;
             let fn_id = DS_SR_FN_NEXT.with(|c| {
                 let n = c.get();
                 c.set(n.checked_add(1).unwrap_or(1));
                 n
             });
             ic.globals().set(format!("__ds_wfn_{fn_id}"), v)?;
-            SrPrim::WrappedFn { realm, fn_id }
+            SrPrim::WrappedFn {
+                realm,
+                fn_id,
+                length,
+                name,
+            }
         }
         _ => SrPrim::TypeError,
     })
