@@ -2996,7 +2996,7 @@
     "layer": "test262",
     "category": "promise",
     "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `foo_promise` in this scope: not found in this scope\nsrc\\main.rs:24:15: error[E0425]: cannot find value `_done` in this scope: not found in this scope\nsrc\\main.rs:24:22: error[E0425]: cannot find value `_done` in this scope: not found in this scope\nsrc\\main.rs:14:29: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:4:5: error[E0425]: cannot find value `foo_promise` in this scope: not found in this scope\nsrc\\main.rs:24:15: error[E0425]: cannot find value `_done` in this scope: not found in this scope\nsrc\\main.rs:24:22: error[E0425]: cannot find value `_done` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {

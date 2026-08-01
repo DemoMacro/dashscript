@@ -1228,7 +1228,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:24:38: error[E0425]: cannot find value `obj` in this scope: not found in this scope\nsrc\\main.rs:17:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:24:38: error[E0425]: cannot find value `obj` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2388,7 +2388,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:24:38: error[E0425]: cannot find value `obj` in this scope: not found in this scope\nsrc\\main.rs:17:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:24:38: error[E0425]: cannot find value `obj` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {

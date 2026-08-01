@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (14968) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
+    "detail": "Test262Error: \nthread 'main' (38412) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (21168) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "detail": "Test262Error: \nthread 'main' (32844) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40812) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (20080) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22700) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (11564) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23604) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (23864) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39888) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (33528) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10572) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (18420) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40016) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (2336) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (26116) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (23080) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -7556,7 +7556,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:10:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:43: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:26: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound",
+    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:43: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:26: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -7564,7 +7564,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:10:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -7604,7 +7604,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:10:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -7612,7 +7612,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:10:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:43: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:26: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound",
+    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:43: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:26: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -7620,7 +7620,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:10:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {

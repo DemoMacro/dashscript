@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (16052) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35200) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1172,7 +1172,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "src\\main.rs:18:37: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:24:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:36:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:47:37: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:53:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:65:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`",
+    "detail": "src\\main.rs:18:37: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:47:37: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:10:13: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:30:10: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:37:23: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:59:10: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
     "note": ""
   },
   {
@@ -8268,7 +8268,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41060) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (9888) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {

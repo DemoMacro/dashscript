@@ -52,7 +52,7 @@
     "layer": "test262",
     "category": "isfinite",
     "status": "partial",
-    "detail": "src\\main.rs:6:13: error[E0433]: cannot find module or crate `isFinite` in this scope: use of unresolved module or unlinked crate `isFinite`\nsrc\\main.rs:8:66: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:6:13: error[E0433]: cannot find module or crate `isFinite` in this scope: use of unresolved module or unlinked crate `isFinite`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {

@@ -257,3 +257,35 @@ pub const UNMAPPED_NEW_GLOBALS: &[&str] = &[
 pub fn is_unmapped_new_global(name: &str) -> bool {
     UNMAPPED_NEW_GLOBALS.contains(&name)
 }
+
+/// ES native Error constructors plus the test262 harness's `Test262Error`. `new
+/// <X>(message)` lowers to a `DsError` value — the same model `throw new <X>(…)`
+/// uses (`functions/try_throw` → `panic_any(DsError)`). `throw new <X>(<string
+/// literal>)` is intercepted before `new_expr` by `thrown_error`; but `throw new
+/// <X>(<dynamic message>)` (whose message is not a literal, so `thrown_error`
+/// returns `None` and the throw falls back to `throw expr`) and any `new <X>(…)`
+/// used as a value (`var e = new TypeError("x")`) reach `new_expr`, which emits
+/// `DsError::new("<X>", msg.to_string())` — a value carrying `name`/`message`
+/// fields and a `Display` impl, so `e.message`/`e.name`/`e.toString()` work.
+/// `AggregateError`/`SuppressedError` are intentionally absent: their constructor
+/// signatures are not `(message)` (`AggregateError` takes an errors iterable
+/// first, `SuppressedError` takes `(error, suppressed, message)`), so a
+/// first-arg-as-message lowering would be unsound.
+pub const ERROR_CTOR_NAMES: &[&str] = &[
+    "Error",
+    "RangeError",
+    "TypeError",
+    "SyntaxError",
+    "ReferenceError",
+    "EvalError",
+    "URIError",
+    "Test262Error",
+];
+
+/// The ES error-class name a `new <X>(…)` constructor lowers to (the class name
+/// itself), or `None` if `name` is not an ES native Error constructor or
+/// `Test262Error`. See [`ERROR_CTOR_NAMES`].
+#[inline]
+pub fn error_ctor_name(name: &str) -> Option<&'static str> {
+    ERROR_CTOR_NAMES.iter().copied().find(|n| *n == name)
+}

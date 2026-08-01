@@ -5,6 +5,7 @@ use syn::{parse_quote, Expr, Ident};
 use super::super::bindings;
 use super::super::builtins;
 use super::super::context::Ctx;
+use super::super::globals::error_ctor_name;
 use super::super::types;
 use super::{array_elem_arg, array_elem_expr, array_owned_expr};
 
@@ -86,6 +87,27 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::encoding_ctor_type(id.name.as_str()).is_some() {
             let name = bindings::type_ident(&id.name);
             return parse_quote!(crate::__ds::#name::new());
+        }
+        // `new Error("msg")` / `new TypeError(msg)` / `new Test262Error(msg)` —
+        // an ES native Error constructor (or the test262 harness's
+        // `Test262Error`). `throw new <X>(<literal>)` is intercepted earlier by
+        // `thrown_error` (→ `panic_any(DsError)`); a throw with a dynamic message
+        // and any `new <X>(…)` used as a value (`var e = new TypeError("x")`)
+        // reach here. Lowered to a `DsError` value — `name`/`message` fields plus
+        // `Display`, so `e.message`/`e.name`/`e.toString()` work. The message arg
+        // (any type — ES stringifies it) becomes `.to_string()`; no arg is "".
+        // Intercepted before the generic `Foo::new` path, which would emit
+        // `Error::new(…)`/`Test262Error::new(…)` — E0433, no such Rust type.
+        if let Some(ctor) = error_ctor_name(id.name.as_str()) {
+            let msg: Expr = match n.arguments.first() {
+                Some(arg) => {
+                    let e = array_elem_arg(arg, ctx);
+                    parse_quote!((#e).to_string())
+                }
+                None => parse_quote!(::std::string::String::new()),
+            };
+            let ctor_lit = syn::LitStr::new(ctor, proc_macro2::Span::call_site());
+            return parse_quote!(crate::__ds::DsError::new(#ctor_lit, #msg));
         }
     }
     let Some(name) = class_name(&n.callee) else {

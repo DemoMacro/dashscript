@@ -1492,7 +1492,7 @@
     "layer": "test262",
     "category": "set",
     "status": "partial",
-    "detail": "src\\main.rs:21:29: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:28:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:30:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:28:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:30:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1692,7 +1692,7 @@
     "layer": "test262",
     "category": "set",
     "status": "partial",
-    "detail": "src\\main.rs:24:29: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:31:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:33:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:31:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:33:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -1876,7 +1876,7 @@
     "layer": "test262",
     "category": "set",
     "status": "partial",
-    "detail": "src\\main.rs:18:29: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:25:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:27:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:25:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:27:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {

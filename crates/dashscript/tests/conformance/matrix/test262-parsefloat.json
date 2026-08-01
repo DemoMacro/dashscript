@@ -51,8 +51,8 @@
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t1",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:357:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:482:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:607:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -67,64 +67,64 @@
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t2",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:357:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:482:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:607:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t3",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t4",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t5",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t6",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t7",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t8",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a2_t9",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:107:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:232:21: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
