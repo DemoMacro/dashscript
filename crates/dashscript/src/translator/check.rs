@@ -32,7 +32,7 @@ use oxc_parser::Parser;
 use oxc_semantic::SemanticBuilder;
 use oxc_span::{GetSpan, SourceType, Span};
 
-use super::classify::{self, ClassifyCtx, Mapping};
+use super::classify::{self, ClassifyCtx, LocalKind, Mapping};
 use super::name_table;
 use super::{analysis, functions, registry, FileRole};
 
@@ -49,22 +49,15 @@ thread_local! {
 
 /// Traverse state threaded through the unsupported-construct walk — the bits a
 /// context-dependent classification reads: whether the current expression sits
-/// inside a loop (a looped `re.exec` needs the engine), and which locals are
-/// bound to plainly non-string literals (a `.test`/`.exec` on one needs the
-/// engine). Threading it explicitly (instead of the prior `IN_LOOP`/
-/// `NON_STRING_VARS` thread-locals) keeps the walk self-contained and
-/// parallel-safe without per-thread globals.
+/// inside a loop (a looped `re.exec` needs the engine), and which locals bind
+/// to a known value kind (a `.test`/`.exec` on a non-string local, or a
+/// `compare`/`from` on a Temporal local — see [`classify::LocalKind`]).
+/// Threading it explicitly (instead of the prior `IN_LOOP`/`NON_STRING_VARS`
+/// thread-locals) keeps the walk self-contained and parallel-safe without
+/// per-thread globals.
 struct WalkState {
     in_loop: bool,
-    non_string_vars: HashSet<String>,
-    /// Locals in the current walk whose initializer resolves to a Temporal type
-    /// (`Temporal.<Type>.from(…)`, `new Temporal.<Type>(…)`) — local name →
-    /// Temporal type name ("PlainDate", …). Lets `classify` route a
-    /// `compare(a, b)` / `from(arg)` through the static `temporal_rs` mapping
-    /// only when the args genuinely are that Temporal type (or a string),
-    /// degrading an unknown local to the polyfill rather than risking a cargo
-    /// type error or a mis-emitted TypeError.
-    temporal_vars: HashMap<String, String>,
+    local_kinds: HashMap<String, LocalKind>,
 }
 
 /// RAII guard: constructed to mark an engine-path detection in progress;
@@ -119,8 +112,7 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
     let mutable_top_level = functions::mutable_top_level_names(&program.body, &names, &registry);
     let mut state = WalkState {
         in_loop: false,
-        non_string_vars: HashSet::new(),
-        temporal_vars: HashMap::new(),
+        local_kinds: HashMap::new(),
     };
     for stmt in &program.body {
         // `export {}` is a standard TS module marker (no declaration, no
@@ -330,8 +322,7 @@ pub(super) fn program_engine_sites(program: &oxc_ast::ast::Program) -> EngineSit
     let _scope = EngineScope;
     let mut state = WalkState {
         in_loop: false,
-        non_string_vars: HashSet::new(),
-        temporal_vars: HashMap::new(),
+        local_kinds: HashMap::new(),
     };
     let mut diags = Vec::new();
     let mut sites = EngineSites::default();
@@ -470,32 +461,26 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &m
         Statement::VariableDeclaration(v) => {
             for d in &v.declarations {
                 if let Some(init) = &d.init {
-                    // A variable bound to a plainly non-string literal
-                    // (number/boolean/object/array) — recorded so a later
-                    // `.test(x)` / `.exec(x)` on it routes to the engine: ES
-                    // coerces the argument via ToString, which regress (taking
-                    // `&str`) cannot express. A function-call or identifier
-                    // initializer may still yield a string, so it is left
-                    // unrecorded (no false engine route).
-                    if matches!(
-                        init,
-                        Expression::NumericLiteral(_)
+                    // Record the value kind a binding's initializer resolves
+                    // to, so a later context-dependent classification reads it:
+                    // a plainly non-string literal (number/boolean/object/
+                    // array) routes a `.test(x)`/`.exec(x)` to the engine (ES
+                    // coerces via ToString, which regress taking `&str` cannot
+                    // express); a `Temporal.<Type>.from(…)`/`new …(…)` routes
+                    // `compare(a, b)`/`from(arg)` through the static
+                    // `temporal_rs` mapping only when the arg genuinely is that
+                    // Temporal type. A function-call or identifier initializer
+                    // of unknown type is left unrecorded (no false route).
+                    if let BindingPattern::BindingIdentifier(id) = &d.id {
+                        let kind = match init {
+                            Expression::NumericLiteral(_)
                             | Expression::BooleanLiteral(_)
                             | Expression::ObjectExpression(_)
-                            | Expression::ArrayExpression(_)
-                    ) {
-                        if let BindingPattern::BindingIdentifier(id) = &d.id {
-                            state.non_string_vars.insert(id.name.as_str().to_string());
-                        }
-                    }
-                    // A binding whose initializer resolves to a Temporal type
-                    // (`Temporal.<Type>.from(…)` / `new Temporal.<Type>(…)`) —
-                    // recorded so a later `compare(a, b)` / `from(arg)` on it
-                    // routes through the static `temporal_rs` mapping only when
-                    // the arg genuinely is that Temporal type.
-                    if let BindingPattern::BindingIdentifier(id) = &d.id {
-                        if let Some(ty) = super::builtins::temporal_init_type(init) {
-                            state.temporal_vars.insert(id.name.as_str().to_string(), ty);
+                            | Expression::ArrayExpression(_) => Some(LocalKind::NonString),
+                            _ => super::builtins::temporal_init_type(init).map(LocalKind::Temporal),
+                        };
+                        if let Some(kind) = kind {
+                            state.local_kinds.insert(id.name.as_str().to_string(), kind);
                         }
                     }
                     collect_expr(init, out, state);
@@ -632,8 +617,7 @@ fn collect_loop_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mu
 fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut WalkState) {
     let ctx = ClassifyCtx {
         in_loop: state.in_loop,
-        non_string_vars: &state.non_string_vars,
-        temporal_vars: &state.temporal_vars,
+        local_kinds: &state.local_kinds,
     };
     if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) = classify::classify_expr(expr, &ctx)
     {
