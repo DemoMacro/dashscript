@@ -3,40 +3,40 @@
     "id": "test262.test.built-ins.asyncgeneratorprototype.next.iterator-result-prototype",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-await-order",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: asyncTest called without async flag",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-order",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-order-state-executing",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.next.request-queue-promise-resolve-order",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -51,16 +51,16 @@
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.iterator-result-prototype",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.request-queue-order-state-executing",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -75,8 +75,8 @@
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-state-completed",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -91,160 +91,160 @@
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedstart",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedstart-broken-promise",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedstart-promise",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-broken-promise-try-catch",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-promise",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-try-finally",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-try-finally-return",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.return.return-suspendedyield-try-finally-throw",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.request-queue-order-state-executing",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.return-rejected-promise",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-state-completed",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedstart",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedstart-promise",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-promise",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-catch",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-finally",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-finally-return",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.asyncgeneratorprototype.throw.throw-suspendedyield-try-finally-throw",
     "layer": "test262",
     "category": "asyncgeneratorprototype",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $DONE is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   }
 ]
