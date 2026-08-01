@@ -116,10 +116,13 @@ fn translates_string_split_with_limit() {
 
 #[test]
 fn translates_trim_start_end_to_trim_methods() {
+    // trimStart/trimEnd strip ES WhiteSpace + LineTerminator (not Rust's
+    // is_whitespace, which omits U+FEFF), so they lower to trim_start_matches
+    // / trim_end_matches with the ES char set.
     let src = "function f(): void { const a = \"  x\".trimStart(); const b = \"x  \".trimEnd(); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".trim_start()"), "got:\n{rust}");
-    assert!(rust.contains(".trim_end()"), "got:\n{rust}");
+    assert!(rust.contains(".trim_start_matches("), "got:\n{rust}");
+    assert!(rust.contains(".trim_end_matches("), "got:\n{rust}");
 }
 
 #[test]
@@ -222,7 +225,9 @@ fn translates_string_last_index_of_to_rfind() {
 fn translates_string_lower_trim_methods() {
     let src = "function f(s: string): string { return s.trim().toLowerCase(); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".trim()"), "got:\n{rust}");
+    // trim lowers to trim_matches with the ES WhiteSpace+LineTerminator set
+    // (Rust's trim uses is_whitespace, which omits U+FEFF and includes U+0085).
+    assert!(rust.contains(".trim_matches("), "got:\n{rust}");
     assert!(rust.contains(".to_lowercase()"), "got:\n{rust}");
 }
 
@@ -335,10 +340,12 @@ fn translates_string_pad_undefined_fill_uses_space_default() {
 #[test]
 fn translates_string_prototype_trim_call_to_method() {
     // `String.prototype.trim.call(x)` — the JS borrow-via-.call idiom — lowers
-    // to ToString(x).trim() (a scalar receiver is format!-coerced first).
+    // to ToString(x).trim_matches(ES_WS) (a scalar receiver is format!-coerced
+    // first; trim_matches covers the ES WhiteSpace+LineTerminator set rather
+    // than Rust's is_whitespace, which omits U+FEFF).
     let src = "function f(): void { console.log(String.prototype.trim.call(\"  x  \")); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".trim()"), "got:\n{rust}");
+    assert!(rust.contains(".trim_matches("), "got:\n{rust}");
     assert!(!rust.contains("prototype"), "got:\n{rust}");
 }
 

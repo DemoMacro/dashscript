@@ -28,6 +28,27 @@ fn str_receiver(obj: &Expression, ctx: &Ctx<'_>) -> Expr {
     }
 }
 
+/// The chars ES `String.prototype.trim` strips: WhiteSpace + LineTerminator
+/// (ECMA-262 §7.2, §7.3). Rust's `char::is_whitespace` omits U+FEFF (ES
+/// WhiteSpace) and includes U+0085 NEL (ES does not trim), so emit the set
+/// explicitly for `trim`/`trimStart`/`trimEnd`.
+fn es_trim_chars() -> Expr {
+    parse_quote!(|c: char| matches!(
+        c,
+        '\u{9}'
+            | '\u{A}'
+            | '\u{B}'
+            | '\u{C}'
+            | '\u{D}'
+            | '\u{20}'
+            | '\u{A0}'
+            | '\u{FEFF}'
+            | '\u{1680}'
+            | '\u{2000}'
+            ..='\u{200A}' | '\u{2028}' | '\u{2029}' | '\u{202F}' | '\u{205F}' | '\u{3000}'
+    ))
+}
+
 /// String methods whose arguments need adapting to Rust's `&str`-oriented API:
 /// `includes`/`startsWith`/`endsWith` → `contains`/`starts_with`/`ends_with`;
 /// `replace` → `replacen(.., 1)` (TS replaces the first match only); `repeat`
@@ -52,6 +73,21 @@ pub(in crate::translator) fn string_method_on(
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
     Some(match name {
+        // `.trim()`/`.trimStart()`/`.trimEnd()` strip ES WhiteSpace +
+        // LineTerminator (§7.2/§7.3). Rust's `char::is_whitespace` differs
+        // (omits U+FEFF, includes U+0085 NEL), so emit the explicit char set.
+        "trim" => {
+            let ws = es_trim_chars();
+            parse_quote!(#obj.trim_matches(#ws))
+        }
+        "trimStart" => {
+            let ws = es_trim_chars();
+            parse_quote!(#obj.trim_start_matches(#ws))
+        }
+        "trimEnd" => {
+            let ws = es_trim_chars();
+            parse_quote!(#obj.trim_end_matches(#ws))
+        }
         // `.includes(s)` / `.includes(s, pos)` — search from byte offset `pos`
         // (a negative `pos` is clamped to 0, an over-length one to `len`;
         // ASCII matches TS char index). `pos` is taken as `f64` then routed
