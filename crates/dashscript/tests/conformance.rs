@@ -1309,7 +1309,12 @@ fn sr_value_to_prim<'js>(
         Type::Bool => SrPrim::Bool(bool::from_js(ic, v)?),
         Type::Int | Type::Float => SrPrim::Num(f64::from_js(ic, v)?),
         Type::String => SrPrim::Str(String::from_js(ic, v)?),
-        Type::Function => {
+        // QuickJS-NG tags a callable that carries [[Construct]] (a function
+        // declaration, a named function expression, a class) as `Constructor`,
+        // not `Function` — both are callable, so both wrap as a WrappedFunction.
+        // Matching only `Function` sent every function-declaration result to the
+        // `_ => TypeError` arm ("evaluation did not resolve to a primitive").
+        Type::Function | Type::Constructor => {
             // Spec (sec-wrappedfunctioncreate, CopyNameAndLength): wrapping a
             // callable reads `length` then `name` via HasOwnProperty/Get. A
             // revoked Proxy, a throwing accessor, or a throwing
