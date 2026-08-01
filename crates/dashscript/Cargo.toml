@@ -46,5 +46,6 @@ path = "bin/main.rs"
 # `[dependencies]` above (available to integration tests too).
 [dev-dependencies]
 rquickjs = { workspace = true }
+temporal_rs = "0.2"
 tempfile = { workspace = true }
 wait-timeout = { workspace = true }

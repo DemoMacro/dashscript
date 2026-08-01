@@ -799,6 +799,80 @@ const CONSOLE_PRELUDE: &str = "this.console = { log: function () {} };\n";
 const HARNESS_STA: &str = include_str!("conformance/data/harness/sta.js");
 const HARNESS_ASSERT: &str = include_str!("conformance/data/harness/assert.js");
 
+/// Minimal `Intl` stub injected before the polyfill. rquickjs's QuickJS-NG
+/// build ships without `Intl`, but the polyfill's factory reads
+/// `Intl.DateTimeFormat` / `Intl.DurationFormat` to layer its Temporal-aware
+/// formatting on top of the native one — so the bare global must exist when
+/// the factory runs. The stub returns empty/identity results and is shaped so
+/// the polyfill can `extends Intl.DateTimeFormat`. Temporal fixtures that stay
+/// in ISO space (the majority) never call into it; locale-aware ones degrade
+/// to `partial` honestly rather than crashing the prelude.
+const INTL_STUB: &str = r#"
+if (!globalThis.Intl) {
+  function __ds_fmt() {
+    function F() {}
+    F.prototype.format = function () { return ''; };
+    F.prototype.formatToParts = function () { return []; };
+    F.prototype.formatRange = function () { return ''; };
+    F.prototype.formatRangeToParts = function () { return []; };
+    F.prototype.resolvedOptions = function () { return { calendar: 'iso8601', locale: 'en', numberingSystem: 'latn', timeZone: 'UTC' }; };
+    F.supportedLocalesOf = function () { return []; };
+    return F;
+  }
+  // DateTimeFormat must yield a parseable en-US numeric+era string: the
+  // polyfill's GetFormatterParts splits the output on non-word chars and
+  // expects exactly 7 parts (month/day/year era hour/minute/second) to bisect
+  // named-time-zone DST offsets. The generic __ds_fmt stub returns '' which
+  // throws RangeError "expected 7 parts", so format a real UTC date.
+  function __ds_dtf() {
+    return {
+      format: function (date) {
+        var d = typeof date === 'number' ? new Date(date) : date instanceof Date ? date : new Date(+date || Date.now());
+        var y = d.getUTCFullYear();
+        var era = y < 1 ? 'BC' : 'AD';
+        var ay = y < 1 ? 1 - y : y;
+        function p(x) { return x < 10 ? '0' + x : '' + x; }
+        return d.getUTCMonth() + 1 + '/' + d.getUTCDate() + '/' + ay + ' ' + era + ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes()) + ':' + p(d.getUTCSeconds());
+      },
+      formatToParts: function () { return []; },
+      formatRange: function () { return ''; },
+      formatRangeToParts: function () { return []; },
+      resolvedOptions: function () { return { calendar: 'iso8601', locale: 'en-US', numberingSystem: 'latn', timeZone: 'UTC' }; },
+    };
+  }
+  __ds_dtf.supportedLocalesOf = function () { return []; };
+  globalThis.Intl = {
+    DateTimeFormat: __ds_dtf,
+    NumberFormat: __ds_fmt(),
+    DurationFormat: __ds_fmt(),
+    Collator: function () { this.compare = function (a, b) { a = String(a); b = String(b); return a < b ? -1 : a > b ? 1 : 0; }; },
+    getCanonicalLocales: function (x) { return Array.isArray(x) ? x : [x]; },
+  };
+}
+"#;
+
+/// The `@js-temporal/polyfill` UMD build (ISC, © ECMA International) — vendored
+/// under `data/vendor/`. QuickJS-NG does not ship `Temporal`, so a fixture that
+/// touches the Temporal API would otherwise `ReferenceError` on the engine path.
+/// This polyfill is the TC39 proposal's reference JS implementation, validated
+/// by `@js-temporal/temporal-test262-runner` against the full Temporal test262
+/// suite — so injecting it gives the engine path a spec-conformant Temporal
+/// rather than a hand-written stub, and `assert.sameValue` runs against the
+/// reference semantics. The UMD wrapper mounts its exports on
+/// `globalThis.temporal.{Temporal,Intl,toTemporalInstant}`; [`TEMPORAL_EXPOSE`]
+/// re-exposes them under the spec-global names a fixture expects.
+const TEMPORAL_POLYFILL: &str = include_str!("conformance/data/vendor/temporal-polyfill.umd.js");
+
+/// Re-expose the polyfill's exports under the spec-global names. The UMD build
+/// mounts on `globalThis.temporal`; a test262 fixture writes `Temporal.X`, so
+/// `globalThis.Temporal` must alias `globalThis.temporal.Temporal`. Also
+/// installs `Date.prototype.toTemporalInstant` (a spec global) — guarded so a
+/// QuickJS build without `Date` degrades rather than crashes the prelude.
+const TEMPORAL_EXPOSE: &str = "\
+globalThis.Temporal = globalThis.temporal.Temporal;
+try { Date.prototype.toTemporalInstant = globalThis.temporal.toTemporalInstant; } catch (e) {}
+";
+
 /// The rest of the bundled harness, looked up by `$INCLUDE` name (a fixture's
 /// `includes:` frontmatter) and injected on the engine path — `propertyHelper`
 /// (reflection/verifyProperty), `compareArray`, `deepEqual`, `isConstructor`
@@ -934,6 +1008,27 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
     let result = ctx.with(
         move |ctx: Ctx<'_>| -> Result<Option<String>, rquickjs::Error> {
             ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy())?;
+            // Temporal polyfill: QuickJS-NG lacks Temporal, so a fixture touching
+            // it would ReferenceError. Inject the @js-temporal/polyfill (spec
+            // reference) and expose under the spec-global name. Conditioned on the
+            // fixture's source mentioning Temporal so non-Temporal fixtures skip
+            // the ~240KB eval. A polyfill eval failure propagates as OtherError
+            // (judge_engine → partial) rather than being masked.
+            if js_source.contains("Temporal") {
+                ctx.eval_with_options::<(), _>(INTL_STUB, sloppy())?;
+                if ctx
+                    .eval_with_options::<(), _>(TEMPORAL_POLYFILL, sloppy())
+                    .is_err()
+                {
+                    let thrown = ctx.catch();
+                    let _ = ctx.globals().set("__ds_err_diag", thrown);
+                    let msg = ctx
+                        .eval::<String, &str>("String(globalThis.__ds_err_diag)")
+                        .unwrap_or_else(|_| "<opaque>".into());
+                    return Ok(Some(format!("polyfill eval failed: {msg}")));
+                }
+                ctx.eval_with_options::<(), _>(TEMPORAL_EXPOSE, sloppy())?;
+            }
             // Harness prelude: sta.js (defines Test262Error), assert.js (throws it
             // on mismatch), then any $INCLUDE helpers the fixture declares.
             ctx.eval_with_options::<(), _>(HARNESS_STA, sloppy())?;
