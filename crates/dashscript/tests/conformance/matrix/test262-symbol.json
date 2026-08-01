@@ -3,8 +3,8 @@
     "id": "test262.test.built-ins.symbol.asyncdispose.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -27,8 +27,8 @@
     "id": "test262.test.built-ins.symbol.asynciterator.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -83,8 +83,8 @@
     "id": "test262.test.built-ins.symbol.dispose.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -115,8 +115,8 @@
     "id": "test262.test.built-ins.symbol.for.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«function for() {\n    [native code]\n}», «function for() {\n    [native code]\n}») to be false",
     "note": ""
   },
   {
@@ -163,8 +163,8 @@
     "id": "test262.test.built-ins.symbol.hasinstance.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -195,8 +195,8 @@
     "id": "test262.test.built-ins.symbol.isconcatspreadable.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -211,8 +211,8 @@
     "id": "test262.test.built-ins.symbol.iterator.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -251,8 +251,8 @@
     "id": "test262.test.built-ins.symbol.keyfor.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«function keyFor() {\n    [native code]\n}», «function keyFor() {\n    [native code]\n}») to be false",
     "note": ""
   },
   {
@@ -275,8 +275,8 @@
     "id": "test262.test.built-ins.symbol.match.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -291,8 +291,8 @@
     "id": "test262.test.built-ins.symbol.matchall.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -539,8 +539,8 @@
     "id": "test262.test.built-ins.symbol.replace.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -555,8 +555,8 @@
     "id": "test262.test.built-ins.symbol.search.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -587,8 +587,8 @@
     "id": "test262.test.built-ins.symbol.species.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -603,8 +603,8 @@
     "id": "test262.test.built-ins.symbol.split.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -619,8 +619,8 @@
     "id": "test262.test.built-ins.symbol.toprimitive.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -635,8 +635,8 @@
     "id": "test262.test.built-ins.symbol.tostringtag.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -659,8 +659,8 @@
     "id": "test262.test.built-ins.symbol.unscopables.cross-realm",
     "layer": "test262",
     "category": "symbol",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

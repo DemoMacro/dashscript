@@ -659,16 +659,16 @@
     "id": "test262.test.built-ins.function.call-bind-this-realm-undef",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.function.call-bind-this-realm-value",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -691,8 +691,8 @@
     "id": "test262.test.built-ins.function.internals.call.class-ctor-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -707,8 +707,8 @@
     "id": "test262.test.built-ins.function.internals.construct.base-ctor-revoked-proxy-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -723,8 +723,8 @@
     "id": "test262.test.built-ins.function.internals.construct.derived-return-val-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -739,8 +739,8 @@
     "id": "test262.test.built-ins.function.internals.construct.derived-this-uninitialized-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -875,16 +875,16 @@
     "id": "test262.test.built-ins.function.proto-from-ctor-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.function.proto-from-ctor-realm-prototype",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -923,8 +923,8 @@
     "id": "test262.test.built-ins.function.prototype.apply.argarray-not-object-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1243,8 +1243,8 @@
     "id": "test262.test.built-ins.function.prototype.apply.this-not-callable-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1827,16 +1827,16 @@
     "id": "test262.test.built-ins.function.prototype.bind.get-fn-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.function.prototype.bind.get-fn-realm-recursive",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1947,8 +1947,8 @@
     "id": "test262.test.built-ins.function.prototype.bind.proto-from-ctor-realm",
     "layer": "test262",
     "category": "function",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

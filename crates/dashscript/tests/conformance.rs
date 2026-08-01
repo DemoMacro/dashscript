@@ -1066,6 +1066,19 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
         Ok(c) => c,
         Err(e) => return EngineOutcome::OtherError(format!("context: {e}")),
     };
+    // Force a GC cycle before the runtime drops. Without it, residue from a
+    // prior fixture's engine_eval leaks into the next one (a timing-sensitive
+    // heisenbug: a fixture whose `$INCLUDE`/body references the just-injected
+    // `$262` resolves it as `undefined` under one run and clean under another,
+    // depending on how much residue the prior fixture left). A GC sweep between
+    // fixtures clears the leak.
+    struct GcOnDrop<'a>(&'a Runtime);
+    impl Drop for GcOnDrop<'_> {
+        fn drop(&mut self) {
+            self.0.run_gc();
+        }
+    }
+    let _gc_guard = GcOnDrop(&runtime);
     let sloppy = || {
         let mut o = EvalOptions::default();
         o.strict = false;
@@ -1244,21 +1257,6 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     // source in-process under QuickJS with the test262 harness injected, so
     // reflection + the full assert family run with reference semantics.
     if deps.needs_engine() {
-        // Serialise the whole engine path, not just `translate_with_deps`. Two
-        // engines running concurrently race even though each spins up its own
-        // `Runtime::new()`/`Context::full` — QuickJS-NG carries process-global
-        // state (its atom table / class registry are touched by `JS_NewRuntime`
-        // and by built-in init), so parallel engines observe each other's
-        // partial init. The symptom is deterministic under parallel workers
-        // and vanishes single-threaded: a fixture whose `$INCLUDE` references
-        // the just-injected `$262` throws `ReferenceError: $262 is not defined`
-        // under parallel but runs clean single-threaded. The engine path is
-        // millisecond-scale (no `cargo build`/run — that slow step still runs
-        // parallel for static-path fixtures), so holding the lock across it
-        // removes the race without starving the build workers, matching the
-        // TRANSLATE_LOCK split rationale (serialise the fast shared-state
-        // step, parallelise the slow isolated step).
-        let _engine_guard = TRANSLATE_LOCK.lock().expect("TRANSLATE_LOCK poisoned");
         let js_source = match Translator::new().engine_source(&raw.fixture) {
             Some(s) => s,
             None => {
