@@ -901,6 +901,82 @@ var $DONE = function (error) {
 };
 "#;
 
+/// `Error.prototype.stack` as an accessor (tc39 `error-stack-accessor` proposal).
+/// QuickJS-NG ships no own `stack` slot on `Error.prototype` (each instance gets
+/// an own data property at construction), so
+/// `Object.getOwnPropertyDescriptor(Error.prototype, 'stack')` is `undefined` and
+/// the `.get`/`.set` access crashes the ~29 `error.prototype.stack.{getter,setter}-*`
+/// fixtures. The proposal makes it an accessor whose get/set are bound to the
+/// `[[ErrorData]]` slot: get returns the trace for Error instances (undefined
+/// otherwise, TypeError for a non-object `this`); set creates an own data
+/// property (TypeError for non-object `this`, non-string value, or an existing
+/// own accessor/non-writable data). The slot check is approximated with a
+/// `WeakMap` populated by wrapping every native Error constructor: at
+/// construction the QuickJS-set own `stack` is captured into the map and the own
+/// property deleted (the proposal model — an instance carries no own `stack`).
+/// Injected before `$INCLUDE`s so `nativeErrors.js` captures the wrappers in its
+/// constructor arrays. Cross-realm variants stay partial: `$262.createRealm`
+/// returns the same global, so the `notSameValue` realm precondition fails
+/// regardless of this polyfill.
+const ERROR_STACK_ACCESSOR_PRELUDE: &str = r#"
+(function () {
+  'use strict';
+  var d = Object.getOwnPropertyDescriptor(Error.prototype, 'stack');
+  if (d !== undefined && typeof d.get === 'function') return;
+  var traces = new WeakMap();
+  function wrap(name) {
+    var O = globalThis[name];
+    if (typeof O !== 'function') return;
+    var Wrapper = function () {
+      var args = Array.prototype.slice.call(arguments);
+      var nt = (typeof new.target === 'function') ? new.target : Wrapper;
+      var err = Reflect.construct(O, args, nt);
+      var s = err.stack;
+      if (typeof s === 'string') traces.set(err, s);
+      try { delete err.stack; } catch (e) {}
+      return err;
+    };
+    Wrapper.prototype = O.prototype;
+    Object.setPrototypeOf(Wrapper, O);
+    // Keep `instance.constructor === <Ctor>` true after the global binding is
+    // replaced: assert.throws checks `thrown.constructor === expectedCtor` by
+    // identity, so the prototype's `.constructor` must point at the Wrapper.
+    try { O.prototype.constructor = Wrapper; } catch (e) {}
+    try { Object.defineProperty(Wrapper, 'name', { value: name, configurable: true }); } catch (e) {}
+    globalThis[name] = Wrapper;
+  }
+  ['Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError',
+   'TypeError', 'URIError', 'AggregateError', 'SuppressedError'].forEach(wrap);
+  // Method-shorthand accessors carry no [[Construct]] slot, so `isConstructor`
+  // reports false — matching the proposal's built-in (non-constructor) get/set.
+  var _stack = {
+    get() {
+      if (this === null || (typeof this !== 'object' && typeof this !== 'function'))
+        throw new TypeError();
+      return traces.has(this) ? traces.get(this) : undefined;
+    },
+    set(value) {
+      if (this === null || (typeof this !== 'object' && typeof this !== 'function'))
+        throw new TypeError();
+      if (typeof value !== 'string') throw new TypeError();
+      var own = Object.getOwnPropertyDescriptor(this, 'stack');
+      if (own === undefined) {
+        Object.defineProperty(this, 'stack', {
+          value: value, writable: true, enumerable: true, configurable: true
+        });
+      } else if ('get' in own || 'set' in own || !own.writable) {
+        throw new TypeError();
+      } else {
+        Object.defineProperty(this, 'stack', { value: value });
+      }
+    },
+  };
+  Object.defineProperty(Error.prototype, 'stack', {
+    get: _stack.get, set: _stack.set, enumerable: false, configurable: true,
+  });
+})();
+"#;
+
 /// The two harness files every test262 fixture needs: `sta.js` defines
 /// `Test262Error` (the assert-failure exception), `assert.js` defines the
 /// `assert.*` family that throws it. Injected on the engine path before any
@@ -1557,7 +1633,7 @@ impl Drop for RealmsGuard {
 /// the test262 harness (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s)
 /// before the fixture, so the assert family runs with reference semantics; a
 /// thrown `Test262Error` (assert mismatch) is the single failure signal.
-fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
+fn engine_eval(js_source: &str, includes: &[String], features: &[String]) -> EngineOutcome {
     use rquickjs::{context::EvalOptions, ArrayBuffer, Context, Ctx, FromJs, Function, Runtime};
     // Serialize the rquickjs engine path across worker threads. Concurrent
     // `Runtime::new()` / `Context::full` / `globals().set` in the N parallel
@@ -1670,6 +1746,15 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
             // fixtures that reference it — skips the registration cost otherwise.
             if js_source.contains("ShadowRealm") {
                 sr_install(&ctx)?;
+            }
+            // Error.prototype.stack accessor (tc39 `error-stack-accessor` proposal):
+            // QuickJS-NG has no own `stack` on `Error.prototype`, so the
+            // `.get`/`.set` access crashes the getter/setter fixtures. Inject before
+            // `$INCLUDE`s so `nativeErrors.js` captures the wrapped constructors.
+            // Gated on the feature flag (the only fixtures that opt into the
+            // proposal), so every other error fixture is untouched.
+            if features.iter().any(|f| f == "error-stack-accessor") {
+                ctx.eval_with_options::<(), _>(ERROR_STACK_ACCESSOR_PRELUDE, sloppy())?;
             }
             for inc in includes {
                 if let Some(src) = harness_source(inc) {
@@ -1798,7 +1883,7 @@ fn run_engine(raw: &RawFeature) -> (&'static str, String) {
         Translator::new().engine_source(&raw.fixture)
     };
     match js_source {
-        Some(s) => judge_engine(engine_eval(&s, &raw.includes)),
+        Some(s) => judge_engine(engine_eval(&s, &raw.includes, &raw.features)),
         None => (
             "partial",
             "engine flag set but engine_source returned None".into(),
@@ -2222,6 +2307,76 @@ fn temporal_strip_removes_non_ctor_prototype() {
             s("new Temporal.Duration(0,0,0,0,1).add(new Temporal.Duration(0,0,0,0,1)).toJSON()"),
             "PT2H"
         );
+    });
+}
+
+/// Regression guard for `ERROR_STACK_ACCESSOR_PRELUDE` (tc39
+/// `error-stack-accessor` proposal). QuickJS-NG has no own `stack` on
+/// `Error.prototype`; the prelude wraps the native constructors (capturing the
+/// trace into a WeakMap and deleting the construction-time own property) and
+/// installs a get/set accessor matching the proposal. Lock in: the prototype
+/// slot is an accessor, get returns a trace for Error instances / undefined for
+/// non-Errors / TypeError for non-objects, and set creates an own data property
+/// / rejects non-string values, non-object receivers, and the prototype itself.
+#[test]
+fn error_stack_accessor_polyfill_semantics() {
+    use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
+    let sloppy = || {
+        let mut o = EvalOptions::default();
+        o.strict = false;
+        o
+    };
+    let rt = Runtime::new().expect("rt");
+    let ctx = Context::full(&rt).expect("ctx");
+    ctx.with(|ctx: Ctx<'_>| {
+        ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy()).unwrap();
+        ctx.eval_with_options::<(), _>(ERROR_STACK_ACCESSOR_PRELUDE, sloppy())
+            .unwrap();
+        let b = |s: &str| ctx.eval::<bool, _>(s).unwrap();
+        let throws = |src: &str| -> String {
+            ctx.eval::<String, _>(format!(
+                "try{{ {src}; 'no-throw' }} catch(e) {{ e.constructor.name }}"
+            ))
+            .unwrap()
+        };
+        // Prototype slot is an accessor: own descriptor has get+set, no value.
+        assert!(b("var d=Object.getOwnPropertyDescriptor(Error.prototype,'stack'); typeof d.get==='function' && typeof d.set==='function' && !('value' in d)"));
+        assert!(b("d.enumerable===false && d.configurable===true"));
+        // Instances carry no own `stack` at construction (proposal model).
+        assert!(b("!Object.prototype.hasOwnProperty.call(new Error('x'),'stack')"));
+        // get: Error instance → trace string; non-Error → undefined.
+        assert!(b("typeof d.get.call(new Error('x'))==='string'"));
+        assert!(b("d.get.call(new TypeError('x')) !== undefined"));
+        assert!(b("d.get.call({}) === undefined"));
+        assert!(b("d.get.call([]) === undefined"));
+        // get: non-object `this` → TypeError.
+        assert_eq!(throws("d.get.call(undefined)"), "TypeError");
+        assert_eq!(throws("d.get.call(null)"), "TypeError");
+        assert_eq!(throws("d.get.call(5)"), "TypeError");
+        // set: creates an own data property {w,e,c:true}, returns undefined.
+        assert_eq!(
+            ctx.eval::<String, _>("var e=new Error('m'); d.set.call(e,'sentinel'); String(d.set.call(e,'sentinel2'))")
+                .unwrap(),
+            "undefined"
+        );
+        assert!(b("var e2=new Error('m'); d.set.call(e2,'s'); Object.getOwnPropertyDescriptor(e2,'stack').writable===true"));
+        // set: non-string value → TypeError.
+        assert_eq!(throws("d.set.call(new Error('m'), null)"), "TypeError");
+        assert_eq!(throws("d.set.call(new Error('m'), {})"), "TypeError");
+        // set: non-object receiver → TypeError.
+        assert_eq!(throws("d.set.call(undefined, 'x')"), "TypeError");
+        // set: the prototype itself is rejected (its own slot is the accessor).
+        assert_eq!(throws("d.set.call(Error.prototype, '')"), "TypeError");
+        // Own non-writable data rejects the set.
+        assert_eq!(
+            throws("var e3=new Error('m'); Object.defineProperty(e3,'stack',{value:'o',writable:false,configurable:true}); d.set.call(e3,'u')"),
+            "TypeError"
+        );
+        // Data-property shadow: get.call still returns a trace string.
+        assert!(b("var e4=new Error('m'); Object.defineProperty(e4,'stack',{value:'sentinel',writable:true,enumerable:true,configurable:true}); typeof d.get.call(e4)==='string'"));
+        // get/set are non-constructors (method shorthand, no [[Construct]]).
+        assert_eq!(throws("new d.get()"), "TypeError");
+        assert_eq!(throws("new d.set('x')"), "TypeError");
     });
 }
 

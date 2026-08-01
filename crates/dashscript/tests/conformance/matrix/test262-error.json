@@ -236,7 +236,7 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40412) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41288) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -244,111 +244,111 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "detail": "Test262Error: Test262Error: precondition: the two realms have distinct Error.prototype objects Expected SameValue(«Error», «Error») to be false",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-data-property-shadows",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-error-as-prototype",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-error-instance",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-error-prototype",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-foreign-new-target",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-no-error-data",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-not-a-constructor",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-receiver-is-proxy",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-subclass",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.getter-this-not-object",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.instance-no-own-stack",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Error: hasOwnProperty(\"stack\") is false Expected SameValue(«true», «false») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.instance-not-enumerable",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Error: getOwnPropertyNames does not include \"stack\" Expected SameValue(«1», «-1») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-creates-own-property",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -356,63 +356,63 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "detail": "Test262Error: Test262Error: precondition: the two realms have distinct Error.prototype objects Expected SameValue(«Error», «Error») to be false",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-delete-round-trip",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-empty-string",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-no-argument",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-non-extensible-receiver",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-non-string-value",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-non-writable-stack",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-not-a-constructor",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "detail": "engine error: TypeError",
     "note": ""
   },
   {
@@ -428,7 +428,7 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "detail": "Test262Error: Test262Error: set trap returns false Expected a TypeError to be thrown but no exception was thrown at all",
     "note": ""
   },
   {
@@ -436,7 +436,7 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "detail": "Test262Error: Test262Error: set trap throw Expected a Sentinel to be thrown but no exception was thrown at all",
     "note": ""
   },
   {
@@ -444,23 +444,23 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "detail": "engine error: TypeError",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-receiver-is-other-prototype",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-receiver-is-prototype",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -468,23 +468,23 @@
     "layer": "test262",
     "category": "error",
     "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "detail": "Test262Error: Test262Error: (b): [[DefineOwnProperty]] trap called",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-this-not-object",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'set' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.error.prototype.stack.setter-via-assignment",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'get' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
