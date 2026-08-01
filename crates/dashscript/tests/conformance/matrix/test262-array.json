@@ -12,15 +12,15 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (41824) panicked at src\\main.rs:9:12:\nindex out of bounds: the len is 0 but the index is 4294967295\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (38508) panicked at src\\main.rs:9:12:\nindex out of bounds: the len is 0 but the index is 4294967295\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.15.4.5.1-5-2",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:56: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -83,8 +83,8 @@
     "id": "test262.test.built-ins.array.from.elements-deleted-after",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: The value of value is expected to equal the value of array[this.arrayIndex] Expected SameValue(«0», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -107,8 +107,8 @@
     "id": "test262.test.built-ins.array.from.from-string",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:18: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:11:18: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:15:18: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:19:18: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -299,8 +299,8 @@
     "id": "test262.test.built-ins.array.from.source-array-boundary",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: The value of value is expected to equal the value of array[this.arrayIndex] Expected SameValue(«1.7976931348623157e+308», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20980) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (2536) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -771,16 +771,16 @@
     "id": "test262.test.built-ins.array.isarray.15.4.3.2-2-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nsrc\\main.rs:6:17: error[E0433]: cannot find type `Con` in this scope: use of undeclared type `Con`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.isarray.15.4.3.2-2-2",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0425]: cannot find value `array` in this scope: not found in this scope\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:17: error[E0433]: cannot find type `Con` in this scope: use of undeclared type `Con`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -835,8 +835,8 @@
     "id": "test262.test.built-ins.array.length.15.4.5.1-3.d-3",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:7: error[E0609]: no field `length` on type `Vec<_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1019,8 +1019,8 @@
     "id": "test262.test.built-ins.array.length.s15.4.5.1_a1.2_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:7: error[E0609]: no field `length` on type `Vec<f64>`: unknown field\nsrc\\main.rs:6:7: error[E0609]: no field `length` on type `Vec<f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1051,8 +1051,8 @@
     "id": "test262.test.built-ins.array.length.s15.4.5.2_a3_t4",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:7: error[E0609]: no field `length` on type `Vec<f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1067,8 +1067,8 @@
     "id": "test262.test.built-ins.array.of.creates-a-new-array-from-arguments",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:25: error[E0308]: mismatched types: expected `Option<_>`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1155,24 +1155,24 @@
     "id": "test262.test.built-ins.array.property-cast-boolean-primitive",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:12:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:9:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:15:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.property-cast-nan-infinity",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:17:13: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:27:13: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.property-cast-number",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:18:37: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:47:37: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:10:13: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:30:10: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:37:23: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:59:10: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1859,16 +1859,16 @@
     "id": "test262.test.built-ins.array.prototype.entries.iteration",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0599]: no method named `entries` found for struct `Vec<String>` in the current scope: method not found in `Vec<String>`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.entries.iteration-mutable",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0599]: no method named `entries` found for struct `Vec<_>` in the current scope: method not found in `Vec<_>`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -5723,8 +5723,8 @@
     "id": "test262.test.built-ins.array.prototype.find.predicate-not-called-on-empty-array",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:39: warning: unnecessary parentheses around method argument\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -5891,8 +5891,8 @@
     "id": "test262.test.built-ins.array.prototype.findindex.predicate-not-called-on-empty-array",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:43: error[E0277]: expected a `FnMut(_)` closure, found `()`: expected an `FnMut(_)` closure, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -6083,8 +6083,8 @@
     "id": "test262.test.built-ins.array.prototype.findlast.predicate-not-called-on-empty-array",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:45: warning: unnecessary parentheses around method argument\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -6275,8 +6275,8 @@
     "id": "test262.test.built-ins.array.prototype.findlastindex.predicate-not-called-on-empty-array",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:44: error[E0277]: expected a `FnMut(_)` closure, found `()`: expected an `FnMut(_)` closure, found `()`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8115,24 +8115,24 @@
     "id": "test262.test.built-ins.array.prototype.includes.length-boundaries",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:10:9: error[E0609]: no field `length` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:12:18: error[E0609]: no field `includes` on type `Vec<_>`: unknown field\nsrc\\main.rs:15:9: error[E0609]: no field `length` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:17:18: error[E0609]: no field `includes` on type `Vec<_>`: unknown field\nsrc\\main.rs:20:9: error[E0609]: no field `length` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:22:18: error[E0609]: no field `includes` on type `Vec<_>`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.includes.length-zero-returns-false",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:60: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:9:45: error[E0599]: no method named `includes` found for struct `Vec<_>` in the current scope: method not found in `Vec<_>`\nsrc\\main.rs:13:66: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.includes.no-arg",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:50: error[E0599]: no method named `includes` found for struct `Vec<f64>` in the current scope: method not found in `Vec<f64>`\nsrc\\main.rs:4:49: error[E0599]: no method named `includes` found for struct `Vec<Option<_>>` in the current scope: method not found in `Vec<Option<_>>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8251,16 +8251,16 @@
     "id": "test262.test.built-ins.array.prototype.includes.tointeger-fromindex",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:26: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:16:26: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:65:26: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:72:26: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:79:26: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.includes.tolength-length",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:9: error[E0609]: no field `length` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:9:18: error[E0609]: no field `includes` on type `Vec<_>`: unknown field\nsrc\\main.rs:12:9: error[E0609]: no field `length` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:14:18: error[E0609]: no field `includes` on type `Vec<_>`: unknown field\nsrc\\main.rs:17:9: error[E0609]: no field `length` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:19:18: error[E0609]: no field `includes` on type `Vec<_>`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8268,7 +8268,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34264) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39776) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -8771,8 +8771,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-4-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:24: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8859,24 +8859,24 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:24: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:44: error[E0277]: cannot add `String` to `f64`: no implementation for `f64 + String`\nsrc\\main.rs:26:24: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:26:44: error[E0277]: cannot add `String` to `f64`: no implementation for `f64 + String`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-10",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:26:47: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-11",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:26:47: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8931,16 +8931,16 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-18",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:47: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:11:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:26:54: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:31:28: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-19",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:47: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:11:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:26:54: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:31:28: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8955,8 +8955,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-20",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:47: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:11:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:26:54: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:31:28: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9035,8 +9035,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-3",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:24: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:9:44: error[E0277]: cannot add `bool` to `f64`: no implementation for `f64 + bool`\nsrc\\main.rs:26:24: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:26:44: error[E0277]: cannot add `bool` to `f64`: no implementation for `f64 + bool`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9051,16 +9051,16 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-31",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:26:47: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-32",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:26:47: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9075,16 +9075,16 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-4",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:24: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nsrc\\main.rs:9:44: error[E0277]: cannot add `Option<_>` to `f64`: no implementation for `f64 + Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-5-5",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:24: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nsrc\\main.rs:9:44: error[E0277]: cannot add `Option<_>` to `f64`: no implementation for `f64 + Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9123,8 +9123,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-6-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:51:32: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9147,8 +9147,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-7-3",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:16:32: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9387,8 +9387,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-a-3",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0609]: no field `length` on type `Vec<_>`: unknown field\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:33: error[E0599]: no method named `find` found for reference `&[_]` in the current scope: method not found in `&[_]`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9699,8 +9699,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-9-b-ii-11",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:78: error[E0382]: use of moved value: `obj2`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9827,8 +9827,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.length-zero-returns-minus-one",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:25:26: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nsrc\\main.rs:25:48: error[E0277]: cannot add `HashMap<String, _>` to `f64`: no implementation for `f64 + HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9947,16 +9947,16 @@
     "id": "test262.test.built-ins.array.prototype.keys.iteration",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0599]: no method named `keys` found for struct `Vec<String>` in the current scope: method not found in `Vec<String>`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.keys.iteration-mutable",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0599]: no method named `keys` found for struct `Vec<_>` in the current scope: method not found in `Vec<_>`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -10475,8 +10475,8 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-4-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:25: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -10571,16 +10571,16 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-10",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:30:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-11",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:30:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -10611,8 +10611,8 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-15",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:40: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:10:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:29:47: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:34:28: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -10635,16 +10635,16 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-18",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:57: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:11:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:30:64: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:35:28: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-19",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:11:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:30:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:35:28: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -10659,24 +10659,24 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-20",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:11:28: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:30:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:35:28: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-21",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:38: error[E0433]: cannot find type `RegExp` in this scope: use of undeclared type `RegExp`\nsrc\\main.rs:9:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:14:26: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nsrc\\main.rs:14:62: error[E0599]: the method `min` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:33:40: error[E0308]: mismatched types: expected `f64`, found `bool`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-22",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:14:26: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nsrc\\main.rs:14:62: error[E0599]: the method `min` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:33:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:38:26: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -10755,16 +10755,16 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-31",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:30:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-5-32",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:30:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -10851,8 +10851,8 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-6-4",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:19:37: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -11091,8 +11091,8 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-8-a-3",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0609]: no field `length` on type `Vec<_>`: unknown field\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:15: error[E0599]: no method named `rfind` found for struct `Vec<_>` in the current scope: method not found in `Vec<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -11403,8 +11403,8 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-8-b-ii-11",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:8:33: error[E0382]: use of moved value: `obj2`: value used here after move\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -11547,8 +11547,8 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.length-zero-returns-minus-one",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:25:26: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nsrc\\main.rs:25:47: error[E0277]: cannot add `HashMap<String, _>` to `f64`: no implementation for `f64 + HashMap<String, _>`\nsrc\\main.rs:25:62: error[E0599]: the method `min` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -19803,48 +19803,48 @@
     "id": "test262.test.built-ins.array.prototype.sort.s15.4.4.11_a5_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:7:13: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:15: error[E0277]: the trait bound `f64: Ord` is not satisfied: the trait `Ord` is not implemented for `f64`\nsrc\\main.rs:8:15: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.sort.stability-11-elements",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:11:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:12:64: error[E0308]: mismatched types: expected `String`, found `f64`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.sort.stability-2048-elements",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:67: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:67: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:11:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:12:67: error[E0308]: mismatched types: expected `String`, found `f64`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.sort.stability-5-elements",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:64: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:11:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:14:11: error[E0277]: the trait bound `HashMap<String, String>: Ord` is not satisfied: the trait `Ord` is not implemented for `HashMap<String, String>`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.sort.stability-513-elements",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:5:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:66: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:8:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:9:66: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:11:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:12:66: error[E0308]: mismatched types: expected `String`, found `f64`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.splice.15.4.4.12-9-a-1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:9:51: error[E0599]: no method named `len` found for unit type `()` in the current scope\nsrc\\main.rs:10:49: error[E0608]: cannot index into a value of type `()`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -19859,8 +19859,8 @@
     "id": "test262.test.built-ins.array.prototype.splice.called_with_one_argument",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:31: error[E0277]: the trait bound `f64: RangeBounds<usize>` is not satisfied: the trait `RangeBounds<usize>` is not implemented for `f64`\nsrc\\main.rs:6:24: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:14:17: error[E0608]: cannot index into a value of type `std::vec::Splice<'_, _>`\nsrc\\main.rs:18:17: error[E0608]: cannot index into a value of type `std::vec::Splice<'_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -20579,16 +20579,16 @@
     "id": "test262.test.built-ins.array.prototype.values.iteration",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0599]: no method named `values` found for struct `Vec<String>` in the current scope: method not found in `Vec<String>`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.prototype.values.iteration-mutable",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0599]: no method named `values` found for struct `Vec<_>` in the current scope: method not found in `Vec<_>`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -20779,24 +20779,24 @@
     "id": "test262.test.built-ins.array.s15.4.1_a1.3_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0425]: cannot find function `array` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.s15.4.1_a2.1_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:39: error[E0425]: cannot find function `array` in this scope: not found in this scope\nsrc\\main.rs:5:12: error[E0425]: cannot find function `array` in this scope: not found in this scope\nsrc\\main.rs:8:39: error[E0425]: cannot find function `array` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.s15.4.1_a2.2_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:113:38: error[E0425]: cannot find value `result` in this scope\nsrc\\main.rs:3:13: error[E0425]: cannot find function `array` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -20899,24 +20899,24 @@
     "id": "test262.test.built-ins.array.s15.4.5.1_a2.1_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:20:40: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.s15.4.5.1_a2.2_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0425]: cannot find function `array` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.s15.4.5.1_a2.3_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0425]: cannot find function `array` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -20924,7 +20924,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (15088) panicked at src\\__ds.rs:150:9:\nTest262Error: Expected SameValue(«2.0», «2147483649.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34568) panicked at src\\__ds.rs:150:9:\nTest262Error: Expected SameValue(«2.0», «2147483649.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -20947,8 +20947,8 @@
     "id": "test262.test.built-ins.array.s15.4.5.2_a3_t1",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:4:7: error[E0609]: no field `length` on type `Vec<_>`: unknown field\nsrc\\main.rs:10:7: error[E0609]: no field `length` on type `Vec<f64>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -20972,23 +20972,23 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (19880) panicked at src\\main.rs:19:47:\nindex out of bounds: the len is 2097151 but the index is 4194302\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (36928) panicked at src\\main.rs:19:47:\nindex out of bounds: the len is 2097151 but the index is 4194302\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.s15.4_a1.1_t4",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:12:40: error[E0308]: mismatched types: expected `f64`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.s15.4_a1.1_t5",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "src\\main.rs:6:40: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:13:40: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:9:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:17:13: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

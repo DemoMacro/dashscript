@@ -1345,13 +1345,15 @@ impl Translator {
         check::check_as(source, role)
     }
 
-    /// The annotation-stripped ECMAScript the engine compat path would run,
-    /// when the source uses ES dynamic reflection (`Object.defineProperty`,
-    /// `Reflect.*`, …) the static translator cannot lower. `None` for a plain
-    /// source (no engine). The conformance harness uses this to run an engine
-    /// fixture directly under an embedded QuickJS engine — the exact bytes
-    /// `translate_with_deps` embeds in `__ds_engine::run` — without compiling
-    /// a throwaway cargo project per fixture.
+    /// The annotation-stripped ECMAScript the engine compat path runs under
+    /// QuickJS. The conformance harness uses this both for `needs_engine`
+    /// fixtures (ES reflection the static translator cannot lower) and as the
+    /// `cargo check` failure fallback — running the JS directly under QuickJS
+    /// rather than reporting a static-only partial. Returns `None` only when
+    /// oxc reports parse diagnostics (invalid source); a valid program always
+    /// yields JS, mirroring the exact bytes `translate_with_deps` embeds in
+    /// `__ds_engine::run`. Whether a fixture routes to the engine at all is
+    /// decided by `RuntimeDeps::needs_engine`, not here.
     #[must_use]
     pub fn engine_source(&self, source: &str) -> Option<String> {
         let allocator = Allocator::default();
@@ -1360,13 +1362,9 @@ impl Translator {
             return None;
         }
         let program = allocator.alloc(ret.program);
-        if check::program_uses_engine(program) {
-            let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
-            let scoping = sret.semantic.into_scoping();
-            Some(engine_js_source(program, &allocator, scoping))
-        } else {
-            None
-        }
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let scoping = sret.semantic.into_scoping();
+        Some(engine_js_source(program, &allocator, scoping))
     }
 
     /// The local `.ts` modules this file imports (`import { x } from "./other"`

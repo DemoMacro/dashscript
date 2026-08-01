@@ -27,40 +27,40 @@
     "id": "test262.test.built-ins.isfinite.return-false-on-nan-or-infinities",
     "layer": "test262",
     "category": "isfinite",
-    "status": "partial",
-    "detail": "src\\main.rs:5:37: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.isfinite.return-true-for-valid-finite-numbers",
     "layer": "test262",
     "category": "isfinite",
-    "status": "partial",
-    "detail": "src\\main.rs:4:37: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:6:37: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:8:37: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:10:37: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:16:10: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.isfinite.s15.1.2.5_a2.6",
     "layer": "test262",
     "category": "isfinite",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `is_finite` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.isfinite.s15.1.2.5_a2.7",
     "layer": "test262",
     "category": "isfinite",
-    "status": "partial",
-    "detail": "src\\main.rs:6:13: error[E0433]: cannot find module or crate `isFinite` in this scope: use of unresolved module or unlinked crate `isFinite`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.isfinite.tonumber-operations",
     "layer": "test262",
     "category": "isfinite",
-    "status": "partial",
-    "detail": "src\\main.rs:3:54: error[E0599]: no method named `is_finite` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:4:53: error[E0599]: no method named `is_finite` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:5:61: error[E0599]: no method named `is_finite` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:7:46: error[E0599]: no method named `is_finite` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:10:43: error[E0599]: no method named `is_finite` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:11:44: error[E0599]: no method named `is_finite` found for type `bool` in the current scope: method not found in `bool`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

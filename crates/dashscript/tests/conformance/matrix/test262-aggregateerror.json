@@ -27,8 +27,8 @@
     "id": "test262.test.built-ins.aggregateerror.message-tostring-abrupt",
     "layer": "test262",
     "category": "aggregateerror",
-    "status": "partial",
-    "detail": "src\\main.rs:4:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:15:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:26:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

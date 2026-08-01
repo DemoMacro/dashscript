@@ -11,8 +11,8 @@
     "id": "test262.test.built-ins.suppressederror.message-tostring-abrupt",
     "layer": "test262",
     "category": "suppressederror",
-    "status": "partial",
-    "detail": "src\\main.rs:4:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:15:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:26:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -67,8 +67,8 @@
     "id": "test262.test.built-ins.suppressederror.order-of-args-evaluation",
     "layer": "test262",
     "category": "suppressederror",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:13: error[E0433]: cannot find type `SuppressedError` in this scope: use of undeclared type `SuppressedError`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

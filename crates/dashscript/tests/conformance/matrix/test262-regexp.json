@@ -59,16 +59,16 @@
     "id": "test262.test.built-ins.regexp.call_with_regexp_not_same_constructor",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:17: error[E0609]: no field `constructor` on type `Regex`: unknown field\nsrc\\main.rs:6:47: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:6:9: error[E0277]: the trait bound `Regex: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Regex`\nsrc\\main.rs:7:9: error[E0277]: the trait bound `Regex: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.character-class-escape-non-whitespace",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:28:36: error[E0308]: mismatched types: expected `f64`, found `i64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (4312) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (11492) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "src\\main.rs:9:45: error[E0609]: no field `source` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "static build: src\\main.rs:9:45: error[E0609]: no field `source` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40524) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "detail": "Test262Error: \nthread 'main' (34164) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
     "note": ""
   },
   {
@@ -420,15 +420,15 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41540) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (24800) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.escape.escaped-otherpunctuators",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:15: error[E0277]: `&String` is not an iterator: `&String` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (12064) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42816) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -475,8 +475,8 @@
     "id": "test262.test.built-ins.regexp.escape.escaped-utf16encodecodepoint",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:25:9: error[E0382]: borrow of moved value: `code_points`: value borrowed here after move\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20796) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (1880) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (24072) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (36668) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -523,8 +523,8 @@
     "id": "test262.test.built-ins.regexp.escape.not-escaped",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:27:10: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nsrc\\main.rs:67:10: error[E0599]: no method named `for_each` found for struct `Vec<String>` in the current scope: `Vec<String>` is not an iterator\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41380) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (27032) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -619,8 +619,8 @@
     "id": "test262.test.built-ins.regexp.lookbehind.do-not-backtrack",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `DsMatch: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -659,8 +659,8 @@
     "id": "test262.test.built-ins.regexp.lookbehind.sliced-strings",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:13:9: error[E0277]: the trait bound `DsMatch: DsSameValue` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:21:9: error[E0277]: the trait bound `DsMatch: DsSameValue` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:29:9: error[E0277]: the trait bound `DsMatch: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -723,8 +723,8 @@
     "id": "test262.test.built-ins.regexp.match-indices.indices-array-unmatched",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:9:45: error[E0609]: no field `indices` on type `&DsMatch`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -788,15 +788,15 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (18292) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (38952) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.duplicate-names-replaceall",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:5:65: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:10:65: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:16:60: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:24:60: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -931,56 +931,56 @@
     "id": "test262.test.built-ins.regexp.named-groups.string-replace-escaped",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:33: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.string-replace-get",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:21:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.string-replace-missing",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:15:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:19:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:23:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:33:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:37:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.string-replace-nocaptures",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:15:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:19:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:23:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:27:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:31:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.string-replace-numbered",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:21:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.string-replace-unclosed",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:21:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.string-replace-undefined",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:11:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:21:34: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1115,8 +1115,8 @@
     "id": "test262.test.built-ins.regexp.prototype.dotall.this-val-regexp",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:13:66: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:14:67: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:15:67: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:16:67: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:17:67: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:18:67: error[E0609]: no field `dot_all` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1211,8 +1211,8 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.s15.10.6.2_a12",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:35: error[E0599]: no method named `test` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:9:6: error[E0608]: cannot index into a value of type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1275,8 +1275,8 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.s15.10.6.2_a1_t16",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:70: error[E0608]: cannot index into a value of type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1699,8 +1699,8 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.u-lastindex-adv",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `DsMatch: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1731,8 +1731,8 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.y-fail-return",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:36: error[E0277]: the trait bound `DsMatch: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1835,8 +1835,8 @@
     "id": "test262.test.built-ins.regexp.prototype.flags.return-order",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:45: error[E0609]: no field `flags` on type `Regex`: unknown field\nsrc\\main.rs:8:45: error[E0609]: no field `flags` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1979,8 +1979,8 @@
     "id": "test262.test.built-ins.regexp.prototype.hasindices.this-val-regexp",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:17:66: error[E0609]: no field `has_indices` on type `Regex`: unknown field\nsrc\\main.rs:19:40: error[E0609]: no field `has_indices` on type `Regex`: unknown field\nsrc\\main.rs:23:40: error[E0609]: no field `has_indices` on type `Regex`: unknown field\nsrc\\main.rs:27:40: error[E0609]: no field `has_indices` on type `Regex`: unknown field\nsrc\\main.rs:31:40: error[E0609]: no field `has_indices` on type `Regex`: unknown field\nsrc\\main.rs:35:40: error[E0609]: no field `has_indices` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -3883,8 +3883,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t1",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:10:11: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -3939,8 +3939,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t16",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:9:11: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -3979,8 +3979,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t20",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:5:21: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:7:23: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:9:11: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (5568) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (18996) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4371,8 +4371,8 @@
     "id": "test262.test.built-ins.regexp.prototype.unicodesets.this-val-regexp",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:19:39: error[E0609]: no field `unicode_sets` on type `Regex`: unknown field\nsrc\\main.rs:23:40: error[E0609]: no field `unicode_sets` on type `Regex`: unknown field\nsrc\\main.rs:27:40: error[E0609]: no field `unicode_sets` on type `Regex`: unknown field\nsrc\\main.rs:31:40: error[E0609]: no field `unicode_sets` on type `Regex`: unknown field\nsrc\\main.rs:35:40: error[E0609]: no field `unicode_sets` on type `Regex`: unknown field\nsrc\\main.rs:39:40: error[E0609]: no field `unicode_sets` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -5155,8 +5155,8 @@
     "id": "test262.test.built-ins.regexp.s15.10.2.13_a1_t17",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:8:36: error[E0277]: the trait bound `DsMatch: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -7243,8 +7243,8 @@
     "id": "test262.test.built-ins.regexp.s15.10.3.1_a1_t1",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:67: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:5:10: error[E0609]: no field `indicator` on type `Regex`: unknown field\nsrc\\main.rs:6:49: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -7259,24 +7259,24 @@
     "id": "test262.test.built-ins.regexp.s15.10.3.1_a1_t3",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:6:12: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:3:36: error[E0433]: cannot find type `RegExp` in this scope: use of undeclared type `RegExp`\nsrc\\main.rs:9:49: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.3.1_a1_t4",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:36: error[E0425]: cannot find function `reg_exp` in this scope: not found in this scope\nsrc\\main.rs:6:30: warning: unreachable call: unreachable call\nsrc\\main.rs:9:49: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.3.1_a1_t5",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:5:19: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:6:19: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:8:10: error[E0609]: no field `indicator` on type `Regex`: unknown field\nsrc\\main.rs:9:49: error[E0609]: no field `indicator` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -7315,32 +7315,32 @@
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a1_t1",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:66: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:5:43: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:5:64: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:6:67: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:7:43: error[E0609]: no field `global` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a1_t2",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:6:12: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:8:43: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:8:64: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:9:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:9:67: error[E0609]: no field `multiline` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a1_t3",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:5:24: error[E0599]: `Regex` doesn't implement `std::fmt::Display`: method cannot be called on `Regex` due to unsatisfied trait bounds\nsrc\\main.rs:6:30: warning: unreachable call: unreachable call\nsrc\\main.rs:8:43: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:8:64: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:9:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:9:67: error[E0609]: no field `multiline` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a1_t4",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:37: error[E0433]: cannot find type `RegExp` in this scope: use of undeclared type `RegExp`\nsrc\\main.rs:6:19: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:8:43: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:9:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:11:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -7371,32 +7371,32 @@
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a3_t1",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:32: error[E0433]: cannot find type `RegExp` in this scope: use of undeclared type `RegExp`\nsrc\\main.rs:3:15: error[E0433]: cannot find module or crate `regress` in this scope: use of unresolved module or unlinked crate `regress`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a3_t2",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:52: error[E0282]: type annotations needed: cannot infer type\nsrc\\main.rs:3:72: warning: unreachable call: unreachable call\nsrc\\main.rs:4:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:5:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a3_t3",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:54: error[E0425]: cannot find value `x` in this scope: not found in this scope\nsrc\\main.rs:4:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:5:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a3_t4",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:61: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:4:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:5:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -7411,32 +7411,32 @@
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a4_t1",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:19: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:5:30: warning: unreachable call: unreachable call\nsrc\\main.rs:7:43: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:9:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a4_t2",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:19: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:5:19: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:7:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:9:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a4_t3",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:50: error[E0609]: no field `p` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:5:50: error[E0609]: no field `q` on type `HashMap<_, _>`: unknown field\nsrc\\main.rs:7:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:9:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a4_t4",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:4:19: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:5:30: warning: unreachable call: unreachable call\nsrc\\main.rs:7:43: error[E0609]: no field `source` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:9:43: error[E0609]: no field `global` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -7555,16 +7555,16 @@
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a8_t12",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:43: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:26: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a8_t13",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -7603,24 +7603,24 @@
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a8_t6",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a8_t7",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:43: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:26: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.s15.10.4.1_a8_t8",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:12:60: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:47: error[E0599]: the method `to_string` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:11:25: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:23:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

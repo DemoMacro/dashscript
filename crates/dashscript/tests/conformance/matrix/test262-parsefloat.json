@@ -27,8 +27,8 @@
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t3",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:51:25: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nsrc\\main.rs:103:25: error[E0599]: the method `to_string` exists for enum `Option<_>`, but its trait bounds were not satisfied: method cannot be called on `Option<_>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

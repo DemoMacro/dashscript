@@ -115,16 +115,16 @@
     "id": "test262.test.built-ins.set.prototype.add.returns-this",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:8:9: error[E0277]: the trait bound `HashSet<DsF64Key>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashSet<DsF64Key>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.add.returns-this-when-ignoring-duplicate",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:12:9: error[E0277]: the trait bound `HashSet<DsF64Key>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashSet<DsF64Key>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -195,8 +195,8 @@
     "id": "test262.test.built-ins.set.prototype.add.will-not-add-duplicate-entry-normalizes-zero",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0277]: the trait bound `f64: Eq` is not satisfied: the trait `Eq` is not implemented for `f64`\nsrc\\main.rs:3:17: error[E0277]: the trait bound `f64: Hash` is not satisfied: the trait `Hash` is not implemented for `f64`\nsrc\\main.rs:6:11: error[E0599]: the method `insert` exists for struct `HashSet<f64>`, but its trait bounds were not satisfied\nsrc\\main.rs:10:11: error[E0599]: the method `insert` exists for struct `HashSet<f64>`, but its trait bounds were not satisfied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -211,24 +211,24 @@
     "id": "test262.test.built-ins.set.prototype.clear.clears-all-contents",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:7:10: error[E0599]: no method named `add` found for unit type `()` in the current scope: method not found in `()`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.clear.clears-all-contents-from-iterable",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:23:48: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.clear.clears-an-empty-set",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -283,8 +283,8 @@
     "id": "test262.test.built-ins.set.prototype.clear.returns-undefined",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -371,8 +371,8 @@
     "id": "test262.test.built-ins.set.prototype.delete.delete-entry-normalizes-zero",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0277]: the trait bound `f64: Eq` is not satisfied: the trait `Eq` is not implemented for `f64`\nsrc\\main.rs:3:17: error[E0277]: the trait bound `f64: Hash` is not satisfied: the trait `Hash` is not implemented for `f64`\nsrc\\main.rs:5:20: error[E0599]: the method `remove` exists for struct `HashSet<f64>`, but its trait bounds were not satisfied: method cannot be called on `HashSet<f64>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -427,8 +427,8 @@
     "id": "test262.test.built-ins.set.prototype.delete.returns-false-when-delete-is-noop",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -747,16 +747,16 @@
     "id": "test262.test.built-ins.set.prototype.entries.returns-iterator",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0599]: no method named `entries` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<DsF64Key>`\nsrc\\main.rs:15:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.entries.returns-iterator-empty",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0599]: no method named `entries` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -979,8 +979,8 @@
     "id": "test262.test.built-ins.set.prototype.foreach.this-arg-explicit-cannot-override-lexical-this-arrow",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:19: error: `this` is only valid inside a class method\nsrc\\main.rs:10:7: error[E0599]: no method named `for_each` found for struct `HashSet<DsF64Key>` in the current scope: `HashSet<DsF64Key>` is not an iterator\nsrc\\main.rs:14:17: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1115,48 +1115,48 @@
     "id": "test262.test.built-ins.set.prototype.has.returns-false-when-undefined-added-deleted-not-present-undefined",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<Option<_>>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.has.returns-false-when-value-not-present-boolean",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.has.returns-false-when-value-not-present-nan",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.has.returns-false-when-value-not-present-null",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.has.returns-false-when-value-not-present-number",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.has.returns-false-when-value-not-present-string",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1171,8 +1171,8 @@
     "id": "test262.test.built-ins.set.prototype.has.returns-false-when-value-not-present-undefined",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1195,8 +1195,8 @@
     "id": "test262.test.built-ins.set.prototype.has.returns-true-when-value-present-null",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<Option<_>>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1227,8 +1227,8 @@
     "id": "test262.test.built-ins.set.prototype.has.returns-true-when-value-present-undefined",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:9: error[E0282]: type annotations needed for `HashSet<Option<_>>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1483,16 +1483,16 @@
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.allows-set-like-class",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:9:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.allows-set-like-object",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:28:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:30:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1523,48 +1523,48 @@
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.compares-empty-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:16:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:19:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.compares-itself",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:8:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.compares-map",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:12:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.compares-same-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.compares-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:19:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.converts-negative-zero",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:14: error[E0277]: the trait bound `f64: Eq` is not satisfied: the trait `Eq` is not implemented for `f64`\nsrc\\main.rs:8:14: error[E0277]: the trait bound `f64: Hash` is not satisfied: the trait `Hash` is not implemented for `f64`\nsrc\\main.rs:10:14: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<f64>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1635,8 +1635,8 @@
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.set-like-array",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:8: error[E0609]: no field `size` on type `Vec<f64>`: unknown field\nsrc\\main.rs:10:8: error[E0609]: no field `has` on type `Vec<f64>`: unknown field\nsrc\\main.rs:10:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:8: error[E0609]: no field `keys` on type `Vec<f64>`: unknown field\nsrc\\main.rs:11:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:41: error[E0599]: no method named `is_disjoint_from` found for struct `HashSet<T, S, A>` in the current scope",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1659,8 +1659,8 @@
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.set-like-iter-return",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:5:36: error[E0308]: mismatched types: expected `Vec<f64>`, found `f64`\nsrc\\main.rs:6:38: error[E0308]: mismatched types: expected `Vec<f64>`, found `f64`\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:36: error[E0609]: no field `a` on type `HashMap<String, Vec<f64>>`: unknown field\nsrc\\main.rs:12:9: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1675,24 +1675,24 @@
     "id": "test262.test.built-ins.set.prototype.isdisjointfrom.subclass-receiver-methods",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:6:14: error[E0433]: cannot find type `MySet` in this scope: use of undeclared type `MySet`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issubsetof.allows-set-like-class",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:9:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issubsetof.allows-set-like-object",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:31:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:33:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1723,40 +1723,40 @@
     "id": "test262.test.built-ins.set.prototype.issubsetof.compares-empty-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:16:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:19:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issubsetof.compares-itself",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:8:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issubsetof.compares-map",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:12:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issubsetof.compares-same-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issubsetof.compares-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:19:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1827,8 +1827,8 @@
     "id": "test262.test.built-ins.set.prototype.issubsetof.set-like-array",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:8: error[E0609]: no field `size` on type `Vec<f64>`: unknown field\nsrc\\main.rs:10:8: error[E0609]: no field `has` on type `Vec<f64>`: unknown field\nsrc\\main.rs:10:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:8: error[E0609]: no field `keys` on type `Vec<f64>`: unknown field\nsrc\\main.rs:11:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:41: error[E0599]: no method named `is_subset_of` found for struct `HashSet<T, S, A>` in the current scope",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1859,24 +1859,24 @@
     "id": "test262.test.built-ins.set.prototype.issubsetof.subclass-receiver-methods",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:6:14: error[E0433]: cannot find type `MySet` in this scope: use of undeclared type `MySet`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issupersetof.allows-set-like-class",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:9:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issupersetof.allows-set-like-object",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:12:13: error[E0308]: mismatched types: expected `f64`, found closure\nsrc\\main.rs:25:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:27:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1907,48 +1907,48 @@
     "id": "test262.test.built-ins.set.prototype.issupersetof.compares-empty-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:16:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:19:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issupersetof.compares-itself",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:8:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issupersetof.compares-map",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:12:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issupersetof.compares-same-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issupersetof.compares-sets",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nsrc\\main.rs:19:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.issupersetof.converts-negative-zero",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:14: error[E0277]: the trait bound `f64: Eq` is not satisfied: the trait `Eq` is not implemented for `f64`\nsrc\\main.rs:8:14: error[E0277]: the trait bound `f64: Hash` is not satisfied: the trait `Hash` is not implemented for `f64`\nsrc\\main.rs:10:14: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<f64>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2019,8 +2019,8 @@
     "id": "test262.test.built-ins.set.prototype.issupersetof.set-like-array",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:9:8: error[E0609]: no field `size` on type `Vec<f64>`: unknown field\nsrc\\main.rs:10:8: error[E0609]: no field `has` on type `Vec<f64>`: unknown field\nsrc\\main.rs:10:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:8: error[E0609]: no field `keys` on type `Vec<f64>`: unknown field\nsrc\\main.rs:11:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:41: error[E0599]: no method named `is_superset_of` found for struct `HashSet<T, S, A>` in the current scope",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2043,8 +2043,8 @@
     "id": "test262.test.built-ins.set.prototype.issupersetof.set-like-iter-return",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:5:36: error[E0308]: mismatched types: expected `Vec<f64>`, found `f64`\nsrc\\main.rs:6:38: error[E0308]: mismatched types: expected `Vec<f64>`, found `f64`\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:36: error[E0609]: no field `a` on type `HashMap<String, Vec<f64>>`: unknown field\nsrc\\main.rs:12:9: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2059,8 +2059,8 @@
     "id": "test262.test.built-ins.set.prototype.issupersetof.subclass-receiver-methods",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:6:14: error[E0433]: cannot find type `MySet` in this scope: use of undeclared type `MySet`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2595,16 +2595,16 @@
     "id": "test262.test.built-ins.set.prototype.values.returns-iterator",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:13:24: error[E0599]: no method named `values` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<DsF64Key>`\nsrc\\main.rs:15:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.set.prototype.values.returns-iterator-empty",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0599]: no method named `values` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2667,8 +2667,8 @@
     "id": "test262.test.built-ins.set.prototype.values.values-iteration-mutable",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:10:24: error[E0599]: no method named `values` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<DsF64Key>`\nsrc\\main.rs:12:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2755,8 +2755,8 @@
     "id": "test262.test.built-ins.set.set-no-iterable",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "src\\main.rs:3:73: error[E0609]: no field `size` on type `HashSet<_>`: unknown field\nsrc\\main.rs:4:38: error[E0433]: cannot find type `Set` in this scope: use of undeclared type `Set`\nsrc\\main.rs:5:38: error[E0433]: cannot find type `Set` in this scope: use of undeclared type `Set`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

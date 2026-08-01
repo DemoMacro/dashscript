@@ -387,8 +387,8 @@
     "id": "test262.test.built-ins.json.parse.duplicate-proto",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:7:45: error[E0609]: no field `__proto__` on type `Value`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -596,7 +596,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34684) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«Number(-0.0)», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (31452) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«Number(-0.0)», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -611,8 +611,8 @@
     "id": "test262.test.built-ins.json.parse.text-object",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:18: error[E0599]: the method `to_string` exists for struct `HashMap<std::string::String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<std::string::String, _>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -731,8 +731,8 @@
     "id": "test262.test.built-ins.json.stringify.replacer-array-empty",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:19:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nsrc\\main.rs:29:28: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -756,7 +756,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33888) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"{\\\"c\\\":3.0,\\\"b\\\":1.0,\\\"a\\\":2.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` ",
+    "detail": "Test262Error: \nthread 'main' (4912) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"{\\\"b\\\":1.0,\\\"a\\\":2.0,\\\"c\\\":3.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` e",
     "note": ""
   },
   {
@@ -851,8 +851,8 @@
     "id": "test262.test.built-ins.json.stringify.replacer-function-result",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:10:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, bool>`\nsrc\\main.rs:17:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nsrc\\main.rs:20:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -891,8 +891,8 @@
     "id": "test262.test.built-ins.json.stringify.space-number",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:10:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:17:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -923,8 +923,8 @@
     "id": "test262.test.built-ins.json.stringify.space-string",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:10:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:17:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -939,8 +939,8 @@
     "id": "test262.test.built-ins.json.stringify.space-string-range",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:10:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:17:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1051,8 +1051,8 @@
     "id": "test262.test.built-ins.json.stringify.value-number-negative-zero",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:8:57: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1107,16 +1107,16 @@
     "id": "test262.test.built-ins.json.stringify.value-primitive-top-level",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:4:34: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.value-string-escape-ascii",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:43:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:49:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nsrc\\main.rs:54:15: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:60:10: error[E0599]: no method named `join` found for unit type `()` in the current scope: method not found in `()`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1124,7 +1124,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (18292) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
+    "detail": "Test262Error: \nthread 'main' (13628) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
     "note": ""
   },
   {
@@ -1155,8 +1155,8 @@
     "id": "test262.test.built-ins.json.stringify.value-tojson-arguments",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`\nsrc\\main.rs:17:46: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:22:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`\nsrc\\main.rs:32:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1171,8 +1171,8 @@
     "id": "test262.test.built-ins.json.stringify.value-tojson-not-function",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:26:17: error[E0277]: the trait bound `Regex: serde::Serialize` is not satisfied: the trait `serde_core::ser::Serialize` is not implemented for `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

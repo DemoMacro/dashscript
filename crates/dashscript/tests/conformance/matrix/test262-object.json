@@ -3,8 +3,8 @@
     "id": "test262.test.built-ins.object.assign.assignment-to-readonly-property-of-target-must-throw-a-typeerror-exception",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:8:21: error[E0277]: the trait bound `String: Extend<f64>` is not satisfied: the trait `Extend<f64>` is not implemented for `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -27,8 +27,8 @@
     "id": "test262.test.built-ins.object.assign.objectoverride-sameproperty",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:12:13: error[E0271]: type mismatch resolving `<HashMap<String, String> as IntoIterator>::Item == (String, f64)`: expected `(String, f64)`, found `(String, String)`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -43,16 +43,16 @@
     "id": "test262.test.built-ins.object.assign.override",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:8:20: error[E0277]: `String` is not an iterator: `String` is not an iterator; try calling `.chars()` or `.bytes()`\nsrc\\main.rs:10:13: error[E0271]: type mismatch resolving `<HashMap<String, String> as IntoIterator>::Item == (String, f64)`: expected `(String, f64)`, found `(String, String)`\nsrc\\main.rs:18:20: error[E0277]: `f64` is not an iterator: `f64` is not an iterator\nsrc\\main.rs:30:28: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:34:28: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:38:28: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.assign.override-notstringtarget",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:6:13: error[E0658]: use of unstable library feature `integer_extend_truncate`\nsrc\\main.rs:6:13: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:7:13: error[E0658]: use of unstable library feature `integer_extend_truncate`\nsrc\\main.rs:7:13: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:8:13: error[E0658]: use of unstable library feature `integer_extend_truncate`\nsrc\\main.rs:8:13: error[E0061]: this method takes 0 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -11795,24 +11795,24 @@
     "id": "test262.test.built-ins.object.entries.primitive-booleans",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:10: error[E0599]: no method named `iter` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:10:10: error[E0599]: no method named `iter` found for type `bool` in the current scope: method not found in `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.entries.primitive-numbers",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:18: error[E0599]: no method named `iter` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:9:19: error[E0599]: no method named `iter` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:15:14: error[E0599]: no method named `iter` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:23:14: error[E0599]: no method named `iter` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:31:14: error[E0599]: no method named `iter` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:39:14: error[E0599]: no method named `iter` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.entries.primitive-strings",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:5:10: error[E0599]: no method named `iter` found for struct `String` in the current scope: method not found in `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -11868,7 +11868,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25732) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35468) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -11996,7 +11996,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36344) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42500) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -12203,8 +12203,8 @@
     "id": "test262.test.built-ins.object.fromentries.string-entry-object-succeeds",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:23: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:7:18: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -12235,8 +12235,8 @@
     "id": "test262.test.built-ins.object.fromentries.to-property-key",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:33: error[E0308]: mismatched types: expected `HashMap<_, _>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -14891,8 +14891,8 @@
     "id": "test262.test.built-ins.object.getownpropertynames.15.2.3.4-4-36",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:9: error[E0282]: type annotations needed\nsrc\\main.rs:8:17: error[E0433]: cannot find type `Con` in this scope: use of undeclared type `Con`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -15035,8 +15035,8 @@
     "id": "test262.test.built-ins.object.getownpropertynames.non-object-argument-invalid",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:8:18: error[E0599]: no method named `keys` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:15:18: error[E0599]: no method named `keys` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16059,24 +16059,24 @@
     "id": "test262.test.built-ins.object.is.not-same-value-x-y-boolean",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:5:46: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:6:47: error[E0308]: mismatched types: expected `bool`, found `f64`\nsrc\\main.rs:8:19: error[E0308]: mismatched types: expected `bool`, found `HashMap<_, _>`\nsrc\\main.rs:11:46: error[E0308]: mismatched types: expected `bool`, found `Option<_>`\nsrc\\main.rs:12:47: error[E0308]: mismatched types: expected `bool`, found `Option<_>`\nsrc\\main.rs:13:46: error[E0308]: mismatched types: expected `bool`, found `Option<_>`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.is.not-same-value-x-y-null",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.is.not-same-value-x-y-number",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:15:38: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:5:61: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:6:35: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:11:34: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:12:17: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:20:24: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16091,8 +16091,8 @@
     "id": "test262.test.built-ins.object.is.not-same-value-x-y-string",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0277]: can't compare `String` with `bool`: no implementation for `String == bool`\nsrc\\main.rs:4:53: error[E0277]: can't compare `String` with `f64`: no implementation for `String == f64`\nsrc\\main.rs:6:26: error[E0277]: can't compare `String` with `HashMap<_, _>`: no implementation for `String == HashMap<_, _>`\nsrc\\main.rs:9:53: error[E0277]: can't compare `String` with `Option<_>`: no implementation for `String == Option<_>`\nsrc\\main.rs:10:53: error[E0277]: can't compare `String` with `Option<_>`: no implementation for `String == Option<_>`\nsrc\\main.rs:11:53: error[E0277]: can't compare `String` with `f64`: no implementation for `String == f64`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16107,16 +16107,16 @@
     "id": "test262.test.built-ins.object.is.not-same-value-x-y-type",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:43: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `bool`\nsrc\\main.rs:5:43: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `String`\nsrc\\main.rs:6:43: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `f64`\nsrc\\main.rs:7:43: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `Option<_>`\nsrc\\main.rs:8:57: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:9:57: error[E0308]: mismatched types: expected `f64`, found `String`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.is.not-same-value-x-y-undefined",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16139,24 +16139,24 @@
     "id": "test262.test.built-ins.object.is.same-value-x-y-empty",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.is.same-value-x-y-null",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.is.same-value-x-y-number",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:13:34: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:13:63: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:14:17: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nsrc\\main.rs:14:36: error[E0600]: cannot apply unary operator `-` to type `bool`: cannot apply unary operator `-`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16187,8 +16187,8 @@
     "id": "test262.test.built-ins.object.is.same-value-x-y-undefined",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:38: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16348,7 +16348,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35532) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (19340) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -16371,16 +16371,16 @@
     "id": "test262.test.built-ins.object.isextensible.15.2.3.13-2-26",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:9: error[E0282]: type annotations needed\nsrc\\main.rs:6:15: error[E0433]: cannot find type `ConstructFun` in this scope: use of undeclared type `ConstructFun`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.isextensible.15.2.3.13-2-27",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:9: error[E0282]: type annotations needed\nsrc\\main.rs:7:15: error[E0433]: cannot find type `ConstructFun` in this scope: use of undeclared type `ConstructFun`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16547,8 +16547,8 @@
     "id": "test262.test.built-ins.object.isfrozen.15.2.3.12-2-a-14",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0616]: field `len` of struct `Vec` is private: private field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -17148,7 +17148,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36628) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (26712) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17211,8 +17211,8 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-3-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (20796) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"y\"», «\"x\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17227,8 +17227,8 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-3-3",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:15: error[E0599]: no method named `keys` found for struct `Vec<f64>` in the current scope: method not found in `Vec<f64>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -17539,8 +17539,8 @@
     "id": "test262.test.built-ins.object.preventextensions.15.2.3.10-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:5:10: error[E0308]: mismatched types: expected `Option<_>`, found `HashMap<String, f64>`\nsrc\\main.rs:6:43: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -18987,8 +18987,8 @@
     "id": "test262.test.built-ins.object.prototype.s15.2.4_a1_t1",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -20507,24 +20507,24 @@
     "id": "test262.test.built-ins.object.values.primitive-booleans",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:28: error[E0599]: no method named `values` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:6:30: error[E0599]: no method named `values` found for type `bool` in the current scope: method not found in `bool`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.values.primitive-numbers",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:18: error[E0599]: no method named `values` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:8:19: error[E0599]: no method named `values` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:12:33: error[E0599]: no method named `values` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:16:34: error[E0599]: no method named `values` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:20:28: error[E0599]: no method named `values` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:24:35: error[E0599]: no method named `values` found for type `f64` in the current scope: method not found in `f64`",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.values.primitive-strings",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:36: error[E0599]: no method named `values` found for struct `String` in the current scope: method not found in `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

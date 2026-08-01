@@ -1665,6 +1665,35 @@ fn strip_main_wrapper(fixture: &str) -> &str {
     s.strip_suffix(SUFFIX).unwrap_or(s)
 }
 
+/// Run a fixture on the engine path — QuickJS with the test262 harness
+/// (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s) injected. The
+/// extractor wraps every body as `function main(): void { … } main();` for
+/// the static path; on the engine path we eval the raw body at global scope
+/// instead — mirroring how test262 runs a fixture as a script — so top-level
+/// `var` declarations are globals and the `Function()` constructor's global-
+/// scope capture resolves them per spec (the planet fixture
+/// `Function("return planet;")` would otherwise throw ReferenceError). Fall
+/// back to the wrapped fixture if the unwrapped body is shorter, so this
+/// never perturbs a fixture's routing. Used both for `needs_engine` fixtures
+/// and as the `cargo check` failure fallback (degrade, don't reject).
+fn run_engine(raw: &RawFeature) -> (&'static str, String) {
+    let body = strip_main_wrapper(&raw.fixture);
+    let js_source = if body.len() < raw.fixture.len() {
+        Translator::new()
+            .engine_source(body)
+            .or_else(|| Translator::new().engine_source(&raw.fixture))
+    } else {
+        Translator::new().engine_source(&raw.fixture)
+    };
+    match js_source {
+        Some(s) => judge_engine(engine_eval(&s, &raw.includes)),
+        None => (
+            "partial",
+            "engine flag set but engine_source returned None".into(),
+        ),
+    }
+}
+
 /// Run one test262 fixture through the assert-driven pipeline. Returns
 /// `(status, detail)`.
 ///
@@ -1693,34 +1722,7 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     // source in-process under QuickJS with the test262 harness injected, so
     // reflection + the full assert family run with reference semantics.
     if deps.needs_engine() {
-        // The extractor wraps every body verbatim as
-        // `function main(): void {\n<body>\n}\nmain();\n` for the *static* path
-        // (DashScript's implicit `fn main`). On the engine path we eval the raw
-        // body at global scope instead — mirroring how test262 runs a fixture as
-        // a script — so top-level `var` declarations are globals and the
-        // `Function()` constructor's global-scope capture resolves them per spec
-        // (the wrapper would otherwise make them `main`-locals, e.g. the planet
-        // fixture `Function("return planet;")` would throw ReferenceError).
-        // Fall back to the wrapped fixture if the unwrapped body's engine verdict
-        // disagrees, so this never perturbs a fixture's routing.
-        let body = strip_main_wrapper(&raw.fixture);
-        let js_source = if body.len() < raw.fixture.len() {
-            Translator::new()
-                .engine_source(body)
-                .or_else(|| Translator::new().engine_source(&raw.fixture))
-        } else {
-            Translator::new().engine_source(&raw.fixture)
-        };
-        let js_source = match js_source {
-            Some(s) => s,
-            None => {
-                return (
-                    "partial",
-                    "engine flag set but engine_source returned None".into(),
-                )
-            }
-        };
-        return judge_engine(engine_eval(&js_source, &raw.includes));
+        return run_engine(raw);
     }
     // Static path: `check` (translatability) → cargo check (compiles) → build
     // + run the probe (assert-driven verdict).
@@ -1740,7 +1742,24 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
         &["check", "--quiet", "--message-format=short"],
     );
     if !ok {
-        return ("partial", err);
+        // The translator flagged this Mapped but the emitted Rust does not
+        // compile (a unification the static classify could not predict).
+        // DashScript's contract is "degrade, don't reject" — fall back to the
+        // engine path so the fixture still runs under QuickJS rather than
+        // reporting a static-only partial. Only upgrade to `supported`; if the
+        // engine also fails, keep `partial` carrying both details (never
+        // downgrade to `unsupported`, which would be a false regression).
+        let (estatus, edetail) = run_engine(raw);
+        if estatus == "supported" {
+            return (
+                "supported",
+                "engine fallback after static build failure".into(),
+            );
+        }
+        return (
+            "partial",
+            format!("static build: {err} | engine: {edetail}"),
+        );
     }
     let (verdict, _stdout) = cargo_run_full(project, target_dir);
     judge_run(verdict)

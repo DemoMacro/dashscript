@@ -35,8 +35,8 @@
     "id": "test262.test.built-ins.arraybuffer.isview.arg-has-no-viewedarraybuffer",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nsrc\\main.rs:7:38: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -83,8 +83,8 @@
     "id": "test262.test.built-ins.arraybuffer.isview.arg-is-not-object",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nsrc\\main.rs:4:38: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nsrc\\main.rs:5:38: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nsrc\\main.rs:6:38: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -131,8 +131,8 @@
     "id": "test262.test.built-ins.arraybuffer.isview.no-arg",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

@@ -35,8 +35,8 @@
     "id": "test262.test.built-ins.infinity.s15.1.1.2_a4",
     "layer": "test262",
     "category": "infinity",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error: `this` is only valid inside a class method\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "engine fallback after static build failure",
     "note": ""
   }
 ]
