@@ -890,6 +890,87 @@ if (typeof Atomics !== 'undefined' && Atomics !== null
 }
 "#;
 
+/// `Promise.allKeyed` / `Promise.allSettledKeyed` (tc39 `await-dictionary`
+/// proposal). QuickJS-NG ships neither, so a fixture touching them hits
+/// `TypeError: cannot read property 'call' of undefined` on
+/// `Promise.allKeyed.call(Ctor, …)`. The polyfill mirrors `Promise.all` /
+/// `allSettled` over the input object's own enumerable string-keyed properties:
+/// `Constructor.resolve` is fetched once (a getter observes a single `get`),
+/// each value is resolved then `.then`'d with a per-key resolve/reject element,
+/// and the result is a `null`-prototype object keyed identically. Element
+/// functions are arrows (no `prototype`, not constructible, `length` 1) routed
+/// through `anon` so their `name` is `""` — variable assignment would infer the
+/// variable name; passing the arrow as an argument does not, which matches the
+/// spec's built-in element functions (`verifyProperty` checks length / name /
+/// prototype / constructor / extensibility).
+const ALLKEYED_PRELUDE: &str = r#"
+(function () {
+  if (typeof Promise === 'undefined' || Promise === null) return;
+  function anon(fn) {
+    Object.defineProperty(fn, 'name', { value: '', configurable: true });
+    return fn;
+  }
+  // Shared by allKeyed / allSettledKeyed — only the per-key settle differs.
+  function makeKeyed(allSettled) {
+    return function (input) {
+      var C = this;
+      var keys = Object.keys(input);
+      var result = Object.create(null);
+      var remaining = keys.length;
+      // NewPromiseCapability: construct, then verify the executor installed
+      // callable resolve/reject. A Constructor that never calls the executor
+      // (the `fn1` case in capability-executor-not-callable) leaves them
+      // undefined, which ECMA-262 turns into a synchronous TypeError — raised
+      // before Get(constructor, "resolve") runs (a getter there must not fire).
+      var capability = { resolve: undefined, reject: undefined };
+      var promise = new C(function (resolve, reject) {
+        if (capability.resolve !== undefined) return;
+        capability.resolve = resolve;
+        capability.reject = reject;
+      });
+      if (typeof capability.resolve !== 'function') throw new TypeError();
+      if (typeof capability.reject !== 'function') throw new TypeError();
+      var resolveFn = C.resolve;
+      if (typeof resolveFn !== 'function') throw new TypeError();
+      if (remaining === 0) { capability.resolve(result); return promise; }
+      keys.forEach(function (key) {
+        var alreadyCalled = false;
+        var resolveElement = anon((x) => {
+          if (alreadyCalled) return;
+          alreadyCalled = true;
+          result[key] = allSettled ? { status: 'fulfilled', value: x } : x;
+          if (--remaining === 0) capability.resolve(result);
+        });
+        var rejectElement = anon((e) => {
+          if (alreadyCalled) return;
+          alreadyCalled = true;
+          if (allSettled) {
+            result[key] = { status: 'rejected', reason: e };
+            if (--remaining === 0) capability.resolve(result);
+          } else {
+            capability.reject(e);
+          }
+        });
+        var nextPromise = resolveFn.call(C, input[key]);
+        // A thenable goes through `.then`; a non-thenable primitive (the
+        // `ctx-ctor` fixtures return one from Constructor.resolve) resolves
+        // the element directly — `Invoke(primitive, "then")` would throw.
+        if (nextPromise !== null
+            && (typeof nextPromise === 'object' || typeof nextPromise === 'function')
+            && typeof nextPromise.then === 'function') {
+          nextPromise.then(resolveElement, rejectElement);
+        } else {
+          resolveElement(nextPromise);
+        }
+      });
+      return promise;
+    };
+  }
+  if (typeof Promise.allKeyed !== 'function') Promise.allKeyed = makeKeyed(false);
+  if (typeof Promise.allSettledKeyed !== 'function') Promise.allSettledKeyed = makeKeyed(true);
+})();
+"#;
+
 /// Host-defined `$DONE` async-completion callback (test262 host API). test262
 /// async fixtures signal completion by calling `$DONE()` (success) or
 /// `$DONE(error)` (failure); `asyncHelpers.js`'s `asyncTest` also requires
@@ -1767,6 +1848,24 @@ fn engine_eval(
             // waitAsync paths; the `-agent` variants stay partial.
             if js_source.contains("waitAsync") {
                 ctx.eval_with_options::<(), _>(WAITASYNC_PRELUDE, sloppy())?;
+            }
+            // Promise.allKeyed / allSettledKeyed (tc39 `await-dictionary` proposal):
+            // QuickJS-NG lacks both, so inject a polyfill only for fixtures that
+            // reference either. Note `"allSettledKeyed"` is NOT a substring of
+            // `"allKeyed"` (it is `all`+`Settled`+`Keyed`), so both must be probed
+            // — otherwise the allSettledKeyed suite stays partial.
+            if js_source.contains("allKeyed") || js_source.contains("allSettledKeyed") {
+                ctx.eval_with_options::<(), _>(ALLKEYED_PRELUDE, sloppy())?;
+            }
+            // asyncHelpers.js (`asyncTest` / `assert.throwsAsync`): the newer async
+            // helpers are not always declared in a fixture's `includes:` (the
+            // `await-dictionary` suite omits it), so inject when the source
+            // references them. `asyncTest` checks `$DONE` at call time, which the
+            // `DONE_PRELUDE` below provides before the fixture eval runs.
+            if js_source.contains("asyncTest") || js_source.contains("throwsAsync") {
+                if let Some(src) = harness_source("asyncHelpers.js") {
+                    ctx.eval_with_options::<(), _>(src, sloppy())?;
+                }
             }
             // ShadowRealm polyfill: QuickJS-NG lacks ShadowRealm, so inject a
             // Rust-backed one (isolated rquickjs Context per instance) only for

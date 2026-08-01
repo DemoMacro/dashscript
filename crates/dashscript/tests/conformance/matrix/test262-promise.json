@@ -667,8 +667,8 @@
     "id": "test262.test.built-ins.promise.allkeyed.capability-executor-not-callable",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: executor not called at all Expected SameValue(«\"\"», «\"a\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -683,16 +683,16 @@
     "id": "test262.test.built-ins.promise.allkeyed.ctx-ctor-constructed",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.ctx-ctor-throws",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a Test262Error but got a TypeError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -707,8 +707,8 @@
     "id": "test262.test.built-ins.promise.allkeyed.extensible",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected true but got false",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -755,8 +755,8 @@
     "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-custom",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -779,16 +779,16 @@
     "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-get-once",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.invoke-resolve-return",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -811,8 +811,8 @@
     "id": "test262.test.built-ins.promise.allkeyed.key-order-preserved",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -836,7 +836,7 @@
     "layer": "test262",
     "category": "promise",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: isConstructor invoked with a non-function value",
+    "detail": "Test262Error: Test262Error: isConstructor(Promise.allKeyed) must return false Expected SameValue(«true», «false») to be true",
     "note": ""
   },
   {
@@ -851,8 +851,8 @@
     "id": "test262.test.built-ins.promise.allkeyed.proto",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not an object",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -875,8 +875,8 @@
     "id": "test262.test.built-ins.promise.allkeyed.reject-first",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -891,40 +891,40 @@
     "id": "test262.test.built-ins.promise.allkeyed.reject-last",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.reject-second",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.resolve-before-loop-exit",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.resolve-element-function-properties",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allkeyed.resolve-from-same-thenable",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1651,8 +1651,8 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.capability-executor-not-callable",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: executor not called at all Expected SameValue(«\"\"», «\"a\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1667,16 +1667,16 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.ctx-ctor-constructed",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.ctx-ctor-throws",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a Test262Error but got a TypeError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1691,16 +1691,16 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.element-function-properties",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.extensible",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected true but got false",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1747,8 +1747,8 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-custom",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1771,16 +1771,16 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-get-once",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.invoke-resolve-return",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1803,8 +1803,8 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.key-order-preserved",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1828,7 +1828,7 @@
     "layer": "test262",
     "category": "promise",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: isConstructor invoked with a non-function value",
+    "detail": "Test262Error: Test262Error: isConstructor(Promise.allSettledKeyed) must return false Expected SameValue(«true», «false») to be true",
     "note": ""
   },
   {
@@ -1843,8 +1843,8 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.proto",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: not an object",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1859,24 +1859,24 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.reject-from-same-thenable",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.resolve-before-loop-exit",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.promise.allsettledkeyed.resolve-from-same-thenable",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "engine error: TypeError: cannot read property 'call' of undefined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
