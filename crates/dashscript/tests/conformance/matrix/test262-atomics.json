@@ -59,8 +59,8 @@
     "id": "test262.test.built-ins.atomics.add.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:6:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:7:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -163,8 +163,8 @@
     "id": "test262.test.built-ins.atomics.and.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:6:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:7:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -267,8 +267,8 @@
     "id": "test262.test.built-ins.atomics.compareexchange.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:7:19: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:10:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -379,8 +379,8 @@
     "id": "test262.test.built-ins.atomics.exchange.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:7:19: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:10:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -507,8 +507,8 @@
     "id": "test262.test.built-ins.atomics.load.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:6:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -995,8 +995,8 @@
     "id": "test262.test.built-ins.atomics.or.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:6:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:7:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1051,8 +1051,8 @@
     "id": "test262.test.built-ins.atomics.pause.returns-undefined",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1139,8 +1139,8 @@
     "id": "test262.test.built-ins.atomics.store.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:7:19: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:10:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1243,8 +1243,8 @@
     "id": "test262.test.built-ins.atomics.sub.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:7:19: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:10:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:11:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -1532,7 +1532,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: harness eval: Exception generated by QuickJS",
+    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:10:11: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:14:11: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:18:16: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:18:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -2731,8 +2731,8 @@
     "id": "test262.test.built-ins.atomics.xor.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:6:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:7:46: error[E0425]: cannot find value `atomics` in this scope: not found in this scope\nsrc\\main.rs:5:24: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_atomics_friendly_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {

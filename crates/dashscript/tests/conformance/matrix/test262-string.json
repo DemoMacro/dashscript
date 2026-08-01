@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:70: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -20,7 +20,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:70: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -28,7 +28,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:70: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:68: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:73: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -52,7 +52,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:81: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -60,7 +60,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:68: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -68,7 +68,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:73: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -76,7 +76,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:81: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -92,7 +92,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -100,7 +100,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -108,15 +108,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.fromcharcode.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -171,8 +171,8 @@
     "id": "test262.test.built-ins.string.fromcodepoint.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -476,7 +476,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (21292) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (30144) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39004) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (14812) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -500,7 +500,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:23:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:45:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:67:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:23:10: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -508,7 +508,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:23:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:45:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:23:10: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1564,7 +1564,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (5724) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (39112) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -1644,7 +1644,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34812) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (41892) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -1940,7 +1940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (36672) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (10212) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1948,7 +1948,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (29252) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (35508) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1956,7 +1956,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (39220) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (38128) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1964,7 +1964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (30984) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (38700) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1980,7 +1980,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (19056) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (3616) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2092,7 +2092,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (39840) panicked at src\\main.rs:3:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (13648) panicked at src\\main.rs:3:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3283,8 +3283,8 @@
     "id": "test262.test.built-ins.string.prototype.split.valueof-is-called-for-limit-argument",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:23: error[E0605]: non-primitive cast: `HashMap<String, ()>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
     "note": ""
   },
   {
@@ -3868,7 +3868,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37144) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (38340) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3876,7 +3876,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39824) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"-inf\"», «\"-Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (29816) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-inf\"», «\"-Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -3892,7 +3892,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40444) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (42500) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
     "note": ""
   },
   {
@@ -3900,7 +3900,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40320) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
+    "detail": "Test262Error: \nthread 'main' (2280) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
     "note": ""
   },
   {
@@ -3916,7 +3916,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40800) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (39124) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
     "note": ""
   },
   {
@@ -3924,7 +3924,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37856) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
+    "detail": "Test262Error: \nthread 'main' (41748) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
     "note": ""
   },
   {
@@ -3940,7 +3940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3832) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39096) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -3956,7 +3956,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (28888) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"0.00000001\"», «\"1e-8\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (2072) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.00000001\"», «\"1e-8\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -3964,7 +3964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23576) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35808) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -4228,7 +4228,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38284) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"-0\"», «\"0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (30176) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-0\"», «\"0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4252,7 +4252,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20252) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (26148) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4308,7 +4308,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38908) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42408) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4316,7 +4316,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37688) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (15308) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4324,7 +4324,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (26492) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to",
+    "detail": "Test262Error: \nthread 'main' (34944) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable t",
     "note": ""
   },
   {
@@ -4332,7 +4332,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23392) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u{2006}\\u{2007}\\u{2008}\\u{200",
+    "detail": "Test262Error: \nthread 'main' (5716) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u{2006}\\u{2007}\\u{2008}\\u{200",
     "note": ""
   },
   {
@@ -4340,7 +4340,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39828) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u",
+    "detail": "Test262Error: \nthread 'main' (23040) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\",
     "note": ""
   },
   {
@@ -4380,7 +4380,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25860) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (21300) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -4428,7 +4428,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (1128) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"abc\\u{feff}\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (3220) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\u{feff}\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -4532,7 +4532,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40864) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (13608) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtr",
     "note": ""
   },
   {
@@ -5163,8 +5163,8 @@
     "id": "test262.test.built-ins.string.raw.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `string` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {

@@ -1323,8 +1323,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.ctors.buffer-arg.resizable-out-of-bounds",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:4:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:17: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:14:17: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:20:17: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:27:21: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
     "note": ""
   },
   {

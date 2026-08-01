@@ -355,8 +355,8 @@
     "id": "test262.test.built-ins.boolean.s9.2_a6_t1",
     "layer": "test262",
     "category": "boolean",
-    "status": "partial",
-    "detail": "src\\main.rs:3:59: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:5:32: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:9:59: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nsrc\\main.rs:11:32: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nsrc\\main.rs:14:59: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nsrc\\main.rs:15:59: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

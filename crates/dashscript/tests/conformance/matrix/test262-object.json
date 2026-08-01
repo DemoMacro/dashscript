@@ -3,8 +3,8 @@
     "id": "test262.test.built-ins.object.assign.assignment-to-readonly-property-of-target-must-throw-a-typeerror-exception",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:8:21: error[E0277]: the trait bound `String: Extend<f64>` is not satisfied: the trait `Extend<f64>` is not implemented for `String`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -11868,7 +11868,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38620) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (23168) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -11996,7 +11996,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (16296) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42180) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -12075,8 +12075,8 @@
     "id": "test262.test.built-ins.object.freeze.typedarray-backed-by-resizable-buffer",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:41:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:72:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:4:19: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:8:28: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:9:40: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`",
     "note": ""
   },
   {
@@ -14892,7 +14892,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:10:16: error[E0433]: cannot find `__ds` in `crate`: could not find `__ds` in the crate root\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:5:9: error[E0282]: type annotations needed\nsrc\\main.rs:7:17: error[E0433]: cannot find type `Con` in this scope: use of undeclared type `Con`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:7:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:9: error[E0282]: type annotations needed\nsrc\\main.rs:8:17: error[E0433]: cannot find type `Con` in this scope: use of undeclared type `Con`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -15035,8 +15035,8 @@
     "id": "test262.test.built-ins.object.getownpropertynames.non-object-argument-invalid",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:8:18: error[E0599]: no method named `keys` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:15:18: error[E0599]: no method named `keys` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -16348,7 +16348,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40004) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (33932) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -16444,7 +16444,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16684,7 +16684,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16940,7 +16940,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17148,7 +17148,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38820) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (31268) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17211,8 +17211,8 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-3-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (39500) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"y\"», «\"x\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17540,7 +17540,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:5:10: error[E0308]: mismatched types: expected `Option<_>`, found `HashMap<String, f64>`\nsrc\\main.rs:6:36: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:6:43: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:5:10: error[E0308]: mismatched types: expected `Option<_>`, found `HashMap<String, f64>`\nsrc\\main.rs:6:43: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -18988,7 +18988,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `object` in this scope: not found in this scope\nsrc\\main.rs:3:67: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `object` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -19843,8 +19843,8 @@
     "id": "test262.test.built-ins.object.s15.2.2.1_a2_t5",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:4:17: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

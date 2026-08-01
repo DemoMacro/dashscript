@@ -19,24 +19,24 @@
     "id": "test262.test.built-ins.date.coercion-order",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:17:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:20:9: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.construct_with_date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.is-a-constructor",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -91,16 +91,16 @@
     "id": "test262.test.built-ins.date.parse.time-value-maximum-range",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:6:38: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:10:38: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:13:38: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:14:38: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:4:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.parse.without-utc-offset",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:5:11: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:8:38: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:30: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -115,8 +115,8 @@
     "id": "test262.test.built-ins.date.parse.zero",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:47: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:5:47: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:6:47: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -155,8 +155,8 @@
     "id": "test262.test.built-ins.date.prototype.getdate.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -179,8 +179,8 @@
     "id": "test262.test.built-ins.date.prototype.getdate.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:16:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:21:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:25:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -195,8 +195,8 @@
     "id": "test262.test.built-ins.date.prototype.getday.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -219,8 +219,8 @@
     "id": "test262.test.built-ins.date.prototype.getday.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:16:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:20:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:24:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -235,8 +235,8 @@
     "id": "test262.test.built-ins.date.prototype.getfullyear.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -259,8 +259,8 @@
     "id": "test262.test.built-ins.date.prototype.getfullyear.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:18:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -275,8 +275,8 @@
     "id": "test262.test.built-ins.date.prototype.gethours.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -299,8 +299,8 @@
     "id": "test262.test.built-ins.date.prototype.gethours.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:22:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:26:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -315,8 +315,8 @@
     "id": "test262.test.built-ins.date.prototype.getmilliseconds.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -339,8 +339,8 @@
     "id": "test262.test.built-ins.date.prototype.getmilliseconds.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:18:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -355,8 +355,8 @@
     "id": "test262.test.built-ins.date.prototype.getminutes.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -379,8 +379,8 @@
     "id": "test262.test.built-ins.date.prototype.getminutes.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:22:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:26:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -395,8 +395,8 @@
     "id": "test262.test.built-ins.date.prototype.getmonth.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -419,8 +419,8 @@
     "id": "test262.test.built-ins.date.prototype.getmonth.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:14:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:19:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:23:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -435,8 +435,8 @@
     "id": "test262.test.built-ins.date.prototype.getseconds.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -459,8 +459,8 @@
     "id": "test262.test.built-ins.date.prototype.getseconds.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:18:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:23:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:27:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -475,8 +475,8 @@
     "id": "test262.test.built-ins.date.prototype.gettime.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -499,8 +499,8 @@
     "id": "test262.test.built-ins.date.prototype.gettime.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:4:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -515,8 +515,8 @@
     "id": "test262.test.built-ins.date.prototype.gettimezoneoffset.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -555,8 +555,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcdate.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -579,8 +579,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcdate.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:6:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:16:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:19:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:21:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -595,8 +595,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcday.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -619,8 +619,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcday.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:6:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:16:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:19:38: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:21:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -635,8 +635,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcfullyear.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -659,8 +659,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcfullyear.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:6:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:10:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:14:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:18:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -675,8 +675,8 @@
     "id": "test262.test.built-ins.date.prototype.getutchours.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -699,8 +699,8 @@
     "id": "test262.test.built-ins.date.prototype.getutchours.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:7:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:19:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:23:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:27:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -715,8 +715,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcmilliseconds.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -739,8 +739,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcmilliseconds.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:5:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -755,8 +755,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcminutes.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -779,8 +779,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcminutes.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:7:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:19:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:23:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:27:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -795,8 +795,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcmonth.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -819,8 +819,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcmonth.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:7:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:19:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:23:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:27:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -835,8 +835,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcseconds.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -859,8 +859,8 @@
     "id": "test262.test.built-ins.date.prototype.getutcseconds.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:6:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:10:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:14:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:18:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:22:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:26:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1211,8 +1211,8 @@
     "id": "test262.test.built-ins.date.prototype.setdate.arg-coercion-order",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1235,24 +1235,24 @@
     "id": "test262.test.built-ins.date.prototype.setdate.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setdate.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setdate.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1267,8 +1267,8 @@
     "id": "test262.test.built-ins.date.prototype.setdate.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1291,8 +1291,8 @@
     "id": "test262.test.built-ins.date.prototype.setdate.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1355,24 +1355,24 @@
     "id": "test262.test.built-ins.date.prototype.setfullyear.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setfullyear.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setfullyear.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:7:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:12:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1387,8 +1387,8 @@
     "id": "test262.test.built-ins.date.prototype.setfullyear.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:10:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1411,24 +1411,24 @@
     "id": "test262.test.built-ins.date.prototype.setfullyear.this-value-valid-date-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setfullyear.this-value-valid-date-month",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setfullyear.this-value-valid-date-year",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1507,24 +1507,24 @@
     "id": "test262.test.built-ins.date.prototype.sethours.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.sethours.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.sethours.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:9:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1539,8 +1539,8 @@
     "id": "test262.test.built-ins.date.prototype.sethours.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1563,40 +1563,40 @@
     "id": "test262.test.built-ins.date.prototype.sethours.this-value-valid-date-hour",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.sethours.this-value-valid-date-min",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.sethours.this-value-valid-date-ms",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.sethours.this-value-valid-date-sec",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setmilliseconds.arg-coercion-order",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1619,24 +1619,24 @@
     "id": "test262.test.built-ins.date.prototype.setmilliseconds.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setmilliseconds.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setmilliseconds.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1651,8 +1651,8 @@
     "id": "test262.test.built-ins.date.prototype.setmilliseconds.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1675,8 +1675,8 @@
     "id": "test262.test.built-ins.date.prototype.setmilliseconds.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1739,24 +1739,24 @@
     "id": "test262.test.built-ins.date.prototype.setminutes.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setminutes.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setminutes.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:9:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1771,8 +1771,8 @@
     "id": "test262.test.built-ins.date.prototype.setminutes.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1795,8 +1795,8 @@
     "id": "test262.test.built-ins.date.prototype.setminutes.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:18:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1843,24 +1843,24 @@
     "id": "test262.test.built-ins.date.prototype.setmonth.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setmonth.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setmonth.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:6:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:8:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:11:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1875,8 +1875,8 @@
     "id": "test262.test.built-ins.date.prototype.setmonth.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:8:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1899,16 +1899,16 @@
     "id": "test262.test.built-ins.date.prototype.setmonth.this-value-valid-date-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setmonth.this-value-valid-date-month",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1955,24 +1955,24 @@
     "id": "test262.test.built-ins.date.prototype.setseconds.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setseconds.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setseconds.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:9:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1987,8 +1987,8 @@
     "id": "test262.test.built-ins.date.prototype.setseconds.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2011,16 +2011,16 @@
     "id": "test262.test.built-ins.date.prototype.setseconds.this-value-valid-date-ms",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:12:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setseconds.this-value-valid-date-sec",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2043,8 +2043,8 @@
     "id": "test262.test.built-ins.date.prototype.settime.new-value-time-clip",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2059,8 +2059,8 @@
     "id": "test262.test.built-ins.date.prototype.settime.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2083,32 +2083,32 @@
     "id": "test262.test.built-ins.date.prototype.settime.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcdate.arg-coercion-order",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcdate.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcdate.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2123,16 +2123,16 @@
     "id": "test262.test.built-ins.date.prototype.setutcfullyear.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcfullyear.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2155,16 +2155,16 @@
     "id": "test262.test.built-ins.date.prototype.setutchours.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutchours.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2179,56 +2179,56 @@
     "id": "test262.test.built-ins.date.prototype.setutchours.this-value-valid-date-hour",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutchours.this-value-valid-date-min",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutchours.this-value-valid-date-ms",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutchours.this-value-valid-date-sec",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcmilliseconds.arg-coercion-order",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcmilliseconds.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcmilliseconds.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2243,8 +2243,8 @@
     "id": "test262.test.built-ins.date.prototype.setutcmilliseconds.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2259,16 +2259,16 @@
     "id": "test262.test.built-ins.date.prototype.setutcminutes.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcminutes.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2283,8 +2283,8 @@
     "id": "test262.test.built-ins.date.prototype.setutcminutes.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:30: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:18:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:31:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2299,16 +2299,16 @@
     "id": "test262.test.built-ins.date.prototype.setutcmonth.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcmonth.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2323,16 +2323,16 @@
     "id": "test262.test.built-ins.date.prototype.setutcmonth.this-value-valid-date-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcmonth.this-value-valid-date-month",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2347,16 +2347,16 @@
     "id": "test262.test.built-ins.date.prototype.setutcseconds.date-value-read-before-tonumber-when-date-is-invalid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcseconds.date-value-read-before-tonumber-when-date-is-valid",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2371,16 +2371,16 @@
     "id": "test262.test.built-ins.date.prototype.setutcseconds.this-value-valid-date-ms",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.setutcseconds.this-value-valid-date-sec",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:26: error[E0425]: cannot find value `date` in this scope: not found in this scope\nsrc\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2507,24 +2507,24 @@
     "id": "test262.test.built-ins.date.prototype.todatestring.format",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:11:18: error[E0425]: cannot find function `assert_not_same_value` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:18:18: error[E0425]: cannot find function `assert_not_same_value` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:8:19: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:19: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.todatestring.invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.todatestring.negative-year",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:44: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:44: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:7:44: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:44: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:44: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:44: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2547,16 +2547,16 @@
     "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-11",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-12",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:29: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:12: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2611,16 +2611,16 @@
     "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-4",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:4:22: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.toisostring.15.9.5.43-0-5",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2779,24 +2779,24 @@
     "id": "test262.test.built-ins.date.prototype.tostring.format",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:11:18: error[E0425]: cannot find function `assert_not_same_value` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:16:18: error[E0425]: cannot find function `assert_not_same_value` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:8:19: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:19: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.tostring.invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.tostring.negative-year",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:42: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:42: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:7:42: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:42: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:42: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:42: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2820,55 +2820,55 @@
     "layer": "test262",
     "category": "date",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: isConstructor invoked with a non-function value",
+    "detail": "Test262Error: Test262Error: isConstructor(Date.prototype.toTemporalInstant) must return false Expected SameValue(«true», «false») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.totemporalinstant.this-value-invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a RangeError but got a TypeError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.totemporalinstant.this-value-non-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.totemporalinstant.this-value-non-object",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.totemporalinstant.this-value-valid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "engine error: TypeError: not a function",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.totimestring.format",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:11:18: error[E0425]: cannot find function `assert_not_same_value` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:8:19: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.totimestring.invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2883,40 +2883,40 @@
     "id": "test262.test.built-ins.date.prototype.toutcstring.day-names",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:5:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:21:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:25:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.toutcstring.format",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:8:19: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:40: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:11:49: error[E0277]: the trait bound `Option<DsMatch>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<DsMatch>`\nsrc\\main.rs:14:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.toutcstring.invalid-date",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.toutcstring.month-names",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:5:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:17:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:21:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:25:11: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.toutcstring.negative-year",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:46: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:7:46: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:46: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:15:46: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:19:46: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:23:46: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2939,16 +2939,16 @@
     "id": "test262.test.built-ins.date.prototype.valueof.s9.4_a3_t1",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:7:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:13:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.date.prototype.valueof.s9.4_a3_t2",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:5:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:7:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:9:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nsrc\\main.rs:11:14: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3339,8 +3339,8 @@
     "id": "test262.test.built-ins.date.timeclip_negative_zero",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:3:16: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3547,8 +3547,8 @@
     "id": "test262.test.built-ins.date.year-zero",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "src\\main.rs:8:42: error[E0433]: cannot find type `Date` in this scope: use of undeclared type `Date`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   }
 ]

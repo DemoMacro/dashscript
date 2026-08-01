@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (24776) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35508) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -644,7 +644,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13108) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34412) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -764,7 +764,7 @@
     "layer": "test262",
     "category": "array",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8268,7 +8268,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (27032) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (13608) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -8299,8 +8299,8 @@
     "id": "test262.test.built-ins.array.prototype.indexof.15.4.4.14-1-11",
     "layer": "test262",
     "category": "array",
-    "status": "unsupported",
-    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10035,8 +10035,8 @@
     "id": "test262.test.built-ins.array.prototype.lastindexof.15.4.4.15-1-11",
     "layer": "test262",
     "category": "array",
-    "status": "unsupported",
-    "detail": "`<builtin>.prototype.<method>` reflection is unsupported",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20931,8 +20931,8 @@
     "id": "test262.test.built-ins.array.s15.4.5.2_a1_t2",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42804) panicked at src\\__ds.rs:135:9:\nTest262Error: Expected SameValue(«4294967296.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "unsupported",
+    "detail": "timed out",
     "note": ""
   },
   {

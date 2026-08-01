@@ -25,12 +25,11 @@
 /// mapping (dynamic function creation is reflection), so a bare reference
 /// (`Object.getOwnPropertyNames(Function)`, `Function.prototype.X`) routes to
 /// the engine instead of emitting a phantom `function` binding. `Date` is
-/// included for the same reason: DashScript models Temporal (not `Date`), so
-/// the `Date` constructor has no mapping, and a bare reference (`Date.now`,
-/// `Date.prototype.X`) routes to the engine rather than emitting a phantom
-/// `date` binding.
+/// *not* here: it has no static mapping at all (no constructor, static, or
+/// instance form) — see [`ENGINE_VALUE_GLOBALS`], where every reference
+/// (bare/`new`/member) degrades to the engine.
 pub const STATIC_ONLY_GLOBALS: &[&str] = &[
-    "Array", "Object", "Math", "JSON", "Map", "Set", "RegExp", "Function", "Date",
+    "Array", "Object", "Math", "JSON", "Map", "Set", "RegExp", "Function",
 ];
 
 /// Names that may stand as the receiver of a mapped static-member read —
@@ -59,7 +58,12 @@ pub const GLOBAL_RECEIVERS: &[&str] = &[
 /// value reference degrades to the engine (which carries the
 /// @js-temporal/polyfill); the `Temporal.X(…)` call / `new Temporal.X(…)`
 /// forms are routed to the engine by `classify`'s `is_temporal_callee`.
+/// `Date` IS listed: DashScript models Temporal (not `Date`), so the `Date`
+/// constructor, its static/instance methods, and a bare value reference all
+/// lack a static mapping — any of them degrades to the engine (QuickJS ships
+/// a complete `Date`) rather than emitting a phantom `date` binding (E0433).
 pub const ENGINE_VALUE_GLOBALS: &[&str] = &[
+    "Date",
     "Promise",
     "Temporal",
     "DataView",

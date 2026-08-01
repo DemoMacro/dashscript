@@ -20,7 +20,7 @@
     "layer": "test262",
     "category": "global",
     "status": "partial",
-    "detail": "src\\main.rs:4:11: error: `this` is only valid inside a class method\nsrc\\main.rs:5:11: error[E0425]: cannot find value `global_this` in this scope: not found in this scope\nsrc\\main.rs:7:38: error[E0425]: cannot find value `global_this` in this scope: not found in this scope\nsrc\\main.rs:7:66: error[E0425]: cannot find value `global_this` in this scope: not found in this scope\nsrc\\main.rs:8:38: error[E0425]: cannot find value `array` in this scope: not found in this scope\nsrc\\main.rs:8:48: error[E0425]: cannot find value `global_this` in this scope: not found in this scope",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«[object Object]», «undefined») to be true",
     "note": ""
   },
   {

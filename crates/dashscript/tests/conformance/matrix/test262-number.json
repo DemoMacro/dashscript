@@ -83,8 +83,8 @@
     "id": "test262.test.built-ins.number.isfinite.not-a-constructor",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -131,8 +131,8 @@
     "id": "test262.test.built-ins.number.isinteger.not-a-constructor",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -155,8 +155,8 @@
     "id": "test262.test.built-ins.number.isnan.not-a-constructor",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -195,8 +195,8 @@
     "id": "test262.test.built-ins.number.issafeinteger.not-a-constructor",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -347,8 +347,8 @@
     "id": "test262.test.built-ins.number.parsefloat.not-a-constructor",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -363,8 +363,8 @@
     "id": "test262.test.built-ins.number.parseint.not-a-constructor",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `number` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -539,8 +539,8 @@
     "id": "test262.test.built-ins.number.prototype.toexponential.range",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (36876) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -564,7 +564,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10412) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (7996) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (31284) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"-0.0e+0\"», «\"0.0e+0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39988) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-0.0e+0\"», «\"0.0e+0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -627,8 +627,8 @@
     "id": "test262.test.built-ins.number.prototype.tofixed.range",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (39992) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -763,8 +763,8 @@
     "id": "test262.test.built-ins.number.prototype.toprecision.range",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (32296) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -852,15 +852,15 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39600) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (38984) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-1",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (17076) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -1099,8 +1099,8 @@
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-37",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (9268) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -1155,8 +1155,8 @@
     "id": "test262.test.built-ins.number.prototype.tostring.numeric-literal-tostring-radix-poisoned",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:27: error[E0605]: non-primitive cast: `HashMap<String, ()>` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:47:27: error[E0605]: non-primitive cast: `HashMap<String, ()>` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:83:27: error[E0605]: non-primitive cast: `HashMap<String, ()>` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:119:27: error[E0605]: non-primitive cast: `HashMap<String, ()>` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -2092,7 +2092,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:36: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:37: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2100,7 +2100,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:36: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:3:37: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2108,7 +2108,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (2944) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«false», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (40744) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2148,7 +2148,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33968) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«1.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41996) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«1.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2156,7 +2156,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (15732) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«16.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (9028) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«16.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2412,7 +2412,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37252) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«8.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34860) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«8.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   }
 ]

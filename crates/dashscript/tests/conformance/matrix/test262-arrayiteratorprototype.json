@@ -68,7 +68,7 @@
     "layer": "test262",
     "category": "arrayiteratorprototype",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "detail": "src\\main.rs:5:31: error[E0433]: cannot find type `TA` in this scope: use of undeclared type `TA`\nsrc\\main.rs:11:25: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0425]: cannot find function `test_with_all_typed_array_constructors` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {

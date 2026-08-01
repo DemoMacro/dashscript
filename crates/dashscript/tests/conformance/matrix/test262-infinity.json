@@ -36,7 +36,7 @@
     "layer": "test262",
     "category": "infinity",
     "status": "partial",
-    "detail": "src\\main.rs:2:17: error: `this` is only valid inside a class method\nsrc\\main.rs:6:16: error[E0433]: cannot find `__ds` in `crate`: could not find `__ds` in the crate root\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:17: error: `this` is only valid inside a class method\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   }
 ]

@@ -3,8 +3,8 @@
     "id": "test262.test.built-ins.decodeuricomponent.not-a-constructor",
     "layer": "test262",
     "category": "decodeuricomponent",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `decode_uri_component` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nsrc\\main.rs:7:13: error[E0433]: cannot find module or crate `decodeURIComponent` in this scope: use of unresolved module or unlinked crate `decodeURIComponent`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {

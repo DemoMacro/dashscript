@@ -198,7 +198,23 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
             Some(_) => {
                 degrade("`new Temporal.*` property-bag/unmapped → engine (polyfill coercion)")
             }
-            None => Mapping::Mapped,
+            // `new Date()` — DashScript models Temporal (not `Date`), so the
+            // `Date` constructor has no static mapping; the generic `Foo::new`
+            // emit would produce a phantom `date` binding (E0433). Degrade so
+            // the engine runs the real constructor (QuickJS ships a complete
+            // `Date`). Scoped to `Date` alone: the other engine-value globals
+            // (`Promise`/`DataView`/typed-array ctors) reach `new` only inside
+            // reflection fixtures (`<X>.prototype.<m>.not-a-constructor`) that
+            // already degrade via the `.constructor` reflection rule — adding a
+            // `new`-site degrade there flips those fixtures off the engine path
+            // (a per-function emit interaction), so they stay on the `None =>
+            // Mapped` arm.
+            None => match &n.callee {
+                Expression::Identifier(id) if id.name.as_str() == "Date" => {
+                    degrade("`new Date()` has no static mapping — runs under the engine")
+                }
+                _ => Mapping::Mapped,
+            },
         },
         _ => Mapping::Mapped,
     }
