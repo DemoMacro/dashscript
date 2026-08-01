@@ -785,6 +785,45 @@ fn temporal_plain_date_compare_emits_ordering_match() {
 }
 
 #[test]
+fn temporal_compare_routes_each_type_to_its_comparator() {
+    // `Temporal.<Type>.compare(a, b)` routes to the type's matching
+    // comparator: `compare_iso` for the ISO-field types (PlainDateTime/
+    // PlainYearMonth join PlainDate), `compare_instant` for ZonedDateTime,
+    // and `__a.cmp(&__b)` for the `Ord`-deriving PlainTime (Instant already
+    // covered). Each must lower an `Ordering` match → ES -1/0/1.
+    let cases: &[(&str, &str, &str)] = &[
+        ("PlainDateTime", "\"2024-01-01T00:00\"", "compare_iso"),
+        ("PlainYearMonth", "\"2024-01\"", "compare_iso"),
+        (
+            "ZonedDateTime",
+            "\"2024-01-01T00:00[UTC]\"",
+            "compare_instant",
+        ),
+        ("PlainTime", "\"00:00\"", ".cmp("),
+    ];
+    for (ty, lit, needle) in cases {
+        let src = format!(
+            "function main(): void {{\n  const a = Temporal.{ty}.from({lit});\n  const b = Temporal.{ty}.from({lit});\n  console.log(Temporal.{ty}.compare(a, b));\n}}"
+        );
+        let (rust, deps) = Translator::new()
+            .translate_with_deps(&src)
+            .expect("translate_with_deps");
+        assert!(
+            deps.needs_temporal(),
+            "{ty}.compare flags needs_temporal, got deps: {deps:?}"
+        );
+        assert!(
+            rust.contains(needle),
+            "{ty}.compare routes to {needle:?}, got:\n{rust}"
+        );
+        assert!(
+            rust.contains("Ordering::Less") && rust.contains("Ordering::Greater"),
+            "{ty}.compare lowers an Ordering match, got:\n{rust}"
+        );
+    }
+}
+
+#[test]
 fn temporal_plain_date_time_from_and_time_accessors_route_through_temporal_rs() {
     // `Temporal.PlainDateTime.from(s)` → `temporal_rs::PlainDateTime::from_utf8`,
     // and `.hour`/`.minute`/`.second` on the local → the matching accessor

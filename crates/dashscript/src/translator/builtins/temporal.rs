@@ -71,10 +71,27 @@ pub(in crate::translator) fn temporal_static(
         // disambiguation (`Compatible`) and offset (`Reject`) options boa/perry
         // also default to; no options-bag overload is lowered statically.
         ("ZonedDateTime", "from") => zoned_date_time_from(args, ctx),
-        ("PlainDate", "compare") => plain_date_compare(args, ctx),
-        // `Temporal.Instant.compare(a, b)` — Instant derives `Ord`, so
-        // `a.cmp(&b)` gives the ES -1/0/1 (boa does `one.cmp(&two) as i8`).
-        ("Instant", "compare") => instant_compare(args, ctx),
+        // `Temporal.<Type>.compare(a, b)` → -1/0/1. `compare_iso` for the
+        // ISO-field types (date/time/year-month), `compare_instant` for
+        // ZonedDateTime (compares the exact instant), `a.cmp(&b)` for the
+        // `Ord`-deriving scalar types (Instant, PlainTime). See
+        // [`temporal_compare`].
+        ("PlainDate" | "PlainDateTime" | "PlainYearMonth", "compare") => {
+            let ty = syn::Ident::new(ty, Span::call_site());
+            temporal_compare(
+                args,
+                ctx,
+                parse_quote!(temporal_rs::#ty::compare_iso(&__a, &__b)),
+            )
+        }
+        ("ZonedDateTime", "compare") => temporal_compare(
+            args,
+            ctx,
+            parse_quote!(temporal_rs::ZonedDateTime::compare_instant(&__a, &__b)),
+        ),
+        ("Instant" | "PlainTime", "compare") => {
+            temporal_compare(args, ctx, parse_quote!(__a.cmp(&__b)))
+        }
         // `Temporal.Instant.fromEpochMilliseconds(n)` →
         // `Instant::from_epoch_milliseconds(i64)` (a `.ts` `number` is `f64`,
         // cast to `i64` — ES truncates the fractional part).
@@ -188,36 +205,20 @@ fn is_string_arg(a: &Argument, ctx: &Ctx<'_>) -> bool {
     }
 }
 
-/// `Temporal.PlainDate.compare(a, b)` → -1/0/1 (ES Temporal's
-/// `Temporal.CompareResult`). `temporal_rs::PlainDate::compare_iso` returns
-/// `Ordering`; the two args are bound first so a plain `&__a`/`&__b` borrow
-/// works whether they are locals or inline `Temporal.PlainDate.from(…)` calls.
-/// The result is an ES `number` (`f64`).
-fn plain_date_compare(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+/// `Temporal.<Type>.compare(a, b)` → ES -1/0/1 (`f64`). `cmp_expr` references
+/// the bound `__a`/`__b` idents and yields a `core::cmp::Ordering` — the
+/// receiver type's `compare_iso` (ISO-field types: PlainDate/PlainDateTime/
+/// PlainYearMonth), `compare_instant` (ZonedDateTime), or `__a.cmp(&__b)` for
+/// an `Ord`-deriving scalar type (Instant, PlainTime). The two args are bound
+/// first so a plain `&__a`/`&__b` borrow works whether they are locals or
+/// inline `Temporal.<Type>.from(…)` calls. Returns `f64` (the ES `number`).
+fn temporal_compare(args: &[Argument], ctx: &Ctx<'_>, cmp_expr: Expr) -> Option<Expr> {
     let a = translate_argument(args.first()?, ctx);
     let b = translate_argument(args.get(1)?, ctx);
     Some(parse_quote!({
         let __a = #a;
         let __b = #b;
-        match temporal_rs::PlainDate::compare_iso(&__a, &__b) {
-            ::core::cmp::Ordering::Less => -1_f64,
-            ::core::cmp::Ordering::Equal => 0_f64,
-            ::core::cmp::Ordering::Greater => 1_f64,
-        }
-    }))
-}
-
-/// `Temporal.Instant.compare(a, b)` → -1/0/1. `Instant` derives `Ord`, so
-/// `__a.cmp(&__b)` is the ES `CompareEpochNanoseconds` ordering. The args are
-/// bound first (locals or inline `Temporal.Instant.from(…)`); the result is an
-/// ES `number` (`f64`).
-fn instant_compare(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
-    let a = translate_argument(args.first()?, ctx);
-    let b = translate_argument(args.get(1)?, ctx);
-    Some(parse_quote!({
-        let __a = #a;
-        let __b = #b;
-        match __a.cmp(&__b) {
+        match #cmp_expr {
             ::core::cmp::Ordering::Less => -1_f64,
             ::core::cmp::Ordering::Equal => 0_f64,
             ::core::cmp::Ordering::Greater => 1_f64,
