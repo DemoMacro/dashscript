@@ -44,7 +44,7 @@
     "layer": "test262",
     "category": "isnan",
     "status": "partial",
-    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `is_na_n` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:38: error[E0425]: cannot find value `is_na_n` in this scope: not found in this scope\nsrc\\main.rs:3:58: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {

@@ -1023,6 +1023,37 @@ fn assert_same_value_on_composite_routes_to_engine() {
 }
 
 #[test]
+fn assert_same_value_cross_form_string_operands() {
+    // `assert.sameValue(methodCall(), "lit")` — a string method like `trim`
+    // lowers to `&str` while the literal lowers to `String`. The SameValue
+    // helper projects both operands to a `DsCmp::Str` kind (rather than a
+    // single generic `&T`), so the cross-form pair compiles. Without this,
+    // cargo emits `&str: DsSameValue not satisfied` + an `&&str`/`&String`
+    // mismatch (the dominant string-partial root cause, ~94 fixtures).
+    let src = "function main(): void { assert.sameValue(\"  x  \".trim(), \"x\"); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("__ds::assert_same_value"),
+        "cross-form string assert still lowers, got:\n{rust}"
+    );
+    let helper = deps.helper_module().expect("Assert dep ships a helper");
+    assert!(
+        helper.contains("enum DsCmp"),
+        "helper projects via DsCmp enum, got helper: {helper:?}"
+    );
+    assert!(
+        helper.contains("impl DsSameValue for &str"),
+        "helper has the &str impl so a &&str operand projects, got: {helper:?}"
+    );
+    assert!(
+        helper.contains("<A: DsSameValue, B: DsSameValue>"),
+        "helper takes two type params so &str/String mix, got: {helper:?}"
+    );
+}
+
+#[test]
 fn object_is_distinguishes_neg_zero() {
     // `Object.is(0, -0)` → false: ES SameValue treats +0 and -0 as distinct,
     // where Rust `==` says `0.0 == -0.0`. The f64 lowering emits a sign check

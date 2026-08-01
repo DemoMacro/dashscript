@@ -2476,7 +2476,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:5:46: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:17:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:5:46: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:5:69: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:17:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -2484,7 +2484,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:6:19: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:6:28: warning: unreachable call: unreachable call\nsrc\\main.rs:5:13: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:20:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:6:19: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:6:28: warning: unreachable call: unreachable call\nsrc\\main.rs:7:17: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:20:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -2492,7 +2492,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:4:38: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:4:38: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:62: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -2732,7 +2732,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:21: error[E0433]: cannot find type `Function` in this scope: use of undeclared type `Function`\nsrc\\main.rs:14:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:25:13: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:25:13: error[E0277]: `DsError` doesn't implement `Debug`: the trait `Debug` is not implemented for `DsError`\nsrc\\main.rs:25:50: error[E0308]: mismatched types: expected `&DsError`, found `&f64`",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:21: error[E0433]: cannot find type `Function` in this scope: use of undeclared type `Function`\nsrc\\main.rs:14:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:25:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -2884,7 +2884,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:21: error[E0433]: cannot find type `Function` in this scope: use of undeclared type `Function`\nsrc\\main.rs:15:35: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:24:13: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:24:13: error[E0277]: `DsError` doesn't implement `Debug`: the trait `Debug` is not implemented for `DsError`",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:21: error[E0433]: cannot find type `Function` in this scope: use of undeclared type `Function`\nsrc\\main.rs:15:35: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -2948,7 +2948,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:21: error[E0433]: cannot find type `Function` in this scope: use of undeclared type `Function`\nsrc\\main.rs:15:35: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:24:13: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:24:13: error[E0277]: `DsError` doesn't implement `Debug`: the trait `Debug` is not implemented for `DsError`",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:21: error[E0433]: cannot find type `Function` in this scope: use of undeclared type `Function`\nsrc\\main.rs:15:35: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nsrc\\main.rs:24:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:27:36: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`",
     "note": ""
   },
   {
@@ -3116,7 +3116,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:13:11: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `mars` in this scope: not found in this scope\nsrc\\main.rs:9:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:7:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:11:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "detail": "src\\main.rs:13:11: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:3:27: error[E0425]: cannot find value `mars` in this scope: not found in this scope\nsrc\\main.rs:9:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:7:32: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:11:51: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
     "note": ""
   },
   {
@@ -3140,7 +3140,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:5:13: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:8:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:5:13: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:8:44: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -3148,7 +3148,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:5:13: error: `this` is only valid inside a class method\nsrc\\main.rs:10:13: error: `this` is only valid inside a class method\nsrc\\main.rs:17:5: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:8:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:13:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "detail": "src\\main.rs:5:13: error: `this` is only valid inside a class method\nsrc\\main.rs:10:13: error: `this` is only valid inside a class method\nsrc\\main.rs:17:5: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:8:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:13:44: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
     "note": ""
   },
   {
@@ -3156,7 +3156,7 @@
     "layer": "test262",
     "category": "function",
     "status": "partial",
-    "detail": "src\\main.rs:5:13: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:8:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:5:13: error: `this` is only valid inside a class method\nsrc\\main.rs:3:13: error[E0425]: cannot find value `function` in this scope: not found in this scope\nsrc\\main.rs:8:44: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {

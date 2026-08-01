@@ -675,8 +675,8 @@
     "id": "test262.test.built-ins.math.fround.ties",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:10:66: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:11:59: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:17:69: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:18:60: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -916,7 +916,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:8:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:8:55: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -956,7 +956,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34384) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34328) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -972,7 +972,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:8:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:8:55: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:25: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1012,7 +1012,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (29880) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«0.0», «-0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (37352) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«0.0», «-0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1396,7 +1396,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (12008) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backt",
+    "detail": "Test262Error: \nthread 'main' (22784) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backt",
     "note": ""
   },
   {

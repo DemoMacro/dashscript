@@ -4644,7 +4644,7 @@
     "layer": "test262",
     "category": "typedarrayconstructors",
     "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:15:55: error[E0308]: mismatched types: expected `u8`, found `HashMap<String, _>`\nsrc\\main.rs:18:5: error[E0277]: the trait bound `u8: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `u8`\nsrc\\main.rs:18:67: error[E0308]: mismatched types: expected `&u8`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:15:55: error[E0308]: mismatched types: expected `u8`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {

@@ -188,7 +188,7 @@
     "layer": "test262",
     "category": "weakset",
     "status": "partial",
-    "detail": "src\\main.rs:5:13: error[E0599]: no method named `add` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<_>`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `HashSet<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:13: error[E0599]: no method named `add` found for struct `HashSet<T, S, A>` in the current scope: method not found in `HashSet<_>`\nsrc\\main.rs:6:9: error[E0277]: the trait bound `HashSet<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashSet<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {

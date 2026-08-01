@@ -156,7 +156,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:52: error[E0599]: no method named `as_str` found for struct `Vec<f64>` in the current scope\nsrc\\main.rs:8:40: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:14:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:16:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:4:36: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:52: error[E0599]: no method named `as_str` found for struct `Vec<f64>` in the current scope\nsrc\\main.rs:8:40: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:14:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:16:58: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -204,7 +204,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:3:34: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:34: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:4:32: error[E0599]: no method named `next` found for struct `String` in the current scope\nsrc\\main.rs:6:58: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:5:24: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:5:24: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -372,7 +372,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -508,7 +508,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:18:16: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -596,7 +596,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -820,7 +820,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -980,7 +980,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1068,7 +1068,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1284,7 +1284,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1468,7 +1468,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1596,7 +1596,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:6:65: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1732,7 +1732,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1876,7 +1876,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1964,7 +1964,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2164,7 +2164,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2452,7 +2452,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nsrc\\main.rs:6:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:6:50: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:5:20: error[E0433]: cannot find type `CountingIterator` in this scope: use of undeclared type `CountingIterator`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2564,7 +2564,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:5:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:7:53: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:11:16: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nsrc\\main.rs:18:16: error[E0433]: cannot find type `TestIterator` in this scope: use of undeclared type `TestIterator`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -2964,7 +2964,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:9:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:11:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -2972,7 +2972,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:9:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:11:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -3260,7 +3260,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:10:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:12:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -3268,7 +3268,7 @@
     "layer": "test262",
     "category": "iterator",
     "status": "partial",
-    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:10:58: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:12:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "detail": "src\\main.rs:8:14: error[E0425]: cannot find value `iterator` in this scope: not found in this scope\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {

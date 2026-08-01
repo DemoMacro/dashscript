@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:70: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -20,7 +20,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:70: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -28,7 +28,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:70: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:4:40: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:68: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:73: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -52,7 +52,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:81: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -60,7 +60,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:68: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -68,7 +68,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:73: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -76,7 +76,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:81: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -92,7 +92,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -100,7 +100,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:13: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -108,7 +108,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:40: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:4:59: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -380,15 +380,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:14:9: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:7:23: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:7:23: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.charcodeat.pos-rounding",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:15:9: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:27:9: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:39:9: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:51:9: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:63:9: error[E0308]: mismatched types: expected `&f64`, found `&i64`\nsrc\\main.rs:75:9: error[E0308]: mismatched types: expected `&f64`, found `&i64`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -476,7 +476,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11608) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (21292) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34948) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39004) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -500,7 +500,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:23:9: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nsrc\\main.rs:45:9: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nsrc\\main.rs:67:9: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:23:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:45:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:67:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -508,7 +508,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:23:9: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nsrc\\main.rs:45:9: error[E0308]: mismatched types: expected `&f64`, found `&Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:23:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:45:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1564,7 +1564,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35800) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (5724) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -1644,7 +1644,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35876) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (34812) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -1868,7 +1868,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:53: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, _>`\nsrc\\main.rs:9:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:9:46: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:53: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -1876,7 +1876,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:39: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:6:19: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:10:53: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:12:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:12:46: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:14:67: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`",
+    "detail": "src\\main.rs:5:39: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:6:19: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:10:53: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:14:67: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1940,7 +1940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (24664) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (36672) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1948,7 +1948,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (24544) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (29252) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1956,7 +1956,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (35664) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (39220) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1964,7 +1964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (6556) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (30984) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1980,7 +1980,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (10784) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (19056) panicked at src\\main.rs:5:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2092,7 +2092,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (37944) panicked at src\\main.rs:3:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (39840) panicked at src\\main.rs:3:22:\nnot yet implemented\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3164,7 +3164,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:17:13: error[E0425]: cannot find value `test262_error` in this scope: not found in this scope\nsrc\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:30: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, _>`\nsrc\\main.rs:28:13: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:28:13: error[E0277]: `DsError` doesn't implement `Debug`: the trait `Debug` is not implemented for `DsError`",
+    "detail": "src\\main.rs:17:13: error[E0425]: cannot find value `test262_error` in this scope: not found in this scope\nsrc\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:30: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, _>`\nsrc\\main.rs:28:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -3803,16 +3803,16 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-3",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-4",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3820,31 +3820,31 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:32: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nsrc\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:32: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-6",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-7",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-8",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:4:55: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3852,15 +3852,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:4:55: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-1",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3868,7 +3868,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (37144) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3876,15 +3876,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (39824) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"-inf\"», «\"-Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-12",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3892,7 +3892,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (40444) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -3900,15 +3900,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (40320) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-15",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3916,7 +3916,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (40800) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -3924,15 +3924,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (37856) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-18",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3940,15 +3940,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (3832) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-2",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3956,7 +3956,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (28888) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"0.00000001\"», «\"1e-8\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -3964,111 +3964,111 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (23576) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-22",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-23",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-24",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-25",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-26",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-27",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-28",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-29",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-3",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-30",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-31",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-32",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-33",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4076,7 +4076,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter\nsrc\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:11: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4084,7 +4084,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:32: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:32: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4092,7 +4092,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:32: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nsrc\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:32: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4100,7 +4100,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:32: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:32: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4108,7 +4108,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:32: error[E0277]: `HashMap<String, _>` doesn't implement `std::fmt::Display`: `HashMap<String, _>` cannot be formatted with the default formatter\nsrc\\main.rs:6:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:8:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:32: error[E0277]: `HashMap<String, _>` doesn't implement `std::fmt::Display`: `HashMap<String, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -4116,15 +4116,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:32: error[E0277]: `HashMap<String, _>` doesn't implement `std::fmt::Display`: `HashMap<String, _>` cannot be formatted with the default formatter\nsrc\\main.rs:6:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:8:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:32: error[E0277]: `HashMap<String, _>` doesn't implement `std::fmt::Display`: `HashMap<String, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-4",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4163,8 +4163,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-44",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:4:51: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4172,7 +4172,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:41: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nsrc\\main.rs:7:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:7:52: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:41: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:32: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nsrc\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:4:32: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4196,15 +4196,15 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:32: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nsrc\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:5:32: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-5",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4212,7 +4212,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0433]: cannot find type `Error` in this scope: use of undeclared type `Error`\nsrc\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:3:19: error[E0433]: cannot find type `Error` in this scope: use of undeclared type `Error`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4228,23 +4228,23 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (38284) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"-0\"», «\"0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-7",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-8",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4252,55 +4252,55 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (20252) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-1",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:4:68: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-10",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:64: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-11",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-12",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-13",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-14",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4308,7 +4308,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:64: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (38908) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4316,7 +4316,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (37688) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4324,7 +4324,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (26492) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to",
     "note": ""
   },
   {
@@ -4332,7 +4332,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:7:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (23392) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u{2006}\\u{2007}\\u{2008}\\u{200",
     "note": ""
   },
   {
@@ -4340,39 +4340,39 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:10:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:10:51: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (39828) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-7",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:7:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-8",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-3-9",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:64: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-1",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:4:49: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4380,47 +4380,47 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (25860) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-11",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:67: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-12",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-13",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-14",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-16",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4428,103 +4428,103 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (1128) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"abc\\u{feff}\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-19",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-2",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-20",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-21",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-22",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:67: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-24",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-27",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-28",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-29",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-3",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:67: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-30",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:64: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-32",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4532,247 +4532,247 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (40864) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-35",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-36",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-37",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-38",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-39",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-4",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-40",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-41",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-42",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-43",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:67: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-44",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:67: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-45",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-46",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-47",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:67: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-48",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:67: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-49",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-5",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-50",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-51",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-52",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-53",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-54",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-55",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-56",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-57",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-58",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-59",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:4:49: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-6",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-60",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:3:66: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-4-8",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4787,8 +4787,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.u180e",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nsrc\\main.rs:7:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:9:9: error[E0308]: mismatched types: expected `&&str`, found `&String`\nsrc\\main.rs:11:5: error[E0277]: the trait bound `&str: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `&str`\nsrc\\main.rs:13:9: error[E0308]: mismatched types: expected `&&str`, found `&String`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -5252,7 +5252,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nsrc\\main.rs:3:56: error[E0308]: mismatched types: expected `&!`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -5292,7 +5292,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `&!`, found `&String`\nsrc\\main.rs:7:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:5: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nsrc\\main.rs:7:56: error[E0308]: mismatched types: expected `&!`, found `&String`",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:9: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nsrc\\main.rs:7:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -5356,7 +5356,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nsrc\\main.rs:3:56: error[E0308]: mismatched types: expected `&!`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -5364,7 +5364,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:5: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nsrc\\main.rs:3:56: error[E0308]: mismatched types: expected `&!`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {

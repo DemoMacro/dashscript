@@ -1596,7 +1596,7 @@
     "layer": "test262",
     "category": "typedarray",
     "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:5: error[E0277]: the trait bound `u8: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `u8`\nsrc\\main.rs:12:67: error[E0308]: mismatched types: expected `&u8`, found `&f64`\nsrc\\main.rs:13:13: error[E0308]: mismatched types: expected `u8`, found `HashMap<String, _>`\nsrc\\main.rs:15:5: error[E0277]: the trait bound `u8: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `u8`",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:13: error[E0308]: mismatched types: expected `u8`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -4940,7 +4940,7 @@
     "layer": "test262",
     "category": "typedarray",
     "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:12:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:13:16: error[E0599]: the method `join` exists for struct `Vec<u8>`, but its trait bounds were not satisfied: method cannot be called on `Vec<u8>` due to unsatisfied trait bounds\nsrc\\main.rs:14:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:16: error[E0599]: the method `join` exists for struct `Vec<u8>`, but its trait bounds were not satisfied: method cannot be called on `Vec<u8>` due to unsatisfied trait bounds\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -10260,7 +10260,7 @@
     "layer": "test262",
     "category": "typedarray",
     "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:7:18: error[E0433]: cannot find type `Int8Array` in this scope: use of undeclared type `Int8Array`\nsrc\\main.rs:20:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:28:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:34:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:7:18: error[E0433]: cannot find type `Int8Array` in this scope: use of undeclared type `Int8Array`\nsrc\\main.rs:20:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:28:48: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:34:48: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -10364,7 +10364,7 @@
     "layer": "test262",
     "category": "typedarray",
     "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:48: error[E0308]: mismatched types: expected `u8`, found `f64`\nsrc\\main.rs:14:48: error[E0308]: mismatched types: expected `u8`, found `f64`\nsrc\\main.rs:17:5: error[E0277]: the trait bound `u8: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `u8`\nsrc\\main.rs:17:67: error[E0308]: mismatched types: expected `&u8`, found `&f64`\nsrc\\main.rs:18:5: error[E0277]: the trait bound `u8: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `u8`",
+    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:48: error[E0308]: mismatched types: expected `u8`, found `f64`\nsrc\\main.rs:14:48: error[E0308]: mismatched types: expected `u8`, found `f64`\nsrc\\main.rs:21:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:23:21: error[E0599]: no method named `with` found for struct `Vec<u8>` in the current scope: method not found in `Vec<u8>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -10452,7 +10452,7 @@
     "layer": "test262",
     "category": "typedarray",
     "status": "partial",
-    "detail": "src\\main.rs:6:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:7:18: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nsrc\\main.rs:14:9: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:15:9: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:23:9: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`",
+    "detail": "src\\main.rs:6:19: error[E0425]: cannot find value `ctors` in this scope: not found in this scope\nsrc\\main.rs:3:15: error[E0425]: cannot find function `create_resizable_array_buffer` in this scope: not found in this scope\nsrc\\main.rs:7:18: error[E0433]: cannot find module or crate `ctor` in this scope: use of unresolved module or unlinked crate `ctor`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {

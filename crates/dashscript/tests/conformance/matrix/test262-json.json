@@ -148,7 +148,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -180,7 +180,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:8:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -244,7 +244,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -252,7 +252,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:8:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -260,7 +260,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -268,7 +268,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -276,7 +276,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -284,7 +284,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -292,7 +292,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -596,7 +596,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:6:9: error[E0308]: mismatched types: expected `&Value`, found `&f64`\nsrc\\main.rs:8:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:11:9: error[E0308]: mismatched types: expected `&Value`, found `&f64`\nsrc\\main.rs:13:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:16:9: error[E0308]: mismatched types: expected `&Value`, found `&f64`",
+    "detail": "src\\main.rs:4:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:9:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:14:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:19:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:26:9: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
@@ -612,7 +612,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:18: error[E0599]: the method `to_string` exists for struct `HashMap<std::string::String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<std::string::String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:13:5: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nsrc\\main.rs:13:45: error[E0308]: mismatched types: expected `&Value`, found `&String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:8:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:18: error[E0599]: the method `to_string` exists for struct `HashMap<std::string::String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<std::string::String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:13:36: error[E0277]: the trait bound `Value: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Value`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -756,7 +756,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (31284) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"{\\\"a\\\":2.0,\\\"b\\\":1.0,\\\"c\\\":3.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` e",
+    "detail": "Test262Error: \nthread 'main' (33100) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"{\\\"b\\\":1.0,\\\"a\\\":2.0,\\\"c\\\":3.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` e",
     "note": ""
   },
   {
@@ -1108,7 +1108,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:26:9: error[E0308]: mismatched types: expected `&String`, found `&Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:26:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1124,7 +1124,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (24756) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a bac",
+    "detail": "Test262Error: \nthread 'main' (27464) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a bac",
     "note": ""
   },
   {
@@ -1156,7 +1156,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:9: error[E0308]: mismatched types: expected `&String`, found `&Option<_>`\nsrc\\main.rs:13:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:13:51: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:14:5: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:14:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`\nsrc\\main.rs:17:46: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:22:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`",
     "note": ""
   },
   {
@@ -1188,7 +1188,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:6:21: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:9: error[E0609]: no field `to_json` on type `Vec<bool>`: unknown field\nsrc\\main.rs:13:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:16:9: error[E0308]: mismatched types: expected `&String`, found `&Option<_>`\nsrc\\main.rs:18:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:19:9: error[E0609]: no field `to_json` on type `std::string::String`: unknown field",
+    "detail": "src\\main.rs:6:21: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:9: error[E0609]: no field `to_json` on type `Vec<bool>`: unknown field\nsrc\\main.rs:13:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:16:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:18:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:19:9: error[E0609]: no field `to_json` on type `std::string::String`: unknown field",
     "note": ""
   },
   {

@@ -715,17 +715,49 @@ impl DsTruthy for bool {
 const ASSERT_HELPER: &str = r#"
 /// test262 SameValue (Object.is): `===` plus distinct +0/-0 and NaN===NaN.
 /// A scalar-only trait — composite operands route to the engine, where ES
-/// reference-SameValue runs natively.
-pub trait DsSameValue {
-    fn ds_same_value(&self, other: &Self) -> bool;
+/// reference-SameValue runs natively. Each scalar projects to a [`DsCmp`]
+/// kind rather than comparing `&Self`, so a `&str` operand and a `String`
+/// operand (both TS `string`, but lowered to different Rust forms) compare by
+/// content — the translator emits `assert.sameValue(methodCall(), "lit")`,
+/// where the method returns `&str` and the literal is `String`.
+pub trait DsSameValue: std::fmt::Debug {
+    fn ds_cmp(&self) -> DsCmp<'_>;
+}
+
+/// The comparable projection of a scalar — strings borrow, so a `&str` operand
+/// and a `String` operand both yield [`DsCmp::Str`] and compare by content.
+pub enum DsCmp<'a> {
+    Num(f64),
+    Bool(bool),
+    Str(&'a str),
+    Unit,
+}
+
+impl DsCmp<'_> {
+    fn same(&self, other: &Self) -> bool {
+        match (self, other) {
+            // Object.is: `===` but +0 !== -0 (Rust `==` treats them equal) and
+            // NaN === NaN (Rust `==` says false).
+            (DsCmp::Num(a), DsCmp::Num(b)) => {
+                (*a == *b
+                    && (*a != 0.0 || a.is_sign_negative() == b.is_sign_negative()))
+                    || (a.is_nan() && b.is_nan())
+            }
+            (DsCmp::Bool(a), DsCmp::Bool(b)) => a == b,
+            (DsCmp::Str(a), DsCmp::Str(b)) => *a == *b,
+            (DsCmp::Unit, DsCmp::Unit) => true,
+            _ => false,
+        }
+    }
 }
 
 /// test262 `assert.sameValue(a, b)` — panics a `Test262Error` on mismatch.
 /// The `Test262Error:` prefix lets the conformance harness distinguish an
-/// assert failure (partial) from a build error (unsupported).
+/// assert failure (partial) from a build error (unsupported). Two type params
+/// so a `&str` operand and a `String` operand (both TS `string`) compare.
 #[inline]
-pub fn assert_same_value<T: DsSameValue + std::fmt::Debug>(a: &T, b: &T) {
-    if !a.ds_same_value(b) {
+pub fn assert_same_value<A: DsSameValue, B: DsSameValue>(a: &A, b: &B) {
+    if !a.ds_cmp().same(&b.ds_cmp()) {
         panic!(
             "Test262Error: Expected SameValue(«{:?}», «{:?}») to be true",
             a, b
@@ -735,8 +767,8 @@ pub fn assert_same_value<T: DsSameValue + std::fmt::Debug>(a: &T, b: &T) {
 
 /// test262 `assert.notSameValue(a, b)` — panics if the values are SameValue.
 #[inline]
-pub fn assert_not_same_value<T: DsSameValue + std::fmt::Debug>(a: &T, b: &T) {
-    if a.ds_same_value(b) {
+pub fn assert_not_same_value<A: DsSameValue, B: DsSameValue>(a: &A, b: &B) {
+    if a.ds_cmp().same(&b.ds_cmp()) {
         panic!(
             "Test262Error: Expected SameValue(«{:?}», «{:?}») to be false",
             a, b
@@ -746,40 +778,70 @@ pub fn assert_not_same_value<T: DsSameValue + std::fmt::Debug>(a: &T, b: &T) {
 
 impl DsSameValue for f64 {
     #[inline]
-    fn ds_same_value(&self, other: &Self) -> bool {
-        // Object.is: `===` but +0 !== -0 (Rust `==` treats them equal) and
-        // NaN === NaN (Rust `==` says false).
-        (*self == *other
-            && (*self != 0.0 || self.is_sign_negative() == other.is_sign_negative()))
-            || (self.is_nan() && other.is_nan())
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Num(*self)
+    }
+}
+
+/// DashScript flavors a `number` as `i64`/`u64`/`u8` for bitwise/integer/byte
+/// contexts, but ES SameValue is f64 semantics (every ES Number is an f64), so
+/// an integer-flavored operand projects to [`DsCmp::Num`] via an f64 cast —
+/// `assert.sameValue(i64Value, f64Value)` then compares numerically.
+impl DsSameValue for i64 {
+    #[inline]
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Num(*self as f64)
+    }
+}
+
+impl DsSameValue for u64 {
+    #[inline]
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Num(*self as f64)
+    }
+}
+
+impl DsSameValue for u8 {
+    #[inline]
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Num(*self as f64)
     }
 }
 
 impl DsSameValue for bool {
     #[inline]
-    fn ds_same_value(&self, other: &Self) -> bool {
-        self == other
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Bool(*self)
     }
 }
 
 impl DsSameValue for String {
     #[inline]
-    fn ds_same_value(&self, other: &Self) -> bool {
-        self == other
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Str(self.as_str())
     }
 }
 
 impl DsSameValue for str {
     #[inline]
-    fn ds_same_value(&self, other: &Self) -> bool {
-        self == other
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Str(self)
+    }
+}
+
+/// A `&str` operand — `&("x".trim())` lowers to `&&str`. This projects to the
+/// same `Str` kind as an owned `String`, so cross-form string asserts compare.
+impl DsSameValue for &str {
+    #[inline]
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Str(*self)
     }
 }
 
 impl DsSameValue for () {
     #[inline]
-    fn ds_same_value(&self, _other: &Self) -> bool {
-        true
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        DsCmp::Unit
     }
 }
 "#;

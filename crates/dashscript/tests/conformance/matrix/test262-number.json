@@ -564,7 +564,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34344) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (10412) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32796) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"-0.0e+0\"», «\"0.0e+0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (31284) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"-0.0e+0\"», «\"0.0e+0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -740,7 +740,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:50:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:97:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:97:46: error[E0308]: mismatched types: expected `&i64`, found `&f64`\nsrc\\main.rs:98:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:145:5: error[E0277]: the trait bound `i64: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `i64`\nsrc\\main.rs:145:46: error[E0308]: mismatched types: expected `&i64`, found `&f64`",
+    "detail": "src\\main.rs:50:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:98:13: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -852,7 +852,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (28156) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39600) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1748,7 +1748,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:6:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:13: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`\nsrc\\main.rs:9:54: error[E0308]: mismatched types: expected `&HashMap<String, _>`, found `&f64`\nsrc\\main.rs:21:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "detail": "src\\main.rs:6:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:17: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:44: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`\nsrc\\main.rs:21:25: error[E0433]: cannot find type `Test262Error` in this scope: use of undeclared type `Test262Error`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
@@ -1764,7 +1764,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:5: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`\nsrc\\main.rs:7:47: error[E0308]: mismatched types: expected `&HashMap<String, _>`, found `&f64`\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression",
+    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:36: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:12:36: error[E0277]: the trait bound `HashMap<String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, _>`",
     "note": ""
   },
   {
@@ -2092,7 +2092,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:3:45: error[E0308]: mismatched types: expected `&Option<_>`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:36: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2100,7 +2100,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:3:45: error[E0308]: mismatched types: expected `&Option<_>`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:36: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -2108,7 +2108,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "src\\main.rs:3:46: error[E0308]: mismatched types: expected `&bool`, found `&f64`\nsrc\\main.rs:4:45: error[E0308]: mismatched types: expected `&bool`, found `&f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "Test262Error: \nthread 'main' (2944) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«false», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2148,7 +2148,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10284) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«1.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (33968) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«1.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2156,7 +2156,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38872) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«16.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (15732) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«16.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2412,7 +2412,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37320) panicked at src\\__ds.rs:18:9:\nTest262Error: Expected SameValue(«8.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (37252) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«8.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   }
 ]

@@ -372,7 +372,7 @@
     "layer": "test262",
     "category": "weakmap",
     "status": "partial",
-    "detail": "src\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `HashMap<String, f64>`\nsrc\\main.rs:5:5: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:9:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "detail": "src\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `HashMap<String, f64>`\nsrc\\main.rs:5:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:5:61: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`",
     "note": ""
   },
   {
@@ -908,7 +908,7 @@
     "layer": "test262",
     "category": "weakmap",
     "status": "partial",
-    "detail": "src\\main.rs:5:15: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:4:5: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:5:15: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
