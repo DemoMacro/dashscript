@@ -15,13 +15,16 @@
 //! builds. Context-free rules ignore it.
 
 use std::borrow::Cow;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use oxc_ast::ast::{
     Argument, AssignmentTarget, BinaryOperator, CallExpression, Class, Expression, Function,
     ObjectPropertyKind, PropertyKind, UnaryOperator,
 };
 
+use super::builtins::{
+    temporal_callee_split, temporal_new_maps, temporal_static_maps, temporal_type_of_callee,
+};
 use super::globals::{is_engine_value_global, is_global_receiver, is_static_only_global};
 
 /// How a single AST node lowers — the translator's translatability verdict,
@@ -64,6 +67,14 @@ pub struct ClassifyCtx<'a> {
     /// literal (number/boolean/object/array) — a `.test(x)`/`.exec(x)` on one
     /// needs the engine (ES coerces via ToString; regress takes `&str`).
     pub non_string_vars: &'a HashSet<String>,
+    /// Locals in the current walk whose initializer resolves to a Temporal type
+    /// (`Temporal.<Type>.from(…)` / `new Temporal.<Type>(…)`), keyed by binding
+    /// name to its `<Type>`. A `Temporal.X.compare(a, b)` stays on the static
+    /// `compare_iso(&a, &b)` path only when both `a` and `b` are `X` Temporal
+    /// locals (the emit assumes `&<ty>` operands); a `Temporal.X.from(item)`
+    /// stays static only when `item` is a string, degrading for a Temporal local
+    /// (ES clones it) so the polyfill carries the real ToTemporal coercion.
+    pub temporal_vars: &'a HashMap<String, String>,
 }
 
 /// Classify a single expression. See [`Mapping`] for the verdicts.
@@ -167,8 +178,108 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         Expression::AwaitExpression(_) => {
             reject("`await` is unsupported (DashScript has no async runtime)")
         }
+        // `new Temporal.<Type>(…)` — static ISO-field mapping (the four
+        // date/time types) when the args are integer fields; a property-bag
+        // `new Temporal.X({…})` or an unmapped type degrades to the engine,
+        // whose polyfill carries the full ToTemporal<type> coercion.
+        Expression::NewExpression(n) => match temporal_type_of_callee(&n.callee) {
+            Some(ty) if temporal_new_maps(&ty) && !args_have_object(&n.arguments) => {
+                Mapping::Mapped
+            }
+            Some(_) => {
+                degrade("`new Temporal.*` property-bag/unmapped → engine (polyfill coercion)")
+            }
+            None => Mapping::Mapped,
+        },
         _ => Mapping::Mapped,
     }
+}
+
+/// True if any argument is an object literal — a Temporal property-bag coercion
+/// (`from({year,month})`, `compare({…}, d)`, `new Temporal.X({…})`) the static
+/// mapping cannot lower: `temporal_static` would emit a `TypeError`, and
+/// `compare_iso` would hit a cargo type error. The engine's polyfill carries
+/// the real `ToTemporalDate` coercion, so the enclosing call degrades.
+fn args_have_object(args: &[Argument]) -> bool {
+    args.iter()
+        .any(|a| matches!(a, Argument::ObjectExpression(_)))
+}
+
+/// True when `Temporal.<ty>.<method>(args)` is statically compatible — the
+/// static `temporal_rs` emit both compiles and produces correct ES behavior for
+/// these operands. The pair itself is mapped (`temporal_static_maps`); this
+/// decides argument compatibility, the half a context-free classify cannot.
+///
+/// - `from(item)` — the emit (`temporal_from`) parses only a string operand;
+///   any other operand needs the polyfill's full ToTemporal coercion (a
+///   Temporal local → ES clones it; a number → ES TypeError that may be
+///   asserted; an object → property-bag). Mirrors the translator's `is_string_arg`.
+/// - `compare(a, b)` — the emit (`temporal_compare`) lowers `compare_iso(&a,
+///   &b)` / `.cmp(&a, &b)`, so both operands must be `<ty>` Temporal values;
+///   a string literal, a non-Temporal local, or a Temporal local of a different
+///   type would fail cargo check or mis-compare.
+/// - `fromEpochMilliseconds(n)` takes a `number` (`f64`) — always static.
+fn temporal_args_static_compatible(
+    ty: &str,
+    method: &str,
+    args: &[Argument],
+    ctx: &ClassifyCtx,
+) -> bool {
+    match method {
+        "from" => !from_arg_needs_engine(args.first(), ctx),
+        "compare" => {
+            let a = compare_operand_type(args.first(), ctx);
+            let b = compare_operand_type(args.get(1), ctx);
+            a.as_deref() == Some(ty) && b.as_deref() == Some(ty)
+        }
+        _ => true,
+    }
+}
+
+/// True when a `Temporal.<Type>.from(item)` operand is plainly not a string —
+/// a non-string literal, `undefined`, or a local bound (in this walk) to one or
+/// to a Temporal value. Only a string operand (a string literal, or an
+/// untracked local the emit infers as `String`) stays on the static `from_utf8`
+/// path; anything else degrades so the polyfill carries the real coercion.
+fn from_arg_needs_engine(arg: Option<&Argument>, ctx: &ClassifyCtx) -> bool {
+    let Some(expr) = arg.and_then(|a| a.as_expression()) else {
+        return false;
+    };
+    match expr {
+        Expression::StringLiteral(_) => false,
+        Expression::NumericLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::ObjectExpression(_)
+        | Expression::ArrayExpression(_)
+        | Expression::NullLiteral(_) => true,
+        // `void <expr>` evaluates to `undefined` → ToTemporal rejects it.
+        Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Void) => true,
+        Expression::Identifier(id) => {
+            if id.name.as_str() == "undefined" {
+                return true;
+            }
+            ctx.non_string_vars.contains(id.name.as_str())
+                || ctx.temporal_vars.contains_key(id.name.as_str())
+        }
+        // Any other expression (a call, a member access, …) — its type is
+        // unknown to the walk; let the emit's `is_string_arg` decide, treating
+        // it optimistically as a string so a known-string call result parses.
+        _ => false,
+    }
+}
+
+/// The Temporal `<Type>` of a `compare` operand, when it is a local bound (in
+/// this walk) to a Temporal value of that type. Returns `None` for a string
+/// literal, a non-Temporal local, a Temporal local of any type (the caller
+/// checks it matches `<ty>`), or any other expression — `compare_iso`/`.cmp`
+/// need `&<ty>` operands, so only a same-type Temporal local stays static.
+fn compare_operand_type(arg: Option<&Argument>, ctx: &ClassifyCtx) -> Option<String> {
+    let expr = arg.and_then(|a| a.as_expression())?;
+    let Expression::Identifier(id) = expr else {
+        return None;
+    };
+    ctx.temporal_vars.get(id.name.as_str()).cloned()
 }
 
 /// Classify an assignment's left-hand target — `prototype` mutation, an ES
@@ -269,6 +380,23 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
             "a `function` expression as a callee (IIFE) or argument (callback) needs the engine \
              (no static lowering)",
         );
+    }
+    // `Temporal.<Type>.<method>(…)` — route to the static `temporal_rs` mapping
+    // when the pair is mapped AND the args are type-compatible with the static
+    // emit (a `from(item)` only for a string operand; a `compare(a, b)` only
+    // when both `a` and `b` are same-`<Type>` Temporal locals). An unmapped pair
+    // or a type-mismatched operand degrades to the engine, whose polyfill
+    // carries the full ToTemporal coercion and every unmapped method — the
+    // static emit would otherwise mis-lower (`from(temporal)` panics TypeError
+    // where ES clones) or fail cargo check (`compare_iso` needs `&<ty>`).
+    // Static-first: the zero-cost path wins where it genuinely can.
+    if let Some((ty, method)) = temporal_callee_split(&c.callee) {
+        if temporal_static_maps(ty, method)
+            && temporal_args_static_compatible(ty, method, &c.arguments, ctx)
+        {
+            return Mapping::Mapped;
+        }
+        return degrade("Temporal.* unmapped/type-mismatched coercion → engine (polyfill)");
     }
     // Bare `assert(x)` — test262's shorthand for `assert.sameValue(x, true)`.
     // No static lowering yet; degrade so the engine's `assert.js` runs it.
@@ -540,17 +668,18 @@ mod tests {
     use super::*;
 
     fn classify_first_expr(src: &str) -> Mapping {
-        classify_first_expr_ctx(src, false, &HashSet::new())
+        classify_first_expr_ctx(src, false, &HashSet::new(), &HashMap::new())
     }
 
     fn classify_first_expr_in_loop(src: &str) -> Mapping {
-        classify_first_expr_ctx(src, true, &HashSet::new())
+        classify_first_expr_ctx(src, true, &HashSet::new(), &HashMap::new())
     }
 
     fn classify_first_expr_ctx(
         src: &str,
         in_loop: bool,
         non_string_vars: &HashSet<String>,
+        temporal_vars: &HashMap<String, String>,
     ) -> Mapping {
         use oxc_allocator::Allocator;
         use oxc_parser::Parser;
@@ -558,6 +687,7 @@ mod tests {
         let ctx = ClassifyCtx {
             in_loop,
             non_string_vars,
+            temporal_vars,
         };
         let allocator = Allocator::default();
         let ret = Parser::new(&allocator, src, SourceType::ts()).parse();
@@ -740,7 +870,7 @@ mod tests {
     fn degrades_regex_test_non_string_var() {
         let mut vars = HashSet::new();
         vars.insert("x".to_string());
-        let m = classify_first_expr_ctx("re.test(x)", false, &vars);
+        let m = classify_first_expr_ctx("re.test(x)", false, &vars, &HashMap::new());
         assert!(matches!(m, Mapping::DegradeEngine(_)));
     }
 
@@ -932,5 +1062,121 @@ mod tests {
             classify_first_expr("assert.throws(Error.SubType, () => 1)"),
             Mapping::DegradeEngine(_)
         ));
+    }
+
+    // --- Temporal: type-aware static-vs-engine routing ---------------------
+    //
+    // `Temporal.<Type>.<method>` routes to the static `temporal_rs` path only
+    // when the operands are type-compatible with the emit: `from(item)` needs a
+    // string; `compare(a, b)` needs two same-`<Type>` Temporal locals. Anything
+    // else degrades so the polyfill carries the real ToTemporal coercion.
+
+    #[test]
+    fn maps_temporal_from_string_literal() {
+        // A string operand parses via `from_utf8` — the zero-cost static path.
+        assert!(classify_first_expr("Temporal.PlainDate.from('2024-03-15')").is_mapped());
+    }
+
+    #[test]
+    fn maps_temporal_from_untracked_local() {
+        // An untracked local may still be a string — let the emit's
+        // `is_string_arg` decide (it parses if the local infers as `String`).
+        assert!(classify_first_expr("Temporal.PlainDate.from(s)").is_mapped());
+    }
+
+    #[test]
+    fn degrades_temporal_from_number() {
+        // A number operand → ES TypeError; degrade so the polyfill coerces.
+        assert!(matches!(
+            classify_first_expr("Temporal.PlainDate.from(123)"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn degrades_temporal_from_property_bag() {
+        // A property-bag object → ToTemporal coercion; only the polyfill has it.
+        assert!(matches!(
+            classify_first_expr("Temporal.PlainDate.from({ year: 2024, month: 3, day: 15 })"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn degrades_temporal_from_temporal_local() {
+        // `from(temporal)` clones in ES; the static emit would panic TypeError.
+        let mut vars = HashMap::new();
+        vars.insert("x".to_string(), "PlainDate".to_string());
+        let m =
+            classify_first_expr_ctx("Temporal.PlainDate.from(x)", false, &HashSet::new(), &vars);
+        assert!(matches!(m, Mapping::DegradeEngine(_)));
+    }
+
+    #[test]
+    fn degrades_temporal_from_non_string_local() {
+        // A local bound to a non-string literal → not a string → engine.
+        let mut non_string = HashSet::new();
+        non_string.insert("n".to_string());
+        let m = classify_first_expr_ctx(
+            "Temporal.PlainDate.from(n)",
+            false,
+            &non_string,
+            &HashMap::new(),
+        );
+        assert!(matches!(m, Mapping::DegradeEngine(_)));
+    }
+
+    #[test]
+    fn maps_temporal_compare_same_type_locals() {
+        // Two same-`<Type>` Temporal locals → static `compare_iso(&a, &b)`.
+        let mut vars = HashMap::new();
+        vars.insert("a".to_string(), "PlainDate".to_string());
+        vars.insert("b".to_string(), "PlainDate".to_string());
+        let m = classify_first_expr_ctx(
+            "Temporal.PlainDate.compare(a, b)",
+            false,
+            &HashSet::new(),
+            &vars,
+        );
+        assert!(m.is_mapped());
+    }
+
+    #[test]
+    fn degrades_temporal_compare_untracked_locals() {
+        // Untracked locals would fail cargo check — `compare_iso` needs
+        // `&PlainDate`, not whatever `a`/`b` translate to.
+        assert!(matches!(
+            classify_first_expr("Temporal.PlainDate.compare(a, b)"),
+            Mapping::DegradeEngine(_)
+        ));
+    }
+
+    #[test]
+    fn degrades_temporal_compare_string_operand() {
+        // A string literal operand (not a Temporal local) → degrade.
+        let mut vars = HashMap::new();
+        vars.insert("a".to_string(), "PlainDate".to_string());
+        let m = classify_first_expr_ctx(
+            "Temporal.PlainDate.compare(a, '2024-01-01')",
+            false,
+            &HashSet::new(),
+            &vars,
+        );
+        assert!(matches!(m, Mapping::DegradeEngine(_)));
+    }
+
+    #[test]
+    fn degrades_temporal_compare_mismatched_types() {
+        // Two Temporal locals of different types → cargo check fail → degrade.
+        let mut vars = HashMap::new();
+        vars.insert("a".to_string(), "PlainDate".to_string());
+        vars.insert("b".to_string(), "PlainDateTime".to_string());
+        let m = classify_first_expr_ctx(
+            "Temporal.PlainDate.compare(a, b)",
+            false,
+            &HashSet::new(),
+            &vars,
+        );
+        assert!(matches!(m, Mapping::DegradeEngine(_)));
     }
 }

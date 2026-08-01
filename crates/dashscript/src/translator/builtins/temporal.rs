@@ -11,7 +11,7 @@
 //! `RangeError`/`SyntaxError`, not a bare unwrap panic) — see
 //! `RuntimeDep::Error` + `try`/`catch` in `functions/try_throw.rs`.
 
-use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
+use oxc_ast::ast::{Argument, CallExpression, Expression, StaticMemberExpression};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
@@ -101,6 +101,84 @@ pub(in crate::translator) fn temporal_static(
         }
         _ => None,
     }
+}
+
+/// Classify-time mirror of [`temporal_static`]'s match — true when
+/// `Temporal.<ty>.<method>` has a static lowering. The classify table routes a
+/// mapped pair to the static path (zero-cost `temporal_rs`) and an unmapped
+/// pair to the engine (polyfill), so this must stay in lockstep with
+/// `temporal_static`'s arms (the `temporal_static_maps_drift` metatest pins
+/// them). Argument compatibility — a property-bag coercion like
+/// `from({year,month})` — is decided separately in `classify`; a mapped pair
+/// whose args force a coercion still degrades.
+pub(in crate::translator) fn temporal_static_maps(ty: &str, method: &str) -> bool {
+    matches!(
+        (ty, method),
+        ("Duration" | "Instant", "from")
+            | ("ZonedDateTime", "from")
+            | ("PlainDate" | "PlainDateTime" | "PlainYearMonth", "compare")
+            | ("ZonedDateTime", "compare")
+            | ("Instant" | "PlainTime", "compare")
+            | ("Instant", "fromEpochMilliseconds")
+    ) || (method == "from" && TEMPORAL_DATE_TIME_TYPES.contains(&ty))
+}
+
+/// Classify-time mirror of [`temporal_new`]'s match — true when
+/// `new Temporal.<ty>(…)` has a static ISO-field lowering (the four date/time
+/// types whose constructors take integer ISO fields). Drift-pinned against
+/// `temporal_new`.
+pub(in crate::translator) fn temporal_new_maps(ty: &str) -> bool {
+    matches!(
+        ty,
+        "PlainDate" | "PlainDateTime" | "PlainTime" | "PlainYearMonth"
+    )
+}
+
+/// `(ty, method)` for a `Temporal.<ty>.<method>(…)` call callee, or `None` if
+/// `expr` is not that two-level member shape. Used by `classify` to look up
+/// [`temporal_static_maps`] without re-walking the chain. The returned strings
+/// borrow the oxc arena (the property `Atom`s), not `expr` itself.
+pub(in crate::translator) fn temporal_callee_split<'a>(
+    expr: &Expression<'a>,
+) -> Option<(&'a str, &'a str)> {
+    let Expression::StaticMemberExpression(method_sm) = expr else {
+        return None;
+    };
+    let Expression::StaticMemberExpression(type_sm) = &method_sm.object else {
+        return None;
+    };
+    let Expression::Identifier(id) = &type_sm.object else {
+        return None;
+    };
+    (id.name.as_str() == "Temporal").then(|| {
+        (
+            type_sm.property.name.as_str(),
+            method_sm.property.name.as_str(),
+        )
+    })
+}
+
+/// The Temporal type a binding's initializer resolves to, when it is a
+/// `Temporal.<Type>.from(…)` (the only static call that yields a Temporal
+/// value — `compare` yields a number) or a `new Temporal.<Type>(…)`. Used by
+/// `check` to record the local's type so `classify` routes a later
+/// `Temporal.X.compare(a, b)` / `from(arg)` through the static `temporal_rs`
+/// mapping only when the arg genuinely is that Temporal type, degrading an
+/// unknown local to the polyfill rather than risking a cargo type error.
+pub(in crate::translator) fn temporal_init_type(init: &Expression) -> Option<String> {
+    match init {
+        Expression::CallExpression(c) => temporal_call_result_type(c),
+        Expression::NewExpression(n) => temporal_type_of_callee(&n.callee),
+        _ => None,
+    }
+}
+
+/// The Temporal type yielded by a `Temporal.<Type>.<method>(…)` static call —
+/// `from` for any `<Type>` (the constructor); other mapped calls (`compare`,
+/// `fromEpochMilliseconds`) yield a number, so they return `None`.
+fn temporal_call_result_type(c: &CallExpression) -> Option<String> {
+    let (ty, method) = temporal_callee_split(&c.callee)?;
+    (method == "from").then(|| ty.to_string())
 }
 
 /// `Temporal.<Type>.from(item)` for a single-arg `from_utf8` type (the five

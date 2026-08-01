@@ -54,10 +54,14 @@ pub const GLOBAL_RECEIVERS: &[&str] = &[
 /// (handled by an earlier explicit arm). The wrapper typed arrays
 /// `Uint8Array`/`Uint8ClampedArray`/`Int8Array` are absent — `new` on them
 /// maps to `Vec<u8>` (`expressions/new`) — as is `ArrayBuffer` (a
-/// type-annotation mapping) and `Temporal` (static members map to
-/// `temporal-rs`); flagging any of those would regress a static mapping.
+/// type-annotation mapping); flagging either would regress a static mapping.
+/// `Temporal` IS listed: its static mapping is partial, so a bare `Temporal`
+/// value reference degrades to the engine (which carries the
+/// @js-temporal/polyfill); the `Temporal.X(…)` call / `new Temporal.X(…)`
+/// forms are routed to the engine by `classify`'s `is_temporal_callee`.
 pub const ENGINE_VALUE_GLOBALS: &[&str] = &[
     "Promise",
+    "Temporal",
     "DataView",
     "Int16Array",
     "Uint16Array",

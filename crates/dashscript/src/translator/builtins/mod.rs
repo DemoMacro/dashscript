@@ -44,7 +44,8 @@ pub(in crate::translator) use number::{number_constant, number_method, number_st
 pub(in crate::translator) use object::object_method;
 pub(in crate::translator) use string::{string_method, string_method_on, string_static};
 pub(in crate::translator) use temporal::{
-    temporal_method, temporal_new, temporal_static, temporal_type_of_callee, TEMPORAL_TYPES,
+    temporal_callee_split, temporal_init_type, temporal_method, temporal_new, temporal_new_maps,
+    temporal_static, temporal_static_maps, temporal_type_of_callee, TEMPORAL_TYPES,
 };
 pub(in crate::translator) use typed_array::typed_array_method;
 

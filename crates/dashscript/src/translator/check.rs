@@ -20,7 +20,7 @@
 
 use std::borrow::Cow;
 use std::cell::Cell;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
@@ -57,6 +57,14 @@ thread_local! {
 struct WalkState {
     in_loop: bool,
     non_string_vars: HashSet<String>,
+    /// Locals in the current walk whose initializer resolves to a Temporal type
+    /// (`Temporal.<Type>.from(…)`, `new Temporal.<Type>(…)`) — local name →
+    /// Temporal type name ("PlainDate", …). Lets `classify` route a
+    /// `compare(a, b)` / `from(arg)` through the static `temporal_rs` mapping
+    /// only when the args genuinely are that Temporal type (or a string),
+    /// degrading an unknown local to the polyfill rather than risking a cargo
+    /// type error or a mis-emitted TypeError.
+    temporal_vars: HashMap<String, String>,
 }
 
 /// RAII guard: constructed to mark an engine-path detection in progress;
@@ -112,6 +120,7 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
     let mut state = WalkState {
         in_loop: false,
         non_string_vars: HashSet::new(),
+        temporal_vars: HashMap::new(),
     };
     for stmt in &program.body {
         // `export {}` is a standard TS module marker (no declaration, no
@@ -322,6 +331,7 @@ pub(super) fn program_engine_sites(program: &oxc_ast::ast::Program) -> EngineSit
     let mut state = WalkState {
         in_loop: false,
         non_string_vars: HashSet::new(),
+        temporal_vars: HashMap::new(),
     };
     let mut diags = Vec::new();
     let mut sites = EngineSites::default();
@@ -478,6 +488,16 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &m
                             state.non_string_vars.insert(id.name.as_str().to_string());
                         }
                     }
+                    // A binding whose initializer resolves to a Temporal type
+                    // (`Temporal.<Type>.from(…)` / `new Temporal.<Type>(…)`) —
+                    // recorded so a later `compare(a, b)` / `from(arg)` on it
+                    // routes through the static `temporal_rs` mapping only when
+                    // the arg genuinely is that Temporal type.
+                    if let BindingPattern::BindingIdentifier(id) = &d.id {
+                        if let Some(ty) = super::builtins::temporal_init_type(init) {
+                            state.temporal_vars.insert(id.name.as_str().to_string(), ty);
+                        }
+                    }
                     collect_expr(init, out, state);
                 }
             }
@@ -613,6 +633,7 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut Wal
     let ctx = ClassifyCtx {
         in_loop: state.in_loop,
         non_string_vars: &state.non_string_vars,
+        temporal_vars: &state.temporal_vars,
     };
     if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) = classify::classify_expr(expr, &ctx)
     {
@@ -804,11 +825,40 @@ fn is_global_object_name(name: &str) -> bool {
 /// (`new Map()`). Used to skip recursing the callee so the receiver is not
 /// mistaken for a value reference.
 fn is_global_object_callee(expr: &Expression) -> bool {
+    // A `Global.X(…)` static call (`Math.floor(x)`) takes the global name only
+    // as the call's receiver — `Global` is not a value reference. A two-level
+    // `Global.Type.method(…)` (`Temporal.PlainDate.from(s)`) is the same shape:
+    // `Global` is the member-chain root, not a value. Walk the chain down to
+    // its root Identifier; a `prototype` segment anywhere in the chain marks a
+    // reflection borrow (`Object.prototype.trim.call(…)`) — that stays visible
+    // so the reflection rule flags it, rather than being muted as a static call
+    // (which would let `Object.prototype.X(y)` slip through to a cargo partial).
+    fn rooted_at_global(mut e: &Expression) -> bool {
+        loop {
+            match e {
+                Expression::ParenthesizedExpression(p) => e = &p.expression,
+                Expression::StaticMemberExpression(sm) => {
+                    if sm.property.name.as_str() == "prototype" {
+                        return false;
+                    }
+                    e = &sm.object;
+                }
+                Expression::Identifier(id) => {
+                    // A `Static`-only global (`Math`, `Array`) or an `Engine`-
+                    // value global as a chain root (`Temporal.PlainDate.from`)
+                    // is the call's receiver, not a value reference — only its
+                    // bare form is. Accept either as the root so the receiver
+                    // is not recursed into (a bare `Temporal` value reference
+                    // is still flagged by the Identifier rule below).
+                    return is_global_object_name(id.name.as_str())
+                        || super::globals::is_engine_value_global(id.name.as_str());
+                }
+                _ => return false,
+            }
+        }
+    }
     match expr {
-        Expression::StaticMemberExpression(sm) => matches!(
-            &sm.object,
-            Expression::Identifier(id) if is_global_object_name(id.name.as_str())
-        ),
+        Expression::StaticMemberExpression(_) => rooted_at_global(expr),
         Expression::Identifier(id) => is_global_object_name(id.name.as_str()),
         _ => false,
     }
