@@ -948,6 +948,74 @@ globalThis.Temporal = globalThis.temporal.Temporal;
 try { Date.prototype.toTemporalInstant = globalThis.temporal.toTemporalInstant; } catch (e) {}
 ";
 
+/// Strip the default `prototype` own property from non-constructor Temporal
+/// built-ins. The @js-temporal/polyfill defines static methods (`from`,
+/// `compare`) and prototype methods (`add`, `with`, …) as plain functions,
+/// which in JS carry a default `prototype`. ECMA-262 requires built-in
+/// Replace the non-constructor Temporal built-ins (static methods like
+/// `Duration.compare`, prototype methods like `Duration.prototype.add`) with
+/// prototype-less forwarders so the surface matches ECMA-262, where a
+/// non-constructor built-in carries *no* `prototype` own property — the test262
+/// `.builtin` fixtures assert `hasOwnProperty("prototype") === false`.
+///
+/// `delete` cannot work here: a plain function's `prototype` is created with
+/// `configurable: false`, so `delete` is a silent no-op in sloppy mode. The only
+/// way to produce a function with no `prototype` that still preserves dynamic
+/// `this` (needed for prototype methods) is a method-shorthand function
+/// (ECMA-262: a method definition is non-constructable and gets no `prototype`).
+/// Direct `eval` keeps the captured `fn` in lexical scope so the shorthand can
+/// forward `fn.apply(this, arguments)`. Named constructors keep `prototype`; the
+/// `constructor` back-reference on each prototype is skipped so a ctor never
+/// loses it via that alias.
+const TEMPORAL_NON_CTOR_STRIP: &str = r#"
+(function () {
+  var CTORS = { PlainDate:1, PlainTime:1, PlainDateTime:1, ZonedDateTime:1,
+               Instant:1, Duration:1, PlainYearMonth:1, PlainMonthDay:1,
+               Calendar:1, TimeZone:1 };
+  function protoless(fn, name) {
+    var holder = eval('({ __call() { return fn.apply(this, arguments); } })');
+    var w = holder.__call;
+    // Function `name`/`length` are configurable — restore the originals so the
+    // `.name`/`.length` fixtures still hold after wrapping.
+    try { Object.defineProperty(w, 'name', { value: name }); } catch (e) {}
+    try { Object.defineProperty(w, 'length', { value: fn.length }); } catch (e) {}
+    return w;
+  }
+  function setFn(o, k, fn) {
+    var d = Object.getOwnPropertyDescriptor(o, k);
+    if (!d) { try { o[k] = fn; } catch (e) {} return; }
+    if (d.configurable) {
+      try {
+        Object.defineProperty(o, k, {
+          value: fn, writable: true, enumerable: d.enumerable, configurable: true
+        });
+        return;
+      } catch (e) {}
+    }
+    if (d.writable || 'set' in d) { try { o[k] = fn; } catch (e) {} }
+  }
+  function walk(o, skipCtors) {
+    if (!o || (typeof o !== 'object' && typeof o !== 'function')) return;
+    var names = Object.getOwnPropertyNames(o);
+    for (var i = 0; i < names.length; i++) {
+      var k = names[i];
+      if (k === 'constructor') continue;
+      var v; try { v = o[k]; } catch (e) { continue; }
+      if (typeof v === 'function' && !(skipCtors && CTORS[k])) setFn(o, k, protoless(v, k));
+    }
+  }
+  if (typeof Temporal === 'undefined') return;
+  walk(Temporal, true);
+  for (var c in CTORS) {
+    var C = Temporal[c];
+    if (!C) continue;
+    walk(C, false);
+    if (C.prototype) walk(C.prototype, false);
+  }
+  if (Temporal.Now) walk(Temporal.Now, false);
+})();
+"#;
+
 /// The rest of the bundled harness, looked up by `$INCLUDE` name (a fixture's
 /// `includes:` frontmatter) and injected on the engine path — `propertyHelper`
 /// (reflection/verifyProperty), `compareArray`, `deepEqual`, `isConstructor`
@@ -1534,6 +1602,10 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
                     return Ok(Some(format!("polyfill eval failed: {msg}")));
                 }
                 ctx.eval_with_options::<(), _>(TEMPORAL_EXPOSE, sloppy())?;
+                // Strip the default `prototype` from non-constructor built-ins
+                // (static/prototype methods defined as plain functions) so the
+                // polyfill surface matches ECMA-262 for the `.builtin` fixtures.
+                ctx.eval_with_options::<(), _>(TEMPORAL_NON_CTOR_STRIP, sloppy())?;
             }
             // Harness prelude: sta.js (defines Test262Error), assert.js (throws it
             // on mismatch), then any $INCLUDE helpers the fixture declares.
@@ -2065,4 +2137,50 @@ fn scrub_local_paths_strips_tempdir_only() {
     // Two absolute paths in one line are both scrubbed.
     let two = r"C:\Temp\a.ts and /tmp/b.ts";
     assert_eq!(scrub_local_paths(two), "<path>a.ts and <path>b.ts");
+}
+
+/// Regression guard for `TEMPORAL_NON_CTOR_STRIP`: the @js-temporal/polyfill
+/// defines non-constructor built-ins as ordinary functions, which carry a
+/// non-configurable `prototype` (so `delete` is a silent no-op). The shim
+/// replaces them with method-shorthand forwarders (no `prototype`, dynamic
+/// `this` preserved). Lock in: prototype removed for static/proto/Now methods,
+/// kept for named constructors; `name`/`length` preserved; calls still correct.
+#[test]
+fn temporal_strip_removes_non_ctor_prototype() {
+    use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
+    let sloppy = || {
+        let mut o = EvalOptions::default();
+        o.strict = false;
+        o
+    };
+    let rt = Runtime::new().expect("rt");
+    let ctx = Context::full(&rt).expect("ctx");
+    ctx.with(|ctx: Ctx<'_>| {
+        ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy()).unwrap();
+        ctx.eval_with_options::<(), _>(INTL_STUB, sloppy()).unwrap();
+        ctx.eval_with_options::<(), _>(TEMPORAL_POLYFILL, sloppy()).unwrap();
+        ctx.eval_with_options::<(), _>(TEMPORAL_EXPOSE, sloppy()).unwrap();
+        ctx.eval_with_options::<(), _>(TEMPORAL_NON_CTOR_STRIP, sloppy()).unwrap();
+        let b = |src: &str| ctx.eval::<bool, _>(src).unwrap();
+        let s = |src: &str| ctx.eval::<String, _>(src).unwrap();
+        let f = |src: &str| ctx.eval::<f64, _>(src).unwrap();
+        // Non-constructors carry no `prototype` own property (static + proto + Now).
+        assert!(!b("Temporal.Duration.compare.hasOwnProperty('prototype')"));
+        assert!(!b("Temporal.Duration.prototype.add.hasOwnProperty('prototype')"));
+        assert!(!b("Temporal.Now.zonedDateTimeISO.hasOwnProperty('prototype')"));
+        // Named constructors keep their `prototype`.
+        assert!(b("Temporal.PlainDate.hasOwnProperty('prototype')"));
+        // `name`/`length` restored after wrapping.
+        assert_eq!(s("Temporal.Duration.compare.name"), "compare");
+        assert_eq!(f("Temporal.Duration.compare.length"), 2.0);
+        // Calls forward correctly (static + prototype method dynamic `this`).
+        assert_eq!(
+            f("Temporal.Duration.compare(new Temporal.Duration(0,0,0,0,2), new Temporal.Duration(0,0,0,0,1))"),
+            1.0
+        );
+        assert_eq!(
+            s("new Temporal.Duration(0,0,0,0,1).add(new Temporal.Duration(0,0,0,0,1)).toJSON()"),
+            "PT2H"
+        );
+    });
 }
