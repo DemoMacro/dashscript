@@ -19,8 +19,8 @@
     "id": "test262.test.built-ins.typedarray.from.from-array-mapper-detaches-result",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -35,8 +35,8 @@
     "id": "test262.test.built-ins.typedarray.from.from-typedarray-into-itself-mapper-detaches-result",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -51,8 +51,8 @@
     "id": "test262.test.built-ins.typedarray.from.from-typedarray-mapper-detaches-result",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -339,8 +339,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.buffer.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makeArrayBuffer.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -355,8 +355,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.buffer.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makeArrayBuffer.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -419,8 +419,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.bytelength.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -451,8 +451,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.bytelength.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -547,8 +547,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.byteoffset.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makeArrayBuffer.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -579,8 +579,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.byteoffset.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makeArrayBuffer.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -691,8 +691,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.copywithin.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -883,16 +883,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.copywithin.coerced-values-end-detached",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: should throw TypeError as array is detached Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.copywithin.coerced-values-end-detached-prototype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: should throw TypeError as array is detached Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -907,8 +907,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.copywithin.coerced-values-start-detached",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: should throw TypeError as array is detached Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -923,8 +923,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.copywithin.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1147,8 +1147,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.entries.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1179,8 +1179,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.entries.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1283,8 +1283,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.every.bigint.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1347,8 +1347,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.every.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1411,8 +1411,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.every.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1483,8 +1483,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.every.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1611,8 +1611,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.fill.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1747,8 +1747,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.fill.coerced-end-detach",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Detachment when coercing end should throw TypeError Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1763,16 +1763,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.fill.coerced-start-detach",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Detachment when coercing start should throw TypeError Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.fill.coerced-value-detach",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Detachment when coercing value should throw TypeError Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1787,8 +1787,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.fill.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2035,8 +2035,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.filter.bigint.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2099,8 +2099,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.filter.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2315,8 +2315,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.filter.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2387,8 +2387,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.filter.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2627,8 +2627,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2683,8 +2683,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.bigint.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2739,8 +2739,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2819,8 +2819,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2907,8 +2907,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2963,8 +2963,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.bigint.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3019,8 +3019,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3099,8 +3099,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3187,8 +3187,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3243,8 +3243,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.bigint.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3299,8 +3299,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3395,8 +3395,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3483,8 +3483,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3539,8 +3539,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.bigint.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3595,8 +3595,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3691,8 +3691,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.predicate-may-detach-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3811,8 +3811,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.foreach.bigint.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3875,8 +3875,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.foreach.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3923,8 +3923,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.foreach.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3995,8 +3995,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.foreach.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4075,24 +4075,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.includes.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.includes.bigint.detached-buffer-during-fromindex-returns-false-for-zero",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.includes.bigint.detached-buffer-during-fromindex-returns-true-for-undefined",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4195,24 +4195,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.includes.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.includes.detached-buffer-during-fromindex-returns-false-for-zero",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.includes.detached-buffer-during-fromindex-returns-true-for-undefined",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4411,24 +4411,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.indexof.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.indexof.bigint.detached-buffer-during-fromindex-returns-minus-one-for-undefined",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.indexof.bigint.detached-buffer-during-fromindex-returns-minus-one-for-zero",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4547,24 +4547,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.indexof.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.indexof.detached-buffer-during-fromindex-returns-minus-one-for-undefined",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.indexof.detached-buffer-during-fromindex-returns-minus-one-for-zero",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4739,16 +4739,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.join.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.join.bigint.detached-buffer-during-fromindex-returns-single-comma",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4835,16 +4835,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.join.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.join.detached-buffer-during-fromindex-returns-single-comma",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4963,8 +4963,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.keys.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4995,8 +4995,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.keys.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5083,24 +5083,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.bigint.detached-buffer-during-fromindex-returns-minus-one-for-undefined",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.bigint.detached-buffer-during-fromindex-returns-minus-one-for-zero",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5211,24 +5211,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.detached-buffer-during-fromindex-returns-minus-one-for-undefined",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.lastindexof.detached-buffer-during-fromindex-returns-minus-one-for-zero",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5395,8 +5395,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.length.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5427,8 +5427,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.length.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5555,8 +5555,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.map.bigint.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5635,8 +5635,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.map.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5819,8 +5819,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.map.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -5907,8 +5907,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.map.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6179,8 +6179,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduce.bigint.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6243,8 +6243,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduce.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6331,8 +6331,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduce.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6403,8 +6403,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduce.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6539,8 +6539,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduceright.bigint.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6603,8 +6603,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduceright.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6691,8 +6691,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduceright.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6763,8 +6763,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reduceright.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6891,8 +6891,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reverse.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6939,8 +6939,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.reverse.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7179,24 +7179,24 @@
     "id": "test262.test.built-ins.typedarray.prototype.set.array-arg-targetbuffer-detached-on-get-src-value-no-throw",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.set.array-arg-targetbuffer-detached-on-tointeger-offset-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.set.array-arg-targetbuffer-detached-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7331,16 +7331,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.set.bigint.array-arg-targetbuffer-detached-on-tointeger-offset-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.set.bigint.array-arg-targetbuffer-detached-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7539,8 +7539,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.set.bigint.typedarray-arg-srcbuffer-detached-during-tointeger-offset-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7571,8 +7571,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.set.bigint.typedarray-arg-targetbuffer-detached-during-tointeger-offset-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7811,8 +7811,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.set.typedarray-arg-srcbuffer-detached-during-tointeger-offset-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7843,8 +7843,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.set.typedarray-arg-targetbuffer-detached-during-tointeger-offset-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7867,56 +7867,56 @@
     "id": "test262.test.built-ins.typedarray.prototype.slice.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.bigint.detached-buffer-custom-ctor-other-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.bigint.detached-buffer-custom-ctor-same-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.bigint.detached-buffer-get-ctor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.bigint.detached-buffer-speciesctor-get-species-custom-ctor-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.bigint.detached-buffer-zero-count-custom-ctor-other-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.bigint.detached-buffer-zero-count-custom-ctor-same-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8187,56 +8187,56 @@
     "id": "test262.test.built-ins.typedarray.prototype.slice.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.detached-buffer-custom-ctor-other-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.detached-buffer-custom-ctor-same-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.detached-buffer-get-ctor",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.detached-buffer-speciesctor-get-species-custom-ctor-throws",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `sample.slice()` throws TypeError Expected a TypeError but got a ReferenceError (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.detached-buffer-zero-count-custom-ctor-other-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.slice.detached-buffer-zero-count-custom-ctor-same-targettype",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8571,8 +8571,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.some.bigint.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8635,8 +8635,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.some.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8699,8 +8699,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.some.callbackfn-detachbuffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8771,8 +8771,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.some.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8923,8 +8923,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.sort.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9003,8 +9003,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.sort.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9067,8 +9067,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.sort.sort-tonumber",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9123,8 +9123,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.subarray.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9339,8 +9339,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.subarray.byteoffset-with-detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makeArrayBuffer.)",
+    "status": "partial",
+    "detail": "engine error: RangeError: invalid offset (Testing with Float64Array and makeArrayBuffer.)",
     "note": ""
   },
   {
@@ -9355,8 +9355,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.subarray.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9643,8 +9643,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.symbol.tostringtag.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9699,8 +9699,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.symbol.tostringtag.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9779,8 +9779,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.tolocalestring.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9891,8 +9891,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.tolocalestring.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10083,8 +10083,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.toreversed.this-value-invalid",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makeArrayBuffer.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10147,8 +10147,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.tosorted.this-value-invalid",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makeArrayBuffer.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10163,16 +10163,16 @@
     "id": "test262.test.built-ins.typedarray.prototype.tostring.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.typedarray.prototype.tostring.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10187,8 +10187,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.values.bigint.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10219,8 +10219,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.values.detached-buffer",
     "layer": "test262",
     "category": "typedarray",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

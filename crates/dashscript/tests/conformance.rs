@@ -810,6 +810,31 @@ fn judge_engine(o: EngineOutcome) -> (&'static str, String) {
 /// from throwing `ReferenceError: console is not defined`.
 const CONSOLE_PRELUDE: &str = "this.console = { log: function () {} };\n";
 
+/// Minimal `$262` host-defined agent (test262 host API). Only `detachArrayBuffer`
+/// is host-implemented (Rust via `__ds_detach` — JS cannot detach an ArrayBuffer);
+/// the rest are JS polyfills. `detachArrayBuffer` unlocks the
+/// typedarray/dataview/arraybuffer suites (fixtures whose `$INCLUDE` of
+/// `detachArrayBuffer.js` references `$262`). `createRealm`/`evalScript` are
+/// best-effort stubs returning the current global — cross-realm-isolation
+/// fixtures honestly degrade to `partial`, never fake a pass. `$262.agent` is
+/// intentionally absent: it needs real worker threads; `atomicsHelper.js` reads
+/// it at include-eval top level, so omitting it fails fast and correctly (a
+/// no-op stub would busy-wait the per-fixture timeout).
+const AGENT_262_PRELUDE: &str = r#"
+var $262 = (function () {
+  function evalScript(src) { return (0, eval)(src); }
+  return {
+    detachArrayBuffer: function (buffer) { __ds_detach(buffer); },
+    evalScript: evalScript,
+    createRealm: function () {
+      return { evalScript: evalScript, global: globalThis, $262: null };
+    },
+    global: globalThis,
+    IsHTMLDDA: null,
+  };
+})();
+"#;
+
 /// The two harness files every test262 fixture needs: `sta.js` defines
 /// `Test262Error` (the assert-failure exception), `assert.js` defines the
 /// `assert.*` family that throws it. Injected on the engine path before any
@@ -1002,7 +1027,7 @@ fn harness_source(name: &str) -> Option<&'static str> {
 /// before the fixture, so the assert family runs with reference semantics; a
 /// thrown `Test262Error` (assert mismatch) is the single failure signal.
 fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
-    use rquickjs::{context::EvalOptions, Context, Ctx, FromJs, Runtime};
+    use rquickjs::{context::EvalOptions, ArrayBuffer, Context, Ctx, FromJs, Function, Runtime};
     let runtime = match Runtime::new() {
         Ok(r) => r,
         Err(e) => return EngineOutcome::OtherError(format!("runtime: {e}")),
@@ -1051,6 +1076,20 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
             // on mismatch), then any $INCLUDE helpers the fixture declares.
             ctx.eval_with_options::<(), _>(HARNESS_STA, sloppy())?;
             ctx.eval_with_options::<(), _>(HARNESS_ASSERT, sloppy())?;
+            // Register the host-defined `$262` agent before any `$INCLUDE` (e.g.
+            // detachArrayBuffer.js) that references it. Only `detachArrayBuffer`
+            // needs a Rust impl (JS cannot detach an ArrayBuffer — it calls
+            // QuickJS's JS_DetachArrayBuffer via ArrayBuffer::detach); the rest
+            // of `$262` is the JS polyfill in AGENT_262_PRELUDE.
+            ctx.globals().set(
+                "__ds_detach",
+                Function::new(ctx.clone(), |buf: ArrayBuffer| -> rquickjs::Result<()> {
+                    let mut b = buf;
+                    b.detach();
+                    Ok(())
+                })?,
+            )?;
+            ctx.eval_with_options::<(), _>(AGENT_262_PRELUDE, sloppy())?;
             for inc in includes {
                 if let Some(src) = harness_source(inc) {
                     ctx.eval_with_options::<(), _>(src, sloppy())?;
