@@ -356,6 +356,14 @@ impl RuntimeDeps {
                 }
             }
         }
+        // The `serde_json::Value` `DsSameValue` impl needs both the trait
+        // (`ASSERT_HELPER`, emitted by `Assert`) and `serde_json` (flagged by
+        // `SerdeJson`); emit it only when both are present, so a non-JSON assert
+        // fixture (no serde_json dep) never references `serde_json::Value`.
+        if self.has(RuntimeDep::Assert) && self.has(RuntimeDep::SerdeJson) {
+            src.push_str(ASSERT_VALUE_HELPER);
+            any = true;
+        }
         any.then_some(src)
     }
 
@@ -903,6 +911,27 @@ impl<T: DsSameValue> DsSameValue for Option<T> {
         match self {
             Some(v) => v.ds_cmp(),
             None => DsCmp::Undefined,
+        }
+    }
+}
+"#;
+
+/// The `serde_json::Value` `DsSameValue` impl — emitted only when both `Assert`
+/// and `SerdeJson` are flagged (see `RuntimeDeps::helper_module`). A scalar JSON
+/// value projects to its `DsCmp`; array/object operands have no static reference
+/// identity (ES SameValue on objects is reference-equality, which a value-typed
+/// `serde_json::Value` cannot express), so they panic — test262 covers them via
+/// `compareArray`/`deepEqual` on the engine path, never reaching this arm.
+const ASSERT_VALUE_HELPER: &str = r#"
+impl DsSameValue for serde_json::Value {
+    #[inline]
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        match self {
+            serde_json::Value::Null => DsCmp::Undefined,
+            serde_json::Value::Bool(b) => DsCmp::Bool(*b),
+            serde_json::Value::Number(n) => DsCmp::Num(n.as_f64().unwrap_or(f64::NAN)),
+            serde_json::Value::String(s) => DsCmp::Str(s.as_str()),
+            _ => panic!("DsSameValue: array/object Value operand has no static reference identity"),
         }
     }
 }
