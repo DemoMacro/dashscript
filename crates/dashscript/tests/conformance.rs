@@ -846,6 +846,40 @@ var $262 = (function () {
 })();
 "#;
 
+/// `Atomics.waitAsync` polyfill. QuickJS-NG lacks it (`typeof` is `"undefined"`),
+/// so the ~100 test262 `waitAsync` fixtures fail at the first assert. Only the
+/// validation + non-blocking paths are covered (the `-agent` variants need real
+/// worker threads and stay partial). Validation is delegated to `Atomics.wait`
+/// with a 0-timeout probe: it throws the spec-required TypeError (not a waitable
+/// shared typed array) / RangeError (out-of-bounds index) / TypeError (Symbol
+/// value) *before* QuickJS's main-thread "cannot block in this thread" check.
+/// That "cannot block" throw (which happens regardless of value/timeout on the
+/// main thread) is swallowed — it only signals validation passed — and the
+/// result is computed directly: value mismatch → `{async:false,"not-equal"}`;
+/// match with timeout ≤ 0 → `{async:false,"timed-out"}`; match with timeout > 0
+/// → `{async:true, Promise<"timed-out">}` (no agent can wake, so the promise
+/// resolves — the fixtures check the resolved value, not the timing).
+const WAITASYNC_PRELUDE: &str = r#"
+if (typeof Atomics !== 'undefined' && Atomics !== null
+    && typeof Atomics.wait === 'function'
+    && typeof Atomics.waitAsync !== 'function') {
+  Atomics.waitAsync = function (typedArray, index, value, timeout) {
+    try {
+      Atomics.wait(typedArray, index, value, 0);
+    } catch (e) {
+      if (!/cannot block/.test(String(e))) throw e;
+    }
+    var t = Number(timeout);
+    if (t !== t) t = Infinity;
+    var current = typedArray[index];
+    var coerced = (typeof current === 'bigint') ? BigInt(value) : (value | 0);
+    if (current !== coerced) return { async: false, value: 'not-equal' };
+    if (t <= 0) return { async: false, value: 'timed-out' };
+    return { async: true, value: Promise.resolve('timed-out') };
+  };
+}
+"#;
+
 /// Host-defined `$DONE` async-completion callback (test262 host API). test262
 /// async fixtures signal completion by calling `$DONE()` (success) or
 /// `$DONE(error)` (failure); `asyncHelpers.js`'s `asyncTest` also requires
@@ -1625,6 +1659,12 @@ fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
                 })?,
             )?;
             ctx.eval_with_options::<(), _>(AGENT_262_PRELUDE, sloppy())?;
+            // Atomics.waitAsync polyfill (QuickJS-NG lacks it). Inject only for
+            // fixtures that reference it — covers the validation + non-blocking
+            // waitAsync paths; the `-agent` variants stay partial.
+            if js_source.contains("waitAsync") {
+                ctx.eval_with_options::<(), _>(WAITASYNC_PRELUDE, sloppy())?;
+            }
             // ShadowRealm polyfill: QuickJS-NG lacks ShadowRealm, so inject a
             // Rust-backed one (isolated rquickjs Context per instance) only for
             // fixtures that reference it — skips the registration cost otherwise.
@@ -2182,5 +2222,68 @@ fn temporal_strip_removes_non_ctor_prototype() {
             s("new Temporal.Duration(0,0,0,0,1).add(new Temporal.Duration(0,0,0,0,1)).toJSON()"),
             "PT2H"
         );
+    });
+}
+
+/// Regression guard for `WAITASYNC_PRELUDE`: QuickJS-NG lacks `Atomics.waitAsync`,
+/// and `Atomics.wait` throws "cannot block in this thread" on the main thread
+/// (before value comparison), so the polyfill delegates only validation and
+/// computes the result directly. Lock in: presence, validation throws
+/// (RangeError OOB / TypeError non-shared / TypeError Symbol value|timeout),
+/// not-equal return, and the timeout-branched `{async,value}` shape.
+#[test]
+fn waitasync_polyfill_validation_and_returns() {
+    use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
+    let sloppy = || {
+        let mut o = EvalOptions::default();
+        o.strict = false;
+        o
+    };
+    let rt = Runtime::new().expect("rt");
+    let ctx = Context::full(&rt).expect("ctx");
+    ctx.with(|ctx: Ctx<'_>| {
+        ctx.eval_with_options::<(), _>(WAITASYNC_PRELUDE, sloppy())
+            .unwrap();
+        let b = |s: &str| ctx.eval::<bool, _>(s).unwrap();
+        let s = |src: &str| -> String {
+            ctx.eval::<String, _>(format!(
+                "try{{ {src}; 'no-throw' }} catch(e) {{ e.constructor.name }}"
+            ))
+            .unwrap()
+        };
+        // Presence.
+        assert!(b("typeof Atomics.waitAsync === 'function'"));
+        // Validation: out-of-bounds index → RangeError.
+        assert_eq!(
+            s("Atomics.waitAsync(new Int32Array(new SharedArrayBuffer(4)), 99, 0, 0)"),
+            "RangeError"
+        );
+        // Validation: non-shared buffer → TypeError.
+        assert_eq!(
+            s("Atomics.waitAsync(new Int32Array(new ArrayBuffer(4)), 0, 0, 0)"),
+            "TypeError"
+        );
+        // Validation: Symbol value → TypeError.
+        assert_eq!(
+            s("Atomics.waitAsync(new Int32Array(new SharedArrayBuffer(4)), 0, Symbol(), 0)"),
+            "TypeError"
+        );
+        // Validation: Symbol timeout → TypeError (value valid, reaches timeout coercion).
+        assert_eq!(
+            s("Atomics.waitAsync(new Int32Array(new SharedArrayBuffer(4)), 0, 0, Symbol())"),
+            "TypeError"
+        );
+        // Value mismatch → {async:false, value:'not-equal'}.
+        assert!(b(
+            "var __t = new Int32Array(new SharedArrayBuffer(4)); Atomics.store(__t, 0, 42);\
+             Atomics.waitAsync(__t, 0, 0).value === 'not-equal'"
+        ));
+        // Value match, timeout 0 → {async:false, value:'timed-out'}.
+        assert!(b("var __u = new Int32Array(new SharedArrayBuffer(4));\
+             Atomics.waitAsync(__u, 0, 0, 0).value === 'timed-out'"));
+        // Value match, timeout > 0 → {async:true, value: Promise}.
+        assert!(b("var __v = new Int32Array(new SharedArrayBuffer(4));\
+             var r = Atomics.waitAsync(__v, 0, 0, 10);\
+             r.async === true && r.value instanceof Promise"));
     });
 }
