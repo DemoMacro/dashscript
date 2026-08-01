@@ -476,7 +476,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38440) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (24664) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37240) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (38272) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1564,7 +1564,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39524) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (19960) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -1644,7 +1644,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38752) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (1980) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -1940,7 +1940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39652) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ningu$$$m $$$ igual a ningu$$$m. Todo o ser humano $$$ um estranho ímpar.\"», «\"Ningu$$m $$ igual a ningu$$m. To",
+    "detail": "Test262Error: \nthread 'main' (41932) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ningu$$$m $$$ igual a ningu$$$m. Todo o ser humano $$$ um estranho ímpar.\"», «\"Ningu$$m $$ igual a ningu$$m. To",
     "note": ""
   },
   {
@@ -1948,7 +1948,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11464) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $$. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a $. Todo o ser humano é um e",
+    "detail": "Test262Error: \nthread 'main' (35364) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $$. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a $. Todo o ser humano é um e",
     "note": ""
   },
   {
@@ -1956,7 +1956,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25920) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $&. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a ninguém. Todo o ser humano ",
+    "detail": "Test262Error: \nthread 'main' (23728) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $&. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a ninguém. Todo o ser humano ",
     "note": ""
   },
   {
@@ -1964,7 +1964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35016) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $'. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a . Todo o ser humano é um es",
+    "detail": "Test262Error: \nthread 'main' (38460) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $'. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a . Todo o ser humano é um es",
     "note": ""
   },
   {
@@ -1980,7 +1980,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (7816) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $`. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a Ninguém é igual a . Todo o s",
+    "detail": "Test262Error: \nthread 'main' (5380) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"Ninguém é igual a $`. Todo o ser humano é um estranho ímpar.\"», «\"Ninguém é igual a Ninguém é igual a . Todo o s",
     "note": ""
   },
   {
@@ -3867,16 +3867,16 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-10",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (4824) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-11",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10492) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-inf\"», «\"-Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3891,16 +3891,16 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-13",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13576) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displ",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-14",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33484) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3915,16 +3915,16 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-16",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (1844) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1000000000000000000000\"», «\"1e+21\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-17",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42688) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"10000000000000000000000\"», «\"1e+22\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3939,8 +3939,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-19",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (26552) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -3955,16 +3955,16 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-20",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (5156) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.00000001\"», «\"1e-8\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-21",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42156) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"0.0000001\"», «\"1e-7\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4227,8 +4227,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-6",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42952) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-0\"», «\"0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4251,8 +4251,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-9",
     "layer": "test262",
     "category": "string",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42236) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4308,7 +4308,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34016) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (19484) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4316,7 +4316,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (7644) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42012) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4324,7 +4324,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (12808) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable t",
+    "detail": "Test262Error: \nthread 'main' (39756) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable t",
     "note": ""
   },
   {
@@ -4332,7 +4332,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13620) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u{2006}\\u{2007}\\u{2008}\\u{20",
+    "detail": "Test262Error: \nthread 'main' (9540) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\u{2006}\\u{2007}\\u{2008}\\u{200",
     "note": ""
   },
   {
@@ -4340,7 +4340,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (26904) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\",
+    "detail": "Test262Error: \nthread 'main' (29516) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\n\\r\\u{2028}\\u{2029}abc\\t\\n\\u{b}\\u{c}\\r \\u{a0}\\u{1680}\\u{2000}\\u{2001}\\u{2002}\\u{2003}\\u{2004}\\u{2005}\\",
     "note": ""
   },
   {
@@ -4380,7 +4380,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9356) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (23504) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}abc\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -4428,7 +4428,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42320) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\u{feff}\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (7644) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc\\u{feff}\"», «\"abc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -4532,7 +4532,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (5568) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (27400) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\\u{feff}\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtr",
     "note": ""
   },
   {

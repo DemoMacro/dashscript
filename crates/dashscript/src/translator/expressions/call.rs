@@ -275,22 +275,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                     }
                 }
                 _ if is_number_arg(a, ctx) => {
-                    // An ES `Number::toString`: Rust's `f64` `Display` differs
-                    // from ECMAScript (`1e21` → `1e+21`, `1e-7`, `-0` → `0`), so
-                    // route any numeric argument — a literal, a numeric local,
-                    // arithmetic, `Math.*`, `.length` — through the `__ds` helper
-                    // (ryu_js). Its presence in the output flags `needs_ryu_js`.
-                    // `__ds::number_to_string` takes `f64`; a flavor-promoted
-                    // `i64` local (`console.log(total)` where `total` is `i64`)
-                    // is site-cast here so the call compiles.
-                    let e = if let Some(expr) = a.as_expression() {
-                        translate_number_to(expr, NumberFlavor::F64, ctx)
-                    } else {
-                        translate_argument(a, ctx)
-                    };
-                    let wrapped: Expr = parse_quote!(crate::__ds::number_to_string(#e));
+                    // An ES `Number::toString` — route through `__ds` (ryu_js),
+                    // not Rust `Display` (`1e21`, `1e-7`, `-0` differ). See
+                    // `number_arg_to_es_string` for the flavor-promoted `i64`
+                    // site-cast and the `needs_ryu_js` flag.
+                    vals.push(number_arg_to_es_string(a, ctx));
                     fmt.push_str("{}");
-                    vals.push(wrapped);
                 }
                 _ if is_match_arg(a, ctx) => {
                     // `console.log(/pat/.exec(s))` — `Option<DsMatch>` has no
@@ -820,6 +810,20 @@ pub(in crate::translator) fn prototype_method_call<'a>(
     Some((builtin, method))
 }
 
+/// Render a numeric argument as an ES `Number::toString` string (ryu_js),
+/// routing around Rust's `f64` `Display`, which differs from ECMAScript
+/// (`1e21` → `1e+21`, `1e-7`, `-0` → `0`). Shared by the console.log /
+/// template format points and the `String.prototype.method.call(n)` idiom's
+/// `ToString(n)` step. Its presence in the output flags `needs_ryu_js`.
+fn number_arg_to_es_string(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    let e = if let Some(expr) = arg.as_expression() {
+        translate_number_to(expr, NumberFlavor::F64, ctx)
+    } else {
+        translate_argument(arg, ctx)
+    };
+    parse_quote!(crate::__ds::number_to_string(#e))
+}
+
 /// ToString-coerce a `.call(receiver)` argument to a `String`, matching TS
 /// `String(x)`: a scalar via `format!`; `null`/`undefined` to the literal
 /// `"null"`/`"undefined"` (they lower to `None`, which has no `Display`).
@@ -831,6 +835,9 @@ fn to_string_expr(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::Identifier(id) if id.name.as_str() == "undefined" => {
             parse_quote!("undefined".to_string())
         }
+        // A numeric receiver (`String.prototype.trim.call(1e21)`) is ES
+        // `Number::toString`, not Rust `Display` — see `number_arg_to_es_string`.
+        _ if is_number_arg(arg, ctx) => number_arg_to_es_string(arg, ctx),
         _ => {
             let e = translate_argument(arg, ctx);
             parse_quote!(::std::format!("{}", #e))
