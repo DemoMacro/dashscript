@@ -75,8 +75,8 @@
     "id": "test262.test.built-ins.error.iserror.errors-other-realm",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:4:38: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:5:38: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:6:38: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:7:38: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:8:38: error[E0425]: cannot find value `error` in this scope: not found in this scope",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
     "note": ""
   },
   {

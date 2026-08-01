@@ -436,6 +436,21 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
         return Mapping::Mapped;
     };
     let prop = sm.property.name.as_str();
+    // `<engine-value-global>.<method>(…)` — these globals (`Date`, `Promise`,
+    // `Atomics`, the typed-array constructors, the test262 `TemporalHelpers`/
+    // `$262` harness objects, …) carry no static member-call mapping; the
+    // generic member-call emit snake-cases the receiver name and produces a
+    // phantom binding (E0425). Degrade so the engine runs the real method
+    // (QuickJS ships the ES ones; the harness ones arrive via the injected
+    // `includes`). `Temporal` is routed earlier by `temporal_callee_split`, so
+    // a `Temporal.<Type>.<method>` call never reaches this arm.
+    if let Expression::Identifier(id) = &sm.object {
+        if is_engine_value_global(id.name.as_str()) {
+            return degrade(
+                "`<engine-value-global>.<method>` has no static mapping — runs under the engine",
+            );
+        }
+    }
     // `<re>.exec(…)` inside a loop — regress is stateless, so the loop would
     // re-find the same match every iteration. The engine advances
     // `lastIndex` like ES.

@@ -84,7 +84,7 @@ pub const ENGINE_VALUE_GLOBALS: &[&str] = &[
     "DisposableStack",
     "AsyncDisposableStack",
     "$262",
-    "temporalHelpers",
+    "TemporalHelpers",
 ];
 
 /// True if `name` is a global DashScript models only as a static-call/new

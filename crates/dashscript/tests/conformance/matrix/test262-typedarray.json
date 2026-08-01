@@ -115,8 +115,8 @@
     "id": "test262.test.built-ins.typedarray.from.iterated-array-changed-by-tonumber",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "src\\main.rs:7:14: error[E0425]: cannot find value `int32_array` in this scope: not found in this scope\nsrc\\main.rs:4:51: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:16: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

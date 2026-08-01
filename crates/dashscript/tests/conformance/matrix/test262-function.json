@@ -659,8 +659,8 @@
     "id": "test262.test.built-ins.function.call-bind-this-realm-undef",
     "layer": "test262",
     "category": "function",
-    "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:5:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
     "note": ""
   },
   {

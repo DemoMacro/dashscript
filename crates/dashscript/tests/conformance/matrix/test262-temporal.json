@@ -379,8 +379,8 @@
     "id": "test262.test.built-ins.temporal.duration.constructor",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:48: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -468,7 +468,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9400) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (5696) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -2732,7 +2732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35372) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
+    "detail": "Test262Error: \nthread 'main' (34508) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -3252,7 +3252,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40112) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (39348) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -3284,7 +3284,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (24348) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (40640) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -3292,7 +3292,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9508) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (22724) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -3300,7 +3300,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (26808) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (40464) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -3347,8 +3347,8 @@
     "id": "test262.test.built-ins.temporal.instant.from.argument-zoneddatetime",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:11:13: warning: unreachable statement: unreachable statement\nsrc\\main.rs:12:26: error[E0615]: attempted to take value of method `epoch_nanoseconds` on type `temporal_rs::Instant`: method, not a field\nsrc\\main.rs:13:26: error[E0615]: attempted to take value of method `epoch_nanoseconds` on type `temporal_rs::Instant`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3404,7 +3404,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40716) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (39752) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -3444,7 +3444,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (26552) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (42744) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -3475,8 +3475,8 @@
     "id": "test262.test.built-ins.temporal.instant.fromepochmilliseconds.limits",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:54:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:101:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6219,8 +6219,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:29:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:38:49: error[E0609]: no field `calendar_id` on type `temporal_rs::PlainDate`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6244,7 +6244,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42640) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (40464) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -6579,8 +6579,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.constructor",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:5:12: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6684,7 +6684,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42180) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (9916) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -6692,15 +6692,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (24792) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (38308) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.from.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:24:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:24:9: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -6724,7 +6724,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (18896) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (37404) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -6732,7 +6732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19052) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (40028) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -6740,7 +6740,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22300) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (9228) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -6764,7 +6764,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41292) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (42092) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -6844,7 +6844,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11788) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (41988) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -6948,7 +6948,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40732) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (13772) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -6971,8 +6971,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.limits",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:61:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:95:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:129:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:162:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:195:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:228:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7819,16 +7819,16 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.since.argument-plaindatetime",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:34:22: error[E0599]: no method named `total` found for enum `Result<T, E>` in the current scope: method not found in `Result<temporal_rs::Duration, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.prototype.since.argument-propertybag-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:36:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:33:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:35:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:51:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:52:58: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -7883,8 +7883,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.since.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:45:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:44:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:71:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8059,8 +8059,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.since.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:72:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:105:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:175:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:207:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:302:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:335:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8379,8 +8379,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.toplaindatetime.argument-object",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:40:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:66:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:30:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:34:13: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `HashMap<String, f64>`\nsrc\\main.rs:56:25: error[E0609]: no field `calendar_id` on type `Result<PlainDateTime, TemporalError>`: unknown field\nsrc\\main.rs:57:22: error[E0609]: no field `calendar_id` on type `temporal_rs::PlainDate`: unknown field",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8411,8 +8411,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.toplaindatetime.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:50:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:49:50: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `String`\nsrc\\main.rs:76:81: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8483,8 +8483,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.toplaindatetime.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:30:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:54:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:92:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:132:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:174:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:29:42: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `String`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8507,8 +8507,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.toplaindatetime.limits",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:140:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:155:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:170:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:139:72: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `PlainTime`\nsrc\\main.rs:142:36: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `PlainTime`\nsrc\\main.rs:157:36: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `PlainTime`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8523,8 +8523,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.toplaindatetime.plaintime-propertybag-no-time-units",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:36:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:32:40: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `HashMap<String, f64>`\nsrc\\main.rs:34:11: error[E0609]: no field `minute` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:35:46: error[E0308]: mismatched types: expected `Option<PlainTime>`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8555,8 +8555,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.toplainmonthday.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:30:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:42: error[E0609]: no field `calendar_id` on type `Result<PlainMonthDay, TemporalError>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8595,8 +8595,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.toplainyearmonth.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:30:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:42: error[E0609]: no field `calendar_id` on type `Result<PlainYearMonth, TemporalError>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -8707,8 +8707,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.tostring.calendarname-wrong-type",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:29:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:38:24: error[E0599]: no method named `is_nan` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`\nsrc\\main.rs:40:31: error[E0599]: no method named `is_infinite` found for struct `temporal_rs::PlainDate` in the current scope: method not found in `temporal_rs::PlainDate`\nsrc\\main.rs:41:28: error[E0369]: binary operation `<` cannot be applied to type `temporal_rs::PlainDate`\nsrc\\main.rs:47:31: error[E0605]: non-primitive cast: `temporal_rs::PlainDate` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9099,16 +9099,16 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.until.argument-plaindatetime",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:34:22: error[E0599]: no method named `total` found for enum `Result<T, E>` in the current scope: method not found in `Result<temporal_rs::Duration, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindate.prototype.until.argument-propertybag-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:36:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:33:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:35:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:51:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:52:58: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9163,8 +9163,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.until.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:45:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:44:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:71:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9339,8 +9339,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.until.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:72:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:104:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:173:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:204:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:298:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:331:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9571,8 +9571,8 @@
     "id": "test262.test.built-ins.temporal.plaindate.prototype.withcalendar.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:27:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:25:50: error[E0308]: mismatched types: expected `Calendar`, found `String`\nsrc\\main.rs:26:40: error[E0277]: the trait bound `temporal_rs::PlainDate: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `temporal_rs::PlainDate`\nsrc\\main.rs:26:58: error[E0277]: the trait bound `temporal_rs::PlainDate: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `temporal_rs::PlainDate`\nsrc\\main.rs:37:25: error[E0609]: no field `calendar_id` on type `temporal_rs::PlainDate`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -9772,7 +9772,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40724) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (39576) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -10115,24 +10115,24 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.constructor",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:5:12: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.constructor-full",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:50:47: error[E0609]: no field `calendar_id` on type `PlainDateTime`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.datetime-math",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:82:13: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:99:13: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:76:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:85:26: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:91:26: error[E0599]: no method named `negated` found for enum `Result<T, E>` in the current scope: method not found in `Result<temporal_rs::Duration, TemporalError>`\nsrc\\main.rs:94:41: error[E0277]: the trait bound `PlainDateTime: DsDisplay` is not satisfied: the trait `DsDisplay` is not implemented for `PlainDateTime`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10163,8 +10163,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-plaindate",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:11:13: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:11:13: warning: unreachable statement: unreachable statement\nsrc\\main.rs:27:26: error[E0609]: no field `calendar_id` on type `PlainDateTime`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10252,7 +10252,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22732) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (2532) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -10260,15 +10260,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41800) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (6676) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:24:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:24:9: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10276,7 +10276,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36144) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (22480) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -10292,7 +10292,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (29420) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (42496) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -10300,7 +10300,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39260) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (16564) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -10308,7 +10308,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37004) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (33576) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -10323,8 +10323,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.from.argument-string-subsecond",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:40:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:77:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:114:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:151:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:188:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10340,7 +10340,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20880) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (704) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -10387,8 +10387,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.from.leap-second",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:25:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:61:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:106:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:77:11: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -10428,7 +10428,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10336) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (31792) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -10524,7 +10524,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10232) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (2980) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -10587,8 +10587,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.add.ambiguous-date",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:51:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:38:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:54:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:76:18: error[E0308]: arguments to this method are incorrect\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -11707,16 +11707,16 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.since.argument-plaindate",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:37:35: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:40:22: error[E0599]: no method named `total` found for enum `Result<T, E>` in the current scope: method not found in `Result<temporal_rs::Duration, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.since.argument-propertybag-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:42:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:37:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:39:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:41:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:57:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:58:58: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -11771,8 +11771,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.since.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:51:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:50:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:77:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -11979,8 +11979,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.since.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:84:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:117:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:193:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:225:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:332:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:365:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -12019,8 +12019,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.subtract.ambiguous-date",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:53:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:38:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:56:18: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:78:18: error[E0308]: arguments to this method are incorrect\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -12443,8 +12443,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.tostring.calendarname-wrong-type",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:44:24: error[E0599]: no method named `is_nan` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nsrc\\main.rs:46:31: error[E0599]: no method named `is_infinite` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nsrc\\main.rs:47:28: error[E0369]: binary operation `<` cannot be applied to type `PlainDateTime`\nsrc\\main.rs:53:31: error[E0605]: non-primitive cast: `PlainDateTime` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -12675,8 +12675,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.tostring.roundingmode-wrong-type",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:45:24: error[E0599]: no method named `is_nan` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nsrc\\main.rs:47:31: error[E0599]: no method named `is_infinite` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nsrc\\main.rs:48:28: error[E0369]: binary operation `<` cannot be applied to type `PlainDateTime`\nsrc\\main.rs:41:27: error[E0605]: non-primitive cast: `HashMap<String, String>` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:54:31: error[E0605]: non-primitive cast: `PlainDateTime` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -12715,8 +12715,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.tostring.smallestunit-wrong-type",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:44:24: error[E0599]: no method named `is_nan` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nsrc\\main.rs:46:31: error[E0599]: no method named `is_infinite` found for struct `PlainDateTime` in the current scope: method not found in `PlainDateTime`\nsrc\\main.rs:47:28: error[E0369]: binary operation `<` cannot be applied to type `PlainDateTime`\nsrc\\main.rs:53:31: error[E0605]: non-primitive cast: `PlainDateTime` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -12939,16 +12939,16 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.until.argument-plaindate",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:37:35: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:40:22: error[E0599]: no method named `total` found for enum `Result<T, E>` in the current scope: method not found in `Result<temporal_rs::Duration, TemporalError>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.until.argument-propertybag-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:42:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:37:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:39:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:41:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:57:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:58:58: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13003,8 +13003,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.until.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:51:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:50:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:77:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13067,8 +13067,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.until.balance",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:79:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:105:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:131:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:73:10: error[E0308]: arguments to this method are incorrect\nsrc\\main.rs:95:13: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:95:21: error[E0599]: `Result<PlainDateTime, TemporalError>` doesn't implement `std::fmt::Display`: method cannot be called on `Result<PlainDateTime, TemporalError>` due to unsatisfied trait bounds",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13219,8 +13219,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.until.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:84:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:116:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:191:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:222:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:328:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:361:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13331,8 +13331,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.with.argument-object-insufficient-data",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:62:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:37:21: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:51:65: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:57:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:68:50: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:65:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13491,8 +13491,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.withcalendar.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:37:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:36:35: error[E0308]: mismatched types: expected `Calendar`, found `String`\nsrc\\main.rs:52:45: error[E0609]: no field `calendar_id` on type `PlainDateTime`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13611,8 +13611,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.withplaintime.argument-object-insufficient-data",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:39:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:66:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:37:15: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope\nsrc\\main.rs:42:18: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope\nsrc\\main.rs:61:18: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope\nsrc\\main.rs:69:18: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13643,8 +13643,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.withplaintime.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:56:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:55:31: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope\nsrc\\main.rs:82:62: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13739,8 +13739,8 @@
     "id": "test262.test.built-ins.temporal.plaindatetime.prototype.withplaintime.plaintime-propertybag-no-time-units",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:39:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:36:57: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope\nsrc\\main.rs:37:11: error[E0609]: no field `minute` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:38:27: error[E0599]: no method named `with_plain_time` found for struct `PlainDateTime` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -13939,8 +13939,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.constructor",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:48: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14028,7 +14028,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36312) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (10408) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -14036,15 +14036,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42448) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (13656) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:27:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:27:9: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14052,7 +14052,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33460) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (26484) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -14060,7 +14060,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32796) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (7404) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -14068,7 +14068,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10260) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (26940) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -14084,7 +14084,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39152) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (7944) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -14155,8 +14155,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.from.fields-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:23: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:11:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:23:18: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:10:9: warning: unreachable statement: unreachable statement\nsrc\\main.rs:10:44: error[E0277]: the trait bound `PlainMonthDay: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `PlainMonthDay`\nsrc\\main.rs:19:31: error[E0615]: attempted to take value of method `calendar_id` on type `PlainMonthDay`: method, not a field",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14196,7 +14196,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39440) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (16032) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -14284,7 +14284,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22300) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (4000) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -14795,8 +14795,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.prototype.toplaindate.limits",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:89:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:123:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:181:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:215:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:51:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, f64>`\nsrc\\main.rs:83:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, f64>`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -14963,8 +14963,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.prototype.with.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:24:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:38:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:50:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:75:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:88:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15355,8 +15355,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.constructor",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:5:12: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15403,8 +15403,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:59:43: error[E0425]: cannot find value `expected` in this scope: not found in this scope\nsrc\\main.rs:60:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:60:69: error[E0425]: cannot find value `input` in this scope: not found in this scope\nsrc\\main.rs:4:35: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:38: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:42: error[E0308]: mismatched types: expected `String`, found `f64`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15420,15 +15420,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (4076) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (39768) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.from.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:29:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:29:9: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15444,7 +15444,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25260) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (39796) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -15452,7 +15452,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40100) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (9272) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -15460,7 +15460,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23484) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (40900) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -15500,7 +15500,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (5008) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (13772) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -15531,8 +15531,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.from.leap-second",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:25:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:57:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:97:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:68:11: error[E0308]: mismatched types: expected `String`, found `HashMap<String, f64>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -15540,7 +15540,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42268) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (28536) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -15636,7 +15636,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40168) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (18892) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -16283,8 +16283,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.prototype.since.argument-cast",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:31:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:46:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:33:24: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:49:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:69:23: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:75:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16315,8 +16315,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.prototype.since.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:52:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:51:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:78:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16467,8 +16467,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.prototype.since.plaintime-propertybag-no-time-units",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:32:57: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:33:11: error[E0609]: no field `minute` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:34:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16963,8 +16963,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.prototype.tostring.roundingmode-wrong-type",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:31:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:41:24: error[E0599]: no method named `is_nan` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:43:31: error[E0599]: no method named `is_infinite` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:44:30: error[E0308]: mismatched types: expected `PlainTime`, found `f64`\nsrc\\main.rs:37:27: error[E0605]: non-primitive cast: `HashMap<String, String>` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:50:31: error[E0605]: non-primitive cast: `PlainTime` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17003,16 +17003,16 @@
     "id": "test262.test.built-ins.temporal.plaintime.prototype.tostring.smallestunit-wrong-type",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:31:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:40:24: error[E0599]: no method named `is_nan` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:42:31: error[E0599]: no method named `is_infinite` found for struct `PlainTime` in the current scope: method not found in `PlainTime`\nsrc\\main.rs:43:30: error[E0308]: mismatched types: expected `PlainTime`, found `f64`\nsrc\\main.rs:49:31: error[E0605]: non-primitive cast: `PlainTime` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plaintime.prototype.until.argument-cast",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:31:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:46:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:33:24: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:49:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:69:23: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:75:18: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17043,8 +17043,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.prototype.until.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:52:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:51:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:78:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17195,8 +17195,8 @@
     "id": "test262.test.built-ins.temporal.plaintime.prototype.until.plaintime-propertybag-no-time-units",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:32:57: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:33:11: error[E0609]: no field `minute` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:34:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17260,7 +17260,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39312) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
+    "detail": "Test262Error: \nthread 'main' (37332) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -17476,7 +17476,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20956) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (21344) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -17732,7 +17732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (31964) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (33348) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17795,8 +17795,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.constructor",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:5:12: error[E0425]: cannot find value `temporal` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17883,8 +17883,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:10:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:58:20: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:65:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:10:9: warning: unreachable statement: unreachable statement\nsrc\\main.rs:18:32: error[E0615]: attempted to take value of method `calendar_id` on type `PlainYearMonth`: method, not a field",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17908,7 +17908,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33144) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (40364) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -17916,15 +17916,15 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (16540) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (39600) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:25:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:25:9: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17948,7 +17948,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39564) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (23620) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -17956,7 +17956,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (27832) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (41244) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -17964,7 +17964,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41964) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (11880) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -17988,7 +17988,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37148) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (19892) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -18084,7 +18084,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35244) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (41228) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -18188,7 +18188,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19152) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (37840) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -18211,8 +18211,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.limits",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:61:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:94:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:130:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:163:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -18748,7 +18748,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (21864) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41956) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -18979,8 +18979,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.since.argument-propertybag-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:32:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:34:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:50:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:51:58: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19035,8 +19035,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.since.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:46:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:45:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:73:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19235,8 +19235,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.since.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:72:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:105:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:175:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:207:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:57:14: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:58:14: error[E0599]: no method named `total` found for enum `Result<T, E>` in the current scope: method not found in `Result<temporal_rs::Duration, TemporalError>`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19267,8 +19267,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.since.throws-if-year-outside-valid-iso-range",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:81:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:83:28: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:96:64: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:97:64: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19579,8 +19579,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.toplaindate.basic",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:24:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:28:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, f64>`\nsrc\\main.rs:40:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, String>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19611,8 +19611,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.toplaindate.limits",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:33:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:75:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:29:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, f64>`\nsrc\\main.rs:37:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, f64>`\nsrc\\main.rs:71:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, f64>`\nsrc\\main.rs:79:21: error[E0308]: mismatched types: expected `Option<CalendarFields>`, found `HashMap<String, f64>`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19699,8 +19699,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.tostring.calendarname-wrong-type",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:29:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:38:24: error[E0599]: no method named `is_nan` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:40:31: error[E0599]: no method named `is_infinite` found for struct `PlainYearMonth` in the current scope: method not found in `PlainYearMonth`\nsrc\\main.rs:41:28: error[E0369]: binary operation `<` cannot be applied to type `PlainYearMonth`\nsrc\\main.rs:47:31: error[E0605]: non-primitive cast: `PlainYearMonth` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19755,8 +19755,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.until.argument-propertybag-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:35:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:31:36: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:32:34: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:34:27: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:50:9: error[E0609]: no field `calendar` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:51:58: error[E0061]: this method takes 2 arguments but 1 argument was supplied",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19811,8 +19811,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.until.argument-string-date-with-utc-offset",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:46:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:45:31: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:73:62: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20011,8 +20011,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.until.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:72:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:104:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:173:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:204:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:57:14: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:58:14: error[E0599]: no method named `total` found for enum `Result<T, E>` in the current scope: method not found in `Result<temporal_rs::Duration, TemporalError>`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20043,8 +20043,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.prototype.until.throws-if-year-outside-valid-iso-range",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:81:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:83:28: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:96:64: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nsrc\\main.rs:97:64: error[E0061]: this method takes 2 arguments but 1 argument was supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20916,7 +20916,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40576) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (26988) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -20924,7 +20924,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3652) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (42356) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -20940,7 +20940,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35100) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (13584) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -20956,7 +20956,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (15608) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (40804) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -20964,7 +20964,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37076) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (42708) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -20972,7 +20972,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3960) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (39452) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -21052,7 +21052,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11884) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (38352) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -21148,7 +21148,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30144) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (32808) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -21316,7 +21316,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25724) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "detail": "Test262Error: \nthread 'main' (34384) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a RangeError to be thrown but got a TypeError\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
     "note": ""
   },
   {
@@ -23443,8 +23443,8 @@
     "id": "test262.test.built-ins.temporal.zoneddatetime.prototype.since.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:70:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:103:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:172:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:204:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:297:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:330:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -24867,8 +24867,8 @@
     "id": "test262.test.built-ins.temporal.zoneddatetime.prototype.until.roundingmode-half-boundary",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:70:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:102:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:170:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:201:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:293:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:326:9: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -25659,8 +25659,8 @@
     "id": "test262.test.built-ins.temporal.zoneddatetime.prototype.withtimezone.preserves-instant",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "src\\main.rs:31:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:45:5: error[E0425]: cannot find value `temporal_helpers` in this scope: not found in this scope\nsrc\\main.rs:28:20: error[E0599]: no method named `with_time_zone` found for struct `temporal_rs::ZonedDateTime` in the current scope\nsrc\\main.rs:29:42: error[E0615]: attempted to take value of method `epoch_nanoseconds` on type `temporal_rs::ZonedDateTime`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
