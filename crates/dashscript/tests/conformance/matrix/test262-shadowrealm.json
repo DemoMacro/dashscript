@@ -316,71 +316,71 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "detail": "Test262Error: Test262Error: TypeError: ShadowRealm importValue: module loading is not supported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.not-constructor",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.proto",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "engine error: TypeError: not an object",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.specifier-tostring",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-if-exportname-not-string",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-if-import-value-does-not-exist",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-typeerror-import-syntax-error",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.throws-typeerror-import-throws",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.importvalue.validates-realm-object",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: This test must fail if ShadowRealm.prototype.importValue is not a function Expected SameValue(«\"undefined\"», «\"function\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

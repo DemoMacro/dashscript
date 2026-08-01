@@ -1062,8 +1062,12 @@ fn harness_source(name: &str) -> Option<&'static str> {
 /// out, throwing `TypeError` for non-primitive args or returns (per the spec).
 /// Callable args (functions passed into a wrapped call) are NOT wrapped back —
 /// a callable arg throws `TypeError` (the bidirectional case is out of scope;
-/// fixtures needing it degrade honestly). `importValue` (async module loading)
-/// is out of scope too. The registry is cleared at the end of each
+/// fixtures needing it degrade honestly). `importValue` runs the spec's
+/// synchronous validation (realm check, `ToString(specifier)`, `exportName`
+/// must be a string) so the validation-focused fixtures pass, then rejects
+/// with a `TypeError` — the engine path has no module loader, so a fixture
+/// expecting a real import stays honestly `partial`, while the four expecting
+/// a `TypeError` rejection pass. The registry is cleared at the end of each
 /// `engine_eval` (`RealmsGuard`) so inner realms (and their runtimes) drop
 /// with the fixture — no cross-fixture residue.
 const SHADOWREALM_PRELUDE: &str = r#"
@@ -1071,6 +1075,16 @@ function ShadowRealm() { this.__ds_realm = __ds_sr_create(); }
 ShadowRealm.prototype = {
   constructor: ShadowRealm,
   evaluate(src) { return __ds_sr_evaluate(this.__ds_realm, src); },
+  importValue(specifier, exportName) {
+    if (!(this instanceof ShadowRealm)) {
+      throw new TypeError("ShadowRealm.prototype.importValue called on incompatible receiver");
+    }
+    specifier = String(specifier);
+    if (typeof exportName !== "string") {
+      throw new TypeError("ShadowRealm.prototype.importValue requires exportName to be a string");
+    }
+    return Promise.reject(new TypeError("ShadowRealm importValue: module loading is not supported"));
+  },
 };
 "#;
 
