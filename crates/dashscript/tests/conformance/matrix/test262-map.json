@@ -316,7 +316,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:10:48: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -332,7 +332,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:63: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:51: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:51: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:4:63: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -388,7 +388,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:5:35: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:65: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:27: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:16:48: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "src\\main.rs:3:17: error[E0433]: cannot find type `Map` in this scope: use of undeclared type `Map`\nsrc\\main.rs:5:35: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:5:65: error[E0308]: mismatched types: expected `String`, found `f64`\nsrc\\main.rs:6:27: error[E0308]: mismatched types: expected `String`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -460,7 +460,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:9:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:25:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:9:5: warning: unreachable statement: unreachable statement\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors; 1 warning emitted",
     "note": ""
   },
   {
@@ -468,7 +468,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "src\\main.rs:4:24: error[E0599]: no method named `entries` found for struct `HashMap<K, V, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -660,7 +660,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:46: error[E0308]: mismatched types: expected `&_`, found `String`\nsrc\\main.rs:4:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:4:68: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`",
+    "detail": "src\\main.rs:4:46: error[E0308]: mismatched types: expected `&_`, found `String`\nsrc\\main.rs:4:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`\nsrc\\main.rs:7:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
     "note": ""
   },
   {
@@ -676,7 +676,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:8:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
     "note": ""
   },
   {
@@ -700,7 +700,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:8:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
     "note": ""
   },
   {
@@ -796,7 +796,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:8:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
     "note": ""
   },
   {
@@ -1052,7 +1052,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:6:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1076,7 +1076,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:8:36: error[E0277]: the trait bound `Option<&_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<&_>`",
+    "detail": "src\\main.rs:4:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `f64`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:11: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
     "note": ""
   },
   {
@@ -1300,7 +1300,7 @@
     "layer": "test262",
     "category": "map",
     "status": "partial",
-    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:6:53: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "detail": "src\\main.rs:6:45: error[E0609]: no field `value` on type `Option<&_>`: unknown field\nsrc\\main.rs:7:45: error[E0609]: no field `done` on type `Option<&_>`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {

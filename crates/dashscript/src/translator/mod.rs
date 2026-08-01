@@ -744,6 +744,8 @@ pub enum DsCmp<'a> {
     Bool(bool),
     Str(&'a str),
     Unit,
+    /// `undefined` — an `Option<T>`'s `None`, or `serde_json::Value::Null`.
+    Undefined,
 }
 
 impl DsCmp<'_> {
@@ -759,6 +761,8 @@ impl DsCmp<'_> {
             (DsCmp::Bool(a), DsCmp::Bool(b)) => a == b,
             (DsCmp::Str(a), DsCmp::Str(b)) => *a == *b,
             (DsCmp::Unit, DsCmp::Unit) => true,
+            // `undefined` SameValue `undefined` (an Option's None, or Null).
+            (DsCmp::Undefined, DsCmp::Undefined) => true,
             _ => false,
         }
     }
@@ -886,6 +890,20 @@ impl DsSameValue for () {
     #[inline]
     fn ds_cmp(&self) -> DsCmp<'_> {
         DsCmp::Unit
+    }
+}
+
+/// An `Option<T>` — a `Map.get(k)` (ES `V | undefined`). `None` projects to
+/// [`DsCmp::Undefined`] so `assert.sameValue(m.get(k), undefined)` holds when
+/// the key is absent; `Some(v)` delegates to `T`, so a present value compares
+/// against a bare `T` operand (`assert.sameValue(m.get(k), v)`).
+impl<T: DsSameValue> DsSameValue for Option<T> {
+    #[inline]
+    fn ds_cmp(&self) -> DsCmp<'_> {
+        match self {
+            Some(v) => v.ds_cmp(),
+            None => DsCmp::Undefined,
+        }
     }
 }
 "#;

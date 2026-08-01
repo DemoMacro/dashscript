@@ -756,7 +756,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33100) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"{\\\"b\\\":1.0,\\\"a\\\":2.0,\\\"c\\\":3.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` e",
+    "detail": "Test262Error: \nthread 'main' (40864) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"{\\\"b\\\":1.0,\\\"c\\\":3.0,\\\"a\\\":2.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
@@ -1108,7 +1108,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:26:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "src\\main.rs:4:34: error[E0282]: type annotations needed: cannot infer type of the type parameter `T` declared on the enum `Option`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1124,7 +1124,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (27464) panicked at src\\__ds.rs:50:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a bac",
+    "detail": "Test262Error: \nthread 'main' (11560) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
     "note": ""
   },
   {
@@ -1156,7 +1156,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:11:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:14:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`\nsrc\\main.rs:17:46: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:22:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`",
+    "detail": "src\\main.rs:5:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:14:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`\nsrc\\main.rs:17:46: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, _>`\nsrc\\main.rs:22:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`\nsrc\\main.rs:32:46: error[E0277]: the trait bound `HashMap<std::string::String, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<std::string::String, _>`",
     "note": ""
   },
   {
@@ -1188,7 +1188,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "src\\main.rs:6:21: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:9: error[E0609]: no field `to_json` on type `Vec<bool>`: unknown field\nsrc\\main.rs:13:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:16:9: error[E0277]: the trait bound `Option<_>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Option<_>`\nsrc\\main.rs:18:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:19:9: error[E0609]: no field `to_json` on type `std::string::String`: unknown field",
+    "detail": "src\\main.rs:6:21: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:9: error[E0609]: no field `to_json` on type `Vec<bool>`: unknown field\nsrc\\main.rs:13:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:18:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:19:9: error[E0609]: no field `to_json` on type `std::string::String`: unknown field\nsrc\\main.rs:19:5: warning: unreachable expression: unreachable expression",
     "note": ""
   },
   {
