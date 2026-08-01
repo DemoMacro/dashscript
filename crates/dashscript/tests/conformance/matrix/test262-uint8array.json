@@ -139,8 +139,8 @@
     "id": "test262.test.built-ins.uint8array.prototype.setfrombase64.detached-buffer",
     "layer": "test262",
     "category": "uint8array",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -251,8 +251,8 @@
     "id": "test262.test.built-ins.uint8array.prototype.setfromhex.detached-buffer",
     "layer": "test262",
     "category": "uint8array",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -339,8 +339,8 @@
     "id": "test262.test.built-ins.uint8array.prototype.tobase64.detached-buffer",
     "layer": "test262",
     "category": "uint8array",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -387,8 +387,8 @@
     "id": "test262.test.built-ins.uint8array.prototype.tohex.detached-buffer",
     "layer": "test262",
     "category": "uint8array",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

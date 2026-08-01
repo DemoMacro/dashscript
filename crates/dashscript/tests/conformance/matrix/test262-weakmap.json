@@ -139,8 +139,8 @@
     "id": "test262.test.built-ins.weakmap.proto-from-ctor-realm",
     "layer": "test262",
     "category": "weakmap",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

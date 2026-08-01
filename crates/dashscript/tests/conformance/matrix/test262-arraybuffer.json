@@ -275,8 +275,8 @@
     "id": "test262.test.built-ins.arraybuffer.proto-from-ctor-realm",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -603,8 +603,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.resize.coerced-new-length-detach",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -707,8 +707,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.resize.this-is-detached",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1011,8 +1011,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.slicetoimmutable.this-becomes-detached",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a ReferenceError",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1035,8 +1035,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.slicetoimmutable.this-is-not-detached",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1203,8 +1203,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.transfer.this-is-detached",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1371,8 +1371,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.transfertofixedlength.this-is-detached",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1435,8 +1435,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.transfertoimmutable.this-is-not-detachable",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Actual [] and expected [newLength.valueOf] should have the same contents. [immutable ArrayBuffer] Must read arguments before verifying detachability.",
     "note": ""
   },
   {

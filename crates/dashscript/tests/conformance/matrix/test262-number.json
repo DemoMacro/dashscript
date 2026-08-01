@@ -395,8 +395,8 @@
     "id": "test262.test.built-ins.number.proto-from-ctor-realm",
     "layer": "test262",
     "category": "number",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -540,7 +540,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9828) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
+    "detail": "Test262Error: \nthread 'main' (35292) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -564,7 +564,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40996) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (36084) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30052) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-0.0e+0\"», «\"0.0e+0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "detail": "Test262Error: \nthread 'main' (35344) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"-0.0e+0\"», «\"0.0e+0\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
     "note": ""
   },
   {
@@ -628,7 +628,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41032) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (26992) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -764,7 +764,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37052) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (34328) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -852,7 +852,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39756) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (19752) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"inf\"», «\"Infinity\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -860,7 +860,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40876) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (13784) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -1100,7 +1100,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25800) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (37372) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -2108,7 +2108,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39460) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (15056) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2148,7 +2148,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42016) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«1.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (13188) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«1.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2156,7 +2156,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9228) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«16.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (40472) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«16.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2412,7 +2412,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23196) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«8.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (21320) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«8.0», «NaN») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   }
 ]

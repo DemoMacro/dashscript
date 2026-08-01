@@ -147,8 +147,8 @@
     "id": "test262.test.built-ins.sharedarraybuffer.proto-from-ctor-realm",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

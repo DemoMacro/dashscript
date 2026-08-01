@@ -1,32 +1,32 @@
 # DashScript Conformance Matrix
 
-- 21 features: **20** supported, **0** partial, **1** unsupported, **0** untested
+- 21 features: **21** supported, **0** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## weakref
 
-| feature                                                                                  | status         | detail / note                                              |
-| ---------------------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------- |
-| test262.test.built-ins.weakref.constructor                                               | 🟢 supported   |                                                            |
-| test262.test.built-ins.weakref.instance-extensible                                       | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.is-a-constructor                                          | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.newtarget-prototype-is-not-object                         | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.proto                                                     | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.proto-from-ctor-realm                                     | 🔴 unsupported | engine lacks built-in: ReferenceError: $262 is not defined |
-| test262.test.built-ins.weakref.prototype-from-newtarget                                  | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype-from-newtarget-abrupt                           | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype-from-newtarget-custom                           | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.deref.custom-this                               | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.deref.not-a-constructor                         | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.deref.prop-desc                                 | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.deref.return-object-target                      | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.deref.return-symbol-target                      | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.deref.this-does-not-have-internal-target-throws | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.deref.this-not-object-throws                    | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.prototype.proto                                           | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.returns-new-object-from-constructor-with-object-target    | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.returns-new-object-from-constructor-with-symbol-target    | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.throws-when-target-cannot-be-held-weakly                  | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.weakref.undefined-newtarget-throws                                | 🟢 supported   | via rquickjs engine                                        |
+| feature                                                                                  | status       | detail / note       |
+| ---------------------------------------------------------------------------------------- | ------------ | ------------------- |
+| test262.test.built-ins.weakref.constructor                                               | 🟢 supported |                     |
+| test262.test.built-ins.weakref.instance-extensible                                       | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.is-a-constructor                                          | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.newtarget-prototype-is-not-object                         | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.proto                                                     | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.proto-from-ctor-realm                                     | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype-from-newtarget                                  | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype-from-newtarget-abrupt                           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype-from-newtarget-custom                           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.deref.custom-this                               | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.deref.not-a-constructor                         | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.deref.prop-desc                                 | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.deref.return-object-target                      | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.deref.return-symbol-target                      | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.deref.this-does-not-have-internal-target-throws | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.deref.this-not-object-throws                    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.prototype.proto                                           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.returns-new-object-from-constructor-with-object-target    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.returns-new-object-from-constructor-with-symbol-target    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.throws-when-target-cannot-be-held-weakly                  | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.weakref.undefined-newtarget-throws                                | 🟢 supported | via rquickjs engine |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->

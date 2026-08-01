@@ -91,8 +91,8 @@
     "id": "test262.test.built-ins.suppressederror.proto-from-ctor-realm",
     "layer": "test262",
     "category": "suppressederror",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

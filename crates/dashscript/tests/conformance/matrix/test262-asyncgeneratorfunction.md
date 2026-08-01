@@ -1,29 +1,29 @@
 # DashScript Conformance Matrix
 
-- 18 features: **10** supported, **0** partial, **8** unsupported, **0** untested
+- 18 features: **18** supported, **0** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## asyncgeneratorfunction
 
-| feature                                                                              | status         | detail / note                                               |
-| ------------------------------------------------------------------------------------ | -------------- | ----------------------------------------------------------- |
-| test262.test.built-ins.asyncgeneratorfunction.extensibility                          | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.has-instance                           | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.instance-await-expr-in-param           | 🔴 unsupported | engine lacks built-in: ReferenceError: $DONE is not defined |
-| test262.test.built-ins.asyncgeneratorfunction.instance-construct-throws              | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.instance-length                        | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.instance-prototype                     | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.instance-yield-expr-in-param           | 🔴 unsupported | engine lacks built-in: ReferenceError: $DONE is not defined |
-| test262.test.built-ins.asyncgeneratorfunction.invoked-as-constructor-no-arguments    | 🔴 unsupported | engine lacks built-in: ReferenceError: $DONE is not defined |
-| test262.test.built-ins.asyncgeneratorfunction.invoked-as-function-multiple-arguments | 🔴 unsupported | engine lacks built-in: ReferenceError: $DONE is not defined |
-| test262.test.built-ins.asyncgeneratorfunction.invoked-as-function-no-arguments       | 🔴 unsupported | engine lacks built-in: ReferenceError: $DONE is not defined |
-| test262.test.built-ins.asyncgeneratorfunction.invoked-as-function-single-argument    | 🔴 unsupported | engine lacks built-in: ReferenceError: $DONE is not defined |
-| test262.test.built-ins.asyncgeneratorfunction.is-a-constructor                       | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.proto-from-ctor-realm                  | 🔴 unsupported | engine lacks built-in: ReferenceError: $262 is not defined  |
-| test262.test.built-ins.asyncgeneratorfunction.proto-from-ctor-realm-prototype        | 🔴 unsupported | engine lacks built-in: ReferenceError: $262 is not defined  |
-| test262.test.built-ins.asyncgeneratorfunction.prototype.constructor                  | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.prototype.extensibility                | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.prototype.not-callable                 | 🟢 supported   | via rquickjs engine                                         |
-| test262.test.built-ins.asyncgeneratorfunction.prototype.prototype                    | 🟢 supported   | via rquickjs engine                                         |
+| feature                                                                              | status       | detail / note       |
+| ------------------------------------------------------------------------------------ | ------------ | ------------------- |
+| test262.test.built-ins.asyncgeneratorfunction.extensibility                          | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.has-instance                           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.instance-await-expr-in-param           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.instance-construct-throws              | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.instance-length                        | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.instance-prototype                     | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.instance-yield-expr-in-param           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.invoked-as-constructor-no-arguments    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.invoked-as-function-multiple-arguments | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.invoked-as-function-no-arguments       | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.invoked-as-function-single-argument    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.is-a-constructor                       | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.proto-from-ctor-realm                  | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.proto-from-ctor-realm-prototype        | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.prototype.constructor                  | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.prototype.extensibility                | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.prototype.not-callable                 | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.asyncgeneratorfunction.prototype.prototype                    | 🟢 supported | via rquickjs engine |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->

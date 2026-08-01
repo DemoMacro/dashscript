@@ -1,31 +1,31 @@
 # DashScript Conformance Matrix
 
-- 20 features: **18** supported, **0** partial, **2** unsupported, **0** untested
+- 20 features: **20** supported, **0** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## generatorfunction
 
-| feature                                                                         | status         | detail / note                                              |
-| ------------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------- |
-| test262.test.built-ins.generatorfunction.extensibility                          | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.has-instance                           | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.instance-construct-throws              | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.instance-length                        | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.instance-name                          | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.instance-prototype                     | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.instance-restricted-properties         | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.instance-yield-expr-in-param           | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.invoked-as-constructor-no-arguments    | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.invoked-as-function-multiple-arguments | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.invoked-as-function-no-arguments       | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.invoked-as-function-single-argument    | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.is-a-constructor                       | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.proto-from-ctor-realm                  | 🔴 unsupported | engine lacks built-in: ReferenceError: $262 is not defined |
-| test262.test.built-ins.generatorfunction.proto-from-ctor-realm-prototype        | 🔴 unsupported | engine lacks built-in: ReferenceError: $262 is not defined |
-| test262.test.built-ins.generatorfunction.prototype.constructor                  | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.prototype.extensibility                | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.prototype.not-callable                 | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.prototype.prototype                    | 🟢 supported   | via rquickjs engine                                        |
-| test262.test.built-ins.generatorfunction.prototype.symbol.tostringtag           | 🟢 supported   | via rquickjs engine                                        |
+| feature                                                                         | status       | detail / note       |
+| ------------------------------------------------------------------------------- | ------------ | ------------------- |
+| test262.test.built-ins.generatorfunction.extensibility                          | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.has-instance                           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.instance-construct-throws              | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.instance-length                        | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.instance-name                          | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.instance-prototype                     | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.instance-restricted-properties         | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.instance-yield-expr-in-param           | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.invoked-as-constructor-no-arguments    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.invoked-as-function-multiple-arguments | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.invoked-as-function-no-arguments       | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.invoked-as-function-single-argument    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.is-a-constructor                       | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.proto-from-ctor-realm                  | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.proto-from-ctor-realm-prototype        | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.prototype.constructor                  | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.prototype.extensibility                | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.prototype.not-callable                 | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.prototype.prototype                    | 🟢 supported | via rquickjs engine |
+| test262.test.built-ins.generatorfunction.prototype.symbol.tostringtag           | 🟢 supported | via rquickjs engine |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->

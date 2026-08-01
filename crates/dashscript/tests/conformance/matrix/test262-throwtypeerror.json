@@ -3,8 +3,8 @@
     "id": "test262.test.built-ins.throwtypeerror.distinct-cross-realm",
     "layer": "test262",
     "category": "throwtypeerror",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«function () {\n    [native code]\n}», «function () {\n    [native code]\n}») to be false",
     "note": ""
   },
   {

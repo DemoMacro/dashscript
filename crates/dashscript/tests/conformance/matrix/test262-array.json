@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20392) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (21020) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -644,7 +644,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34980) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41604) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -8268,7 +8268,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20408) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (37924) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -20931,8 +20931,8 @@
     "id": "test262.test.built-ins.array.s15.4.5.2_a1_t2",
     "layer": "test262",
     "category": "array",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34728) panicked at src\\__ds.rs:135:9:\nTest262Error: Expected SameValue(«4294967296.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "unsupported",
+    "detail": "timed out",
     "note": ""
   },
   {

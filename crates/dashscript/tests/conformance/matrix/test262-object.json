@@ -11868,7 +11868,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25728) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (13564) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -11996,7 +11996,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13176) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39148) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -16348,7 +16348,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41952) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41352) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17148,7 +17148,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40508) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35176) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17211,8 +17211,8 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-3-1",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25372) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"y\"», «\"x\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -17803,8 +17803,8 @@
     "id": "test262.test.built-ins.object.proto-from-ctor-realm",
     "layer": "test262",
     "category": "object",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

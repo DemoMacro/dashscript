@@ -611,8 +611,8 @@
     "id": "test262.test.built-ins.atomics.notify.bigint.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: An unexpected error occurred when detaching ArrayBuffer: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -859,8 +859,8 @@
     "id": "test262.test.built-ins.atomics.notify.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: An unexpected error occurred when detaching ArrayBuffer: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -891,8 +891,8 @@
     "id": "test262.test.built-ins.atomics.notify.retrieve-length-before-index-coercion-non-shared-detached",
     "layer": "test262",
     "category": "atomics",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "engine error: RangeError: out-of-bound access",
     "note": ""
   },
   {
@@ -1459,8 +1459,8 @@
     "id": "test262.test.built-ins.atomics.wait.bigint.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: An unexpected error occurred when detaching ArrayBuffer: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1675,8 +1675,8 @@
     "id": "test262.test.built-ins.atomics.wait.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: An unexpected error occurred when detaching ArrayBuffer: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

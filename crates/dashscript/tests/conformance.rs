@@ -813,11 +813,13 @@ fn judge_engine(o: EngineOutcome) -> (&'static str, String) {
     }
 }
 
-/// Minimal `console.log` for the engine path — a no-op. The verdict is
-/// exit/throw-driven (a `Test262Error` is the single failure signal), so console
-/// output is irrelevant; this just keeps a fixture that calls `console.log`
-/// from throwing `ReferenceError: console is not defined`.
-const CONSOLE_PRELUDE: &str = "this.console = { log: function () {} };\n";
+/// Minimal host output surface for the engine path — no-ops. The verdict is
+/// exit/throw-driven (a `Test262Error` is the single failure signal), so output
+/// is irrelevant; these just keep a fixture that calls `console.log` or the
+/// test262 host `print` (e.g. `Array.print = print`) from throwing
+/// `ReferenceError: console is not defined` / `print is not defined`.
+const CONSOLE_PRELUDE: &str =
+    "this.console = { log: function () {} };\nthis.print = function () {};\n";
 
 /// Minimal `$262` host-defined agent (test262 host API). Only `detachArrayBuffer`
 /// is host-implemented (Rust via `__ds_detach` — JS cannot detach an ArrayBuffer);
@@ -1199,6 +1201,22 @@ impl Drop for RealmsGuard {
 /// thrown `Test262Error` (assert mismatch) is the single failure signal.
 fn engine_eval(js_source: &str, includes: &[String]) -> EngineOutcome {
     use rquickjs::{context::EvalOptions, ArrayBuffer, Context, Ctx, FromJs, Function, Runtime};
+    // Serialize the rquickjs engine path across worker threads. Concurrent
+    // `Runtime::new()` / `Context::full` / `globals().set` in the N parallel
+    // workers races inside QuickJS-NG: a fixture whose body or `$INCLUDE`
+    // references the just-injected `$262` (or `Temporal`, `ShadowRealm`, …)
+    // resolves it as undefined under one parallel run and clean under another
+    // — a heisenbug that surfaced ~19 fixtures as false `unsupported`
+    // (`ReferenceError: $262 is not defined`) under the default parallel
+    // matrix while passing single-threaded (`DASH_CONF_WORKERS=1`). The
+    // `run_gc` between evaluations (01f8bb2) only clears residue within a
+    // single runtime's lifetime; it does not stop the cross-thread creation
+    // race, so a process-global lock around the whole engine path is the
+    // reliable fix. The cost is bounded: engine_eval is in-process rquickjs
+    // (microseconds–milliseconds per fixture), dwarfed by the parallel cargo
+    // builds, which still run concurrently — only the QuickJS evals serialize.
+    static ENGINE_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    let _engine_guard = ENGINE_LOCK.lock().expect("ENGINE_LOCK poisoned");
     let runtime = match Runtime::new() {
         Ok(r) => r,
         Err(e) => return EngineOutcome::OtherError(format!("runtime: {e}")),

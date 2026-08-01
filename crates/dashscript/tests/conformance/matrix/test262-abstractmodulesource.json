@@ -3,64 +3,64 @@
     "id": "test262.test.built-ins.abstractmodulesource.length",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.abstractmodulesource.name",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.abstractmodulesource.proto",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.abstractmodulesource.prototype",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.abstractmodulesource.prototype.constructor",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.abstractmodulesource.prototype.proto",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.abstractmodulesource.prototype.symbol.tostringtag",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.abstractmodulesource.throw-from-constructor",
     "layer": "test262",
     "category": "abstractmodulesource",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Expected SameValue(«\"undefined\"», «\"function\"») to be true",
     "note": ""
   }
 ]
