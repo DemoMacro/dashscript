@@ -245,15 +245,19 @@ fn is_temporal_static_call(expr: &Expression, ty: &str, method: &str) -> bool {
 }
 
 /// `Temporal.<Type>.from(s)` infers `temporal_rs::<Type>` (the type the
-/// accessors + `Display` dispatch on), for the five types with an infallible
-/// `from_utf8` constructor. Reads the shared `TEMPORAL_DATE_TIME_TYPES` list so
-/// it stays in sync with `temporal.rs::temporal_static` +
-/// `member.rs::is_temporal_local` — one list, three readers.
+/// accessors + `Display`/`PartialEq` dispatch on), for every type in
+/// `TEMPORAL_TYPES`. `Temporal.Instant.fromEpochMilliseconds(n)` likewise
+/// infers `temporal_rs::Instant` (the epoch constructor mapped in
+/// `temporal_static`). Reads the shared `TEMPORAL_TYPES` list so it stays in
+/// sync with `temporal.rs::temporal_static` + `member.rs::is_temporal_local`.
 fn temporal_from_type(expr: &Expression) -> Option<Type> {
-    let ty = super::super::builtins::TEMPORAL_DATE_TIME_TYPES
+    let ty = super::super::builtins::TEMPORAL_TYPES
         .iter()
         .copied()
-        .find(|t| is_temporal_static_call(expr, t, "from"))?;
+        .find(|t| is_temporal_static_call(expr, t, "from"))
+        .or_else(|| {
+            is_temporal_static_call(expr, "Instant", "fromEpochMilliseconds").then_some("Instant")
+        })?;
     let ident = syn::Ident::new(ty, proc_macro2::Span::call_site());
     Some(parse_quote!(temporal_rs::#ident))
 }

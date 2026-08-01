@@ -406,7 +406,7 @@ pub(in crate::translator) fn temporal_type_of_local(
             let ty = ctx.local_type(&name)?;
             let seg = ty.segments.last()?;
             let ident = seg.ident.to_string();
-            builtins::TEMPORAL_DATE_TIME_TYPES
+            builtins::TEMPORAL_TYPES
                 .contains(&ident.as_str())
                 .then_some(ident)
         }
@@ -433,7 +433,7 @@ fn temporal_type_of_from_call(callee: &Expression) -> Option<String> {
     };
     let ty = t.property.name.as_str();
     let is_temporal = matches!(&t.object, Expression::Identifier(id) if id.name.as_str() == "Temporal")
-        && builtins::TEMPORAL_DATE_TIME_TYPES.contains(&ty);
+        && builtins::TEMPORAL_TYPES.contains(&ty);
     is_temporal.then_some(ty.to_string())
 }
 
