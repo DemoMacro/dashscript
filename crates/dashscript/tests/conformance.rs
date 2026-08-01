@@ -1234,66 +1234,83 @@ thread_local! {
     static DS_SR_FN_NEXT: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
 }
 
-/// Install the ShadowRealm polyfill (constructor + `evaluate`) on the engine
-/// context. `importValue` is deliberately absent — its async-module semantics
-/// are out of scope, so fixtures using it degrade honestly.
+/// Create a fresh isolated `Context` (a new realm with its own intrinsics),
+/// register it in the per-`engine_eval` realm table under a new opaque id, and
+/// recursively install the ShadowRealm polyfill on it — so a `new ShadowRealm()`
+/// evaluated *inside* a realm can itself allocate a nested realm (test262
+/// `nested-realms`). The polyfill closures and `__ds_wfn_check` reach the inner
+/// realm via [`sr_install`], and the thread-local registries they use
+/// (`DS_REALMS`, the id counters) are process-global, so a callable registered
+/// in any realm is callable from any other. Returns the new realm's id.
+fn sr_create_fn() -> rquickjs::Result<u32> {
+    use rquickjs::{Context, Runtime};
+    let rt = Runtime::new()?;
+    let inner = Context::full(&rt)?;
+    inner.with(|ic| sr_install(&ic))?;
+    let id = DS_REALM_NEXT.with(|c| {
+        let v = c.get();
+        c.set(v.checked_add(1).unwrap_or(1));
+        v
+    });
+    DS_REALMS.with(|m| m.borrow_mut().insert(id, inner));
+    Ok(id)
+}
+
+/// `ShadowRealm.prototype.evaluate` host implementation: look up the inner
+/// realm by id, pre-parse via the Function constructor to tell a SyntaxError
+/// (a parse failure ⇒ `SrPrim::SyntaxError`) from a runtime throw, then eval
+/// and lift the result via [`sr_value_to_prim`] (a non-primitive or a runtime
+/// throw ⇒ `SrPrim::TypeError`, per spec).
+fn sr_evaluate_fn(id: u32, src: String) -> rquickjs::Result<SrPrim> {
+    use rquickjs::{Function, Value};
+    let inner = DS_REALMS.with(|m| m.borrow().get(&id).cloned());
+    let Some(inner) = inner else {
+        return Ok(SrPrim::TypeError);
+    };
+    inner.with(|ic| -> rquickjs::Result<SrPrim> {
+        // Spec: a top-level *parse* failure throws a SyntaxError; a *runtime*
+        // throw is wrapped into a TypeError. rquickjs's eval fuses parse and
+        // execute, so to tell them apart we pre-parse via the Function
+        // constructor — `new Function(src)` parses src as a function body,
+        // which agrees with script-body SyntaxError detection for the cases
+        // that matter (a strict directive prologue applies in both). A throw
+        // here is a parse error ⇒ `SyntaxError`; otherwise the real eval runs,
+        // where any throw is a runtime error ⇒ `TypeError`.
+        let function_ctor: Function = ic.globals().get("Function")?;
+        if function_ctor.call::<_, Value>((src.as_str(),)).is_err() {
+            let _ = ic.catch();
+            return Ok(SrPrim::SyntaxError);
+        }
+        let v: Value = match ic.eval_with_options::<Value, _>(src.as_str(), sr_sloppy()) {
+            Ok(v) => v,
+            // A runtime error thrown inside the realm is wrapped into a
+            // TypeError (and a non-primitive result is too — see
+            // sr_value_to_prim).
+            Err(_) => {
+                let _ = ic.catch();
+                return Ok(SrPrim::TypeError);
+            }
+        };
+        sr_value_to_prim(&ic, v, id)
+    })
+}
+
+/// Install the ShadowRealm polyfill on a context: register the host
+/// `__ds_sr_create`/`__ds_sr_evaluate` (so the realm can allocate nested
+/// realms and evaluate in them), install `__ds_wfn_check` (the
+/// CopyNameAndLength read used before wrapping a callable), and define the
+/// global `ShadowRealm`. Called on the engine context for fixtures that
+/// reference ShadowRealm, and recursively on every inner realm [`sr_create_fn`]
+/// allocates — so nested `new ShadowRealm()` works at any depth.
 fn sr_install(ctx: &rquickjs::Ctx) -> rquickjs::Result<()> {
-    use rquickjs::{Context, Function, Runtime, Value};
-    ctx.globals().set(
-        "__ds_sr_create",
-        Function::new(ctx.clone(), || -> rquickjs::Result<u32> {
-            let rt = Runtime::new()?;
-            let inner = Context::full(&rt)?;
-            inner.with(|ic| ic.eval_with_options::<(), _>(SR_INNER_PRELUDE, sr_sloppy()))?;
-            let id = DS_REALM_NEXT.with(|c| {
-                let v = c.get();
-                c.set(v.checked_add(1).unwrap_or(1));
-                v
-            });
-            DS_REALMS.with(|m| m.borrow_mut().insert(id, inner));
-            Ok(id)
-        })?,
-    )?;
+    use rquickjs::Function;
+    ctx.globals()
+        .set("__ds_sr_create", Function::new(ctx.clone(), sr_create_fn)?)?;
     ctx.globals().set(
         "__ds_sr_evaluate",
-        Function::new(
-            ctx.clone(),
-            |id: u32, src: String| -> rquickjs::Result<SrPrim> {
-                let inner = DS_REALMS.with(|m| m.borrow().get(&id).cloned());
-                let Some(inner) = inner else {
-                    return Ok(SrPrim::TypeError);
-                };
-                inner.with(|ic| -> rquickjs::Result<SrPrim> {
-                    // Spec: a top-level *parse* failure throws a SyntaxError;
-                    // a *runtime* throw is wrapped into a TypeError. rquickjs's
-                    // eval fuses parse and execute, so to tell them apart we
-                    // pre-parse via the Function constructor — `new Function(src)`
-                    // parses src as a function body, which agrees with script-body
-                    // SyntaxError detection for the cases that matter (a strict
-                    // directive prologue applies in both). A throw here is a parse
-                    // error ⇒ `SyntaxError`; otherwise the real eval runs, where
-                    // any throw is a runtime error ⇒ `TypeError`.
-                    let function_ctor: Function = ic.globals().get("Function")?;
-                    if function_ctor.call::<_, Value>((src.as_str(),)).is_err() {
-                        let _ = ic.catch();
-                        return Ok(SrPrim::SyntaxError);
-                    }
-                    let v: Value = match ic.eval_with_options::<Value, _>(src.as_str(), sr_sloppy())
-                    {
-                        Ok(v) => v,
-                        // A runtime error thrown inside the realm is wrapped into
-                        // a TypeError (and a non-primitive result is too — see
-                        // sr_value_to_prim).
-                        Err(_) => {
-                            let _ = ic.catch();
-                            return Ok(SrPrim::TypeError);
-                        }
-                    };
-                    sr_value_to_prim(&ic, v, id)
-                })
-            },
-        )?,
+        Function::new(ctx.clone(), sr_evaluate_fn)?,
     )?;
+    ctx.eval_with_options::<(), _>(SR_INNER_PRELUDE, sr_sloppy())?;
     ctx.eval_with_options::<(), _>(SHADOWREALM_PRELUDE, sr_sloppy())?;
     Ok(())
 }

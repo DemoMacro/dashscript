@@ -60,7 +60,7 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "detail": "Test262Error: Test262Error: All globalThis properties must be configurable Expected SameValue(«\"ShadowRealm\"», «\"\"») to be true",
     "note": ""
   },
   {
@@ -75,8 +75,8 @@
     "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.nested-realms",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "detail": "engine error: TypeError: ShadowRealm WrappedFunction call: non-primitive argument",
     "note": ""
   },
   {
