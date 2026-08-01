@@ -1450,11 +1450,16 @@ fn build_local(name: &Ident, mutable: bool, ty: Option<&Type>, init: Option<&Exp
     if let Some(ty) = ty {
         tokens.extend(quote!(: #ty));
     }
-    match init {
-        Some(init) => tokens.extend(quote!(= #init)),
-        // A binding without an initializer is rare; surface it loudly if reached.
-        None => tokens.extend(quote!(= ::core::todo!())),
+    if let Some(init) = init {
+        tokens.extend(quote!(= #init));
     }
+    // No initializer: emit `let [mut] name;` and let Rust's definite-assignment
+    // analysis do the work. The common TS `var x; … x = v; … use(x;` pattern
+    // compiles and runs correctly; a binding read before any assignment fails
+    // with E0381 at build time, which the conformance harness routes to the
+    // engine fallback (degrade, don't reject). Emitting `::core::todo!()` here
+    // used to compile, panic at runtime, and bypass that fallback — the worst
+    // of the three outcomes.
     tokens.extend(quote!(;));
     syn::parse2(tokens).expect("dashscript: generated `let` should parse")
 }
