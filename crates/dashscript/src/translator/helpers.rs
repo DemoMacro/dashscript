@@ -95,19 +95,34 @@ pub(super) const ARRAY_HELPER: &str = "\
 /// ES indexed assignment `arr[i] = v` for a `Vec<T>`. ES `Array` auto-grows:
 /// `i < len` replaces, `i == len` appends, `i > len` grows with `T::default()`
 /// filling the gap (a JS array would use holes, but `T` has no undefined). A
-/// negative or non-integer index is a property set in JS, not an element —
-/// ignored here. A bare Rust `vec[i] = v` would panic instead of growing.
+/// negative, non-integer, or `>= 2^32-1` index is a property set in JS, not an
+/// element — dropped here (length stays as it was). A bare Rust `vec[i] = v`
+/// would panic instead of growing. ES arrays are sparse (holes are free); a
+/// dense `Vec` must fill the gap, so a huge gap (e.g. `x[4294967294] = v` on
+/// an empty array) is capped to avoid allocating ~32GB and hanging — beyond
+/// the cap the store is dropped, honestly failing any later assert.
 #[inline]
 pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
     if !i.is_finite() || i < 0.0 || i.fract() != 0.0 {
         return;
     }
     let idx = i as usize;
+    // An ES array index must be < 2^32-1; at or above it the store is a
+    // property set (length unchanged). Vec has no such property, so drop it.
+    if idx >= u32::MAX as usize {
+        return;
+    }
     if idx < arr.len() {
         arr[idx] = v;
     } else if idx == arr.len() {
         arr.push(v);
     } else {
+        // Sparse-gap cap: ES holes cost nothing, but a dense Vec must fill the
+        // gap with `T::default()`. Drop the store past the cap rather than OOM.
+        const SPARSE_GAP_CAP: usize = 1 << 20;
+        if idx - arr.len() > SPARSE_GAP_CAP {
+            return;
+        }
         arr.resize(idx + 1, T::default());
         arr[idx] = v;
     }

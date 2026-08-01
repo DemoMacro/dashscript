@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38412) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
+    "detail": "Test262Error: \nthread 'main' (4312) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32844) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "detail": "Test262Error: \nthread 'main' (40524) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20080) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (41540) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11564) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (12064) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23864) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (20796) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33528) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (24072) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (18420) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (41380) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (2336) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (18292) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23080) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (5568) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {

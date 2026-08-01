@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 0xc0000409: memory allocation of 103079215104 bytes failed\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (41824) panicked at src\\main.rs:9:12:\nindex out of bounds: the len is 0 but the index is 4294967295\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35200) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (20980) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -8268,7 +8268,7 @@
     "layer": "test262",
     "category": "array",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9888) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34264) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -20923,16 +20923,16 @@
     "id": "test262.test.built-ins.array.s15.4.5.2_a1_t1",
     "layer": "test262",
     "category": "array",
-    "status": "unsupported",
-    "detail": "timed out",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (15088) panicked at src\\__ds.rs:150:9:\nTest262Error: Expected SameValue(«2.0», «2147483649.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.array.s15.4.5.2_a1_t2",
     "layer": "test262",
     "category": "array",
-    "status": "unsupported",
-    "detail": "timed out",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -20971,8 +20971,8 @@
     "id": "test262.test.built-ins.array.s15.4_a1.1_t10",
     "layer": "test262",
     "category": "array",
-    "status": "unsupported",
-    "detail": "timed out",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (19880) panicked at src\\main.rs:19:47:\nindex out of bounds: the len is 2097151 but the index is 4194302\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
