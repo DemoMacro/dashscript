@@ -7,7 +7,6 @@ use syn::{parse_quote, Expr};
 use super::super::context::Ctx;
 use super::super::expressions::{translate_argument, translate_number_to};
 use super::super::flavor::NumberFlavor;
-use super::usize_arg;
 
 /// Methods on a `.ts` `number` (`f64`). `.toFixed(n)` → a formatted string
 /// with `n` decimal places. Returns `None` for an unmapped name.
@@ -23,10 +22,20 @@ pub(in crate::translator) fn number_method(
     let recv = translate_number_to(&sm.object, NumberFlavor::F64, ctx);
     Some(match sm.property.name.as_str() {
         // `(3.14).toFixed(2)` → `format!("{:.*}", n, …)`. In Rust the `*`
-        // precision argument comes first, the value second.
+        // precision argument comes first, the value second. ES throws
+        // `RangeError` when the digit count is outside [0, 100].
         "toFixed" => {
-            let prec = usize_arg(args.first()?, ctx);
-            parse_quote!(format!("{:.*}", #prec, #recv))
+            let f = translate_argument(args.first()?, ctx);
+            parse_quote!({
+                let __f = (#f) as f64;
+                if !(__f >= 0.0 && __f <= 100.0) {
+                    ::std::panic::panic_any(crate::__ds::DsError::new(
+                        "RangeError",
+                        "toFixed() digits must be between 0 and 100",
+                    ));
+                }
+                format!("{:.*}", __f as usize, #recv)
+            })
         }
         // `(n).toString(radix)` → a base-`radix` integer string (radix 2-36).
         // The receiver is cast to `i64` (TS truncates the fractional part of
@@ -41,7 +50,14 @@ pub(in crate::translator) fn number_method(
             let radix = translate_argument(args.first()?, ctx);
             parse_quote!({
                 let __x = #recv;
-                let __r = (#radix) as u32;
+                let __r = (#radix) as f64;
+                if !(__r >= 2.0 && __r <= 36.0) {
+                    ::std::panic::panic_any(crate::__ds::DsError::new(
+                        "RangeError",
+                        "toString() radix must be between 2 and 36",
+                    ));
+                }
+                let __r = __r as u32;
                 if __x.is_nan() {
                     "NaN".to_string()
                 } else if __x.is_infinite() {
@@ -78,8 +94,17 @@ pub(in crate::translator) fn number_method(
         "toExponential" => {
             let formatted: Expr = match args.first() {
                 Some(a) => {
-                    let prec = usize_arg(a, ctx);
-                    parse_quote!(format!("{:.*e}", #prec, #recv))
+                    let prec = translate_argument(a, ctx);
+                    parse_quote!({
+                        let __p = (#prec) as f64;
+                        if !(__p >= 0.0 && __p <= 100.0) {
+                            ::std::panic::panic_any(crate::__ds::DsError::new(
+                                "RangeError",
+                                "toExponential() digits must be between 0 and 100",
+                            ));
+                        }
+                        format!("{:.*e}", __p as usize, #recv)
+                    })
                 }
                 None => parse_quote!(format!("{:e}", #recv)),
             };
@@ -110,10 +135,17 @@ pub(in crate::translator) fn number_method(
             parse_quote!(crate::__ds::number_to_string(#recv))
         }
         "toPrecision" => {
-            let prec = usize_arg(args.first()?, ctx);
+            let prec = translate_argument(args.first()?, ctx);
             parse_quote!({
+                let __p_f = (#prec) as f64;
+                if !(__p_f >= 1.0 && __p_f <= 100.0) {
+                    ::std::panic::panic_any(crate::__ds::DsError::new(
+                        "RangeError",
+                        "toPrecision() precision must be between 1 and 100",
+                    ));
+                }
                 let __x = #recv;
-                let __p: usize = #prec;
+                let __p: usize = __p_f as usize;
                 if __x.is_nan() {
                     "NaN".to_string()
                 } else if __x.is_infinite() {

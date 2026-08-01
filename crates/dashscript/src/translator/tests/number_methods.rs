@@ -4,8 +4,11 @@ use super::super::Translator;
 fn translates_number_to_fixed_to_format_precision() {
     let src = "function f(): string { const pi = 3.14159; return pi.toFixed(2); }";
     let rust = Translator::new().translate(src).expect("should translate");
+    // The digit count is range-checked ([0, 100]) before formatting, so the
+    // arg flows through a `let __f = ... as f64` binding rather than the raw
+    // literal.
     assert!(
-        rust.contains("format!(\"{:.*}\", 2_f64 as usize, pi)"),
+        rust.contains("format!(\"{:.*}\", __f as usize, pi)"),
         "got:\n{rust}"
     );
 }
@@ -46,7 +49,10 @@ fn translates_number_to_string_variable_radix() {
         "got:\n{rust}"
     );
     assert!(rust.contains("as i64"), "got:\n{rust}");
-    assert!(rust.contains("(radix) as u32"), "got:\n{rust}");
+    // The radix is range-checked ([2, 36]) as an `f64` before the `u32` cast
+    // feeds the base-N loop, so `(radix) as f64` appears rather than a direct
+    // `(radix) as u32`.
+    assert!(rust.contains("(radix) as f64"), "got:\n{rust}");
 }
 
 #[test]
